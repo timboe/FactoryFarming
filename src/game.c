@@ -39,6 +39,9 @@ void clickHandlerReplacement() {
 void render() {
   pd->display->setScale(1);
 
+  renderFloor(pd);
+
+  pd->sprite->updateAndDrawSprites();
 
   // Draw FPS indicator (dbg only)
   #ifdef DEBUG_MODE
@@ -77,6 +80,7 @@ void menuOptionsCallback(void* userdata) {
 }
 
 void initGame() {
+  generate(pd);
 }
 
 void deinitGame() {

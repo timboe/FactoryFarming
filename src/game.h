@@ -1,7 +1,7 @@
 #pragma once
 
 #define DEBUG_MODE
-//#define DEV
+#define DEV
 
 #include "pd_api.h"
 
@@ -9,6 +9,15 @@
 #include <stdbool.h> 
 
 #define ANIM_FPS 20
+
+#define SCREEN_X 400
+#define SCREEN_Y 240
+
+#define TILE_SIZE 16
+
+#define TILES_X SCREEN_X/TILE_SIZE
+#define TILES_Y SCREEN_Y/TILE_SIZE
+
 
 void setPDPtr(PlaydateAPI* _p);
 
