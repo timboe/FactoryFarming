@@ -10,9 +10,9 @@
 __declspec(dllexport)
 #endif
 
-static void init(PlaydateAPI* _pd) {
-  initSprite(_pd);
-  initSound(_pd);
+static void init() {
+  initSprite();
+  initSound();
   initGame();
 }
 

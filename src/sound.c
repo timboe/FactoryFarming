@@ -1,7 +1,5 @@
 #include "sound.h"
 
-static PlaydateAPI* pd = NULL;
-
 bool m_sfxOn = true;
 bool m_musicOn = true;
 
@@ -19,8 +17,7 @@ void sfx(bool _onoff) {
   m_sfxOn = _onoff;
 }
 
-void initSound(PlaydateAPI* _pd) {
-  pd = _pd;
+void initSound() {
 
   m_music = pd->sound->fileplayer->newPlayer();
   //int result = pd->sound->fileplayer->loadIntoPlayer(m_music, "sounds/");
