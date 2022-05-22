@@ -27,14 +27,17 @@ void setPDPtr(PlaydateAPI* _p) {
 }
 
 void gameClickConfigHandler(uint32_t _buttonPressed) {
+    static uint32_t x = 0, x2 = 4;
   if (kButtonLeft == _buttonPressed) m_pressed[0] = 1;
   else if (kButtonRight == _buttonPressed) m_pressed[1] = 1;
   else if (kButtonUp == _buttonPressed) m_pressed[2] = 1;
   else if (kButtonDown == _buttonPressed) m_pressed[3] = 1;
   else if (kButtonB == _buttonPressed) {
-    static uint32_t x = 4;
-    for (int i = 0; i < TOT_TILES_Y; ++i) newConveyor(x, i, x % 2 ? SN : NS);
     x += 5;
+    for (int i = 0; i < TOT_TILES_Y; ++i) newConveyor(x, i, x % 2 ? SN : NS);
+
+  } else if (kButtonA == _buttonPressed) {
+    for (int i = 0; i < TOT_TILES_Y; i += rand()%4 + 1) newCargo(x, i, kApple);
   }
 }
 
@@ -90,7 +93,9 @@ void render() {
   static char text[32];
   snprintf(text, 32, "Conveyors:%u", getNConveyors());
   setRoobert11();
-  pd->graphics->drawText(text, 16, kASCIIEncoding, TILE_SIZE - m_offX, TILE_SIZE - m_offY);
+  pd->graphics->drawText(text, 16, kASCIIEncoding, TILE_SIZE - m_offX, 1*TILE_SIZE - m_offY);
+  snprintf(text, 32, "Cargo:%u", getNCargo());
+  pd->graphics->drawText(text, 16, kASCIIEncoding, TILE_SIZE - m_offX, 2*TILE_SIZE - m_offY);
   #endif
 }
 
@@ -124,6 +129,7 @@ bool movePlayer() {
 
   float goalX, goalY;
   pd->sprite->getPosition(p, &goalX, &goalY); // TODO Docs have int instead of float
+  /*
 
   float diffX = 0;
   float diffY = 0;
@@ -144,9 +150,16 @@ bool movePlayer() {
 
   goalX += m_vX;
   goalY += m_vY;
+*/
+
+  if (m_pressed[0]) goalX -= 4;
+  if (m_pressed[1]) goalX += 4;
+  if (m_pressed[2]) goalY -= 4;
+  if (m_pressed[3]) goalY += 4;
 
   int len;
   SpriteCollisionInfo* collInfo = pd->sprite->moveWithCollisions(p, goalX, goalY, &m_actualX, &m_actualY, &len);
+  free(collInfo);
 
   pd->sprite->setZIndex(p, (int16_t)m_actualY);
 

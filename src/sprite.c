@@ -1,14 +1,14 @@
 #include "sprite.h"
 
 
-LCDSprite* m_world[WORLD_SCREENS_X][WORLD_SCREENS_Y];
+struct LCDSprite* m_world[WORLD_SCREENS_X][WORLD_SCREENS_Y];
 LCDSprite* m_worldEdges[WORLD_SCREENS_X*2 + WORLD_SCREENS_Y*2 + 4]; // + 4 is corners
 
 LCDBitmap* m_conveyorMasters[kConvDirN] = {NULL};
 
-uint32_t m_nConveyors = 0;
+uint32_t m_nConveyors = 0, m_nCargo = 0;
 
-LCDSprite* m_worldSprites[TOT_TILES] = {NULL};
+struct Location_t* m_worldLocations = NULL;
 
 LCDBitmapTable* m_sheet16;
 
@@ -147,22 +147,120 @@ void animateConveyor() {
 
 }
 
-void newConveyor(uint32_t _x, uint32_t _y, enum kConvDir _dir) {
-  const uint32_t loc = (TOT_TILES_X * _y) + _x;
+struct Location_t* getLocation(int32_t _x, int32_t _y) {
+  if (_x < 0) _x += TOT_TILES_X;
+  else if (_x >= TOT_TILES_X) _x -= TOT_TILES_X;
+  if (_y < 0) _y += TOT_TILES_Y;
+  else if (_y >= TOT_TILES_Y) _y -= TOT_TILES_Y;
+  const uint32_t l = (TOT_TILES_X * _y) + _x;
+  return &m_worldLocations[l];
+}
 
-  m_worldSprites[loc] = pd->sprite->newSprite();
+
+void conveyorUpdateFnSN(LCDSprite* conveyor) {
+  struct Location_t* loc = (struct Location_t*) pd->sprite->getUserdata(conveyor);
+  if (loc->m_cargo == NULL) return;
+  if (loc->m_progress < TILE_SIZE) {
+    ++(loc->m_progress);
+    pd->sprite->moveTo(loc->m_cargo, loc->m_x, loc->m_y - loc->m_progress);
+  } else if (loc->m_next != NULL && loc->m_next->m_cargo == NULL) {
+    loc->m_next->m_cargo = loc->m_cargo;
+    loc->m_cargo = NULL;
+    loc->m_next->m_progress = 0;
+    loc->m_progress = 0;
+  }
+}
+
+void conveyorUpdateFnNS(LCDSprite* conveyor) {
+  struct Location_t* loc = (struct Location_t*) pd->sprite->getUserdata(conveyor);
+  if (loc->m_cargo == NULL) return;
+  //pd->system->logToConsole("NS %i", loc->m_progress);
+  if (loc->m_progress < TILE_SIZE) {
+    ++(loc->m_progress);
+    pd->sprite->moveTo(loc->m_cargo, loc->m_x, loc->m_y + loc->m_progress);
+  } else if (loc->m_next != NULL && loc->m_next->m_cargo == NULL) {
+    loc->m_next->m_cargo = loc->m_cargo;
+    loc->m_cargo = NULL;
+    loc->m_next->m_progress = 0;
+    loc->m_progress = 0;
+  }
+}
+
+bool newConveyor(uint32_t _x, uint32_t _y, enum kConvDir _dir) {
+  struct Location_t* loc = getLocation(_x, _y);
+  if (loc->m_type != kEmpty) return false;
+
+  loc->m_sprite = pd->sprite->newSprite();
+  loc->m_cargo = NULL;
+  loc->m_type = kConveyor;
+  loc->m_progress = 0;
+  loc->m_x = TILE_SIZE*_x + TILE_SIZE/2.0;
+  loc->m_y = TILE_SIZE*_y + TILE_SIZE/2.0;
   PDRect bound = {.x = 0, .y = 0, .width = TILE_SIZE, .height = TILE_SIZE};
-  pd->sprite->setBounds(m_worldSprites[loc], bound);
-  pd->sprite->setImage(m_worldSprites[loc], m_conveyorMasters[_dir], kBitmapUnflipped);
-  pd->sprite->moveTo(m_worldSprites[loc], TILE_SIZE*_x + TILE_SIZE/2.0f, TILE_SIZE*_y + TILE_SIZE/2.0f);
-  pd->sprite->addSprite(m_worldSprites[loc]);
+  pd->sprite->setBounds(loc->m_sprite, bound);
+  pd->sprite->setImage(loc->m_sprite, m_conveyorMasters[_dir], kBitmapUnflipped);
+  pd->sprite->moveTo(loc->m_sprite, loc->m_x, loc->m_y);
+  pd->sprite->addSprite(loc->m_sprite);
+  pd->sprite->setUserdata(loc->m_sprite, (void*) loc);
+  pd->sprite->setUpdatesEnabled(loc->m_sprite, 1);
+
+  struct Location_t* above;
+  struct Location_t* below;
+  struct Location_t* left;
+  struct Location_t* right;
+  switch (_dir) {
+    case SN:;
+      above = getLocation(_x, _y - 1);
+      below = getLocation(_x, _y + 1);
+      if (above->m_type == kConveyor) loc->m_next = above;
+      if (below->m_type == kConveyor) below->m_next = loc;
+      pd->sprite->setUpdateFunction(loc->m_sprite, conveyorUpdateFnSN);
+      break;
+    case NS:;
+      above = getLocation(_x, _y - 1);
+      below = getLocation(_x, _y + 1);
+      if (above->m_type == kConveyor) above->m_next = loc;
+      if (below->m_type == kConveyor) loc->m_next = below;
+      pd->sprite->setUpdateFunction(loc->m_sprite, conveyorUpdateFnNS);
+      break;
+  }
 
   ++m_nConveyors;
-
+  return true;
 }
+
+bool newCargo(uint32_t _x, uint32_t _y, enum kCargoType _type) {
+  struct Location_t* loc = getLocation(_x, _y);
+  if (loc->m_cargo != NULL) return false;
+  if (loc->m_type != kConveyor) return false;
+
+  //pd->system->logToConsole("Set cargo, current %i", (int)loc->m_cargo);
+
+  LCDBitmap* image = NULL;
+  switch (_type) {
+    case kApple: image = getSprite16(1,1); break;
+  }
+
+  loc->m_cargo = pd->sprite->newSprite();
+  PDRect bound = {.x = 0, .y = 0, .width = TILE_SIZE, .height = TILE_SIZE};
+  pd->sprite->setBounds(loc->m_cargo, bound);
+  pd->sprite->setImage(loc->m_cargo, image, kBitmapUnflipped);
+  pd->sprite->moveTo(loc->m_cargo, loc->m_x, loc->m_y);
+  pd->sprite->addSprite(loc->m_cargo);
+  pd->sprite->setTag(loc->m_cargo, (uint8_t) _type);
+  pd->sprite->setUpdatesEnabled(loc->m_cargo, 0);
+
+  ++m_nCargo;
+  return true;
+}
+
 
 uint32_t getNConveyors() {
   return m_nConveyors;
+}
+
+uint32_t getNCargo() {
+  return m_nCargo;
 }
 
 void setRoobert11() {
@@ -170,7 +268,6 @@ void setRoobert11() {
 }
 
 void initSprite() {
-  //m_ = loadImageAtPath(pd, "images/");
   m_sheet16 = loadImageTableAtPath("images/sheet16");
 
   m_conveyorMasters[SN] = getSprite16(0, 7);
@@ -189,8 +286,11 @@ void initSprite() {
   pd->sprite->addSprite(m_player);
   pd->sprite->setCollideRect(m_player, bound);
 
-
+  //m_worldLocations = calloc(TOT_TILES, sizeof(struct Location_t));
+  m_worldLocations = pd->system->realloc(NULL, TOT_TILES * sizeof(struct Location_t));
+  memset(m_worldLocations, 0, TOT_TILES * sizeof(struct Location_t));
 }
 
 void deinitSprite() {
+  pd->system->realloc(m_worldLocations, 0);
 }
