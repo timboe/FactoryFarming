@@ -26,7 +26,7 @@ int eventHandler(PlaydateAPI* playdate, PDSystemEvent event, uint32_t arg) {
   if (event == kEventInit) {
     setPDPtr(playdate);
     init(playdate);
-    playdate->display->setRefreshRate(100);
+    playdate->display->setRefreshRate(50);
     playdate->system->setUpdateCallback(gameLoop, NULL);
     #ifdef DEV
     playdate->system->logToConsole("EH: init");
