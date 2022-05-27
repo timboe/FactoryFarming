@@ -8,15 +8,19 @@
 #include <stdio.h>
 #include <stdbool.h> 
 
-#define ANIM_FPS 20
+#define TICK_FREQUENCY 32
 
-#define SCREEN_X 400
-#define SCREEN_Y 240
+#define TILE_PIX 16
 
-#define TILE_SIZE 16
+#define SCREEN_PIX_X (400-TILE_PIX)
+#define SCREEN_PIX_Y (240-TILE_PIX)
 
-#define TILES_X SCREEN_X/TILE_SIZE
-#define TILES_Y SCREEN_Y/TILE_SIZE
+#define CHUNK_PIX_X (SCREEN_PIX_X/2)
+#define CHUNK_PIX_Y (SCREEN_PIX_Y/2)
+
+
+#define TILES_PER_CHUNK_X (CHUNK_PIX_X/TILE_PIX)
+#define TILES_PER_CHUNK_Y (CHUNK_PIX_Y/TILE_PIX)
 
 // 16x16 sprite sheet has how many rows/columns
 #define SHEET16_SIZE 8
@@ -25,16 +29,17 @@
 #define FLOOR_TILES 8
 
 // How big is the world in X and Y
-#define WORLD_SCREENS_X 4
-#define WORLD_SCREENS_Y 4
+#define WORLD_CHUNKS_X 4
+#define WORLD_CHUNKS_Y 4
+#define TOT_CHUNKS (WORLD_CHUNKS_X*WORLD_CHUNKS_Y)
 
-#define TOT_WORLD_X WORLD_SCREENS_X*SCREEN_X
-#define TOT_WORLD_Y WORLD_SCREENS_Y*SCREEN_Y
+#define TOT_WORLD_PIX_X (WORLD_CHUNKS_X*CHUNK_PIX_X)
+#define TOT_WORLD_PIX_Y (WORLD_CHUNKS_Y*CHUNK_PIX_Y)
 
 
-#define TOT_TILES_X TILES_X*WORLD_SCREENS_X
-#define TOT_TILES_Y TILES_Y*WORLD_SCREENS_Y
-#define TOT_TILES TOT_TILES_X*TOT_TILES_Y
+#define TOT_TILES_X (TILES_PER_CHUNK_X*WORLD_CHUNKS_X)
+#define TOT_TILES_Y (TILES_PER_CHUNK_Y*WORLD_CHUNKS_Y)
+#define TOT_TILES (TOT_TILES_X*TOT_TILES_Y)
 
 // Player acceleration and friction
 #define PLAYER_A 0.75f
@@ -46,7 +51,13 @@
 #define SCROLL_EDGE 0.8f
 
 // Conveyor directions
-enum kConvDir{SN, NS, EW, WE, SE, SW, NE, NW, EN, ES, WN, WS, kConvDirN};
+enum kConvDir{SN, NS, EW, WE, kConvDirN};
+
+// Chunk quadrants
+enum kChunkQuad{NE, SE, SW, NW};
+
+
+
 
 extern PlaydateAPI* pd;
 
