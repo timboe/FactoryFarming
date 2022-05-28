@@ -5,6 +5,10 @@
 #include "game.h"
 #include "sprite.h"
 #include "sound.h"
+#include "cargo.h"
+#include "location.h"
+#include "chunk.h"
+#include "player.h"
 
 #ifdef _WINDLL
 __declspec(dllexport)
@@ -12,14 +16,15 @@ __declspec(dllexport)
 
 static void init(void) {
   initSprite();
+  initCargo();
+  initLocation();
+  initChunk();
+  initPlayer();
   initSound();
   initGame();
 }
 
 static void deinit(void) {
-  deinitSprite();
-  deinitSound();
-  deinitGame();
 }
 
 int eventHandler(PlaydateAPI* playdate, PDSystemEvent event, uint32_t arg) {

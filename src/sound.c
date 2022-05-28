@@ -27,8 +27,3 @@ void initSound() {
 
   //m_a = pd->sound->sample->load("sounds/");
 }
-
-
-void deinitSound() {
-}
-

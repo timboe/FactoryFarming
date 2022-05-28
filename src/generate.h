@@ -1,6 +1,7 @@
 #pragma once
 #include "game.h"
 #include "sprite.h"
+#include "chunk.h"
 
 void generate(void);
 

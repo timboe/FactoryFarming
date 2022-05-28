@@ -1,10 +1,22 @@
 #include "game.h"
 #include "generate.h"
 #include "sprite.h"
-
+#include "chunk.h"
+#include "location.h"
 
 uint8_t* m_tiles = NULL;
 
+void setChunkBackgrounds(void);
+
+void setChunkAssociations(void);
+
+void setNonNeighborAssociationsFor(struct Chunk_t* _chunk);
+
+void doNonNeighborAssociation(struct Chunk_t* _chunk, struct Chunk_t** _theNeighborList, struct Chunk_t** _theNonNeighborList, uint32_t _theListSize);
+ 
+void setWorldEdges(void);
+
+/// ///
 
 void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   pd->graphics->pushContext(_chunk->m_bkgImage);
