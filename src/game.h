@@ -12,8 +12,11 @@
 
 #define TICK_FREQUENCY 32
 
+#define NEAR_TICK_FREQUENCY 2
+#define FAR_TICK_FREQUENCY 16
+
 #define NEAR_TICK_AMOUNT 1
-#define FAR_TICK_AMOUNT 16
+#define FAR_TICK_AMOUNT 8
 
 #define TILE_PIX 16
 

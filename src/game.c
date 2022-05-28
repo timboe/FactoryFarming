@@ -44,7 +44,10 @@ void gameClickConfigHandler(uint32_t _buttonPressed) {
     x += 5;
     for (int i = 0; i < TOT_TILES_Y; ++i) newConveyor(x, i, x % 2 ? SN : NS);
   } else if (kButtonA == _buttonPressed) {
-    for (int i = 0; i < TOT_TILES_Y; i += rand()%8 + 1) newCargo(x, i, kApple);
+    for (int i = 0; i < TOT_TILES_Y; i += rand()%8 + 1) {
+      newCargo(x, i, kApple);
+      break;
+    }
   }
 }
 
@@ -132,7 +135,6 @@ void chunkTickChunk(struct Chunk_t* _chunk, uint8_t _tick) {
 }
 
 void tickNear() {
-  return;
 
   chunkTickChunk(m_currentChunk, NEAR_TICK_AMOUNT);
 
@@ -203,14 +205,14 @@ int gameLoop(void* _data) {
 
   if (++m_frameCount == 1024) m_frameCount = 0;
 
-  if (getZoom() > 1 && m_frameCount % 2 == 0) {
+  if (getZoom() > 1 && m_frameCount % NEAR_TICK_FREQUENCY == 0) {
     animateConveyor();
   }
   
   movePlayer();
 
-  tickNear();
-  if (m_frameCount % FAR_TICK_AMOUNT == 0) tickFar();
+  if (m_frameCount % NEAR_TICK_FREQUENCY == 0) tickNear();
+  if (m_frameCount % FAR_TICK_FREQUENCY == 0) tickFar();
 
   render();
 
@@ -226,10 +228,10 @@ void chunkAddToRender(struct Chunk_t* _chunk) {
       struct Location_t* loc = _chunk->m_locations[i];
       pd->sprite->addSprite(loc->m_sprite);
     }
-    for (uint32_t i = 0; i < _chunk->m_nCargos; ++i) {
-      struct Cargo_t* cargo = _chunk->m_cargos[i];
-      pd->sprite->addSprite(cargo->m_sprite);
-    }
+  }
+  for (uint32_t i = 0; i < _chunk->m_nCargos; ++i) {
+    struct Cargo_t* cargo = _chunk->m_cargos[i];
+    pd->sprite->addSprite(cargo->m_sprite);
   }
 }
 

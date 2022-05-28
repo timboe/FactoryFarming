@@ -13,7 +13,10 @@ struct Chunk_t* m_edgeChunks;
 
 LCDBitmap* m_conveyorMasters[kConvDirN] = {NULL};
 
-uint16_t m_nConveyors = 0, m_nCargo = 0;
+uint16_t m_nConveyors = 0;
+
+uint16_t m_nCargo = 0;
+uint16_t m_cargoSearchLocation = 0;
 
 struct Location_t* m_locations = NULL;
 
@@ -54,26 +57,27 @@ LCDFont* loadFontAtPath(const char* _path) {
 }
 
 struct Cargo_t* cargoManagerNewCargo(void) {
-  struct Cargo_t* theCargo = &(m_worldCargos[m_nCargo]);
-  ++m_nCargo;
-  return theCargo;
-}
-
-void cargoManagerFreeCargo(struct Cargo_t* _cargo) {
-  int32_t idx = -1;
-  for (uint32_t i = 0; i < TOT_TILES; ++i) {
-    if (m_worldCargos[i].m_sprite == _cargo->m_sprite) {
-      idx = i;
-      break;
+  for (uint8_t try = 0; try < 2; ++try) {
+    const uint32_t start = (try == 0 ? m_cargoSearchLocation : 0);
+    for (uint32_t i = start; i < TOT_TILES; ++i) {
+      if (m_worldCargos[i].m_inUse == false) {
+        ++m_nCargo;
+        ++m_cargoSearchLocation; // Search from the start next time
+        m_worldCargos[i].m_inUse = true;
+        return &(m_worldCargos[i]);
+      }
     }
   }
   #ifdef DEV
-  if (idx == -1) pd->system->error("-1 in freeCargo!");
+  pd->system->error("Cannot allocate any more cargo!");
   #endif
-  for(uint32_t i = idx; i < TOT_TILES - 1; i++) {
-    m_worldCargos[i] = m_worldCargos[i + 1];
-  }
-  --(m_nCargo);
+  return NULL;
+}
+
+void cargoManagerFreeCargo(struct Cargo_t* _cargo) {
+  _cargo->m_inUse = false;
+  m_cargoSearchLocation = _cargo->m_index;
+  --m_nCargo;
 }
 
 
@@ -137,20 +141,22 @@ void conveyorUpdateFn(struct Location_t* _loc, uint8_t _tick) {
   if (_loc->m_progress < TILE_PIX) {
     _loc->m_progress = min(_loc->m_progress + _tick, TILE_PIX);
     switch (_loc->m_convDir) {
-      case SN:; pd->sprite->moveTo(_loc->m_cargo->m_sprite, _loc->m_x, _loc->m_y - _loc->m_progress); break;
-      case NS:; pd->sprite->moveTo(_loc->m_cargo->m_sprite, _loc->m_x, _loc->m_y + _loc->m_progress); break;
-      case WE:; pd->sprite->moveTo(_loc->m_cargo->m_sprite, _loc->m_x + _loc->m_progress, _loc->m_y); break;
-      case EW:; pd->sprite->moveTo(_loc->m_cargo->m_sprite, _loc->m_x - _loc->m_progress, _loc->m_y); break;
+      case SN:; pd->sprite->moveTo(_loc->m_cargo->m_sprite, _loc->m_pix_x, _loc->m_pix_y - _loc->m_progress); break;
+      case NS:; pd->sprite->moveTo(_loc->m_cargo->m_sprite, _loc->m_pix_x, _loc->m_pix_y + _loc->m_progress); break;
+      case WE:; pd->sprite->moveTo(_loc->m_cargo->m_sprite, _loc->m_pix_x + _loc->m_progress, _loc->m_pix_y); break;
+      case EW:; pd->sprite->moveTo(_loc->m_cargo->m_sprite, _loc->m_pix_x - _loc->m_progress, _loc->m_pix_y); break;
       case kConvDirN:; break;
     }
-  } else if (_loc->m_next != NULL && _loc->m_next->m_cargo == NULL) {
+    //pd->system->logToConsole("MOVE %i %i, %i", _loc->m_pix_x, _loc->m_pix_y, _loc->m_progress);
+  }
+  if (_loc->m_progress == TILE_PIX && _loc->m_next != NULL && _loc->m_next->m_cargo == NULL) {
     struct Cargo_t* theCargo = _loc->m_cargo;
     _loc->m_next->m_cargo = theCargo;
     _loc->m_cargo = NULL;
-    _loc->m_next->m_progress = 0;
-    _loc->m_progress = 0;
+    _loc->m_next->m_progress = 0
     // Cargo moves between chunks?
     if (_loc->m_next->m_chunk != _loc->m_chunk) {
+      //pd->system->logToConsole("CHANGE CHUNK");
       chunkRemoveCargo(_loc->m_chunk, theCargo);
       chunkAddCargo(_loc->m_next->m_chunk, theCargo);
     }
@@ -225,6 +231,7 @@ bool newConveyor(uint32_t _x, uint32_t _y, enum kConvDir _dir) {
   pd->sprite->setBounds(loc->m_sprite, bound);
   pd->sprite->setImage(loc->m_sprite, m_conveyorMasters[_dir], kBitmapUnflipped);
   pd->sprite->moveTo(loc->m_sprite, loc->m_pix_x, loc->m_pix_y);
+  pd->sprite->setZIndex(loc->m_sprite, 0);
 
   struct Location_t* above = getLocation(_x, _y - 1);
   struct Location_t* below = getLocation(_x, _y + 1);
@@ -268,6 +275,10 @@ bool newCargo(uint32_t _x, uint32_t _y, enum kCargoType _type) {
   if (loc->m_cargo != NULL) return false;
   if (loc->m_type != kConveyor) return false;
 
+  loc->m_x = _x;
+  loc->m_y = _y; // Should be assured already by loc->m_type == kConveyor check
+  struct Chunk_t* chunk = getChunk_fromLocation(loc);
+
   //pd->system->logToConsole("Set cargo, current %i", (int)loc->m_cargo);
 
   LCDBitmap* image = NULL;
@@ -283,11 +294,14 @@ bool newCargo(uint32_t _x, uint32_t _y, enum kCargoType _type) {
   PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX, .height = TILE_PIX};
   pd->sprite->setBounds(cargo->m_sprite, bound);
   pd->sprite->setImage(cargo->m_sprite, image, kBitmapUnflipped);
-  pd->sprite->moveTo(cargo->m_sprite, loc->m_x, loc->m_y);
+  pd->sprite->moveTo(cargo->m_sprite, loc->m_pix_x, loc->m_pix_y);
+  pd->sprite->setZIndex(cargo->m_sprite, 32767);
 
   loc->m_cargo = cargo;
 
-  updateRenderList();
+  chunkAddCargo(chunk, cargo);
+
+  updateRenderList(); // Do we want to do this here?
   return true;
 }
 
@@ -314,6 +328,9 @@ void initSprite() {
 
   m_worldCargos = pd->system->realloc(NULL, TOT_TILES * sizeof(struct Cargo_t));
   memset(m_worldCargos, 0, TOT_TILES * sizeof(struct Cargo_t));
+  for (uint32_t i = 0; i < TOT_TILES; ++i) {
+    m_worldCargos[i].m_index = i;
+  }
 
   m_chunks = pd->system->realloc(NULL, TOT_CHUNKS * sizeof(struct Chunk_t));
   memset(m_chunks, 0, TOT_CHUNKS * sizeof(struct Chunk_t));
