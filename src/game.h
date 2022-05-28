@@ -3,6 +3,8 @@
 #define DEBUG_MODE
 #define DEV
 
+#define PRETEND_ZOOMED_IN false
+
 #include "pd_api.h"
 
 #include <stdio.h>
@@ -10,10 +12,16 @@
 
 #define TICK_FREQUENCY 32
 
+#define NEAR_TICK_AMOUNT 1
+#define FAR_TICK_AMOUNT 16
+
 #define TILE_PIX 16
 
-#define SCREEN_PIX_X (400-TILE_PIX)
-#define SCREEN_PIX_Y (240-TILE_PIX)
+#define DEVICE_PIX_X 400
+#define DEVICE_PIX_Y 240
+
+#define SCREEN_PIX_X (DEVICE_PIX_X-TILE_PIX)
+#define SCREEN_PIX_Y (DEVICE_PIX_Y-TILE_PIX)
 
 #define CHUNK_PIX_X (SCREEN_PIX_X/2)
 #define CHUNK_PIX_Y (SCREEN_PIX_Y/2)
@@ -23,6 +31,7 @@
 
 #define TILES_PER_CHUNK_X (CHUNK_PIX_X/TILE_PIX)
 #define TILES_PER_CHUNK_Y (CHUNK_PIX_Y/TILE_PIX)
+#define TILES_PER_CHUNK (TILES_PER_CHUNK_X*TILES_PER_CHUNK_Y)
 
 // 16x16 sprite sheet has how many rows/columns
 #define SHEET16_SIZE 8
@@ -75,6 +84,8 @@ void deinitGame(void);
 
 void gameClickConfigHandler(uint32_t _buttonPressed);
 void clickHandlerReplacement(void);
+
+void updateRenderList(void);
 
 uint8_t getZoom(void);
 

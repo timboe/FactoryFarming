@@ -10,7 +10,7 @@
 __declspec(dllexport)
 #endif
 
-static void init() {
+static void init(void) {
   initSprite();
   initSound();
   initGame();
@@ -25,7 +25,7 @@ static void deinit(void) {
 int eventHandler(PlaydateAPI* playdate, PDSystemEvent event, uint32_t arg) {
   if (event == kEventInit) {
     setPDPtr(playdate);
-    init(playdate);
+    init();
     playdate->display->setRefreshRate(TICK_FREQUENCY);
     playdate->system->setUpdateCallback(gameLoop, NULL);
     #ifdef DEV

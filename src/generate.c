@@ -8,6 +8,7 @@ uint8_t* m_tiles = NULL;
 
 void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   pd->graphics->pushContext(_chunk->m_bkgImage);
+  pd->graphics->setDrawMode(kDrawModeCopy);
   for (uint16_t v = 0; v < TILES_PER_CHUNK_Y; ++v) {
     for (uint16_t u = 0; u < TILES_PER_CHUNK_X; ++u) {
       uint8_t t = m_tiles[ (WORLD_CHUNKS_X * TILES_PER_CHUNK_X)*((TILES_PER_CHUNK_Y * _chunk->m_y) + v) + ((TILES_PER_CHUNK_X * _chunk->m_x) + u) ];
@@ -111,11 +112,41 @@ void setWorldEdges(void) {
 
 }
 
-// Each chunk should know who its neighbors are for fast rendering
-void setChunkAssociations(void) {
+void doNonNeighborAssociation(struct Chunk_t* _chunk, struct Chunk_t** _theNeighborList, struct Chunk_t** _theNonNeighborList, uint32_t _theListSize) {
+  uint32_t counter = 0;
   for (uint16_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
     for (uint16_t x = 0; x < WORLD_CHUNKS_X; ++x) {
-      struct Chunk_t* c = getChunk(x, y);
+      struct Chunk_t* testChunk = getChunk_noCheck(x, y);
+
+      bool found = (testChunk == _chunk);
+      for (uint32_t i = 0; i < _theListSize; ++i) {
+        if (_theNeighborList[i] == testChunk) {
+          found = true;
+          break;
+        }
+      }
+
+      if (!found) {
+        _theNonNeighborList[counter++] = testChunk;
+      }
+    }
+  }
+}
+
+void setNonNeighborAssociationsFor(struct Chunk_t* _chunk) {
+  doNonNeighborAssociation(_chunk, _chunk->m_neighborsNE, _chunk->m_nonNeighborsNE, CHUNK_NEIGHBORS_CORNER);
+  doNonNeighborAssociation(_chunk, _chunk->m_neighborsSE, _chunk->m_nonNeighborsSE, CHUNK_NEIGHBORS_CORNER);
+  doNonNeighborAssociation(_chunk, _chunk->m_neighborsSW, _chunk->m_nonNeighborsSW, CHUNK_NEIGHBORS_CORNER);
+  doNonNeighborAssociation(_chunk, _chunk->m_neighborsNW, _chunk->m_nonNeighborsNW, CHUNK_NEIGHBORS_CORNER);
+  doNonNeighborAssociation(_chunk, _chunk->m_neighborsALL, _chunk->m_nonNeighborsALL, CHUNK_NEIGHBORS_ALL);
+}
+
+// Each chunk should know who its neighbors are for fast rendering
+void setChunkAssociations(void) {
+  // Set neighbor associations
+  for (uint16_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
+    for (uint16_t x = 0; x < WORLD_CHUNKS_X; ++x) {
+      struct Chunk_t* c = getChunk_noCheck(x, y);
       c->m_neighborsNE[0] = getChunk(x + 0, y - 1);
       c->m_neighborsNE[1] = getChunk(x + 1, y - 1);
       c->m_neighborsNE[2] = getChunk(x + 1, y + 0);
@@ -140,6 +171,13 @@ void setChunkAssociations(void) {
       c->m_neighborsALL[5] = getChunk(x - 1, y + 1);
       c->m_neighborsALL[6] = getChunk(x - 1, y + 0);
       c->m_neighborsALL[7] = getChunk(x - 1, y - 1);
+    }
+  }
+
+  // Set non-neighbor associations
+  for (uint16_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
+    for (uint16_t x = 0; x < WORLD_CHUNKS_X; ++x) {
+      setNonNeighborAssociationsFor(getChunk_noCheck(x, y));
     }
   }
 }

@@ -18,7 +18,9 @@ int16_t m_offX, m_offY = 0; // Screen offsets
 struct Chunk_t* m_currentChunk;
 enum kChunkQuad m_quadrant = 0;
 
-void updateRenderList(struct Chunk_t* _chunk, enum kChunkQuad _quadrant);
+
+void tickNear(void);
+void tickFar(void);
 
 ////////////
 
@@ -41,9 +43,8 @@ void gameClickConfigHandler(uint32_t _buttonPressed) {
   else if (kButtonB == _buttonPressed) {
     x += 5;
     for (int i = 0; i < TOT_TILES_Y; ++i) newConveyor(x, i, x % 2 ? SN : NS);
-
   } else if (kButtonA == _buttonPressed) {
-    for (int i = 0; i < TOT_TILES_Y; i += rand()%4 + 1) newCargo(x, i, kApple);
+    for (int i = 0; i < TOT_TILES_Y; i += rand()%8 + 1) newCargo(x, i, kApple);
   }
 }
 
@@ -68,18 +69,20 @@ void clickHandlerReplacement() {
   if (m_rot > 260.0f) {
     m_rot = 0.0f;
     if (m_zoom < 4) {
+      pd->system->logToConsole("ZOOM IN");
       m_zoom *= 2;
       m_offX = getPlayer()->m_x - (SCREEN_PIX_X / (m_zoom * 2)); // TODO this is wrong
       m_offY = getPlayer()->m_y - (SCREEN_PIX_Y / (m_zoom * 2));
-      if (m_zoom == 2) updateRenderList(m_currentChunk, m_quadrant); // Zoom 1-to-2, add detail
+      if (m_zoom == 2) updateRenderList(); // Zoom 1-to-2, add detail
     }
-  } else if (m_rot < -45.0f) {
+  } else if (m_rot < -260.0f) {
     m_rot = 0.0f;
+    pd->system->logToConsole("ZOOM OUT");
     if (m_zoom > 1) {
       m_zoom /= 2;
       m_offX = getPlayer()->m_x - (SCREEN_PIX_X / (m_zoom * 2));
       m_offY = getPlayer()->m_y - (SCREEN_PIX_Y / (m_zoom * 2));
-      if (m_zoom == 1) updateRenderList(m_currentChunk, m_quadrant); // Zoom 2-to-1, remove detail
+      if (m_zoom == 1) updateRenderList(); // Zoom 2-to-1, remove detail
     }
   }
 }
@@ -89,37 +92,125 @@ uint8_t getZoom() {
 }
 
 void render() {
-  pd->display->setScale(getZoom());
+  pd->graphics->setDrawMode(kDrawModeCopy);
+  pd->graphics->setDrawOffset(m_offX, m_offY);
+  pd->display->setScale(getZoom()); 
 
   pd->sprite->updateAndDrawSprites();
+
+
+///////////////
+
+  pd->graphics->setDrawOffset(0, 0);
+  //pd->display->setScale(1); // Breaks...
+
+  // GUI
+  pd->graphics->fillRect(SCREEN_PIX_X/m_zoom, 0, TILE_PIX/m_zoom, DEVICE_PIX_Y/m_zoom, kColorBlack);
+  pd->graphics->fillRect(0, SCREEN_PIX_Y/m_zoom, DEVICE_PIX_X/m_zoom, TILE_PIX/m_zoom, kColorBlack);
 
   // Draw FPS indicator (dbg only)
   #ifdef DEBUG_MODE
   pd->system->drawFPS(0, 0);
-
-  if (getZoom() == 1) {
-    static char text[32];
-    snprintf(text, 32, "Conveyors:%u", getNConveyors());
-    setRoobert11();
-    pd->graphics->drawText(text, 16, kASCIIEncoding, TILE_PIX - m_offX, 1*TILE_PIX - m_offY);
-    snprintf(text, 32, "Cargo:%u", getNCargo());
-    pd->graphics->drawText(text, 16, kASCIIEncoding, TILE_PIX - m_offX, 2*TILE_PIX - m_offY);
-  }
   #endif
+
+  static char text[32];
+  snprintf(text, 32, "Conveyors:%u", getNConveyors());
+  setRoobert10();
+  pd->graphics->setDrawMode(kDrawModeFillWhite);
+  pd->graphics->drawText(text, 16, kASCIIEncoding, 0, SCREEN_PIX_Y);
+  snprintf(text, 32, "Cargo:%u", getNCargo());
+  pd->graphics->drawText(text, 16, kASCIIEncoding, 10*TILE_PIX, SCREEN_PIX_Y);
+  
 }
 
+void chunkTickChunk(struct Chunk_t* _chunk, uint8_t _tick) {
+  //pd->system->logToConsole("Asked to tick %i for %i", _tick, _chunk);
+  for (uint32_t i = 0; i < _chunk->m_nLocations; ++i) {
+    struct Location_t* loc = _chunk->m_locations[i];
+    (*loc->m_updateFn)(loc, _tick);
+  }
+}
 
+void tickNear() {
+  return;
+
+  chunkTickChunk(m_currentChunk, NEAR_TICK_AMOUNT);
+
+  if (getZoom() == 1 && !PRETEND_ZOOMED_IN) {
+    for (uint32_t i = 0; i < CHUNK_NEIGHBORS_ALL; ++i) {
+      chunkTickChunk(m_currentChunk->m_neighborsALL[i], NEAR_TICK_AMOUNT);
+    }
+  } else {
+    switch (m_quadrant) {
+      case NE:;
+        chunkTickChunk(m_currentChunk->m_neighborsNE[0], NEAR_TICK_AMOUNT);
+        chunkTickChunk(m_currentChunk->m_neighborsNE[1], NEAR_TICK_AMOUNT);
+        chunkTickChunk(m_currentChunk->m_neighborsNE[2], NEAR_TICK_AMOUNT);
+        break;
+      case SE:;
+        chunkTickChunk(m_currentChunk->m_neighborsSE[0], NEAR_TICK_AMOUNT);
+        chunkTickChunk(m_currentChunk->m_neighborsSE[1], NEAR_TICK_AMOUNT);
+        chunkTickChunk(m_currentChunk->m_neighborsSE[2], NEAR_TICK_AMOUNT);
+        break;
+      case SW:;
+        chunkTickChunk(m_currentChunk->m_neighborsSW[0], NEAR_TICK_AMOUNT);
+        chunkTickChunk(m_currentChunk->m_neighborsSW[1], NEAR_TICK_AMOUNT);
+        chunkTickChunk(m_currentChunk->m_neighborsSW[2], NEAR_TICK_AMOUNT);
+        break;
+      case NW:;
+        chunkTickChunk(m_currentChunk->m_neighborsNW[0], NEAR_TICK_AMOUNT);
+        chunkTickChunk(m_currentChunk->m_neighborsNW[1], NEAR_TICK_AMOUNT);
+        chunkTickChunk(m_currentChunk->m_neighborsNW[2], NEAR_TICK_AMOUNT);
+        break;
+    }
+  }
+}
+
+void tickFar() {
+  if (getZoom() == 1 && !PRETEND_ZOOMED_IN) {
+    for (uint32_t i = 0; i < (TOT_CHUNKS - CHUNK_NEIGHBORS_ALL - 1); ++i) { // The "- 1" is for "me"
+      //pd->system->logToConsole("B %u = %i", i, (int) m_currentChunk->m_nonNeighborsALL[i]);
+      chunkTickChunk(m_currentChunk->m_nonNeighborsALL[i], FAR_TICK_AMOUNT);
+    }
+  } else {
+    switch (m_quadrant) {
+      case NE:;
+        for (uint32_t i = 0; i < (TOT_CHUNKS - CHUNK_NEIGHBORS_CORNER - 1); ++i) {
+          chunkTickChunk(m_currentChunk->m_nonNeighborsNE[i], FAR_TICK_AMOUNT);
+        }
+        break;
+      case SE:;
+        for (uint32_t i = 0; i < (TOT_CHUNKS - CHUNK_NEIGHBORS_CORNER - 1); ++i) {
+          chunkTickChunk(m_currentChunk->m_nonNeighborsSE[i], FAR_TICK_AMOUNT);
+        }
+        break;
+      case SW:;
+        for (uint32_t i = 0; i < (TOT_CHUNKS - CHUNK_NEIGHBORS_CORNER - 1); ++i) {
+          chunkTickChunk(m_currentChunk->m_nonNeighborsSW[i], FAR_TICK_AMOUNT);
+        }
+        break;
+      case NW:;
+        for (uint32_t i = 0; i < (TOT_CHUNKS - CHUNK_NEIGHBORS_CORNER - 1); ++i) {
+          chunkTickChunk(m_currentChunk->m_nonNeighborsNW[i], FAR_TICK_AMOUNT);
+        }
+        break;
+    }
+  }
+} 
 
 int gameLoop(void* _data) {
   clickHandlerReplacement();
 
   if (++m_frameCount == 1024) m_frameCount = 0;
 
-  if (getZoom() > 1) {
+  if (getZoom() > 1 && m_frameCount % 2 == 0) {
     animateConveyor();
   }
   
   movePlayer();
+
+  tickNear();
+  if (m_frameCount % FAR_TICK_AMOUNT == 0) tickFar();
 
   render();
 
@@ -133,45 +224,48 @@ void chunkAddToRender(struct Chunk_t* _chunk) {
   if (getZoom() > 1) {
     for (uint32_t i = 0; i < _chunk->m_nLocations; ++i) {
       struct Location_t* loc = _chunk->m_locations[i];
-      if (loc->m_type == kConveyor) {
-        pd->sprite->addSprite(loc->m_sprite);
-      }
+      pd->sprite->addSprite(loc->m_sprite);
+    }
+    for (uint32_t i = 0; i < _chunk->m_nCargos; ++i) {
+      struct Cargo_t* cargo = _chunk->m_cargos[i];
+      pd->sprite->addSprite(cargo->m_sprite);
     }
   }
 }
 
-void updateRenderList(struct Chunk_t* _chunk, enum kChunkQuad _quadrant) {
+void updateRenderList() {
+
   pd->sprite->removeAllSprites();
 
   pd->sprite->addSprite(getPlayer()->m_sprite);
 
-  chunkAddToRender(_chunk);
+  chunkAddToRender(m_currentChunk);
 
-  if (getZoom() == 1) {
+  if (getZoom() == 1 && !PRETEND_ZOOMED_IN) {
     for (uint32_t i = 0; i < CHUNK_NEIGHBORS_ALL; ++i) {
-      chunkAddToRender(_chunk->m_neighborsALL[i]);
+      chunkAddToRender(m_currentChunk->m_neighborsALL[i]);
     }
   } else {
-    switch (_quadrant) {
+    switch (m_quadrant) {
       case NE:;
-        chunkAddToRender(_chunk->m_neighborsNE[0]);
-        chunkAddToRender(_chunk->m_neighborsNE[1]);
-        chunkAddToRender(_chunk->m_neighborsNE[2]);
+        chunkAddToRender(m_currentChunk->m_neighborsNE[0]);
+        chunkAddToRender(m_currentChunk->m_neighborsNE[1]);
+        chunkAddToRender(m_currentChunk->m_neighborsNE[2]);
         break;
       case SE:;
-        chunkAddToRender(_chunk->m_neighborsSE[0]);
-        chunkAddToRender(_chunk->m_neighborsSE[1]);
-        chunkAddToRender(_chunk->m_neighborsSE[2]);
+        chunkAddToRender(m_currentChunk->m_neighborsSE[0]);
+        chunkAddToRender(m_currentChunk->m_neighborsSE[1]);
+        chunkAddToRender(m_currentChunk->m_neighborsSE[2]);
         break;
       case SW:;
-        chunkAddToRender(_chunk->m_neighborsSW[0]);
-        chunkAddToRender(_chunk->m_neighborsSW[1]);
-        chunkAddToRender(_chunk->m_neighborsSW[2]);
+        chunkAddToRender(m_currentChunk->m_neighborsSW[0]);
+        chunkAddToRender(m_currentChunk->m_neighborsSW[1]);
+        chunkAddToRender(m_currentChunk->m_neighborsSW[2]);
         break;
       case NW:;
-        chunkAddToRender(_chunk->m_neighborsNW[0]);
-        chunkAddToRender(_chunk->m_neighborsNW[1]);
-        chunkAddToRender(_chunk->m_neighborsNW[2]);
+        chunkAddToRender(m_currentChunk->m_neighborsNW[0]);
+        chunkAddToRender(m_currentChunk->m_neighborsNW[1]);
+        chunkAddToRender(m_currentChunk->m_neighborsNW[2]);
         break;
     }
   }
@@ -206,7 +300,7 @@ bool movePlayer() {
 
   goalX += p->m_vX;
   goalY += p->m_vY;
-*/
+  */
 
   if (m_pressed[0]) goalX -= 4;
   if (m_pressed[1]) goalX += 4;
@@ -222,11 +316,11 @@ bool movePlayer() {
 
   pd->sprite->setZIndex(p->m_sprite, (int16_t)p->m_y);
 
-  if      ((m_offX + p->m_x) > ((SCREEN_PIX_X / m_zoom) * SCROLL_EDGE))          m_offX = ((SCREEN_PIX_X / m_zoom) * SCROLL_EDGE) - p->m_x;
-  else if ((m_offX + p->m_x) < ((SCREEN_PIX_X / m_zoom) * (1.0f - SCROLL_EDGE))) m_offX = ((SCREEN_PIX_X / m_zoom) * (1.0f - SCROLL_EDGE)) - p->m_x;
+  //if      ((m_offX + p->m_x) > ((SCREEN_PIX_X / m_zoom) * SCROLL_EDGE))          m_offX = ((SCREEN_PIX_X / m_zoom) * SCROLL_EDGE) - p->m_x;
+  //else if ((m_offX + p->m_x) < ((SCREEN_PIX_X / m_zoom) * (1.0f - SCROLL_EDGE))) m_offX = ((SCREEN_PIX_X / m_zoom) * (1.0f - SCROLL_EDGE)) - p->m_x;
 
-  if      ((m_offY + p->m_y) > ((SCREEN_PIX_Y / m_zoom) * SCROLL_EDGE))          m_offY = ((SCREEN_PIX_Y / m_zoom) * SCROLL_EDGE) - p->m_y;
-  else if ((m_offY + p->m_y) < ((SCREEN_PIX_Y / m_zoom) * (1.0f - SCROLL_EDGE))) m_offY = ((SCREEN_PIX_Y / m_zoom) * (1.0f - SCROLL_EDGE)) - p->m_y;
+  //if      ((m_offY + p->m_y) > ((SCREEN_PIX_Y / m_zoom) * SCROLL_EDGE))          m_offY = ((SCREEN_PIX_Y / m_zoom) * SCROLL_EDGE) - p->m_y;
+  //else if ((m_offY + p->m_y) < ((SCREEN_PIX_Y / m_zoom) * (1.0f - SCROLL_EDGE))) m_offY = ((SCREEN_PIX_Y / m_zoom) * (1.0f - SCROLL_EDGE)) - p->m_y;
 
   if (p->m_x > TOT_WORLD_PIX_X) {
     pd->sprite->moveTo(p->m_sprite, p->m_x - TOT_WORLD_PIX_X, p->m_y);
@@ -252,6 +346,10 @@ bool movePlayer() {
   //pd->system->logToConsole("CHX %f / %f = %f", p->m_x, (float)CHUNK_PIX_X, ((p->m_x)/((float)CHUNK_PIX_X)));
 
 
+  m_offX = -(p->m_x - SCREEN_PIX_X/(2 * getZoom()));
+  m_offY = -(p->m_y - SCREEN_PIX_Y/(2 * getZoom()));
+
+
   // Check chunk change
   uint16_t chunkX = p->m_x / CHUNK_PIX_X;
   uint16_t chunkY = p->m_y / CHUNK_PIX_Y;
@@ -272,11 +370,8 @@ bool movePlayer() {
     m_currentChunk = getChunk(chunkX, chunkY); // TODO this can still go out-of-bounds (how?), ideally should be able to use getChunk_noCheck here
     m_quadrant = quadrant;
     pd->system->logToConsole("CHUNKCHANGE %u %u (%u %u)", chunkX, chunkY, subChunkX, subChunkY);
-    updateRenderList(m_currentChunk, m_quadrant);
+    updateRenderList();
   }
-
-
-  pd->graphics->setDrawOffset(m_offX, m_offY);
 
   return true;
 }
@@ -291,4 +386,5 @@ void initGame() {
 }
 
 void deinitGame() {
+
 }
