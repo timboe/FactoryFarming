@@ -156,7 +156,7 @@ bool newConveyor(uint32_t _x, uint32_t _y, enum kConvDir _dir) {
   PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX, .height = TILE_PIX};
   pd->sprite->setBounds(loc->m_sprite, bound);
   pd->sprite->setImage(loc->m_sprite, m_conveyorMasters[_dir], kBitmapUnflipped);
-  pd->sprite->moveTo(loc->m_sprite, loc->m_x, loc->m_y);
+  pd->sprite->moveTo(loc->m_sprite, loc->m_pix_x, loc->m_pix_y);
 
   struct Location_t* above = getLocation(_x, _y - 1);
   struct Location_t* below = getLocation(_x, _y + 1);

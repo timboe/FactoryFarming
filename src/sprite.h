@@ -31,13 +31,13 @@ struct Chunk_t{
   uint16_t m_y;
 
   LCDSprite* m_bkgSprite;
-  LCDBitmap* m_bkgImage;
+  LCDBitmap* m_bkgImage; 
 
-  struct Chunk_t* m_neighboursNE[3];
-  struct Chunk_t* m_neighboursSE[3];
-  struct Chunk_t* m_neighboursSW[3];
-  struct Chunk_t* m_neighboursNW[3];
-  struct Chunk_t* m_neighboursALL[8];
+  struct Chunk_t* m_neighborsNE[CHUNK_NEIGHBORS_CORNER];
+  struct Chunk_t* m_neighborsSE[CHUNK_NEIGHBORS_CORNER];
+  struct Chunk_t* m_neighborsSW[CHUNK_NEIGHBORS_CORNER];
+  struct Chunk_t* m_neighborsNW[CHUNK_NEIGHBORS_CORNER];
+  struct Chunk_t* m_neighborsALL[CHUNK_NEIGHBORS_ALL];
 
   uint16_t m_nLocations;
   struct Location_t* m_locations[TILES_PER_CHUNK_X * TILES_PER_CHUNK_Y];

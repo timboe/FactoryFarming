@@ -51,8 +51,8 @@ void setWorldEdges(void) {
     pd->sprite->setImage(chunk->m_bkgSprite, getChunk(x, WORLD_CHUNKS_Y-1)->m_bkgImage, kBitmapUnflipped);
     pd->sprite->moveTo(chunk->m_bkgSprite, CHUNK_PIX_X*x + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*-1 + CHUNK_PIX_Y/2.0f);
     pd->sprite->setZIndex(chunk->m_bkgSprite, -1);
-    getChunk(x, 0)->m_neighboursNE[0] = chunk;
-    getChunk(x, 0)->m_neighboursNW[2] = chunk;
+    //getChunk(x, 0)->m_neighborsNE[0] = chunk;
+    //getChunk(x, 0)->m_neighborsNW[2] = chunk;
 
 
     chunk = getEdgeChunk(c++); // Bottom
@@ -60,8 +60,8 @@ void setWorldEdges(void) {
     pd->sprite->setImage(chunk->m_bkgSprite, getChunk(x, 0)->m_bkgImage, kBitmapUnflipped);
     pd->sprite->moveTo(chunk->m_bkgSprite, CHUNK_PIX_X*x + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*WORLD_CHUNKS_Y + CHUNK_PIX_Y/2.0f);
     pd->sprite->setZIndex(chunk->m_bkgSprite, -1);
-    getChunk(x, WORLD_CHUNKS_Y-1)->m_neighboursSE[2] = chunk;
-    getChunk(x, WORLD_CHUNKS_Y-1)->m_neighboursSW[0] = chunk;
+    //getChunk(x, WORLD_CHUNKS_Y-1)->m_neighborsSE[2] = chunk;
+    //getChunk(x, WORLD_CHUNKS_Y-1)->m_neighborsSW[0] = chunk;
     ++x;
   }
 
@@ -71,16 +71,16 @@ void setWorldEdges(void) {
     pd->sprite->setImage(chunk->m_bkgSprite, getChunk(WORLD_CHUNKS_X-1, y)->m_bkgImage, kBitmapUnflipped);
     pd->sprite->moveTo(chunk->m_bkgSprite, CHUNK_PIX_X*-1 + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*y + CHUNK_PIX_Y/2.0f);
     pd->sprite->setZIndex(chunk->m_bkgSprite, -1);
-    getChunk(0, y)->m_neighboursSW[2] = chunk;
-    getChunk(0, y)->m_neighboursNW[0] = chunk;
+    //getChunk(0, y)->m_neighborsSW[2] = chunk;
+    //getChunk(0, y)->m_neighborsNW[0] = chunk;
 
     chunk = getEdgeChunk(c++); // Right
     if (chunk->m_bkgSprite == NULL) chunk->m_bkgSprite = pd->sprite->newSprite();
     pd->sprite->setImage(chunk->m_bkgSprite, getChunk(0, y)->m_bkgImage, kBitmapUnflipped);
     pd->sprite->moveTo(chunk->m_bkgSprite, CHUNK_PIX_X*WORLD_CHUNKS_X + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*y + CHUNK_PIX_Y/2.0f);
     pd->sprite->setZIndex(chunk->m_bkgSprite, -1);
-    getChunk(WORLD_CHUNKS_Y-1, y)->m_neighboursSE[0] = chunk;
-    getChunk(WORLD_CHUNKS_Y-1, y)->m_neighboursNE[2] = chunk;
+    //getChunk(WORLD_CHUNKS_Y-1, y)->m_neighborsSE[0] = chunk;
+    //getChunk(WORLD_CHUNKS_Y-1, y)->m_neighborsNE[2] = chunk;
     ++y;
   }
 
@@ -111,35 +111,35 @@ void setWorldEdges(void) {
 
 }
 
-// Each chunk should know who its neighbours are for fast rendering
+// Each chunk should know who its neighbors are for fast rendering
 void setChunkAssociations(void) {
   for (uint16_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
     for (uint16_t x = 0; x < WORLD_CHUNKS_X; ++x) {
       struct Chunk_t* c = getChunk(x, y);
-      c->m_neighboursNE[0] = getChunk(x + 0, y - 1);
-      c->m_neighboursNE[1] = getChunk(x + 1, y - 1);
-      c->m_neighboursNE[2] = getChunk(x + 1, y + 0);
+      c->m_neighborsNE[0] = getChunk(x + 0, y - 1);
+      c->m_neighborsNE[1] = getChunk(x + 1, y - 1);
+      c->m_neighborsNE[2] = getChunk(x + 1, y + 0);
 
-      c->m_neighboursSE[0] = getChunk(x + 1, y + 0);
-      c->m_neighboursSE[1] = getChunk(x + 1, y + 1);
-      c->m_neighboursSE[2] = getChunk(x + 0, y + 1);
+      c->m_neighborsSE[0] = getChunk(x + 1, y + 0);
+      c->m_neighborsSE[1] = getChunk(x + 1, y + 1);
+      c->m_neighborsSE[2] = getChunk(x + 0, y + 1);
 
-      c->m_neighboursSW[0] = getChunk(x + 0, y + 1);
-      c->m_neighboursSW[1] = getChunk(x - 1, y + 1);
-      c->m_neighboursSW[2] = getChunk(x - 1, y + 0);
+      c->m_neighborsSW[0] = getChunk(x + 0, y + 1);
+      c->m_neighborsSW[1] = getChunk(x - 1, y + 1);
+      c->m_neighborsSW[2] = getChunk(x - 1, y + 0);
 
-      c->m_neighboursNW[0] = getChunk(x - 1, y + 0);
-      c->m_neighboursNW[1] = getChunk(x - 1, y - 1);
-      c->m_neighboursNW[2] = getChunk(x + 0, y - 1);
+      c->m_neighborsNW[0] = getChunk(x - 1, y + 0);
+      c->m_neighborsNW[1] = getChunk(x - 1, y - 1);
+      c->m_neighborsNW[2] = getChunk(x + 0, y - 1);
 
-      c->m_neighboursALL[0] = getChunk(x + 0, y - 1);
-      c->m_neighboursALL[1] = getChunk(x + 1, y - 1);
-      c->m_neighboursALL[2] = getChunk(x + 1, y + 0);
-      c->m_neighboursALL[3] = getChunk(x + 1, y + 1);
-      c->m_neighboursALL[4] = getChunk(x + 0, y + 1);
-      c->m_neighboursALL[5] = getChunk(x - 1, y + 1);
-      c->m_neighboursALL[6] = getChunk(x - 1, y + 0);
-      c->m_neighboursALL[7] = getChunk(x - 1, y - 1);
+      c->m_neighborsALL[0] = getChunk(x + 0, y - 1);
+      c->m_neighborsALL[1] = getChunk(x + 1, y - 1);
+      c->m_neighborsALL[2] = getChunk(x + 1, y + 0);
+      c->m_neighborsALL[3] = getChunk(x + 1, y + 1);
+      c->m_neighborsALL[4] = getChunk(x + 0, y + 1);
+      c->m_neighborsALL[5] = getChunk(x - 1, y + 1);
+      c->m_neighborsALL[6] = getChunk(x - 1, y + 0);
+      c->m_neighborsALL[7] = getChunk(x - 1, y - 1);
     }
   }
 }

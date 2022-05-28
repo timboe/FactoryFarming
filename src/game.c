@@ -15,12 +15,12 @@ uint8_t m_zoom = 1;
 
 int16_t m_offX, m_offY = 0; // Screen offsets
 
-uint16_t m_curChunkX = 0;
-uint16_t m_curChunkY = 0; 
-
-uint8_t m_curSubChunkX = 0;
-uint8_t m_curSubChunkY = 0;
+struct Chunk_t* m_currentChunk;
 enum kChunkQuad m_quadrant = 0;
+
+void updateRenderList(struct Chunk_t* _chunk, enum kChunkQuad _quadrant);
+
+////////////
 
 
 int getFrameCount() { 
@@ -65,12 +65,13 @@ void clickHandlerReplacement() {
   if (released & kButtonDown) m_pressed[3] = 0;
 
   m_rot += pd->system->getCrankChange();
-  if (m_rot > 45.0f) {
+  if (m_rot > 260.0f) {
     m_rot = 0.0f;
     if (m_zoom < 4) {
       m_zoom *= 2;
       m_offX = getPlayer()->m_x - (SCREEN_PIX_X / (m_zoom * 2)); // TODO this is wrong
       m_offY = getPlayer()->m_y - (SCREEN_PIX_Y / (m_zoom * 2));
+      if (m_zoom == 2) updateRenderList(m_currentChunk, m_quadrant); // Zoom 1-to-2, add detail
     }
   } else if (m_rot < -45.0f) {
     m_rot = 0.0f;
@@ -78,6 +79,7 @@ void clickHandlerReplacement() {
       m_zoom /= 2;
       m_offX = getPlayer()->m_x - (SCREEN_PIX_X / (m_zoom * 2));
       m_offY = getPlayer()->m_y - (SCREEN_PIX_Y / (m_zoom * 2));
+      if (m_zoom == 1) updateRenderList(m_currentChunk, m_quadrant); // Zoom 2-to-1, remove detail
     }
   }
 }
@@ -87,8 +89,7 @@ uint8_t getZoom() {
 }
 
 void render() {
-  pd->display->setScale(m_zoom);
-
+  pd->display->setScale(getZoom());
 
   pd->sprite->updateAndDrawSprites();
 
@@ -110,54 +111,69 @@ void render() {
 
 
 int gameLoop(void* _data) {
-
   clickHandlerReplacement();
 
   if (++m_frameCount == 1024) m_frameCount = 0;
-  bool requestRedraw = true;
 
-  animateConveyor();
+  if (getZoom() > 1) {
+    animateConveyor();
+  }
   
   movePlayer();
 
-  if (requestRedraw) {
-    render();
-  }
+  render();
 
-  // TODO: The docs say that returning 0 does not request a redraw,
-  // but it is currently required
-  requestRedraw = true;
-
-  return (int)requestRedraw;
+  return 1;
 }
 
-void updateRenderListZoom(struct Chunk_t* chunk, enum kChunkQuad quadrant) {
+void chunkAddToRender(struct Chunk_t* _chunk) {
+  // TODO in the future all chunks should have all backgrounds populated
+  //pd->system->logToConsole("CATR %i %i", _chunk->m_x, _chunk->m_y);
+  if (_chunk->m_bkgSprite) pd->sprite->addSprite(_chunk->m_bkgSprite);
+  if (getZoom() > 1) {
+    for (uint32_t i = 0; i < _chunk->m_nLocations; ++i) {
+      struct Location_t* loc = _chunk->m_locations[i];
+      if (loc->m_type == kConveyor) {
+        pd->sprite->addSprite(loc->m_sprite);
+      }
+    }
+  }
+}
+
+void updateRenderList(struct Chunk_t* _chunk, enum kChunkQuad _quadrant) {
   pd->sprite->removeAllSprites();
 
   pd->sprite->addSprite(getPlayer()->m_sprite);
 
-  pd->sprite->addSprite(chunk->m_bkgSprite);
-  switch (quadrant) {
-    case NE:;
-      pd->sprite->addSprite(chunk->m_neighboursNE[0]->m_bkgSprite);
-      pd->sprite->addSprite(chunk->m_neighboursNE[1]->m_bkgSprite);
-      pd->sprite->addSprite(chunk->m_neighboursNE[2]->m_bkgSprite);
-      break;
-    case SE:;
-      pd->sprite->addSprite(chunk->m_neighboursSE[0]->m_bkgSprite);
-      pd->sprite->addSprite(chunk->m_neighboursSE[1]->m_bkgSprite);
-      pd->sprite->addSprite(chunk->m_neighboursSE[2]->m_bkgSprite);
-      break;
-    case SW:;
-      pd->sprite->addSprite(chunk->m_neighboursSW[0]->m_bkgSprite);
-      pd->sprite->addSprite(chunk->m_neighboursSW[1]->m_bkgSprite);
-      pd->sprite->addSprite(chunk->m_neighboursSW[2]->m_bkgSprite);
-      break;
-    case NW:;
-      pd->sprite->addSprite(chunk->m_neighboursNW[0]->m_bkgSprite);
-      pd->sprite->addSprite(chunk->m_neighboursNW[1]->m_bkgSprite);
-      pd->sprite->addSprite(chunk->m_neighboursNW[2]->m_bkgSprite);
-      break;
+  chunkAddToRender(_chunk);
+
+  if (getZoom() == 1) {
+    for (uint32_t i = 0; i < CHUNK_NEIGHBORS_ALL; ++i) {
+      chunkAddToRender(_chunk->m_neighborsALL[i]);
+    }
+  } else {
+    switch (_quadrant) {
+      case NE:;
+        chunkAddToRender(_chunk->m_neighborsNE[0]);
+        chunkAddToRender(_chunk->m_neighborsNE[1]);
+        chunkAddToRender(_chunk->m_neighborsNE[2]);
+        break;
+      case SE:;
+        chunkAddToRender(_chunk->m_neighborsSE[0]);
+        chunkAddToRender(_chunk->m_neighborsSE[1]);
+        chunkAddToRender(_chunk->m_neighborsSE[2]);
+        break;
+      case SW:;
+        chunkAddToRender(_chunk->m_neighborsSW[0]);
+        chunkAddToRender(_chunk->m_neighborsSW[1]);
+        chunkAddToRender(_chunk->m_neighborsSW[2]);
+        break;
+      case NW:;
+        chunkAddToRender(_chunk->m_neighborsNW[0]);
+        chunkAddToRender(_chunk->m_neighborsNW[1]);
+        chunkAddToRender(_chunk->m_neighborsNW[2]);
+        break;
+    }
   }
 }
 
@@ -237,9 +253,10 @@ bool movePlayer() {
 
 
   // Check chunk change
-  uint16_t chunkX = p->m_x / ((float)CHUNK_PIX_X);
-  uint16_t chunkY = p->m_y / ((float)CHUNK_PIX_Y);
+  uint16_t chunkX = p->m_x / CHUNK_PIX_X;
+  uint16_t chunkY = p->m_y / CHUNK_PIX_Y;
 
+  // Subchunk change
   uint8_t subChunkX = (uint16_t)(p->m_x / ((float)CHUNK_PIX_X/2.0f)) % 2;
   uint8_t subChunkY = (uint16_t)(p->m_y / ((float)CHUNK_PIX_Y/2.0f)) % 2;
   enum kChunkQuad quadrant = NW;
@@ -251,18 +268,12 @@ bool movePlayer() {
     quadrant = SW;
   }
 
-  if (chunkX != m_curChunkX || chunkY != m_curChunkY) {
-    m_curChunkX = chunkX;
-    m_curChunkY = chunkY;
-    m_curSubChunkX = subChunkX;
-    m_curSubChunkY = subChunkY;
-    pd->system->logToConsole("CHUNKCHANGE %u %u (%u %u)", chunkX, chunkY, subChunkX, subChunkY);
-  } else if (m_quadrant != quadrant) {
+  if (chunkX != m_currentChunk->m_x || chunkY != m_currentChunk->m_y || m_quadrant != quadrant) {
+    m_currentChunk = getChunk(chunkX, chunkY); // TODO this can still go out-of-bounds (how?), ideally should be able to use getChunk_noCheck here
     m_quadrant = quadrant;
-    pd->system->logToConsole("SUBCHUNKCHANGE (%u %u)", subChunkX, subChunkY);
-    updateRenderListZoom(getChunk_noCheck(m_curChunkX, m_curChunkY), m_quadrant);
+    pd->system->logToConsole("CHUNKCHANGE %u %u (%u %u)", chunkX, chunkY, subChunkX, subChunkY);
+    updateRenderList(m_currentChunk, m_quadrant);
   }
-
 
 
   pd->graphics->setDrawOffset(m_offX, m_offY);
@@ -276,6 +287,7 @@ void menuOptionsCallback(void* userdata) {
 
 void initGame() {
   generate();
+  m_currentChunk = getChunk_noCheck(0,0);
 }
 
 void deinitGame() {
