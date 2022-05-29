@@ -5,7 +5,7 @@
 enum kLocationType {kEmpty, kConveyor};
 
 // Conveyor directions
-enum kConvDir{SN, NS, EW, WE, kConvDirN};
+enum kConvDir{SN, WE, NS, EW, kConvDirN};
 
 struct Location_t{
   enum kLocationType m_type;
@@ -27,6 +27,8 @@ uint16_t getNConveyors(void);
 
 struct Location_t* getLocation(int32_t _x, int32_t _y);
 
-bool newConveyor(uint32_t _x, uint32_t _y, enum kConvDir _dir);
+struct Location_t* getLocation_noCheck(int32_t _x, int32_t _y);
+
+bool newConveyor(struct Location_t* _loc, enum kConvDir _dir);
 
 void initLocation(void);

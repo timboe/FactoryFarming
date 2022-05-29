@@ -65,7 +65,7 @@ bool newCargo(uint32_t _x, uint32_t _y, enum kCargoType _type) {
   pd->sprite->setBounds(cargo->m_sprite, bound);
   pd->sprite->setImage(cargo->m_sprite, image, kBitmapUnflipped);
   pd->sprite->moveTo(cargo->m_sprite, loc->m_pix_x, loc->m_pix_y);
-  pd->sprite->setZIndex(cargo->m_sprite, 32767);
+  pd->sprite->setZIndex(cargo->m_sprite, Z_INDEX_CARGO);
 
   loc->m_cargo = cargo;
 

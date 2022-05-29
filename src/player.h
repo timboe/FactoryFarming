@@ -6,6 +6,7 @@ enum kChunkQuad{NE, SE, SW, NW};
 
 struct Player_t{
   LCDSprite* m_sprite;
+  LCDSprite* m_blueprint;
   float m_pix_x; // Note: Centre
   float m_pix_y;
   float m_vX;
@@ -21,6 +22,10 @@ int16_t getOffY(void);
 struct Chunk_t* getCurrentChunk(void);
 
 enum kChunkQuad getCurrentQuadrant(void);
+
+struct Location_t* getPlayerLocation(void);
+
+struct Location_t* getPlayerLookingAtLocation(void);
 
 bool movePlayer(void);
 

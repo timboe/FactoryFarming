@@ -17,8 +17,8 @@ __declspec(dllexport)
 static void init(void) {
   initSprite();
   initCargo();
-  initLocation();
   initChunk();
+  initLocation();
   initPlayer();
   initSound();
   initGame();

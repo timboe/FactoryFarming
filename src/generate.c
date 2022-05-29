@@ -198,10 +198,6 @@ void setChunkBackgrounds(void) {
   for (uint16_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
     for (uint16_t x = 0; x < WORLD_CHUNKS_X; ++x) {
       struct Chunk_t* c = getChunk(x, y);
-      c->m_x = x;
-      c->m_y = y;
-      c->m_pix_x = CHUNK_PIX_X*x + CHUNK_PIX_X/2.0;
-      c->m_pix_y = CHUNK_PIX_Y*y + CHUNK_PIX_Y/2.0;
       if (c->m_bkgImage == NULL) {
         c->m_bkgImage = pd->graphics->newBitmap(CHUNK_PIX_X, CHUNK_PIX_Y, kColorClear);
       }

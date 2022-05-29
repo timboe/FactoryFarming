@@ -75,6 +75,16 @@ void initChunk() {
   m_chunks = pd->system->realloc(NULL, TOT_CHUNKS * sizeof(struct Chunk_t));
   memset(m_chunks, 0, TOT_CHUNKS * sizeof(struct Chunk_t));
 
+  for (uint32_t x = 0; x < WORLD_CHUNKS_X; ++x) {
+    for (uint32_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
+      struct Chunk_t* chunk = getChunk_noCheck(x, y);
+      chunk->m_x = x;
+      chunk->m_y = y;
+      chunk->m_pix_x = CHUNK_PIX_X*x + CHUNK_PIX_X/2.0;
+      chunk->m_pix_y = CHUNK_PIX_Y*y + CHUNK_PIX_Y/2.0;
+    }
+  }
+
   m_edgeChunks = pd->system->realloc(NULL, (WORLD_CHUNKS_X*2 + WORLD_CHUNKS_Y*2 + 4) * sizeof(struct Chunk_t));
   memset(m_edgeChunks, 0, (WORLD_CHUNKS_X*2 + WORLD_CHUNKS_Y*2 + 4) * sizeof(struct Chunk_t));
 }

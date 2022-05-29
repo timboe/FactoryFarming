@@ -57,3 +57,11 @@
 
 // Fraction of the screen to trigger scrolling
 #define SCROLL_EDGE 0.8f
+
+#define Z_INDEX_CARGO 32766
+#define Z_INDEX_MAX 32767
+#define Z_INDEX_CONVEYOR 1
+#define Z_INDEX_BLUEPRINT 0
+#define Z_INDEX_FLOOR -1
+
+#define UI_ITEMS 4

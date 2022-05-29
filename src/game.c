@@ -14,7 +14,10 @@ uint8_t m_pressed[4] = {0};
 float m_rot = 0;
 uint8_t m_zoom = 1;
 
+int16_t m_selectedID = 0; // UI
+int16_t m_selectedRotation = 0;
 
+enum kGameMode m_mode;
 
 void tickNear(void);
 
@@ -40,33 +43,93 @@ uint8_t getZoom() {
   return m_zoom;
 }
 
+enum kGameMode getGameMode() {
+  return m_mode;
+}
 
-void gameClickConfigHandler(uint32_t _buttonPressed) {
-    static uint32_t x = 0, x2 = 4;
+void setGameMode(enum kGameMode _mode) {
+  m_mode = _mode;
+}
+
+bool characterMoveInput(uint32_t _buttonPressed);
+
+bool characterMoveInput(uint32_t _buttonPressed) {
   if (kButtonLeft == _buttonPressed) m_pressed[0] = 1;
   else if (kButtonRight == _buttonPressed) m_pressed[1] = 1;
   else if (kButtonUp == _buttonPressed) m_pressed[2] = 1;
   else if (kButtonDown == _buttonPressed) m_pressed[3] = 1;
-  /*
-  else if (kButtonB == _buttonPressed) {
-    x += 5;
-    for (int i = 0; i < TOT_TILES_Y; ++i) newConveyor(x, i, x % 2 ? SN : NS);
-  } else if (kButtonA == _buttonPressed) {
-    for (int i = 0; i < TOT_TILES_Y; i += rand()%8 + 1) {
-      newCargo(x, i, kApple);
-      break;
+  else return false;
+  return true;
+}
+
+void gameClickConfigHandler(uint32_t _buttonPressed) {
+  
+  if (m_mode == kWander) {
+
+    if (characterMoveInput(_buttonPressed)) {}
+    else if (kButtonA == _buttonPressed) setGameMode(kMenuSelect);
+
+    /*
+    else if (kButtonB == _buttonPressed) {
+      x += 5;
+      for (int i = 0; i < TOT_TILES_Y; ++i) newConveyor(x, i, x % 2 ? SN : NS);
+    } else if (kButtonA == _buttonPressed) {
+      for (int i = 0; i < TOT_TILES_Y; i += rand()%8 + 1) {
+        newCargo(x, i, kApple);
+        break;
+      }
     }
-  }
-  */
-  else if (kButtonB == _buttonPressed) {
-    x += 5;
-    for (int i = 0; i < TOT_TILES_X; ++i) newConveyor(i, x, x % 2 ? EW : WE);
-  } else if (kButtonA == _buttonPressed) {
-    for (int i = 0; i < TOT_TILES_Y; i += rand()%8 + 1) {
-      newCargo(i, x, kApple);
-      break;
+    */
+    /*
+    else if (kButtonB == _buttonPressed) {
+      x += 5;
+      for (int i = 0; i < TOT_TILES_X; ++i) newConveyor(i, x, x % 2 ? EW : WE);
+    } else if (kButtonA == _buttonPressed) {
+      for (int i = 0; i < TOT_TILES_Y; i += rand()%8 + 1) {
+        newCargo(i, x, kApple);
+        break;
+      }
     }
+    */
+
+  } else if (m_mode == kMenuSelect) {
+
+    if      (kButtonUp    == _buttonPressed) m_selectedID = (m_selectedID - 1) % UI_ITEMS;
+    else if (kButtonDown  == _buttonPressed) m_selectedID = (m_selectedID + 1) % UI_ITEMS;
+    else if (kButtonLeft  == _buttonPressed) m_selectedRotation = (m_selectedRotation - 1) % 4;
+    else if (kButtonRight == _buttonPressed) m_selectedRotation = (m_selectedRotation + 1) % 4;
+    else if (kButtonA     == _buttonPressed) {
+      setGameMode(kMenuOptionSelected);
+      switch (m_selectedID) {
+        case kMenuConveyor:; pd->sprite->setImage(getPlayer()->m_blueprint, getSprite16(m_selectedRotation+0, 3), kBitmapUnflipped); break;
+        case kMenuSplitI:;   pd->sprite->setImage(getPlayer()->m_blueprint, getSprite16(m_selectedRotation+0, 4), kBitmapUnflipped); break;
+        case kMenuSplitL:;   pd->sprite->setImage(getPlayer()->m_blueprint, getSprite16(m_selectedRotation+4, 3), kBitmapUnflipped); break;
+        case kMenuSplitT:;   pd->sprite->setImage(getPlayer()->m_blueprint, getSprite16(m_selectedRotation+4, 4), kBitmapUnflipped); break;     
+      }
+    } else if (kButtonB     == _buttonPressed) {
+      setGameMode(kWander);
+    }
+  
+  } else if (m_mode == kMenuOptionSelected) {
+
+    if (characterMoveInput(_buttonPressed)) {
+      // noop
+    } else if (kButtonA    == _buttonPressed) {
+      switch (m_selectedID) {
+        case kMenuConveyor:; newConveyor(getPlayerLookingAtLocation(), m_selectedRotation);
+        case kMenuSplitI:;   break;
+        case kMenuSplitL:;   break;
+        case kMenuSplitT:;   break;     
+      }
+    } else if (kButtonB    == _buttonPressed) {
+      setGameMode(kMenuSelect);
+      pd->sprite->setImage(getPlayer()->m_blueprint, getSprite16(0, 0), kBitmapUnflipped);
+    }
+
+
   }
+
+
 
 }
 
@@ -190,7 +253,7 @@ void tickFar() {
 int gameLoop(void* _data) {
   clickHandlerReplacement();
 
-  if (++m_frameCount == 1024) m_frameCount = 0;
+  if (++m_frameCount == TICK_FREQUENCY) m_frameCount = 0;
 
   if (getZoom() > 1 && m_frameCount % NEAR_TICK_FREQUENCY == 0) {
     animateConveyor();

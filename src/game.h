@@ -11,6 +11,13 @@
 #include "pd_api.h"
 #include "constants.h"
 
+enum kGameMode {kWander, kMenuSelect, kMenuOptionSelected};
+
+enum kMenuSelections {kMenuConveyor, kMenuSplitI, kMenuSplitL, kMenuSplitT};
+
+extern int16_t m_selectedID;
+extern int16_t m_selectedRotation;
+
 extern PlaydateAPI* pd;
 
 void setPDPtr(PlaydateAPI* _p);
@@ -18,6 +25,10 @@ void setPDPtr(PlaydateAPI* _p);
 int gameLoop(void* _data);
 
 int getFrameCount(void);
+
+enum kGameMode getGameMode(void);
+
+void setGameMode(enum kGameMode _mode);
 
 void initGame(void);
 
