@@ -1,11 +1,15 @@
 #include "sprite.h"
 
-
 LCDBitmap* m_conveyorMasters[kConvDirN] = {NULL};
 
 LCDBitmapTable* m_sheet16;
 
+LCDBitmap* m_bitmap16_x2[SHEET16_SIZE];
+
+LCDBitmap* m_bitmap16_x4[SHEET16_SIZE];
+
 LCDFont* m_fontRoobert24;
+
 LCDFont* m_fontRoobert10;
 
 LCDBitmap* loadImageAtPath(const char* _path);
@@ -13,6 +17,8 @@ LCDBitmap* loadImageAtPath(const char* _path);
 LCDBitmapTable* loadImageTableAtPath(const char* _path);
 
 LCDFont* loadFontAtPath(const char* _path);
+
+void populateResizedSprites(void);
 
 /// ///
 
@@ -44,7 +50,15 @@ LCDFont* loadFontAtPath(const char* _path) {
 }
 
 LCDBitmap* getSprite16(uint32_t _x, uint32_t _y) {
-  return pd->graphics->getTableBitmap(m_sheet16, (SHEET16_SIZE * _y) + _x);
+  return pd->graphics->getTableBitmap(m_sheet16, (SHEET16_SIZE_X * _y) + _x);
+}
+
+LCDBitmap* getSprite16_x2(uint32_t _x, uint32_t _y) {
+  return m_bitmap16_x2[(SHEET16_SIZE_X * _y) + _x];
+}
+
+LCDBitmap* getSprite16_x4(uint32_t _x, uint32_t _y) {
+  return m_bitmap16_x4[(SHEET16_SIZE_X * _y) + _x];
 }
 
 void animateConveyor() {
@@ -68,9 +82,29 @@ void setRoobert10() {
   pd->graphics->setFont(m_fontRoobert10);
 }
 
+void setRoobert24() {
+  pd->graphics->setFont(m_fontRoobert24);
+}
+
+void populateResizedSprites() {
+  for (uint32_t i = 0; i < SHEET16_SIZE; ++i) {
+    LCDBitmap* original = pd->graphics->getTableBitmap(m_sheet16, i);
+    m_bitmap16_x2[i] = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*2, kColorWhite);
+    m_bitmap16_x4[i] = pd->graphics->newBitmap(TILE_PIX*4, TILE_PIX*4, kColorWhite);
+    pd->graphics->pushContext(m_bitmap16_x2[i]);
+    pd->graphics->drawScaledBitmap(original, 0, 0, 2.0f, 2.0f);
+    pd->graphics->popContext();
+    pd->graphics->pushContext(m_bitmap16_x4[i]);
+    pd->graphics->drawScaledBitmap(original, 0, 0, 4.0f, 4.0f);
+    pd->graphics->popContext();
+  }
+
+}
+
 void initSprite() {
   pd->graphics->setDrawMode(kDrawModeCopy);
   m_sheet16 = loadImageTableAtPath("images/sheet16");
+  populateResizedSprites();
 
   for (int32_t i = 0; i < kConvDirN; ++i) {
     m_conveyorMasters[i] = pd->graphics->copyBitmap(getSprite16(0, CONV_START_Y + i));

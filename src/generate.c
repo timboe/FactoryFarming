@@ -42,6 +42,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   }
 
   #ifdef DEV
+  setRoobert24();
   pd->graphics->drawRect(0, 0, CHUNK_PIX_X, CHUNK_PIX_Y, kColorBlack);
   static char text[16];
   snprintf(text, 16, "(%u,%u)", _chunk->m_x, _chunk->m_y);

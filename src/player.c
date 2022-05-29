@@ -2,6 +2,7 @@
 #include "sprite.h"
 #include "chunk.h"
 #include "render.h"
+#include "input.h"
 
 struct Player_t m_player;
 

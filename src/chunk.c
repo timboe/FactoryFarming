@@ -71,6 +71,14 @@ void chunkRemoveCargo(struct Chunk_t* _chunk, struct Cargo_t* _cargo) {
   --(_chunk->m_nCargos);
 }
 
+void chunkTickChunk(struct Chunk_t* _chunk, uint8_t _tick) {
+  //pd->system->logToConsole("Asked to tick %i for %i", _tick, _chunk);
+  for (uint32_t i = 0; i < _chunk->m_nLocations; ++i) {
+    struct Location_t* loc = _chunk->m_locations[i];
+    (*loc->m_updateFn)(loc, _tick);
+  }
+}
+
 void initChunk() {
   m_chunks = pd->system->realloc(NULL, TOT_CHUNKS * sizeof(struct Chunk_t));
   memset(m_chunks, 0, TOT_CHUNKS * sizeof(struct Chunk_t));

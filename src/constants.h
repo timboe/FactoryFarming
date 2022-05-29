@@ -28,7 +28,11 @@
 #define TILES_PER_CHUNK (TILES_PER_CHUNK_X*TILES_PER_CHUNK_Y)
 
 // 16x16 sprite sheet has how many rows/columns
-#define SHEET16_SIZE 8
+#define SHEET16_SIZE_X 8
+#define SHEET16_SIZE_Y 16
+#define SHEET16_SIZE (SHEET16_SIZE_X*SHEET16_SIZE_Y)
+
+
 
 // Number of available floor spires
 #define FLOOR_TILES 8
@@ -59,6 +63,7 @@
 #define SCROLL_EDGE 0.8f
 
 #define Z_INDEX_CARGO 32766
+#define Z_INDEX_UI 32767
 #define Z_INDEX_MAX 32767
 #define Z_INDEX_CONVEYOR 1
 #define Z_INDEX_BLUEPRINT 0

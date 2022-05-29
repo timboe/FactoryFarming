@@ -47,4 +47,6 @@ void chunkAddCargo(struct Chunk_t* _chunk, struct Cargo_t* _cargo);
 
 void chunkRemoveCargo(struct Chunk_t* _chunk, struct Cargo_t* _cargo);
 
+void chunkTickChunk(struct Chunk_t* _chunk, uint8_t _tick);
+
 void initChunk(void);

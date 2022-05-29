@@ -9,6 +9,8 @@
 #include "location.h"
 #include "chunk.h"
 #include "player.h"
+#include "ui.h"
+
 
 #ifdef _WINDLL
 __declspec(dllexport)
@@ -20,6 +22,7 @@ static void init(void) {
   initChunk();
   initLocation();
   initPlayer();
+  initiUI();
   initSound();
   initGame();
 }
