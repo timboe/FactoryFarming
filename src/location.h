@@ -11,8 +11,8 @@ struct Location_t{
   enum kLocationType m_type;
   enum  kConvDir m_convDir; // Only used by conveyors
   struct Chunk_t* m_chunk; // My chunk
-  LCDSprite* m_sprite;
-  LCDBitmap* m_image;
+  LCDSprite* m_sprite[5]; // Only locations 1, 2 and 4 are used
+  LCDBitmap* m_image[5]; // Only locations 1, 2 and 4 are used
   struct Cargo_t* m_cargo;
   struct Location_t* m_next;
   uint16_t m_pix_x; // Note: centre
@@ -20,7 +20,7 @@ struct Location_t{
   uint16_t m_x; // In location coords
   uint16_t m_y;
   uint8_t m_progress; // Counts towards the location's progress
-  void (*m_updateFn)(struct Location_t*, uint8_t);
+  void (*m_updateFn)(struct Location_t*, uint8_t, uint8_t);
 };
 
 uint16_t getNConveyors(void);

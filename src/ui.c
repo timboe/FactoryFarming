@@ -1,6 +1,7 @@
 #include "ui.h"
 #include "sprite.h"
 #include "player.h"
+#include "input.h"
 
 uint16_t m_UIIcons[] = {0,7,  0,11,  1,11,  2,11};
 
@@ -79,15 +80,16 @@ void updateUI() {
 }
 
 void updateBlueprint() {
+  uint8_t zoom = getZoom();
   if (getGameMode() == kMenuOptionSelected) {
     switch (m_UISelectedID) {
-      case kMenuConveyor:; pd->sprite->setImage(getPlayer()->m_blueprint, getSprite16(m_UISelectedRotation+0, 3), kBitmapUnflipped); break;
-      case kMenuSplitI:;   pd->sprite->setImage(getPlayer()->m_blueprint, getSprite16(m_UISelectedRotation+0, 4), kBitmapUnflipped); break;
-      case kMenuSplitL:;   pd->sprite->setImage(getPlayer()->m_blueprint, getSprite16(m_UISelectedRotation+4, 3), kBitmapUnflipped); break;
-      case kMenuSplitT:;   pd->sprite->setImage(getPlayer()->m_blueprint, getSprite16(m_UISelectedRotation+4, 4), kBitmapUnflipped); break;     
+      case kMenuConveyor:; pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(m_UISelectedRotation+0, 3, zoom), kBitmapUnflipped); break;
+      case kMenuSplitI:;   pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(m_UISelectedRotation+0, 4, zoom), kBitmapUnflipped); break;
+      case kMenuSplitL:;   pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(m_UISelectedRotation+4, 3, zoom), kBitmapUnflipped); break;
+      case kMenuSplitT:;   pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(m_UISelectedRotation+4, 4, zoom), kBitmapUnflipped); break;     
     }
   } else { // Clear blueprint
-    pd->sprite->setImage(getPlayer()->m_blueprint, getSprite16(0, 0), kBitmapUnflipped); 
+    pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(0, 0, zoom), kBitmapUnflipped); 
   }
 }
 
@@ -165,11 +167,11 @@ void drawUIRight() {
   const enum kGameMode gm = getGameMode();
   for (uint32_t i = 0; i < UI_ITEMS; ++i) {
     const uint16_t y = TILE_PIX*2*i + TILE_PIX;
-    pd->graphics->drawBitmap(getSprite16(m_UIIcons[i*2], m_UIIcons[(i*2)+1] + getUISelectedRotation()), 0, y, kBitmapUnflipped);
+    pd->graphics->drawBitmap(getSprite16(m_UIIcons[i*2], m_UIIcons[(i*2)+1] + getUISelectedRotation(), 1), 0, y, kBitmapUnflipped);
     if ((gm == kMenuSelect || gm == kMenuOptionSelected) && i == getUISelectedID()) {
       LCDBitmapDrawMode m = ((gm == kMenuSelect && getFrameCount() % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4) ? kDrawModeInverted : kDrawModeCopy );
       pd->graphics->setDrawMode(m);
-      pd->graphics->drawBitmap(getSprite16(0, 2), 0, y, kBitmapUnflipped);
+      pd->graphics->drawBitmap(getSprite16(0, 2, 1), 0, y, kBitmapUnflipped);
       pd->graphics->setDrawMode(kDrawModeCopy);
     }
   }

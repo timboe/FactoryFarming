@@ -8,7 +8,9 @@ uint16_t m_nConveyors = 0;
 
 struct Location_t* m_locations = NULL;
 
-void conveyorUpdateFn(struct Location_t* _loc, uint8_t _tick);
+void conveyorUpdateFn(struct Location_t* _loc, uint8_t _tick, uint8_t _zoom);
+
+void locationSpriteSetup(struct Location_t* _loc, enum kConvDir _dir, uint8_t _zoom);
 
 /// ///
 
@@ -29,15 +31,15 @@ struct Location_t* getLocation(int32_t _x, int32_t _y) {
   return getLocation_noCheck(_x, _y);
 }
 
-void conveyorUpdateFn(struct Location_t* _loc, uint8_t _tick) {
+void conveyorUpdateFn(struct Location_t* _loc, uint8_t _tick, uint8_t _zoom) {
   if (_loc->m_cargo == NULL) return;
   if (_loc->m_progress < TILE_PIX) {
     _loc->m_progress += _tick;
     switch (_loc->m_convDir) {
-      case SN:; pd->sprite->moveTo(_loc->m_cargo->m_sprite, _loc->m_pix_x, _loc->m_pix_y - _loc->m_progress); break;
-      case NS:; pd->sprite->moveTo(_loc->m_cargo->m_sprite, _loc->m_pix_x, _loc->m_pix_y + _loc->m_progress); break;
-      case EW:; pd->sprite->moveTo(_loc->m_cargo->m_sprite, _loc->m_pix_x + _loc->m_progress, _loc->m_pix_y); break;
-      case WE:; pd->sprite->moveTo(_loc->m_cargo->m_sprite, _loc->m_pix_x - _loc->m_progress, _loc->m_pix_y); break;
+      case SN:; pd->sprite->moveTo(_loc->m_cargo->m_sprite[_zoom], _loc->m_pix_x*_zoom, (_loc->m_pix_y - _loc->m_progress)*_zoom); break;
+      case NS:; pd->sprite->moveTo(_loc->m_cargo->m_sprite[_zoom], _loc->m_pix_x*_zoom, (_loc->m_pix_y + _loc->m_progress)*_zoom); break;
+      case EW:; pd->sprite->moveTo(_loc->m_cargo->m_sprite[_zoom], (_loc->m_pix_x + _loc->m_progress)*_zoom, _loc->m_pix_y*_zoom); break;
+      case WE:; pd->sprite->moveTo(_loc->m_cargo->m_sprite[_zoom], (_loc->m_pix_x - _loc->m_progress)*_zoom, _loc->m_pix_y*_zoom); break;
       case kConvDirN:; break;
     }
     //pd->system->logToConsole("MOVE %i %i, %i", _loc->m_pix_x, _loc->m_pix_y, _loc->m_progress);
@@ -56,22 +58,34 @@ void conveyorUpdateFn(struct Location_t* _loc, uint8_t _tick) {
   }
 }
 
+void locationSpriteSetup(struct Location_t* _loc, enum kConvDir _dir, uint8_t _zoom) {
+  PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*_zoom, .height = TILE_PIX*_zoom};
+  pd->sprite->setBounds(_loc->m_sprite[_zoom], bound);
+  pd->sprite->setImage(_loc->m_sprite[_zoom], getConveyorMaster(_zoom, _dir), kBitmapUnflipped);
+  pd->sprite->moveTo(_loc->m_sprite[_zoom], _loc->m_pix_x*_zoom, _loc->m_pix_y*_zoom);
+  pd->sprite->setZIndex(_loc->m_sprite[_zoom], Z_INDEX_CONVEYOR);
+}
+
 bool newConveyor(struct Location_t* _loc, enum kConvDir _dir) {
   if (_loc->m_type != kEmpty) return false;
 
-  if (_loc->m_sprite == NULL) _loc->m_sprite = pd->sprite->newSprite();
-  _loc->m_image = getSprite16(0, CONV_START_Y + _dir);
+  if (_loc->m_sprite[1] == NULL) {
+    _loc->m_sprite[1] = pd->sprite->newSprite();
+    _loc->m_sprite[2] = pd->sprite->newSprite();
+    _loc->m_sprite[4] = pd->sprite->newSprite();
+  }
+  _loc->m_image[1] = getSprite16(0, CONV_START_Y + _dir, 1);
+  _loc->m_image[2] = getSprite16(0, CONV_START_Y + _dir, 2);
+  _loc->m_image[4] = getSprite16(0, CONV_START_Y + _dir, 4);
   _loc->m_cargo = NULL;
   _loc->m_type = kConveyor;
   _loc->m_convDir = _dir;
   _loc->m_updateFn = &conveyorUpdateFn;
   _loc->m_progress = 0;
 
-  PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX, .height = TILE_PIX};
-  pd->sprite->setBounds(_loc->m_sprite, bound);
-  pd->sprite->setImage(_loc->m_sprite, getConveyorMaster(_dir), kBitmapUnflipped);
-  pd->sprite->moveTo(_loc->m_sprite, _loc->m_pix_x, _loc->m_pix_y);
-  pd->sprite->setZIndex(_loc->m_sprite, Z_INDEX_CONVEYOR);
+  locationSpriteSetup(_loc, _dir, 1);
+  locationSpriteSetup(_loc, _dir, 2);
+  locationSpriteSetup(_loc, _dir, 4);
 
   struct Location_t* above = getLocation(_loc->m_x, _loc->m_y - 1);
   struct Location_t* below = getLocation(_loc->m_x, _loc->m_y + 1);

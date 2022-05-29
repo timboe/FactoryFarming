@@ -43,35 +43,36 @@ void tickNear() {
     return;
   }
 
+  uint8_t zoom = getZoom();
   struct Chunk_t* currentChunk = getCurrentChunk();
 
-  chunkTickChunk(currentChunk, NEAR_TICK_AMOUNT);
+  chunkTickChunk(currentChunk, NEAR_TICK_AMOUNT, zoom);
 
-  if (getZoom() == 1 && !PRETEND_ZOOMED_IN) {
+  if (zoom == 1 && !PRETEND_ZOOMED_IN) {
     for (uint32_t i = 0; i < CHUNK_NEIGHBORS_ALL; ++i) {
-      chunkTickChunk(currentChunk->m_neighborsALL[i], NEAR_TICK_AMOUNT);
+      chunkTickChunk(currentChunk->m_neighborsALL[i], NEAR_TICK_AMOUNT, zoom);
     }
   } else {
     switch (getCurrentQuadrant()) {
       case NE:;
-        chunkTickChunk(currentChunk->m_neighborsNE[0], NEAR_TICK_AMOUNT);
-        chunkTickChunk(currentChunk->m_neighborsNE[1], NEAR_TICK_AMOUNT);
-        chunkTickChunk(currentChunk->m_neighborsNE[2], NEAR_TICK_AMOUNT);
+        chunkTickChunk(currentChunk->m_neighborsNE[0], NEAR_TICK_AMOUNT, zoom);
+        chunkTickChunk(currentChunk->m_neighborsNE[1], NEAR_TICK_AMOUNT, zoom);
+        chunkTickChunk(currentChunk->m_neighborsNE[2], NEAR_TICK_AMOUNT, zoom);
         break;
       case SE:;
-        chunkTickChunk(currentChunk->m_neighborsSE[0], NEAR_TICK_AMOUNT);
-        chunkTickChunk(currentChunk->m_neighborsSE[1], NEAR_TICK_AMOUNT);
-        chunkTickChunk(currentChunk->m_neighborsSE[2], NEAR_TICK_AMOUNT);
+        chunkTickChunk(currentChunk->m_neighborsSE[0], NEAR_TICK_AMOUNT, zoom);
+        chunkTickChunk(currentChunk->m_neighborsSE[1], NEAR_TICK_AMOUNT, zoom);
+        chunkTickChunk(currentChunk->m_neighborsSE[2], NEAR_TICK_AMOUNT, zoom);
         break;
       case SW:;
-        chunkTickChunk(currentChunk->m_neighborsSW[0], NEAR_TICK_AMOUNT);
-        chunkTickChunk(currentChunk->m_neighborsSW[1], NEAR_TICK_AMOUNT);
-        chunkTickChunk(currentChunk->m_neighborsSW[2], NEAR_TICK_AMOUNT);
+        chunkTickChunk(currentChunk->m_neighborsSW[0], NEAR_TICK_AMOUNT, zoom);
+        chunkTickChunk(currentChunk->m_neighborsSW[1], NEAR_TICK_AMOUNT, zoom);
+        chunkTickChunk(currentChunk->m_neighborsSW[2], NEAR_TICK_AMOUNT, zoom);
         break;
       case NW:;
-        chunkTickChunk(currentChunk->m_neighborsNW[0], NEAR_TICK_AMOUNT);
-        chunkTickChunk(currentChunk->m_neighborsNW[1], NEAR_TICK_AMOUNT);
-        chunkTickChunk(currentChunk->m_neighborsNW[2], NEAR_TICK_AMOUNT);
+        chunkTickChunk(currentChunk->m_neighborsNW[0], NEAR_TICK_AMOUNT, zoom);
+        chunkTickChunk(currentChunk->m_neighborsNW[1], NEAR_TICK_AMOUNT, zoom);
+        chunkTickChunk(currentChunk->m_neighborsNW[2], NEAR_TICK_AMOUNT, zoom);
         break;
     }
   }
@@ -86,33 +87,34 @@ void tickFar() {
     UIDirtyBottom();
   }
 
+  uint8_t zoom = getZoom();
   struct Chunk_t* currentChunk = getCurrentChunk();
 
-  if (getZoom() == 1 && !PRETEND_ZOOMED_IN) {
+  if (zoom == 1 && !PRETEND_ZOOMED_IN) {
     for (uint32_t i = 0; i < (TOT_CHUNKS - CHUNK_NEIGHBORS_ALL - 1); ++i) { // The "- 1" is for "me"
       //pd->system->logToConsole("B %u = %i", i, (int) currentChunk->m_nonNeighborsALL[i]);
-      chunkTickChunk(currentChunk->m_nonNeighborsALL[i], FAR_TICK_AMOUNT);
+      chunkTickChunk(currentChunk->m_nonNeighborsALL[i], FAR_TICK_AMOUNT, zoom);
     }
   } else {
     switch (getCurrentQuadrant()) {
       case NE:;
         for (uint32_t i = 0; i < (TOT_CHUNKS - CHUNK_NEIGHBORS_CORNER - 1); ++i) {
-          chunkTickChunk(currentChunk->m_nonNeighborsNE[i], FAR_TICK_AMOUNT);
+          chunkTickChunk(currentChunk->m_nonNeighborsNE[i], FAR_TICK_AMOUNT, zoom);
         }
         break;
       case SE:;
         for (uint32_t i = 0; i < (TOT_CHUNKS - CHUNK_NEIGHBORS_CORNER - 1); ++i) {
-          chunkTickChunk(currentChunk->m_nonNeighborsSE[i], FAR_TICK_AMOUNT);
+          chunkTickChunk(currentChunk->m_nonNeighborsSE[i], FAR_TICK_AMOUNT, zoom);
         }
         break;
       case SW:;
         for (uint32_t i = 0; i < (TOT_CHUNKS - CHUNK_NEIGHBORS_CORNER - 1); ++i) {
-          chunkTickChunk(currentChunk->m_nonNeighborsSW[i], FAR_TICK_AMOUNT);
+          chunkTickChunk(currentChunk->m_nonNeighborsSW[i], FAR_TICK_AMOUNT, zoom);
         }
         break;
       case NW:;
         for (uint32_t i = 0; i < (TOT_CHUNKS - CHUNK_NEIGHBORS_CORNER - 1); ++i) {
-          chunkTickChunk(currentChunk->m_nonNeighborsNW[i], FAR_TICK_AMOUNT);
+          chunkTickChunk(currentChunk->m_nonNeighborsNW[i], FAR_TICK_AMOUNT, zoom);
         }
         break;
     }

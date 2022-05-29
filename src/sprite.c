@@ -1,6 +1,7 @@
 #include "sprite.h"
+#include "input.h"
 
-LCDBitmap* m_conveyorMasters[kConvDirN] = {NULL};
+LCDBitmap* m_conveyorMasters[5][kConvDirN] = {NULL}; // Only 1, 2 and 4 are used
 
 LCDBitmapTable* m_sheet16;
 
@@ -49,33 +50,32 @@ LCDFont* loadFontAtPath(const char* _path) {
   return _f;
 }
 
-LCDBitmap* getSprite16(uint32_t _x, uint32_t _y) {
-  return pd->graphics->getTableBitmap(m_sheet16, (SHEET16_SIZE_X * _y) + _x);
-}
-
-LCDBitmap* getSprite16_x2(uint32_t _x, uint32_t _y) {
-  return m_bitmap16_x2[(SHEET16_SIZE_X * _y) + _x];
-}
-
-LCDBitmap* getSprite16_x4(uint32_t _x, uint32_t _y) {
-  return m_bitmap16_x4[(SHEET16_SIZE_X * _y) + _x];
+LCDBitmap* getSprite16(uint32_t _x, uint32_t _y, uint8_t _zoom) {
+  switch (_zoom) {
+    case 1: return pd->graphics->getTableBitmap(m_sheet16, (SHEET16_SIZE_X * _y) + _x);
+    case 2: return m_bitmap16_x2[(SHEET16_SIZE_X * _y) + _x];
+    case 4: return m_bitmap16_x4[(SHEET16_SIZE_X * _y) + _x];
+  }
+  pd->system->error("getSprite16 Error");
+  return NULL;
 }
 
 void animateConveyor() {
   static int8_t tick = 0;
   tick = (tick + 1) % 8;
+  uint8_t zoom = getZoom();
 
   pd->graphics->setDrawMode(kDrawModeCopy);
   for (int32_t i = 0; i < kConvDirN; ++i) {
-    pd->graphics->pushContext(m_conveyorMasters[i]);
-    pd->graphics->drawBitmap(getSprite16(tick, CONV_START_Y + i), 0, 0, kBitmapUnflipped);
+    pd->graphics->pushContext(m_conveyorMasters[zoom][i]);
+    pd->graphics->drawBitmap(getSprite16(tick, CONV_START_Y + i, zoom), 0, 0, kBitmapUnflipped);
     pd->graphics->popContext();
   }
 
 }
 
-LCDBitmap* getConveyorMaster(enum kConvDir _dir) {
-  return m_conveyorMasters[_dir];
+LCDBitmap* getConveyorMaster(uint8_t _zoom, enum kConvDir _dir) {
+  return m_conveyorMasters[_zoom][_dir];
 }
 
 void setRoobert10() {
@@ -89,8 +89,8 @@ void setRoobert24() {
 void populateResizedSprites() {
   for (uint32_t i = 0; i < SHEET16_SIZE; ++i) {
     LCDBitmap* original = pd->graphics->getTableBitmap(m_sheet16, i);
-    m_bitmap16_x2[i] = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*2, kColorWhite);
-    m_bitmap16_x4[i] = pd->graphics->newBitmap(TILE_PIX*4, TILE_PIX*4, kColorWhite);
+    m_bitmap16_x2[i] = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*2, kColorClear);
+    m_bitmap16_x4[i] = pd->graphics->newBitmap(TILE_PIX*4, TILE_PIX*4, kColorClear);
     pd->graphics->pushContext(m_bitmap16_x2[i]);
     pd->graphics->drawScaledBitmap(original, 0, 0, 2.0f, 2.0f);
     pd->graphics->popContext();
@@ -107,7 +107,9 @@ void initSprite() {
   populateResizedSprites();
 
   for (int32_t i = 0; i < kConvDirN; ++i) {
-    m_conveyorMasters[i] = pd->graphics->copyBitmap(getSprite16(0, CONV_START_Y + i));
+    m_conveyorMasters[1][i] = pd->graphics->copyBitmap(getSprite16(0, CONV_START_Y + i, 1));
+    m_conveyorMasters[2][i] = pd->graphics->copyBitmap(getSprite16(0, CONV_START_Y + i, 2));
+    m_conveyorMasters[4][i] = pd->graphics->copyBitmap(getSprite16(0, CONV_START_Y + i, 4));
   }
 
   m_fontRoobert24 = loadFontAtPath("fonts/Roobert-24-Medium");

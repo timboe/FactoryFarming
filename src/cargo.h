@@ -5,7 +5,7 @@ enum kCargoType {kNoCargo, kApple};
 
 struct Cargo_t{
   enum kCargoType m_type;
-  LCDSprite* m_sprite;
+  LCDSprite* m_sprite[5]; // Only locations 1, 2 and 4 are used
   bool m_inUse;
   uint16_t m_index; // My location in the cargo array.
 };

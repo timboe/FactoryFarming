@@ -19,12 +19,13 @@ void setWorldEdges(void);
 /// ///
 
 void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
-  pd->graphics->pushContext(_chunk->m_bkgImage);
+  pd->graphics->pushContext(_chunk->m_bkgImage[1]);
   pd->graphics->setDrawMode(kDrawModeCopy);
+  pd->graphics->fillRect(0, 0, CHUNK_PIX_X, CHUNK_PIX_Y, kColorWhite);
   for (uint16_t v = 0; v < TILES_PER_CHUNK_Y; ++v) {
     for (uint16_t u = 0; u < TILES_PER_CHUNK_X; ++u) {
       uint8_t t = m_tiles[ (WORLD_CHUNKS_X * TILES_PER_CHUNK_X)*((TILES_PER_CHUNK_Y * _chunk->m_y) + v) + ((TILES_PER_CHUNK_X * _chunk->m_x) + u) ];
-      LCDBitmap* b = getSprite16(t, 0); // Top row of sprite sheet
+      LCDBitmap* b = getSprite16(t, 0, 1); // Top row of sprite sheet
       pd->graphics->drawBitmap(b, u * TILE_PIX, v * TILE_PIX, kBitmapUnflipped);
     }
   }
@@ -37,7 +38,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   for (uint32_t i = 0; i < _chunk->m_nLocations; ++i) {
     struct Location_t* loc = _chunk->m_locations[i];
     if (loc->m_image) {
-      pd->graphics->drawBitmap(loc->m_image, loc->m_pix_x - off_x, loc->m_pix_y - off_y, kBitmapUnflipped);
+      pd->graphics->drawBitmap(loc->m_image[1], loc->m_pix_x - off_x, loc->m_pix_y - off_y, kBitmapUnflipped);
     }
   }
 
@@ -48,10 +49,17 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   snprintf(text, 16, "(%u,%u)", _chunk->m_x, _chunk->m_y);
   pd->graphics->drawText(text, 16, kASCIIEncoding, TILE_PIX, TILE_PIX);
   #endif
+
   pd->graphics->popContext();
 
-  
-  pd->sprite->markDirty(_chunk->m_bkgSprite);
+  pd->graphics->pushContext(_chunk->m_bkgImage[2]);
+  pd->graphics->drawScaledBitmap(_chunk->m_bkgImage[1], 0, 0, 2.0f, 2.0f);
+  pd->graphics->popContext();
+
+  pd->graphics->pushContext(_chunk->m_bkgImage[4]);
+  pd->graphics->drawScaledBitmap(_chunk->m_bkgImage[1], 0, 0, 4.0f, 4.0f);
+  pd->graphics->popContext();
+
 }
 
 void setWorldEdges(void) {
@@ -61,19 +69,19 @@ void setWorldEdges(void) {
 
   for (uint32_t x = 0; x < WORLD_CHUNKS_X; ++x) {
     chunk = getEdgeChunk(c++); // Top
-    if (chunk->m_bkgSprite == NULL) chunk->m_bkgSprite = pd->sprite->newSprite();
-    pd->sprite->setImage(chunk->m_bkgSprite, getChunk(x, WORLD_CHUNKS_Y-1)->m_bkgImage, kBitmapUnflipped);
-    pd->sprite->moveTo(chunk->m_bkgSprite, CHUNK_PIX_X*x + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*-1 + CHUNK_PIX_Y/2.0f);
-    pd->sprite->setZIndex(chunk->m_bkgSprite, -1);
+    if (chunk->m_bkgSprite[1] == NULL) chunk->m_bkgSprite[1] = pd->sprite->newSprite();
+    pd->sprite->setImage(chunk->m_bkgSprite[1], getChunk(x, WORLD_CHUNKS_Y-1)->m_bkgImage[1], kBitmapUnflipped);
+    pd->sprite->moveTo(chunk->m_bkgSprite[1], CHUNK_PIX_X*x + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*-1 + CHUNK_PIX_Y/2.0f);
+    pd->sprite->setZIndex(chunk->m_bkgSprite[1], -1);
     //getChunk(x, 0)->m_neighborsNE[0] = chunk;
     //getChunk(x, 0)->m_neighborsNW[2] = chunk;
 
 
     chunk = getEdgeChunk(c++); // Bottom
-    if (chunk->m_bkgSprite == NULL) chunk->m_bkgSprite = pd->sprite->newSprite();
-    pd->sprite->setImage(chunk->m_bkgSprite, getChunk(x, 0)->m_bkgImage, kBitmapUnflipped);
-    pd->sprite->moveTo(chunk->m_bkgSprite, CHUNK_PIX_X*x + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*WORLD_CHUNKS_Y + CHUNK_PIX_Y/2.0f);
-    pd->sprite->setZIndex(chunk->m_bkgSprite, -1);
+    if (chunk->m_bkgSprite[1] == NULL) chunk->m_bkgSprite[1] = pd->sprite->newSprite();
+    pd->sprite->setImage(chunk->m_bkgSprite[1], getChunk(x, 0)->m_bkgImage[1], kBitmapUnflipped);
+    pd->sprite->moveTo(chunk->m_bkgSprite[1], CHUNK_PIX_X*x + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*WORLD_CHUNKS_Y + CHUNK_PIX_Y/2.0f);
+    pd->sprite->setZIndex(chunk->m_bkgSprite[1], -1);
     //getChunk(x, WORLD_CHUNKS_Y-1)->m_neighborsSE[2] = chunk;
     //getChunk(x, WORLD_CHUNKS_Y-1)->m_neighborsSW[0] = chunk;
     ++x;
@@ -81,46 +89,46 @@ void setWorldEdges(void) {
 
   for (uint32_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
     chunk = getEdgeChunk(c++);  // Left
-    if (chunk->m_bkgSprite == NULL) chunk->m_bkgSprite = pd->sprite->newSprite();
-    pd->sprite->setImage(chunk->m_bkgSprite, getChunk(WORLD_CHUNKS_X-1, y)->m_bkgImage, kBitmapUnflipped);
-    pd->sprite->moveTo(chunk->m_bkgSprite, CHUNK_PIX_X*-1 + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*y + CHUNK_PIX_Y/2.0f);
-    pd->sprite->setZIndex(chunk->m_bkgSprite, -1);
+    if (chunk->m_bkgSprite[1] == NULL) chunk->m_bkgSprite[1] = pd->sprite->newSprite();
+    pd->sprite->setImage(chunk->m_bkgSprite[1], getChunk(WORLD_CHUNKS_X-1, y)->m_bkgImage[1], kBitmapUnflipped);
+    pd->sprite->moveTo(chunk->m_bkgSprite[1], CHUNK_PIX_X*-1 + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*y + CHUNK_PIX_Y/2.0f);
+    pd->sprite->setZIndex(chunk->m_bkgSprite[1], -1);
     //getChunk(0, y)->m_neighborsSW[2] = chunk;
     //getChunk(0, y)->m_neighborsNW[0] = chunk;
 
     chunk = getEdgeChunk(c++); // Right
-    if (chunk->m_bkgSprite == NULL) chunk->m_bkgSprite = pd->sprite->newSprite();
-    pd->sprite->setImage(chunk->m_bkgSprite, getChunk(0, y)->m_bkgImage, kBitmapUnflipped);
-    pd->sprite->moveTo(chunk->m_bkgSprite, CHUNK_PIX_X*WORLD_CHUNKS_X + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*y + CHUNK_PIX_Y/2.0f);
-    pd->sprite->setZIndex(chunk->m_bkgSprite, -1);
+    if (chunk->m_bkgSprite[1] == NULL) chunk->m_bkgSprite[1] = pd->sprite->newSprite();
+    pd->sprite->setImage(chunk->m_bkgSprite[1], getChunk(0, y)->m_bkgImage[1], kBitmapUnflipped);
+    pd->sprite->moveTo(chunk->m_bkgSprite[1], CHUNK_PIX_X*WORLD_CHUNKS_X + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*y + CHUNK_PIX_Y/2.0f);
+    pd->sprite->setZIndex(chunk->m_bkgSprite[1], -1);
     //getChunk(WORLD_CHUNKS_Y-1, y)->m_neighborsSE[0] = chunk;
     //getChunk(WORLD_CHUNKS_Y-1, y)->m_neighborsNE[2] = chunk;
     ++y;
   }
 
   chunk = getEdgeChunk(c++); // Top Left
-  if (chunk->m_bkgSprite == NULL) chunk->m_bkgSprite = pd->sprite->newSprite();
-  pd->sprite->setImage(chunk->m_bkgSprite, getChunk(WORLD_CHUNKS_X-1, WORLD_CHUNKS_Y-1)->m_bkgImage, kBitmapUnflipped);
-  pd->sprite->moveTo(chunk->m_bkgSprite, CHUNK_PIX_X*-1 + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*-1 + CHUNK_PIX_Y/2.0f);
-  pd->sprite->setZIndex(chunk->m_bkgSprite, -1);
+  if (chunk->m_bkgSprite[1] == NULL) chunk->m_bkgSprite[1] = pd->sprite->newSprite();
+  pd->sprite->setImage(chunk->m_bkgSprite[1], getChunk(WORLD_CHUNKS_X-1, WORLD_CHUNKS_Y-1)->m_bkgImage[1], kBitmapUnflipped);
+  pd->sprite->moveTo(chunk->m_bkgSprite[1], CHUNK_PIX_X*-1 + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*-1 + CHUNK_PIX_Y/2.0f);
+  pd->sprite->setZIndex(chunk->m_bkgSprite[1], -1);
 
   chunk = getEdgeChunk(c++); // Top Right
-  if (chunk->m_bkgSprite == NULL) chunk->m_bkgSprite = pd->sprite->newSprite();
-  pd->sprite->setImage(chunk->m_bkgSprite, getChunk(0, WORLD_CHUNKS_Y-1)->m_bkgImage, kBitmapUnflipped);
-  pd->sprite->moveTo(chunk->m_bkgSprite, CHUNK_PIX_X*WORLD_CHUNKS_X + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*-1 + CHUNK_PIX_Y/2.0f);
-  pd->sprite->setZIndex(chunk->m_bkgSprite, -1);
+  if (chunk->m_bkgSprite[1] == NULL) chunk->m_bkgSprite[1] = pd->sprite->newSprite();
+  pd->sprite->setImage(chunk->m_bkgSprite[1], getChunk(0, WORLD_CHUNKS_Y-1)->m_bkgImage[1], kBitmapUnflipped);
+  pd->sprite->moveTo(chunk->m_bkgSprite[1], CHUNK_PIX_X*WORLD_CHUNKS_X + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*-1 + CHUNK_PIX_Y/2.0f);
+  pd->sprite->setZIndex(chunk->m_bkgSprite[1], -1);
 
   chunk = getEdgeChunk(c++); // Bottom Right
-  if (chunk->m_bkgSprite == NULL) chunk->m_bkgSprite = pd->sprite->newSprite();
-  pd->sprite->setImage(chunk->m_bkgSprite, getChunk(0, 0)->m_bkgImage, kBitmapUnflipped);
-  pd->sprite->moveTo(chunk->m_bkgSprite, CHUNK_PIX_X*WORLD_CHUNKS_X + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*WORLD_CHUNKS_Y + CHUNK_PIX_Y/2.0f);
-  pd->sprite->setZIndex(chunk->m_bkgSprite, -1);
+  if (chunk->m_bkgSprite[1] == NULL) chunk->m_bkgSprite[1] = pd->sprite->newSprite();
+  pd->sprite->setImage(chunk->m_bkgSprite[1], getChunk(0, 0)->m_bkgImage[1], kBitmapUnflipped);
+  pd->sprite->moveTo(chunk->m_bkgSprite[1], CHUNK_PIX_X*WORLD_CHUNKS_X + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*WORLD_CHUNKS_Y + CHUNK_PIX_Y/2.0f);
+  pd->sprite->setZIndex(chunk->m_bkgSprite[1], -1);
 
   chunk = getEdgeChunk(c++); // Bottom Left
-  if (chunk->m_bkgSprite == NULL) chunk->m_bkgSprite = pd->sprite->newSprite();
-  pd->sprite->setImage(chunk->m_bkgSprite, getChunk(WORLD_CHUNKS_X-1, 0)->m_bkgImage, kBitmapUnflipped);
-  pd->sprite->moveTo(chunk->m_bkgSprite, CHUNK_PIX_X*-1 + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*WORLD_CHUNKS_Y + CHUNK_PIX_Y/2.0f);
-  pd->sprite->setZIndex(chunk->m_bkgSprite, -1);
+  if (chunk->m_bkgSprite[1] == NULL) chunk->m_bkgSprite[1] = pd->sprite->newSprite();
+  pd->sprite->setImage(chunk->m_bkgSprite[1], getChunk(WORLD_CHUNKS_X-1, 0)->m_bkgImage[1], kBitmapUnflipped);
+  pd->sprite->moveTo(chunk->m_bkgSprite[1], CHUNK_PIX_X*-1 + CHUNK_PIX_X/2.0f, CHUNK_PIX_Y*WORLD_CHUNKS_Y + CHUNK_PIX_Y/2.0f);
+  pd->sprite->setZIndex(chunk->m_bkgSprite[1], -1);
 
 
 }
@@ -199,20 +207,36 @@ void setChunkBackgrounds(void) {
   for (uint16_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
     for (uint16_t x = 0; x < WORLD_CHUNKS_X; ++x) {
       struct Chunk_t* c = getChunk(x, y);
-      if (c->m_bkgImage == NULL) {
-        c->m_bkgImage = pd->graphics->newBitmap(CHUNK_PIX_X, CHUNK_PIX_Y, kColorClear);
+      if (c->m_bkgImage[1] == NULL) {
+        c->m_bkgImage[1] = pd->graphics->newBitmap(CHUNK_PIX_X*1, CHUNK_PIX_Y*1, kColorClear);
+        c->m_bkgImage[2] = pd->graphics->newBitmap(CHUNK_PIX_X*2, CHUNK_PIX_Y*2, kColorClear);
+        c->m_bkgImage[4] = pd->graphics->newBitmap(CHUNK_PIX_X*4, CHUNK_PIX_Y*4, kColorClear);
       }
-      if (c->m_bkgSprite == NULL) {
-        c->m_bkgSprite = pd->sprite->newSprite();
+      if (c->m_bkgSprite[1] == NULL) {
+        c->m_bkgSprite[1] = pd->sprite->newSprite();
+        c->m_bkgSprite[2] = pd->sprite->newSprite();
+        c->m_bkgSprite[4] = pd->sprite->newSprite();
       }
 
       renderChunkBackgroundImage(c);
 
-      PDRect bound = {.x = 0, .y = 0, .width = CHUNK_PIX_X, .height = CHUNK_PIX_Y};
-      pd->sprite->setBounds(c->m_bkgSprite , bound);
-      pd->sprite->setImage(c->m_bkgSprite , c->m_bkgImage, kBitmapUnflipped);
-      pd->sprite->moveTo(c->m_bkgSprite, c->m_pix_x, c->m_pix_y);
-      pd->sprite->setZIndex(c->m_bkgSprite, -1);
+      PDRect bound_x1 = {.x = 0, .y = 0, .width = CHUNK_PIX_X, .height = CHUNK_PIX_Y};
+      pd->sprite->setBounds(c->m_bkgSprite[1], bound_x1);
+      pd->sprite->setImage(c->m_bkgSprite[1], c->m_bkgImage[1], kBitmapUnflipped);
+      pd->sprite->moveTo(c->m_bkgSprite[1], c->m_pix_x, c->m_pix_y);
+      pd->sprite->setZIndex(c->m_bkgSprite[1], -1);
+
+      PDRect bound_x2 = {.x = 0, .y = 0, .width = CHUNK_PIX_X*2, .height = CHUNK_PIX_Y*2};
+      pd->sprite->setBounds(c->m_bkgSprite[2], bound_x2);
+      pd->sprite->setImage(c->m_bkgSprite[2], c->m_bkgImage[2], kBitmapUnflipped);
+      pd->sprite->moveTo(c->m_bkgSprite[2], c->m_pix_x*2, c->m_pix_y*2);
+      pd->sprite->setZIndex(c->m_bkgSprite[2], -1);
+
+      PDRect bound_x4 = {.x = 0, .y = 0, .width = CHUNK_PIX_X*4, .height = CHUNK_PIX_Y*4};
+      pd->sprite->setBounds(c->m_bkgSprite[4], bound_x4);
+      pd->sprite->setImage(c->m_bkgSprite[4], c->m_bkgImage[4], kBitmapUnflipped);
+      pd->sprite->moveTo(c->m_bkgSprite[4], c->m_pix_x*4, c->m_pix_y*4);
+      pd->sprite->setZIndex(c->m_bkgSprite[4], -1);
     }
   }
 }
@@ -231,7 +255,7 @@ void generate() {
   // The main playing grid
   setChunkBackgrounds();
 
-  // The neighbouring associations, including modulo behaviour
+  // The neighboring associations, including modulo behavior
   setChunkAssociations();
 
   // The borders of the grid and update the border associations too

@@ -10,6 +10,10 @@ uint16_t m_cargoSearchLocation = 0;
 
 struct Cargo_t* m_worldCargos;
 
+void cargoSpriteSetup(struct Cargo_t* _cargo, struct Location_t* _loc, uint16_t ix, uint16_t _iy, uint8_t _zoom);
+
+/// ///
+
 uint16_t getNCargo() {
   return m_nCargo;
 }
@@ -20,7 +24,7 @@ struct Cargo_t* cargoManagerNewCargo() {
     for (uint32_t i = start; i < TOT_TILES; ++i) {
       if (m_worldCargos[i].m_inUse == false) {
         ++m_nCargo;
-        ++m_cargoSearchLocation; // Search from the start next time
+        ++m_cargoSearchLocation;
         m_worldCargos[i].m_inUse = true;
         return &(m_worldCargos[i]);
       }
@@ -38,6 +42,13 @@ void cargoManagerFreeCargo(struct Cargo_t* _cargo) {
   --m_nCargo;
 }
 
+void cargoSpriteSetup(struct Cargo_t* _cargo, struct Location_t* _loc, uint16_t _ix, uint16_t _iy, uint8_t _zoom) {
+  PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*_zoom, .height = TILE_PIX*_zoom};
+  pd->sprite->setBounds(_cargo->m_sprite[_zoom], bound);
+  pd->sprite->setImage(_cargo->m_sprite[_zoom], getSprite16(_ix, _iy, _zoom), kBitmapUnflipped);
+  pd->sprite->moveTo(_cargo->m_sprite[_zoom], _loc->m_pix_x*_zoom, _loc->m_pix_y*_zoom);
+  pd->sprite->setZIndex(_cargo->m_sprite[_zoom], Z_INDEX_CARGO);
+}
 
 bool newCargo(uint32_t _x, uint32_t _y, enum kCargoType _type) {
 
@@ -45,27 +56,27 @@ bool newCargo(uint32_t _x, uint32_t _y, enum kCargoType _type) {
   if (loc->m_cargo != NULL) return false;
   if (loc->m_type != kConveyor) return false;
 
-  loc->m_x = _x;
-  loc->m_y = _y; // Should be assured already by loc->m_type == kConveyor check
   struct Chunk_t* chunk = getChunk_fromLocation(loc);
 
   //pd->system->logToConsole("Set cargo, current %i", (int)loc->m_cargo);
 
-  LCDBitmap* image = NULL;
+  uint16_t ix = 0, iy = 0;
   switch (_type) {
-    case kApple: image = getSprite16(1,1); break;
+    case kApple:; ix = 1; iy = 1; break;
     case kNoCargo:;
   }
 
   struct Cargo_t* cargo = cargoManagerNewCargo();
-  if (cargo->m_sprite == NULL) cargo->m_sprite = pd->sprite->newSprite();
+  if (cargo->m_sprite[1] == NULL) {
+    cargo->m_sprite[1] = pd->sprite->newSprite();
+    cargo->m_sprite[2] = pd->sprite->newSprite();
+    cargo->m_sprite[4] = pd->sprite->newSprite();
+  }
   cargo->m_type = _type;
 
-  PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX, .height = TILE_PIX};
-  pd->sprite->setBounds(cargo->m_sprite, bound);
-  pd->sprite->setImage(cargo->m_sprite, image, kBitmapUnflipped);
-  pd->sprite->moveTo(cargo->m_sprite, loc->m_pix_x, loc->m_pix_y);
-  pd->sprite->setZIndex(cargo->m_sprite, Z_INDEX_CARGO);
+  cargoSpriteSetup(cargo, loc, ix, iy, 1);
+  cargoSpriteSetup(cargo, loc, ix, iy, 2);
+  cargoSpriteSetup(cargo, loc, ix, iy, 4);
 
   loc->m_cargo = cargo;
 

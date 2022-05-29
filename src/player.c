@@ -20,6 +20,8 @@ void movePlayerPosition(float _goalX, float _goalY);
 
 void updatePlayerPosition(void);
 
+void playerSpriteSetup(uint8_t _zoom);
+
 /// ///
 
 int16_t getOffX() {
@@ -51,28 +53,33 @@ struct Location_t* getPlayerLookingAtLocation() {
 }
 
 void setPlayerPosition(uint16_t _x, uint16_t _y) {
-  pd->sprite->moveTo(m_player.m_sprite, _x, _y);
+  uint8_t zoom = getZoom(); 
+  pd->sprite->moveTo(m_player.m_sprite[zoom], _x * zoom, _y * zoom);
   updatePlayerPosition();
-  pd->sprite->setZIndex(m_player.m_sprite, (int16_t)m_player.m_pix_y);
+  pd->sprite->setZIndex(m_player.m_sprite[zoom], (int16_t)m_player.m_pix_y * zoom);
 }
 
 void movePlayerPosition(float _goalX, float _goalY) {
   int len;
-  SpriteCollisionInfo* collInfo = pd->sprite->moveWithCollisions(m_player.m_sprite, _goalX, _goalY, &(m_player.m_pix_x), &(m_player.m_pix_y), &len);
+  uint8_t zoom = getZoom();
+  SpriteCollisionInfo* collInfo = pd->sprite->moveWithCollisions(m_player.m_sprite[zoom], _goalX * zoom, _goalY * zoom, &(m_player.m_pix_x), &(m_player.m_pix_y), &len);
   free(collInfo);
   updatePlayerPosition();
-  pd->sprite->setZIndex(m_player.m_sprite, (int16_t)m_player.m_pix_y);
+  pd->sprite->setZIndex(m_player.m_sprite[zoom], (int16_t)m_player.m_pix_y * zoom);
 
 }
 
 void updatePlayerPosition() {
-  pd->sprite->getPosition(m_player.m_sprite, &(m_player.m_pix_x), &(m_player.m_pix_y));
-  //m_player.m_pix_x -= TILE_PIX/2;
-  //m_player.m_pix_y -= TILE_PIX/2;
+  uint8_t zoom = getZoom();
+  pd->sprite->getPosition(m_player.m_sprite[zoom], &(m_player.m_pix_x), &(m_player.m_pix_y));
+  m_player.m_pix_x = m_player.m_pix_x / zoom;
+  m_player.m_pix_y = m_player.m_pix_y / zoom;
+  //pd->system->logToConsole("P@ %f %f", m_player.m_pix_x , m_player.m_pix_y);
 }
 
 bool movePlayer() {
-  updatePlayerPosition();
+  uint8_t zoom = getZoom();
+  //updatePlayerPosition();
   float goalX = m_player.m_pix_x;
   float goalY = m_player.m_pix_y;
   
@@ -116,7 +123,7 @@ bool movePlayer() {
   //else if ((m_offY + m_player.m_y) < ((SCREEN_PIX_Y / m_zoom) * (1.0f - SCROLL_EDGE))) m_offY = ((SCREEN_PIX_Y / m_zoom) * (1.0f - SCROLL_EDGE)) - m_player.m_y;
 
   if (m_player.m_pix_x > TOT_WORLD_PIX_X) {
-  	setPlayerPosition(m_player.m_pix_x - TOT_WORLD_PIX_X, m_player.m_pix_y);
+    setPlayerPosition(m_player.m_pix_x - TOT_WORLD_PIX_X, m_player.m_pix_y);
     m_offX += TOT_WORLD_PIX_X;
   } else if (m_player.m_pix_x < 0) {
     setPlayerPosition(m_player.m_pix_x + TOT_WORLD_PIX_X, m_player.m_pix_y);
@@ -136,17 +143,21 @@ bool movePlayer() {
   //pd->system->logToConsole("CHX %f / %f = %f", m_player.m_x, (float)CHUNK_PIX_X, ((m_player.m_x)/((float)CHUNK_PIX_X)));
 
 
-  m_offX = -(m_player.m_pix_x - SCREEN_PIX_X/(2 * getZoom()));
-  m_offY = -(m_player.m_pix_y - SCREEN_PIX_Y/(2 * getZoom()));
+  m_offX = -(m_player.m_pix_x*zoom - (SCREEN_PIX_X/2));
+  m_offY = -(m_player.m_pix_y*zoom - (SCREEN_PIX_Y/2));
+
+
+  //pd->system->logToConsole("P@ %f %f", m_player.m_pix_x , m_player.m_pix_y);
+  //pd->system->logToConsole("OFF %i %i", m_offX, m_offY);
 
 
   // Check chunk change
-  uint16_t chunkX = m_player.m_pix_x / CHUNK_PIX_X;
-  uint16_t chunkY = m_player.m_pix_y / CHUNK_PIX_Y;
+  uint16_t chunkX = m_player.m_pix_x / (CHUNK_PIX_X);
+  uint16_t chunkY = m_player.m_pix_y / (CHUNK_PIX_Y);
 
   // Subchunk change
-  uint8_t subChunkX = (uint16_t)(m_player.m_pix_x / ((float)CHUNK_PIX_X/2.0f)) % 2;
-  uint8_t subChunkY = (uint16_t)(m_player.m_pix_y / ((float)CHUNK_PIX_Y/2.0f)) % 2;
+  uint8_t subChunkX = (uint16_t)(m_player.m_pix_x / ((float)(CHUNK_PIX_X)/2.0f)) % 2;
+  uint8_t subChunkY = (uint16_t)(m_player.m_pix_y / ((float)(CHUNK_PIX_Y)/2.0f)) % 2;
   enum kChunkQuad quadrant = NW;
   if (subChunkX && subChunkY) {
     quadrant = SE;
@@ -163,36 +174,42 @@ bool movePlayer() {
     updateRenderList();
   }
 
+  struct Location_t* wasAt = m_currentLocation;
   m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
 
-  struct Location_t* wasLookingAt = m_lookingAt;
   if (getPressed(0)) m_lookingAt = getLocation(m_currentLocation->m_x - 1, m_currentLocation->m_y);
   if (getPressed(1)) m_lookingAt = getLocation(m_currentLocation->m_x + 1, m_currentLocation->m_y);
   if (getPressed(2)) m_lookingAt = getLocation(m_currentLocation->m_x, m_currentLocation->m_y - 1);
   if (getPressed(3)) m_lookingAt = getLocation(m_currentLocation->m_x, m_currentLocation->m_y + 1);
 
   //pd->system->logToConsole("LA %i", (int) m_lookingAt);
-  if (m_lookingAt && wasLookingAt != m_lookingAt) {
-  	pd->sprite->moveTo(m_player.m_blueprint, m_lookingAt->m_pix_x, m_lookingAt->m_pix_y);
-  	pd->system->logToConsole("LA %i %i", m_lookingAt->m_pix_x, m_lookingAt->m_pix_y);
+  if (m_currentLocation && wasAt != m_currentLocation) {
+    pd->sprite->moveTo(m_player.m_blueprint[zoom], m_currentLocation->m_pix_x * zoom, m_currentLocation->m_pix_y * zoom);
+    //pd->system->logToConsole("LA %i %i", m_lookingAt->m_pix_x, m_lookingAt->m_pix_y);
   }
 
   return true;
 }
 
+void playerSpriteSetup(uint8_t _zoom) {
+  m_player.m_sprite[_zoom] = pd->sprite->newSprite();
+  PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*_zoom, .height = TILE_PIX*_zoom};
+  pd->sprite->setBounds(m_player.m_sprite[_zoom], bound);
+  pd->sprite->setImage(m_player.m_sprite[_zoom], getSprite16(0, 1, _zoom), kBitmapUnflipped);
+  pd->sprite->setCollideRect(m_player.m_sprite[_zoom], bound);
+
+  m_player.m_blueprint[_zoom] = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_player.m_blueprint[_zoom], bound);
+  pd->sprite->setImage(m_player.m_blueprint[_zoom], getSprite16(0, 0, _zoom), kBitmapUnflipped);
+  pd->sprite->setZIndex(m_player.m_blueprint[_zoom], Z_INDEX_BLUEPRINT);
+}
+
 void initPlayer() {
-  m_player.m_sprite = pd->sprite->newSprite();
-  m_player.m_blueprint = pd->sprite->newSprite();
+  playerSpriteSetup(1);
+  playerSpriteSetup(2);
+  playerSpriteSetup(4);
 
-  PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX, .height = TILE_PIX};
-  pd->sprite->setBounds(m_player.m_sprite, bound);
-  pd->sprite->setImage(m_player.m_sprite, getSprite16(0, 1), kBitmapUnflipped);
   setPlayerPosition(SCREEN_PIX_X/2, SCREEN_PIX_Y/2);
-  pd->sprite->setCollideRect(m_player.m_sprite, bound);
-
-  pd->sprite->setBounds(m_player.m_blueprint, bound);
-  pd->sprite->setImage(m_player.m_blueprint, getSprite16(0, 3), kBitmapUnflipped);
-  pd->sprite->setZIndex(m_player.m_blueprint, Z_INDEX_BLUEPRINT);
 
   m_currentChunk = getChunk_noCheck(0,0);
 }

@@ -9,8 +9,8 @@ struct Chunk_t{
   uint16_t m_x; // In chunk coords
   uint16_t m_y;
 
-  LCDSprite* m_bkgSprite;
-  LCDBitmap* m_bkgImage; 
+  LCDSprite* m_bkgSprite[5]; // Only using indicies 1, 2, 4
+  LCDBitmap* m_bkgImage[5];  // Only using indicies 1, 2, 4
 
   struct Chunk_t* m_neighborsNE[CHUNK_NEIGHBORS_CORNER];
   struct Chunk_t* m_neighborsSE[CHUNK_NEIGHBORS_CORNER];
@@ -47,6 +47,6 @@ void chunkAddCargo(struct Chunk_t* _chunk, struct Cargo_t* _cargo);
 
 void chunkRemoveCargo(struct Chunk_t* _chunk, struct Cargo_t* _cargo);
 
-void chunkTickChunk(struct Chunk_t* _chunk, uint8_t _tick);
+void chunkTickChunk(struct Chunk_t* _chunk, uint8_t _tick, uint8_t _zoom);
 
 void initChunk(void);

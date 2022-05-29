@@ -37,10 +37,12 @@ uint8_t getPressed(uint32_t _i) {
 
 void toggleZoom() {
   switch (m_zoom) {
-    case 1: m_zoom = 2; updateRenderList(); break;
+    case 1: m_zoom = 2; break;
     case 2: m_zoom = 4; break;
-    case 4: m_zoom = 1; updateRenderList(); break;
+    case 4: m_zoom = 1; break;
   }
+  updateRenderList();
+  updateBlueprint();
 }
 
 bool characterMoveInput(uint32_t _buttonPressed) {
@@ -84,7 +86,7 @@ void clickHandleMenuOptionSelected(uint32_t _buttonPressed) {
     // noop
   } else if (kButtonA    == _buttonPressed) {
     switch (getUISelectedID()) {
-      case kMenuConveyor:; newConveyor(getPlayerLookingAtLocation(), getUISelectedRotation());
+      case kMenuConveyor:; newConveyor(getPlayerLocation(), getUISelectedRotation());
       case kMenuSplitI:;   break;
       case kMenuSplitL:;   break;
       case kMenuSplitT:;   break;     
@@ -92,7 +94,6 @@ void clickHandleMenuOptionSelected(uint32_t _buttonPressed) {
   } else if (kButtonB    == _buttonPressed) {
     setGameMode(kMenuSelect);
     updateBlueprint();
-    pd->sprite->setImage(getPlayer()->m_blueprint, getSprite16(0, 0), kBitmapUnflipped); // Clear blueprint
   }
 }
 
@@ -104,14 +105,16 @@ void rotateHandleWander(float _rotation) {
     if (m_zoom < 4) {
       pd->system->logToConsole("ZOOM IN");
       m_zoom *= 2;
-      if (m_zoom == 2) updateRenderList(); // Zoom 1-to-2, add detail
+      updateRenderList();
+      updateBlueprint();
     }
   } else if (rot < -260.0f) {
     rot = 0.0f;
     pd->system->logToConsole("ZOOM OUT");
     if (m_zoom > 1) {
       m_zoom /= 2;
-      if (m_zoom == 1) updateRenderList(); // Zoom 2-to-1, remove detail
+      updateRenderList();
+      updateBlueprint();
     }
   }
 }
