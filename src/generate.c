@@ -16,6 +16,8 @@ void doNonNeighborAssociation(struct Chunk_t* _chunk, struct Chunk_t** _theNeigh
  
 void setWorldEdges(void);
 
+void generateSpriteSetup(struct Chunk_t* _chunk, uint8_t _zoom);
+
 /// ///
 
 void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
@@ -30,18 +32,6 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
     }
   }
 
-  // Shift from Sprite to Bitmap draw coords
-  const int16_t off_x = (_chunk->m_x * CHUNK_PIX_X) + TILE_PIX/2;
-  const int16_t off_y = (_chunk->m_y * CHUNK_PIX_Y) + TILE_PIX/2;
-
-  // Render locations into the background image
-  for (uint32_t i = 0; i < _chunk->m_nLocations; ++i) {
-    struct Location_t* loc = _chunk->m_locations[i];
-    if (loc->m_image) {
-      pd->graphics->drawBitmap(loc->m_image[1], loc->m_pix_x - off_x, loc->m_pix_y - off_y, kBitmapUnflipped);
-    }
-  }
-
   #ifdef DEV
   setRoobert24();
   pd->graphics->drawRect(0, 0, CHUNK_PIX_X, CHUNK_PIX_Y, kColorBlack);
@@ -50,15 +40,25 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   pd->graphics->drawText(text, 16, kASCIIEncoding, TILE_PIX, TILE_PIX);
   #endif
 
+  // Shift from Sprite to Bitmap draw coords
+  const int16_t off_x = (_chunk->m_x * CHUNK_PIX_X) + TILE_PIX/2;
+  const int16_t off_y = (_chunk->m_y * CHUNK_PIX_Y) + TILE_PIX/2;
+
+  // Render locations into the background image
+  for (uint32_t i = 0; i < _chunk->m_nLocations; ++i) {
+    struct Location_t* loc = _chunk->m_locations[i];
+    if (loc->m_type != kEmpty && loc->m_image) {
+      pd->graphics->drawBitmap(loc->m_image[1], loc->m_pix_x - off_x, loc->m_pix_y - off_y, kBitmapUnflipped);
+    }
+  }
+
   pd->graphics->popContext();
 
-  pd->graphics->pushContext(_chunk->m_bkgImage[2]);
-  pd->graphics->drawScaledBitmap(_chunk->m_bkgImage[1], 0, 0, 2.0f, 2.0f);
-  pd->graphics->popContext();
-
-  pd->graphics->pushContext(_chunk->m_bkgImage[4]);
-  pd->graphics->drawScaledBitmap(_chunk->m_bkgImage[1], 0, 0, 4.0f, 4.0f);
-  pd->graphics->popContext();
+  for (uint32_t zoom = 2; zoom < 5; ++zoom) {
+    pd->graphics->pushContext(_chunk->m_bkgImage[zoom]);
+    pd->graphics->drawScaledBitmap(_chunk->m_bkgImage[1], 0, 0, (float)zoom, (float)zoom);
+    pd->graphics->popContext();
+  }
 
 }
 
@@ -203,40 +203,34 @@ void setChunkAssociations(void) {
   }
 }
 
+void generateSpriteSetup(struct Chunk_t* _chunk, uint8_t _zoom) {
+  PDRect bound = {.x = 0, .y = 0, .width = CHUNK_PIX_X*_zoom, .height = CHUNK_PIX_Y*_zoom};
+  pd->sprite->setBounds(_chunk->m_bkgSprite[_zoom], bound);
+  pd->sprite->setImage(_chunk->m_bkgSprite[_zoom], _chunk->m_bkgImage[_zoom], kBitmapUnflipped);
+  pd->sprite->moveTo(_chunk->m_bkgSprite[_zoom], _chunk->m_pix_x*_zoom, _chunk->m_pix_y*_zoom);
+  pd->sprite->setZIndex(_chunk->m_bkgSprite[_zoom], -1);
+}
+
 void setChunkBackgrounds(void) {
   for (uint16_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
     for (uint16_t x = 0; x < WORLD_CHUNKS_X; ++x) {
       struct Chunk_t* c = getChunk(x, y);
       if (c->m_bkgImage[1] == NULL) {
-        c->m_bkgImage[1] = pd->graphics->newBitmap(CHUNK_PIX_X*1, CHUNK_PIX_Y*1, kColorClear);
-        c->m_bkgImage[2] = pd->graphics->newBitmap(CHUNK_PIX_X*2, CHUNK_PIX_Y*2, kColorClear);
-        c->m_bkgImage[4] = pd->graphics->newBitmap(CHUNK_PIX_X*4, CHUNK_PIX_Y*4, kColorClear);
+        for (uint32_t zoom = 1; zoom < 5; ++zoom) {
+          c->m_bkgImage[zoom] = pd->graphics->newBitmap(CHUNK_PIX_X*zoom, CHUNK_PIX_Y*zoom, kColorClear);
+        }
       }
       if (c->m_bkgSprite[1] == NULL) {
-        c->m_bkgSprite[1] = pd->sprite->newSprite();
-        c->m_bkgSprite[2] = pd->sprite->newSprite();
-        c->m_bkgSprite[4] = pd->sprite->newSprite();
+        for (uint32_t zoom = 1; zoom < 5; ++zoom) {
+          c->m_bkgSprite[zoom] = pd->sprite->newSprite();
+        }
       }
 
       renderChunkBackgroundImage(c);
 
-      PDRect bound_x1 = {.x = 0, .y = 0, .width = CHUNK_PIX_X, .height = CHUNK_PIX_Y};
-      pd->sprite->setBounds(c->m_bkgSprite[1], bound_x1);
-      pd->sprite->setImage(c->m_bkgSprite[1], c->m_bkgImage[1], kBitmapUnflipped);
-      pd->sprite->moveTo(c->m_bkgSprite[1], c->m_pix_x, c->m_pix_y);
-      pd->sprite->setZIndex(c->m_bkgSprite[1], -1);
-
-      PDRect bound_x2 = {.x = 0, .y = 0, .width = CHUNK_PIX_X*2, .height = CHUNK_PIX_Y*2};
-      pd->sprite->setBounds(c->m_bkgSprite[2], bound_x2);
-      pd->sprite->setImage(c->m_bkgSprite[2], c->m_bkgImage[2], kBitmapUnflipped);
-      pd->sprite->moveTo(c->m_bkgSprite[2], c->m_pix_x*2, c->m_pix_y*2);
-      pd->sprite->setZIndex(c->m_bkgSprite[2], -1);
-
-      PDRect bound_x4 = {.x = 0, .y = 0, .width = CHUNK_PIX_X*4, .height = CHUNK_PIX_Y*4};
-      pd->sprite->setBounds(c->m_bkgSprite[4], bound_x4);
-      pd->sprite->setImage(c->m_bkgSprite[4], c->m_bkgImage[4], kBitmapUnflipped);
-      pd->sprite->moveTo(c->m_bkgSprite[4], c->m_pix_x*4, c->m_pix_y*4);
-      pd->sprite->setZIndex(c->m_bkgSprite[4], -1);
+      for (uint32_t zoom = 1; zoom < 5; ++zoom) {
+        generateSpriteSetup(c, zoom);
+      }
     }
   }
 }

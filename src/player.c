@@ -106,10 +106,10 @@ bool movePlayer() {
   goalY += m_player.m_vY;
   */
 
-  if (getPressed(0)) goalX -= 4 / getZoom();
-  if (getPressed(1)) goalX += 4 / getZoom();
-  if (getPressed(2)) goalY -= 4 / getZoom();
-  if (getPressed(3)) goalY += 4 / getZoom();
+  if (getPressed(0)) goalX -= 4 / zoom;
+  if (getPressed(1)) goalX += 4 / zoom;
+  if (getPressed(2)) goalY -= 4 / zoom;
+  if (getPressed(3)) goalY += 4 / zoom;
 
 
   //pd->system->logToConsole("GOAL %f %f CURRENT %f %f", goalX, goalY, m_player.m_x, m_player.m_y);
@@ -201,13 +201,13 @@ void playerSpriteSetup(uint8_t _zoom) {
   m_player.m_blueprint[_zoom] = pd->sprite->newSprite();
   pd->sprite->setBounds(m_player.m_blueprint[_zoom], bound);
   pd->sprite->setImage(m_player.m_blueprint[_zoom], getSprite16(0, 0, _zoom), kBitmapUnflipped);
-  pd->sprite->setZIndex(m_player.m_blueprint[_zoom], Z_INDEX_BLUEPRINT);
+  pd->sprite->setZIndex(m_player.m_blueprint[_zoom], Z_INDEX_BLUEPRINT_A);
 }
 
 void initPlayer() {
-  playerSpriteSetup(1);
-  playerSpriteSetup(2);
-  playerSpriteSetup(4);
+  for (uint32_t zoom = 1; zoom < 5; ++zoom) {
+    playerSpriteSetup(zoom);
+  }
 
   setPlayerPosition(SCREEN_PIX_X/2, SCREEN_PIX_Y/2);
 

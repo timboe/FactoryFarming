@@ -35,26 +35,50 @@ void conveyorUpdateFn(struct Location_t* _loc, uint8_t _tick, uint8_t _zoom) {
   if (_loc->m_cargo == NULL) return;
   if (_loc->m_progress < TILE_PIX) {
     _loc->m_progress += _tick;
+    enum kConvDir dir;
     switch (_loc->m_convDir) {
       case SN:; pd->sprite->moveTo(_loc->m_cargo->m_sprite[_zoom], _loc->m_pix_x*_zoom, (_loc->m_pix_y - _loc->m_progress)*_zoom); break;
       case NS:; pd->sprite->moveTo(_loc->m_cargo->m_sprite[_zoom], _loc->m_pix_x*_zoom, (_loc->m_pix_y + _loc->m_progress)*_zoom); break;
-      case EW:; pd->sprite->moveTo(_loc->m_cargo->m_sprite[_zoom], (_loc->m_pix_x + _loc->m_progress)*_zoom, _loc->m_pix_y*_zoom); break;
-      case WE:; pd->sprite->moveTo(_loc->m_cargo->m_sprite[_zoom], (_loc->m_pix_x - _loc->m_progress)*_zoom, _loc->m_pix_y*_zoom); break;
+      case EW:; pd->sprite->moveTo(_loc->m_cargo->m_sprite[_zoom], (_loc->m_pix_x - _loc->m_progress)*_zoom, _loc->m_pix_y*_zoom); break;
+      case WE:; pd->sprite->moveTo(_loc->m_cargo->m_sprite[_zoom], (_loc->m_pix_x + _loc->m_progress)*_zoom, _loc->m_pix_y*_zoom); break;
       case kConvDirN:; break;
     }
     //pd->system->logToConsole("MOVE %i %i, %i", _loc->m_pix_x, _loc->m_pix_y, _loc->m_progress);
   }
-  if (_loc->m_progress >= TILE_PIX && _loc->m_next != NULL && _loc->m_next->m_cargo == NULL) {
+  if (_loc->m_progress >= TILE_PIX && _loc->m_next[0] != NULL && _loc->m_next[0]->m_cargo == NULL) {
     struct Cargo_t* theCargo = _loc->m_cargo;
-    _loc->m_next->m_cargo = theCargo;
+    _loc->m_next[0]->m_cargo = theCargo;
     _loc->m_cargo = NULL;
-    _loc->m_next->m_progress = _loc->m_progress - TILE_PIX;
+    _loc->m_next[0]->m_progress = _loc->m_progress - TILE_PIX;
     // Cargo moves between chunks?
-    if (_loc->m_next->m_chunk != _loc->m_chunk) {
+    if (_loc->m_next[0]->m_chunk != _loc->m_chunk) {
       //pd->system->logToConsole("CHANGE CHUNK");
       chunkRemoveCargo(_loc->m_chunk, theCargo);
-      chunkAddCargo(_loc->m_next->m_chunk, theCargo);
+      chunkAddCargo(_loc->m_next[0]->m_chunk, theCargo);
     }
+  }
+}
+
+void clearLocation(struct Location_t* _loc) {
+  bool removed = false;
+
+  if (_loc->m_cargo) {
+    chunkRemoveCargo(_loc->m_chunk, _loc->m_cargo);
+    cargoManagerFreeCargo(_loc->m_cargo);
+    _loc->m_cargo = NULL;
+    removed = true;
+  }
+
+  if (_loc->m_type == kConveyor) {
+    _loc->m_type = kEmpty;
+    chunkRemoveLocation(_loc->m_chunk, _loc);
+    renderChunkBackgroundImage(_loc->m_chunk);
+    --m_nConveyors;
+    removed = true;
+  }
+
+  if (removed) {
+    updateRenderList();
   }
 }
 
@@ -66,53 +90,76 @@ void locationSpriteSetup(struct Location_t* _loc, enum kConvDir _dir, uint8_t _z
   pd->sprite->setZIndex(_loc->m_sprite[_zoom], Z_INDEX_CONVEYOR);
 }
 
-bool newConveyor(struct Location_t* _loc, enum kConvDir _dir) {
-  if (_loc->m_type != kEmpty) return false;
+bool newConveyor(struct Location_t* _loc, enum kConvDir _dir, enum kConvSubType _subType) {
+  bool newToChunk = true;
+  if (_loc->m_type == kConveyor) { // TODO - cover any other options here
+    newToChunk = false;
+  } else if (_loc->m_type == kEmpty) {
+    ++m_nConveyors;
+  } else {
+    return false;
+  }
 
   if (_loc->m_sprite[1] == NULL) {
-    _loc->m_sprite[1] = pd->sprite->newSprite();
-    _loc->m_sprite[2] = pd->sprite->newSprite();
-    _loc->m_sprite[4] = pd->sprite->newSprite();
+    for (uint32_t zoom = 1; zoom < 5; ++zoom) {
+      _loc->m_sprite[zoom] = pd->sprite->newSprite();
+    }
   }
-  _loc->m_image[1] = getSprite16(0, CONV_START_Y + _dir, 1);
-  _loc->m_image[2] = getSprite16(0, CONV_START_Y + _dir, 2);
-  _loc->m_image[4] = getSprite16(0, CONV_START_Y + _dir, 4);
-  _loc->m_cargo = NULL;
+
+  for (uint32_t zoom = 1; zoom < 5; ++zoom) {
+    _loc->m_image[zoom] = getSprite16(0, CONV_START_Y + _dir, zoom);
+  }
   _loc->m_type = kConveyor;
+  _loc->m_convSubType = _subType;
   _loc->m_convDir = _dir;
   _loc->m_updateFn = &conveyorUpdateFn;
   _loc->m_progress = 0;
+  _loc->m_mode = 0;
 
-  locationSpriteSetup(_loc, _dir, 1);
-  locationSpriteSetup(_loc, _dir, 2);
-  locationSpriteSetup(_loc, _dir, 4);
+  for (uint32_t zoom = 1; zoom < 5; ++zoom) {
+    locationSpriteSetup(_loc, _dir, zoom);
+  }
 
   struct Location_t* above = getLocation(_loc->m_x, _loc->m_y - 1);
   struct Location_t* below = getLocation(_loc->m_x, _loc->m_y + 1);
   struct Location_t* left  = getLocation(_loc->m_x - 1, _loc->m_y);
   struct Location_t* right = getLocation(_loc->m_x + 1, _loc->m_y);
-  switch (_dir) {
-    case SN:;
-      if (above->m_type == kConveyor) _loc->m_next = above;
-      if (below->m_type == kConveyor) below->m_next = _loc;
-      break;
-    case NS:;
-      if (above->m_type == kConveyor) above->m_next = _loc;
-      if (below->m_type == kConveyor) _loc->m_next = below;
-      break;
-    case EW:;
-      if (left->m_type  == kConveyor) left->m_next = _loc;
-      if (right->m_type == kConveyor) _loc->m_next = right;
-      break;
-    case WE:;
-      if (left->m_type  == kConveyor) _loc->m_next = left;
-      if (right->m_type == kConveyor) right->m_next = _loc;
-      break;
-    case kConvDirN:;
+  if (_subType == kBelt) {
+    switch (_dir) {
+      case SN:; _loc->m_next[0] = above; break;
+      case NS:; _loc->m_next[0] = below; break;
+      case WE:; _loc->m_next[0] = right; break;
+      case EW:; _loc->m_next[0] = left;  break;
+      case kConvDirN:; break;
+    }
+  } else if (_subType == kSplitI) {
+    switch (_dir) {
+      case SN:; case NS:; _loc->m_next[0] = above; _loc->m_next[1] = below; break;
+      case WE:; case EW:; _loc->m_next[0] = left;  _loc->m_next[0] = right; break;
+      case kConvDirN:; break;
+    }
+  } else if (_subType == kSplitL) {
+    switch (_dir) {
+      case SN:; _loc->m_next[0] = above; _loc->m_next[1] = right; break;
+      case NS:; _loc->m_next[0] = right; _loc->m_next[1] = below; break;
+      case WE:; _loc->m_next[0] = below; _loc->m_next[1] = left;  break;
+      case EW:; _loc->m_next[0] = left;  _loc->m_next[1] = above; break;
+      case kConvDirN:; break;
+    }
+  } else if (_subType == kSplitT) {
+    switch (_dir) {
+      case SN:; _loc->m_next[0] = left;  _loc->m_next[1] = above;  _loc->m_next[2] = right; break;
+      case NS:; _loc->m_next[0] = above; _loc->m_next[1] = right;  _loc->m_next[2] = below; break;
+      case WE:; _loc->m_next[0] = right; _loc->m_next[1] = below;  _loc->m_next[2] = left;  break;
+      case EW:; _loc->m_next[0] = below; _loc->m_next[1] = left;   _loc->m_next[2] = above; break;
+      case kConvDirN:; break;
+    }
   }
 
   // Add to the active/render list
-  chunkAddLocation(_loc->m_chunk, _loc);
+  if (newToChunk) {
+    chunkAddLocation(_loc->m_chunk, _loc); // Careful, no de-duplication in here, for speed
+  }
 
   //pd->system->logToConsole("ADD TO CHUNK: %i %i with %i sprites", chunk->m_x, chunk->m_y, chunk->m_nLocations);
 
@@ -120,7 +167,6 @@ bool newConveyor(struct Location_t* _loc, enum kConvDir _dir) {
   renderChunkBackgroundImage(_loc->m_chunk);
   updateRenderList();
 
-  ++m_nConveyors;
   return true;
 }
 

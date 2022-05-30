@@ -3,7 +3,7 @@
 #include "player.h"
 #include "input.h"
 
-uint16_t m_UIIcons[] = {0,7,  0,11,  1,11,  2,11};
+uint16_t m_UIIcons[] = {0,3,  0,4,  4,3,  4,4,  1,1,  2,1,  1,2};
 
 LCDSprite* m_UISpriteBottom;
 
@@ -63,10 +63,18 @@ void modUISelectedRotation(bool _increment) {
   UIDirtyRight();
 }
 
-void updateUI() {
-  // Flashing cursor
-  if (getGameMode() == kMenuSelect && getFrameCount() % (TICK_FREQUENCY/4) == 0) {
+void updateUI(int _fc, enum kGameMode _gm) {
+  
+  if (_gm == kMenuSelect && _fc % (TICK_FREQUENCY/4) == 0) {
+    // Flashing cursor
     UIDirtyRight();
+    pd->system->logToConsole("BP %i", _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4 ? Z_INDEX_BLUEPRINT_A : Z_INDEX_BLUEPRINT_B);
+  } else if (_gm == kMenuOptionSelected && _fc % (TICK_FREQUENCY/4) == 0) {
+    // Flashing blueprint 
+    pd->sprite->setZIndex(getPlayer()->m_blueprint[getZoom()], _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4 ? Z_INDEX_BLUEPRINT_A : Z_INDEX_BLUEPRINT_B);
+  } else if (_gm ==kWander && _fc % FAR_TICK_FREQUENCY == 0) {
+    // Update bottom ticker
+    UIDirtyBottom();
   }
 
   if (m_UIDirtyRight) {
@@ -87,6 +95,9 @@ void updateBlueprint() {
       case kMenuSplitI:;   pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(m_UISelectedRotation+0, 4, zoom), kBitmapUnflipped); break;
       case kMenuSplitL:;   pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(m_UISelectedRotation+4, 3, zoom), kBitmapUnflipped); break;
       case kMenuSplitT:;   pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(m_UISelectedRotation+4, 4, zoom), kBitmapUnflipped); break;     
+      case kMenuApple:;    pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(m_UIIcons[8], m_UIIcons[9], zoom), kBitmapUnflipped); break;     
+      case kMenuCheese:;   pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(m_UIIcons[10], m_UIIcons[11], zoom), kBitmapUnflipped); break;     
+      case kMenuBin:;      pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(m_UIIcons[12], m_UIIcons[13], zoom), kBitmapUnflipped); break;     
     }
   } else { // Clear blueprint
     pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(0, 0, zoom), kBitmapUnflipped); 
@@ -143,18 +154,34 @@ void drawUIBottom() {
   pd->graphics->setDrawMode(kDrawModeFillWhite);
   const enum kGameMode gm = getGameMode();
   if (gm == kWander) {
-    snprintf(text, 128, "Conveyors:%u", getNConveyors());
-    pd->graphics->drawText(text, 128, kASCIIEncoding, 0, 0);
-    snprintf(text, 128, "Cargo:%u", getNCargo());
-    pd->graphics->drawText(text, 128, kASCIIEncoding, 7*TILE_PIX, 0);
-    snprintf(text, 128, "SpriteList:%u", pd->sprite->getSpriteCount());
-    pd->graphics->drawText(text, 128, kASCIIEncoding, 12*TILE_PIX, 0);
+    static bool mode = true;
+    if (pd->system->getElapsedTime() > 3.0f) {
+      mode = !mode;
+      pd->system->resetElapsedTime();
+    }
+    if (mode) {
+      snprintf(text, 128, "Conveyors:%u", getNConveyors());
+      pd->graphics->drawText(text, 128, kASCIIEncoding, 0, 0);
+      snprintf(text, 128, "Cargo:%u", getNCargo());
+      pd->graphics->drawText(text, 128, kASCIIEncoding, 7*TILE_PIX, 0);
+      snprintf(text, 128, "Sprite List:%u", pd->sprite->getSpriteCount());
+      pd->graphics->drawText(text, 128, kASCIIEncoding, 12*TILE_PIX, 0);
+    } else {
+      snprintf(text, 128, "Near Ticks:%u", getNearTickCount());
+      pd->graphics->drawText(text, 128, kASCIIEncoding, 0, 0);
+      snprintf(text, 128, "Far Ticks:%u", getFarTickCount());
+      pd->graphics->drawText(text, 128, kASCIIEncoding, 7*TILE_PIX, 0);
+    }
+
   } else if (gm == kMenuSelect || gm == kMenuOptionSelected) {
     switch (m_UISelectedID) {
       case kMenuConveyor:; snprintf(text, 128, "Conveyor Belt (%s)", getRotationAsString()); break;
       case kMenuSplitI:;   snprintf(text, 128, "'I' Conveyor Splitter (%s)", getRotationAsString()); break;
       case kMenuSplitL:;   snprintf(text, 128, "'L' Conveyor Splitter (%s)", getRotationAsString()); break;
       case kMenuSplitT:;   snprintf(text, 128, "'T' Conveyor Splitter (%s)", getRotationAsString()); break;
+      case kMenuApple:;    snprintf(text, 128, "Apples, put them on a conveyor"); break;
+      case kMenuCheese:;   snprintf(text, 128, "Cheese (Gouda), put it on a conveyor?"); break;
+      case kMenuBin:;      snprintf(text, 128, "Remove conveyors & cargo"); break;
     }
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX, 0);
   }
@@ -167,7 +194,8 @@ void drawUIRight() {
   const enum kGameMode gm = getGameMode();
   for (uint32_t i = 0; i < UI_ITEMS; ++i) {
     const uint16_t y = TILE_PIX*2*i + TILE_PIX;
-    pd->graphics->drawBitmap(getSprite16(m_UIIcons[i*2], m_UIIcons[(i*2)+1] + getUISelectedRotation(), 1), 0, y, kBitmapUnflipped);
+    const uint16_t offset = i >= kMenuApple ? 0 : getUISelectedRotation();
+    pd->graphics->drawBitmap(getSprite16(m_UIIcons[i*2] + offset, m_UIIcons[(i*2)+1], 1), 0, y, kBitmapUnflipped);
     if ((gm == kMenuSelect || gm == kMenuOptionSelected) && i == getUISelectedID()) {
       LCDBitmapDrawMode m = ((gm == kMenuSelect && getFrameCount() % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4) ? kDrawModeInverted : kDrawModeCopy );
       pd->graphics->setDrawMode(m);

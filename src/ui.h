@@ -1,7 +1,7 @@
 #pragma once
 #include "game.h"
 
-enum kMenuSelections {kMenuConveyor, kMenuSplitI, kMenuSplitL, kMenuSplitT};
+enum kMenuSelections {kMenuConveyor, kMenuSplitI, kMenuSplitL, kMenuSplitT, kMenuApple, kMenuCheese, kMenuBin};
 
 LCDSprite* getUISpriteBottom(void);
 
@@ -19,7 +19,7 @@ void UIDirtyBottom(void);
 
 void UIDirtyRight(void);
 
-void updateUI(void);
+void updateUI(int _fc, enum kGameMode _gm);
 
 void updateBlueprint(void);
 

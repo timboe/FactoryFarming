@@ -14,6 +14,12 @@ PlaydateAPI* pd = NULL;
 
 int32_t m_frameCount = 0;
 
+uint16_t m_nearTickCount = 0;
+
+uint16_t m_farTickCount = 0;
+
+bool m_queueUpdateRenderList = false;
+
 enum kGameMode m_mode;
 
 void tickNear(void);
@@ -24,6 +30,18 @@ void tickFar(void);
 
 void setPDPtr(PlaydateAPI* _p) {
   pd = _p;
+}
+
+void queueUpdateRenderList() {
+  m_queueUpdateRenderList = true;
+}
+
+uint16_t getNearTickCount() {
+  return m_nearTickCount;
+}
+
+uint16_t getFarTickCount() {
+  return m_farTickCount;
 }
 
 int getFrameCount() { 
@@ -42,49 +60,52 @@ void tickNear() {
   if (m_frameCount % NEAR_TICK_FREQUENCY) {
     return;
   }
+  m_nearTickCount = 0;
 
   uint8_t zoom = getZoom();
   struct Chunk_t* currentChunk = getCurrentChunk();
 
-  chunkTickChunk(currentChunk, NEAR_TICK_AMOUNT, zoom);
+  m_nearTickCount += chunkTickChunk(currentChunk, NEAR_TICK_AMOUNT, zoom);
 
   if (zoom == 1 && !PRETEND_ZOOMED_IN) {
     for (uint32_t i = 0; i < CHUNK_NEIGHBORS_ALL; ++i) {
-      chunkTickChunk(currentChunk->m_neighborsALL[i], NEAR_TICK_AMOUNT, zoom);
+      m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsALL[i], NEAR_TICK_AMOUNT, zoom);
     }
   } else {
     switch (getCurrentQuadrant()) {
       case NE:;
-        chunkTickChunk(currentChunk->m_neighborsNE[0], NEAR_TICK_AMOUNT, zoom);
-        chunkTickChunk(currentChunk->m_neighborsNE[1], NEAR_TICK_AMOUNT, zoom);
-        chunkTickChunk(currentChunk->m_neighborsNE[2], NEAR_TICK_AMOUNT, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNE[0], NEAR_TICK_AMOUNT, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNE[1], NEAR_TICK_AMOUNT, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNE[2], NEAR_TICK_AMOUNT, zoom);
         break;
       case SE:;
-        chunkTickChunk(currentChunk->m_neighborsSE[0], NEAR_TICK_AMOUNT, zoom);
-        chunkTickChunk(currentChunk->m_neighborsSE[1], NEAR_TICK_AMOUNT, zoom);
-        chunkTickChunk(currentChunk->m_neighborsSE[2], NEAR_TICK_AMOUNT, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSE[0], NEAR_TICK_AMOUNT, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSE[1], NEAR_TICK_AMOUNT, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSE[2], NEAR_TICK_AMOUNT, zoom);
         break;
       case SW:;
-        chunkTickChunk(currentChunk->m_neighborsSW[0], NEAR_TICK_AMOUNT, zoom);
-        chunkTickChunk(currentChunk->m_neighborsSW[1], NEAR_TICK_AMOUNT, zoom);
-        chunkTickChunk(currentChunk->m_neighborsSW[2], NEAR_TICK_AMOUNT, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSW[0], NEAR_TICK_AMOUNT, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSW[1], NEAR_TICK_AMOUNT, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSW[2], NEAR_TICK_AMOUNT, zoom);
         break;
       case NW:;
-        chunkTickChunk(currentChunk->m_neighborsNW[0], NEAR_TICK_AMOUNT, zoom);
-        chunkTickChunk(currentChunk->m_neighborsNW[1], NEAR_TICK_AMOUNT, zoom);
-        chunkTickChunk(currentChunk->m_neighborsNW[2], NEAR_TICK_AMOUNT, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNW[0], NEAR_TICK_AMOUNT, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNW[1], NEAR_TICK_AMOUNT, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNW[2], NEAR_TICK_AMOUNT, zoom);
         break;
     }
   }
 }
 
 void tickFar() {
-  if(m_frameCount % FAR_TICK_FREQUENCY) {
+  if((m_frameCount + 1) % FAR_TICK_FREQUENCY) { // +1 to put this out-of-sync with tickNear()
     return;
   }
+  m_farTickCount = 0;
 
-  if (m_mode == kWander) {
-    UIDirtyBottom();
+  if (m_queueUpdateRenderList) {
+    m_queueUpdateRenderList = false;
+    updateRenderList();
   }
 
   uint8_t zoom = getZoom();
@@ -93,28 +114,28 @@ void tickFar() {
   if (zoom == 1 && !PRETEND_ZOOMED_IN) {
     for (uint32_t i = 0; i < (TOT_CHUNKS - CHUNK_NEIGHBORS_ALL - 1); ++i) { // The "- 1" is for "me"
       //pd->system->logToConsole("B %u = %i", i, (int) currentChunk->m_nonNeighborsALL[i]);
-      chunkTickChunk(currentChunk->m_nonNeighborsALL[i], FAR_TICK_AMOUNT, zoom);
+      m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsALL[i], FAR_TICK_AMOUNT, zoom);
     }
   } else {
     switch (getCurrentQuadrant()) {
       case NE:;
         for (uint32_t i = 0; i < (TOT_CHUNKS - CHUNK_NEIGHBORS_CORNER - 1); ++i) {
-          chunkTickChunk(currentChunk->m_nonNeighborsNE[i], FAR_TICK_AMOUNT, zoom);
+          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsNE[i], FAR_TICK_AMOUNT, zoom);
         }
         break;
       case SE:;
         for (uint32_t i = 0; i < (TOT_CHUNKS - CHUNK_NEIGHBORS_CORNER - 1); ++i) {
-          chunkTickChunk(currentChunk->m_nonNeighborsSE[i], FAR_TICK_AMOUNT, zoom);
+          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsSE[i], FAR_TICK_AMOUNT, zoom);
         }
         break;
       case SW:;
         for (uint32_t i = 0; i < (TOT_CHUNKS - CHUNK_NEIGHBORS_CORNER - 1); ++i) {
-          chunkTickChunk(currentChunk->m_nonNeighborsSW[i], FAR_TICK_AMOUNT, zoom);
+          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsSW[i], FAR_TICK_AMOUNT, zoom);
         }
         break;
       case NW:;
         for (uint32_t i = 0; i < (TOT_CHUNKS - CHUNK_NEIGHBORS_CORNER - 1); ++i) {
-          chunkTickChunk(currentChunk->m_nonNeighborsNW[i], FAR_TICK_AMOUNT, zoom);
+          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsNW[i], FAR_TICK_AMOUNT, zoom);
         }
         break;
     }
@@ -122,7 +143,7 @@ void tickFar() {
 } 
 
 int gameLoop(void* _data) {
-  if (++m_frameCount == TICK_FREQUENCY) m_frameCount = 0;
+  ++m_frameCount;
 
   clickHandlerReplacement();
 
@@ -135,7 +156,7 @@ int gameLoop(void* _data) {
   tickNear();
   tickFar();
 
-  updateUI();
+  updateUI(m_frameCount, m_mode);
 
   render();
 

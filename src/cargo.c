@@ -1,5 +1,4 @@
 #include "cargo.h"
-#include "location.h"
 #include "chunk.h"
 #include "sprite.h"
 #include "render.h"
@@ -50,11 +49,9 @@ void cargoSpriteSetup(struct Cargo_t* _cargo, struct Location_t* _loc, uint16_t 
   pd->sprite->setZIndex(_cargo->m_sprite[_zoom], Z_INDEX_CARGO);
 }
 
-bool newCargo(uint32_t _x, uint32_t _y, enum kCargoType _type) {
-
-  struct Location_t* loc = getLocation(_x, _y);
+bool newCargo(struct Location_t* loc, enum kCargoType _type) {
+  bool addedByPlayer = true;
   if (loc->m_cargo != NULL) return false;
-  if (loc->m_type != kConveyor) return false;
 
   struct Chunk_t* chunk = getChunk_fromLocation(loc);
 
@@ -63,26 +60,29 @@ bool newCargo(uint32_t _x, uint32_t _y, enum kCargoType _type) {
   uint16_t ix = 0, iy = 0;
   switch (_type) {
     case kApple:; ix = 1; iy = 1; break;
+    case kCheese:; ix = 2; iy = 1; break;
     case kNoCargo:;
   }
 
   struct Cargo_t* cargo = cargoManagerNewCargo();
   if (cargo->m_sprite[1] == NULL) {
-    cargo->m_sprite[1] = pd->sprite->newSprite();
-    cargo->m_sprite[2] = pd->sprite->newSprite();
-    cargo->m_sprite[4] = pd->sprite->newSprite();
+    for (uint32_t zoom = 1; zoom < 5; ++zoom) {
+      cargo->m_sprite[zoom] = pd->sprite->newSprite();
+    }
   }
   cargo->m_type = _type;
 
-  cargoSpriteSetup(cargo, loc, ix, iy, 1);
-  cargoSpriteSetup(cargo, loc, ix, iy, 2);
-  cargoSpriteSetup(cargo, loc, ix, iy, 4);
+  for (uint32_t zoom = 1; zoom < 5; ++zoom) {
+    cargoSpriteSetup(cargo, loc, ix, iy, zoom);
+  }
 
   loc->m_cargo = cargo;
+  loc->m_progress = 0;
 
   chunkAddCargo(chunk, cargo);
 
-  updateRenderList(); // Do we want to do this here?
+  if (addedByPlayer) updateRenderList(); // Do we want to do this here?
+  else queueUpdateRenderList();
   return true;
 }
 

@@ -36,10 +36,8 @@ uint8_t getPressed(uint32_t _i) {
 }
 
 void toggleZoom() {
-  switch (m_zoom) {
-    case 1: m_zoom = 2; break;
-    case 2: m_zoom = 4; break;
-    case 4: m_zoom = 1; break;
+  if (++m_zoom == 5) {
+    m_zoom = 1;
   }
   updateRenderList();
   updateBlueprint();
@@ -76,8 +74,9 @@ void clickHandleMenuSelect(uint32_t _buttonPressed) {
   else if (kButtonA     == _buttonPressed) {
     setGameMode(kMenuOptionSelected);
     updateBlueprint();
-  } else if (kButtonB     == _buttonPressed) {
+  } else if (kButtonB   == _buttonPressed) {
     setGameMode(kWander);
+    UIDirtyRight();
   }
 }
 
@@ -86,10 +85,13 @@ void clickHandleMenuOptionSelected(uint32_t _buttonPressed) {
     // noop
   } else if (kButtonA    == _buttonPressed) {
     switch (getUISelectedID()) {
-      case kMenuConveyor:; newConveyor(getPlayerLocation(), getUISelectedRotation());
+      case kMenuConveyor:; newConveyor(getPlayerLocation(), getUISelectedRotation()); break;
       case kMenuSplitI:;   break;
       case kMenuSplitL:;   break;
-      case kMenuSplitT:;   break;     
+      case kMenuSplitT:;   break;
+      case kMenuApple:;    newCargo(getPlayerLocation(), kApple); break;
+      case kMenuCheese:;   newCargo(getPlayerLocation(), kCheese);  break;
+      case kMenuBin:;      clearLocation(getPlayerLocation()); break; 
     }
   } else if (kButtonB    == _buttonPressed) {
     setGameMode(kMenuSelect);
@@ -100,41 +102,34 @@ void clickHandleMenuOptionSelected(uint32_t _buttonPressed) {
 void rotateHandleWander(float _rotation) {
   static float rot = 0.0f;
   rot += _rotation;
-  if (rot > 260.0f) {
+  if (rot > UI_ROTATE_ACTION) {
     rot = 0.0f;
-    if (m_zoom < 4) {
-      pd->system->logToConsole("ZOOM IN");
-      m_zoom *= 2;
-      updateRenderList();
-      updateBlueprint();
-    }
-  } else if (rot < -260.0f) {
+    if (++m_zoom == 5) m_zoom = 4;
+    pd->system->logToConsole("ZOOM IN");
+    updateRenderList();
+    updateBlueprint();
+  } else if (rot < -UI_ROTATE_ACTION) {
     rot = 0.0f;
     pd->system->logToConsole("ZOOM OUT");
-    if (m_zoom > 1) {
-      m_zoom /= 2;
-      updateRenderList();
-      updateBlueprint();
-    }
+    if (--m_zoom == 0) m_zoom = 1;
+    updateRenderList();
+    updateBlueprint();
   }
 }
 
 void rotateHandleMenuSelect(float _rotation) {
   static float rot = 0.0f;
   rot += _rotation;
-  if (rot > 260.0f) {
+  if (rot > UI_ROTATE_ACTION) {
     rot = 0.0f;
     modUISelectedRotation(true);
     if (getGameMode() == kMenuOptionSelected) updateBlueprint();
-  } else if (rot < -260.0f) {
+  } else if (rot < -UI_ROTATE_ACTION) {
     rot = 0.0f;
     modUISelectedRotation(false);
     if (getGameMode() == kMenuOptionSelected) updateBlueprint();
   }
 }
-
-
-
 
 // Temporary until the playdate eventHandler is functional for inputs
 void clickHandlerReplacement() {
@@ -144,8 +139,8 @@ void clickHandlerReplacement() {
   if (pushed & kButtonRight) gameClickConfigHandler(kButtonRight);
   if (pushed & kButtonDown) gameClickConfigHandler(kButtonDown);
   if (pushed & kButtonLeft) gameClickConfigHandler(kButtonLeft);
-  if (pushed & kButtonB) gameClickConfigHandler(kButtonB);
-  if (pushed & kButtonA) gameClickConfigHandler(kButtonA);
+  if (released & kButtonB) gameClickConfigHandler(kButtonB);
+  if (released & kButtonA) gameClickConfigHandler(kButtonA);
   else if ((current & kButtonA) && getGameMode() == kMenuOptionSelected) {
     gameClickConfigHandler(kButtonA); // Special, allow placing rows of conveyors
   }

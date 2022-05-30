@@ -21,9 +21,15 @@ int gameLoop(void* _data);
 
 int getFrameCount(void);
 
+uint16_t getNearTickCount(void);
+
+uint16_t getFarTickCount(void);
+
 enum kGameMode getGameMode(void);
 
 void setGameMode(enum kGameMode _mode);
+
+void queueUpdateRenderList(void);
 
 void initGame(void);
 

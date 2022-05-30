@@ -6,7 +6,7 @@ LCDBitmap* m_conveyorMasters[5][kConvDirN] = {NULL}; // Only 1, 2 and 4 are used
 LCDBitmapTable* m_sheet16;
 
 LCDBitmap* m_bitmap16_x2[SHEET16_SIZE];
-
+LCDBitmap* m_bitmap16_x3[SHEET16_SIZE];
 LCDBitmap* m_bitmap16_x4[SHEET16_SIZE];
 
 LCDFont* m_fontRoobert24;
@@ -54,6 +54,7 @@ LCDBitmap* getSprite16(uint32_t _x, uint32_t _y, uint8_t _zoom) {
   switch (_zoom) {
     case 1: return pd->graphics->getTableBitmap(m_sheet16, (SHEET16_SIZE_X * _y) + _x);
     case 2: return m_bitmap16_x2[(SHEET16_SIZE_X * _y) + _x];
+    case 3: return m_bitmap16_x3[(SHEET16_SIZE_X * _y) + _x];
     case 4: return m_bitmap16_x4[(SHEET16_SIZE_X * _y) + _x];
   }
   pd->system->error("getSprite16 Error");
@@ -90,9 +91,13 @@ void populateResizedSprites() {
   for (uint32_t i = 0; i < SHEET16_SIZE; ++i) {
     LCDBitmap* original = pd->graphics->getTableBitmap(m_sheet16, i);
     m_bitmap16_x2[i] = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*2, kColorClear);
+    m_bitmap16_x3[i] = pd->graphics->newBitmap(TILE_PIX*3, TILE_PIX*3, kColorClear);
     m_bitmap16_x4[i] = pd->graphics->newBitmap(TILE_PIX*4, TILE_PIX*4, kColorClear);
     pd->graphics->pushContext(m_bitmap16_x2[i]);
     pd->graphics->drawScaledBitmap(original, 0, 0, 2.0f, 2.0f);
+    pd->graphics->popContext();
+    pd->graphics->pushContext(m_bitmap16_x3[i]);
+    pd->graphics->drawScaledBitmap(original, 0, 0, 3.0f, 3.0f);
     pd->graphics->popContext();
     pd->graphics->pushContext(m_bitmap16_x4[i]);
     pd->graphics->drawScaledBitmap(original, 0, 0, 4.0f, 4.0f);
@@ -107,9 +112,9 @@ void initSprite() {
   populateResizedSprites();
 
   for (int32_t i = 0; i < kConvDirN; ++i) {
-    m_conveyorMasters[1][i] = pd->graphics->copyBitmap(getSprite16(0, CONV_START_Y + i, 1));
-    m_conveyorMasters[2][i] = pd->graphics->copyBitmap(getSprite16(0, CONV_START_Y + i, 2));
-    m_conveyorMasters[4][i] = pd->graphics->copyBitmap(getSprite16(0, CONV_START_Y + i, 4));
+    for (int32_t zoom = 1; zoom < 5; ++zoom) {
+      m_conveyorMasters[zoom][i] = pd->graphics->copyBitmap(getSprite16(0, CONV_START_Y + i, zoom));
+    }
   }
 
   m_fontRoobert24 = loadFontAtPath("fonts/Roobert-24-Medium");
