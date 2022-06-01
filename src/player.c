@@ -183,8 +183,8 @@ bool movePlayer() {
   if (getPressed(3)) m_lookingAt = getLocation(m_currentLocation->m_x, m_currentLocation->m_y + 1);
 
   //pd->system->logToConsole("LA %i", (int) m_lookingAt);
-  if (m_currentLocation && wasAt != m_currentLocation) {
-    pd->sprite->moveTo(m_player.m_blueprint[zoom], m_currentLocation->m_pix_x * zoom, m_currentLocation->m_pix_y * zoom);
+  if (m_currentLocation && wasAt != m_currentLocation) {  
+    pd->sprite->moveTo(m_player.m_blueprint[zoom], (TILE_PIX*m_currentLocation->m_x + TILE_PIX/2.0) * zoom, (m_currentLocation->m_y  + TILE_PIX/2.0) * zoom);
     //pd->system->logToConsole("LA %i %i", m_lookingAt->m_pix_x, m_lookingAt->m_pix_y);
   }
 

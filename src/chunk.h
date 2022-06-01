@@ -4,8 +4,6 @@
 #include "location.h"
 
 struct Chunk_t{
-  uint16_t m_pix_x; // Note: centre
-  uint16_t m_pix_y;
   uint16_t m_x; // In chunk coords
   uint16_t m_y;
 
@@ -34,8 +32,6 @@ struct Chunk_t{
 struct Chunk_t* getChunk(int32_t _x, int32_t _y);
 
 struct Chunk_t* getChunk_noCheck(const int32_t _x, const int32_t _y);
-
-struct Chunk_t* getChunk_fromLocation(struct Location_t* _loc);
 
 struct Chunk_t* getEdgeChunk(uint32_t _i);
 

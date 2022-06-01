@@ -1,6 +1,8 @@
 #include "chunk.h"
+#include "building.h"
 
 struct Chunk_t* m_chunks;
+
 struct Chunk_t* m_edgeChunks;
 
 /// ///
@@ -20,11 +22,6 @@ struct Chunk_t* getChunk(int32_t _x, int32_t _y) {
 struct Chunk_t* getChunk_noCheck(const int32_t _x, const int32_t _y) {
   const uint32_t l = (WORLD_CHUNKS_X * _y) + _x;
   return &m_chunks[l];
-}
-
-struct Chunk_t* getChunk_fromLocation(struct Location_t* _loc) {
-  //pd->system->logToConsole("ADD TO CHUNK: %i / %i = %i", (int)_loc->m_y, (int)TILES_PER_CHUNK_Y, (int)(_loc->m_y) / (int)TILES_PER_CHUNK_Y);
-  return getChunk_noCheck(_loc->m_x / TILES_PER_CHUNK_X, _loc->m_y / TILES_PER_CHUNK_Y);
 }
 
 void chunkAddLocation(struct Chunk_t* _chunk, struct Location_t* _loc) {
@@ -75,22 +72,23 @@ uint16_t chunkTickChunk(struct Chunk_t* _chunk, uint8_t _tick, uint8_t _zoom) {
   //pd->system->logToConsole("Asked to tick %i for %i", _tick, _chunk);
   for (uint32_t i = 0; i < _chunk->m_nLocations; ++i) {
     struct Location_t* loc = _chunk->m_locations[i];
-    (*loc->m_updateFn)(loc, _tick, _zoom);
+    // if it's in this list, it should have a valid building
+    (*loc->m_building->m_updateFn)(loc, _tick, _zoom);
   }
   return _chunk->m_nLocations;
 }
 
 void initChunk() {
-  m_chunks = pd->system->realloc(NULL, TOT_CHUNKS * sizeof(struct Chunk_t));
-  memset(m_chunks, 0, TOT_CHUNKS * sizeof(struct Chunk_t));
+  const int32_t s = TOT_CHUNKS * sizeof(struct Chunk_t);
+  m_chunks = pd->system->realloc(NULL, s);
+  memset(m_chunks, 0, s);
+  pd->system->logToConsole("malloc: for chunks %i", s/1024);
 
   for (uint32_t x = 0; x < WORLD_CHUNKS_X; ++x) {
     for (uint32_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
       struct Chunk_t* chunk = getChunk_noCheck(x, y);
       chunk->m_x = x;
       chunk->m_y = y;
-      chunk->m_pix_x = CHUNK_PIX_X*x + CHUNK_PIX_X/2.0;
-      chunk->m_pix_y = CHUNK_PIX_Y*y + CHUNK_PIX_Y/2.0;
     }
   }
 

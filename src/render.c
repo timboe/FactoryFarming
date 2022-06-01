@@ -35,7 +35,7 @@ void chunkAddToRender(struct Chunk_t* _chunk, uint8_t _zoom) {
   if (getZoom() > 1) {
     for (uint32_t i = 0; i < _chunk->m_nLocations; ++i) {
       struct Location_t* loc = _chunk->m_locations[i];
-      pd->sprite->addSprite(loc->m_sprite[_zoom]);
+      pd->sprite->addSprite(loc->m_building->m_sprite[_zoom]);
     }
   }
   for (uint32_t i = 0; i < _chunk->m_nCargos; ++i) {

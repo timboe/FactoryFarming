@@ -2,6 +2,8 @@
 #include "sprite.h"
 #include "player.h"
 #include "input.h"
+#include "cargo.h"
+#include "building.h"
 
 uint16_t m_UIIcons[] = {0,3,  0,4,  4,3,  4,4,  1,1,  2,1,  1,2};
 

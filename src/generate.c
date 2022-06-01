@@ -47,8 +47,8 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   // Render locations into the background image
   for (uint32_t i = 0; i < _chunk->m_nLocations; ++i) {
     struct Location_t* loc = _chunk->m_locations[i];
-    if (loc->m_type != kEmpty && loc->m_image) {
-      pd->graphics->drawBitmap(loc->m_image[1], loc->m_pix_x - off_x, loc->m_pix_y - off_y, kBitmapUnflipped);
+    if (loc->m_building && loc->m_building->m_type != kEmpty && loc->m_building->m_image) {
+      pd->graphics->drawBitmap(loc->m_building->m_image[1], loc->m_building->m_pix_x - off_x, loc->m_building->m_pix_y - off_y, kBitmapUnflipped);
     }
   }
 
@@ -207,7 +207,7 @@ void generateSpriteSetup(struct Chunk_t* _chunk, uint8_t _zoom) {
   PDRect bound = {.x = 0, .y = 0, .width = CHUNK_PIX_X*_zoom, .height = CHUNK_PIX_Y*_zoom};
   pd->sprite->setBounds(_chunk->m_bkgSprite[_zoom], bound);
   pd->sprite->setImage(_chunk->m_bkgSprite[_zoom], _chunk->m_bkgImage[_zoom], kBitmapUnflipped);
-  pd->sprite->moveTo(_chunk->m_bkgSprite[_zoom], _chunk->m_pix_x*_zoom, _chunk->m_pix_y*_zoom);
+  pd->sprite->moveTo(_chunk->m_bkgSprite[_zoom], (CHUNK_PIX_X*_chunk->m_x + CHUNK_PIX_X/2.0)*_zoom, (CHUNK_PIX_Y*_chunk->m_y + CHUNK_PIX_Y/2.0)*_zoom);
   pd->sprite->setZIndex(_chunk->m_bkgSprite[_zoom], -1);
 }
 

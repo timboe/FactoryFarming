@@ -18,6 +18,6 @@ struct Cargo_t* cargoManagerNewCargo(void);
 
 void cargoManagerFreeCargo(struct Cargo_t* _cargo);
 
-bool newCargo(struct Location_t* loc, enum kCargoType _type);
+bool newCargo(struct Location_t* loc, enum kCargoType _type, bool _addedByPlayer);
 
 void initCargo(void);

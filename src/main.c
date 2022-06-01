@@ -10,7 +10,7 @@
 #include "chunk.h"
 #include "player.h"
 #include "ui.h"
-
+#include "building.h"
 
 #ifdef _WINDLL
 __declspec(dllexport)
@@ -23,8 +23,9 @@ static void init(void) {
   initLocation();
   initPlayer();
   initiUI();
-  initSound();
   initGame();
+  initBuilding();
+  initSound();
 }
 
 static void deinit(void) {

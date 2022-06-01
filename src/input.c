@@ -3,6 +3,7 @@
 #include "player.h"
 #include "sprite.h"
 #include "render.h"
+#include "building.h"
 #include "ui.h"
 
 uint8_t m_pressed[4] = {0};
@@ -89,8 +90,8 @@ void clickHandleMenuOptionSelected(uint32_t _buttonPressed) {
       case kMenuSplitI:;   newConveyor(getPlayerLocation(), getUISelectedRotation(), kSplitI); break;
       case kMenuSplitL:;   newConveyor(getPlayerLocation(), getUISelectedRotation(), kSplitL); break;
       case kMenuSplitT:;   newConveyor(getPlayerLocation(), getUISelectedRotation(), kSplitT); break;
-      case kMenuApple:;    newCargo(getPlayerLocation(), kApple); break;
-      case kMenuCheese:;   newCargo(getPlayerLocation(), kCheese);  break;
+      case kMenuApple:;    newCargo(getPlayerLocation(), kApple, true); break;
+      case kMenuCheese:;   newCargo(getPlayerLocation(), kCheese, true);  break;
       case kMenuBin:;      clearLocation(getPlayerLocation()); break; 
     }
   } else if (kButtonB    == _buttonPressed) {
