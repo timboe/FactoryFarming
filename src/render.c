@@ -54,8 +54,7 @@ void updateRenderList() {
   pd->sprite->addSprite(player->m_sprite[zoom]);
   pd->sprite->addSprite(player->m_blueprint[zoom]);
 
-  pd->sprite->addSprite(getUISpriteBottom());
-  pd->sprite->addSprite(getUISpriteRight());
+  addUIToSpriteList();
 
   chunkAddToRender(currentChunk, zoom);
 

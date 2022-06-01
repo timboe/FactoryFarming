@@ -9,8 +9,8 @@ struct Chunk_t{
   uint16_t m_x; // In chunk coords
   uint16_t m_y;
 
-  LCDSprite* m_bkgSprite[5]; // Index 0 not used
-  LCDBitmap* m_bkgImage[5];  // Index 0 not used
+  LCDSprite* m_bkgSprite[ZOOM_LEVELS]; // Index 0 not used
+  LCDBitmap* m_bkgImage[ZOOM_LEVELS];  // Index 0 not used
 
   struct Chunk_t* m_neighborsNE[CHUNK_NEIGHBORS_CORNER];
   struct Chunk_t* m_neighborsSE[CHUNK_NEIGHBORS_CORNER];

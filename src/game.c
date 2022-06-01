@@ -54,6 +54,9 @@ enum kGameMode getGameMode() {
 
 void setGameMode(enum kGameMode _mode) {
   m_mode = _mode;
+  if (_mode == kMenuSelect) drawUITop("Menu Mode");
+  else if (_mode == kMenuOptionSelected) drawUITop("Place Mode");
+  else drawUITop(NULL);
 }
 
 void tickNear() {

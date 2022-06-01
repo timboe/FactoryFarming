@@ -54,7 +54,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
 
   pd->graphics->popContext();
 
-  for (uint32_t zoom = 2; zoom < 5; ++zoom) {
+  for (uint32_t zoom = 2; zoom < ZOOM_LEVELS; ++zoom) {
     pd->graphics->pushContext(_chunk->m_bkgImage[zoom]);
     pd->graphics->drawScaledBitmap(_chunk->m_bkgImage[1], 0, 0, (float)zoom, (float)zoom);
     pd->graphics->popContext();
@@ -216,19 +216,19 @@ void setChunkBackgrounds(void) {
     for (uint16_t x = 0; x < WORLD_CHUNKS_X; ++x) {
       struct Chunk_t* c = getChunk(x, y);
       if (c->m_bkgImage[1] == NULL) {
-        for (uint32_t zoom = 1; zoom < 5; ++zoom) {
+        for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
           c->m_bkgImage[zoom] = pd->graphics->newBitmap(CHUNK_PIX_X*zoom, CHUNK_PIX_Y*zoom, kColorClear);
         }
       }
       if (c->m_bkgSprite[1] == NULL) {
-        for (uint32_t zoom = 1; zoom < 5; ++zoom) {
+        for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
           c->m_bkgSprite[zoom] = pd->sprite->newSprite();
         }
       }
 
       renderChunkBackgroundImage(c);
 
-      for (uint32_t zoom = 1; zoom < 5; ++zoom) {
+      for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
         generateSpriteSetup(c, zoom);
       }
     }

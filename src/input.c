@@ -36,7 +36,7 @@ uint8_t getPressed(uint32_t _i) {
 }
 
 void toggleZoom() {
-  if (++m_zoom == 5) {
+  if (++m_zoom == ZOOM_LEVELS) {
     m_zoom = 1;
   }
   updateRenderList();
@@ -63,7 +63,7 @@ void gameClickConfigHandler(uint32_t _buttonPressed) {
 void clickHandleWander(uint32_t _buttonPressed) {
   if (characterMoveInput(_buttonPressed)) {}
   else if (kButtonA == _buttonPressed) setGameMode(kMenuSelect);
-  else if (kButtonB == _buttonPressed) toggleZoom();
+  //else if (kButtonB == _buttonPressed) toggleZoom();
 }
 
 void clickHandleMenuSelect(uint32_t _buttonPressed) {
@@ -85,10 +85,10 @@ void clickHandleMenuOptionSelected(uint32_t _buttonPressed) {
     // noop
   } else if (kButtonA    == _buttonPressed) {
     switch (getUISelectedID()) {
-      case kMenuConveyor:; newConveyor(getPlayerLocation(), getUISelectedRotation()); break;
-      case kMenuSplitI:;   break;
-      case kMenuSplitL:;   break;
-      case kMenuSplitT:;   break;
+      case kMenuConveyor:; newConveyor(getPlayerLocation(), getUISelectedRotation(), kBelt); break;
+      case kMenuSplitI:;   newConveyor(getPlayerLocation(), getUISelectedRotation(), kSplitI); break;
+      case kMenuSplitL:;   newConveyor(getPlayerLocation(), getUISelectedRotation(), kSplitL); break;
+      case kMenuSplitT:;   newConveyor(getPlayerLocation(), getUISelectedRotation(), kSplitT); break;
       case kMenuApple:;    newCargo(getPlayerLocation(), kApple); break;
       case kMenuCheese:;   newCargo(getPlayerLocation(), kCheese);  break;
       case kMenuBin:;      clearLocation(getPlayerLocation()); break; 
@@ -104,7 +104,7 @@ void rotateHandleWander(float _rotation) {
   rot += _rotation;
   if (rot > UI_ROTATE_ACTION) {
     rot = 0.0f;
-    if (++m_zoom == 5) m_zoom = 4;
+    if (++m_zoom == ZOOM_LEVELS) m_zoom = ZOOM_LEVELS-1;
     pd->system->logToConsole("ZOOM IN");
     updateRenderList();
     updateBlueprint();

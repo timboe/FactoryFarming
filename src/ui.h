@@ -3,9 +3,7 @@
 
 enum kMenuSelections {kMenuConveyor, kMenuSplitI, kMenuSplitL, kMenuSplitT, kMenuApple, kMenuCheese, kMenuBin};
 
-LCDSprite* getUISpriteBottom(void);
-
-LCDSprite* getUISpriteRight(void);
+void addUIToSpriteList(void);
 
 void modUISelectedID(bool _increment);
 
@@ -22,5 +20,7 @@ void UIDirtyRight(void);
 void updateUI(int _fc, enum kGameMode _gm);
 
 void updateBlueprint(void);
+
+void drawUITop(const char* _text);
 
 void initiUI(void);

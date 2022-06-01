@@ -66,13 +66,13 @@ bool newCargo(struct Location_t* loc, enum kCargoType _type) {
 
   struct Cargo_t* cargo = cargoManagerNewCargo();
   if (cargo->m_sprite[1] == NULL) {
-    for (uint32_t zoom = 1; zoom < 5; ++zoom) {
+    for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
       cargo->m_sprite[zoom] = pd->sprite->newSprite();
     }
   }
   cargo->m_type = _type;
 
-  for (uint32_t zoom = 1; zoom < 5; ++zoom) {
+  for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     cargoSpriteSetup(cargo, loc, ix, iy, zoom);
   }
 

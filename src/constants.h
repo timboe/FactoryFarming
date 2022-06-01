@@ -41,8 +41,8 @@
 #define CONV_START_Y 7
 
 // How big is the world in X and Y
-#define WORLD_CHUNKS_X 8
-#define WORLD_CHUNKS_Y 8
+#define WORLD_CHUNKS_X 16
+#define WORLD_CHUNKS_Y 16
 #define TOT_CHUNKS (WORLD_CHUNKS_X*WORLD_CHUNKS_Y)
 
 #define TOT_WORLD_PIX_X (WORLD_CHUNKS_X*CHUNK_PIX_X)
@@ -65,11 +65,13 @@
 #define Z_INDEX_UI 32767
 #define Z_INDEX_MAX 32767
 #define Z_INDEX_CARGO 32765
-#define Z_INDEX_BLUEPRINT_A 2
+#define Z_INDEX_BLUEPRINT 32767
 #define Z_INDEX_CONVEYOR 1
-#define Z_INDEX_BLUEPRINT_B 0
 #define Z_INDEX_FLOOR -1
 
 #define UI_ITEMS 7
 
 #define UI_ROTATE_ACTION 270.0f
+
+// Note: 1 larger than actual zoom levels (0 index unused)
+#define ZOOM_LEVELS 3

@@ -9,9 +9,13 @@ LCDSprite* m_UISpriteBottom;
 
 LCDSprite* m_UISpriteRight;
 
+LCDSprite* m_UISpriteTop;
+
 LCDBitmap* m_UIBitmapBottom;
 
 LCDBitmap* m_UIBitmapRight;
+
+LCDBitmap* m_UIBitmapTop;
 
 bool m_UIDirtyBottom = false;
 
@@ -68,10 +72,9 @@ void updateUI(int _fc, enum kGameMode _gm) {
   if (_gm == kMenuSelect && _fc % (TICK_FREQUENCY/4) == 0) {
     // Flashing cursor
     UIDirtyRight();
-    pd->system->logToConsole("BP %i", _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4 ? Z_INDEX_BLUEPRINT_A : Z_INDEX_BLUEPRINT_B);
   } else if (_gm == kMenuOptionSelected && _fc % (TICK_FREQUENCY/4) == 0) {
     // Flashing blueprint 
-    pd->sprite->setZIndex(getPlayer()->m_blueprint[getZoom()], _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4 ? Z_INDEX_BLUEPRINT_A : Z_INDEX_BLUEPRINT_B);
+    pd->sprite->setVisible(getPlayer()->m_blueprint[getZoom()], _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
   } else if (_gm ==kWander && _fc % FAR_TICK_FREQUENCY == 0) {
     // Update bottom ticker
     UIDirtyBottom();
@@ -104,12 +107,10 @@ void updateBlueprint() {
   }
 }
 
-LCDSprite* getUISpriteBottom() {
-  return m_UISpriteBottom;
-}
-
-LCDSprite* getUISpriteRight() {
-  return m_UISpriteRight;
+void addUIToSpriteList() {
+  pd->sprite->addSprite(m_UISpriteBottom);
+  pd->sprite->addSprite(m_UISpriteTop);
+  pd->sprite->addSprite(m_UISpriteRight);
 }
 
 const char* getRotationAsString() {
@@ -207,12 +208,38 @@ void drawUIRight() {
   UIDirtyBottom();
 }
 
+void drawUITop(const char* _text) {
+  pd->sprite->setVisible(m_UISpriteTop, !(_text == NULL) );
+  if (_text == NULL) {
+    return;
+  }
+  pd->graphics->pushContext(m_UIBitmapTop);
+  pd->graphics->setLineCapStyle(kLineCapStyleRound);
+  pd->graphics->drawLine(TILE_PIX, TILE_PIX, SCREEN_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorBlack);
+  pd->graphics->setDrawMode(kDrawModeFillWhite);
+  setRoobert24();
+  pd->graphics->drawText(_text, 16, kASCIIEncoding, TILE_PIX, 0);
+  pd->graphics->popContext();
+}
+
 void initiUI() {
+  m_UISpriteTop = pd->sprite->newSprite();
   m_UISpriteBottom = pd->sprite->newSprite();
   m_UISpriteRight = pd->sprite->newSprite();
 
+  
+  m_UIBitmapTop = pd->graphics->newBitmap(SCREEN_PIX_X/2, TILE_PIX*2, kColorClear);
   m_UIBitmapBottom = pd->graphics->newBitmap(DEVICE_PIX_X, TILE_PIX, kColorBlack);
   m_UIBitmapRight = pd->graphics->newBitmap(TILE_PIX, DEVICE_PIX_Y, kColorBlack);
+
+
+  PDRect boundTop = {.x = 0, .y = 0, .width = SCREEN_PIX_X/2, .height = TILE_PIX*2};
+  pd->sprite->setBounds(m_UISpriteTop, boundTop);
+  pd->sprite->setImage(m_UISpriteTop, m_UIBitmapTop, kBitmapUnflipped);
+  pd->sprite->moveTo(m_UISpriteTop, SCREEN_PIX_X/2, TILE_PIX*2);
+  pd->sprite->setZIndex(m_UISpriteTop, Z_INDEX_UI);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteTop, 1);
+  pd->sprite->setVisible(m_UISpriteTop, 1);
 
   PDRect boundBottom = {.x = 0, .y = 0, .width = DEVICE_PIX_X, .height = TILE_PIX};
   pd->sprite->setBounds(m_UISpriteBottom, boundBottom);

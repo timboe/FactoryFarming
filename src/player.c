@@ -201,11 +201,11 @@ void playerSpriteSetup(uint8_t _zoom) {
   m_player.m_blueprint[_zoom] = pd->sprite->newSprite();
   pd->sprite->setBounds(m_player.m_blueprint[_zoom], bound);
   pd->sprite->setImage(m_player.m_blueprint[_zoom], getSprite16(0, 0, _zoom), kBitmapUnflipped);
-  pd->sprite->setZIndex(m_player.m_blueprint[_zoom], Z_INDEX_BLUEPRINT_A);
+  pd->sprite->setZIndex(m_player.m_blueprint[_zoom], Z_INDEX_BLUEPRINT);
 }
 
 void initPlayer() {
-  for (uint32_t zoom = 1; zoom < 5; ++zoom) {
+  for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     playerSpriteSetup(zoom);
   }
 
