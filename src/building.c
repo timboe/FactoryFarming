@@ -35,6 +35,9 @@ struct Building_t* buildingManagerNewBuilding(enum kBuildingType _asType) {
       if (m_buildings[i].m_type == kEmpty) {
         ++m_nBuildings;
         ++m_buildingSearchLocation;
+        if (_asType == kConveyor) {
+          ++m_nConveyors;
+        }
         m_buildings[i].m_type = _asType;
         return &(m_buildings[i]);
       }
@@ -73,9 +76,13 @@ void conveyorUpdateFn(struct Location_t* _loc, uint8_t _tick, uint8_t _zoom) {
   if (building->m_progress >= TILE_PIX && building->m_next[building->m_mode]->m_cargo == NULL) {
     struct Cargo_t* theCargo = _loc->m_cargo;
     struct Location_t* nextLoc = building->m_next[building->m_mode]; 
+    // Move cargo
     nextLoc->m_cargo = theCargo;
     _loc->m_cargo = NULL;
-    nextLoc->m_building->m_progress = building->m_progress - TILE_PIX;
+    // Carry over any excess ticks
+    if (nextLoc->m_building) {
+      nextLoc->m_building->m_progress = building->m_progress - TILE_PIX;
+    }
     // Cargo moves between chunks?
     if (nextLoc->m_chunk != _loc->m_chunk) {
       //pd->system->logToConsole("CHANGE CHUNK");
@@ -83,6 +90,7 @@ void conveyorUpdateFn(struct Location_t* _loc, uint8_t _tick, uint8_t _zoom) {
       chunkAddCargo(nextLoc->m_chunk, theCargo);
       queueUpdateRenderList();
     }
+    // Cycle outputs
     switch (building->m_convSubType) {
       case kSplitI:; case kSplitL:; case kFilterL:; building->m_mode = (building->m_mode + 1) % 2; break;
       case kSplitT:; building->m_mode = (building->m_mode + 1) % 3; break;
@@ -104,6 +112,10 @@ bool newConveyor(struct Location_t* _loc, enum kConvDir _dir, enum kConvSubType 
   if (_loc->m_building == NULL) {
     newToChunk = true;
     _loc->m_building = buildingManagerNewBuilding(kConveyor);
+    if (!_loc->m_building) {
+      // Run out of buildings
+      return false;
+    }
   } else if (_loc->m_building->m_type != kConveyor) {
     return false;
   }
@@ -159,7 +171,7 @@ bool newConveyor(struct Location_t* _loc, enum kConvDir _dir, enum kConvSubType 
     switch (_dir) {
       case WE:; case EW:; building->m_next[0]    = above; building->m_next[1]    = below; 
                           building->m_nextDir[0] = SN;    building->m_nextDir[1] = NS; break;
-      case SN:; case NS:; building->m_next[0]    = left;  building->m_next[0]    = right;
+      case SN:; case NS:; building->m_next[0]    = left;  building->m_next[1]    = right;
                           building->m_nextDir[0] = EW;    building->m_nextDir[1] = WE; break;
       case kConvDirN:; break;
     }

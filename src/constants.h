@@ -33,7 +33,7 @@
 #define SHEET16_SIZE (SHEET16_SIZE_X*SHEET16_SIZE_Y)
 
 // 4 means that up to 25% of tiles can be populated
-#define POPULATION_LIMIT_RATIO 10
+#define POPULATION_LIMIT_RATIO 4
 
 // Number of available floor spires
 #define FLOOR_TILES 8
@@ -61,7 +61,7 @@
 #define SQRT_HALF 0.70710678118f
 
 // Fraction of the screen to trigger scrolling
-#define SCROLL_EDGE 0.8f
+//#define SCROLL_EDGE 0.8f
 
 #define Z_INDEX_UI 32767
 #define Z_INDEX_MAX 32767

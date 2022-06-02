@@ -66,6 +66,10 @@ bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addedByPlaye
   }
 
   struct Cargo_t* cargo = cargoManagerNewCargo();
+  if (!cargo) { // Run out of slots
+    return false;
+  }
+
   if (cargo->m_sprite[1] == NULL) {
     for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
       cargo->m_sprite[zoom] = pd->sprite->newSprite();
