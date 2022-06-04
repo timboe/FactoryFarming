@@ -19,3 +19,7 @@ void initWorld(void);
 void resetWorld(void);
 
 void serialiseWorld(struct json_encoder* je);
+
+void deserialiseValueWorld(json_decoder* jd, const char* _key, json_value _value);
+
+void* deserialiseStructDoneWorld(json_decoder* jd, const char* _name, json_value_type _type);

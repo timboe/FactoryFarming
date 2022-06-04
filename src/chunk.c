@@ -81,8 +81,8 @@ void resetChunk() {
     for (uint32_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
       for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
         struct Chunk_t* chunk = getChunk_noCheck(x, y);
-        pd->sprite->freeSprite(chunk->m_bkgSprite[zoom]);
-        pd->graphics->freeBitmap(chunk->m_bkgImage[zoom]);
+        if (chunk->m_bkgSprite[zoom]) pd->sprite->freeSprite(chunk->m_bkgSprite[zoom]);
+        if (chunk->m_bkgImage[zoom]) pd->graphics->freeBitmap(chunk->m_bkgImage[zoom]);
       }
     }
   }

@@ -220,7 +220,7 @@ bool newConveyor(struct Location_t* _loc, enum kConvDir _dir, enum kConvSubType 
 void resetBuilding() {
   for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
     for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
-      pd->sprite->freeSprite(m_buildings[i].m_sprite[zoom]);
+      if (m_buildings[i].m_sprite[zoom]) pd->sprite->freeSprite(m_buildings[i].m_sprite[zoom]);
     }
   }
   memset(m_buildings, 0, SIZE_BUILDING);

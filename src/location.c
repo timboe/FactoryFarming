@@ -82,6 +82,7 @@ void serialiseLocation(struct json_encoder* je) {
       if (loc->m_cargo) idCargo = loc->m_cargo->m_index;
       if (loc->m_building) idBuilding = loc->m_building->m_index;
 
+      je->addArrayMember(je);
       je->startTable(je);
       je->addTableMember(je, "x", 1);
       je->writeInt(je, x);

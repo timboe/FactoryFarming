@@ -6,6 +6,8 @@
 
 struct Tile_t* m_tiles = NULL;
 
+uint16_t m_deserialiseCounterWorld = 0;
+
 const int32_t SIZE_GENERATE = TOT_TILES * sizeof(struct Tile_t);
 
 void setChunkBackgrounds(void);
@@ -173,6 +175,7 @@ void setChunkBackgrounds(void) {
 
 void resetWorld() {
   memset(m_tiles, 0, SIZE_GENERATE);
+  m_deserialiseCounterWorld = 0;
 }
 
 void initWorld() {
@@ -193,6 +196,20 @@ void serialiseWorld(struct json_encoder* je) {
   }
 
   je->endArray(je);
+}
+
+void deserialiseValueWorld(json_decoder* jd, const char* _key, json_value _value) {
+  if (strcmp(_key, "tile") == 0) {
+    m_tiles[m_deserialiseCounterWorld].m_tile = json_intValue(_value);
+    int x = json_intValue(_value);
+  } else {
+    pd->system->logToConsole("WORLD DECODE ISSUE, %s", _key);
+  }
+}
+
+void* deserialiseStructDoneWorld(json_decoder* jd, const char* _name, json_value_type _type) {
+  ++m_deserialiseCounterWorld;
+  return NULL;
 }
 
 

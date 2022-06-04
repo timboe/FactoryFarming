@@ -28,3 +28,7 @@ void initCargo(void);
 void resetCargo(void);
 
 void serialiseCargo(struct json_encoder* je);
+
+void deserialiseValueCargo(json_decoder* jd, const char* _key, json_value _value);
+
+void* deserialiseStructDoneCargo(json_decoder* jd, const char* _name, json_value_type _type);

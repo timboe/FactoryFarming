@@ -179,7 +179,7 @@ void menuOptionsCallbackRestart(void* blank) {
 }
 
 void menuOptionsCallbackLoad(void* blank) {
-  reset();
+  //reset();
   load();
 }
 

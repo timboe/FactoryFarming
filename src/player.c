@@ -8,6 +8,8 @@ struct Player_t m_player;
 
 int16_t m_offX, m_offY = 0; // Screen offsets
 
+uint16_t m_deserialiseXPlayer = 0, m_deserialiseYPlayer = 0;
+
 struct Chunk_t* m_currentChunk;
 enum kChunkQuad m_quadrant = 0;
 
@@ -214,4 +216,32 @@ void initPlayer() {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     playerSpriteSetup(zoom);
   }
+}
+
+void serialisePlayer(struct json_encoder* je) {
+  je->addTableMember(je, "player", 6);
+  je->startTable(je);
+  je->addTableMember(je, "x", 1);
+  je->writeInt(je, (int) m_player.m_pix_x);
+  je->addTableMember(je, "y", 1);
+  je->writeInt(je, (int) m_player.m_pix_y);
+  je->endTable(je);
+}
+
+void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _value) {
+  if (strcmp(_key, "x") == 0) {
+    m_player.m_pix_x = (float) json_intValue(_value);
+  } else if (strcmp(_key, "y") == 0) {
+    m_player.m_pix_y = json_intValue(_value);
+  } else {
+    pd->system->logToConsole("PLAYER DECODE ISSUE, %s", _key);
+  }
+}
+
+void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_value_type _type) {
+  setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y);
+  m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
+
+  pd->system->logToConsole("-- Player decoded to (%i, %i)", (int32_t)m_player.m_pix_x, (int32_t)m_player.m_pix_y);
+  return NULL;
 }
