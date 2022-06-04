@@ -8,7 +8,7 @@
 #include "player.h"
 #include "input.h"
 #include "ui.h"
-
+#include "io.h"
 
 PlaydateAPI* pd = NULL;
 
@@ -25,6 +25,12 @@ enum kGameMode m_mode;
 void tickNear(void);
 
 void tickFar(void);
+
+void menuOptionsCallbackRestart(void*);
+
+void menuOptionsCallbackLoad(void* _menu);
+
+void menuOptionsCallbackSave(void* _menu);
 
 ////////////
 
@@ -166,9 +172,31 @@ int gameLoop(void* _data) {
   return 1;
 }
 
-void menuOptionsCallback(void* userdata) {
+void menuOptionsCallbackRestart(void* blank) {
+}
+
+void menuOptionsCallbackLoad(void* _menu) {
+  int value = pd->system->getMenuItemValue((PDMenuItem*)_menu);
+  setSlot(value);
+  load();
+}
+
+void menuOptionsCallbackSave(void* _menu) {
+  int value = pd->system->getMenuItemValue((PDMenuItem*)_menu);
+  setSlot(value);
+  save();
 }
 
 void initGame() {
   generate();
+
+  pd->system->addMenuItem("restart", menuOptionsCallbackRestart, NULL);
+
+
+  static const char* slots[] = {"Slot 0", "Slot 1", "Slot 2"};
+  PDMenuItem* _menu1 = pd->system->addOptionsMenuItem("load", slots, 3, menuOptionsCallbackLoad, NULL);
+  pd->system->setMenuItemUserdata(_menu1, (void*) _menu1); 
+
+  PDMenuItem* _menu0 = pd->system->addOptionsMenuItem("save", slots, 3, menuOptionsCallbackSave, NULL);
+  pd->system->setMenuItemUserdata(_menu0, (void*) _menu0);
 }
