@@ -4,6 +4,7 @@
 #include "pd_api.h"
 #include "game.h"
 #include "sprite.h"
+#include "generate.h"
 #include "sound.h"
 #include "cargo.h"
 #include "location.h"
@@ -19,14 +20,18 @@ __declspec(dllexport)
 
 static void init(void) {
   initSprite();
+  initWorld();
   initCargo();
   initChunk();
   initLocation();
   initPlayer();
   initiUI();
-  initGame();
   initBuilding();
   initSound();
+  initGame();
+
+  reset();
+  generate();
 }
 
 static void deinit(void) {

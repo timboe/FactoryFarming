@@ -1,15 +1,13 @@
 #include "chunk.h"
 #include "building.h"
 
+const int32_t SIZE_CHUNK = TOT_CHUNKS * sizeof(struct Chunk_t);
+
 struct Chunk_t* m_chunks;
 
-struct Chunk_t* m_edgeChunks;
 
 /// ///
 
-struct Chunk_t* getEdgeChunk(uint32_t _i) {
-  return &(m_edgeChunks[_i]);
-}
 
 struct Chunk_t* getChunk(int32_t _x, int32_t _y) {
   if (_x < 0) _x += WORLD_CHUNKS_X;
@@ -78,12 +76,17 @@ uint16_t chunkTickChunk(struct Chunk_t* _chunk, uint8_t _tick, uint8_t _zoom) {
   return _chunk->m_nLocations;
 }
 
-void initChunk() {
-  const int32_t s = TOT_CHUNKS * sizeof(struct Chunk_t);
-  m_chunks = pd->system->realloc(NULL, s);
-  memset(m_chunks, 0, s);
-  pd->system->logToConsole("malloc: for chunks %i", s/1024);
-
+void resetChunk() {
+  for (uint32_t x = 0; x < WORLD_CHUNKS_X; ++x) {
+    for (uint32_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
+      for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+        struct Chunk_t* chunk = getChunk_noCheck(x, y);
+        pd->sprite->freeSprite(chunk->m_bkgSprite[zoom]);
+        pd->graphics->freeBitmap(chunk->m_bkgImage[zoom]);
+      }
+    }
+  }
+  memset(m_chunks, 0, SIZE_CHUNK);
   for (uint32_t x = 0; x < WORLD_CHUNKS_X; ++x) {
     for (uint32_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
       struct Chunk_t* chunk = getChunk_noCheck(x, y);
@@ -91,7 +94,10 @@ void initChunk() {
       chunk->m_y = y;
     }
   }
+}
 
-  m_edgeChunks = pd->system->realloc(NULL, (WORLD_CHUNKS_X*2 + WORLD_CHUNKS_Y*2 + 4) * sizeof(struct Chunk_t));
-  memset(m_edgeChunks, 0, (WORLD_CHUNKS_X*2 + WORLD_CHUNKS_Y*2 + 4) * sizeof(struct Chunk_t));
+void initChunk() {
+  m_chunks = pd->system->realloc(NULL, SIZE_CHUNK);
+  memset(m_chunks, 0, SIZE_CHUNK);
+  pd->system->logToConsole("malloc: for chunks %i", SIZE_CHUNK/1024);
 }

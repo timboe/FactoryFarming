@@ -33,5 +33,7 @@ void queueUpdateRenderList(void);
 
 void initGame(void);
 
+void reset(void);
+
 
 

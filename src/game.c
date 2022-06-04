@@ -28,9 +28,9 @@ void tickFar(void);
 
 void menuOptionsCallbackRestart(void*);
 
-void menuOptionsCallbackLoad(void* _menu);
+void menuOptionsCallbackLoad(void*);
 
-void menuOptionsCallbackSave(void* _menu);
+void menuOptionsCallbackSave(void*);
 
 ////////////
 
@@ -173,30 +173,34 @@ int gameLoop(void* _data) {
 }
 
 void menuOptionsCallbackRestart(void* blank) {
+  reset();
+  generate();
+  updateRenderList();
 }
 
-void menuOptionsCallbackLoad(void* _menu) {
-  int value = pd->system->getMenuItemValue((PDMenuItem*)_menu);
-  setSlot(value);
+void menuOptionsCallbackLoad(void* blank) {
+  reset();
   load();
 }
 
-void menuOptionsCallbackSave(void* _menu) {
-  int value = pd->system->getMenuItemValue((PDMenuItem*)_menu);
-  setSlot(value);
+void menuOptionsCallbackSave(void* blank) {
   save();
 }
 
-void initGame() {
-  generate();
+// Call prior to loading anything
+void reset() {
+  resetCargo();
+  resetBuilding();
+  resetLocation();
+  resetChunk();
+  resetWorld();
+  resetPlayer();
+}
 
+void initGame() {
   pd->system->addMenuItem("restart", menuOptionsCallbackRestart, NULL);
 
+  pd->system->addMenuItem("load", menuOptionsCallbackLoad, NULL);
 
-  static const char* slots[] = {"Slot 0", "Slot 1", "Slot 2"};
-  PDMenuItem* _menu1 = pd->system->addOptionsMenuItem("load", slots, 3, menuOptionsCallbackLoad, NULL);
-  pd->system->setMenuItemUserdata(_menu1, (void*) _menu1); 
-
-  PDMenuItem* _menu0 = pd->system->addOptionsMenuItem("save", slots, 3, menuOptionsCallbackSave, NULL);
-  pd->system->setMenuItemUserdata(_menu0, (void*) _menu0);
+  pd->system->addMenuItem("save", menuOptionsCallbackSave, NULL);
 }

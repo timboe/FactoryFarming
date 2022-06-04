@@ -7,6 +7,8 @@
 
 struct Location_t* m_locations = NULL;
 
+const int32_t SIZE_LOCATION = TOT_TILES * sizeof(struct Location_t);
+
 /// ///
 
 struct Location_t* getLocation_noCheck(int32_t _x, int32_t _y) {
@@ -47,11 +49,14 @@ void clearLocation(struct Location_t* _loc) {
 
 
 void initLocation() {
-  const int32_t s = TOT_TILES * sizeof(struct Location_t);
-  m_locations = pd->system->realloc(NULL, s);
-  memset(m_locations, 0, s);
-  pd->system->logToConsole("malloc: for location %i", s/1024);
+  m_locations = pd->system->realloc(NULL, SIZE_LOCATION);
+  pd->system->logToConsole("malloc: for location %i", SIZE_LOCATION/1024);
 
+
+}
+
+void resetLocation() {
+  memset(m_locations, 0, SIZE_LOCATION);
   for (uint32_t x = 0; x < TOT_TILES_X; ++x) {
     for (uint32_t y = 0; y < TOT_TILES_Y; ++y) {
       struct Location_t* loc = getLocation_noCheck(x, y);
@@ -60,4 +65,35 @@ void initLocation() {
       loc->m_chunk = getChunk_noCheck(x / TILES_PER_CHUNK_X, y / TILES_PER_CHUNK_Y);
     }
   }
+}
+
+void serialiseLocation(struct json_encoder* je) {
+  je->addTableMember(je, "location", 8);
+  je->startArray(je);
+
+  for (uint32_t x = 0; x < TOT_TILES_X; ++x) {
+    for (uint32_t y = 0; y < TOT_TILES_Y; ++y) {
+      struct Location_t* loc = getLocation_noCheck(x, y);
+      if (loc->m_cargo == NULL && loc->m_building == NULL) {
+        continue;
+      }
+
+      int16_t idCargo = -1, idBuilding = -1;
+      if (loc->m_cargo) idCargo = loc->m_cargo->m_index;
+      if (loc->m_building) idBuilding = loc->m_building->m_index;
+
+      je->startTable(je);
+      je->addTableMember(je, "x", 1);
+      je->writeInt(je, x);
+      je->addTableMember(je, "y", 1);
+      je->writeInt(je, y);
+      je->addTableMember(je, "cargo", 5);
+      je->writeInt(je, idCargo);
+      je->addTableMember(je, "build", 5);
+      je->writeInt(je, idBuilding);
+      je->endTable(je);
+    }
+  }
+
+  je->endArray(je);
 }

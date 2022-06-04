@@ -3,6 +3,8 @@
 #include "sprite.h"
 #include "render.h"
 
+const int32_t SIZE_CARGO = TOT_CARGO_OR_BUILDINGS * sizeof(struct Cargo_t);
+
 uint16_t m_nCargo = 0;
 
 uint16_t m_cargoSearchLocation = 0;
@@ -17,15 +19,15 @@ uint16_t getNCargo() {
   return m_nCargo;
 }
 
-struct Cargo_t* cargoManagerNewCargo() {
+struct Cargo_t* cargoManagerNewCargo(enum kCargoType _type) {
   for (uint8_t try = 0; try < 2; ++try) {
     const uint32_t start = (try == 0 ? m_cargoSearchLocation : 0);
-    const uint32_t stop  = (try == 0 ? TOT_TILES / POPULATION_LIMIT_RATIO : m_cargoSearchLocation);
+    const uint32_t stop  = (try == 0 ? TOT_CARGO_OR_BUILDINGS : m_cargoSearchLocation);
     for (uint32_t i = start; i < stop; ++i) {
-      if (m_cargos[i].m_inUse == false) {
+      if (m_cargos[i].m_type == kNoCargo) {
         ++m_nCargo;
         ++m_cargoSearchLocation;
-        m_cargos[i].m_inUse = true;
+        m_cargos[i].m_type = _type;
         return &(m_cargos[i]);
       }
     }
@@ -37,7 +39,7 @@ struct Cargo_t* cargoManagerNewCargo() {
 }
 
 void cargoManagerFreeCargo(struct Cargo_t* _cargo) {
-  _cargo->m_inUse = false;
+  _cargo->m_type = kNoCargo;
   m_cargoSearchLocation = _cargo->m_index;
   --m_nCargo;
 }
@@ -65,7 +67,7 @@ bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addedByPlaye
     case kNoCargo:;
   }
 
-  struct Cargo_t* cargo = cargoManagerNewCargo();
+  struct Cargo_t* cargo = cargoManagerNewCargo(_type);
   if (!cargo) { // Run out of slots
     return false;
   }
@@ -75,7 +77,7 @@ bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addedByPlaye
       cargo->m_sprite[zoom] = pd->sprite->newSprite();
     }
   }
-  cargo->m_type = _type;
+
 
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     cargoSpriteSetup(cargo, _loc, ix, iy, zoom);
@@ -93,13 +95,47 @@ bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addedByPlaye
   return true;
 }
 
-void initCargo() {
-  const int32_t s = (TOT_TILES / POPULATION_LIMIT_RATIO) * sizeof(struct Cargo_t);
-  m_cargos = pd->system->realloc(NULL, s);
-  memset(m_cargos, 0, s);
-  pd->system->logToConsole("malloc: for cargo %i", s/1024);
-
-  for (uint32_t i = 0; i < TOT_TILES / POPULATION_LIMIT_RATIO; ++i) {
+void resetCargo() {
+  for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
+    for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+      pd->sprite->freeSprite(m_cargos[i].m_sprite[zoom]);
+    }
+  }
+  memset(m_cargos, 0, SIZE_CARGO);
+  for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
     m_cargos[i].m_index = i;
   }
+}
+
+void initCargo() {
+  m_cargos = pd->system->realloc(NULL, SIZE_CARGO);
+  memset(m_cargos, 0, SIZE_CARGO);
+  pd->system->logToConsole("malloc: for cargo %i", SIZE_CARGO/1024);
+}
+
+void serialiseCargo(struct json_encoder* je) {
+  je->addTableMember(je, "cargo", 5);
+  je->startArray(je);
+
+  for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
+    if (m_cargos[i].m_type == kNoCargo) {
+      continue;
+    }
+    float x, y;
+    pd->sprite->getPosition(m_cargos[i].m_sprite[/*zoom=*/1], &x, &y);
+
+    je->addArrayMember(je);
+    je->startTable(je);
+    je->addTableMember(je, "idx", 3);
+    je->writeInt(je, i);
+    je->addTableMember(je, "type", 4);
+    je->writeInt(je, m_cargos[i].m_type);
+    je->addTableMember(je, "x", 1);
+    je->writeInt(je, (int32_t)x);
+    je->addTableMember(je, "y", 1);
+    je->writeInt(je, (int32_t)y);
+    je->endTable(je);
+  }
+
+  je->endArray(je);
 }

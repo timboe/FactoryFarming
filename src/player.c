@@ -204,12 +204,14 @@ void playerSpriteSetup(uint8_t _zoom) {
   pd->sprite->setZIndex(m_player.m_blueprint[_zoom], Z_INDEX_BLUEPRINT);
 }
 
+void resetPlayer() {
+  setPlayerPosition(SCREEN_PIX_X/2, SCREEN_PIX_Y/2);
+  m_currentChunk = getChunk_noCheck(0,0);
+}
+
+
 void initPlayer() {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     playerSpriteSetup(zoom);
   }
-
-  setPlayerPosition(SCREEN_PIX_X/2, SCREEN_PIX_Y/2);
-
-  m_currentChunk = getChunk_noCheck(0,0);
 }

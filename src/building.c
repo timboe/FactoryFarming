@@ -5,6 +5,8 @@
 #include "render.h"
 #include "constants.h"
 
+const int32_t SIZE_BUILDING = TOT_CARGO_OR_BUILDINGS * sizeof(struct Building_t);
+
 uint16_t m_nBuildings = 0;
 
 uint16_t m_nConveyors = 0;
@@ -30,9 +32,9 @@ uint16_t getNConveyors() {
 struct Building_t* buildingManagerNewBuilding(enum kBuildingType _asType) {
   for (uint8_t try = 0; try < 2; ++try) {
     const uint32_t start = (try == 0 ? m_buildingSearchLocation : 0);
-    const uint32_t stop  = (try == 0 ? TOT_TILES / POPULATION_LIMIT_RATIO : m_buildingSearchLocation);
+    const uint32_t stop  = (try == 0 ? TOT_CARGO_OR_BUILDINGS : m_buildingSearchLocation);
     for (uint32_t i = start; i < stop; ++i) {
-      if (m_buildings[i].m_type == kEmpty) {
+      if (m_buildings[i].m_type == kNoBuilding) {
         ++m_nBuildings;
         ++m_buildingSearchLocation;
         if (_asType == kConveyor) {
@@ -53,7 +55,7 @@ void buildingManagerFreeBuilding(struct Building_t* _building) {
   if (_building->m_type == kConveyor) {
     --m_nConveyors;
   }
-  _building->m_type = kEmpty;
+  _building->m_type = kNoBuilding;
   _building->m_updateFn = NULL;
   m_buildingSearchLocation = _building->m_index;
   --m_nBuildings;
@@ -215,13 +217,53 @@ bool newConveyor(struct Location_t* _loc, enum kConvDir _dir, enum kConvSubType 
   return true;
 }
 
-void initBuilding() {
-  const int32_t s = (TOT_TILES / POPULATION_LIMIT_RATIO) * sizeof(struct Building_t);
-  m_buildings = pd->system->realloc(NULL, s);
-  memset(m_buildings, 0, s);
-  pd->system->logToConsole("malloc: for buildings %i", s/1024);
-
-  for (uint32_t i = 0; i < TOT_TILES / POPULATION_LIMIT_RATIO; ++i) {
+void resetBuilding() {
+  for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
+    for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+      pd->sprite->freeSprite(m_buildings[i].m_sprite[zoom]);
+    }
+  }
+  memset(m_buildings, 0, SIZE_BUILDING);
+  for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
     m_buildings[i].m_index = i;
   }
+}
+
+void initBuilding() {
+  m_buildings = pd->system->realloc(NULL, SIZE_BUILDING);
+  memset(m_buildings, 0, SIZE_BUILDING);
+  pd->system->logToConsole("malloc: for buildings %i", SIZE_BUILDING/1024);
+}
+
+void serialiseBuilding(struct json_encoder* je) {
+  je->addTableMember(je, "building", 8);
+  je->startArray(je);
+
+  for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
+    if (m_buildings[i].m_type == kNoBuilding) {
+      continue;
+    }
+
+    je->addArrayMember(je);
+    je->startTable(je);
+    je->addTableMember(je, "idx", 3);
+    je->writeInt(je, i);
+    je->addTableMember(je, "type", 4);
+    je->writeInt(je, m_buildings[i].m_type);
+    je->addTableMember(je, "dir", 3);
+    je->writeInt(je, m_buildings[i].m_convDir);
+    je->addTableMember(je, "stype", 5);
+    je->writeInt(je, m_buildings[i].m_convSubType);
+    je->addTableMember(je, "x", 1);
+    je->writeInt(je, m_buildings[i].m_pix_x);
+    je->addTableMember(je, "y", 1);
+    je->writeInt(je, m_buildings[i].m_pix_y);
+    je->addTableMember(je, "prog", 4);
+    je->writeInt(je, m_buildings[i].m_progress);
+    je->addTableMember(je, "mode", 4);
+    je->writeInt(je, m_buildings[i].m_mode);
+    je->endTable(je);
+  }
+
+  je->endArray(je);
 }

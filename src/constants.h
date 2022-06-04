@@ -32,8 +32,7 @@
 #define SHEET16_SIZE_Y 16
 #define SHEET16_SIZE (SHEET16_SIZE_X*SHEET16_SIZE_Y)
 
-// 4 means that up to 25% of tiles can be populated
-#define POPULATION_LIMIT_RATIO 4
+#define TOT_CARGO_OR_BUILDINGS 2046
 
 // Number of available floor spires
 #define FLOOR_TILES 8

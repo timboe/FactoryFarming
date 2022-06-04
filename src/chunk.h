@@ -4,11 +4,14 @@
 #include "location.h"
 
 struct Chunk_t{
+  // Persistent
+
+  // Transient
   uint16_t m_x; // In chunk coords
   uint16_t m_y;
 
-  LCDSprite* m_bkgSprite[ZOOM_LEVELS]; // Index 0 not used
-  LCDBitmap* m_bkgImage[ZOOM_LEVELS];  // Index 0 not used
+  LCDSprite* m_bkgSprite[ZOOM_LEVELS]; // Index 0 not used - OWNED
+  LCDBitmap* m_bkgImage[ZOOM_LEVELS];  // Index 0 not used - OWNED
 
   struct Chunk_t* m_neighborsNE[CHUNK_NEIGHBORS_CORNER];
   struct Chunk_t* m_neighborsSE[CHUNK_NEIGHBORS_CORNER];
@@ -33,8 +36,6 @@ struct Chunk_t* getChunk(int32_t _x, int32_t _y);
 
 struct Chunk_t* getChunk_noCheck(const int32_t _x, const int32_t _y);
 
-struct Chunk_t* getEdgeChunk(uint32_t _i);
-
 void chunkAddLocation(struct Chunk_t* _chunk, struct Location_t* _loc);
 
 void chunkRemoveLocation(struct Chunk_t* _chunk, struct Location_t* _loc);
@@ -46,3 +47,5 @@ void chunkRemoveCargo(struct Chunk_t* _chunk, struct Cargo_t* _cargo);
 uint16_t chunkTickChunk(struct Chunk_t* _chunk, uint8_t _tick, uint8_t _zoom);
 
 void initChunk(void);
+
+void resetChunk(void);

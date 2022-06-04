@@ -31,3 +31,5 @@ bool movePlayer(void);
 
 void initPlayer(void);
 
+void resetPlayer(void);
+
