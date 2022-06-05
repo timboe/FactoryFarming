@@ -58,6 +58,14 @@ enum kGameMode getGameMode() {
   return m_mode;
 }
 
+uint16_t locToPix(uint16_t _loc) {
+  return TILE_PIX*_loc + TILE_PIX/2.0;
+}
+
+uint16_t pixToLoc(uint16_t _pix) {
+  return (_pix - TILE_PIX/2) / TILE_PIX;
+}
+
 void setGameMode(enum kGameMode _mode) {
   m_mode = _mode;
   if (_mode == kMenuSelect) drawUITop("Menu Mode");

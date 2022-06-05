@@ -5,9 +5,9 @@ enum kCargoType {kNoCargo, kApple, kCheese};
 
 struct Cargo_t{
   // Persistent
-  uint16_t m_index; // My location in the cargo array.
+  uint16_t m_index; // My location in the cargo array.Created at RESET ("const")
   enum kCargoType m_type;
-  // int x, y; - read from sprite on save
+  // int pix_x, pix_y; - read from sprite on save
 
   // Transient
   LCDSprite* m_sprite[ZOOM_LEVELS]; // Location 0 is unused - OWNED

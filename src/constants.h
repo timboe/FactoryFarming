@@ -1,6 +1,4 @@
 
-
-
 #define TICK_FREQUENCY 32
 
 #define NEAR_TICK_FREQUENCY 2
@@ -75,3 +73,6 @@
 
 // Note: 1 larger than actual zoom levels (0 index unused)
 #define ZOOM_LEVELS 3
+
+// 4 inputs plus 1 output. CAUTION: changing this currently requires manual change to de/serialisation
+#define MAX_STORE 5

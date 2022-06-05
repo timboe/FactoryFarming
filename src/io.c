@@ -81,6 +81,9 @@ void willDecodeSublist(json_decoder* jd, const char* _name, json_value_type _typ
   } else if (strcmp(truncated, "cargo") == 0 && _type == kJSONTable) {
     jd->didDecodeTableValue = deserialiseValueCargo;
     jd->didDecodeSublist = deserialiseStructDoneCargo;
+  } else if (strcmp(truncated, "build") == 0 && _type == kJSONTable) {
+    jd->didDecodeTableValue = deserialiseValueBuilding;
+    jd->didDecodeSublist = deserialiseStructDoneBuilding;
   } else if (strcmp(truncated, "world") == 0 && _type == kJSONTable) {
     jd->didDecodeTableValue = deserialiseValueWorld;
     jd->didDecodeSublist = deserialiseStructDoneWorld;

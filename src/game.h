@@ -25,6 +25,10 @@ uint16_t getNearTickCount(void);
 
 uint16_t getFarTickCount(void);
 
+uint16_t locToPix(uint16_t _loc) ;
+
+uint16_t pixToLoc(uint16_t _pix) ;
+
 enum kGameMode getGameMode(void);
 
 void setGameMode(enum kGameMode _mode);
