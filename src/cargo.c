@@ -54,6 +54,10 @@ struct Cargo_t* cargoManagerNewCargo(enum kCargoType _type) {
   return NULL;
 }
 
+struct Cargo_t* cargoManagerGetByIndex(uint16_t _index) {
+  return &(m_cargos[_index]);
+}
+
 void cargoManagerFreeCargo(struct Cargo_t* _cargo) {
   _cargo->m_type = kNoCargo;
   m_cargoSearchLocation = _cargo->m_index;
@@ -171,7 +175,7 @@ void deserialiseValueCargo(json_decoder* jd, const char* _key, json_value _value
   } else if (strcmp(_key, "y") == 0) {
     m_deserialiseYCargo = json_intValue(_value);
   } else {
-    pd->system->logToConsole("CARGO DECODE ISSUE, %s", _key);
+    pd->system->error("CARGO DECODE ISSUE, %s", _key);
   }
 }
 

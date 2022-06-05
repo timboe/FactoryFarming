@@ -14,6 +14,8 @@ void generate(void);
 
 void renderChunkBackgroundImage(struct Chunk_t* _chunk);
 
+void setChunkBackgrounds(void);
+
 void initWorld(void);
 
 void resetWorld(void);

@@ -6,19 +6,11 @@
 
 struct Tile_t* m_tiles = NULL;
 
-uint16_t m_deserialiseCounterWorld = 0;
+uint16_t m_deserialiseIndexWorld = 0;
 
 const int32_t SIZE_GENERATE = TOT_TILES * sizeof(struct Tile_t);
-
-void setChunkBackgrounds(void);
-
-void setChunkAssociations(void);
-
-void setNonNeighborAssociationsFor(struct Chunk_t* _chunk);
-
-void doNonNeighborAssociation(struct Chunk_t* _chunk, struct Chunk_t** _theNeighborList, struct Chunk_t** _theNonNeighborList, uint32_t _theListSize);
  
-void generateSpriteSetup(struct Chunk_t* _chunk, uint8_t _zoom);
+void generateSpriteSetup(struct Chunk_t* _chunk);
 
 struct Tile_t* getTile(struct Chunk_t* _chunk, uint16_t _u, uint16_t _v);
 
@@ -53,10 +45,10 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   const int16_t off_y = (_chunk->m_y * CHUNK_PIX_Y) + TILE_PIX/2;
 
   // Render locations into the background image
-  for (uint32_t i = 0; i < _chunk->m_nLocations; ++i) {
-    struct Location_t* loc = _chunk->m_locations[i];
-    if (loc->m_building && loc->m_building->m_type != kNoBuilding && loc->m_building->m_image) {
-      pd->graphics->drawBitmap(loc->m_building->m_image[1], loc->m_building->m_pix_x - off_x, loc->m_building->m_pix_y - off_y, kBitmapUnflipped);
+  for (uint32_t i = 0; i < _chunk->m_nBuildings; ++i) {
+    struct Building_t* building = _chunk->m_buildings[i];
+    if (building->m_type != kNoBuilding && building->m_image[1]) {
+      pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - off_x, building->m_pix_y - off_y, kBitmapUnflipped);
     }
   }
 
@@ -70,112 +62,34 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
 
 }
 
-
-void doNonNeighborAssociation(struct Chunk_t* _chunk, struct Chunk_t** _theNeighborList, struct Chunk_t** _theNonNeighborList, uint32_t _theListSize) {
-  uint32_t counter = 0;
-  for (uint16_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
-    for (uint16_t x = 0; x < WORLD_CHUNKS_X; ++x) {
-      struct Chunk_t* testChunk = getChunk_noCheck(x, y);
-
-      bool found = (testChunk == _chunk);
-      for (uint32_t i = 0; i < _theListSize; ++i) {
-        if (_theNeighborList[i] == testChunk) {
-          found = true;
-          break;
-        }
-      }
-
-      if (!found) {
-        _theNonNeighborList[counter++] = testChunk;
-      }
-    }
+void generateSpriteSetup(struct Chunk_t* _chunk) {
+  for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+    if (_chunk->m_bkgImage[zoom] == NULL) _chunk->m_bkgImage[zoom] = pd->graphics->newBitmap(CHUNK_PIX_X*zoom, CHUNK_PIX_Y*zoom, kColorClear);
+    // Not enough RAM for this :(
+    //if (_chunk->m_bkgImage2[zoom] == NULL) _chunk->m_bkgImage2[zoom] = pd->graphics->newBitmap(CHUNK_PIX_X*zoom, CHUNK_PIX_Y*zoom, kColorClear);
+    // ...
+    if (_chunk->m_bkgSprite[zoom] == NULL) _chunk->m_bkgSprite[zoom] = pd->sprite->newSprite();
+    PDRect bound = {.x = 0, .y = 0, .width = CHUNK_PIX_X*zoom, .height = CHUNK_PIX_Y*zoom};
+    pd->sprite->setBounds(_chunk->m_bkgSprite[zoom], bound);
+    pd->sprite->setImage(_chunk->m_bkgSprite[zoom], _chunk->m_bkgImage[zoom], kBitmapUnflipped);
+    pd->sprite->moveTo(_chunk->m_bkgSprite[zoom], (CHUNK_PIX_X*_chunk->m_x + CHUNK_PIX_X/2.0)*zoom, (CHUNK_PIX_Y*_chunk->m_y + CHUNK_PIX_Y/2.0)*zoom);
+    pd->sprite->setZIndex(_chunk->m_bkgSprite[zoom], -1);
   }
 }
 
-void setNonNeighborAssociationsFor(struct Chunk_t* _chunk) {
-  doNonNeighborAssociation(_chunk, _chunk->m_neighborsNE, _chunk->m_nonNeighborsNE, CHUNK_NEIGHBORS_CORNER);
-  doNonNeighborAssociation(_chunk, _chunk->m_neighborsSE, _chunk->m_nonNeighborsSE, CHUNK_NEIGHBORS_CORNER);
-  doNonNeighborAssociation(_chunk, _chunk->m_neighborsSW, _chunk->m_nonNeighborsSW, CHUNK_NEIGHBORS_CORNER);
-  doNonNeighborAssociation(_chunk, _chunk->m_neighborsNW, _chunk->m_nonNeighborsNW, CHUNK_NEIGHBORS_CORNER);
-  doNonNeighborAssociation(_chunk, _chunk->m_neighborsALL, _chunk->m_nonNeighborsALL, CHUNK_NEIGHBORS_ALL);
-}
-
-// Each chunk should know who its neighbors are for fast rendering
-void setChunkAssociations(void) {
-  // Set neighbor associations
+void setChunkBackgrounds() {
   for (uint16_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
     for (uint16_t x = 0; x < WORLD_CHUNKS_X; ++x) {
-      struct Chunk_t* c = getChunk_noCheck(x, y);
-      c->m_neighborsNE[0] = getChunk(x + 0, y - 1);
-      c->m_neighborsNE[1] = getChunk(x + 1, y - 1);
-      c->m_neighborsNE[2] = getChunk(x + 1, y + 0);
-
-      c->m_neighborsSE[0] = getChunk(x + 1, y + 0);
-      c->m_neighborsSE[1] = getChunk(x + 1, y + 1);
-      c->m_neighborsSE[2] = getChunk(x + 0, y + 1);
-
-      c->m_neighborsSW[0] = getChunk(x + 0, y + 1);
-      c->m_neighborsSW[1] = getChunk(x - 1, y + 1);
-      c->m_neighborsSW[2] = getChunk(x - 1, y + 0);
-
-      c->m_neighborsNW[0] = getChunk(x - 1, y + 0);
-      c->m_neighborsNW[1] = getChunk(x - 1, y - 1);
-      c->m_neighborsNW[2] = getChunk(x + 0, y - 1);
-
-      c->m_neighborsALL[0] = getChunk(x + 0, y - 1);
-      c->m_neighborsALL[1] = getChunk(x + 1, y - 1);
-      c->m_neighborsALL[2] = getChunk(x + 1, y + 0);
-      c->m_neighborsALL[3] = getChunk(x + 1, y + 1);
-      c->m_neighborsALL[4] = getChunk(x + 0, y + 1);
-      c->m_neighborsALL[5] = getChunk(x - 1, y + 1);
-      c->m_neighborsALL[6] = getChunk(x - 1, y + 0);
-      c->m_neighborsALL[7] = getChunk(x - 1, y - 1);
-    }
-  }
-
-  // Set non-neighbor associations
-  for (uint16_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
-    for (uint16_t x = 0; x < WORLD_CHUNKS_X; ++x) {
-      setNonNeighborAssociationsFor(getChunk_noCheck(x, y));
-    }
-  }
-}
-
-void generateSpriteSetup(struct Chunk_t* _chunk, uint8_t _zoom) {
-  PDRect bound = {.x = 0, .y = 0, .width = CHUNK_PIX_X*_zoom, .height = CHUNK_PIX_Y*_zoom};
-  pd->sprite->setBounds(_chunk->m_bkgSprite[_zoom], bound);
-  pd->sprite->setImage(_chunk->m_bkgSprite[_zoom], _chunk->m_bkgImage[_zoom], kBitmapUnflipped);
-  pd->sprite->moveTo(_chunk->m_bkgSprite[_zoom], (CHUNK_PIX_X*_chunk->m_x + CHUNK_PIX_X/2.0)*_zoom, (CHUNK_PIX_Y*_chunk->m_y + CHUNK_PIX_Y/2.0)*_zoom);
-  pd->sprite->setZIndex(_chunk->m_bkgSprite[_zoom], -1);
-}
-
-void setChunkBackgrounds(void) {
-  for (uint16_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
-    for (uint16_t x = 0; x < WORLD_CHUNKS_X; ++x) {
-      struct Chunk_t* c = getChunk(x, y);
-      if (c->m_bkgImage[1] == NULL) {
-        for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
-          c->m_bkgImage[zoom] = pd->graphics->newBitmap(CHUNK_PIX_X*zoom, CHUNK_PIX_Y*zoom, kColorClear);
-        }
-      }
-      if (c->m_bkgSprite[1] == NULL) {
-        for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
-          c->m_bkgSprite[zoom] = pd->sprite->newSprite();
-        }
-      }
-
-      renderChunkBackgroundImage(c);
-
-      for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
-        generateSpriteSetup(c, zoom);
-      }
+      struct Chunk_t* chunk = getChunk_noCheck(x, y);
+      generateSpriteSetup(chunk);
+      renderChunkBackgroundImage(chunk);
     }
   }
 }
 
 void resetWorld() {
   memset(m_tiles, 0, SIZE_GENERATE);
-  m_deserialiseCounterWorld = 0;
+  m_deserialiseIndexWorld = 0;
 }
 
 void initWorld() {
@@ -200,15 +114,14 @@ void serialiseWorld(struct json_encoder* je) {
 
 void deserialiseValueWorld(json_decoder* jd, const char* _key, json_value _value) {
   if (strcmp(_key, "tile") == 0) {
-    m_tiles[m_deserialiseCounterWorld].m_tile = json_intValue(_value);
-    int x = json_intValue(_value);
+    m_tiles[m_deserialiseIndexWorld].m_tile = json_intValue(_value);
   } else {
-    pd->system->logToConsole("WORLD DECODE ISSUE, %s", _key);
+    pd->system->error("WORLD DECODE ISSUE, %s", _key);
   }
 }
 
 void* deserialiseStructDoneWorld(json_decoder* jd, const char* _name, json_value_type _type) {
-  ++m_deserialiseCounterWorld;
+  ++m_deserialiseIndexWorld;
   return NULL;
 }
 
@@ -220,11 +133,5 @@ void generate() {
   for (uint16_t i = 0; i < TOT_TILES; ++i) {
     m_tiles[i].m_tile = rand() % FLOOR_TILES;
   } 
-
-  // The main playing grid
-  setChunkBackgrounds();
-
-  // The neighboring associations, including modulo behavior
-  setChunkAssociations();
 
 }

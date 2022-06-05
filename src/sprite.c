@@ -1,7 +1,7 @@
 #include "sprite.h"
 #include "input.h"
 
-LCDBitmap* m_conveyorMasters[ZOOM_LEVELS][kConvDirN] = {NULL}; // Only 1, 2 and 4 are used
+LCDBitmap* m_conveyorMasters[ZOOM_LEVELS][kDirN] = {NULL}; // Only 1, 2 and 4 are used
 
 LCDBitmapTable* m_sheet16;
 
@@ -50,12 +50,16 @@ LCDFont* loadFontAtPath(const char* _path) {
 
 LCDBitmap* getSprite16(uint32_t _x, uint32_t _y, uint8_t _zoom) {
   if (_zoom == 1) {
-    return pd->graphics->getTableBitmap(m_sheet16, (SHEET16_SIZE_X * _y) + _x);
+    return pd->graphics->getTableBitmap(m_sheet16, getSprite16_idx(_x, _y));
   } else if (_zoom < ZOOM_LEVELS) {
-    return m_bitmap16_zoom[_zoom][(SHEET16_SIZE_X * _y) + _x];
+    return m_bitmap16_zoom[_zoom][getSprite16_idx(_x, _y)];
   }
   pd->system->error("getSprite16 Error");
   return NULL;
+}
+
+uint16_t getSprite16_idx(uint32_t _x, uint32_t _y) {
+  return (SHEET16_SIZE_X * _y) + _x;
 }
 
 void animateConveyor() {
@@ -64,7 +68,7 @@ void animateConveyor() {
   uint8_t zoom = getZoom();
 
   pd->graphics->setDrawMode(kDrawModeCopy);
-  for (int32_t i = 0; i < kConvDirN; ++i) {
+  for (int32_t i = 0; i < kDirN; ++i) {
     pd->graphics->pushContext(m_conveyorMasters[zoom][i]);
     pd->graphics->drawBitmap(getSprite16(tick, CONV_START_Y + i, zoom), 0, 0, kBitmapUnflipped);
     pd->graphics->popContext();
@@ -72,7 +76,7 @@ void animateConveyor() {
 
 }
 
-LCDBitmap* getConveyorMaster(uint8_t _zoom, enum kConvDir _dir) {
+LCDBitmap* getConveyorMaster(uint8_t _zoom, enum kDir _dir) {
   return m_conveyorMasters[_zoom][_dir];
 }
 
@@ -101,7 +105,7 @@ void initSprite() {
   m_sheet16 = loadImageTableAtPath("images/sheet16");
   populateResizedSprites();
 
-  for (int32_t i = 0; i < kConvDirN; ++i) {
+  for (int32_t i = 0; i < kDirN; ++i) {
     for (int32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
       m_conveyorMasters[zoom][i] = pd->graphics->copyBitmap(getSprite16(0, CONV_START_Y + i, zoom));
     }

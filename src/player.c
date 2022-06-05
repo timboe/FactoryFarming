@@ -234,7 +234,7 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
   } else if (strcmp(_key, "y") == 0) {
     m_player.m_pix_y = json_intValue(_value);
   } else {
-    pd->system->logToConsole("PLAYER DECODE ISSUE, %s", _key);
+    pd->system->error("PLAYER DECODE ISSUE, %s", _key);
   }
 }
 
@@ -242,6 +242,8 @@ void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_valu
   setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y);
   m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
 
-  pd->system->logToConsole("-- Player decoded to (%i, %i)", (int32_t)m_player.m_pix_x, (int32_t)m_player.m_pix_y);
+  pd->system->logToConsole("-- Player decoded to (%i, %i), current location (%i, %i)", 
+    (int32_t)m_player.m_pix_x, (int32_t)m_player.m_pix_y, m_currentLocation->m_x, m_currentLocation->m_y);
+  
   return NULL;
 }

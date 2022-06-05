@@ -12,7 +12,8 @@ struct Location_t{
   // Transient
   struct Cargo_t* m_cargo;
   struct Building_t* m_building;
-  struct Chunk_t* m_chunk; // My chunk
+  // Populated at RESET
+  struct Chunk_t* m_chunk;
   uint16_t m_x; // In location coords
   uint16_t m_y;
 };
@@ -29,3 +30,7 @@ void initLocation(void);
 void resetLocation(void);
 
 void serialiseLocation(struct json_encoder* je);
+
+void deserialiseValueLocation(json_decoder* jd, const char* _key, json_value _value);
+
+void* deserialiseStructDoneLocation(json_decoder* jd, const char* _name, json_value_type _type);

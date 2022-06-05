@@ -42,9 +42,7 @@ bool save() {
   serialiseLocation(&je);
   serialiseWorld(&je);
 
-
   je.endTable(&je);
-
 
   int status = pd->file->close(file);
 
@@ -53,27 +51,11 @@ bool save() {
 
 }
 
-const char* typeToName(json_value_type _type) {
-  switch ( _type ) {
-    case kJSONNull: return "null";
-    case kJSONTrue: return "true";
-    case kJSONFalse: return "false";
-    case kJSONInteger: return "integer";
-    case kJSONFloat: return "float";
-    case kJSONString: return "string";
-    case kJSONArray: return "array";
-    case kJSONTable: return "table";
-    default: return "???";
-  }
-}
-
 void willDecodeSublist(json_decoder* jd, const char* _name, json_value_type _type) {
-  pd->system->logToConsole("will decode %s, type %s", _name, typeToName(_type));
 
   static char truncated[6];
   strncpy(truncated, _name, 5);
   truncated[5] = '\0';
-
 
   if (strcmp(_name, "player") == 0 && _type == kJSONTable) {
     jd->didDecodeTableValue = didDecodeTableValuePlayer;
@@ -84,18 +66,16 @@ void willDecodeSublist(json_decoder* jd, const char* _name, json_value_type _typ
   } else if (strcmp(truncated, "build") == 0 && _type == kJSONTable) {
     jd->didDecodeTableValue = deserialiseValueBuilding;
     jd->didDecodeSublist = deserialiseStructDoneBuilding;
+  } else if (strcmp(truncated, "locat") == 0 && _type == kJSONTable) {
+    jd->didDecodeTableValue = deserialiseValueLocation;
+    jd->didDecodeSublist = deserialiseStructDoneLocation;
   } else if (strcmp(truncated, "world") == 0 && _type == kJSONTable) {
     jd->didDecodeTableValue = deserialiseValueWorld;
     jd->didDecodeSublist = deserialiseStructDoneWorld;
   } else {
-    //jd->didDecodeTableValue = NULL;
+    jd->didDecodeTableValue = NULL;
   }
   
-  //  Widget* widget = pd_malloc(sizeof(Widget));
-  //  decoder->userdata = widget;
-  //  decoder->didDecodeTableValue = setWidgetValue;
-  //  decoder->didDecodeSublist = finishWidget;
-  //}
 }
 
 int doRead(void* _userdata, uint8_t* _buf, int _bufsize) {
@@ -105,14 +85,11 @@ int doRead(void* _userdata, uint8_t* _buf, int _bufsize) {
 
 bool load() {
 
+  pd->system->logToConsole("START load from slot %i", m_slot);
+
   json_decoder jd = {
     .decodeError = decodeError,
     .willDecodeSublist = willDecodeSublist
-    //.shouldDecodeTableValueForKey = shouldDecodeTableValueForKey,
-    //.didDecodeTableValue = didDecodeTableValue,
-    //.shouldDecodeArrayValueAtIndex = shouldDecodeArrayValueAtIndex,
-    //.didDecodeArrayValue = didDecodeArrayValue,
-    //.didDecodeSublist = didDecodeSublist
   };
 
   static char filePath[16];
@@ -123,8 +100,7 @@ bool load() {
 
   pd->file->close(file);
 
-  pd->system->logToConsole("load from slot %i", m_slot);
-
+  pd->system->logToConsole("STOP from slot %i", m_slot);
   
   return true;
 }

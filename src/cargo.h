@@ -19,6 +19,8 @@ uint16_t getNCargo(void);
 
 struct Cargo_t* cargoManagerNewCargo(enum kCargoType _type);
 
+struct Cargo_t* cargoManagerGetByIndex(uint16_t _index);
+
 void cargoManagerFreeCargo(struct Cargo_t* _cargo);
 
 bool newCargo(struct Location_t* loc, enum kCargoType _type, bool _addedByPlayer);

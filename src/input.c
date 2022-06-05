@@ -86,10 +86,10 @@ void clickHandleMenuOptionSelected(uint32_t _buttonPressed) {
     // noop
   } else if (kButtonA    == _buttonPressed) {
     switch (getUISelectedID()) {
-      case kMenuConveyor:; newConveyor(getPlayerLocation(), getUISelectedRotation(), kBelt); break;
-      case kMenuSplitI:;   newConveyor(getPlayerLocation(), getUISelectedRotation(), kSplitI); break;
-      case kMenuSplitL:;   newConveyor(getPlayerLocation(), getUISelectedRotation(), kSplitL); break;
-      case kMenuSplitT:;   newConveyor(getPlayerLocation(), getUISelectedRotation(), kSplitT); break;
+      case kMenuConveyor:; newConveyor(getPlayerLocation(), getUISelectedRotation(), (union kSubType) {.conveyor = kBelt}   ); break;
+      case kMenuSplitI:;   newConveyor(getPlayerLocation(), getUISelectedRotation(), (union kSubType) {.conveyor = kSplitI} ); break;
+      case kMenuSplitL:;   newConveyor(getPlayerLocation(), getUISelectedRotation(), (union kSubType) {.conveyor = kSplitL} ); break;
+      case kMenuSplitT:;   newConveyor(getPlayerLocation(), getUISelectedRotation(), (union kSubType) {.conveyor = kSplitT} ); break;
       case kMenuApple:;    newCargo(getPlayerLocation(), kApple, true); break;
       case kMenuCheese:;   newCargo(getPlayerLocation(), kCheese, true);  break;
       case kMenuBin:;      clearLocation(getPlayerLocation()); break; 

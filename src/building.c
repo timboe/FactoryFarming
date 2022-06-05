@@ -17,7 +17,7 @@ uint16_t m_deserialiseIndexBuilding = 0;
 
 struct Building_t* m_buildings;
 
-void conveyorUpdateFn(struct Location_t* _loc, uint8_t _tick, uint8_t _zoom);
+void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom);
 
 void buildingSpriteSetup(struct Building_t* _building);
 
@@ -65,6 +65,10 @@ struct Building_t* buildingManagerNewBuilding(enum kBuildingType _asType) {
   return NULL;
 }
 
+struct Building_t* buildingManagerGetByIndex(uint16_t _index) {
+  return &(m_buildings[_index]);
+}
+
 void buildingManagerFreeBuilding(struct Building_t* _building) {
   --(m_nByType[_building->m_type]);
   --m_nBuildings;
@@ -73,41 +77,41 @@ void buildingManagerFreeBuilding(struct Building_t* _building) {
   m_buildingSearchLocation = _building->m_index;
 }
 
-void conveyorUpdateFn(struct Location_t* _loc, uint8_t _tick, uint8_t _zoom) {
-  if (_loc->m_cargo == NULL) return;
-  struct Building_t* building = _loc->m_building;
-  if (building->m_progress < TILE_PIX) {
-    building->m_progress += _tick;
-    switch (building->m_nextDir[building->m_mode]) {
-      case SN:; pd->sprite->moveTo(_loc->m_cargo->m_sprite[_zoom], building->m_pix_x*_zoom, (building->m_pix_y - building->m_progress)*_zoom); break;
-      case NS:; pd->sprite->moveTo(_loc->m_cargo->m_sprite[_zoom], building->m_pix_x*_zoom, (building->m_pix_y + building->m_progress)*_zoom); break;
-      case EW:; pd->sprite->moveTo(_loc->m_cargo->m_sprite[_zoom], (building->m_pix_x - building->m_progress)*_zoom, building->m_pix_y*_zoom); break;
-      case WE:; pd->sprite->moveTo(_loc->m_cargo->m_sprite[_zoom], (building->m_pix_x + building->m_progress)*_zoom, building->m_pix_y*_zoom); break;
-      case kConvDirN:; break;
+void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
+  struct Location_t* loc = _building->m_location;
+  if (loc->m_cargo == NULL) return;
+  if (_building->m_progress < TILE_PIX) {
+    _building->m_progress += _tick;
+    switch (_building->m_nextDir[_building->m_mode]) {
+      case SN:; pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], _building->m_pix_x*_zoom, (_building->m_pix_y - _building->m_progress)*_zoom); break;
+      case NS:; pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], _building->m_pix_x*_zoom, (_building->m_pix_y + _building->m_progress)*_zoom); break;
+      case EW:; pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], (_building->m_pix_x - _building->m_progress)*_zoom, _building->m_pix_y*_zoom); break;
+      case WE:; pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], (_building->m_pix_x + _building->m_progress)*_zoom, _building->m_pix_y*_zoom); break;
+      case kDirN:; break;
     }
-    //pd->system->logToConsole("MOVE %i %i, %i", _loc->m_pix_x, _loc->m_pix_y, _loc->m_progress);
+    //pd->system->logToConsole("MOVE %i %i, %i", loc->m_pix_x, loc->m_pix_y, loc->m_progress);
   }
-  if (building->m_progress >= TILE_PIX && building->m_next[building->m_mode]->m_cargo == NULL) {
-    struct Cargo_t* theCargo = _loc->m_cargo;
-    struct Location_t* nextLoc = building->m_next[building->m_mode]; 
+  if (_building->m_progress >= TILE_PIX && _building->m_next[_building->m_mode]->m_cargo == NULL) {
+    struct Cargo_t* theCargo = loc->m_cargo;
+    struct Location_t* nextLoc = _building->m_next[_building->m_mode]; 
     // Move cargo
     nextLoc->m_cargo = theCargo;
-    _loc->m_cargo = NULL;
+    loc->m_cargo = NULL;
     // Carry over any excess ticks
     if (nextLoc->m_building) {
-      nextLoc->m_building->m_progress = building->m_progress - TILE_PIX;
+      nextLoc->m_building->m_progress = _building->m_progress - TILE_PIX;
     }
     // Cargo moves between chunks?
-    if (nextLoc->m_chunk != _loc->m_chunk) {
+    if (nextLoc->m_chunk != loc->m_chunk) {
       //pd->system->logToConsole("CHANGE CHUNK");
-      chunkRemoveCargo(_loc->m_chunk, theCargo);
+      chunkRemoveCargo(loc->m_chunk, theCargo);
       chunkAddCargo(nextLoc->m_chunk, theCargo);
       queueUpdateRenderList();
     }
     // Cycle outputs
-    switch (building->m_convSubType) {
-      case kSplitI:; case kSplitL:; case kFilterL:; building->m_mode = (building->m_mode + 1) % 2; break;
-      case kSplitT:; building->m_mode = (building->m_mode + 1) % 3; break;
+    switch (_building->m_subType.conveyor) {
+      case kSplitI:; case kSplitL:; case kFilterL:; _building->m_mode = (_building->m_mode + 1) % 2; break;
+      case kSplitT:; _building->m_mode = (_building->m_mode + 1) % 3; break;
       case kBelt:; default: break;
     }
   }
@@ -117,22 +121,22 @@ void buildingSpriteSetup(struct Building_t* _building) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
 
     if (_building->m_type == kConveyor) {
-      switch (_building->m_convSubType) {
-        case kBelt:;   _building->m_image[zoom] = getSprite16(0, CONV_START_Y + _building->m_convDir, zoom); break;
-        case kSplitI:; _building->m_image[zoom] = getSprite16(0, 11 + _building->m_convDir, zoom); break;
-        case kSplitL:; _building->m_image[zoom] = getSprite16(1, 11 + _building->m_convDir, zoom); break;
-        case kSplitT:; _building->m_image[zoom] = getSprite16(2, 11 + _building->m_convDir, zoom); break;
+      switch (_building->m_subType.conveyor) {
+        case kBelt:;   _building->m_image[zoom] = getSprite16(0, CONV_START_Y + _building->m_dir, zoom); break;
+        case kSplitI:; _building->m_image[zoom] = getSprite16(0, 11 + _building->m_dir, zoom); break;
+        case kSplitL:; _building->m_image[zoom] = getSprite16(1, 11 + _building->m_dir, zoom); break;
+        case kSplitT:; _building->m_image[zoom] = getSprite16(2, 11 + _building->m_dir, zoom); break;
         case kFilterL:; default: break;
       }
     }
 
-    if (_building->m_type == kConveyor && _building->m_convSubType == kBelt) {
+    if (_building->m_type == kConveyor && _building->m_subType.conveyor == kBelt) {
       PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
       if (_building->m_sprite[zoom] == NULL) {
         _building->m_sprite[zoom] = pd->sprite->newSprite();
       }
       pd->sprite->setBounds(_building->m_sprite[zoom], bound);
-      pd->sprite->setImage(_building->m_sprite[zoom], getConveyorMaster(zoom, _building->m_convDir), kBitmapUnflipped);
+      pd->sprite->setImage(_building->m_sprite[zoom], getConveyorMaster(zoom, _building->m_dir), kBitmapUnflipped);
       pd->sprite->moveTo(_building->m_sprite[zoom], _building->m_pix_x*zoom, _building->m_pix_y*zoom);
       pd->sprite->setZIndex(_building->m_sprite[zoom], Z_INDEX_CONVEYOR);
     }
@@ -143,12 +147,13 @@ void assignNeighbors(struct Building_t* _building) {
   uint16_t locX, locY;
   locX = pixToLoc(_building->m_pix_x);
   locY = pixToLoc(_building->m_pix_y);
+  _building->m_location = getLocation(locX, locY);
   struct Location_t* above = getLocation(locX, locY - 1);
   struct Location_t* below = getLocation(locX, locY + 1);
   struct Location_t* left  = getLocation(locX - 1, locY);
   struct Location_t* right = getLocation(locX + 1, locY);
-  if (_building->m_convSubType == kBelt) {
-    switch (_building->m_convDir) {
+  if (_building->m_subType.conveyor == kBelt) {
+    switch (_building->m_dir) {
       case SN:; _building->m_next[0]    = above;
                 _building->m_nextDir[0] = SN; break;
       case NS:; _building->m_next[0]    = below;
@@ -157,18 +162,18 @@ void assignNeighbors(struct Building_t* _building) {
                 _building->m_nextDir[0] = WE; break;
       case EW:; _building->m_next[0]    = left;
                 _building->m_nextDir[0] = EW; break;
-      case kConvDirN:; break;
+      case kDirN:; break;
     }
-  } else if (_building->m_convSubType == kSplitI) {
-    switch (_building->m_convDir) {
+  } else if (_building->m_subType.conveyor == kSplitI) {
+    switch (_building->m_dir) {
       case WE:; case EW:; _building->m_next[0]    = above; _building->m_next[1]    = below; 
                           _building->m_nextDir[0] = SN;    _building->m_nextDir[1] = NS; break;
       case SN:; case NS:; _building->m_next[0]    = left;  _building->m_next[1]    = right;
                           _building->m_nextDir[0] = EW;    _building->m_nextDir[1] = WE; break;
-      case kConvDirN:; break;
+      case kDirN:; break;
     }
-  } else if (_building->m_convSubType == kSplitL) {
-    switch (_building->m_convDir) {
+  } else if (_building->m_subType.conveyor == kSplitL) {
+    switch (_building->m_dir) {
       case SN:; _building->m_next[0]    = above; _building->m_next[1]    = right;
                 _building->m_nextDir[0] = SN;    _building->m_nextDir[1] = WE; break;
       case WE:; _building->m_next[0]    = right; _building->m_next[1]    = below;
@@ -177,10 +182,10 @@ void assignNeighbors(struct Building_t* _building) {
                 _building->m_nextDir[0] = NS;    _building->m_nextDir[1] = EW; break;
       case EW:; _building->m_next[0]    = left;  _building->m_next[1]    = above;
                 _building->m_nextDir[0] = EW;    _building->m_nextDir[1] = SN; break;
-      case kConvDirN:; break;
+      case kDirN:; break;
     }
-  } else if (_building->m_convSubType == kSplitT) {
-    switch (_building->m_convDir) {
+  } else if (_building->m_subType.conveyor == kSplitT) {
+    switch (_building->m_dir) {
       case SN:; _building->m_next[0]    = left;  _building->m_next[1]    = above;  _building->m_next[2]    = right;
                 _building->m_nextDir[0] = EW;    _building->m_nextDir[1] = SN;     _building->m_nextDir[2] = WE; break;
       case WE:; _building->m_next[0]    = above; _building->m_next[1]    = right;  _building->m_next[2]    = below;
@@ -189,7 +194,7 @@ void assignNeighbors(struct Building_t* _building) {
                 _building->m_nextDir[0] = WE;    _building->m_nextDir[1] = NS;     _building->m_nextDir[2] = EW; break;
       case EW:; _building->m_next[0]    = below; _building->m_next[1]    = left;   _building->m_next[2]    = above;
                 _building->m_nextDir[0] = NS;    _building->m_nextDir[1] = EW;     _building->m_nextDir[2] = SN; break;
-      case kConvDirN:; break;
+      case kDirN:; break;
     }
   }
 }
@@ -201,7 +206,7 @@ void assignUpdate(struct Building_t* _building) {
   }
 }
 
-bool newConveyor(struct Location_t* _loc, enum kConvDir _dir, enum kConvSubType _subType) {
+bool newConveyor(struct Location_t* _loc, enum kDir _dir, union kSubType _subType) {
   bool newToChunk = false;
   if (_loc->m_building == NULL) {
     newToChunk = true;
@@ -215,13 +220,12 @@ bool newConveyor(struct Location_t* _loc, enum kConvDir _dir, enum kConvSubType 
   }
   struct Building_t* building = _loc->m_building;
 
-  building->m_convSubType = _subType;
-  building->m_convDir = _dir;
+  building->m_subType.conveyor = _subType.conveyor;
+  building->m_dir = _dir;
   building->m_progress = 0;
   building->m_mode = 0;
   building->m_pix_x = locToPix(_loc->m_x);
-  building->m_pix_y = locToPix(_loc->m_y);
-  
+  building->m_pix_y = locToPix(_loc->m_y);  
 
   buildingSpriteSetup(building);
   assignNeighbors(building);
@@ -229,7 +233,7 @@ bool newConveyor(struct Location_t* _loc, enum kConvDir _dir, enum kConvSubType 
 
   // Add to the active/render list
   if (newToChunk) {
-    chunkAddLocation(_loc->m_chunk, _loc); // Careful, no de-duplication in here, for speed
+    chunkAddBuilding(_loc->m_chunk, building); // Careful, no de-duplication in here, for speed
   }
 
   //pd->system->logToConsole("ADD TO CHUNK: %i %i with %i sprites", chunk->m_x, chunk->m_y, chunk->m_nLocations);
@@ -278,13 +282,13 @@ void serialiseBuilding(struct json_encoder* je) {
     je->writeInt(je, i);
     je->addTableMember(je, "type", 4);
     je->writeInt(je, m_buildings[i].m_type);
-    if (m_buildings[i].m_convDir) {
+    if (m_buildings[i].m_dir) {
       je->addTableMember(je, "dir", 3);
-      je->writeInt(je, m_buildings[i].m_convDir);
+      je->writeInt(je, m_buildings[i].m_dir);
     }
-    if (m_buildings[i].m_convSubType) {
+    if (m_buildings[i].m_subType.conveyor) { // Which union member we access does not matter here
       je->addTableMember(je, "stype", 5);
-      je->writeInt(je, m_buildings[i].m_convSubType);
+      je->writeInt(je, m_buildings[i].m_subType.conveyor);
     }
     je->addTableMember(je, "x", 1);
     je->writeInt(je, m_buildings[i].m_pix_x);
@@ -331,9 +335,9 @@ void deserialiseValueBuilding(json_decoder* jd, const char* _key, json_value _va
   } else if (strcmp(_key, "type") == 0) {
     m_buildings[m_deserialiseIndexBuilding].m_type = json_intValue(_value);
   } else if (strcmp(_key, "dir") == 0) {
-    m_buildings[m_deserialiseIndexBuilding].m_convDir = json_intValue(_value);
+    m_buildings[m_deserialiseIndexBuilding].m_dir = json_intValue(_value);
   } else if (strcmp(_key, "stype") == 0) {
-    m_buildings[m_deserialiseIndexBuilding].m_convSubType = json_intValue(_value);
+    m_buildings[m_deserialiseIndexBuilding].m_subType.conveyor = json_intValue(_value); // The union type does not matter here
   } else if (strcmp(_key, "x") == 0) {
     m_buildings[m_deserialiseIndexBuilding].m_pix_x = json_intValue(_value);
   } else if (strcmp(_key, "y") == 0) {
@@ -353,7 +357,7 @@ void deserialiseValueBuilding(json_decoder* jd, const char* _key, json_value _va
   } else if (strcmp(_key, "s4") == 0) {
     m_buildings[m_deserialiseIndexBuilding].m_stored[4] = json_intValue(_value);
   } else {
-    pd->system->logToConsole("BUILDING DECODE ISSUE, %s", _key);
+    pd->system->error("BUILDING DECODE ISSUE, %s", _key);
   }
 }
 
@@ -369,7 +373,7 @@ void* deserialiseStructDoneBuilding(json_decoder* jd, const char* _name, json_va
 
   pd->system->logToConsole("-- Building #%i [%i] decoded to %s, (%i, %i) dir:%i stype:%i prog:%i mode:%i store:[%i][%i, %i, %i, %i]",
     m_nBuildings, m_deserialiseIndexBuilding, toStringBuilding(building->m_type),
-    building->m_pix_x, building->m_pix_y, building->m_convDir, building->m_convSubType, building->m_progress, building->m_mode,
+    building->m_pix_x, building->m_pix_y, building->m_dir, building->m_subType.conveyor, building->m_progress, building->m_mode,
     building->m_stored[0], building->m_stored[1], building->m_stored[2], building->m_stored[3], building->m_stored[4]
   );
 

@@ -30,8 +30,7 @@ static void init(void) {
   initSound();
   initGame();
 
-  reset();
-  generate();
+  menuOptionsCallbackRestart(NULL);
 }
 
 static void deinit(void) {
@@ -64,7 +63,6 @@ int eventHandler(PlaydateAPI* playdate, PDSystemEvent event, uint32_t arg) {
       #ifdef DEV
       playdate->system->logToConsole("EH: pause");
       #endif
-      save();
       break;
     case kEventResume:;
       #ifdef DEV

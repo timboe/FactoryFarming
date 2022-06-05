@@ -4,8 +4,9 @@
 #include "sprite.h"
 #include "render.h"
 
-
 struct Location_t* m_locations = NULL;
+
+int16_t m_deserialiseXLocation = -1, m_deserialiseYLocation = -1, m_deserialiseIDBuilding = -1, m_deserialiseIDCargo = -1;
 
 const int32_t SIZE_LOCATION = TOT_TILES * sizeof(struct Location_t);
 
@@ -35,7 +36,7 @@ void clearLocation(struct Location_t* _loc) {
   }
 
   if (_loc->m_building) {
-    chunkRemoveLocation(_loc->m_chunk, _loc);
+    chunkRemoveBuilding(_loc->m_chunk, _loc->m_building);
     buildingManagerFreeBuilding(_loc->m_building);
     renderChunkBackgroundImage(_loc->m_chunk);
     _loc->m_building = NULL;
@@ -65,6 +66,10 @@ void resetLocation() {
       loc->m_chunk = getChunk_noCheck(x / TILES_PER_CHUNK_X, y / TILES_PER_CHUNK_Y);
     }
   }
+  m_deserialiseIDBuilding = -1;
+  m_deserialiseIDCargo = -1;
+  m_deserialiseXLocation = -1;
+  m_deserialiseYLocation = -1;
 }
 
 void serialiseLocation(struct json_encoder* je) {
@@ -97,4 +102,42 @@ void serialiseLocation(struct json_encoder* je) {
   }
 
   je->endArray(je);
+}
+
+void deserialiseValueLocation(json_decoder* jd, const char* _key, json_value _value) {
+  if (strcmp(_key, "x") == 0) {
+    m_deserialiseXLocation = json_intValue(_value);
+  } else if (strcmp(_key, "y") == 0) {
+    m_deserialiseYLocation = json_intValue(_value);
+  } else if (strcmp(_key, "cargo") == 0) {
+    m_deserialiseIDCargo = json_intValue(_value);
+  } else if (strcmp(_key, "build") == 0) {
+    m_deserialiseIDBuilding = json_intValue(_value);
+  } else {
+    pd->system->error("LOCATION DECODE ISSUE, %s", _key);
+  }
+}
+
+void* deserialiseStructDoneLocation(json_decoder* jd, const char* _name, json_value_type _type) {
+  struct Location_t* loc = getLocation_noCheck(m_deserialiseXLocation, m_deserialiseYLocation);
+
+  if (m_deserialiseIDBuilding >= 0) {
+    loc->m_building = buildingManagerGetByIndex(m_deserialiseIDBuilding);
+    chunkAddBuilding(loc->m_chunk, loc->m_building);
+  }
+  if (m_deserialiseIDCargo >= 0) {
+    loc->m_cargo = cargoManagerGetByIndex(m_deserialiseIDCargo);
+    chunkAddCargo(loc->m_chunk, loc->m_cargo);
+  }
+
+  pd->system->logToConsole("-- Location (%i, %i) building:#%i, cargo:#%i",
+    m_deserialiseXLocation, m_deserialiseYLocation, m_deserialiseIDBuilding, m_deserialiseIDCargo);
+
+  m_deserialiseXLocation = -1;
+  m_deserialiseYLocation = -1;
+  m_deserialiseIDBuilding = -1;
+  m_deserialiseIDCargo = -1;
+
+
+  return NULL;
 }

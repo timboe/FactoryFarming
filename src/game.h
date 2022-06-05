@@ -11,8 +11,6 @@
 #include "pd_api.h"
 #include "constants.h"
 
-enum kGameMode {kWander, kMenuSelect, kMenuOptionSelected};
-
 extern PlaydateAPI* pd;
 
 void setPDPtr(PlaydateAPI* _p);
@@ -25,13 +23,15 @@ uint16_t getNearTickCount(void);
 
 uint16_t getFarTickCount(void);
 
-uint16_t locToPix(uint16_t _loc) ;
+uint16_t locToPix(uint16_t _loc);
 
-uint16_t pixToLoc(uint16_t _pix) ;
+uint16_t pixToLoc(uint16_t _pix);
 
-enum kGameMode getGameMode(void);
+void menuOptionsCallbackRestart(void*);
 
-void setGameMode(enum kGameMode _mode);
+void menuOptionsCallbackLoad(void*);
+
+void menuOptionsCallbackSave(void*);
 
 void queueUpdateRenderList(void);
 

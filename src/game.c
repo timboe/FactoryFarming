@@ -20,17 +20,9 @@ uint16_t m_farTickCount = 0;
 
 bool m_queueUpdateRenderList = false;
 
-enum kGameMode m_mode;
-
 void tickNear(void);
 
 void tickFar(void);
-
-void menuOptionsCallbackRestart(void*);
-
-void menuOptionsCallbackLoad(void*);
-
-void menuOptionsCallbackSave(void*);
 
 ////////////
 
@@ -54,10 +46,6 @@ int getFrameCount() {
   return m_frameCount; 
 }
 
-enum kGameMode getGameMode() {
-  return m_mode;
-}
-
 uint16_t locToPix(uint16_t _loc) {
   return TILE_PIX*_loc + TILE_PIX/2.0;
 }
@@ -66,12 +54,7 @@ uint16_t pixToLoc(uint16_t _pix) {
   return (_pix - TILE_PIX/2) / TILE_PIX;
 }
 
-void setGameMode(enum kGameMode _mode) {
-  m_mode = _mode;
-  if (_mode == kMenuSelect) drawUITop("Menu Mode");
-  else if (_mode == kMenuOptionSelected) drawUITop("Place Mode");
-  else drawUITop(NULL);
-}
+
 
 void tickNear() {
   if (m_frameCount % NEAR_TICK_FREQUENCY) {
@@ -173,7 +156,7 @@ int gameLoop(void* _data) {
   tickNear();
   tickFar();
 
-  updateUI(m_frameCount, m_mode);
+  updateUI(m_frameCount);
 
   render();
 
@@ -183,12 +166,15 @@ int gameLoop(void* _data) {
 void menuOptionsCallbackRestart(void* blank) {
   reset();
   generate();
+  setChunkBackgrounds();
   updateRenderList();
 }
 
 void menuOptionsCallbackLoad(void* blank) {
-  //reset();
+  reset();
   load();
+  setChunkBackgrounds();
+  updateRenderList();
 }
 
 void menuOptionsCallbackSave(void* blank) {
@@ -203,6 +189,7 @@ void reset() {
   resetChunk();
   resetWorld();
   resetPlayer();
+  resetUI();
 }
 
 void initGame() {

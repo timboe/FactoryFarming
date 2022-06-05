@@ -12,5 +12,7 @@ void setRoobert24(void);
 
 LCDBitmap* getSprite16(uint32_t _x, uint32_t _y, uint8_t _zoom);
 
-LCDBitmap* getConveyorMaster(uint8_t _zoom, enum kConvDir _dir);
+uint16_t getSprite16_idx(uint32_t _x, uint32_t _y);
+
+LCDBitmap* getConveyorMaster(uint8_t _zoom, enum kDir _dir);
 

@@ -7,6 +7,8 @@
 
 uint16_t m_UIIcons[] = {0,3,  0,4,  4,3,  4,4,  1,1,  2,1,  1,2};
 
+enum kGameMode m_mode;
+
 LCDSprite* m_UISpriteBottom;
 
 LCDSprite* m_UISpriteRight;
@@ -35,6 +37,10 @@ const char* getRotationAsString(void);
 
 /// ///
 
+enum kGameMode getGameMode() {
+  return m_mode;
+}
+
 void UIDirtyBottom() {
   m_UIDirtyBottom = true;
 }
@@ -62,22 +68,22 @@ void modUISelectedID(bool _increment) {
 
 void modUISelectedRotation(bool _increment) {
   if (_increment) {
-    m_UISelectedRotation = (m_UISelectedRotation == kConvDirN-1 ? 0 : m_UISelectedRotation + 1);
+    m_UISelectedRotation = (m_UISelectedRotation == kDirN-1 ? 0 : m_UISelectedRotation + 1);
   } else {
-    m_UISelectedRotation = (m_UISelectedRotation == 0 ? kConvDirN-1 : m_UISelectedRotation - 1);
+    m_UISelectedRotation = (m_UISelectedRotation == 0 ? kDirN-1 : m_UISelectedRotation - 1);
   }
   UIDirtyRight();
 }
 
-void updateUI(int _fc, enum kGameMode _gm) {
+void updateUI(int _fc) {
   
-  if (_gm == kMenuSelect && _fc % (TICK_FREQUENCY/4) == 0) {
+  if (m_mode == kMenuSelect && _fc % (TICK_FREQUENCY/4) == 0) {
     // Flashing cursor
     UIDirtyRight();
-  } else if (_gm == kMenuOptionSelected && _fc % (TICK_FREQUENCY/4) == 0) {
+  } else if (m_mode == kMenuOptionSelected && _fc % (TICK_FREQUENCY/4) == 0) {
     // Flashing blueprint 
     pd->sprite->setVisible(getPlayer()->m_blueprint[getZoom()], _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
-  } else if (_gm ==kWander && _fc % FAR_TICK_FREQUENCY == 0) {
+  } else if (m_mode ==kWander && _fc % FAR_TICK_FREQUENCY == 0) {
     // Update bottom ticker
     UIDirtyBottom();
   }
@@ -222,6 +228,20 @@ void drawUITop(const char* _text) {
   setRoobert24();
   pd->graphics->drawText(_text, 16, kASCIIEncoding, TILE_PIX, 0);
   pd->graphics->popContext();
+}
+
+void setGameMode(enum kGameMode _mode) {
+  m_mode = _mode;
+  if (_mode == kMenuSelect) drawUITop("Menu Mode");
+  else if (_mode == kMenuOptionSelected) drawUITop("Place Mode");
+  else drawUITop(NULL);
+}
+
+void resetUI() {
+  m_UISelectedID = 0;
+  m_UISelectedRotation = 0;
+  setGameMode(kWander);
+  updateBlueprint();
 }
 
 void initiUI() {
