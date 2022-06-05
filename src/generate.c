@@ -12,12 +12,63 @@ const int32_t SIZE_GENERATE = TOT_TILES * sizeof(struct Tile_t);
  
 void generateSpriteSetup(struct Chunk_t* _chunk);
 
-struct Tile_t* getTile(struct Chunk_t* _chunk, uint16_t _u, uint16_t _v);
+struct Tile_t* getTileInChunk(struct Chunk_t* _chunk, uint16_t _u, uint16_t _v);
+
+struct Tile_t* getTile(uint16_t _x, uint16_t _y);
+
+void addLake(uint16_t _startX, uint16_t _startY);
 
 /// ///
 
-struct Tile_t* getTile(struct Chunk_t* _chunk, uint16_t _u, uint16_t _v) {
+struct Tile_t* getTileInChunk(struct Chunk_t* _chunk, uint16_t _u, uint16_t _v) {
   return &m_tiles[ (WORLD_CHUNKS_X * TILES_PER_CHUNK_X)*((TILES_PER_CHUNK_Y * _chunk->m_y) + _v) + ((TILES_PER_CHUNK_X * _chunk->m_x) + _u) ];
+}
+
+struct Tile_t* getTile(uint16_t _x, uint16_t _y) {
+  return &m_tiles[ WORLD_CHUNKS_X*TILES_PER_CHUNK_X*_y + _x ];
+}
+
+#define LAKE_MIN 8
+#define LAKE_MAX 16
+void addLake(uint16_t _startX, uint16_t _startY) {
+  const uint8_t w = rand() % (LAKE_MAX - LAKE_MIN) + LAKE_MIN; 
+  const uint8_t h = rand() % (LAKE_MAX - LAKE_MIN) + LAKE_MIN; 
+  uint8_t c_x[4] = {0};
+  uint8_t c_y[4] = {0};
+  for (uint8_t i = 0; i < 4; ++i) {
+    if (rand() % 2) {
+      c_x[i] = 2 + rand() % 2;
+      c_y[i] = 2 + rand() % 2;
+    }
+  }
+  // LR
+  for (uint16_t x = _startX; x < _startX + w; ++x) {
+    uint16_t y = _startY;
+    if      (c_x[0] && (x-_startX) <     c_x[0])     y += c_y[0];
+    else if (c_x[1] && (x-_startX) > w - c_x[1] - 1) y += c_y[1];
+
+    getTile(x,y)->m_tile = getSprite16_idx(4,6);
+
+    y = _startY + h;
+    if      (c_x[3] && (x-_startX) <     c_x[3])     y -= c_y[3];
+    else if (c_x[2] && (x-_startX) > w - c_x[2] - 1) y -= c_y[2];
+
+    getTile(x,y)->m_tile = getSprite16_idx(4,6);
+  }
+  // TB
+  for (uint16_t y = _startY; y < _startY + h; ++y) {
+    uint16_t x = _startX;
+    if      (c_y[0] && (y-_startY) <     c_y[0])     x += c_x[0];
+    else if (c_y[1] && (y-_startY) > h - c_y[1] - 1) x += c_x[1];
+
+    getTile(x,y)->m_tile = getSprite16_idx(4,6);
+
+    x = _startX + w;
+    if      (c_y[3] && (y-_startY) <     c_y[3])     x -= c_x[3];
+    else if (c_y[2] && (y-_startY) > h - c_y[2] - 1) x -= c_x[2];
+
+    getTile(x,y)->m_tile = getSprite16_idx(4,6);
+  }
 }
 
 void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
@@ -26,7 +77,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   pd->graphics->fillRect(0, 0, CHUNK_PIX_X, CHUNK_PIX_Y, kColorWhite);
   for (uint16_t v = 0; v < TILES_PER_CHUNK_Y; ++v) {
     for (uint16_t u = 0; u < TILES_PER_CHUNK_X; ++u) {
-      struct Tile_t* t = getTile(_chunk, u, v);
+      struct Tile_t* t = getTileInChunk(_chunk, u, v);
       LCDBitmap* b = getSprite16(t->m_tile, 0, 1); // Top row of sprite sheet
       pd->graphics->drawBitmap(b, u * TILE_PIX, v * TILE_PIX, kBitmapUnflipped);
     }
@@ -133,5 +184,8 @@ void generate() {
   for (uint16_t i = 0; i < TOT_TILES; ++i) {
     m_tiles[i].m_tile = rand() % FLOOR_TILES;
   } 
+
+  //addLake(0,0);
+
 
 }

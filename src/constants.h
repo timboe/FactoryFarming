@@ -30,6 +30,10 @@
 #define SHEET16_SIZE_Y 16
 #define SHEET16_SIZE (SHEET16_SIZE_X*SHEET16_SIZE_Y)
 
+#define SHEET48_SIZE_X 3
+#define SHEET48_SIZE_Y 3
+#define SHEET48_SIZE (SHEET48_SIZE_X*SHEET48_SIZE_Y)
+
 #define TOT_CARGO_OR_BUILDINGS 2046
 
 // Number of available floor spires
@@ -60,14 +64,15 @@
 // Fraction of the screen to trigger scrolling
 //#define SCROLL_EDGE 0.8f
 
-#define Z_INDEX_UI 32767
+#define Z_INDEX_UI_RIGHT 32765
+#define Z_INDEX_UI_BOTTOM 32766
 #define Z_INDEX_MAX 32767
 #define Z_INDEX_CARGO 32765
-#define Z_INDEX_BLUEPRINT 32767
+#define Z_INDEX_BLUEPRINT 32766
 #define Z_INDEX_CONVEYOR 1
 #define Z_INDEX_FLOOR -1
 
-#define UI_ITEMS 7
+#define UI_ITEMS 8
 
 #define UI_ROTATE_ACTION 270.0f
 

@@ -5,7 +5,11 @@ LCDBitmap* m_conveyorMasters[ZOOM_LEVELS][kDirN] = {NULL}; // Only 1, 2 and 4 ar
 
 LCDBitmapTable* m_sheet16;
 
+LCDBitmapTable* m_sheet48;
+
 LCDBitmap* m_bitmap16_zoom[ZOOM_LEVELS][SHEET16_SIZE];
+
+LCDBitmap* m_bitmap48_zoom[ZOOM_LEVELS][SHEET48_SIZE];
 
 LCDFont* m_fontRoobert24;
 
@@ -49,10 +53,14 @@ LCDFont* loadFontAtPath(const char* _path) {
 }
 
 LCDBitmap* getSprite16(uint32_t _x, uint32_t _y, uint8_t _zoom) {
+  return getSprite16_byidx(getSprite16_idx(_x, _y), _zoom);
+}
+
+LCDBitmap* getSprite16_byidx(uint32_t _idx, uint8_t _zoom) {
   if (_zoom == 1) {
-    return pd->graphics->getTableBitmap(m_sheet16, getSprite16_idx(_x, _y));
+    return pd->graphics->getTableBitmap(m_sheet16, _idx);
   } else if (_zoom < ZOOM_LEVELS) {
-    return m_bitmap16_zoom[_zoom][getSprite16_idx(_x, _y)];
+    return m_bitmap16_zoom[_zoom][_idx];
   }
   pd->system->error("getSprite16 Error");
   return NULL;
@@ -60,6 +68,24 @@ LCDBitmap* getSprite16(uint32_t _x, uint32_t _y, uint8_t _zoom) {
 
 uint16_t getSprite16_idx(uint32_t _x, uint32_t _y) {
   return (SHEET16_SIZE_X * _y) + _x;
+}
+
+LCDBitmap* getSprite48(uint32_t _x, uint32_t _y, uint8_t _zoom) {
+  return getSprite48_byidx(getSprite48_idx(_x, _y), _zoom);
+}
+
+LCDBitmap* getSprite48_byidx(uint32_t _idx, uint8_t _zoom) {
+  if (_zoom == 1) {
+    return pd->graphics->getTableBitmap(m_sheet48, _idx);
+  } else if (_zoom < ZOOM_LEVELS) {
+    return m_bitmap48_zoom[_zoom][_idx];
+  }
+  pd->system->error("getSprite48 Error");
+  return NULL;
+}
+
+uint16_t getSprite48_idx(uint32_t _x, uint32_t _y) {
+  return (SHEET48_SIZE_X * _y) + _x;
 }
 
 void animateConveyor() {
@@ -89,11 +115,18 @@ void setRoobert24() {
 }
 
 void populateResizedSprites() {
-  for (uint32_t i = 0; i < SHEET16_SIZE; ++i) {
-    for (uint32_t zoom = 2; zoom < ZOOM_LEVELS; ++zoom) {
+  for (uint32_t zoom = 2; zoom < ZOOM_LEVELS; ++zoom) {
+    for (uint32_t i = 0; i < SHEET16_SIZE; ++i) {
       LCDBitmap* original = pd->graphics->getTableBitmap(m_sheet16, i);
       m_bitmap16_zoom[zoom][i] = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*2, kColorClear);
       pd->graphics->pushContext(m_bitmap16_zoom[zoom][i]);
+      pd->graphics->drawScaledBitmap(original, 0, 0, zoom, zoom);
+      pd->graphics->popContext();
+    }
+    for (uint32_t i = 0; i < SHEET48_SIZE; ++i) {
+      LCDBitmap* original = pd->graphics->getTableBitmap(m_sheet48, i);
+      m_bitmap48_zoom[zoom][i] = pd->graphics->newBitmap(TILE_PIX*3*2, TILE_PIX*3*2, kColorClear);
+      pd->graphics->pushContext(m_bitmap48_zoom[zoom][i]);
       pd->graphics->drawScaledBitmap(original, 0, 0, zoom, zoom);
       pd->graphics->popContext();
     }
@@ -103,6 +136,7 @@ void populateResizedSprites() {
 void initSprite() {
   pd->graphics->setDrawMode(kDrawModeCopy);
   m_sheet16 = loadImageTableAtPath("images/sheet16");
+  m_sheet48 = loadImageTableAtPath("images/sheet48");
   populateResizedSprites();
 
   for (int32_t i = 0; i < kDirN; ++i) {

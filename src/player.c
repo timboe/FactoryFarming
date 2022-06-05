@@ -8,12 +8,20 @@ struct Player_t m_player;
 
 int16_t m_offX, m_offY = 0; // Screen offsets
 
+uint8_t m_facing;
+
+uint8_t m_lookingAtOffset;
+
+bool m_updateLookingAt = false;
+
 uint16_t m_deserialiseXPlayer = 0, m_deserialiseYPlayer = 0;
 
 struct Chunk_t* m_currentChunk;
+
 enum kChunkQuad m_quadrant = 0;
 
 struct Location_t* m_currentLocation;
+
 struct Location_t* m_lookingAt;
 
 void setPlayerPosition(uint16_t _x, uint16_t _y);
@@ -52,6 +60,11 @@ struct Location_t* getPlayerLocation() {
 
 struct Location_t* getPlayerLookingAtLocation() {
   return m_lookingAt;
+}
+
+void setPlayerLookingAtOffset(int8_t _offset) {
+  m_lookingAtOffset = _offset;
+  m_updateLookingAt = true;
 }
 
 void setPlayerPosition(uint16_t _x, uint16_t _y) {
@@ -108,10 +121,10 @@ bool movePlayer() {
   goalY += m_player.m_vY;
   */
 
-  if (getPressed(0)) goalX -= 4 / zoom;
-  if (getPressed(1)) goalX += 4 / zoom;
-  if (getPressed(2)) goalY -= 4 / zoom;
-  if (getPressed(3)) goalY += 4 / zoom;
+  if (getPressed(0)) { goalX -= 4 / zoom; m_facing = 0; } 
+  if (getPressed(1)) { goalX += 4 / zoom; m_facing = 1; }
+  if (getPressed(2)) { goalY -= 4 / zoom; m_facing = 2; }
+  if (getPressed(3)) { goalY += 4 / zoom; m_facing = 3; }
 
 
   //pd->system->logToConsole("GOAL %f %f CURRENT %f %f", goalX, goalY, m_player.m_x, m_player.m_y);
@@ -179,15 +192,18 @@ bool movePlayer() {
   struct Location_t* wasAt = m_currentLocation;
   m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
 
-  if (getPressed(0)) m_lookingAt = getLocation(m_currentLocation->m_x - 1, m_currentLocation->m_y);
-  if (getPressed(1)) m_lookingAt = getLocation(m_currentLocation->m_x + 1, m_currentLocation->m_y);
-  if (getPressed(2)) m_lookingAt = getLocation(m_currentLocation->m_x, m_currentLocation->m_y - 1);
-  if (getPressed(3)) m_lookingAt = getLocation(m_currentLocation->m_x, m_currentLocation->m_y + 1);
+  switch (m_facing) {
+    case 0: m_lookingAt = getLocation(m_currentLocation->m_x - m_lookingAtOffset, m_currentLocation->m_y); break;
+    case 1: m_lookingAt = getLocation(m_currentLocation->m_x + m_lookingAtOffset, m_currentLocation->m_y); break;
+    case 2: m_lookingAt = getLocation(m_currentLocation->m_x, m_currentLocation->m_y - m_lookingAtOffset); break;
+    case 3: m_lookingAt = getLocation(m_currentLocation->m_x, m_currentLocation->m_y + m_lookingAtOffset); break;
+  }
 
   //pd->system->logToConsole("LA %i", (int) m_lookingAt);
-  if (m_currentLocation && wasAt != m_currentLocation) {  
-    pd->sprite->moveTo(m_player.m_blueprint[zoom], (TILE_PIX*m_currentLocation->m_x + TILE_PIX/2.0) * zoom, (TILE_PIX*m_currentLocation->m_y  + TILE_PIX/2.0) * zoom);
-    //pd->system->logToConsole("LA %i %i", m_lookingAt->m_pix_x, m_lookingAt->m_pix_y);
+  if (m_lookingAt && (wasAt != m_currentLocation || m_updateLookingAt)) {
+    m_updateLookingAt = false;  
+    pd->sprite->moveTo(m_player.m_blueprint[zoom], (TILE_PIX*m_lookingAt->m_x + TILE_PIX/2.0) * zoom, (TILE_PIX*m_lookingAt->m_y  + TILE_PIX/2.0) * zoom);
+    //pd->system->logToConsole("LA %i %i, off %i", m_lookingAt->m_x, m_lookingAt->m_y, m_lookingAtOffset);
   }
 
   return true;
@@ -244,6 +260,6 @@ void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_valu
 
   pd->system->logToConsole("-- Player decoded to (%i, %i), current location (%i, %i)", 
     (int32_t)m_player.m_pix_x, (int32_t)m_player.m_pix_y, m_currentLocation->m_x, m_currentLocation->m_y);
-  
+
   return NULL;
 }

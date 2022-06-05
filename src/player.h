@@ -30,6 +30,8 @@ struct Location_t* getPlayerLocation(void);
 
 struct Location_t* getPlayerLookingAtLocation(void);
 
+void setPlayerLookingAtOffset(int8_t _offset);
+
 bool movePlayer(void);
 
 void initPlayer(void);

@@ -5,7 +5,7 @@
 #include "cargo.h"
 #include "building.h"
 
-uint16_t m_UIIcons[] = {0,3,  0,4,  4,3,  4,4,  1,1,  2,1,  1,2};
+uint16_t m_UIIcons[] = {0,3,  0,4,  4,3,  4,4,  1,1,  2,1,  2,2,  1,2};
 
 enum kGameMode m_mode;
 
@@ -100,18 +100,22 @@ void updateUI(int _fc) {
 
 void updateBlueprint() {
   uint8_t zoom = getZoom();
+  LCDSprite* bp = getPlayer()->m_blueprint[zoom];
   if (getGameMode() == kMenuOptionSelected) {
+    //pd->sprite->setVisible(getPlayer()->m_blueprint[zoom], true);
     switch (m_UISelectedID) {
-      case kMenuConveyor:; pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(m_UISelectedRotation+0, 3, zoom), kBitmapUnflipped); break;
-      case kMenuSplitI:;   pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(m_UISelectedRotation+0, 4, zoom), kBitmapUnflipped); break;
-      case kMenuSplitL:;   pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(m_UISelectedRotation+4, 3, zoom), kBitmapUnflipped); break;
-      case kMenuSplitT:;   pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(m_UISelectedRotation+4, 4, zoom), kBitmapUnflipped); break;     
-      case kMenuApple:;    pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(m_UIIcons[8], m_UIIcons[9], zoom), kBitmapUnflipped); break;     
-      case kMenuCheese:;   pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(m_UIIcons[10], m_UIIcons[11], zoom), kBitmapUnflipped); break;     
-      case kMenuBin:;      pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(m_UIIcons[12], m_UIIcons[13], zoom), kBitmapUnflipped); break;     
+      case kMenuConveyor:;  pd->sprite->setImage(bp, getSprite16(m_UISelectedRotation+0, 3, zoom),    kBitmapUnflipped); setPlayerLookingAtOffset(0); break;
+      case kMenuSplitI:;    pd->sprite->setImage(bp, getSprite16(m_UISelectedRotation+0, 4, zoom),    kBitmapUnflipped); setPlayerLookingAtOffset(0); break;
+      case kMenuSplitL:;    pd->sprite->setImage(bp, getSprite16(m_UISelectedRotation+4, 3, zoom),    kBitmapUnflipped); setPlayerLookingAtOffset(0); break;
+      case kMenuSplitT:;    pd->sprite->setImage(bp, getSprite16(m_UISelectedRotation+4, 4, zoom),    kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
+      case kMenuApple:;     pd->sprite->setImage(bp, getSprite16(m_UIIcons[8], m_UIIcons[9], zoom),   kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
+      case kMenuCheese:;    pd->sprite->setImage(bp, getSprite16(m_UIIcons[10], m_UIIcons[11], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
+      case kMenuExtractor:; pd->sprite->setImage(bp, getSprite48(0, 0 , zoom),                        kBitmapUnflipped); setPlayerLookingAtOffset(2); break;     
+      case kMenuBin:;       pd->sprite->setImage(bp, getSprite16(m_UIIcons[14], m_UIIcons[15], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(1); break;     
     }
   } else { // Clear blueprint
-    pd->sprite->setImage(getPlayer()->m_blueprint[zoom], getSprite16(0, 0, zoom), kBitmapUnflipped); 
+    //pd->sprite->setVisible(getPlayer()->m_blueprint[zoom], false);
+    pd->sprite->setImage(bp, getSprite16(0, 0, zoom), kBitmapUnflipped); 
   }
 }
 
@@ -184,13 +188,14 @@ void drawUIBottom() {
 
   } else if (gm == kMenuSelect || gm == kMenuOptionSelected) {
     switch (m_UISelectedID) {
-      case kMenuConveyor:; snprintf(text, 128, "Conveyor Belt (%s)", getRotationAsString()); break;
-      case kMenuSplitI:;   snprintf(text, 128, "'I' Conveyor Splitter (%s)", getRotationAsString()); break;
-      case kMenuSplitL:;   snprintf(text, 128, "'L' Conveyor Splitter (%s)", getRotationAsString()); break;
-      case kMenuSplitT:;   snprintf(text, 128, "'T' Conveyor Splitter (%s)", getRotationAsString()); break;
-      case kMenuApple:;    snprintf(text, 128, "Apples, put them on a conveyor"); break;
-      case kMenuCheese:;   snprintf(text, 128, "Cheese (Gouda), put it on a conveyor?"); break;
-      case kMenuBin:;      snprintf(text, 128, "Remove conveyors & cargo"); break;
+      case kMenuConveyor:;  snprintf(text, 128, "Conveyor Belt (%s)", getRotationAsString()); break;
+      case kMenuSplitI:;    snprintf(text, 128, "'I' Conveyor Splitter (%s)", getRotationAsString()); break;
+      case kMenuSplitL:;    snprintf(text, 128, "'L' Conveyor Splitter (%s)", getRotationAsString()); break;
+      case kMenuSplitT:;    snprintf(text, 128, "'T' Conveyor Splitter (%s)", getRotationAsString()); break;
+      case kMenuApple:;     snprintf(text, 128, "Apples, put them on a conveyor"); break;
+      case kMenuCheese:;    snprintf(text, 128, "Cheese (Gouda), put it on a conveyor?"); break;
+      case kMenuExtractor:; snprintf(text, 128, "Test Building"); break;
+      case kMenuBin:;       snprintf(text, 128, "Remove conveyors & cargo"); break;
     }
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX, 0);
   }
@@ -202,7 +207,7 @@ void drawUIRight() {
   pd->graphics->fillRect(0, 0, TILE_PIX, DEVICE_PIX_Y, kColorBlack);
   const enum kGameMode gm = getGameMode();
   for (uint32_t i = 0; i < UI_ITEMS; ++i) {
-    const uint16_t y = TILE_PIX*2*i + TILE_PIX;
+    const uint16_t y = TILE_PIX*2*i;
     const uint16_t offset = i >= kMenuApple ? 0 : getUISelectedRotation();
     pd->graphics->drawBitmap(getSprite16(m_UIIcons[i*2] + offset, m_UIIcons[(i*2)+1], 1), 0, y, kBitmapUnflipped);
     if ((gm == kMenuSelect || gm == kMenuOptionSelected) && i == getUISelectedID()) {
@@ -259,7 +264,7 @@ void initiUI() {
   pd->sprite->setBounds(m_UISpriteTop, boundTop);
   pd->sprite->setImage(m_UISpriteTop, m_UIBitmapTop, kBitmapUnflipped);
   pd->sprite->moveTo(m_UISpriteTop, SCREEN_PIX_X/2, TILE_PIX*2);
-  pd->sprite->setZIndex(m_UISpriteTop, Z_INDEX_UI);
+  pd->sprite->setZIndex(m_UISpriteTop, Z_INDEX_MAX);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteTop, 1);
   pd->sprite->setVisible(m_UISpriteTop, 1);
 
@@ -267,14 +272,14 @@ void initiUI() {
   pd->sprite->setBounds(m_UISpriteBottom, boundBottom);
   pd->sprite->setImage(m_UISpriteBottom, m_UIBitmapRight, kBitmapUnflipped);
   pd->sprite->moveTo(m_UISpriteBottom, SCREEN_PIX_X + TILE_PIX/2, DEVICE_PIX_Y/2);
-  pd->sprite->setZIndex(m_UISpriteBottom, Z_INDEX_UI);
+  pd->sprite->setZIndex(m_UISpriteBottom, Z_INDEX_UI_BOTTOM);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteBottom, 1);
 
   PDRect boundRight = {.x = 0, .y = 0, .width = DEVICE_PIX_X, .height = TILE_PIX};
   pd->sprite->setBounds(m_UISpriteRight, boundRight);
   pd->sprite->setImage(m_UISpriteRight, m_UIBitmapBottom, kBitmapUnflipped);
   pd->sprite->moveTo(m_UISpriteRight, DEVICE_PIX_X/2, SCREEN_PIX_Y + TILE_PIX/2);
-  pd->sprite->setZIndex(m_UISpriteRight, Z_INDEX_UI);
+  pd->sprite->setZIndex(m_UISpriteRight, Z_INDEX_UI_RIGHT);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteRight, 1);
 
   UIDirtyBottom();

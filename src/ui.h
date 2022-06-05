@@ -3,7 +3,7 @@
 
 enum kGameMode {kWander, kMenuSelect, kMenuOptionSelected};
 
-enum kMenuSelections {kMenuConveyor, kMenuSplitI, kMenuSplitL, kMenuSplitT, kMenuApple, kMenuCheese, kMenuBin};
+enum kMenuSelections {kMenuConveyor, kMenuSplitI, kMenuSplitL, kMenuSplitT, kMenuApple, kMenuCheese, kMenuExtractor, kMenuBin};
 
 void addUIToSpriteList(void);
 
