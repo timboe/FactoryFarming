@@ -16,6 +16,10 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk);
 
 void setChunkBackgrounds(void);
 
+bool tileIsObstacle(struct Tile_t* _tile);
+
+void addObstacles();
+
 void initWorld(void);
 
 void resetWorld(void);

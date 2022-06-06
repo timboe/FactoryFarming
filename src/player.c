@@ -30,7 +30,7 @@ void movePlayerPosition(float _goalX, float _goalY);
 
 void updatePlayerPosition(void);
 
-void playerSpriteSetup(uint8_t _zoom);
+void playerSpriteSetup();
 
 /// ///
 
@@ -209,17 +209,19 @@ bool movePlayer() {
   return true;
 }
 
-void playerSpriteSetup(uint8_t _zoom) {
-  m_player.m_sprite[_zoom] = pd->sprite->newSprite();
-  PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*_zoom, .height = TILE_PIX*_zoom};
-  pd->sprite->setBounds(m_player.m_sprite[_zoom], bound);
-  pd->sprite->setImage(m_player.m_sprite[_zoom], getSprite16(0, 1, _zoom), kBitmapUnflipped);
-  pd->sprite->setCollideRect(m_player.m_sprite[_zoom], bound);
+void playerSpriteSetup() {
+  for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+    m_player.m_sprite[zoom] = pd->sprite->newSprite();
+    PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
+    pd->sprite->setBounds(m_player.m_sprite[zoom], bound);
+    pd->sprite->setImage(m_player.m_sprite[zoom], getSprite16(0, 1, zoom), kBitmapUnflipped);
+    pd->sprite->setCollideRect(m_player.m_sprite[zoom], bound);
 
-  m_player.m_blueprint[_zoom] = pd->sprite->newSprite();
-  pd->sprite->setBounds(m_player.m_blueprint[_zoom], bound);
-  pd->sprite->setImage(m_player.m_blueprint[_zoom], getSprite16(0, 0, _zoom), kBitmapUnflipped);
-  pd->sprite->setZIndex(m_player.m_blueprint[_zoom], Z_INDEX_BLUEPRINT);
+    m_player.m_blueprint[zoom] = pd->sprite->newSprite();
+    pd->sprite->setBounds(m_player.m_blueprint[zoom], bound);
+    pd->sprite->setImage(m_player.m_blueprint[zoom], getSprite16(0, 0, zoom), kBitmapUnflipped);
+    pd->sprite->setZIndex(m_player.m_blueprint[zoom], Z_INDEX_BLUEPRINT);
+  }
 }
 
 void resetPlayer() {
@@ -229,9 +231,7 @@ void resetPlayer() {
 
 
 void initPlayer() {
-  for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
-    playerSpriteSetup(zoom);
-  }
+  playerSpriteSetup();
 }
 
 void serialisePlayer(struct json_encoder* je) {

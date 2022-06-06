@@ -77,6 +77,7 @@
 #define UI_ROTATE_ACTION 270.0f
 
 // Note: 1 larger than actual zoom levels (0 index unused)
+// TODO changing this will break the chunk->obstacle add/remove 
 #define ZOOM_LEVELS 3
 
 // 4 inputs plus 1 output. CAUTION: changing this currently requires manual change to de/serialisation

@@ -35,6 +35,9 @@ struct Chunk_t{
 
   uint16_t m_nCargos;
   struct Cargo_t* m_cargos[TILES_PER_CHUNK];
+
+  uint16_t m_nObstacles;
+  LCDSprite* m_obstacles[TILES_PER_CHUNK][ZOOM_LEVELS]; // OWNED
 };
 
 struct Chunk_t* getChunk(int32_t _x, int32_t _y);
@@ -48,6 +51,10 @@ void chunkRemoveBuilding(struct Chunk_t* _chunk, struct Building_t* _building);
 void chunkAddCargo(struct Chunk_t* _chunk, struct Cargo_t* _cargo);
 
 void chunkRemoveCargo(struct Chunk_t* _chunk, struct Cargo_t* _cargo);
+
+void chunkAddObstacle(struct Chunk_t* _chunk, LCDSprite* _obsticleZ1,  LCDSprite* _obsticleZ2);
+
+void chunkRemoveObstacle(struct Chunk_t* _chunk, LCDSprite* _obsticle);
 
 uint16_t chunkTickChunk(struct Chunk_t* _chunk, uint8_t _tick, uint8_t _zoom);
 

@@ -166,6 +166,7 @@ int gameLoop(void* _data) {
 void menuOptionsCallbackRestart(void* blank) {
   reset();
   generate();
+  addObstacles();
   setChunkBackgrounds();
   updateRenderList();
 }
@@ -173,6 +174,7 @@ void menuOptionsCallbackRestart(void* blank) {
 void menuOptionsCallbackLoad(void* blank) {
   reset();
   load();
+  addObstacles();
   setChunkBackgrounds();
   updateRenderList();
 }

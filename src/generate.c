@@ -16,7 +16,7 @@ struct Tile_t* getTileInChunk(struct Chunk_t* _chunk, uint16_t _u, uint16_t _v);
 
 struct Tile_t* getTile(uint16_t _x, uint16_t _y);
 
-void addLake(uint16_t _startX, uint16_t _startY);
+bool addLake(uint16_t _startX, uint16_t _startY);
 
 /// ///
 
@@ -28,11 +28,11 @@ struct Tile_t* getTile(uint16_t _x, uint16_t _y) {
   return &m_tiles[ WORLD_CHUNKS_X*TILES_PER_CHUNK_X*_y + _x ];
 }
 
-#define LAKE_MIN 8
-#define LAKE_MAX 16
-void addLake(uint16_t _startX, uint16_t _startY) {
-  const uint8_t w = rand() % (LAKE_MAX - LAKE_MIN) + LAKE_MIN; 
-  const uint8_t h = rand() % (LAKE_MAX - LAKE_MIN) + LAKE_MIN; 
+#define LAKE_MIN 9
+#define LAKE_MAX 17
+bool addLake(uint16_t _startX, uint16_t _startY) {
+  uint8_t w = rand() % (LAKE_MAX - LAKE_MIN) + LAKE_MIN; 
+  uint8_t h = rand() % (LAKE_MAX - LAKE_MIN) + LAKE_MIN; 
   uint8_t c_x[4] = {0};
   uint8_t c_y[4] = {0};
   for (uint8_t i = 0; i < 4; ++i) {
@@ -41,34 +41,61 @@ void addLake(uint16_t _startX, uint16_t _startY) {
       c_y[i] = 2 + rand() % 2;
     }
   }
+
+  uint16_t tex;
   // LR
   for (uint16_t x = _startX; x < _startX + w; ++x) {
     uint16_t y = _startY;
-    if      (c_x[0] && (x-_startX) <     c_x[0])     y += c_y[0];
+    tex = getSprite16_idx(4,5);
+    if      (x == _startX) tex = getSprite16_idx(0,5); // Corner
+    else if (c_x[0] && (x-_startX) == c_x[0]) tex = getSprite16_idx(0,6); // Inner corner
+    else if (c_x[1] && (x-_startX) == w - c_x[1]) tex = getSprite16_idx(1,6); // Inner corner
+
+    if      (c_x[0] && (x-_startX) <     c_x[0] + 1) y += c_y[0];
     else if (c_x[1] && (x-_startX) > w - c_x[1] - 1) y += c_y[1];
 
-    getTile(x,y)->m_tile = getSprite16_idx(4,6);
+    getTile(x,y)->m_tile = tex;
 
     y = _startY + h;
-    if      (c_x[3] && (x-_startX) <     c_x[3])     y -= c_y[3];
+    tex = getSprite16_idx(6,5);
+    if (x == _startX) tex = getSprite16_idx(3,5);
+    else if (c_x[3] && (x-_startX) == c_x[3]) tex = getSprite16_idx(3,6); // Inner corner
+    else if (c_x[2] && (x-_startX) == w - c_x[2]) tex = getSprite16_idx(2,6); // Inner corner
+
+
+    if      (c_x[3] && (x-_startX) <     c_x[3] + 1) y -= c_y[3];
     else if (c_x[2] && (x-_startX) > w - c_x[2] - 1) y -= c_y[2];
 
-    getTile(x,y)->m_tile = getSprite16_idx(4,6);
+    getTile(x,y)->m_tile = tex;
   }
   // TB
-  for (uint16_t y = _startY; y < _startY + h; ++y) {
+  for (uint16_t y = _startY; y < _startY + h + 1; ++y) {
     uint16_t x = _startX;
-    if      (c_y[0] && (y-_startY) <     c_y[0])     x += c_x[0];
-    else if (c_y[1] && (y-_startY) > h - c_y[1] - 1) x += c_x[1];
+    tex = getSprite16_idx(7,5);
+    if      (y == _startY) tex = getSprite16_idx(0,5); // Corner
+    else if (c_y[0] && (y-_startY) == c_y[0])  tex = getSprite16_idx(0,5);
+    else if (c_y[3] && (y-_startY) == h - c_y[3])  tex = getSprite16_idx(3,5);
+    else if ((y-_startY) == _startY+h)  tex = getSprite16_idx(3,5);
 
-    getTile(x,y)->m_tile = getSprite16_idx(4,6);
+    if      (c_y[0] && (y-_startY) <     c_y[0] ) x += c_x[0];
+    else if (c_y[3] && (y-_startY) > h - c_y[3] ) x += c_x[3];
+
+    getTile(x,y)->m_tile = tex;
 
     x = _startX + w;
-    if      (c_y[3] && (y-_startY) <     c_y[3])     x -= c_x[3];
-    else if (c_y[2] && (y-_startY) > h - c_y[2] - 1) x -= c_x[2];
+    tex = getSprite16_idx(5,5);
+    if      (y == _startY) tex = getSprite16_idx(1,5); // Corner
+    else if (c_y[1] && (y-_startY) == c_y[1]) tex = getSprite16_idx(1,5);
+    else if (c_y[2] && (y-_startY) == h - c_y[2]) tex = getSprite16_idx(2,5);
+    else if ((y-_startY) == _startY+h)  tex = getSprite16_idx(2,5);
 
-    getTile(x,y)->m_tile = getSprite16_idx(4,6);
+    if      (c_y[1] && (y-_startY) <     c_y[1]) x -= c_x[1];
+    else if (c_y[2] && (y-_startY) > h - c_y[2]) x -= c_x[2];
+
+    getTile(x,y)->m_tile = tex;
   }
+
+  return false;
 }
 
 void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
@@ -177,15 +204,40 @@ void* deserialiseStructDoneWorld(json_decoder* jd, const char* _name, json_value
 }
 
 
+bool tileIsObstacle(struct Tile_t* _tile) {
+  return _tile->m_tile > 9;
+}
+
+void addObstacles() {
+  for (uint32_t x = 0; x < TOT_TILES_X; ++x) {
+    for (uint32_t y = 0; y < TOT_TILES_Y; ++y) {
+      struct Tile_t* tile = getTile(x, y);
+      if (!tileIsObstacle(tile)) {
+        continue;
+      }
+      struct Location_t* loc = getLocation_noCheck(x, y);
+
+      if (loc->m_cargo == NULL && loc->m_building == NULL) {
+        continue;
+      }
+
+}
+
 void generate() {
   srand(pd->system->getSecondsSinceEpoch(NULL));
+
     
   // Worldgen is very basic for now
   for (uint16_t i = 0; i < TOT_TILES; ++i) {
     m_tiles[i].m_tile = rand() % FLOOR_TILES;
   } 
 
-  //addLake(0,0);
+  struct Tile_t* backup = pd->system->realloc(NULL, SIZE_GENERATE);
+  
+  //memcpy(backup, m_tiles, SIZE_GENERATE);
+  bool reject = addLake(0,0);
+  //if (reject) memcpy(m_tiles, backup, SIZE_GENERATE);
 
+  pd->system->realloc(backup, 0); // Free
 
 }

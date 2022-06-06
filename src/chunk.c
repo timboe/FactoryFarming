@@ -73,6 +73,34 @@ void chunkRemoveCargo(struct Chunk_t* _chunk, struct Cargo_t* _cargo) {
   --(_chunk->m_nCargos);
 }
 
+void chunkAddObstacle(struct Chunk_t* _chunk, LCDSprite* _obstacleZ1, LCDSprite* _obstacleZ2) {
+  _chunk->m_obstacles[ _chunk->m_nObsticles ][1] = _obstacleZ1;
+  _chunk->m_obstacles[ _chunk->m_nObsticles ][2] = _obstacleZ2;
+  ++(_chunk->m_nObstacles);
+}
+
+void chunkRemoveObstacle(struct Chunk_t* _chunk, LCDSprite* _obstacleZ1) {
+  int32_t idx = -1;
+  for (uint32_t i = 0; i < TILES_PER_CHUNK; ++i) {
+    if (_chunk->m_obstacles[i][1] == _obstacle) {
+      idx = i;
+      break;
+    }
+  }
+  #ifdef DEV
+  if (idx == -1) pd->system->error("-1 in chunkRemoveObstacle!");
+  #endif
+  // Note: We owned this!
+  pd->sprite->freeSprite(_chunk->m_obstacles[i][1]);
+  pd->sprite->freeSprite(_chunk->m_obstacles[i][2]);
+  for(uint32_t i = idx; i < TILES_PER_CHUNK - 1; i++) {
+    _chunk->m_obstacles[i][1] = _chunk->m_obstacles[i + 1][1];
+    _chunk->m_obstacles[i][2] = _chunk->m_obstacles[i + 1][2];
+    if (_chunk->m_obstacles[i] == NULL) break;
+  }
+  --(_chunk->m_nObstacles);
+}
+
 uint16_t chunkTickChunk(struct Chunk_t* _chunk, uint8_t _tick, uint8_t _zoom) {
   //pd->system->logToConsole("Asked to tick %i for %i", _tick, _chunk);
   for (uint32_t i = 0; i < _chunk->m_nBuildings; ++i) {
@@ -154,6 +182,7 @@ void setChunkAssociations(void) {
 void resetChunk() {
   for (uint32_t x = 0; x < WORLD_CHUNKS_X; ++x) {
     for (uint32_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
+      // Owns background sprites and images
       for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
         struct Chunk_t* chunk = getChunk_noCheck(x, y);
         if (chunk->m_bkgSprite[zoom]) pd->sprite->freeSprite(chunk->m_bkgSprite[zoom]);
@@ -161,6 +190,10 @@ void resetChunk() {
         // Not enough RAM :(
         //if (chunk->m_bkgImage2[zoom]) pd->graphics->freeBitmap(chunk->m_bkgImage2[zoom]);
         //...
+        // Owns obstacle sprites
+        for (uint32_t i = 0; i < chunk->m_nObstacles) {
+          pd->sprite->freeSprite(_chunk->m_obstacles[i][zoom]);
+        }
       }
     }
   }
