@@ -52,9 +52,9 @@ void chunkAddCargo(struct Chunk_t* _chunk, struct Cargo_t* _cargo);
 
 void chunkRemoveCargo(struct Chunk_t* _chunk, struct Cargo_t* _cargo);
 
-void chunkAddObstacle(struct Chunk_t* _chunk, LCDSprite* _obsticleZ1,  LCDSprite* _obsticleZ2);
+void chunkAddObstacle(struct Chunk_t* _chunk, LCDSprite* _obstacleZ1,  LCDSprite* _obstacleZ2);
 
-void chunkRemoveObstacle(struct Chunk_t* _chunk, LCDSprite* _obsticle);
+void chunkRemoveObstacle(struct Chunk_t* _chunk, LCDSprite* _obstacleZ1);
 
 uint16_t chunkTickChunk(struct Chunk_t* _chunk, uint8_t _tick, uint8_t _zoom);
 

@@ -5,7 +5,7 @@
 #include "cargo.h"
 #include "building.h"
 
-uint16_t m_UIIcons[] = {0,3,  0,4,  4,3,  4,4,  1,1,  2,1,  2,2,  1,2};
+uint16_t m_UIIcons[] = {0,3,  0,4,  4,3,  4,4,  1,1,  2,1,  4,2,  1,2};
 
 enum kGameMode m_mode;
 
@@ -110,7 +110,7 @@ void updateBlueprint() {
       case kMenuSplitT:;    pd->sprite->setImage(bp, getSprite16(m_UISelectedRotation+4, 4, zoom),    kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
       case kMenuApple:;     pd->sprite->setImage(bp, getSprite16(m_UIIcons[8], m_UIIcons[9], zoom),   kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
       case kMenuCheese:;    pd->sprite->setImage(bp, getSprite16(m_UIIcons[10], m_UIIcons[11], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
-      case kMenuExtractor:; pd->sprite->setImage(bp, getSprite48(0, 0 , zoom),                        kBitmapUnflipped); setPlayerLookingAtOffset(2); break;     
+      case kMenuExtractor:; pd->sprite->setImage(bp, getSprite48(m_UISelectedRotation, 0 , zoom),     kBitmapUnflipped); setPlayerLookingAtOffset(2); break;     
       case kMenuBin:;       pd->sprite->setImage(bp, getSprite16(m_UIIcons[14], m_UIIcons[15], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(1); break;     
     }
   } else { // Clear blueprint
@@ -208,7 +208,7 @@ void drawUIRight() {
   const enum kGameMode gm = getGameMode();
   for (uint32_t i = 0; i < UI_ITEMS; ++i) {
     const uint16_t y = TILE_PIX*2*i;
-    const uint16_t offset = i >= kMenuApple ? 0 : getUISelectedRotation();
+    const uint16_t offset = (i >= kMenuApple && i != kMenuExtractor) ? 0 : getUISelectedRotation();
     pd->graphics->drawBitmap(getSprite16(m_UIIcons[i*2] + offset, m_UIIcons[(i*2)+1], 1), 0, y, kBitmapUnflipped);
     if ((gm == kMenuSelect || gm == kMenuOptionSelected) && i == getUISelectedID()) {
       LCDBitmapDrawMode m = ((gm == kMenuSelect && getFrameCount() % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4) ? kDrawModeInverted : kDrawModeCopy );

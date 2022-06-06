@@ -30,7 +30,7 @@ void movePlayerPosition(float _goalX, float _goalY);
 
 void updatePlayerPosition(void);
 
-void playerSpriteSetup();
+void playerSpriteSetup(void);
 
 /// ///
 
@@ -78,7 +78,7 @@ void movePlayerPosition(float _goalX, float _goalY) {
   int len;
   uint8_t zoom = getZoom();
   SpriteCollisionInfo* collInfo = pd->sprite->moveWithCollisions(m_player.m_sprite[zoom], _goalX * zoom, _goalY * zoom, &(m_player.m_pix_x), &(m_player.m_pix_y), &len);
-  free(collInfo);
+  pd->system->realloc(collInfo, 0); // Free
   updatePlayerPosition();
   pd->sprite->setZIndex(m_player.m_sprite[zoom], (int16_t)m_player.m_pix_y * zoom);
 
@@ -225,7 +225,7 @@ void playerSpriteSetup() {
 }
 
 void resetPlayer() {
-  setPlayerPosition(SCREEN_PIX_X/2, SCREEN_PIX_Y/2);
+  setPlayerPosition(SCREEN_PIX_X, SCREEN_PIX_Y);
   m_currentChunk = getChunk_noCheck(0,0);
 }
 

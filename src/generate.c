@@ -3,6 +3,7 @@
 #include "sprite.h"
 #include "chunk.h"
 #include "location.h"
+#include "building.h"
 
 struct Tile_t* m_tiles = NULL;
 
@@ -12,25 +13,94 @@ const int32_t SIZE_GENERATE = TOT_TILES * sizeof(struct Tile_t);
  
 void generateSpriteSetup(struct Chunk_t* _chunk);
 
-struct Tile_t* getTileInChunk(struct Chunk_t* _chunk, uint16_t _u, uint16_t _v);
+struct Tile_t* getTileInChunk(struct Chunk_t* _chunk, int32_t _u, int32_t _v);
 
-struct Tile_t* getTile(uint16_t _x, uint16_t _y);
+struct Tile_t* getTile(int32_t _x, int32_t _y);
 
-bool addLake(uint16_t _startX, uint16_t _startY);
+bool addLake(int32_t _startX, int32_t _startY);
 
 /// ///
 
-struct Tile_t* getTileInChunk(struct Chunk_t* _chunk, uint16_t _u, uint16_t _v) {
+struct Tile_t* getTileInChunk(struct Chunk_t* _chunk, int32_t _u, int32_t _v) {
   return &m_tiles[ (WORLD_CHUNKS_X * TILES_PER_CHUNK_X)*((TILES_PER_CHUNK_Y * _chunk->m_y) + _v) + ((TILES_PER_CHUNK_X * _chunk->m_x) + _u) ];
 }
 
-struct Tile_t* getTile(uint16_t _x, uint16_t _y) {
-  return &m_tiles[ WORLD_CHUNKS_X*TILES_PER_CHUNK_X*_y + _x ];
+struct Tile_t* getTile(int32_t _x, int32_t _y) {
+  if (_x < 0) _x += TOT_TILES_X;
+  else if (_x >= TOT_TILES_X) _x -= TOT_TILES_X;
+  if (_y < 0) _y += TOT_TILES_Y;
+  else if (_y >= TOT_TILES_Y) _y -= TOT_TILES_Y;
+  return &m_tiles[ TOT_TILES_X*_y + _x ];
 }
 
-#define LAKE_MIN 9
-#define LAKE_MAX 17
-bool addLake(uint16_t _startX, uint16_t _startY) {
+#define LAKE_MIN 10
+#define LAKE_MAX 18
+#define RIVER_MIN 8
+#define RIVER_MAX 16
+bool addRiver(int32_t _startX, int32_t _startY, enum kDir _dir) {
+
+  getTile(_startX,_startY)->m_tile = getSprite16_idx(5+(_dir == NS ? 1 : 0), 11);
+
+  int32_t lenA = RIVER_MIN + rand() % (RIVER_MAX - RIVER_MIN);
+  bool switchA = rand() % 2;
+  bool switchDir = rand() % 2;
+  int32_t lenB = RIVER_MIN + rand() % (RIVER_MAX - RIVER_MIN);
+  bool switchB = switchA && rand() % 2;
+  int32_t lenC = RIVER_MIN + rand() % (RIVER_MAX - RIVER_MIN);
+
+  bool endInLake = rand() % 2;
+
+  if (_dir == WE) {
+    for (int32_t x = _startX + 1; x < _startX + lenA; ++x) getTile(x, _startY)->m_tile = getSprite16_idx(5, 12);
+    if (switchA) getTile(_startX + lenA, _startY)->m_tile = getSprite16_idx(6 + (switchDir ? 0 : 1), 13);
+    else if (endInLake) return addLake(_startX + lenA, _startY - LAKE_MIN/2);
+    else getTile(_startX + lenA, _startY)->m_tile = getSprite16_idx(5, 14);
+  } else if (_dir == NS) {
+    for (int32_t y = _startY + 1; y < _startY + lenA; ++y) getTile(_startX, y)->m_tile = getSprite16_idx(4, 12);
+    if (switchA) getTile(_startX, _startY + lenA)->m_tile = getSprite16_idx(4 + (switchDir ? 0 : 3), 13);
+    else if (endInLake) return addLake(_startX - LAKE_MIN/2, _startY + lenA);
+    else getTile(_startX, _startY + lenA)->m_tile = getSprite16_idx(4, 14);
+  }
+
+  if (switchA && _dir == WE) {
+    if (switchDir) {
+      for (int32_t y = _startY + 1; y < _startY + lenB; ++y) getTile(_startX + lenA, y)->m_tile = getSprite16_idx(4, 12);
+      if (switchB) getTile(_startX + lenA, _startY + lenB)->m_tile = getSprite16_idx(4, 13);
+      else getTile(_startX + lenA, _startY + lenB)->m_tile = getSprite16_idx(4, 14);
+    } else {
+      for (int32_t y = _startY - 1; y > _startY - lenB; --y) getTile(_startX + lenA, y)->m_tile = getSprite16_idx(4, 12); 
+      if (switchB) getTile(_startX + lenA, _startY - lenB)->m_tile = getSprite16_idx(5, 13);
+      else getTile(_startX + lenA, _startY - lenB)->m_tile = getSprite16_idx(6, 14);
+    }
+  } else if (switchA && _dir == NS) {
+    if (switchDir) {
+      for (int32_t x = _startX + 1; x < _startX + lenB; ++x) getTile(x, _startY + lenA)->m_tile = getSprite16_idx(5, 12);
+      if (switchB) getTile(_startX + lenB, _startY + lenA)->m_tile = getSprite16_idx(6, 13);
+      else getTile(_startX + lenB, _startY + lenA)->m_tile = getSprite16_idx(5, 14);
+    } else {
+      for (int32_t x = _startX - 1; x > _startX - lenB; --x) getTile(x, _startY + lenA)->m_tile = getSprite16_idx(5, 12); 
+      if (switchB) getTile(_startX - lenB, _startY + lenA)->m_tile = getSprite16_idx(5, 13);
+      else getTile(_startX - lenB, _startY + lenA)->m_tile = getSprite16_idx(7, 14);
+    }
+  }
+
+  int32_t signedLenB = lenB * (switchDir ? 1 : -1);
+  if (switchB && _dir == WE) {
+    for (int32_t x = _startX + lenA + 1; x < _startX + lenA + lenC; ++x) getTile(x, _startY + signedLenB)->m_tile = getSprite16_idx(5, 12);
+    if (endInLake) return addLake(_startX + lenA + lenC, _startY + signedLenB - LAKE_MIN/2); 
+    else getTile(_startX + lenA + lenC, _startY + signedLenB)->m_tile = getSprite16_idx(5, 14);
+  } else if (switchB && _dir == NS) {
+    for (int32_t y = _startY + lenA + 1; y < _startY + lenA + lenC; ++y) getTile(_startX + signedLenB, y)->m_tile = getSprite16_idx(4, 12);
+    if (endInLake) return addLake(_startX + signedLenB - LAKE_MIN/2, _startY + lenA + lenC); 
+    else getTile(_startX + signedLenB, _startY + lenA + lenC)->m_tile = getSprite16_idx(4, 14);
+  }
+
+  return false;
+
+}
+
+
+bool addLake(int32_t _startX, int32_t _startY) {
   uint8_t w = rand() % (LAKE_MAX - LAKE_MIN) + LAKE_MIN; 
   uint8_t h = rand() % (LAKE_MAX - LAKE_MIN) + LAKE_MIN; 
   uint8_t c_x[4] = {0};
@@ -44,8 +114,8 @@ bool addLake(uint16_t _startX, uint16_t _startY) {
 
   uint16_t tex;
   // LR
-  for (uint16_t x = _startX; x < _startX + w; ++x) {
-    uint16_t y = _startY;
+  for (int32_t x = _startX; x < _startX + w; ++x) {
+    int32_t y = _startY;
     tex = getSprite16_idx(4,5);
     if      (x == _startX) tex = getSprite16_idx(0,5); // Corner
     else if (c_x[0] && (x-_startX) == c_x[0]) tex = getSprite16_idx(0,6); // Inner corner
@@ -69,8 +139,8 @@ bool addLake(uint16_t _startX, uint16_t _startY) {
     getTile(x,y)->m_tile = tex;
   }
   // TB
-  for (uint16_t y = _startY; y < _startY + h + 1; ++y) {
-    uint16_t x = _startX;
+  for (int32_t y = _startY; y < _startY + h + 1; ++y) {
+    int32_t x = _startX;
     tex = getSprite16_idx(7,5);
     if      (y == _startY) tex = getSprite16_idx(0,5); // Corner
     else if (c_y[0] && (y-_startY) == c_y[0])  tex = getSprite16_idx(0,5);
@@ -93,6 +163,24 @@ bool addLake(uint16_t _startX, uint16_t _startY) {
     else if (c_y[2] && (y-_startY) > h - c_y[2]) x -= c_x[2];
 
     getTile(x,y)->m_tile = tex;
+  }
+
+  // (Literal) Flood fill
+  for (int32_t x = _startX + 1; x < _startX + w; ++x) {
+    bool fill = false;
+    for (int32_t y = _startY; y < _startY + h; ++y) {
+      struct Tile_t* t = getTile(x,y);
+      if (fill && t->m_tile > FLOOR_TILES) break;
+      if (fill) t->m_tile = getSprite16_idx(4 + rand() % 4, 6);
+      if (!fill && t->m_tile > FLOOR_TILES && getTile(x,y+1)->m_tile <= FLOOR_TILES) fill = true;
+    }
+  }
+
+  bool toAddRiver = true;//rand() % 2;
+  bool riverWE = false;//rand() % 2;
+  if (toAddRiver) {
+    if (riverWE) addRiver(_startX + w, _startY + h/2, WE);
+    else addRiver(_startX + w/2, _startY + h, NS);
   }
 
   return false;
@@ -205,7 +293,8 @@ void* deserialiseStructDoneWorld(json_decoder* jd, const char* _name, json_value
 
 
 bool tileIsObstacle(struct Tile_t* _tile) {
-  return _tile->m_tile > 9;
+  if (_tile->m_tile >= getSprite16_idx(4,6) && _tile->m_tile <= getSprite16_idx(7,6)) return false; // Water (only the border is obstacle)
+  return _tile->m_tile > FLOOR_TILES;
 }
 
 void addObstacles() {
@@ -215,12 +304,22 @@ void addObstacles() {
       if (!tileIsObstacle(tile)) {
         continue;
       }
-      struct Location_t* loc = getLocation_noCheck(x, y);
 
-      if (loc->m_cargo == NULL && loc->m_building == NULL) {
-        continue;
-      }
+      LCDSprite* obstacle_x1 = pd->sprite->newSprite();
+      PDRect bound_x1 = {.x = 0, .y = 0, .width = TILE_PIX, .height = TILE_PIX};
+      pd->sprite->setCollideRect(obstacle_x1, bound_x1);
+      pd->sprite->moveTo(obstacle_x1, x * TILE_PIX, y * TILE_PIX);
 
+
+      LCDSprite* obstacle_x2 = pd->sprite->newSprite();
+      PDRect bound_x2 = {.x = 0, .y = 0, .width = TILE_PIX*2, .height = TILE_PIX*2};
+      pd->sprite->setCollideRect(obstacle_x2, bound_x2);
+      pd->sprite->moveTo(obstacle_x2, (x * TILE_PIX)*2, (y * TILE_PIX)*2);
+
+
+      chunkAddObstacle(getLocation_noCheck(x, y)->m_chunk, obstacle_x1, obstacle_x2);
+    }
+  }
 }
 
 void generate() {
@@ -235,7 +334,7 @@ void generate() {
   struct Tile_t* backup = pd->system->realloc(NULL, SIZE_GENERATE);
   
   //memcpy(backup, m_tiles, SIZE_GENERATE);
-  bool reject = addLake(0,0);
+  bool reject = addLake(1,1);
   //if (reject) memcpy(m_tiles, backup, SIZE_GENERATE);
 
   pd->system->realloc(backup, 0); // Free

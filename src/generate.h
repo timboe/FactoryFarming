@@ -18,7 +18,7 @@ void setChunkBackgrounds(void);
 
 bool tileIsObstacle(struct Tile_t* _tile);
 
-void addObstacles();
+void addObstacles(void);
 
 void initWorld(void);
 

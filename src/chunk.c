@@ -74,15 +74,15 @@ void chunkRemoveCargo(struct Chunk_t* _chunk, struct Cargo_t* _cargo) {
 }
 
 void chunkAddObstacle(struct Chunk_t* _chunk, LCDSprite* _obstacleZ1, LCDSprite* _obstacleZ2) {
-  _chunk->m_obstacles[ _chunk->m_nObsticles ][1] = _obstacleZ1;
-  _chunk->m_obstacles[ _chunk->m_nObsticles ][2] = _obstacleZ2;
+  _chunk->m_obstacles[ _chunk->m_nObstacles ][1] = _obstacleZ1;
+  _chunk->m_obstacles[ _chunk->m_nObstacles ][2] = _obstacleZ2;
   ++(_chunk->m_nObstacles);
 }
 
 void chunkRemoveObstacle(struct Chunk_t* _chunk, LCDSprite* _obstacleZ1) {
   int32_t idx = -1;
   for (uint32_t i = 0; i < TILES_PER_CHUNK; ++i) {
-    if (_chunk->m_obstacles[i][1] == _obstacle) {
+    if (_chunk->m_obstacles[i][1] == _obstacleZ1) {
       idx = i;
       break;
     }
@@ -91,8 +91,8 @@ void chunkRemoveObstacle(struct Chunk_t* _chunk, LCDSprite* _obstacleZ1) {
   if (idx == -1) pd->system->error("-1 in chunkRemoveObstacle!");
   #endif
   // Note: We owned this!
-  pd->sprite->freeSprite(_chunk->m_obstacles[i][1]);
-  pd->sprite->freeSprite(_chunk->m_obstacles[i][2]);
+  pd->sprite->freeSprite(_chunk->m_obstacles[idx][1]);
+  pd->sprite->freeSprite(_chunk->m_obstacles[idx][2]);
   for(uint32_t i = idx; i < TILES_PER_CHUNK - 1; i++) {
     _chunk->m_obstacles[i][1] = _chunk->m_obstacles[i + 1][1];
     _chunk->m_obstacles[i][2] = _chunk->m_obstacles[i + 1][2];
@@ -191,8 +191,8 @@ void resetChunk() {
         //if (chunk->m_bkgImage2[zoom]) pd->graphics->freeBitmap(chunk->m_bkgImage2[zoom]);
         //...
         // Owns obstacle sprites
-        for (uint32_t i = 0; i < chunk->m_nObstacles) {
-          pd->sprite->freeSprite(_chunk->m_obstacles[i][zoom]);
+        for (uint32_t i = 0; i < chunk->m_nObstacles; ++i) {
+          pd->sprite->freeSprite(chunk->m_obstacles[i][zoom]);
         }
       }
     }

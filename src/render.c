@@ -40,6 +40,9 @@ void chunkAddToRender(struct Chunk_t* _chunk, uint8_t _zoom) {
   for (uint32_t i = 0; i < _chunk->m_nCargos; ++i) {
     pd->sprite->addSprite(_chunk->m_cargos[i]->m_sprite[_zoom]);
   }
+  for (uint32_t i = 0; i < _chunk->m_nObstacles; ++i) {
+    pd->sprite->addSprite(_chunk->m_obstacles[i][_zoom]);
+  }
 }
 
 void updateRenderList() {
