@@ -5,7 +5,7 @@
 #include "cargo.h"
 #include "building.h"
 
-uint16_t m_UIIcons[] = {0,3,  0,4,  4,3,  4,4,  1,1,  2,1,  4,2,  1,2};
+uint16_t m_UIIcons[] = {0,3,  0,4,  4,3,  4,4,  8,7,  9,7,  4,2,  1,2};
 
 enum kGameMode m_mode;
 

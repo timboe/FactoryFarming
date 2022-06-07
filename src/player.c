@@ -78,7 +78,7 @@ void movePlayerPosition(float _goalX, float _goalY) {
   int len;
   uint8_t zoom = getZoom();
   SpriteCollisionInfo* collInfo = pd->sprite->moveWithCollisions(m_player.m_sprite[zoom], _goalX * zoom, _goalY * zoom, &(m_player.m_pix_x), &(m_player.m_pix_y), &len);
-  pd->system->realloc(collInfo, 0); // Free
+  if (len) pd->system->realloc(collInfo, 0); // Free
   updatePlayerPosition();
   pd->sprite->setZIndex(m_player.m_sprite[zoom], (int16_t)m_player.m_pix_y * zoom);
 
@@ -214,7 +214,7 @@ void playerSpriteSetup() {
     m_player.m_sprite[zoom] = pd->sprite->newSprite();
     PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
     pd->sprite->setBounds(m_player.m_sprite[zoom], bound);
-    pd->sprite->setImage(m_player.m_sprite[zoom], getSprite16(0, 1, zoom), kBitmapUnflipped);
+    pd->sprite->setImage(m_player.m_sprite[zoom], getSprite16(8, 3, zoom), kBitmapUnflipped);
     pd->sprite->setCollideRect(m_player.m_sprite[zoom], bound);
 
     m_player.m_blueprint[zoom] = pd->sprite->newSprite();
@@ -225,7 +225,7 @@ void playerSpriteSetup() {
 }
 
 void resetPlayer() {
-  setPlayerPosition(SCREEN_PIX_X, SCREEN_PIX_Y);
+  setPlayerPosition(SCREEN_PIX_X/2, SCREEN_PIX_Y/2);
   m_currentChunk = getChunk_noCheck(0,0);
 }
 

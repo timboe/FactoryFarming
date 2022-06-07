@@ -79,8 +79,8 @@ void cargoSpriteSetup(struct Cargo_t* _cargo, uint16_t _x, uint16_t _y, uint16_t
 
 void getCargoixiy(enum kCargoType _type, uint16_t* _ix, uint16_t* _iy) {
   switch (_type) {
-    case kApple:;  (*_ix) = 1; (*_iy) = 1; break;
-    case kCheese:; (*_ix) = 2; (*_iy) = 1; break;
+    case kApple:;  (*_ix) = 8; (*_iy) = 7; break;
+    case kCheese:; (*_ix) = 9; (*_iy) = 7; break;
     case kNoCargo:;
   }
 }

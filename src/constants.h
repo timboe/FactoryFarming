@@ -26,7 +26,7 @@
 #define TILES_PER_CHUNK (TILES_PER_CHUNK_X*TILES_PER_CHUNK_Y)
 
 // 16x16 sprite sheet has how many rows/columns
-#define SHEET16_SIZE_X 8
+#define SHEET16_SIZE_X 16
 #define SHEET16_SIZE_Y 16
 #define SHEET16_SIZE (SHEET16_SIZE_X*SHEET16_SIZE_Y)
 
@@ -36,8 +36,8 @@
 
 #define TOT_CARGO_OR_BUILDINGS 2046
 
-// Number of available floor spires
-#define FLOOR_TILES 8
+// Number of available floor sprites
+#define FLOOR_TILES (8*4)
 
 // Where the conveyor tiles start from in Y
 #define CONV_START_Y 7
