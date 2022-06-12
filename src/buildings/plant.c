@@ -8,8 +8,8 @@ void plantSpawnCargo(struct Building_t* _building, struct Location_t* _loc);
 
 /// ///
 
-#define GROW_TIME (TICK_FREQUENCY*2)
-#define GROW_RANDOM (TICK_FREQUENCY*2)
+#define GROW_TIME (TICKS_PER_SEC*4)
+#define GROW_RANDOM (TICKS_PER_SEC*4)
 
 void plantSpawnCargo(struct Building_t* _building, struct Location_t* _loc) {
   switch (_building->m_subType.plant) {
@@ -18,11 +18,28 @@ void plantSpawnCargo(struct Building_t* _building, struct Location_t* _loc) {
     case kNPlantSubTypes:; default: break;
   }
   _building->m_progress = GROW_TIME + rand() % GROW_RANDOM;
-  ++_building->m_mode;
+  if (++_building->m_mode == N_CROPS_BEFORE_FARMLAND) {
+    renderChunkBackgroundImage(_loc->m_chunk);
+  }
 }
 
+#define CARGO_BOUNCE_OFFSET 4
 void plantUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   _building->m_progress -= _tick;
+
+  // TODO: Additional subtraction if _building->m_mode >= N_CROPS_BEFORE_FARMLAND? Fertiliser etc?
+
+  // TODO: Growning penalties?
+
+  if (_tick == NEAR_TICK_AMOUNT && _building->m_location->m_cargo) {
+    _building->m_stored[0] = _building->m_stored[0] + (_building->m_stored[1] == 0 ? 1 : -1);
+    if      (_building->m_stored[0] == CARGO_BOUNCE_OFFSET) _building->m_stored[1] = 1;
+    else if (_building->m_stored[0] == 0)                   _building->m_stored[1] = 0;
+    pd->sprite->moveTo(
+      _building->m_location->m_cargo->m_sprite[_zoom], 
+      _building->m_pix_x*_zoom, 
+      (_building->m_pix_y - _building->m_stored[0])*_zoom);
+  }
 
   if (_building->m_progress > 0) return;
 
@@ -55,11 +72,11 @@ void assignNeighborsPlant(struct Building_t* _building) {
   struct Location_t* below;
   struct Location_t* left;
   struct Location_t* right;
-  getBuildingNeighbors(_building, &above, &below, &left, &right);
+  getBuildingNeighbors(_building, 1, &above, &below, &left, &right); // Not currently used
   _building->m_next[0] = above;
   _building->m_next[1] = right;
   _building->m_next[2] = below;
-  _building->m_next[3] = left;
+  _building->m_next[3] = left; 
 
 }
 

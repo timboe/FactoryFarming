@@ -32,8 +32,8 @@ void chunkAddToRender(struct Chunk_t* _chunk, uint8_t _zoom) {
   // TODO in the future all chunks should have all backgrounds populated
   //pd->system->logToConsole("CATR %i %i", _chunk->m_x, _chunk->m_y);
   pd->sprite->addSprite(_chunk->m_bkgSprite[_zoom]);
-  if (getZoom() > 1) {
-    for (uint32_t i = 0; i < _chunk->m_nBuildings; ++i) {
+  for (uint32_t i = 0; i < _chunk->m_nBuildings; ++i) {
+    if (_chunk->m_buildings[i]->m_type != kConveyor || getZoom() == 2) {
       pd->sprite->addSprite(_chunk->m_buildings[i]->m_sprite[_zoom]);
     }
   }

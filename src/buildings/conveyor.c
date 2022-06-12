@@ -62,7 +62,7 @@ void assignNeighborsConveyor(struct Building_t* _building) {
   struct Location_t* below;
   struct Location_t* left;
   struct Location_t* right;
-  getBuildingNeighbors(_building, &above, &below, &left, &right);
+  getBuildingNeighbors(_building, 1, &above, &below, &left, &right);
 
   if (_building->m_subType.conveyor == kBelt) {
     switch (_building->m_dir) {

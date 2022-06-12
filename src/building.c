@@ -7,6 +7,7 @@
 #include "buildings/conveyor.h"
 #include "buildings/plant.h"
 #include "buildings/extractor.h"
+#include "buildings/special.h"
 
 const int32_t SIZE_BUILDING = TOT_CARGO_OR_BUILDINGS * sizeof(struct Building_t);
 
@@ -79,22 +80,13 @@ void buildingManagerFreeBuilding(struct Building_t* _building) {
   m_buildingSearchLocation = _building->m_index;
 }
 
-
-void buildingSetup(struct Building_t* _building) {
-  switch (_building->m_type) {
-    case kConveyor:; return buildingSetupConveyor(_building);
-    case kPlant:; return buildingSetupPlant(_building);
-    default: break;
-  };
-}
-
-void getBuildingNeighbors(struct Building_t* _building, struct Location_t** _above, struct Location_t** _below, struct Location_t** _left, struct Location_t** _right) {
+void getBuildingNeighbors(struct Building_t* _building, int8_t _offset, struct Location_t** _above, struct Location_t** _below, struct Location_t** _left, struct Location_t** _right) {
   uint16_t locX = _building->m_location->m_x;
   uint16_t locY = _building->m_location->m_y;;
-  (*_above) = getLocation(locX, locY - 1);
-  (*_below) = getLocation(locX, locY + 1);
-  (*_left)  = getLocation(locX - 1, locY);
-  (*_right) = getLocation(locX + 1, locY);
+  (*_above) = getLocation(locX, locY - _offset);
+  (*_below) = getLocation(locX, locY + _offset);
+  (*_left)  = getLocation(locX - _offset, locY);
+  (*_right) = getLocation(locX + _offset, locY);
 }
 
 void assignNeighbors(struct Building_t* _building) {
@@ -103,6 +95,17 @@ void assignNeighbors(struct Building_t* _building) {
     case kConveyor:; return assignNeighborsConveyor(_building);
     case kPlant:; return assignNeighborsPlant(_building);
     case kExtractor:; return assignNeighborsExtractor(_building);
+    case kSpecial:; return assignNeighborsSpecial(_building);
+    default: break;
+  };
+}
+
+void buildingSetup(struct Building_t* _building) {
+  switch (_building->m_type) {
+    case kConveyor:; return buildingSetupConveyor(_building);
+    case kPlant:; return buildingSetupPlant(_building);
+    case kExtractor:; return buildingSetupExtractor(_building);
+    case kSpecial:; return buildingSetupSpecial(_building);
     default: break;
   };
 }
@@ -112,6 +115,7 @@ void assignUpdate(struct Building_t* _building) {
     case kConveyor:; _building->m_updateFn = &conveyorUpdateFn; break;
     case kPlant:; _building->m_updateFn = &plantUpdateFn; break;
     case kExtractor:; _building->m_updateFn = &extractorUpdateFn; break;
+    case kSpecial:; _building->m_updateFn = &specialUpdateFn; break;
     default: break;
   }
 }
@@ -122,6 +126,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     case kConveyor:; canBePlaced = canBePlacedConveyor(_loc); break;
     case kPlant:;  canBePlaced = canBePlacedPlant(_loc); break;
     case kExtractor:;  canBePlaced = canBePlacedExtractor(_loc); break;
+    case kSpecial:;  canBePlaced = canBePlacedSpecial(_loc); break;
     case kFactory:;  break;
     case kNoBuilding:; case kNBuildingTypes:; canBePlaced = false; break;
   }
@@ -142,6 +147,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     case kConveyor:; building->m_subType.conveyor = _subType.conveyor; break;
     case kPlant:; building->m_subType.plant = _subType.plant; break;
     case kExtractor:; building->m_subType.extractor = _subType.extractor; break;
+    case kSpecial:; building->m_subType.special = _subType.special; break;
     case kFactory:; building->m_subType.factory = _subType.factory; break;
     case kNoBuilding:; case kNBuildingTypes:; break;
   }
@@ -166,10 +172,14 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     chunkAddBuilding(_loc->m_chunk, building); // Careful, no de-duplication in here, for speed
   }
 
-  //pd->system->logToConsole("ADD TO CHUNK: %i %i with %i sprites", chunk->m_x, chunk->m_y, chunk->m_nLocations);
 
-  // Bake into the background 
-  renderChunkBackgroundImage(_loc->m_chunk);
+  // Bake into the background
+  if (_type >= kExtractor) {
+    //pd->system->logToConsole("ADD TO CHUNK: %i %i, new:%i", _loc->m_chunk->m_x, _loc->m_chunk->m_y, newToChunk);
+    renderChunkBackgroundImageAround(_loc->m_chunk);
+  } else {
+    renderChunkBackgroundImage(_loc->m_chunk);
+  }
   updateRenderList();
 
   return true;

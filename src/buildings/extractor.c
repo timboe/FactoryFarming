@@ -11,38 +11,48 @@ void extractorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoo
 }
 
 bool canBePlacedExtractor(struct Location_t* _loc) {
-  struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
-  if (t->m_tile > FLOOR_TILES) return false;
-  if (_loc->m_building != NULL) return false;
+  for (int32_t x = -1; x < 2; ++x) {
+    for (int32_t y = -1; y < 2; ++y) {
+      struct Tile_t* t = getTile(_loc->m_x + 1, _loc->m_y + 1);
+      if (t->m_tile > FLOOR_TILES) return false;
+      if (getLocation(x, y)->m_building != NULL) return false;
+    }
+  }
   return true;
 }
 
 void assignNeighborsExtractor(struct Building_t* _building) {
-  return;
   struct Location_t* above;
   struct Location_t* below;
   struct Location_t* left;
   struct Location_t* right;
-  getBuildingNeighbors(_building, &above, &below, &left, &right);
-  _building->m_next[0] = above;
-  _building->m_next[1] = right;
-  _building->m_next[2] = below;
-  _building->m_next[3] = left;
-
+  getBuildingNeighbors(_building, 2, &above, &below, &left, &right);
+  switch (_building->m_dir) {
+    case SN:; _building->m_next[0] = above; break;
+    case WE:; _building->m_next[0] = right; break;
+    case NS:; _building->m_next[0] = below; break;
+    case EW:; _building->m_next[0] = left; break;
+    case kDirN:; break;
+  }
 }
 
 void buildingSetupExtractor(struct Building_t* _building) {
-  return;
-
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
-    switch (_building->m_subType.plant) {
-      case kCarrotPlant:; _building->m_image[zoom] = getSprite16(10, 8, zoom); break;
-      case kAppleTree:;   _building->m_image[zoom] = getSprite16(8,  8, zoom); break;
+    switch (_building->m_subType.extractor) {
+      case kCropHarvester:; _building->m_image[zoom] = getSprite48(0 + _building->m_dir, 0, zoom); break;
+      case kPump:;          _building->m_image[zoom] = getSprite48(0 + _building->m_dir, 1, zoom); break;
       case kNPlantSubTypes:; default: break;
     }
+
+    PDRect bound = {.x = 0, .y = 0, .width = EXTRACTOR_PIX*zoom, .height = EXTRACTOR_PIX*zoom};
+    if (_building->m_sprite[zoom] == NULL) _building->m_sprite[zoom] = pd->sprite->newSprite();
+    pd->sprite->setCollideRect(_building->m_sprite[zoom], bound);
+    pd->sprite->moveTo(_building->m_sprite[zoom], (_building->m_pix_x - EXTRACTOR_PIX/2)*zoom, (_building->m_pix_y - EXTRACTOR_PIX/2)*zoom);
   }
 
-  clearLocation(_building->m_location, /*cargo*/ true, /*building*/ false);
-
-
+  for (int32_t x = _building->m_location->m_x - 1; x < _building->m_location->m_x + 2; ++x) {
+    for (int32_t y = _building->m_location->m_y - 1; y < _building->m_location->m_y + 2; ++y) {
+      clearLocation(getLocation(x, y), /*cargo*/ true, /*building*/ false);
+    }
+  }
 }

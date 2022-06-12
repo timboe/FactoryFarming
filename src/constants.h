@@ -7,7 +7,12 @@
 #define NEAR_TICK_AMOUNT 1
 #define FAR_TICK_AMOUNT 8
 
+#define TICKS_PER_SEC (NEAR_TICK_AMOUNT*TICK_FREQUENCY/NEAR_TICK_FREQUENCY)
+
 #define TILE_PIX 16
+
+#define EXTRACTOR_PIX (3*TILE_PIX)
+
 
 #define DEVICE_PIX_X 400
 #define DEVICE_PIX_Y 240
@@ -34,8 +39,8 @@
 #define SHEET16_SIZE_Y 16
 #define SHEET16_SIZE (SHEET16_SIZE_X*SHEET16_SIZE_Y)
 
-#define SHEET48_SIZE_X 3
-#define SHEET48_SIZE_Y 3
+#define SHEET48_SIZE_X 4
+#define SHEET48_SIZE_Y 4
 #define SHEET48_SIZE (SHEET48_SIZE_X*SHEET48_SIZE_Y)
 
 #define TOT_CARGO_OR_BUILDINGS 4096
@@ -71,8 +76,8 @@
 #define Z_INDEX_UI_RIGHT 32765
 #define Z_INDEX_UI_BOTTOM 32766
 #define Z_INDEX_MAX 32767
-#define Z_INDEX_CARGO 32765
-#define Z_INDEX_BLUEPRINT 32766
+#define Z_INDEX_CARGO 32763
+#define Z_INDEX_BLUEPRINT 32764
 #define Z_INDEX_CONVEYOR 1
 #define Z_INDEX_FLOOR -1
 
@@ -86,3 +91,6 @@
 
 // 4 inputs plus 1 output. CAUTION: changing this currently requires manual change to de/serialisation
 #define MAX_STORE 5
+
+// Number of crops before a plot upgrades to farmland
+#define N_CROPS_BEFORE_FARMLAND 4

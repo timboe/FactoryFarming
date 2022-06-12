@@ -86,13 +86,14 @@ void clickHandleMenuOptionSelected(uint32_t _buttonPressed) {
     // noop
   } else if (kButtonA    == _buttonPressed) {
     switch (getUISelectedID()) {
-      case kMenuConveyor:; newBuilding(getPlayerLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kBelt}   ); break;
-      case kMenuSplitI:;   newBuilding(getPlayerLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kSplitI} ); break;
-      case kMenuSplitL:;   newBuilding(getPlayerLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kSplitL} ); break;
-      case kMenuSplitT:;   newBuilding(getPlayerLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kSplitT} ); break;
-      case kMenuApple:;    newBuilding(getPlayerLocation(), getUISelectedRotation(), kPlant, (union kSubType) {.plant = kAppleTree} ); break;
-      case kMenuCarrot:;   newBuilding(getPlayerLocation(), getUISelectedRotation(), kPlant, (union kSubType) {.plant = kCarrotPlant} ); break;
-      case kMenuBin:;      clearLocation(getPlayerLocation(), true, true); break; 
+      case kMenuConveyor:; newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kBelt}   ); break;
+      case kMenuSplitI:;   newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kSplitI} ); break;
+      case kMenuSplitL:;   newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kSplitL} ); break;
+      case kMenuSplitT:;   newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kSplitT} ); break;
+      case kMenuApple:;    newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kPlant, (union kSubType) {.plant = kAppleTree} ); break;
+      case kMenuCarrot:;   newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kPlant, (union kSubType) {.plant = kCarrotPlant} ); break;
+      case kMenuExtractor:;newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kExtractor, (union kSubType) {.extractor = kCropHarvester} ); break;
+      case kMenuBin:;      clearLocation(getPlayerLookingAtLocation(), true, true); break; 
     }
   } else if (kButtonB    == _buttonPressed) {
     setGameMode(kMenuSelect);

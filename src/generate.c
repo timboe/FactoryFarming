@@ -72,15 +72,118 @@ float pointDist(int32_t _x, int32_t _y, int32_t _x1, int32_t _y1, int32_t _x2, i
   return sqrt(dx * dx + dy * dy);
 }
 
-#define SPAWN_START_X 8
-#define SPAWN_START_Y 8
-#define SPAWN_END_X 16
-#define SPAWN_END_Y 8
-#define SPAWN_RADIUS 6
+void renderChunkBackgroundImageAround(struct Chunk_t* _chunk) {
+  for (int32_t x = _chunk->m_x - 1; x < _chunk->m_x + 2; ++x) {
+    for (int32_t y = _chunk->m_y - 1; y < _chunk->m_y + 2; ++y) {
+      struct Chunk_t* toRedraw = getChunk(x,y);
+      pd->system->logToConsole("REDRAW %i %i", toRedraw->m_x, toRedraw->m_y);
+      renderChunkBackgroundImage(toRedraw);
+    }
+  }
+}
+
+void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
+  pd->graphics->pushContext(_chunk->m_bkgImage[1]);
+  pd->graphics->setDrawMode(kDrawModeCopy);
+  pd->graphics->fillRect(0, 0, CHUNK_PIX_X, CHUNK_PIX_Y, kColorWhite);
+
+  // Draw background
+  for (uint16_t v = 0; v < TILES_PER_CHUNK_Y; ++v) {
+    for (uint16_t u = 0; u < TILES_PER_CHUNK_X; ++u) {
+      struct Tile_t* t = getTileInChunk(_chunk, u, v);
+      LCDBitmap* b = getSprite16_byidx(t->m_tile, 1);
+      pd->graphics->drawBitmap(b, u * TILE_PIX, v * TILE_PIX, kBitmapUnflipped);
+    }
+  }
+
+  #ifdef DEV
+  setRoobert24();
+  pd->graphics->drawRect(0, 0, CHUNK_PIX_X, CHUNK_PIX_Y, kColorBlack);
+  static char text[16];
+  snprintf(text, 16, "(%u,%u)", _chunk->m_x, _chunk->m_y);
+  pd->graphics->drawText(text, 16, kASCIIEncoding, TILE_PIX, TILE_PIX);
+  #endif
+
+  // Shift from Sprite to Bitmap draw coords
+  const int16_t off16_x = (_chunk->m_x * CHUNK_PIX_X) + TILE_PIX/2;
+  const int16_t off16_y = (_chunk->m_y * CHUNK_PIX_Y) + TILE_PIX/2;
+
+  const int16_t off48_x = (_chunk->m_x * CHUNK_PIX_X) + 3*TILE_PIX/2;
+  const int16_t off48_y = (_chunk->m_y * CHUNK_PIX_Y) + 3*TILE_PIX/2;
+
+  // Render farmland
+  for (uint32_t i = 0; i < _chunk->m_nBuildings; ++i) {
+    struct Building_t* building = _chunk->m_buildings[i];
+    if (building->m_type == kPlant && building->m_mode >= N_CROPS_BEFORE_FARMLAND) { // Draw farm land
+      pd->graphics->drawBitmap(getSprite16(7,12,1), building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
+    }
+  }
+
+  // Render wetness
+  for (uint16_t v = 0; v < TILES_PER_CHUNK_Y; ++v) {
+    for (uint16_t u = 0; u < TILES_PER_CHUNK_X; ++u) {
+      struct Tile_t* t = getTileInChunk(_chunk, u, v);
+      if (t->m_wetness > 0 && t->m_wetness < 8) { // If wet, but not actually water
+        for (int32_t w = 0; w < (8 - t->m_wetness); ++w) {
+          pd->graphics->drawBitmap(getSprite16(12 + (w/2 + v*u)%4, 2, 1), u * TILE_PIX, v * TILE_PIX, kBitmapUnflipped);
+        }
+      }
+    }
+  }
+
+  // Render locations 
+  for (uint32_t i = 0; i < _chunk->m_nBuildings; ++i) {
+    struct Building_t* building = _chunk->m_buildings[i];
+    if (building->m_type != kNoBuilding && building->m_image[1]) {
+      if (building->m_type >= kExtractor) {
+        pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - off48_x, building->m_pix_y - off48_y, kBitmapUnflipped);
+      } else {
+        pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
+      }
+    }
+  }
+
+  // Render from nearby chunk loations
+  for (int32_t x = -1; x < 2; ++x) {
+    for (int32_t y = -1; y < 2; ++y) {
+      if (!x && !y) continue;
+      struct Chunk_t* otherChunk = getChunk(_chunk->m_x + x, _chunk->m_y + y);
+      int32_t chunkOffX = (otherChunk->m_x * CHUNK_PIX_X) + (3*TILE_PIX/2) + (CHUNK_PIX_X * x * -1);
+      int32_t chunkOffY = (otherChunk->m_y * CHUNK_PIX_Y) + (3*TILE_PIX/2) + (CHUNK_PIX_Y * y * -1);
+
+      //int32_t chunkOffX = (otherChunk->m_x * CHUNK_PIX_X) + (3*TILE_PIX/2) ;
+      //int32_t chunkOffY = (otherChunk->m_y * CHUNK_PIX_Y) + (3*TILE_PIX/2) - CHUNK_PIX_Y;
+
+      //  pd->system->logToConsole("OtherChunk %i %i: OCBs %i", otherChunk->m_x, otherChunk->m_y, otherChunk->m_nBuildings);
+      for (uint32_t i = 0; i < otherChunk->m_nBuildings; ++i) {
+        struct Building_t* building = otherChunk->m_buildings[i];
+        if (building->m_type >= kExtractor && building->m_image[1]) {
+          pd->system->logToConsole("render to nearby chunk (%i %i), off is %i %i, coords are %i %i",otherChunk->m_x, otherChunk->m_y, chunkOffX, chunkOffY, building->m_pix_x - chunkOffX, building->m_pix_y - chunkOffY);
+          pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - chunkOffX, building->m_pix_y - chunkOffY, kBitmapUnflipped);
+        }
+      }
+    }
+  }
+
+
+  pd->graphics->popContext();
+
+  for (uint32_t zoom = 2; zoom < ZOOM_LEVELS; ++zoom) {
+    pd->graphics->pushContext(_chunk->m_bkgImage[zoom]);
+    pd->graphics->drawScaledBitmap(_chunk->m_bkgImage[1], 0, 0, (float)zoom, (float)zoom);
+    pd->graphics->popContext();
+  }
+
+}
+
+#define SPAWN_START_X 6
+#define SPAWN_Y TILES_PER_CHUNK_Y
+#define SPAWN_END_X 33
+#define SPAWN_RADIUS 4
 void addSpawn() {
   for (int32_t x = 0; x < SPAWN_END_X+SPAWN_RADIUS; ++x) {
-    for (int32_t y = 0; y < SPAWN_END_Y+SPAWN_RADIUS; ++y) {
-      if (pointDist(x, y, SPAWN_START_X, SPAWN_START_Y, SPAWN_END_X, SPAWN_END_Y) < SPAWN_RADIUS) {
+    for (int32_t y = 0; y < SPAWN_Y+SPAWN_RADIUS; ++y) {
+      if (pointDist(x, y, SPAWN_START_X, SPAWN_Y, SPAWN_END_X, SPAWN_Y) < SPAWN_RADIUS) {
         getTile(x, y)->m_tile = getSprite16_idx(8, 2) + rand() % 4;
       }
     }
@@ -328,52 +431,7 @@ void doLakesAndRivers() {
   
 }
 
-void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
-  pd->graphics->pushContext(_chunk->m_bkgImage[1]);
-  pd->graphics->setDrawMode(kDrawModeCopy);
-  pd->graphics->fillRect(0, 0, CHUNK_PIX_X, CHUNK_PIX_Y, kColorWhite);
-  for (uint16_t v = 0; v < TILES_PER_CHUNK_Y; ++v) {
-    for (uint16_t u = 0; u < TILES_PER_CHUNK_X; ++u) {
-      struct Tile_t* t = getTileInChunk(_chunk, u, v);
-      LCDBitmap* b = getSprite16(t->m_tile, 0, 1); // Top row of sprite sheet
-      pd->graphics->drawBitmap(b, u * TILE_PIX, v * TILE_PIX, kBitmapUnflipped);
-      if (t->m_wetness > 0 && t->m_wetness < 8) { // If wet, but not actually water
-        for (int32_t w = 0; w < (8 - t->m_wetness); ++w) {
-          pd->graphics->drawBitmap(getSprite16(12 + (w/2 + v*u)%4, 2, 1), u * TILE_PIX, v * TILE_PIX, kBitmapUnflipped);
-        }
-      }
-    }
-  }
 
-  #ifdef DEV
-  setRoobert24();
-  pd->graphics->drawRect(0, 0, CHUNK_PIX_X, CHUNK_PIX_Y, kColorBlack);
-  static char text[16];
-  snprintf(text, 16, "(%u,%u)", _chunk->m_x, _chunk->m_y);
-  pd->graphics->drawText(text, 16, kASCIIEncoding, TILE_PIX, TILE_PIX);
-  #endif
-
-  // Shift from Sprite to Bitmap draw coords
-  const int16_t off_x = (_chunk->m_x * CHUNK_PIX_X) + TILE_PIX/2;
-  const int16_t off_y = (_chunk->m_y * CHUNK_PIX_Y) + TILE_PIX/2;
-
-  // Render locations into the background image
-  for (uint32_t i = 0; i < _chunk->m_nBuildings; ++i) {
-    struct Building_t* building = _chunk->m_buildings[i];
-    if (building->m_type != kNoBuilding && building->m_image[1]) {
-      pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - off_x, building->m_pix_y - off_y, kBitmapUnflipped);
-    }
-  }
-
-  pd->graphics->popContext();
-
-  for (uint32_t zoom = 2; zoom < ZOOM_LEVELS; ++zoom) {
-    pd->graphics->pushContext(_chunk->m_bkgImage[zoom]);
-    pd->graphics->drawScaledBitmap(_chunk->m_bkgImage[1], 0, 0, (float)zoom, (float)zoom);
-    pd->graphics->popContext();
-  }
-
-}
 
 void generateSpriteSetup(struct Chunk_t* _chunk) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
@@ -488,6 +546,12 @@ void generate() {
   addBiome(TOT_TILES_X/2, TOT_TILES_Y/2, getSprite16_idx(8,1));
 
   doLakesAndRivers();
+
+  const uint16_t startX = TILES_PER_CHUNK_X/2;
+  newBuilding(getLocation_noCheck(startX,      TILES_PER_CHUNK_Y), 0, kSpecial, (union kSubType) {.special = kShop} );
+  newBuilding(getLocation_noCheck(startX + 9,  TILES_PER_CHUNK_Y), 0, kSpecial, (union kSubType) {.special = kSellBox} );
+  newBuilding(getLocation_noCheck(startX + 18, TILES_PER_CHUNK_Y), 0, kSpecial, (union kSubType) {.special = kExportBox} );
+  newBuilding(getLocation_noCheck(startX + 27, TILES_PER_CHUNK_Y), 0, kSpecial, (union kSubType) {.special = kImportBox} );
 
   doWetness();
 

@@ -17,6 +17,8 @@ struct Tile_t* getTile(int32_t _x, int32_t _y);
 
 void renderChunkBackgroundImage(struct Chunk_t* _chunk);
 
+void renderChunkBackgroundImageAround(struct Chunk_t* _chunk);
+
 void setChunkBackgrounds(void);
 
 bool tileIsObstacle(struct Tile_t* _tile);

@@ -4,7 +4,8 @@
 // Building direction
 enum kDir{SN, WE, NS, EW, kDirN};
 
-enum kBuildingType {kNoBuilding, kConveyor, kPlant, kExtractor, kFactory, kNBuildingTypes};
+// All 48*48 should come after kExtractor
+enum kBuildingType {kNoBuilding, kConveyor, kPlant, kExtractor, kFactory, kSpecial, kNBuildingTypes};
 
 ///
 
@@ -16,11 +17,15 @@ enum kExtractorSubType{kCropHarvester, kPump, kNExtractorSubTypes};
 
 enum kFactorySubType{kMakeSmall, kNFactorySubTypes};
 
+enum kSpecialSubType{kShop, kSellBox, kExportBox, kImportBox, kNSpecialSubTypes};
+
+
 union kSubType {
    enum kConvSubType conveyor;
    enum kPlantSubType plant;
    enum kExtractorSubType extractor;
    enum kFactorySubType factory;
+   enum kSpecialSubType special; 
 };
 
 ///
@@ -38,7 +43,7 @@ struct Building_t{
   uint16_t m_pix_y;
   int16_t m_progress; // Counts towards the location's progress
   uint16_t m_mode; // Conveyor: where next. Filter: my filter.  Plant: how many grown
-  uint8_t m_stored[MAX_STORE]; // For locations which store/produce. Location 0 is always for produced items
+  uint8_t m_stored[MAX_STORE]; // For locations which store/produce. Location 0 is always for produced items. Plant: i=0,1 Used for cargo animation.
 
   // Transient
   LCDSprite* m_sprite[ZOOM_LEVELS]; // Index 0 not used - OWNED
@@ -61,7 +66,7 @@ void buildingManagerFreeBuilding(struct Building_t* _buildings);
 
 bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _type, union kSubType _subType);
 
-void getBuildingNeighbors(struct Building_t* _building, struct Location_t** _above, struct Location_t** _below, struct Location_t** _left, struct Location_t** _right);
+void getBuildingNeighbors(struct Building_t* _building, int8_t _offset, struct Location_t** _above, struct Location_t** _below, struct Location_t** _left, struct Location_t** _right);
 
 void initBuilding(void);
 
