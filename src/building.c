@@ -5,6 +5,8 @@
 #include "render.h"
 #include "constants.h"
 #include "buildings/conveyor.h"
+#include "buildings/plant.h"
+
 
 const int32_t SIZE_BUILDING = TOT_CARGO_OR_BUILDINGS * sizeof(struct Building_t);
 
@@ -81,8 +83,18 @@ void buildingManagerFreeBuilding(struct Building_t* _building) {
 void buildingSpriteSetup(struct Building_t* _building) {
   switch (_building->m_type) {
     case kConveyor:; return buildingSpriteSetupConveyor(_building);
+    case kPlant:; return buildingSpriteSetupPlant(_building);
     default: break;
   };
+}
+
+void getBuildingNeighbors(struct Building_t* _building, struct Location_t** _above, struct Location_t** _below, struct Location_t** _left, struct Location_t** _right) {
+  uint16_t locX = _building->m_location->m_x;
+  uint16_t locY = _building->m_location->m_y;;
+  (*_above) = getLocation(locX, locY - 1);
+  (*_below) = getLocation(locX, locY + 1);
+  (*_left)  = getLocation(locX - 1, locY);
+  (*_right) = getLocation(locX + 1, locY);
 }
 
 void assignNeighbors(struct Building_t* _building) {
@@ -95,7 +107,8 @@ void assignNeighbors(struct Building_t* _building) {
   struct Location_t* left  = getLocation(locX - 1, locY);
   struct Location_t* right = getLocation(locX + 1, locY);
   switch (_building->m_type) {
-    case kConveyor:; return assignNeighborsConveyor(_building, above, below, left, right);
+    case kConveyor:; return assignNeighborsConveyor(_building);
+    case kPlant:; return assignNeighborsPlant(_building);
     default: break;
   };
 }
@@ -103,6 +116,7 @@ void assignNeighbors(struct Building_t* _building) {
 void assignUpdate(struct Building_t* _building) {
   switch (_building->m_type) {
     case kConveyor:; _building->m_updateFn = &conveyorUpdateFn; break;
+    case kPlant:; _building->m_updateFn = &plantUpdateFn; break;
     default: break;
   }
 }
@@ -111,7 +125,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   bool canBePlaced = false;
   switch (_type) {
     case kConveyor:; canBePlaced = canBePlacedConveyor(_loc); break;
-    case kPlant:;  break;
+    case kPlant:;  canBePlaced = canBePlacedPlant(_loc); break;
     case kExtractor:;  break;
     case kFactory:;  break;
     case kNoBuilding:; case kNBuildingTypes:; canBePlaced = false; break;
@@ -140,7 +154,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   building->m_progress = 0;
   building->m_mode = 0;
   for (int32_t i = 0; i < MAX_STORE; ++i) building->m_stored[i] = 0;
-  for (int32_t i = 0; i < 3; ++i) {
+  for (int32_t i = 0; i < 4; ++i) {
     building->m_next[i] = NULL;
     building->m_nextDir[i] = SN;
   }

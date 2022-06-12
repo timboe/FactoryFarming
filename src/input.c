@@ -90,8 +90,8 @@ void clickHandleMenuOptionSelected(uint32_t _buttonPressed) {
       case kMenuSplitI:;   newBuilding(getPlayerLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kSplitI} ); break;
       case kMenuSplitL:;   newBuilding(getPlayerLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kSplitL} ); break;
       case kMenuSplitT:;   newBuilding(getPlayerLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kSplitT} ); break;
-      case kMenuApple:;    newCargo(getPlayerLocation(), kApple, true); break;
-      case kMenuCheese:;   newCargo(getPlayerLocation(), kCheese, true);  break;
+      case kMenuApple:;    newBuilding(getPlayerLocation(), getUISelectedRotation(), kPlant, (union kSubType) {.plant = kAppleTree} ); break;
+      case kMenuCarrot:;   newBuilding(getPlayerLocation(), getUISelectedRotation(), kPlant, (union kSubType) {.plant = kCarrotPlant} ); break;
       case kMenuBin:;      clearLocation(getPlayerLocation()); break; 
     }
   } else if (kButtonB    == _buttonPressed) {

@@ -14,9 +14,9 @@ uint16_t m_deserialiseXCargo = 0, m_deserialiseYCargo = 0;
 
 struct Cargo_t* m_cargos;
 
-void cargoSpriteSetup(struct Cargo_t* _cargo, uint16_t _x, uint16_t _y, uint16_t _ix, uint16_t _iy);
+void cargoSpriteSetup(struct Cargo_t* _cargo, uint16_t _x, uint16_t _y, uint16_t _idx);
 
-void getCargoixiy(enum kCargoType _type, uint16_t* _ix, uint16_t* _iy);
+uint16_t getCargo_idx(enum kCargoType _type);
 
 const char* toStringCargo(enum kCargoType _type);
 
@@ -64,25 +64,27 @@ void cargoManagerFreeCargo(struct Cargo_t* _cargo) {
   --m_nCargo;
 }
 
-void cargoSpriteSetup(struct Cargo_t* _cargo, uint16_t _x, uint16_t _y, uint16_t _ix, uint16_t _iy) {
+void cargoSpriteSetup(struct Cargo_t* _cargo, uint16_t _x, uint16_t _y, uint16_t _idx) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
     if (_cargo->m_sprite[zoom] == NULL) {
       _cargo->m_sprite[zoom] = pd->sprite->newSprite();
     }
     pd->sprite->setBounds(_cargo->m_sprite[zoom], bound);
-    pd->sprite->setImage(_cargo->m_sprite[zoom], getSprite16(_ix, _iy, zoom), kBitmapUnflipped);
+    pd->sprite->setImage(_cargo->m_sprite[zoom], getSprite16_byidx(_idx, zoom), kBitmapUnflipped);
     pd->sprite->moveTo(_cargo->m_sprite[zoom], _x * zoom, _y * zoom);
     pd->sprite->setZIndex(_cargo->m_sprite[zoom], Z_INDEX_CARGO);
   }
 }
 
-void getCargoixiy(enum kCargoType _type, uint16_t* _ix, uint16_t* _iy) {
+uint16_t getCargo_idx(enum kCargoType _type) {
   switch (_type) {
-    case kApple:;  (*_ix) = 8; (*_iy) = 7; break;
-    case kCheese:; (*_ix) = 9; (*_iy) = 7; break;
-    case kNoCargo:;
+    case kApple:;  return getSprite16_idx(8, 7);
+    case kCheese:; return getSprite16_idx(9, 7);
+    case kCarrot:; return getSprite16_idx(10, 7);
+    case kNoCargo:; case kNCargoType:; 
   }
+  return getSprite16_idx(0, 2);
 }
 
 bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addedByPlayer) {
@@ -96,13 +98,10 @@ bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addedByPlaye
     return false;
   }
 
-  uint16_t ix = 0, iy = 0;
-  getCargoixiy(_type, &ix, &iy);
   cargoSpriteSetup(cargo, 
     TILE_PIX*_loc->m_x + TILE_PIX/2.0,
     TILE_PIX*_loc->m_y + TILE_PIX/2.0,
-    ix,
-    iy);
+    getCargo_idx(_type));
 
   _loc->m_cargo = cargo;
   if (_loc->m_building) {
@@ -182,13 +181,10 @@ void deserialiseValueCargo(json_decoder* jd, const char* _key, json_value _value
 void* deserialiseStructDoneCargo(json_decoder* jd, const char* _name, json_value_type _type) {
   struct Cargo_t* cargo = &(m_cargos[m_deserialiseIndexCargo]);
 
-  uint16_t ix = 0, iy = 0;
-  getCargoixiy(cargo->m_type, &ix, &iy);
   cargoSpriteSetup(cargo, 
     m_deserialiseXCargo,
     m_deserialiseYCargo,
-    ix,
-    iy);
+    getCargo_idx(cargo->m_type));
   ++m_nCargo;
 
   pd->system->logToConsole("-- Cargo #%i, [%i] decoded to  %s, (%i, %i)", m_nCargo, m_deserialiseIndexCargo, toStringCargo(cargo->m_type), m_deserialiseXCargo, m_deserialiseYCargo);

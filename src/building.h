@@ -36,16 +36,16 @@ struct Building_t{
   enum kDir m_dir; // Direction
   uint16_t m_pix_x; // Note: centre
   uint16_t m_pix_y;
-  uint16_t m_progress; // Counts towards the location's progress
-  uint16_t m_mode; // For locations which alter between modes, such as a splitter
+  int16_t m_progress; // Counts towards the location's progress
+  uint16_t m_mode; // Conveyor: where next. Plant: how many grown
   uint8_t m_stored[MAX_STORE]; // For locations which store/produce. Location 0 is always for produced items
 
   // Transient
   LCDSprite* m_sprite[ZOOM_LEVELS]; // Index 0 not used - OWNED
   LCDBitmap* m_image[ZOOM_LEVELS]; // Index 0 not used
-  struct Location_t* m_next[3]; // Where to send outputs, up to three (splitters)
+  struct Location_t* m_next[4]; // Where to send outputs
   struct Location_t* m_location; // Building's location
-  enum kDir m_nextDir[3];// Where to animate outputs, up to three (splitters)
+  enum kDir m_nextDir[4];// Where to animate outputs (conveyor only)
   void (*m_updateFn)(struct Building_t*, uint8_t, uint8_t);
 };
 
@@ -60,6 +60,8 @@ struct Building_t* buildingManagerGetByIndex(uint16_t _index);
 void buildingManagerFreeBuilding(struct Building_t* _buildings);
 
 bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _type, union kSubType _subType);
+
+void getBuildingNeighbors(struct Building_t* _building, struct Location_t** _above, struct Location_t** _below, struct Location_t** _left, struct Location_t** _right);
 
 void initBuilding(void);
 

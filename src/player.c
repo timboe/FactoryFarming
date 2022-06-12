@@ -182,11 +182,14 @@ bool movePlayer() {
     quadrant = SW;
   }
 
-  if (chunkX != m_currentChunk->m_x || chunkY != m_currentChunk->m_y || m_quadrant != quadrant) {
+  bool chunkChange = (chunkX != m_currentChunk->m_x || chunkY != m_currentChunk->m_y);
+  if (chunkChange || m_quadrant != quadrant) {
     m_currentChunk = getChunk(chunkX, chunkY); // TODO this can still go out-of-bounds (how?), ideally should be able to use getChunk_noCheck here
     m_quadrant = quadrant;
-    pd->system->logToConsole("CHUNKCHANGE %u %u (%u %u)", chunkX, chunkY, subChunkX, subChunkY);
-    updateRenderList();
+    if (zoom == 2 || chunkChange) { // When zoomed out, only need to call when actually changing chunks
+      pd->system->logToConsole("CHUNKCHANGE %u %u (%u %u)", chunkX, chunkY, subChunkX, subChunkY);
+      updateRenderList();
+    }
   }
 
   struct Location_t* wasAt = m_currentLocation;

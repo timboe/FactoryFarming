@@ -5,7 +5,7 @@
 #include "cargo.h"
 #include "building.h"
 
-uint16_t m_UIIcons[] = {0,3,  0,4,  4,3,  4,4,  8,7,  9,7,  4,2,  1,2};
+uint16_t m_UIIcons[] = {0,3,  0,4,  4,3,  4,4,  8,7,  10,7,  4,2,  1,2};
 
 enum kGameMode m_mode;
 
@@ -109,7 +109,7 @@ void updateBlueprint() {
       case kMenuSplitL:;    pd->sprite->setImage(bp, getSprite16(m_UISelectedRotation+4, 3, zoom),    kBitmapUnflipped); setPlayerLookingAtOffset(0); break;
       case kMenuSplitT:;    pd->sprite->setImage(bp, getSprite16(m_UISelectedRotation+4, 4, zoom),    kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
       case kMenuApple:;     pd->sprite->setImage(bp, getSprite16(m_UIIcons[8], m_UIIcons[9], zoom),   kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
-      case kMenuCheese:;    pd->sprite->setImage(bp, getSprite16(m_UIIcons[10], m_UIIcons[11], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
+      case kMenuCarrot:;    pd->sprite->setImage(bp, getSprite16(m_UIIcons[10], m_UIIcons[11], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
       case kMenuExtractor:; pd->sprite->setImage(bp, getSprite48(m_UISelectedRotation, 0 , zoom),     kBitmapUnflipped); setPlayerLookingAtOffset(2); break;     
       case kMenuBin:;       pd->sprite->setImage(bp, getSprite16(m_UIIcons[14], m_UIIcons[15], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(1); break;     
     }
@@ -192,8 +192,8 @@ void drawUIBottom() {
       case kMenuSplitI:;    snprintf(text, 128, "'I' Conveyor Splitter (%s)", getRotationAsString()); break;
       case kMenuSplitL:;    snprintf(text, 128, "'L' Conveyor Splitter (%s)", getRotationAsString()); break;
       case kMenuSplitT:;    snprintf(text, 128, "'T' Conveyor Splitter (%s)", getRotationAsString()); break;
-      case kMenuApple:;     snprintf(text, 128, "Apples, put them on a conveyor"); break;
-      case kMenuCheese:;    snprintf(text, 128, "Cheese (Gouda), put it on a conveyor?"); break;
+      case kMenuApple:;     snprintf(text, 128, "Apple tree, makes apples"); break;
+      case kMenuCarrot:;    snprintf(text, 128, "Carrot seeds, grows carrots"); break;
       case kMenuExtractor:; snprintf(text, 128, "Test Building"); break;
       case kMenuBin:;       snprintf(text, 128, "Remove conveyors & cargo"); break;
     }

@@ -57,48 +57,54 @@ bool canBePlacedConveyor(struct Location_t* _loc) {
   return false;
 }
 
-void assignNeighborsConveyor(struct Building_t* _building, struct Location_t* _above, struct Location_t* _below, struct Location_t* _left, struct Location_t* _right) {
+void assignNeighborsConveyor(struct Building_t* _building) {
+  struct Location_t* above;
+  struct Location_t* below;
+  struct Location_t* left;
+  struct Location_t* right;
+  getBuildingNeighbors(_building, &above, &below, &left, &right);
+
   if (_building->m_subType.conveyor == kBelt) {
     switch (_building->m_dir) {
-      case SN:; _building->m_next[0]    = _above;
+      case SN:; _building->m_next[0]    = above;
                 _building->m_nextDir[0] = SN; break;
-      case NS:; _building->m_next[0]    = _below;
+      case NS:; _building->m_next[0]    = below;
                 _building->m_nextDir[0] = NS; break;
-      case WE:; _building->m_next[0]    = _right;
+      case WE:; _building->m_next[0]    = right;
                 _building->m_nextDir[0] = WE; break;
-      case EW:; _building->m_next[0]    = _left;
+      case EW:; _building->m_next[0]    = left;
                 _building->m_nextDir[0] = EW; break;
       case kDirN:; break;
     }
   } else if (_building->m_subType.conveyor == kSplitI) {
     switch (_building->m_dir) {
-      case WE:; case EW:; _building->m_next[0]    = _above; _building->m_next[1]   = _below; 
+      case WE:; case EW:; _building->m_next[0]    = above; _building->m_next[1]    = below; 
                           _building->m_nextDir[0] = SN;    _building->m_nextDir[1] = NS; break;
-      case SN:; case NS:; _building->m_next[0]    = _left;  _building->m_next[1]   = _right;
+      case SN:; case NS:; _building->m_next[0]    = left;  _building->m_next[1]    = right;
                           _building->m_nextDir[0] = EW;    _building->m_nextDir[1] = WE; break;
       case kDirN:; break;
     }
   } else if (_building->m_subType.conveyor == kSplitL) {
     switch (_building->m_dir) {
-      case SN:; _building->m_next[0]    = _above; _building->m_next[1]   = _right;
+      case SN:; _building->m_next[0]    = above; _building->m_next[1]    = right;
                 _building->m_nextDir[0] = SN;    _building->m_nextDir[1] = WE; break;
-      case WE:; _building->m_next[0]    = _right; _building->m_next[1]   = _below;
+      case WE:; _building->m_next[0]    = right; _building->m_next[1]    = below;
                 _building->m_nextDir[0] = WE;    _building->m_nextDir[1] = NS; break;
-      case NS:; _building->m_next[0]    = _below; _building->m_next[1]   = _left;
+      case NS:; _building->m_next[0]    = below; _building->m_next[1]    = left;
                 _building->m_nextDir[0] = NS;    _building->m_nextDir[1] = EW; break;
-      case EW:; _building->m_next[0]    = _left;  _building->m_next[1]   = _above;
+      case EW:; _building->m_next[0]    = left;  _building->m_next[1]    = above;
                 _building->m_nextDir[0] = EW;    _building->m_nextDir[1] = SN; break;
       case kDirN:; break;
     }
   } else if (_building->m_subType.conveyor == kSplitT) {
     switch (_building->m_dir) {
-      case SN:; _building->m_next[0]    = _left;  _building->m_next[1]   = _above;  _building->m_next[2]   = _right;
+      case SN:; _building->m_next[0]    = left;  _building->m_next[1]    = above;  _building->m_next[2]    = right;
                 _building->m_nextDir[0] = EW;    _building->m_nextDir[1] = SN;     _building->m_nextDir[2] = WE; break;
-      case WE:; _building->m_next[0]    = _above; _building->m_next[1]   = _right;  _building->m_next[2]   = _below;
+      case WE:; _building->m_next[0]    = above; _building->m_next[1]    = right;  _building->m_next[2]    = below;
                 _building->m_nextDir[0] = SN;    _building->m_nextDir[1] = WE;     _building->m_nextDir[2] = NS; break;
-      case NS:; _building->m_next[0]    = _right; _building->m_next[1]   = _below;  _building->m_next[2]   = _left; 
+      case NS:; _building->m_next[0]    = right; _building->m_next[1]    = below;  _building->m_next[2]    = left; 
                 _building->m_nextDir[0] = WE;    _building->m_nextDir[1] = NS;     _building->m_nextDir[2] = EW; break;
-      case EW:; _building->m_next[0]    = _below; _building->m_next[1]   = _left;   _building->m_next[2]   = _above;
+      case EW:; _building->m_next[0]    = below; _building->m_next[1]    = left;   _building->m_next[2]    = above;
                 _building->m_nextDir[0] = NS;    _building->m_nextDir[1] = EW;     _building->m_nextDir[2] = SN; break;
       case kDirN:; break;
     }

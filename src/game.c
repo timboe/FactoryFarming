@@ -190,6 +190,7 @@ void menuOptionsCallbackLoad(void* blank) {
   reset();
   load();
   addObstacles();
+  doWetness();
   setChunkBackgrounds();
   updateRenderList();
 }
