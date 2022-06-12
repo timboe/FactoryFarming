@@ -111,7 +111,7 @@ void assignNeighborsConveyor(struct Building_t* _building) {
   }
 }
 
-void buildingSpriteSetupConveyor(struct Building_t* _building) {
+void buildingSetupConveyor(struct Building_t* _building) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
 
     switch (_building->m_subType.conveyor) {

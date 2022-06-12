@@ -6,7 +6,7 @@
 #include "constants.h"
 #include "buildings/conveyor.h"
 #include "buildings/plant.h"
-
+#include "buildings/extractor.h"
 
 const int32_t SIZE_BUILDING = TOT_CARGO_OR_BUILDINGS * sizeof(struct Building_t);
 
@@ -21,7 +21,7 @@ uint16_t m_deserialiseIndexBuilding = 0;
 struct Building_t* m_buildings;
 
 
-void buildingSpriteSetup(struct Building_t* _building);
+void buildingSetup(struct Building_t* _building);
 
 void assignNeighbors(struct Building_t* _building);
 
@@ -80,10 +80,10 @@ void buildingManagerFreeBuilding(struct Building_t* _building) {
 }
 
 
-void buildingSpriteSetup(struct Building_t* _building) {
+void buildingSetup(struct Building_t* _building) {
   switch (_building->m_type) {
-    case kConveyor:; return buildingSpriteSetupConveyor(_building);
-    case kPlant:; return buildingSpriteSetupPlant(_building);
+    case kConveyor:; return buildingSetupConveyor(_building);
+    case kPlant:; return buildingSetupPlant(_building);
     default: break;
   };
 }
@@ -98,17 +98,11 @@ void getBuildingNeighbors(struct Building_t* _building, struct Location_t** _abo
 }
 
 void assignNeighbors(struct Building_t* _building) {
-  uint16_t locX, locY;
-  locX = pixToLoc(_building->m_pix_x);
-  locY = pixToLoc(_building->m_pix_y);
-  _building->m_location = getLocation(locX, locY);
-  struct Location_t* above = getLocation(locX, locY - 1);
-  struct Location_t* below = getLocation(locX, locY + 1);
-  struct Location_t* left  = getLocation(locX - 1, locY);
-  struct Location_t* right = getLocation(locX + 1, locY);
+  _building->m_location = getLocation(pixToLoc(_building->m_pix_x), pixToLoc(_building->m_pix_y));
   switch (_building->m_type) {
     case kConveyor:; return assignNeighborsConveyor(_building);
     case kPlant:; return assignNeighborsPlant(_building);
+    case kExtractor:; return assignNeighborsExtractor(_building);
     default: break;
   };
 }
@@ -117,6 +111,7 @@ void assignUpdate(struct Building_t* _building) {
   switch (_building->m_type) {
     case kConveyor:; _building->m_updateFn = &conveyorUpdateFn; break;
     case kPlant:; _building->m_updateFn = &plantUpdateFn; break;
+    case kExtractor:; _building->m_updateFn = &extractorUpdateFn; break;
     default: break;
   }
 }
@@ -126,7 +121,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   switch (_type) {
     case kConveyor:; canBePlaced = canBePlacedConveyor(_loc); break;
     case kPlant:;  canBePlaced = canBePlacedPlant(_loc); break;
-    case kExtractor:;  break;
+    case kExtractor:;  canBePlaced = canBePlacedExtractor(_loc); break;
     case kFactory:;  break;
     case kNoBuilding:; case kNBuildingTypes:; canBePlaced = false; break;
   }
@@ -162,8 +157,8 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   building->m_pix_y = locToPix(_loc->m_y);  
   // building->m_location = _loc; This is done by assignUpdate, as it needs to be done for deserialised buildings too
 
-  buildingSpriteSetup(building);
-  assignNeighbors(building);
+  assignNeighbors(building); // Do this first
+  buildingSetup(building);
   assignUpdate(building);
 
   // Add to the active/render list
@@ -299,8 +294,8 @@ void deserialiseValueBuilding(json_decoder* jd, const char* _key, json_value _va
 void* deserialiseStructDoneBuilding(json_decoder* jd, const char* _name, json_value_type _type) {
   struct Building_t* building = &(m_buildings[m_deserialiseIndexBuilding]);
 
-  buildingSpriteSetup(building);
   assignNeighbors(building);
+  buildingSetup(building);
   assignUpdate(building);
 
   ++m_nBuildings;

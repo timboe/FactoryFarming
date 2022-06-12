@@ -38,7 +38,7 @@
 #define SHEET48_SIZE_Y 3
 #define SHEET48_SIZE (SHEET48_SIZE_X*SHEET48_SIZE_Y)
 
-#define TOT_CARGO_OR_BUILDINGS 2046
+#define TOT_CARGO_OR_BUILDINGS 4096
 
 // Number of available floor sprites
 #define FLOOR_TILES (8*4)

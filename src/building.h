@@ -37,7 +37,7 @@ struct Building_t{
   uint16_t m_pix_x; // Note: centre
   uint16_t m_pix_y;
   int16_t m_progress; // Counts towards the location's progress
-  uint16_t m_mode; // Conveyor: where next. Plant: how many grown
+  uint16_t m_mode; // Conveyor: where next. Filter: my filter.  Plant: how many grown
   uint8_t m_stored[MAX_STORE]; // For locations which store/produce. Location 0 is always for produced items
 
   // Transient

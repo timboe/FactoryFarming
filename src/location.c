@@ -25,17 +25,17 @@ struct Location_t* getLocation(int32_t _x, int32_t _y) {
   return getLocation_noCheck(_x, _y);
 }
 
-void clearLocation(struct Location_t* _loc) {
+void clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuilding) {
   bool removed = false;
 
-  if (_loc->m_cargo) {
+  if (_clearCargo && _loc->m_cargo) {
     chunkRemoveCargo(_loc->m_chunk, _loc->m_cargo);
     cargoManagerFreeCargo(_loc->m_cargo);
     _loc->m_cargo = NULL;
     removed = true;
   }
 
-  if (_loc->m_building) {
+  if (_clearBuilding && _loc->m_building) {
     chunkRemoveBuilding(_loc->m_chunk, _loc->m_building);
     buildingManagerFreeBuilding(_loc->m_building);
     renderChunkBackgroundImage(_loc->m_chunk);
@@ -44,7 +44,7 @@ void clearLocation(struct Location_t* _loc) {
   }
 
   if (removed) {
-    updateRenderList();
+    queueUpdateRenderList();
   }
 }
 

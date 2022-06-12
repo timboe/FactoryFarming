@@ -92,7 +92,7 @@ void clickHandleMenuOptionSelected(uint32_t _buttonPressed) {
       case kMenuSplitT:;   newBuilding(getPlayerLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kSplitT} ); break;
       case kMenuApple:;    newBuilding(getPlayerLocation(), getUISelectedRotation(), kPlant, (union kSubType) {.plant = kAppleTree} ); break;
       case kMenuCarrot:;   newBuilding(getPlayerLocation(), getUISelectedRotation(), kPlant, (union kSubType) {.plant = kCarrotPlant} ); break;
-      case kMenuBin:;      clearLocation(getPlayerLocation()); break; 
+      case kMenuBin:;      clearLocation(getPlayerLocation(), true, true); break; 
     }
   } else if (kButtonB    == _buttonPressed) {
     setGameMode(kMenuSelect);

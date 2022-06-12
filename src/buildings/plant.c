@@ -1,5 +1,4 @@
 #include "plant.h"
-#include "../chunk.h"
 #include "../location.h"
 #include "../sprite.h"
 #include "../generate.h"
@@ -62,10 +61,9 @@ void assignNeighborsPlant(struct Building_t* _building) {
   _building->m_next[2] = below;
   _building->m_next[3] = left;
 
-  _building->m_progress = GROW_TIME + rand() % GROW_RANDOM; // Somewhere better to put the initial timer?
 }
 
-void buildingSpriteSetupPlant(struct Building_t* _building) {
+void buildingSetupPlant(struct Building_t* _building) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     switch (_building->m_subType.plant) {
       case kCarrotPlant:; _building->m_image[zoom] = getSprite16(10, 8, zoom); break;
@@ -73,4 +71,9 @@ void buildingSpriteSetupPlant(struct Building_t* _building) {
       case kNPlantSubTypes:; default: break;
     }
   }
+
+  clearLocation(_building->m_location, /*cargo*/ true, /*building*/ false);
+
+  _building->m_progress = GROW_TIME + rand() % GROW_RANDOM; // Somewhere better to put the initial timer?
+
 }
