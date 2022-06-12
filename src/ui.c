@@ -189,6 +189,8 @@ void drawUIBottom() {
       pd->graphics->drawText(text, 128, kASCIIEncoding, 0, 0);
       snprintf(text, 128, "Far Ticks:%u", getFarTickCount());
       pd->graphics->drawText(text, 128, kASCIIEncoding, 7*TILE_PIX, 0);
+      snprintf(text, 128, "Money:%u", (unsigned) getPlayer()->m_money);
+      pd->graphics->drawText(text, 128, kASCIIEncoding, 14*TILE_PIX, 0);
     }
 
   } else if (gm == kMenuSelect || gm == kMenuOptionSelected) {
@@ -212,7 +214,7 @@ void drawUIRight() {
   pd->graphics->fillRect(0, 0, TILE_PIX, DEVICE_PIX_Y, kColorBlack);
   const enum kGameMode gm = getGameMode();
   for (uint32_t i = 0; i < UI_ITEMS; ++i) {
-    const uint16_t y = TILE_PIX*2*i;
+    const uint16_t y = TILE_PIX*i;
     const uint16_t offset = (i >= kMenuApple && i != kMenuExtractor) ? 0 : getUISelectedRotation();
     pd->graphics->drawBitmap(getSprite16(m_UIIcons[i*2] + offset, m_UIIcons[(i*2)+1], 1), 0, y, kBitmapUnflipped);
     if ((gm == kMenuSelect || gm == kMenuOptionSelected) && i == getUISelectedID()) {

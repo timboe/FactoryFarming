@@ -11,7 +11,20 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
   if (loc->m_cargo == NULL) return;
   if (_building->m_progress < TILE_PIX) {
     _building->m_progress += _tick;
-    switch (_building->m_nextDir[_building->m_mode]) {
+
+    // Handle filters vs. splitters
+    enum kDir direction;
+    if (_building->m_subType.conveyor == kFilterL) {
+      // First encounter with an object? TODO can everything which can place an item on the chunk do this instead?
+      if (_building->m_mode == kNoCargo) {
+        _building->m_mode = loc->m_cargo->m_type; // Note: This CANNOT be undone without re-writing the building
+      }
+      direction = (_building->m_mode == loc->m_cargo->m_type ? _building->m_nextDir[1] :  _building->m_nextDir[0]);  
+    } else {
+      direction = _building->m_nextDir[_building->m_mode];
+    }
+
+    switch (direction) {
       case SN:; pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], _building->m_pix_x*_zoom, (_building->m_pix_y - _building->m_progress)*_zoom); break;
       case NS:; pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], _building->m_pix_x*_zoom, (_building->m_pix_y + _building->m_progress)*_zoom); break;
       case EW:; pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], (_building->m_pix_x - _building->m_progress)*_zoom, _building->m_pix_y*_zoom); break;
@@ -22,7 +35,15 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
   }
   if (_building->m_progress >= TILE_PIX && _building->m_next[_building->m_mode]->m_cargo == NULL) {
     struct Cargo_t* theCargo = loc->m_cargo;
-    struct Location_t* nextLoc = _building->m_next[_building->m_mode]; 
+
+    // Handle filters vs. splitters
+    struct Location_t* nextLoc = NULL;
+    if (_building->m_subType.conveyor == kFilterL) {
+      nextLoc = (_building->m_mode == theCargo->m_type ? _building->m_next[1] :  _building->m_next[0]);  
+    } else {
+      nextLoc = _building->m_next[_building->m_mode];
+    }
+
     // Move cargo
     nextLoc->m_cargo = theCargo;
     loc->m_cargo = NULL;
@@ -39,9 +60,9 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
     }
     // Cycle outputs
     switch (_building->m_subType.conveyor) {
-      case kSplitI:; case kSplitL:; case kFilterL:; _building->m_mode = (_building->m_mode + 1) % 2; break;
+      case kSplitI:; case kSplitL:; _building->m_mode = (_building->m_mode + 1) % 2; break;
       case kSplitT:; _building->m_mode = (_building->m_mode + 1) % 3; break;
-      case kBelt:; default: break;
+      case kBelt:; case kFilterL:; case kNConvSubTypes:; break;
     }
   }
 }
@@ -84,7 +105,7 @@ void assignNeighborsConveyor(struct Building_t* _building) {
                           _building->m_nextDir[0] = EW;    _building->m_nextDir[1] = WE; break;
       case kDirN:; break;
     }
-  } else if (_building->m_subType.conveyor == kSplitL) {
+  } else if (_building->m_subType.conveyor == kSplitL || _building->m_subType.conveyor == kFilterL) {
     switch (_building->m_dir) {
       case SN:; _building->m_next[0]    = above; _building->m_next[1]    = right;
                 _building->m_nextDir[0] = SN;    _building->m_nextDir[1] = WE; break;
