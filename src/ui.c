@@ -100,7 +100,9 @@ void updateUI(int _fc) {
 
 void updateBlueprint() {
   uint8_t zoom = getZoom();
-  LCDSprite* bp = getPlayer()->m_blueprint[zoom];
+  struct Player_t* player = getPlayer();
+  LCDSprite* bp = player->m_blueprint[zoom];
+  LCDSprite* bpRadius = player->m_blueprintRadius[zoom];
   if (getGameMode() == kMenuOptionSelected) {
     //pd->sprite->setVisible(getPlayer()->m_blueprint[zoom], true);
     switch (m_UISelectedID) {
@@ -113,9 +115,13 @@ void updateBlueprint() {
       case kMenuExtractor:; pd->sprite->setImage(bp, getSprite48(m_UISelectedRotation, 0 , zoom),     kBitmapUnflipped); setPlayerLookingAtOffset(2); break;     
       case kMenuBin:;       pd->sprite->setImage(bp, getSprite16(m_UIIcons[14], m_UIIcons[15], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(1); break;     
     }
+
+    pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap9x9[zoom], kBitmapUnflipped); 
+
   } else { // Clear blueprint
     //pd->sprite->setVisible(getPlayer()->m_blueprint[zoom], false);
-    pd->sprite->setImage(bp, getSprite16(0, 0, zoom), kBitmapUnflipped); 
+    pd->sprite->setImage(bp, getSprite16_byidx(0, zoom), kBitmapUnflipped);
+    pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped); 
   }
 }
 

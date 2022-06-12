@@ -54,6 +54,7 @@ void updateRenderList() {
   struct Player_t* player = getPlayer();
   pd->sprite->addSprite(player->m_sprite[zoom]);
   pd->sprite->addSprite(player->m_blueprint[zoom]);
+  pd->sprite->addSprite(player->m_blueprintRadius[zoom]);
 
   addUIToSpriteList();
 

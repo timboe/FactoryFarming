@@ -204,8 +204,12 @@ bool movePlayer() {
 
   //pd->system->logToConsole("LA %i", (int) m_lookingAt);
   if (m_lookingAt && (wasAt != m_currentLocation || m_updateLookingAt)) {
-    m_updateLookingAt = false;  
-    pd->sprite->moveTo(m_player.m_blueprint[zoom], (TILE_PIX*m_lookingAt->m_x + TILE_PIX/2.0) * zoom, (TILE_PIX*m_lookingAt->m_y  + TILE_PIX/2.0) * zoom);
+    m_updateLookingAt = false;
+    int32_t bpX = (TILE_PIX*m_lookingAt->m_x + TILE_PIX/2.0) * zoom, bpY = (TILE_PIX*m_lookingAt->m_y  + TILE_PIX/2.0) * zoom;
+
+    pd->sprite->moveTo(m_player.m_blueprint[zoom], bpX, bpY);
+    pd->sprite->moveTo(m_player.m_blueprintRadius[zoom], bpX, bpY);
+
     //pd->system->logToConsole("LA %i %i, off %i", m_lookingAt->m_x, m_lookingAt->m_y, m_lookingAtOffset);
   }
 
@@ -224,6 +228,33 @@ void playerSpriteSetup() {
     pd->sprite->setBounds(m_player.m_blueprint[zoom], bound);
     pd->sprite->setImage(m_player.m_blueprint[zoom], getSprite16(0, 0, zoom), kBitmapUnflipped);
     pd->sprite->setZIndex(m_player.m_blueprint[zoom], Z_INDEX_BLUEPRINT);
+
+    m_player.m_blueprintRadiusBitmap3x3[zoom] = pd->graphics->newBitmap(TILE_PIX*3*zoom, TILE_PIX*3*zoom, kColorClear);
+    m_player.m_blueprintRadiusBitmap9x9[zoom] = pd->graphics->newBitmap(TILE_PIX*9*zoom, TILE_PIX*9*zoom, kColorClear);
+
+    uint16_t start = 2*zoom, stop = (TILE_PIX*3 - 2)*zoom;
+    pd->graphics->setLineCapStyle(kLineCapStyleRound);
+    pd->graphics->pushContext(m_player.m_blueprintRadiusBitmap3x3[zoom]);
+    pd->graphics->setDrawMode(kDrawModeCopy);
+    pd->graphics->drawLine(start, start, stop, start, 2*zoom, kColorBlack);
+    pd->graphics->drawLine(start, start, start, stop, 2*zoom, kColorBlack);
+    pd->graphics->drawLine(start, stop, stop, stop, 2*zoom, kColorBlack);
+    pd->graphics->drawLine(stop, start, stop, stop, 2*zoom, kColorBlack);
+    pd->graphics->popContext();
+
+    stop = (TILE_PIX*9 - 2)*zoom;
+    pd->graphics->pushContext(m_player.m_blueprintRadiusBitmap9x9[zoom]);
+    pd->graphics->setDrawMode(kDrawModeCopy);
+    pd->graphics->drawLine(start, start, stop, start, 2*zoom, kColorBlack);
+    pd->graphics->drawLine(start, start, start, stop, 2*zoom, kColorBlack);
+    pd->graphics->drawLine(start, stop, stop, stop, 2*zoom, kColorBlack);
+    pd->graphics->drawLine(stop, start, stop, stop, 2*zoom, kColorBlack);
+    pd->graphics->popContext();
+
+    m_player.m_blueprintRadius[zoom] = pd->sprite->newSprite();
+    pd->sprite->setBounds(m_player.m_blueprintRadius[zoom], bound);
+    pd->sprite->setImage(m_player.m_blueprintRadius[zoom], m_player.m_blueprintRadiusBitmap3x3[zoom], kBitmapUnflipped);
+    pd->sprite->setZIndex(m_player.m_blueprintRadius[zoom], Z_INDEX_BLUEPRINT);
   }
 }
 
