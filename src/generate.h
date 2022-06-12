@@ -6,6 +6,7 @@
 struct Tile_t {
   // Persistent
   uint8_t m_tile;
+  uint8_t m_wetness;
 
   // Transient
 };
