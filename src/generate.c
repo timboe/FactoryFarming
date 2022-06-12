@@ -109,6 +109,31 @@ void addBiome(int32_t _offX, int32_t _offY, uint16_t _imgStart) {
   }
 }
 
+uint8_t distanceFromWater(int32_t _x, int32_t _y) {
+  uint8_t r = 0;
+  const uint16_t waterStart = getSprite16_idx(0, 5);
+  if (getTile(_x, _y)->m_tile >= waterStart) return 0;
+  while (++r < 255) {
+    for (int32_t x = _x - r; x < _x + r; ++x) {
+      if (getTile(x, _y - r)->m_tile >= waterStart) return r;
+      if (getTile(x, _y + r)->m_tile >= waterStart) return r;
+    }
+    for (int32_t y = _y - r; y < _y + r; ++y) {
+      if (getTile(_x + r, y)->m_tile >= waterStart) return r;
+      if (getTile(_x - r, y)->m_tile >= waterStart) return r;
+    }
+  }
+  return 255;
+}
+
+void doWetness(void) {
+  for (int32_t x = 0; x < TOT_TILES_X; ++x) {
+    for (int32_t y = 0; y < TOT_TILES_Y; ++y) {
+      getTile(x, y)->m_wetness = distanceFromWater(x,y);
+    }
+  }
+}
+
 #define LAKE_MIN 10
 #define LAKE_MAX 18
 #define RIVER_MIN 8
@@ -313,6 +338,11 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
       struct Tile_t* t = getTileInChunk(_chunk, u, v);
       LCDBitmap* b = getSprite16(t->m_tile, 0, 1); // Top row of sprite sheet
       pd->graphics->drawBitmap(b, u * TILE_PIX, v * TILE_PIX, kBitmapUnflipped);
+      if (t->m_wetness > 0 && t->m_wetness < 8) { // If wet, but not actually water
+        for (int32_t w = 0; w < (8 - t->m_wetness); ++w) {
+          pd->graphics->drawBitmap(getSprite16(12 + rand()%4, 2, 1), u * TILE_PIX, v * TILE_PIX, kBitmapUnflipped);
+        }
+      }
     }
   }
 
@@ -459,6 +489,8 @@ void generate() {
   addBiome(TOT_TILES_X/2, TOT_TILES_Y/2, getSprite16_idx(8,1));
 
   doLakesAndRivers();
+
+  doWetness();
 
 
 

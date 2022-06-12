@@ -4,19 +4,22 @@
 // Building direction
 enum kDir{SN, WE, NS, EW, kDirN};
 
-enum kBuildingType {kNoBuilding, kConveyor, kExtractor, kFactory, kNBuildingTypes};
+enum kBuildingType {kNoBuilding, kConveyor, kPlant, kHarvester, kFactory, kNBuildingTypes};
 
 ///
 
 enum kConvSubType{kBelt, kSplitI, kSplitL, kSplitT, kFilterL, kNConvSubTypes};
 
-enum kExtractorSubType{kMiner, kPump, kCondenser, kNExtractorSubTypes};
+enum kPlantSubType{kCarrotPlant, kNPlantSubTypes};
+
+enum kHarvesterSubType{kMiner, kPump, kCondenser, kNExtractorSubTypes};
 
 enum kFactorySubType{kMakeSmall, kNFactorySubTypes};
 
 union kSubType {
    enum kConvSubType conveyor;
-   enum kExtractorSubType extractor;
+   enum kPlantSubType plant;
+   enum kHarvesterSubType harvester;
    enum kFactorySubType factory;
 };
 
