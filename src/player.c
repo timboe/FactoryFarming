@@ -275,6 +275,8 @@ void serialisePlayer(struct json_encoder* je) {
   je->writeInt(je, (int) m_player.m_pix_x);
   je->addTableMember(je, "y", 1);
   je->writeInt(je, (int) m_player.m_pix_y);
+  je->addTableMember(je, "m", 1);
+  je->writeInt(je, (int) m_player.m_money);
   je->endTable(je);
 }
 
@@ -283,6 +285,8 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_player.m_pix_x = (float) json_intValue(_value);
   } else if (strcmp(_key, "y") == 0) {
     m_player.m_pix_y = json_intValue(_value);
+  } else if (strcmp(_key, "m") == 0) {
+    m_player.m_money = json_intValue(_value);
   } else {
     pd->system->error("PLAYER DECODE ISSUE, %s", _key);
   }
@@ -292,8 +296,8 @@ void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_valu
   setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y);
   m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
 
-  pd->system->logToConsole("-- Player decoded to (%i, %i), current location (%i, %i)", 
-    (int32_t)m_player.m_pix_x, (int32_t)m_player.m_pix_y, m_currentLocation->m_x, m_currentLocation->m_y);
+  pd->system->logToConsole("-- Player decoded to (%i, %i), current location (%i, %i), money:%i", 
+    (int32_t)m_player.m_pix_x, (int32_t)m_player.m_pix_y, m_currentLocation->m_x, m_currentLocation->m_y, m_player.m_money);
 
   return NULL;
 }

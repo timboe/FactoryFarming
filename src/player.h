@@ -8,6 +8,7 @@ struct Player_t{
   // Persistent
   float m_pix_x; // Note: Centre
   float m_pix_y;
+  uint32_t m_money;
 
   // Transient   
   LCDSprite* m_sprite[ZOOM_LEVELS]; // Index 0 not used - OWNED

@@ -113,44 +113,64 @@ void tickFar() {
   struct Chunk_t* currentChunk = getCurrentChunk();
 
   if (zoom == 1 && !PRETEND_ZOOMED_IN) {
+
+    // Save CPU mode
+    /*
     int32_t start = 0;
     int32_t stop = CHUNK_NONNEIGHBORS_ALL/2;
+    int32_t amount = FAR_TICK_AMOUNT*2;
     if (++tickTock % 2) {
       start = CHUNK_NONNEIGHBORS_ALL/2;
       stop = CHUNK_NONNEIGHBORS_ALL;
     }
+    */
+
+    // Regular mode
+    int32_t start = 0;
+    int32_t stop = CHUNK_NONNEIGHBORS_ALL;
+    int32_t amount = FAR_TICK_AMOUNT;
 
     for (uint32_t i = start; i < stop; ++i) { 
       //pd->system->logToConsole("B %u = %i", i, (int) currentChunk->m_nonNeighborsALL[i]);
-      m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsALL[i], FAR_TICK_AMOUNT*2, zoom); // * 2 due to only calling each chunk 50% of the time 
+      m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsALL[i], amount, zoom); // * 2 due to only calling each chunk 50% of the time 
     }
   } else {
+    
+    // Save CPU mode
+    /*
     int32_t start = 0;
     int32_t stop = CHUNK_NONNEIGHBORS_CORNER/2;
+    int32_t amount = FAR_TICK_AMOUNT*2;
     if (++tickTock % 2) {
       start = CHUNK_NONNEIGHBORS_CORNER/2;
       stop = CHUNK_NONNEIGHBORS_CORNER;
     }
+    */
+
+    // Regular mode
+    int32_t start = 0;
+    int32_t stop = CHUNK_NONNEIGHBORS_CORNER;
+    int32_t amount = FAR_TICK_AMOUNT;
 
     switch (getCurrentQuadrant()) {
       case NE:;
         for (uint32_t i = start; i < stop; ++i) {
-          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsNE[i], FAR_TICK_AMOUNT*2, zoom);
+          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsNE[i], amount, zoom);
         }
         break;
       case SE:;
         for (uint32_t i = start; i < stop; ++i) {
-          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsSE[i], FAR_TICK_AMOUNT*2, zoom);
+          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsSE[i], amount, zoom);
         }
         break;
       case SW:;
         for (uint32_t i = start; i < stop; ++i) {
-          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsSW[i], FAR_TICK_AMOUNT*2, zoom);
+          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsSW[i], amount, zoom);
         }
         break;
       case NW:;
         for (uint32_t i = start; i < stop; ++i) {
-          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsNW[i], FAR_TICK_AMOUNT*2, zoom);
+          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsNW[i], amount, zoom);
         }
         break;
     }

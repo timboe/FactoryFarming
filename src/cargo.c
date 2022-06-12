@@ -87,6 +87,16 @@ uint16_t getCargo_idx(enum kCargoType _type) {
   return getSprite16_idx(0, 2);
 }
 
+uint16_t getCargoValue(enum kCargoType _type) {
+  switch (_type) {
+    case kApple:;  return 2;
+    case kCheese:; return 4;
+    case kCarrot:; return 1;
+    case kNoCargo:; case kNCargoType:; 
+  }
+  return 0;
+}
+
 bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addedByPlayer) {
   bool addedByPlayer = true;
   if (_loc->m_cargo != NULL) return false;

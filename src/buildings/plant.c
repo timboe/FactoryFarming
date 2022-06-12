@@ -8,8 +8,9 @@ void plantSpawnCargo(struct Building_t* _building, struct Location_t* _loc);
 
 /// ///
 
-#define GROW_TIME (TICKS_PER_SEC*4)
-#define GROW_RANDOM (TICKS_PER_SEC*4)
+// Note: with current settings, anything under 72 cannot be kept up with by a single harvester
+#define GROW_TIME (TICKS_PER_SEC*52)
+#define GROW_RANDOM (TICKS_PER_SEC*40)
 
 void plantSpawnCargo(struct Building_t* _building, struct Location_t* _loc) {
   switch (_building->m_subType.plant) {

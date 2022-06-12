@@ -246,21 +246,25 @@ void serialiseBuilding(struct json_encoder* je) {
       je->addTableMember(je, "s0", 2);
       je->writeInt(je, m_buildings[i].m_stored[0]);
     }
-    if (m_buildings[i].m_stored[0]) {
+    if (m_buildings[i].m_stored[1]) {
       je->addTableMember(je, "s1", 2);
       je->writeInt(je, m_buildings[i].m_stored[1]);
     }
-    if (m_buildings[i].m_stored[0]) {
+    if (m_buildings[i].m_stored[2]) {
       je->addTableMember(je, "s2", 2);
       je->writeInt(je, m_buildings[i].m_stored[2]);
     }
-    if (m_buildings[i].m_stored[0]) {
+    if (m_buildings[i].m_stored[3]) {
       je->addTableMember(je, "s3", 2);
       je->writeInt(je, m_buildings[i].m_stored[3]);
     }
-    if (m_buildings[i].m_stored[0]) {
+    if (m_buildings[i].m_stored[4]) {
       je->addTableMember(je, "s4", 2);
       je->writeInt(je, m_buildings[i].m_stored[4]);
+    }
+    if (m_buildings[i].m_stored[5]) {
+      je->addTableMember(je, "s4", 2);
+      je->writeInt(je, m_buildings[i].m_stored[5]);
     }
     je->endTable(je);
   }
@@ -296,6 +300,8 @@ void deserialiseValueBuilding(json_decoder* jd, const char* _key, json_value _va
     m_buildings[m_deserialiseIndexBuilding].m_stored[3] = json_intValue(_value);
   } else if (strcmp(_key, "s4") == 0) {
     m_buildings[m_deserialiseIndexBuilding].m_stored[4] = json_intValue(_value);
+  } else if (strcmp(_key, "s5") == 0) {
+    m_buildings[m_deserialiseIndexBuilding].m_stored[5] = json_intValue(_value); 
   } else {
     pd->system->error("BUILDING DECODE ISSUE, %s", _key);
   }

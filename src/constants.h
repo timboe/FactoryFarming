@@ -89,8 +89,8 @@
 // TODO changing this will break the chunk->obstacle add/remove 
 #define ZOOM_LEVELS 3
 
-// 4 inputs plus 1 output. CAUTION: changing this currently requires manual change to de/serialisation
-#define MAX_STORE 5
+// 5 fixed inputs plus 1 fixed output. Or three variable self-describings outputs. CAUTION: changing this currently requires manual change to de/serialisation
+#define MAX_STORE 6
 
 // Number of crops before a plot upgrades to farmland
 #define N_CROPS_BEFORE_FARMLAND 4

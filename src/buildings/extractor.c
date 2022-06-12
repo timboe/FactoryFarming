@@ -4,10 +4,58 @@
 #include "../generate.h"
 #include "../cargo.h"
 
+
+void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick);
+
 /// ///
 
-void extractorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
+#define COLLECT_TIME (TICKS_PER_SEC*8)
 
+void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick) {
+  // Placing down
+  if (_building->m_next[0]->m_cargo == NULL) {
+    for (int32_t try = 0; try < (MAX_STORE/2); ++try) {
+      if (_building->m_stored[try] && (_building->m_next[0]->m_building == NULL || _building->m_next[0]->m_building->m_type == kConveyor)) {
+        newCargo(_building->m_next[0], _building->m_stored[try + (MAX_STORE/2)], false);
+        if (--_building->m_stored[try] == 0) {
+          _building->m_stored[try + 3] = kNoCargo; // Reset the slot if we have run out of items 
+        }
+        break;
+      }
+    }
+  }
+
+  _building->m_progress -= _tick;
+  if (_building->m_progress > 0) return;
+  _building->m_progress = COLLECT_TIME;
+
+  // Picking up
+  for (int32_t x = -5; x < 6; ++x) {
+    for (int32_t y = -5; y < 6; ++y) {
+      struct Location_t* loc = getLocation(_building->m_location->m_x + x, _building->m_location->m_y + y);
+      if (loc->m_cargo && (loc->m_building == NULL || loc->m_building->m_type == kPlant)) {
+        // For our three storage locations
+        for (int32_t try = 0; try < (MAX_STORE/2); ++try) {
+          // Do we already store of this type? Or do we store nothing in this type?
+          if (_building->m_stored[try + (MAX_STORE/2)] == kNoCargo || _building->m_stored[try + (MAX_STORE/2)] == loc->m_cargo->m_type) {
+            _building->m_stored[try + (MAX_STORE/2)] = loc->m_cargo->m_type;
+            if (_building->m_stored[try] < 255) ++_building->m_stored[try]; // TODO, unsigned should not overflow. Check
+            clearLocation(loc, /*clearCargo*/ true, /*clearBuilding*/ false);
+            break;
+          }
+        }
+      }
+    }
+  }
+
+}
+
+void extractorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
+  switch (_building->m_subType.extractor) {
+    case kCropHarvester:; return cropHarveserUpdateFn(_building, _tick);
+    case kPump:;          return;
+    case kNPlantSubTypes:; default: break;
+  }
 }
 
 bool canBePlacedExtractor(struct Location_t* _loc) {
@@ -55,4 +103,6 @@ void buildingSetupExtractor(struct Building_t* _building) {
       clearLocation(getLocation(x, y), /*cargo*/ true, /*building*/ false);
     }
   }
+
+  _building->m_progress = COLLECT_TIME;
 }

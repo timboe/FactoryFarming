@@ -42,8 +42,16 @@ struct Building_t{
   uint16_t m_pix_x; // Note: centre
   uint16_t m_pix_y;
   int16_t m_progress; // Counts towards the location's progress
-  uint16_t m_mode; // Conveyor: where next. Filter: my filter.  Plant: how many grown
-  uint8_t m_stored[MAX_STORE]; // For locations which store/produce. Location 0 is always for produced items. Plant: i=0,1 Used for cargo animation.
+  // m_mode
+  // Conveyor: where next.
+  // Filter: my filter item
+  // Plant: how many plants have grown
+  uint16_t m_mode; 
+  // m_stored
+  // For locations which store/produce fixed items, location 0 is always for produced items, 1-6 for inputs.
+  // For locations which store variable items, locations 0-3 are the number of items, 3-6 are the item ID 
+  // For plants: locations 0, 1 are used for item animation.
+  uint8_t m_stored[MAX_STORE]; 
 
   // Transient
   LCDSprite* m_sprite[ZOOM_LEVELS]; // Index 0 not used - OWNED

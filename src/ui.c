@@ -112,12 +112,11 @@ void updateBlueprint() {
       case kMenuSplitT:;    pd->sprite->setImage(bp, getSprite16(m_UISelectedRotation+4, 4, zoom),    kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
       case kMenuApple:;     pd->sprite->setImage(bp, getSprite16(m_UIIcons[8], m_UIIcons[9], zoom),   kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
       case kMenuCarrot:;    pd->sprite->setImage(bp, getSprite16(m_UIIcons[10], m_UIIcons[11], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
-      case kMenuExtractor:; pd->sprite->setImage(bp, getSprite48(m_UISelectedRotation, 0 , zoom),     kBitmapUnflipped); setPlayerLookingAtOffset(2); break;     
+      case kMenuExtractor:; pd->sprite->setImage(bp, getSprite48(m_UISelectedRotation, 0 , zoom),     kBitmapUnflipped); setPlayerLookingAtOffset(2);
+                            pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap9x9[zoom], kBitmapUnflipped); break;     
       case kMenuBin:;       pd->sprite->setImage(bp, getSprite16(m_UIIcons[14], m_UIIcons[15], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(1); break;     
     }
-
-    pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap9x9[zoom], kBitmapUnflipped); 
-
+ 
   } else { // Clear blueprint
     //pd->sprite->setVisible(getPlayer()->m_blueprint[zoom], false);
     pd->sprite->setImage(bp, getSprite16_byidx(0, zoom), kBitmapUnflipped);
