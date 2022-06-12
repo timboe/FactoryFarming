@@ -33,8 +33,8 @@ struct Building_t{
   enum kDir m_dir; // Direction
   uint16_t m_pix_x; // Note: centre
   uint16_t m_pix_y;
-  uint8_t m_progress; // Counts towards the location's progress
-  uint8_t m_mode; // For locations which alter between modes, such as a splitter
+  uint16_t m_progress; // Counts towards the location's progress
+  uint16_t m_mode; // For locations which alter between modes, such as a splitter
   uint8_t m_stored[MAX_STORE]; // For locations which store/produce. Location 0 is always for produced items
 
   // Transient

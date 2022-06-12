@@ -114,10 +114,10 @@ void tickFar() {
 
   if (zoom == 1 && !PRETEND_ZOOMED_IN) {
     int32_t start = 0;
-    int32_t stop = (TOT_CHUNKS - CHUNK_NEIGHBORS_ALL - 1)/2; // The "- 1" is for "me"
+    int32_t stop = CHUNK_NONNEIGHBORS_ALL/2;
     if (++tickTock % 2) {
-      start = (TOT_CHUNKS - CHUNK_NEIGHBORS_ALL - 1)/2;
-      stop = (TOT_CHUNKS - CHUNK_NEIGHBORS_ALL - 1);
+      start = CHUNK_NONNEIGHBORS_ALL/2;
+      stop = CHUNK_NONNEIGHBORS_ALL;
     }
 
     for (uint32_t i = start; i < stop; ++i) { 
@@ -126,10 +126,10 @@ void tickFar() {
     }
   } else {
     int32_t start = 0;
-    int32_t stop = (TOT_CHUNKS - CHUNK_NEIGHBORS_CORNER - 1)/2;
+    int32_t stop = CHUNK_NONNEIGHBORS_CORNER/2;
     if (++tickTock % 2) {
-      start = (TOT_CHUNKS - CHUNK_NEIGHBORS_CORNER - 1)/2;
-      stop = (TOT_CHUNKS - CHUNK_NEIGHBORS_CORNER - 1);
+      start = CHUNK_NONNEIGHBORS_CORNER/2;
+      stop = CHUNK_NONNEIGHBORS_CORNER;
     }
 
     switch (getCurrentQuadrant()) {

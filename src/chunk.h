@@ -24,11 +24,11 @@ struct Chunk_t{
   struct Chunk_t* m_neighborsNW[CHUNK_NEIGHBORS_CORNER];
   struct Chunk_t* m_neighborsALL[CHUNK_NEIGHBORS_ALL];
 
-  struct Chunk_t* m_nonNeighborsNE[TOT_CHUNKS - CHUNK_NEIGHBORS_CORNER - 1]; // The "- 1" is for "me"
-  struct Chunk_t* m_nonNeighborsSE[TOT_CHUNKS - CHUNK_NEIGHBORS_CORNER - 1];
-  struct Chunk_t* m_nonNeighborsSW[TOT_CHUNKS - CHUNK_NEIGHBORS_CORNER - 1];
-  struct Chunk_t* m_nonNeighborsNW[TOT_CHUNKS - CHUNK_NEIGHBORS_CORNER - 1];
-  struct Chunk_t* m_nonNeighborsALL[TOT_CHUNKS - CHUNK_NEIGHBORS_ALL - 1];
+  struct Chunk_t* m_nonNeighborsNE[CHUNK_NONNEIGHBORS_CORNER]; // The "- 1" is for "me"
+  struct Chunk_t* m_nonNeighborsSE[CHUNK_NONNEIGHBORS_CORNER];
+  struct Chunk_t* m_nonNeighborsSW[CHUNK_NONNEIGHBORS_CORNER];
+  struct Chunk_t* m_nonNeighborsNW[CHUNK_NONNEIGHBORS_CORNER];
+  struct Chunk_t* m_nonNeighborsALL[CHUNK_NONNEIGHBORS_ALL];
 
   uint16_t m_nBuildings;
   struct Building_t* m_buildings[TILES_PER_CHUNK];
