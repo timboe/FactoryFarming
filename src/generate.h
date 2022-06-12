@@ -13,6 +13,8 @@ struct Tile_t {
 
 void generate(void);
 
+struct Tile_t* getTile(int32_t _x, int32_t _y);
+
 void renderChunkBackgroundImage(struct Chunk_t* _chunk);
 
 void setChunkBackgrounds(void);

@@ -17,8 +17,6 @@ void generateSpriteSetup(struct Chunk_t* _chunk);
 
 struct Tile_t* getTileInChunk(struct Chunk_t* _chunk, int32_t _u, int32_t _v);
 
-struct Tile_t* getTile(int32_t _x, int32_t _y);
-
 bool addLake(int32_t _startX, int32_t _startY, int32_t _riverProb);
 
 void addSpawn(void);
@@ -340,7 +338,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
       pd->graphics->drawBitmap(b, u * TILE_PIX, v * TILE_PIX, kBitmapUnflipped);
       if (t->m_wetness > 0 && t->m_wetness < 8) { // If wet, but not actually water
         for (int32_t w = 0; w < (8 - t->m_wetness); ++w) {
-          pd->graphics->drawBitmap(getSprite16(12 + rand()%4, 2, 1), u * TILE_PIX, v * TILE_PIX, kBitmapUnflipped);
+          pd->graphics->drawBitmap(getSprite16(12 + (w/2 + v*u)%4, 2, 1), u * TILE_PIX, v * TILE_PIX, kBitmapUnflipped);
         }
       }
     }

@@ -173,7 +173,7 @@ void drawUIBottom() {
       pd->system->resetElapsedTime();
     }
     if (mode) {
-      snprintf(text, 128, "Conveyors:%u", getNConveyors());
+      snprintf(text, 128, "Conveyors:%u", getNByType(kConveyor));
       pd->graphics->drawText(text, 128, kASCIIEncoding, 0, 0);
       snprintf(text, 128, "Cargo:%u", getNCargo());
       pd->graphics->drawText(text, 128, kASCIIEncoding, 7*TILE_PIX, 0);

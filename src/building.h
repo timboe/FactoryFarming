@@ -4,22 +4,22 @@
 // Building direction
 enum kDir{SN, WE, NS, EW, kDirN};
 
-enum kBuildingType {kNoBuilding, kConveyor, kPlant, kHarvester, kFactory, kNBuildingTypes};
+enum kBuildingType {kNoBuilding, kConveyor, kPlant, kExtractor, kFactory, kNBuildingTypes};
 
 ///
 
 enum kConvSubType{kBelt, kSplitI, kSplitL, kSplitT, kFilterL, kNConvSubTypes};
 
-enum kPlantSubType{kCarrotPlant, kNPlantSubTypes};
+enum kPlantSubType{kCarrotPlant, kAppleTree, kNPlantSubTypes};
 
-enum kHarvesterSubType{kMiner, kPump, kCondenser, kNExtractorSubTypes};
+enum kExtractorSubType{kCropHarvester, kPump, kNExtractorSubTypes};
 
 enum kFactorySubType{kMakeSmall, kNFactorySubTypes};
 
 union kSubType {
    enum kConvSubType conveyor;
    enum kPlantSubType plant;
-   enum kHarvesterSubType harvester;
+   enum kExtractorSubType extractor;
    enum kFactorySubType factory;
 };
 
@@ -51,7 +51,7 @@ struct Building_t{
 
 uint16_t getNBuildings(void);
 
-uint16_t getNConveyors(void);
+uint16_t getNByType(enum kBuildingType _type);
 
 struct Building_t* buildingManagerNewBuilding(enum kBuildingType _asType);
 
@@ -59,7 +59,7 @@ struct Building_t* buildingManagerGetByIndex(uint16_t _index);
 
 void buildingManagerFreeBuilding(struct Building_t* _buildings);
 
-bool newConveyor(struct Location_t* _loc, enum kDir _dir, union kSubType _subType);
+bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _type, union kSubType _subType);
 
 void initBuilding(void);
 

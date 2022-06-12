@@ -16,7 +16,8 @@ endif
 VPATH += Source
 
 # List C source files here
-SRC = $(wildcard src/*.c)
+SRC = $(wildcard src/*.c) \
+      $(wildcard src/buildings/*.c) \
 
 # List all user directories here
 UINCDIR = 
