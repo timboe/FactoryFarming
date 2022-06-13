@@ -11,6 +11,8 @@ struct Tile_t* m_tiles = NULL;
 
 uint16_t m_deserialiseIndexWorld = 0;
 
+char m_worldName[WORLD_NAME_LENGTH];
+
 const int32_t SIZE_GENERATE = TOT_TILES * sizeof(struct Tile_t);
  
 void generateSpriteSetup(struct Chunk_t* _chunk);
@@ -256,6 +258,14 @@ const char* toStringSoil(struct Tile_t* _tile) {
   } else {
     return "Sandy Soil";
   }
+}
+
+const char* getWorldName() {
+  return m_worldName;
+}
+
+void setWorldName(const char* _name) {
+  strcpy(m_worldName, _name);
 }
 
 #define LAKE_MIN 10
@@ -505,6 +515,16 @@ void serialiseWorld(struct json_encoder* je) {
   je->endArray(je);
 }
 
+void didDecodeWorldName(json_decoder* jd, const char* _key, json_value _value) {
+  if (strcmp(_key, "name") == 0) {
+    char* name = json_stringValue(_value);
+    pd->system->logToConsole("Loading world %s", name);
+    setWorldName(name);
+  } else {
+    pd->system->error("WORLD NAME DECODE ISSUE, %s", _key);
+  }
+}
+
 void deserialiseValueWorld(json_decoder* jd, const char* _key, json_value _value) {
   if (strcmp(_key, "tile") == 0) {
     m_tiles[m_deserialiseIndexWorld].m_tile = json_intValue(_value);
@@ -577,6 +597,5 @@ void generate() {
 
   doWetness();
 
-
-
+  snprintf(m_worldName, WORLD_NAME_LENGTH, "World %c%c%c%c%c", 'A'+rand()%24, 'a'+rand()%24, 'a'+rand()%24, 'a'+rand()%24, 'a'+rand()%24);
 }

@@ -30,6 +30,8 @@ static void init(void) {
   initSound();
   initGame();
 
+  scanSlots();
+
   menuOptionsCallbackRestart(NULL);
 }
 

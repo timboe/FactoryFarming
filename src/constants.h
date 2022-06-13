@@ -94,3 +94,7 @@
 
 // Number of crops before a plot upgrades to farmland
 #define N_CROPS_BEFORE_FARMLAND 4
+
+#define WORLD_SAVE_SLOTS 16
+
+#define WORLD_NAME_LENGTH 32
