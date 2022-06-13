@@ -76,7 +76,7 @@ void renderChunkBackgroundImageAround(struct Chunk_t* _chunk) {
   for (int32_t x = _chunk->m_x - 1; x < _chunk->m_x + 2; ++x) {
     for (int32_t y = _chunk->m_y - 1; y < _chunk->m_y + 2; ++y) {
       struct Chunk_t* toRedraw = getChunk(x,y);
-      pd->system->logToConsole("REDRAW %i %i", toRedraw->m_x, toRedraw->m_y);
+      //pd->system->logToConsole("REDRAW %i %i", toRedraw->m_x, toRedraw->m_y);
       renderChunkBackgroundImage(toRedraw);
     }
   }
@@ -158,7 +158,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
       for (uint32_t i = 0; i < otherChunk->m_nBuildings; ++i) {
         struct Building_t* building = otherChunk->m_buildings[i];
         if (building->m_type >= kExtractor && building->m_image[1]) {
-          pd->system->logToConsole("render to nearby chunk (%i %i), off is %i %i, coords are %i %i",otherChunk->m_x, otherChunk->m_y, chunkOffX, chunkOffY, building->m_pix_x - chunkOffX, building->m_pix_y - chunkOffY);
+          //pd->system->logToConsole("render to nearby chunk (%i %i), off is %i %i, coords are %i %i",otherChunk->m_x, otherChunk->m_y, chunkOffX, chunkOffY, building->m_pix_x - chunkOffX, building->m_pix_y - chunkOffY);
           pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - chunkOffX, building->m_pix_y - chunkOffY, kBitmapUnflipped);
         }
       }
@@ -233,6 +233,28 @@ void doWetness(void) {
     for (int32_t y = 0; y < TOT_TILES_Y; ++y) {
       getTile(x, y)->m_wetness = distanceFromWater(x,y);
     }
+  }
+}
+
+const char* toStringWetness(struct Tile_t* _tile) {
+  if (_tile->m_wetness < 4) {
+    return "Wet";
+  } else if (_tile->m_wetness < 8) {
+    return "Medium";
+  } else {
+    return "Dry";
+  }
+}
+
+const char* toStringSoil(struct Tile_t* _tile) {
+  if (_tile->m_tile < 8) {
+    return "Silty Soil";
+  } else if (_tile->m_tile < 16) {
+    return "Chalky Soil";
+  } else if (_tile->m_tile < 24) {
+    return "Peaty Soil";
+  } else {
+    return "Sandy Soil";
   }
 }
 

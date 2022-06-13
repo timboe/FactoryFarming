@@ -28,16 +28,45 @@ void assignNeighbors(struct Building_t* _building);
 
 void assignUpdate(struct Building_t* _building);
 
-const char* toStringBuilding(enum kCargoType _type);
 
 /// ///
 
-const char* toStringBuilding(enum kCargoType _type) {
-  switch(_type) {
+const char* toStringBuilding(struct Building_t* _building) {
+  switch(_building->m_type) {
     case kNoBuilding: return "NoBuilding";
-    case kConveyor: return "Conveyor";
-    default: return "Building???";
+    case kConveyor: switch (_building->m_subType.conveyor) {
+      case kBelt: return "Conveyor Belt";
+      case kSplitI: return "Conveyor 'I' Spliter";
+      case kSplitL: return "Conveyor 'L' Splitter";
+      case kSplitT: return "Conveyor 'T' Splitter";
+      case kFilterL: return "Conveyor 'L' Filter";
+      case kNConvSubTypes: return "";
+    }
+    case kPlant: switch (_building->m_subType.plant) {
+      case kCarrotPlant: return "Carrot Plant";
+      case kAppleTree: return "Apple Tree";
+      case kWheatPlant: return "Wheat Plant";
+      case kNPlantSubTypes: return "";
+    }
+    case kExtractor: switch (_building->m_subType.extractor) {
+      case kCropHarvester: return "Automatic Harvester";
+      case kPump: return "Water Pump";
+      case kNExtractorSubTypes: return "";
+    }
+    case kFactory: switch (_building->m_subType.factory) {
+      case kMakeSmall: return "Placeholder";
+      case kNFactorySubTypes: return "";
+    }
+    case kSpecial: switch (_building->m_subType.special) {
+      case kShop: return "The Shop";
+      case kSellBox: return "Sell Box";
+      case kExportBox: return "Item Exporter";
+      case kImportBox: return "Item Importer";
+      case kNSpecialSubTypes: return "";
+    }
+    case kNBuildingTypes: return "";
   }
+  return "";
 }
 
 uint16_t getNBuildings() {
@@ -318,7 +347,7 @@ void* deserialiseStructDoneBuilding(json_decoder* jd, const char* _name, json_va
   ++(m_nByType[building->m_type]);
 
   pd->system->logToConsole("-- Building #%i [%i] decoded to %s, (%i, %i) dir:%i stype:%i prog:%i mode:%i store:[%i][%i, %i, %i, %i]",
-    m_nBuildings, m_deserialiseIndexBuilding, toStringBuilding(building->m_type),
+    m_nBuildings, m_deserialiseIndexBuilding, toStringBuilding(building),
     building->m_pix_x, building->m_pix_y, building->m_dir, building->m_subType.conveyor, building->m_progress, building->m_mode,
     building->m_stored[0], building->m_stored[1], building->m_stored[2], building->m_stored[3], building->m_stored[4]
   );

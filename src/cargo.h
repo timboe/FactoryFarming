@@ -1,7 +1,7 @@
 #pragma once
 #include "game.h"
 
-enum kCargoType {kNoCargo, kApple, kCheese, kCarrot, kNCargoType};
+enum kCargoType {kNoCargo, kApple, kCheese, kCarrot, kWheat, kNCargoType};
 
 struct Cargo_t{
   // Persistent

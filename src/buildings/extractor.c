@@ -54,7 +54,7 @@ void extractorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoo
   switch (_building->m_subType.extractor) {
     case kCropHarvester:; return cropHarveserUpdateFn(_building, _tick);
     case kPump:;          return;
-    case kNPlantSubTypes:; default: break;
+    case kNExtractorSubTypes:; break;
   }
 }
 
@@ -89,7 +89,7 @@ void buildingSetupExtractor(struct Building_t* _building) {
     switch (_building->m_subType.extractor) {
       case kCropHarvester:; _building->m_image[zoom] = getSprite48(0 + _building->m_dir, 0, zoom); break;
       case kPump:;          _building->m_image[zoom] = getSprite48(0 + _building->m_dir, 1, zoom); break;
-      case kNPlantSubTypes:; default: break;
+      case kNExtractorSubTypes:; break;
     }
 
     PDRect bound = {.x = 0, .y = 0, .width = EXTRACTOR_PIX*zoom, .height = EXTRACTOR_PIX*zoom};

@@ -33,16 +33,17 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
     }
     //pd->system->logToConsole("MOVE %i %i, %i", loc->m_pix_x, loc->m_pix_y, loc->m_progress);
   }
-  if (_building->m_progress >= TILE_PIX && _building->m_next[_building->m_mode]->m_cargo == NULL) {
-    struct Cargo_t* theCargo = loc->m_cargo;
 
-    // Handle filters vs. splitters
-    struct Location_t* nextLoc = NULL;
-    if (_building->m_subType.conveyor == kFilterL) {
-      nextLoc = (_building->m_mode == theCargo->m_type ? _building->m_next[1] :  _building->m_next[0]);  
-    } else {
-      nextLoc = _building->m_next[_building->m_mode];
-    }
+  // Handle filters vs. splitters
+  struct Location_t* nextLoc = NULL;
+  if (_building->m_subType.conveyor == kFilterL) {
+    nextLoc = (_building->m_mode == loc->m_cargo->m_type ? _building->m_next[1] :  _building->m_next[0]);  
+  } else {
+    nextLoc = _building->m_next[_building->m_mode];
+  }
+
+  if (_building->m_progress >= TILE_PIX && nextLoc->m_cargo == NULL) {
+    struct Cargo_t* theCargo = loc->m_cargo;
 
     // Move cargo
     nextLoc->m_cargo = theCargo;
@@ -136,11 +137,12 @@ void buildingSetupConveyor(struct Building_t* _building) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
 
     switch (_building->m_subType.conveyor) {
-      case kBelt:;   _building->m_image[zoom] = getSprite16(0, CONV_START_Y + _building->m_dir, zoom); break;
-      case kSplitI:; _building->m_image[zoom] = getSprite16(0, 11 + _building->m_dir, zoom); break;
-      case kSplitL:; _building->m_image[zoom] = getSprite16(1, 11 + _building->m_dir, zoom); break;
-      case kSplitT:; _building->m_image[zoom] = getSprite16(2, 11 + _building->m_dir, zoom); break;
-      case kFilterL:; default: break;
+      case kBelt:;    _building->m_image[zoom] = getSprite16(0, CONV_START_Y + _building->m_dir, zoom); break;
+      case kSplitI:;  _building->m_image[zoom] = getSprite16(0, 11 + _building->m_dir, zoom); break;
+      case kSplitL:;  _building->m_image[zoom] = getSprite16(1, 11 + _building->m_dir, zoom); break;
+      case kSplitT:;  _building->m_image[zoom] = getSprite16(2, 11 + _building->m_dir, zoom); break;
+      case kFilterL:; _building->m_image[zoom] = getSprite16(3, 11 + _building->m_dir, zoom); break;
+      case kNConvSubTypes:; break;
     }
 
     // Animate the belt at zoom=2

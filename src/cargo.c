@@ -27,6 +27,8 @@ const char* toStringCargo(enum kCargoType _type) {
     case kNoCargo: return "NoCargo";
     case kApple: return "Apple";
     case kCheese: return "Cheese";
+    case kWheat: return "Wheat";
+    case kCarrot: return "Carrot";
     default: return "Cargo???";
   }
 }
@@ -82,6 +84,7 @@ uint16_t getCargo_idx(enum kCargoType _type) {
     case kApple:;  return getSprite16_idx(8, 7);
     case kCheese:; return getSprite16_idx(9, 7);
     case kCarrot:; return getSprite16_idx(10, 7);
+    case kWheat:;  return getSprite16_idx(11, 7);
     case kNoCargo:; case kNCargoType:; 
   }
   return getSprite16_idx(0, 2);
@@ -90,8 +93,9 @@ uint16_t getCargo_idx(enum kCargoType _type) {
 uint16_t getCargoValue(enum kCargoType _type) {
   switch (_type) {
     case kApple:;  return 2;
-    case kCheese:; return 4;
+    case kCheese:; return 8;
     case kCarrot:; return 1;
+    case kWheat:;  return 4;
     case kNoCargo:; case kNCargoType:; 
   }
   return 0;

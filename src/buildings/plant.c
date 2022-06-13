@@ -16,8 +16,10 @@ void plantSpawnCargo(struct Building_t* _building, struct Location_t* _loc) {
   switch (_building->m_subType.plant) {
     case kCarrotPlant:; newCargo(_loc, kCarrot, false);
     case kAppleTree:;   newCargo(_loc, kApple, false);
-    case kNPlantSubTypes:; default: break;
+    case kWheatPlant:;  newCargo(_loc, kWheat, false);
+    case kNPlantSubTypes:; break;
   }
+  // TODO growing bonuses?
   _building->m_progress = GROW_TIME + rand() % GROW_RANDOM;
   if (++_building->m_mode == N_CROPS_BEFORE_FARMLAND) {
     renderChunkBackgroundImage(_loc->m_chunk);
@@ -28,9 +30,7 @@ void plantSpawnCargo(struct Building_t* _building, struct Location_t* _loc) {
 void plantUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   _building->m_progress -= _tick;
 
-  // TODO: Additional subtraction if _building->m_mode >= N_CROPS_BEFORE_FARMLAND? Fertiliser etc?
 
-  // TODO: Growning penalties?
 
   if (_tick == NEAR_TICK_AMOUNT && _building->m_location->m_cargo) {
     _building->m_stored[0] = _building->m_stored[0] + (_building->m_stored[1] == 0 ? 1 : -1);
@@ -43,6 +43,9 @@ void plantUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   }
 
   if (_building->m_progress > 0) return;
+
+  // TODO: Growning penalties?
+
 
   if (_building->m_location->m_cargo == NULL) {
     plantSpawnCargo(_building, _building->m_location);
@@ -86,6 +89,7 @@ void buildingSetupPlant(struct Building_t* _building) {
     switch (_building->m_subType.plant) {
       case kCarrotPlant:; _building->m_image[zoom] = getSprite16(10, 8, zoom); break;
       case kAppleTree:;   _building->m_image[zoom] = getSprite16(8,  8, zoom); break;
+      case kWheatPlant:;  _building->m_image[zoom] = getSprite16(11,  8, zoom); break;
       case kNPlantSubTypes:; default: break;
     }
   }

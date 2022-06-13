@@ -11,7 +11,7 @@ enum kBuildingType {kNoBuilding, kConveyor, kPlant, kExtractor, kFactory, kSpeci
 
 enum kConvSubType{kBelt, kSplitI, kSplitL, kSplitT, kFilterL, kNConvSubTypes};
 
-enum kPlantSubType{kCarrotPlant, kAppleTree, kNPlantSubTypes};
+enum kPlantSubType{kCarrotPlant, kAppleTree, kWheatPlant, kNPlantSubTypes};
 
 enum kExtractorSubType{kCropHarvester, kPump, kNExtractorSubTypes};
 
@@ -65,6 +65,8 @@ struct Building_t{
 uint16_t getNBuildings(void);
 
 uint16_t getNByType(enum kBuildingType _type);
+
+const char* toStringBuilding(struct Building_t* _building);
 
 struct Building_t* buildingManagerNewBuilding(enum kBuildingType _asType);
 
