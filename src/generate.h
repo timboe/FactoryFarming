@@ -15,6 +15,8 @@ void generate(void);
 
 struct Tile_t* getTile(int32_t _x, int32_t _y);
 
+struct Tile_t* getTile_fromLocation(struct Location_t* _loc);
+
 void renderChunkBackgroundImage(struct Chunk_t* _chunk);
 
 void renderChunkBackgroundImageAround(struct Chunk_t* _chunk);

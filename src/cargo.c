@@ -18,12 +18,11 @@ void cargoSpriteSetup(struct Cargo_t* _cargo, uint16_t _x, uint16_t _y, uint16_t
 
 uint16_t getCargo_idx(enum kCargoType _type);
 
-const char* toStringCargo(enum kCargoType _type);
-
 /// ///
 
-const char* toStringCargo(enum kCargoType _type) {
-  switch(_type) {
+const char* toStringCargo(struct Cargo_t* _cargo) {
+  if (!_cargo) return "";
+  switch(_cargo->m_type) {
     case kNoCargo: return "NoCargo";
     case kApple: return "Apple";
     case kCheese: return "Cheese";
@@ -201,6 +200,6 @@ void* deserialiseStructDoneCargo(json_decoder* jd, const char* _name, json_value
     getCargo_idx(cargo->m_type));
   ++m_nCargo;
 
-  pd->system->logToConsole("-- Cargo #%i, [%i] decoded to  %s, (%i, %i)", m_nCargo, m_deserialiseIndexCargo, toStringCargo(cargo->m_type), m_deserialiseXCargo, m_deserialiseYCargo);
+  pd->system->logToConsole("-- Cargo #%i, [%i] decoded to  %s, (%i, %i)", m_nCargo, m_deserialiseIndexCargo, toStringCargo(cargo), m_deserialiseXCargo, m_deserialiseYCargo);
   return NULL;
 }

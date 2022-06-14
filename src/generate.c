@@ -42,6 +42,10 @@ struct Tile_t* getTile(int32_t _x, int32_t _y) {
   return &m_tiles[ TOT_TILES_X*_y + _x ];
 }
 
+struct Tile_t* getTile_fromLocation(struct Location_t* _loc) {
+  return getTile(_loc->m_x, _loc->m_y);
+}
+
 float pointDist(int32_t _x, int32_t _y, int32_t _x1, int32_t _y1, int32_t _x2, int32_t _y2) {
 
   int32_t A = _x - _x1;
@@ -590,12 +594,15 @@ void generate() {
   doLakesAndRivers();
 
   const uint16_t startX = TILES_PER_CHUNK_X/2;
-  newBuilding(getLocation_noCheck(startX,      TILES_PER_CHUNK_Y), 0, kSpecial, (union kSubType) {.special = kShop} );
-  newBuilding(getLocation_noCheck(startX + 9,  TILES_PER_CHUNK_Y), 0, kSpecial, (union kSubType) {.special = kSellBox} );
-  newBuilding(getLocation_noCheck(startX + 18, TILES_PER_CHUNK_Y), 0, kSpecial, (union kSubType) {.special = kExportBox} );
-  newBuilding(getLocation_noCheck(startX + 27, TILES_PER_CHUNK_Y), 0, kSpecial, (union kSubType) {.special = kImportBox} );
+
+  //newBuilding(getLocation_noCheck(startX,      TILES_PER_CHUNK_Y), 0, kSpecial, (union kSubType) {.special = kShop} );
+  //newBuilding(getLocation_noCheck(startX + 9,  TILES_PER_CHUNK_Y), 0, kSpecial, (union kSubType) {.special = kSellBox} );
+  //newBuilding(getLocation_noCheck(startX + 18, TILES_PER_CHUNK_Y), 0, kSpecial, (union kSubType) {.special = kExportBox} );
+  //newBuilding(getLocation_noCheck(startX + 27, TILES_PER_CHUNK_Y), 0, kSpecial, (union kSubType) {.special = kImportBox} );
 
   doWetness();
 
   snprintf(m_worldName, WORLD_NAME_LENGTH, "World %c%c%c%c%c", 'A'+rand()%24, 'a'+rand()%24, 'a'+rand()%24, 'a'+rand()%24, 'a'+rand()%24);
+
+  pd->system->logToConsole("Generated %s", m_worldName);
 }

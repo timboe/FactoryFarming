@@ -8,6 +8,7 @@ struct Location_t{
   // Persistent
   // Chunk index - obtained from chunk
   // Building index - obtained from building
+  bool m_notOwned; // For when there is a building covering this location, but this is not the primary location
 
   // Transient
   struct Cargo_t* m_cargo;

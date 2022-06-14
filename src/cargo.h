@@ -19,6 +19,8 @@ uint16_t getNCargo(void);
 
 uint16_t getCargoValue(enum kCargoType _type);
 
+const char* toStringCargo(struct Cargo_t* _cargo);
+
 struct Cargo_t* cargoManagerNewCargo(enum kCargoType _type);
 
 struct Cargo_t* cargoManagerGetByIndex(uint16_t _index);

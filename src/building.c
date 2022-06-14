@@ -32,6 +32,7 @@ void assignUpdate(struct Building_t* _building);
 /// ///
 
 const char* toStringBuilding(struct Building_t* _building) {
+  if (!_building) return "";
   switch(_building->m_type) {
     case kNoBuilding: return "NoBuilding";
     case kConveyor: switch (_building->m_subType.conveyor) {
@@ -162,15 +163,28 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   if (!canBePlaced) return false;
 
   bool newToChunk = false;
-  if (_loc->m_building == NULL) {
+  struct Building_t* building = _loc->m_building;
+  if (!building) {
+    building = buildingManagerNewBuilding(_type);
     newToChunk = true;
-    _loc->m_building = buildingManagerNewBuilding(_type);
-    if (!_loc->m_building) {
+    if (!building) {
       // Run out of buildings
       return false;
     }
+    _loc->m_building = building;
+    _loc->m_notOwned = false;
+    if (_type >= kExtractor) { // Add to neighbors too
+      for (int32_t x = -1; x < 2; ++x) {
+        for (int32_t y = -1; y < 2; ++y) {
+          if (!x && !y) continue;
+          struct Location_t* otherLoc = getLocation(_loc->m_x + x, _loc->m_y + y);
+          otherLoc->m_building = building;
+          otherLoc->m_notOwned = true;
+        }
+      }
+    }
   }
-  struct Building_t* building = _loc->m_building;
+
 
   switch (building->m_type) {
     case kConveyor:; building->m_subType.conveyor = _subType.conveyor; break;
@@ -201,14 +215,13 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     chunkAddBuilding(_loc->m_chunk, building); // Careful, no de-duplication in here, for speed
   }
 
-
   // Bake into the background
   if (_type >= kExtractor) {
-    //pd->system->logToConsole("ADD TO CHUNK: %i %i, new:%i", _loc->m_chunk->m_x, _loc->m_chunk->m_y, newToChunk);
     renderChunkBackgroundImageAround(_loc->m_chunk);
   } else {
     renderChunkBackgroundImage(_loc->m_chunk);
   }
+
   updateRenderList();
 
   return true;

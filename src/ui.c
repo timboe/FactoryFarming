@@ -4,6 +4,9 @@
 #include "input.h"
 #include "cargo.h"
 #include "building.h"
+#include "location.h"
+#include "generate.h"
+#include "cargo.h"
 
 uint16_t m_UIIcons[] = {0,3,  0,4,  4,3,  4,4,  8,4,  8,7,  10,7,  11,7,  9,7,  4,2,  1,2};
 
@@ -117,7 +120,7 @@ void updateBlueprint() {
       case kMenuCheese:;    pd->sprite->setImage(bp, getSprite16(m_UIIcons[16], m_UIIcons[17], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
       case kMenuExtractor:; pd->sprite->setImage(bp, getSprite48(m_UISelectedRotation, 0 , zoom),     kBitmapUnflipped); setPlayerLookingAtOffset(2);
                             pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap9x9[zoom], kBitmapUnflipped); break;     
-      case kMenuBin:;       pd->sprite->setImage(bp, getSprite16(m_UIIcons[18], m_UIIcons[19], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(1); break;     
+      case kMenuBin:;       pd->sprite->setImage(bp, getSprite16(m_UIIcons[20], m_UIIcons[21], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(1); break;     
     }
  
   } else { // Clear blueprint
@@ -175,25 +178,38 @@ void drawUIBottom() {
   pd->graphics->setDrawMode(kDrawModeFillWhite);
   const enum kGameMode gm = getGameMode();
   if (gm == kWander) {
-    static bool mode = true;
-    if (pd->system->getElapsedTime() > 3.0f) {
-      mode = !mode;
+
+    int32_t mode = 0;
+    if (pd->system->getElapsedTime() < 3.0f) {
+      mode = 0;
+    } else if (pd->system->getElapsedTime() < 6.0f) {
+      mode = 1;
+    } else if (pd->system->getElapsedTime() < 9.0f) {
+      mode = 2;
+    } else if (pd->system->getElapsedTime() > 12.0f) {
       pd->system->resetElapsedTime();
     }
-    if (mode) {
+
+    if (mode == 0) {
       snprintf(text, 128, "Conveyors:%u", getNByType(kConveyor));
       pd->graphics->drawText(text, 128, kASCIIEncoding, 0, 0);
       snprintf(text, 128, "Cargo:%u", getNCargo());
       pd->graphics->drawText(text, 128, kASCIIEncoding, 7*TILE_PIX, 0);
       snprintf(text, 128, "Sprite List:%u", pd->sprite->getSpriteCount());
       pd->graphics->drawText(text, 128, kASCIIEncoding, 12*TILE_PIX, 0);
-    } else {
+    } else if (mode == 1) {
       snprintf(text, 128, "Near Ticks:%u", getNearTickCount());
       pd->graphics->drawText(text, 128, kASCIIEncoding, 0, 0);
       snprintf(text, 128, "Far Ticks:%u", getFarTickCount());
       pd->graphics->drawText(text, 128, kASCIIEncoding, 7*TILE_PIX, 0);
       snprintf(text, 128, "Money:%u", (unsigned) getPlayer()->m_money);
       pd->graphics->drawText(text, 128, kASCIIEncoding, 14*TILE_PIX, 0);
+    } else if (mode == 2) {
+      struct Location_t* loc = getPlayerLocation();
+      struct Tile_t* t = getTile_fromLocation(loc);
+      snprintf(text, 128, "%s (%s), B:%s, C:%s", 
+        toStringSoil(t), toStringWetness(t), toStringBuilding(loc->m_building), toStringCargo(loc->m_cargo));
+      pd->graphics->drawText(text, 128, kASCIIEncoding, 0, 0);
     }
 
   } else if (gm == kMenuSelect || gm == kMenuOptionSelected) {
@@ -205,7 +221,7 @@ void drawUIBottom() {
       case kMenuFilterL:;   snprintf(text, 128, "'L' Conveyor Filter (%s)", getRotationAsString()); break;
       case kMenuApple:;     snprintf(text, 128, "Apple tree, makes apples"); break;
       case kMenuCarrot:;    snprintf(text, 128, "Carrot seeds, grows carrots"); break;
-      case kMenuWheat:;    snprintf(text, 128, "Wheat seeds, grows wheat"); break;
+      case kMenuWheat:;     snprintf(text, 128, "Wheat seeds, grows wheat"); break;
       case kMenuCheese:;    snprintf(text, 128, "Cheese. Can be put on conveyors."); break;
       case kMenuExtractor:; snprintf(text, 128, "Automatic Harvester"); break;
       case kMenuBin:;       snprintf(text, 128, "Remove conveyors & cargo"); break;
