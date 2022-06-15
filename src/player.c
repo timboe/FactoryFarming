@@ -3,6 +3,7 @@
 #include "chunk.h"
 #include "render.h"
 #include "input.h"
+#include "io.h"
 
 struct Player_t m_player;
 
@@ -15,6 +16,7 @@ uint8_t m_lookingAtOffset;
 bool m_updateLookingAt = false;
 
 uint16_t m_deserialiseXPlayer = 0, m_deserialiseYPlayer = 0;
+int16_t m_deserialiseArrayID = -1;
 
 struct Chunk_t* m_currentChunk;
 
@@ -276,20 +278,106 @@ void serialisePlayer(struct json_encoder* je) {
   je->addTableMember(je, "y", 1);
   je->writeInt(je, (int) m_player.m_pix_y);
   je->addTableMember(je, "m", 1);
-  je->writeInt(je, (int) m_player.m_money);
+  je->writeInt(je, m_player.m_money);
+  je->addTableMember(je, "slot", 4);
+  je->writeInt(je, getSlot());
+  
+  je->addTableMember(je, "cargos", 6);
+  je->startArray(je);
+  for (int32_t i = 0; i < kNCargoType; ++i) {
+    je->addArrayMember(je);
+    je->writeInt(je, m_player.m_carryCargo[i]);
+  }
+  je->endArray(je);
+
+  je->addTableMember(je, "convs", 5);
+  je->startArray(je);
+  for (int32_t i = 0; i < kNConvSubTypes; ++i) {
+    je->addArrayMember(je);
+    je->writeInt(je, m_player.m_carryConveyor[i]);
+  }
+  je->endArray(je);
+
+  je->addTableMember(je, "plants", 6);
+  je->startArray(je);
+  for (int32_t i = 0; i < kNPlantSubTypes; ++i) {
+    je->addArrayMember(je);
+    je->writeInt(je, m_player.m_carryPlant[i]);
+  }
+  je->endArray(je);
+
+
+  je->addTableMember(je, "xtrcts", 6);
+  je->startArray(je);
+  for (int32_t i = 0; i < kNExtractorSubTypes; ++i) {
+    je->addArrayMember(je);
+    je->writeInt(je, m_player.m_carryExtractor[i]);
+  }
+  je->endArray(je);
+
+
+  je->addTableMember(je, "facts", 5);
+  je->startArray(je);
+  for (int32_t i = 0; i < kNFactorySubTypes; ++i) {
+    je->addArrayMember(je);
+    je->writeInt(je, m_player.m_carryFactory[i]);
+  }
+  je->endArray(je);
+
   je->endTable(je);
 }
 
 void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _value) {
+  jd->didDecodeArrayValue = NULL;
+  jd->didDecodeSublist = NULL;
   if (strcmp(_key, "x") == 0) {
     m_player.m_pix_x = (float) json_intValue(_value);
+    jd->didDecodeSublist = deserialiseStructDonePlayer;
   } else if (strcmp(_key, "y") == 0) {
     m_player.m_pix_y = json_intValue(_value);
+    jd->didDecodeSublist = deserialiseStructDonePlayer;
   } else if (strcmp(_key, "m") == 0) {
     m_player.m_money = json_intValue(_value);
+    jd->didDecodeSublist = deserialiseStructDonePlayer;
+  } else if (strcmp(_key, "slot") == 0) {
+    setSlot( json_intValue(_value) );
+    jd->didDecodeSublist = deserialiseStructDonePlayer;
+
+    m_deserialiseArrayID = 0;
+    jd->didDecodeArrayValue = deserialiseArrayValuePlayer;
+  } else if (strcmp(_key, "cargos") == 0) {
+    m_deserialiseArrayID = 1;
+    jd->didDecodeArrayValue = deserialiseArrayValuePlayer;
+  } else if (strcmp(_key, "convs") == 0) {
+    m_player.m_carryConveyor[0] = json_intValue(_value); 
+    m_deserialiseArrayID = 2;
+    jd->didDecodeArrayValue = deserialiseArrayValuePlayer;
+  } else if (strcmp(_key, "plants") == 0) {
+    m_deserialiseArrayID = 3;
+    jd->didDecodeArrayValue = deserialiseArrayValuePlayer;
+  } else if (strcmp(_key, "xtrcts") == 0) {
+    m_deserialiseArrayID = 4;
+    jd->didDecodeArrayValue = deserialiseArrayValuePlayer;
+  } else if (strcmp(_key, "facts") == 0) {
+    jd->didDecodeArrayValue = deserialiseArrayValuePlayer;
   } else {
     pd->system->error("PLAYER DECODE ISSUE, %s", _key);
   }
+}
+
+// TODO - we are not loading the final value?
+
+void deserialiseArrayValuePlayer(json_decoder* jd, int _pos, json_value _value) {
+  int v = json_intValue(_value);
+  int i = _pos - 1;
+  switch (m_deserialiseArrayID) {
+    case 0: m_player.m_carryCargo[i] = v; break;
+    case 1: m_player.m_carryConveyor[i] = v; break;
+    case 2: m_player.m_carryPlant[i] = v; break;
+    case 3: m_player.m_carryExtractor[i] = v; break;
+    case 4: m_player.m_carryFactory[i] = v; break;
+  }
+  pd->system->logToConsole("%i -- i %i = %i", m_deserialiseArrayID, i, v);
 }
 
 void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_value_type _type) {
@@ -298,6 +386,8 @@ void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_valu
 
   pd->system->logToConsole("-- Player decoded to (%i, %i), current location (%i, %i), money:%i", 
     (int32_t)m_player.m_pix_x, (int32_t)m_player.m_pix_y, m_currentLocation->m_x, m_currentLocation->m_y, m_player.m_money);
+
+  m_deserialiseArrayID = -1;
 
   return NULL;
 }

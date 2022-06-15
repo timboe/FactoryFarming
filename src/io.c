@@ -23,6 +23,8 @@ void decodeError(json_decoder* jd, const char* _error, int _linenum);
 
 void willDecodeSublist(json_decoder* jd, const char* _name, json_value_type _type);
 
+void willDecodeSublist_player(json_decoder* jd, const char* _name, json_value_type _type);
+
 void scanDidDecode(json_decoder* jd, const char* _key, json_value _value);
 
 int scanShouldDecodeTableValueForKey(json_decoder* jd, const char* _key);
@@ -89,23 +91,38 @@ void scanDidDecode(json_decoder* jd, const char* _key, json_value _value) {
 ///
 
 bool save() {
-  json_encoder je;
-
-  snprintf(m_filePath, 16, "world%i.json", m_slot);
-  SDFile* file = pd->file->open(m_filePath, kFileWrite);
-
   uint8_t pretty = 0;
   #ifdef DEBUG_MODE
   pretty = 1;
   #endif
 
+  json_encoder je_p;
+
+  snprintf(m_filePath, 16, "player.json");
+  SDFile* file_p = pd->file->open(m_filePath, kFileWrite);
+
+  pd->json->initEncoder(&je_p, doWrite, file_p, pretty);
+
+  je_p.startTable(&je_p);
+  serialisePlayer(&je_p);
+  je_p.endTable(&je_p);
+
+  int status = pd->file->close(file_p);
+
+  /// ///
+
+  json_encoder je;
+
+  snprintf(m_filePath, 16, "world%i.json", m_slot);
+  SDFile* file = pd->file->open(m_filePath, kFileWrite);
+
   pd->json->initEncoder(&je, doWrite, file, pretty);
+
   je.startTable(&je);
 
   je.addTableMember(&je, "name", 4);
   je.writeString(&je, getWorldName(), strlen(getWorldName()));
 
-  serialisePlayer(&je);
   serialiseCargo(&je);
   serialiseBuilding(&je);
   serialiseLocation(&je);
@@ -113,7 +130,7 @@ bool save() {
 
   je.endTable(&je);
 
-  int status = pd->file->close(file);
+  status &= pd->file->close(file);
 
   pd->system->logToConsole("save to %u, status %i", m_slot, status);
   return true;
@@ -124,6 +141,22 @@ bool save() {
 
 bool load() {
 
+  pd->system->logToConsole("START load player");
+
+  json_decoder jd_p = {
+    .decodeError = decodeError,
+    .willDecodeSublist = willDecodeSublist_player
+  };
+
+  snprintf(m_filePath, 16, "player.json");
+  SDFile* file_p = pd->file->open(m_filePath, kFileRead|kFileReadData);
+
+  pd->json->decode(&jd_p, (json_reader){ .read = doRead, .userdata = file_p }, NULL);
+
+  pd->file->close(file_p);
+
+  /// /// We have now loaded the correct slot number
+
   pd->system->logToConsole("START load from slot %i", m_slot);
 
   json_decoder jd = {
@@ -131,7 +164,6 @@ bool load() {
     .willDecodeSublist = willDecodeSublist
   };
 
-  static char m_filePath[16];
   snprintf(m_filePath, 16, "world%i.json", m_slot);
   SDFile* file = pd->file->open(m_filePath, kFileRead|kFileReadData);
 
@@ -139,9 +171,17 @@ bool load() {
 
   pd->file->close(file);
 
-  pd->system->logToConsole("STOP from slot %i", m_slot);
+  pd->system->logToConsole("STOP load from slot %i", m_slot);
   
   return true;
+}
+
+void willDecodeSublist_player(json_decoder* jd, const char* _name, json_value_type _type) {
+  if (strcmp(_name, "player") == 0 && _type == kJSONTable) {
+    jd->didDecodeTableValue = didDecodeTableValuePlayer;
+  } else {
+    jd->didDecodeTableValue = NULL;
+  }
 }
 
 void willDecodeSublist(json_decoder* jd, const char* _name, json_value_type _type) {
@@ -152,9 +192,6 @@ void willDecodeSublist(json_decoder* jd, const char* _name, json_value_type _typ
 
   if (strcmp(_name, "name") == 0 && _type == kJSONTable) {
     jd->didDecodeTableValue = didDecodeWorldName;
-  } else if (strcmp(_name, "player") == 0 && _type == kJSONTable) {
-    jd->didDecodeTableValue = didDecodeTableValuePlayer;
-    jd->didDecodeSublist = deserialiseStructDonePlayer;
   } else if (strcmp(truncated, "cargo") == 0 && _type == kJSONTable) {
     jd->didDecodeTableValue = deserialiseValueCargo;
     jd->didDecodeSublist = deserialiseStructDoneCargo;

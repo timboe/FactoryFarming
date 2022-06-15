@@ -130,7 +130,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
     for (uint16_t u = 0; u < TILES_PER_CHUNK_X; ++u) {
       struct Tile_t* t = getTileInChunk(_chunk, u, v);
       if (t->m_wetness > 0 && t->m_wetness < 8) { // If wet, but not actually water
-        for (int32_t w = 0; w < (8 - t->m_wetness); ++w) {
+        for (int32_t w = 0; w < (8 - t->m_wetness); w += 2) {
           pd->graphics->drawBitmap(getSprite16(12 + (w/2 + v*u)%4, 2, 1), u * TILE_PIX, v * TILE_PIX, kBitmapUnflipped);
         }
       }
@@ -149,28 +149,22 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
     }
   }
 
-  // Render from nearby chunk loations
+  // Render locations from nearby chunks, in case they overlap
   for (int32_t x = -1; x < 2; ++x) {
     for (int32_t y = -1; y < 2; ++y) {
       if (!x && !y) continue;
       struct Chunk_t* otherChunk = getChunk(_chunk->m_x + x, _chunk->m_y + y);
-      int32_t chunkOffX = (otherChunk->m_x * CHUNK_PIX_X) + (3*TILE_PIX/2) + (CHUNK_PIX_X * x * -1);
-      int32_t chunkOffY = (otherChunk->m_y * CHUNK_PIX_Y) + (3*TILE_PIX/2) + (CHUNK_PIX_Y * y * -1);
+      int32_t chunkOffX = (otherChunk->m_x * CHUNK_PIX_X) + (3*TILE_PIX/2) - (CHUNK_PIX_X * x);
+      int32_t chunkOffY = (otherChunk->m_y * CHUNK_PIX_Y) + (3*TILE_PIX/2) - (CHUNK_PIX_Y * y);
 
-      //int32_t chunkOffX = (otherChunk->m_x * CHUNK_PIX_X) + (3*TILE_PIX/2) ;
-      //int32_t chunkOffY = (otherChunk->m_y * CHUNK_PIX_Y) + (3*TILE_PIX/2) - CHUNK_PIX_Y;
-
-      //  pd->system->logToConsole("OtherChunk %i %i: OCBs %i", otherChunk->m_x, otherChunk->m_y, otherChunk->m_nBuildings);
       for (uint32_t i = 0; i < otherChunk->m_nBuildings; ++i) {
         struct Building_t* building = otherChunk->m_buildings[i];
         if (building->m_type >= kExtractor && building->m_image[1]) {
-          //pd->system->logToConsole("render to nearby chunk (%i %i), off is %i %i, coords are %i %i",otherChunk->m_x, otherChunk->m_y, chunkOffX, chunkOffY, building->m_pix_x - chunkOffX, building->m_pix_y - chunkOffY);
           pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - chunkOffX, building->m_pix_y - chunkOffY, kBitmapUnflipped);
         }
       }
     }
   }
-
 
   pd->graphics->popContext();
 
