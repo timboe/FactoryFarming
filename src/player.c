@@ -328,44 +328,31 @@ void serialisePlayer(struct json_encoder* je) {
 }
 
 void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _value) {
-  jd->didDecodeArrayValue = NULL;
-  jd->didDecodeSublist = NULL;
   if (strcmp(_key, "x") == 0) {
     m_player.m_pix_x = (float) json_intValue(_value);
-    jd->didDecodeSublist = deserialiseStructDonePlayer;
   } else if (strcmp(_key, "y") == 0) {
     m_player.m_pix_y = json_intValue(_value);
-    jd->didDecodeSublist = deserialiseStructDonePlayer;
   } else if (strcmp(_key, "m") == 0) {
     m_player.m_money = json_intValue(_value);
-    jd->didDecodeSublist = deserialiseStructDonePlayer;
   } else if (strcmp(_key, "slot") == 0) {
-    setSlot( json_intValue(_value) );
-    jd->didDecodeSublist = deserialiseStructDonePlayer;
-
-    m_deserialiseArrayID = 0;
-    jd->didDecodeArrayValue = deserialiseArrayValuePlayer;
+    setSlot( json_intValue(_value) ); 
+    m_deserialiseArrayID = 0; // Note "one behind"
   } else if (strcmp(_key, "cargos") == 0) {
     m_deserialiseArrayID = 1;
-    jd->didDecodeArrayValue = deserialiseArrayValuePlayer;
   } else if (strcmp(_key, "convs") == 0) {
-    m_player.m_carryConveyor[0] = json_intValue(_value); 
     m_deserialiseArrayID = 2;
-    jd->didDecodeArrayValue = deserialiseArrayValuePlayer;
   } else if (strcmp(_key, "plants") == 0) {
     m_deserialiseArrayID = 3;
-    jd->didDecodeArrayValue = deserialiseArrayValuePlayer;
   } else if (strcmp(_key, "xtrcts") == 0) {
     m_deserialiseArrayID = 4;
-    jd->didDecodeArrayValue = deserialiseArrayValuePlayer;
   } else if (strcmp(_key, "facts") == 0) {
-    jd->didDecodeArrayValue = deserialiseArrayValuePlayer;
+    // noop
+  } else if (strcmp(_key, "player") == 0) {
+    jd->didDecodeSublist = deserialiseStructDonePlayer;
   } else {
     pd->system->error("PLAYER DECODE ISSUE, %s", _key);
   }
 }
-
-// TODO - we are not loading the final value?
 
 void deserialiseArrayValuePlayer(json_decoder* jd, int _pos, json_value _value) {
   int v = json_intValue(_value);

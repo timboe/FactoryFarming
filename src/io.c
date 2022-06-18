@@ -23,8 +23,6 @@ void decodeError(json_decoder* jd, const char* _error, int _linenum);
 
 void willDecodeSublist(json_decoder* jd, const char* _name, json_value_type _type);
 
-void willDecodeSublist_player(json_decoder* jd, const char* _name, json_value_type _type);
-
 void scanDidDecode(json_decoder* jd, const char* _key, json_value _value);
 
 int scanShouldDecodeTableValueForKey(json_decoder* jd, const char* _key);
@@ -96,6 +94,8 @@ bool save() {
   pretty = 1;
   #endif
 
+  pd->system->logToConsole("START save player");
+
   json_encoder je_p;
 
   snprintf(m_filePath, 16, "player.json");
@@ -110,6 +110,8 @@ bool save() {
   int status = pd->file->close(file_p);
 
   /// ///
+
+  pd->system->logToConsole("START save world");
 
   json_encoder je;
 
@@ -145,7 +147,8 @@ bool load() {
 
   json_decoder jd_p = {
     .decodeError = decodeError,
-    .willDecodeSublist = willDecodeSublist_player
+    .didDecodeTableValue = didDecodeTableValuePlayer,
+    .didDecodeArrayValue = deserialiseArrayValuePlayer
   };
 
   snprintf(m_filePath, 16, "player.json");
@@ -174,14 +177,6 @@ bool load() {
   pd->system->logToConsole("STOP load from slot %i", m_slot);
   
   return true;
-}
-
-void willDecodeSublist_player(json_decoder* jd, const char* _name, json_value_type _type) {
-  if (strcmp(_name, "player") == 0 && _type == kJSONTable) {
-    jd->didDecodeTableValue = didDecodeTableValuePlayer;
-  } else {
-    jd->didDecodeTableValue = NULL;
-  }
 }
 
 void willDecodeSublist(json_decoder* jd, const char* _name, json_value_type _type) {
