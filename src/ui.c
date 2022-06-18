@@ -119,7 +119,7 @@ void updateBlueprint() {
       case kMenuWheat:;     pd->sprite->setImage(bp, getSprite16(m_UIIcons[14], m_UIIcons[15], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
       case kMenuCheese:;    pd->sprite->setImage(bp, getSprite16(m_UIIcons[16], m_UIIcons[17], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
       case kMenuExtractor:; pd->sprite->setImage(bp, getSprite48(m_UISelectedRotation, 0 , zoom),     kBitmapUnflipped); setPlayerLookingAtOffset(2);
-                            pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap9x9[zoom], kBitmapUnflipped); break;     
+                            pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap7x7[zoom], kBitmapUnflipped); break;     
       case kMenuBin:;       pd->sprite->setImage(bp, getSprite16(m_UIIcons[20], m_UIIcons[21], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(1); break;     
     }
  

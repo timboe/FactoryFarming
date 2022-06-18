@@ -30,8 +30,8 @@ void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick) {
   _building->m_progress = COLLECT_TIME;
 
   // Picking up
-  for (int32_t x = -5; x < 6; ++x) {
-    for (int32_t y = -5; y < 6; ++y) {
+  for (int32_t x = -4; x < 5; ++x) {
+    for (int32_t y = -4; y < 5; ++y) {
       struct Location_t* loc = getLocation(_building->m_location->m_x + x, _building->m_location->m_y + y);
       if (loc->m_cargo && (loc->m_building == NULL || loc->m_building->m_type == kPlant)) {
         // For our three storage locations
@@ -61,9 +61,10 @@ void extractorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoo
 bool canBePlacedExtractor(struct Location_t* _loc) {
   for (int32_t x = -1; x < 2; ++x) {
     for (int32_t y = -1; y < 2; ++y) {
-      struct Tile_t* t = getTile(_loc->m_x + 1, _loc->m_y + 1);
-      if (t->m_tile > FLOOR_TILES) return false;
-      if (getLocation(x, y)->m_building != NULL) return false;
+      struct Tile_t* t = getTile(_loc->m_x + x, _loc->m_y + y);
+      if (t->m_tile > FLOOR_TILES) { pd->system->logToConsole("check FAILED 1"); return false; }
+      if (getLocation(_loc->m_x + x, _loc->m_y + y)->m_building != NULL) { pd->system->logToConsole("check FAILED 1"); return false; }
+      pd->system->logToConsole("check passed");
     }
   }
   return true;

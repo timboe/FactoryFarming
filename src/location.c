@@ -51,6 +51,9 @@ void clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
         for (int32_t y = -1; y < 2; ++y) {
           if (!x && !y) continue;
           struct Location_t* otherLoc = getLocation(_loc->m_x + x, _loc->m_y + y);
+          if (otherLoc->m_notOwned == false) {
+            pd->system->error("LOCATION %i %i SHOULD BE NOT OWNED", _loc->m_x + x, _loc->m_y + y);
+          }
           otherLoc->m_building = NULL;
           otherLoc->m_notOwned = false;
         }
@@ -80,8 +83,6 @@ void clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
 void initLocation() {
   m_locations = pd->system->realloc(NULL, SIZE_LOCATION);
   pd->system->logToConsole("malloc: for location %i", SIZE_LOCATION/1024);
-
-
 }
 
 void resetLocation() {

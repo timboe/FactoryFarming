@@ -22,7 +22,7 @@ struct Player_t{
   LCDSprite* m_blueprint[ZOOM_LEVELS]; // Index 0 not used - OWNED
   LCDSprite* m_blueprintRadius[ZOOM_LEVELS]; // Index 0 not used - OWNED
   LCDBitmap* m_blueprintRadiusBitmap3x3[ZOOM_LEVELS]; // Index 0 not used - OWNED
-  LCDBitmap* m_blueprintRadiusBitmap9x9[ZOOM_LEVELS]; // Index 0 not used - OWNED
+  LCDBitmap* m_blueprintRadiusBitmap7x7[ZOOM_LEVELS]; // Index 0 not used - OWNED
   float m_vX;
   float m_vY;
 };

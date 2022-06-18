@@ -17,7 +17,7 @@ enum kExtractorSubType{kCropHarvester, kPump, kNExtractorSubTypes};
 
 enum kFactorySubType{kMakeSmall, kNFactorySubTypes};
 
-enum kSpecialSubType{kShop, kSellBox, kExportBox, kImportBox, kNSpecialSubTypes};
+enum kSpecialSubType{kShop, kSellBox, kExportBox, kImportBox, kWarp, kNSpecialSubTypes};
 
 
 union kSubType {

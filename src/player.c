@@ -224,7 +224,7 @@ void playerSpriteSetup() {
     PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
     pd->sprite->setBounds(m_player.m_sprite[zoom], bound);
     pd->sprite->setImage(m_player.m_sprite[zoom], getSprite16(8, 3, zoom), kBitmapUnflipped);
-    //pd->sprite->setCollideRect(m_player.m_sprite[zoom], bound);
+    pd->sprite->setCollideRect(m_player.m_sprite[zoom], bound);
 
     m_player.m_blueprint[zoom] = pd->sprite->newSprite();
     pd->sprite->setBounds(m_player.m_blueprint[zoom], bound);
@@ -232,7 +232,7 @@ void playerSpriteSetup() {
     pd->sprite->setZIndex(m_player.m_blueprint[zoom], Z_INDEX_BLUEPRINT);
 
     m_player.m_blueprintRadiusBitmap3x3[zoom] = pd->graphics->newBitmap(TILE_PIX*3*zoom, TILE_PIX*3*zoom, kColorClear);
-    m_player.m_blueprintRadiusBitmap9x9[zoom] = pd->graphics->newBitmap(TILE_PIX*9*zoom, TILE_PIX*9*zoom, kColorClear);
+    m_player.m_blueprintRadiusBitmap7x7[zoom] = pd->graphics->newBitmap(TILE_PIX*7*zoom, TILE_PIX*7*zoom, kColorClear);
 
     uint16_t start = 2*zoom, stop = (TILE_PIX*3 - 2)*zoom;
     pd->graphics->setLineCapStyle(kLineCapStyleRound);
@@ -244,8 +244,8 @@ void playerSpriteSetup() {
     pd->graphics->drawLine(stop, start, stop, stop, 2*zoom, kColorBlack);
     pd->graphics->popContext();
 
-    stop = (TILE_PIX*9 - 2)*zoom;
-    pd->graphics->pushContext(m_player.m_blueprintRadiusBitmap9x9[zoom]);
+    stop = (TILE_PIX*7 - 2)*zoom;
+    pd->graphics->pushContext(m_player.m_blueprintRadiusBitmap7x7[zoom]);
     pd->graphics->setDrawMode(kDrawModeCopy);
     pd->graphics->drawLine(start, start, stop, start, 2*zoom, kColorBlack);
     pd->graphics->drawLine(start, start, start, stop, 2*zoom, kColorBlack);

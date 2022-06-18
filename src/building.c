@@ -63,6 +63,7 @@ const char* toStringBuilding(struct Building_t* _building) {
       case kSellBox: return "Sell Box";
       case kExportBox: return "Item Exporter";
       case kImportBox: return "Item Importer";
+      case kWarp: return "Warp Portal";
       case kNSpecialSubTypes: return "";
     }
     case kNBuildingTypes: return "";

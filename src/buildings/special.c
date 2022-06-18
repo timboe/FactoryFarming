@@ -24,8 +24,8 @@ void sellBoxUpdateFn(struct Building_t* _building) {
 void specialUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   switch (_building->m_subType.special) {
     case kSellBox:; return sellBoxUpdateFn(_building);
-    case kShop:; case kExportBox:; case kImportBox:; return;
-    case kNSpecialSubTypes:;
+    case kShop:; case kExportBox:; case kImportBox:; case kWarp:; return;
+    case kNSpecialSubTypes:; return;
   }
 }
 
@@ -39,10 +39,11 @@ void assignNeighborsSpecial(struct Building_t* _building) {
 void buildingSetupSpecial(struct Building_t* _building) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     switch (_building->m_subType.special) {
-      case kShop:;    _building->m_image[zoom] = getSprite48(1, 1, zoom); break;
-      case kSellBox:; _building->m_image[zoom] = getSprite48(0, 1, zoom); break;
+      case kShop:;      _building->m_image[zoom] = getSprite48(1, 1, zoom); break;
+      case kSellBox:;   _building->m_image[zoom] = getSprite48(0, 1, zoom); break;
       case kExportBox:; _building->m_image[zoom] = getSprite48(2, 1, zoom); break;
       case kImportBox:; _building->m_image[zoom] = getSprite48(3, 1, zoom); break;
+      case kWarp:;      _building->m_image[zoom] = getSprite48(0, 2, zoom); break;
       case kNSpecialSubTypes:;
     }
 
