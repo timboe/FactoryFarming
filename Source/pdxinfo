@@ -1,5 +1,5 @@
-name=Untitled Factory Game
+name=Factory Farming
 author=Tim Martin
-description=A proof of concept
-bundleID=uk.co.tim-martin.playdatefactory
+description=Automation meets crop planting
+bundleID=uk.co.tim-martin.factoryfarming
 version=1.0
