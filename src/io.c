@@ -5,6 +5,8 @@
 #include "generate.h"
 #include "player.h"
 
+bool m_foundSaveData = false;
+
 uint8_t m_slot = 0;
 
 uint8_t m_scanSlot = 0;
@@ -29,6 +31,8 @@ int scanShouldDecodeTableValueForKey(json_decoder* jd, const char* _key);
 
 /// ///
 
+bool hasSaveData() { return m_foundSaveData; }
+
 int doRead(void* _userdata, uint8_t* _buf, int _bufsize) {
   return pd->file->read((SDFile*)_userdata, _buf, _bufsize);
 }
@@ -48,6 +52,7 @@ uint8_t getSlot() { return m_slot; }
 ///
 
 void scanSlots() {
+  m_foundSaveData = false;
   for (m_scanSlot = 0; m_scanSlot < WORLD_SAVE_SLOTS; ++m_scanSlot) {
     snprintf(m_filePath, 16, "world%u.json", (unsigned)m_scanSlot);
     strcpy(m_worldNames[m_scanSlot], "");
@@ -69,6 +74,11 @@ void scanSlots() {
 
     pd->system->logToConsole("Scan world %u - TRUE: %s", (unsigned)m_scanSlot, m_worldNames[m_scanSlot]);
     m_worldExists[m_scanSlot] = true;
+    m_foundSaveData = true;
+  }
+  {
+    SDFile* file = pd->file->open("player.json", kFileRead|kFileReadData);
+    if (!file) m_foundSaveData = false;
   }
 }
 

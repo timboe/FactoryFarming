@@ -200,6 +200,6 @@ void* deserialiseStructDoneCargo(json_decoder* jd, const char* _name, json_value
     getCargo_idx(cargo->m_type));
   ++m_nCargo;
 
-  pd->system->logToConsole("-- Cargo #%i, [%i] decoded to  %s, (%i, %i)", m_nCargo, m_deserialiseIndexCargo, toStringCargo(cargo), m_deserialiseXCargo, m_deserialiseYCargo);
+  //pd->system->logToConsole("-- Cargo #%i, [%i] decoded to  %s, (%i, %i)", m_nCargo, m_deserialiseIndexCargo, toStringCargo(cargo), m_deserialiseXCargo, m_deserialiseYCargo);
   return NULL;
 }

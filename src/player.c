@@ -364,7 +364,6 @@ void deserialiseArrayValuePlayer(json_decoder* jd, int _pos, json_value _value) 
     case 3: m_player.m_carryExtractor[i] = v; break;
     case 4: m_player.m_carryFactory[i] = v; break;
   }
-  pd->system->logToConsole("%i -- i %i = %i", m_deserialiseArrayID, i, v);
 }
 
 void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_value_type _type) {

@@ -168,8 +168,8 @@ void* deserialiseStructDoneLocation(json_decoder* jd, const char* _name, json_va
     chunkAddCargo(loc->m_chunk, loc->m_cargo);
   }
 
-  pd->system->logToConsole("-- Location (%i, %i) building:#%i (not owned? %i), cargo:#%i",
-    m_deserialiseXLocation, m_deserialiseYLocation, m_deserialiseIDBuilding, (int)m_deserialiseNotOwned, m_deserialiseIDCargo);
+  //pd->system->logToConsole("-- Location (%i, %i) building:#%i (not owned? %i), cargo:#%i",
+  //  m_deserialiseXLocation, m_deserialiseYLocation, m_deserialiseIDBuilding, (int)m_deserialiseNotOwned, m_deserialiseIDCargo);
 
   m_deserialiseXLocation = -1;
   m_deserialiseYLocation = -1;

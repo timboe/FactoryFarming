@@ -360,11 +360,11 @@ void* deserialiseStructDoneBuilding(json_decoder* jd, const char* _name, json_va
   ++m_nBuildings;
   ++(m_nByType[building->m_type]);
 
-  pd->system->logToConsole("-- Building #%i [%i] decoded to %s, (%i, %i) dir:%i stype:%i prog:%i mode:%i store:[%i][%i, %i, %i, %i]",
-    m_nBuildings, m_deserialiseIndexBuilding, toStringBuilding(building),
-    building->m_pix_x, building->m_pix_y, building->m_dir, building->m_subType.conveyor, building->m_progress, building->m_mode,
-    building->m_stored[0], building->m_stored[1], building->m_stored[2], building->m_stored[3], building->m_stored[4]
-  );
+  //pd->system->logToConsole("-- Building #%i [%i] decoded to %s, (%i, %i) dir:%i stype:%i prog:%i mode:%i store:[%i][%i, %i, %i, %i]",
+  //  m_nBuildings, m_deserialiseIndexBuilding, toStringBuilding(building),
+  //  building->m_pix_x, building->m_pix_y, building->m_dir, building->m_subType.conveyor, building->m_progress, building->m_mode,
+  //  building->m_stored[0], building->m_stored[1], building->m_stored[2], building->m_stored[3], building->m_stored[4]
+  //);
 
   return NULL;
 }

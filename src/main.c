@@ -32,7 +32,11 @@ static void init(void) {
 
   scanSlots();
 
-  menuOptionsCallbackRestart(NULL);
+  if (hasSaveData()) {
+    menuOptionsCallbackLoad(NULL);
+  } else {
+    menuOptionsCallbackRestart(NULL);
+  }
 }
 
 static void deinit(void) {
