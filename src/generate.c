@@ -144,7 +144,10 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
       if (building->m_type >= kExtractor) {
         pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - off48_x, building->m_pix_y - off48_y, kBitmapUnflipped);
       } else {
+        // Fast conveyors get drawn inverted when zoomed out. Stored[0] is used to hold the speed
+        pd->graphics->setDrawMode((building->m_type == kConveyor && building->m_stored[0] >= 2) ? kDrawModeInverted : kDrawModeCopy);
         pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
+        pd->graphics->setDrawMode(kDrawModeCopy);
       }
     }
   }

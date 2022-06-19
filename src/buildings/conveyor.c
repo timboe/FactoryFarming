@@ -10,7 +10,7 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
   struct Location_t* loc = _building->m_location;
   if (loc->m_cargo == NULL) return;
   if (_building->m_progress < TILE_PIX) {
-    _building->m_progress += _tick;
+    _building->m_progress += _tick * _building->m_stored[0]; // Stored[0] used to hold conveyor speed
 
     // Handle filters vs. splitters
     enum kDir direction;
@@ -157,4 +157,7 @@ void buildingSetupConveyor(struct Building_t* _building) {
       pd->sprite->setZIndex(_building->m_sprite[zoom], Z_INDEX_CONVEYOR);
     }
   }
+
+  // Set the starting speed (TODO: Put this back to 1 and impliment an upgrade mechanic)
+  _building->m_stored[0] = 2;
 }

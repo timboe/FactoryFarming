@@ -51,6 +51,7 @@ struct Building_t{
   // For locations which store/produce fixed items, location 0 is always for produced items, 1-6 for inputs.
   // For locations which store variable items, locations 0-3 are the number of items, 3-6 are the item ID 
   // For plants: locations 0, 1 are used for item animation.
+  // For conveyors, location 0 stores the conveyor's speed multiplier
   uint8_t m_stored[MAX_STORE]; 
 
   // Transient
