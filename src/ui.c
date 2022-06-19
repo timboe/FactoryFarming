@@ -8,7 +8,7 @@
 #include "generate.h"
 #include "cargo.h"
 
-uint16_t m_UIIcons[] = {0,3,  0,4,  4,3,  4,4,  8,4,  8,7,  10,7,  11,7,  9,7,  4,2,  1,2};
+uint16_t m_UIIcons[] = {0,3,  0,4,  4,3,  4,4,  8,4,  8,3,  8,7,  10,7,  11,7,  9,7,  4,2,  1,2};
 
 enum kGameMode m_mode;
 
@@ -114,13 +114,14 @@ void updateBlueprint() {
       case kMenuSplitL:;    pd->sprite->setImage(bp, getSprite16(m_UISelectedRotation+4, 3, zoom),    kBitmapUnflipped); setPlayerLookingAtOffset(0); break;
       case kMenuSplitT:;    pd->sprite->setImage(bp, getSprite16(m_UISelectedRotation+4, 4, zoom),    kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
       case kMenuFilterL:;   pd->sprite->setImage(bp, getSprite16(m_UISelectedRotation+8, 4, zoom),    kBitmapUnflipped); setPlayerLookingAtOffset(0); break;
-      case kMenuApple:;     pd->sprite->setImage(bp, getSprite16(m_UIIcons[10], m_UIIcons[11], zoom),   kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
-      case kMenuCarrot:;    pd->sprite->setImage(bp, getSprite16(m_UIIcons[12], m_UIIcons[13], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
-      case kMenuWheat:;     pd->sprite->setImage(bp, getSprite16(m_UIIcons[14], m_UIIcons[15], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
-      case kMenuCheese:;    pd->sprite->setImage(bp, getSprite16(m_UIIcons[16], m_UIIcons[17], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
+      case kMenuTunnel:;    pd->sprite->setImage(bp, getSprite16(m_UISelectedRotation+8, 3, zoom),    kBitmapUnflipped); setPlayerLookingAtOffset(0); break;
+      case kMenuApple:;     pd->sprite->setImage(bp, getSprite16(m_UIIcons[12], m_UIIcons[13], zoom),   kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
+      case kMenuCarrot:;    pd->sprite->setImage(bp, getSprite16(m_UIIcons[14], m_UIIcons[15], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
+      case kMenuWheat:;     pd->sprite->setImage(bp, getSprite16(m_UIIcons[16], m_UIIcons[17], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
+      case kMenuCheese:;    pd->sprite->setImage(bp, getSprite16(m_UIIcons[18], m_UIIcons[19], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(0); break;     
       case kMenuExtractor:; pd->sprite->setImage(bp, getSprite48(m_UISelectedRotation, 0 , zoom),     kBitmapUnflipped); setPlayerLookingAtOffset(2);
                             pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap7x7[zoom], kBitmapUnflipped); break;     
-      case kMenuBin:;       pd->sprite->setImage(bp, getSprite16(m_UIIcons[20], m_UIIcons[21], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(1); break;     
+      case kMenuBin:;       pd->sprite->setImage(bp, getSprite16(m_UIIcons[22], m_UIIcons[23], zoom), kBitmapUnflipped); setPlayerLookingAtOffset(1); break;     
     }
  
   } else { // Clear blueprint
@@ -138,7 +139,7 @@ void addUIToSpriteList() {
 
 const char* getRotationAsString() {
   switch (m_UISelectedID) {
-    case kMenuConveyor:;
+    case kMenuConveyor:; case kMenuTunnel:;
       switch (m_UISelectedRotation) {
         case 0: return "N";
         case 1: return "E";
@@ -219,6 +220,7 @@ void drawUIBottom() {
       case kMenuSplitL:;    snprintf(text, 128, "'L' Conveyor Splitter (%s)", getRotationAsString()); break;
       case kMenuSplitT:;    snprintf(text, 128, "'T' Conveyor Splitter (%s)", getRotationAsString()); break;
       case kMenuFilterL:;   snprintf(text, 128, "'L' Conveyor Filter (%s)", getRotationAsString()); break;
+      case kMenuTunnel:;    snprintf(text, 128, "Conveyor Tunnel (%s)", getRotationAsString()); break;
       case kMenuApple:;     snprintf(text, 128, "Apple tree, makes apples"); break;
       case kMenuCarrot:;    snprintf(text, 128, "Carrot seeds, grows carrots"); break;
       case kMenuWheat:;     snprintf(text, 128, "Wheat seeds, grows wheat"); break;

@@ -8,4 +8,4 @@ void assignNeighborsPlant(struct Building_t* _building);
 
 void buildingSetupPlant(struct Building_t* _building);
 
-bool canBePlacedPlant(struct Location_t* _loc);
+bool canBePlacedPlant(struct Location_t* _loc, enum kDir _dir, union kSubType _subType);

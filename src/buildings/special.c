@@ -29,7 +29,7 @@ void specialUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom)
   }
 }
 
-bool canBePlacedSpecial(struct Location_t* _loc) {
+bool canBePlacedSpecial(struct Location_t* _loc, enum kDir _dir, union kSubType _subType) {
   return true;
 }
 

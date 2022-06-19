@@ -9,7 +9,7 @@ enum kBuildingType {kNoBuilding, kConveyor, kPlant, kExtractor, kFactory, kSpeci
 
 ///
 
-enum kConvSubType{kBelt, kSplitI, kSplitL, kSplitT, kFilterL, kNConvSubTypes};
+enum kConvSubType{kBelt, kSplitI, kSplitL, kSplitT, kFilterL, kTunnelIn, kTunnelOut, kNConvSubTypes};
 
 enum kPlantSubType{kCarrotPlant, kAppleTree, kWheatPlant, kNPlantSubTypes};
 

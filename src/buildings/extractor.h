@@ -8,4 +8,4 @@ void assignNeighborsExtractor(struct Building_t* _building);
 
 void buildingSetupExtractor(struct Building_t* _building);
 
-bool canBePlacedExtractor(struct Location_t* _loc);
+bool canBePlacedExtractor(struct Location_t* _loc, enum kDir _dir, union kSubType _subType);

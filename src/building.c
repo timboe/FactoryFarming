@@ -41,6 +41,8 @@ const char* toStringBuilding(struct Building_t* _building) {
       case kSplitL: return "Conveyor 'L' Splitter";
       case kSplitT: return "Conveyor 'T' Splitter";
       case kFilterL: return "Conveyor 'L' Filter";
+      case kTunnelIn: return "Conveyor Tunnel (In)";
+      case kTunnelOut: return "Conveyor Tunnel (Out)";
       case kNConvSubTypes: return "";
     }
     case kPlant: switch (_building->m_subType.plant) {
@@ -154,10 +156,10 @@ void assignUpdate(struct Building_t* _building) {
 bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _type, union kSubType _subType) {
   bool canBePlaced = false;
   switch (_type) {
-    case kConveyor:; canBePlaced = canBePlacedConveyor(_loc); break;
-    case kPlant:;  canBePlaced = canBePlacedPlant(_loc); break;
-    case kExtractor:;  canBePlaced = canBePlacedExtractor(_loc); break;
-    case kSpecial:;  canBePlaced = canBePlacedSpecial(_loc); break;
+    case kConveyor:; canBePlaced = canBePlacedConveyor(_loc, _dir, _subType); break;
+    case kPlant:;  canBePlaced = canBePlacedPlant(_loc, _dir, _subType); break;
+    case kExtractor:;  canBePlaced = canBePlacedExtractor(_loc, _dir, _subType); break;
+    case kSpecial:;  canBePlaced = canBePlacedSpecial(_loc, _dir, _subType); break;
     case kFactory:;  break;
     case kNoBuilding:; case kNBuildingTypes:; canBePlaced = false; break;
   }
@@ -185,7 +187,6 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
       }
     }
   }
-
 
   switch (building->m_type) {
     case kConveyor:; building->m_subType.conveyor = _subType.conveyor; break;
@@ -221,6 +222,12 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     renderChunkBackgroundImageAround(_loc->m_chunk);
   } else {
     renderChunkBackgroundImage(_loc->m_chunk);
+  }
+
+  // If placing an input tunnel, then also place the output tunnel too (canBePlacedConveyor will have thecked that this is all OK)
+  if (_type == kConveyor && _subType.conveyor == kTunnelIn) {
+    struct Location_t* tunnelOut = getTunnelOutLocation(_loc, _dir);
+    return newBuilding(tunnelOut, _dir, kConveyor, (union kSubType) {.conveyor = kTunnelOut});
   }
 
   updateRenderList();

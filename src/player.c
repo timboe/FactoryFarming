@@ -223,7 +223,7 @@ void playerSpriteSetup() {
     m_player.m_sprite[zoom] = pd->sprite->newSprite();
     PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
     pd->sprite->setBounds(m_player.m_sprite[zoom], bound);
-    pd->sprite->setImage(m_player.m_sprite[zoom], getSprite16(8, 3, zoom), kBitmapUnflipped);
+    pd->sprite->setImage(m_player.m_sprite[zoom], getSprite16(8, 5, zoom), kBitmapUnflipped);
     pd->sprite->setCollideRect(m_player.m_sprite[zoom], bound);
 
     m_player.m_blueprint[zoom] = pd->sprite->newSprite();

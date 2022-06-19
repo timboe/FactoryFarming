@@ -91,6 +91,7 @@ void clickHandleMenuOptionSelected(uint32_t _buttonPressed) {
       case kMenuSplitL:;   newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kSplitL} ); break;
       case kMenuSplitT:;   newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kSplitT} ); break;
       case kMenuFilterL:;  newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kFilterL} ); break;
+      case kMenuTunnel:;   newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kTunnelIn} ); break;
       case kMenuApple:;    newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kPlant, (union kSubType) {.plant = kAppleTree} ); break;
       case kMenuCarrot:;   newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kPlant, (union kSubType) {.plant = kCarrotPlant} ); break;
       case kMenuWheat:;    newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kPlant, (union kSubType) {.plant = kWheatPlant} ); break;

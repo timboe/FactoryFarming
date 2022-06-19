@@ -58,7 +58,7 @@ void extractorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoo
   }
 }
 
-bool canBePlacedExtractor(struct Location_t* _loc) {
+bool canBePlacedExtractor(struct Location_t* _loc, enum kDir _dir, union kSubType _subType) {
   for (int32_t x = -1; x < 2; ++x) {
     for (int32_t y = -1; y < 2; ++y) {
       struct Tile_t* t = getTile(_loc->m_x + x, _loc->m_y + y);

@@ -81,7 +81,7 @@
 #define Z_INDEX_CONVEYOR 1
 #define Z_INDEX_FLOOR -1
 
-#define UI_ITEMS 11
+#define UI_ITEMS 12
 
 #define UI_ROTATE_ACTION 270.0f
 
