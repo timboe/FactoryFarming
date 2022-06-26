@@ -3,6 +3,7 @@
 #include "chunk.h"
 #include "sprite.h"
 #include "render.h"
+#include "buildings/special.h"
 
 struct Location_t* m_locations = NULL;
 
@@ -166,6 +167,17 @@ void* deserialiseStructDoneLocation(json_decoder* jd, const char* _name, json_va
   if (m_deserialiseIDCargo >= 0) {
     loc->m_cargo = cargoManagerGetByIndex(m_deserialiseIDCargo);
     chunkAddCargo(loc->m_chunk, loc->m_cargo);
+  }
+
+  if (loc->m_building && loc->m_building->m_type == kSpecial) {
+    switch (loc->m_building->m_subType.special) {
+      case kShop: setBuyBox(loc->m_building); break;
+      case kSellBox: setSellBox(loc->m_building); break;
+      case kExportBox: break;
+      case kImportBox: break;
+      case kWarp: break;
+      case kNSpecialSubTypes: break;
+    }
   }
 
   //pd->system->logToConsole("-- Location (%i, %i) building:#%i (not owned? %i), cargo:#%i",

@@ -1,24 +1,25 @@
 #pragma once
 #include "game.h"
 
-// TODO Kill kMenuSelect
-enum kGameMode {kWander, kMenuSelect, kMenuBuy, kMenuOptionSelected};
+enum kGameMode {kWander, kMenuBuy, kMenuPlayer, kPlacement};
 
-enum kMenuSelections {kMenuConveyor, kMenuSplitI, kMenuSplitL, kMenuSplitT, kMenuFilterL, kMenuTunnel, kMenuApple, kMenuCarrot, kMenuWheat, kMenuCheese, kMenuExtractor, kMenuBin};
+//enum kMenuSelections {kMenuConveyor, kMenuSplitI, kMenuSplitL, kMenuSplitT, kMenuFilterL, kMenuTunnel, kMenuApple, kMenuCarrot, kMenuWheat, kMenuCheese, kMenuExtractor, kMenuBin};
 
 void addUIToSpriteList(void);
 
-void modUISelectedID(bool _increment);
+void rotateCursor(bool _increment);
 
-void modUISelectedRotation(bool _increment);
+void moveCursor(uint32_t _button);
 
-uint16_t getUISelectedID(void);
+//uint16_t getUISelectedID(void);
 
-uint16_t getUISelectedRotation(void);
+uint16_t getCursorRotation(void);
 
 void UIDirtyBottom(void);
 
 void UIDirtyRight(void);
+
+void UIDirtyMain(void);
 
 void updateUI(int _fc);
 

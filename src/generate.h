@@ -29,9 +29,9 @@ void addObstacles(void);
 
 void doWetness(void);
 
-const char* toStringWetness(struct Tile_t* _tile);
+const char* toStringWetness(uint8_t _wetness);
 
-const char* toStringSoil(struct Tile_t* _tile);
+const char* toStringSoil(uint8_t _tile);
 
 const char* getWorldName(void);
 

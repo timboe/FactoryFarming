@@ -18,6 +18,8 @@ enum kPlantSubType{kCarrotPlant, kAppleTree, kWheatPlant, kP4, kP5, kP6, kP7, kP
 extern const uint32_t kPlantUnlock[];
 extern const uint16_t kPlantPrice[];
 extern const uint16_t kPlantUIIcon[];
+extern const uint8_t  kPlantWetness[];
+extern const uint8_t  kPlantSoil[];
 
 enum kUtilitySubType{kWell, kNUtilitySubTypes};
 extern const uint32_t kUtilityUnlock[];
@@ -85,6 +87,8 @@ uint16_t getNBuildings(void);
 uint16_t getNByType(enum kBuildingType _type);
 
 const char* toStringBuilding(struct Building_t* _building);
+
+const char* toStringBuildingByType(enum kBuildingType _type, union kSubType _subType);
 
 struct Building_t* buildingManagerNewBuilding(enum kBuildingType _asType);
 

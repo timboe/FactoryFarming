@@ -5,9 +5,31 @@
 #include "../cargo.h"
 #include "../player.h"
 
+struct Building_t* m_sellBox = NULL;
+
+struct Building_t* m_buyBox = NULL;
+
 void sellBoxUpdateFn(struct Building_t* _building);
 
 /// ///
+
+void setBuyBox(struct Building_t* _buyBox) { m_buyBox = _buyBox; }
+
+void setSellBox(struct Building_t* _sellBox) { m_sellBox = _sellBox; }
+
+int16_t distanceFromBuy() {
+  struct Player_t* p = getPlayer();
+  uint16_t dx = abs(p->m_pix_x - m_buyBox->m_pix_x);
+  uint16_t dy = abs(p->m_pix_y - m_buyBox->m_pix_y);
+  return (dx < dy ? dx : dy);
+}
+
+int16_t distanceFromSell() {
+  struct Player_t* p = getPlayer();
+  uint16_t dx = abs(p->m_pix_x - m_sellBox->m_pix_x);
+  uint16_t dy = abs(p->m_pix_y - m_sellBox->m_pix_y);
+  return (dx < dy ? dx : dy);
+}
 
 void sellBoxUpdateFn(struct Building_t* _building) {
   for (int32_t x = _building->m_location->m_x - 1; x < _building->m_location->m_x + 2; ++x) {

@@ -14,15 +14,15 @@ bool characterMoveInput(uint32_t _buttonPressed);
 
 void clickHandleWander(uint32_t _buttonPressed);
 
-void clickHandleMenuSelect(uint32_t _buttonPressed); // Get rid of this
-
 void clickHandleMenuBuy(uint32_t _buttonPressed);
 
-void clickHandleMenuOptionSelected(uint32_t _buttonPressed);
+void clickHandleMenuPlayer(uint32_t _buttonPressed);
+
+void clickHandlePlacement(uint32_t _buttonPressed);
 
 void rotateHandleWander(float _rotation);
 
-void rotateHandleMenuSelect(float _rotation);
+void rotateHandlePlacement(float _rotation);
 
 void toggleZoom(void);
 
@@ -56,35 +56,44 @@ bool characterMoveInput(uint32_t _buttonPressed) {
 void gameClickConfigHandler(uint32_t _buttonPressed) {
   switch (getGameMode()) {
     case kWander:; return clickHandleWander(_buttonPressed);
-    case kMenuSelect:; return clickHandleMenuSelect(_buttonPressed);
-    case kMenuOptionSelected:; return clickHandleMenuOptionSelected(_buttonPressed);
+    case kMenuBuy:; return clickHandleMenuBuy(_buttonPressed);
+    case kMenuPlayer:; return clickHandleMenuPlayer(_buttonPressed);
+    case kPlacement:; return clickHandlePlacement(_buttonPressed);
   }
 }
 
 void clickHandleWander(uint32_t _buttonPressed) {
   if (characterMoveInput(_buttonPressed)) {}
-  else if (kButtonA == _buttonPressed) setGameMode(kMenuSelect);
+  else if (kButtonA == _buttonPressed) setGameMode(kMenuBuy); // TODO use distance from Buy box
   //else if (kButtonB == _buttonPressed) toggleZoom();
 }
 
-void clickHandleMenuSelect(uint32_t _buttonPressed) {
-  if      (kButtonUp    == _buttonPressed) modUISelectedID(false);
-  else if (kButtonDown  == _buttonPressed) modUISelectedID(true);
-  else if (kButtonLeft  == _buttonPressed) modUISelectedRotation(false);
-  else if (kButtonRight == _buttonPressed) modUISelectedRotation(true);
-  else if (kButtonA     == _buttonPressed) {
-    setGameMode(kMenuOptionSelected);
-    updateBlueprint();
+void clickHandleMenuBuy(uint32_t _buttonPressed) {
+  if (kButtonA     == _buttonPressed) {
+    // do Buy
   } else if (kButtonB   == _buttonPressed) {
     setGameMode(kWander);
-    UIDirtyRight();
+  } else {
+    moveCursor(_buttonPressed);
   }
 }
 
-void clickHandleMenuOptionSelected(uint32_t _buttonPressed) {
+void clickHandleMenuPlayer(uint32_t _buttonPressed) {
+  if (kButtonA     == _buttonPressed) {
+    //setGameMode(kPlacement);
+    //updateBlueprint();
+  } else if (kButtonB   == _buttonPressed) {
+    setGameMode(kWander);
+  } else {
+    moveCursor(_buttonPressed);
+  }
+}
+
+void clickHandlePlacement(uint32_t _buttonPressed) {
   if (characterMoveInput(_buttonPressed)) {
     // noop
   } else if (kButtonA    == _buttonPressed) {
+    /*
     switch (getUISelectedID()) {
       case kMenuConveyor:; newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kBelt}   ); break;
       case kMenuSplitI:;   newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kSplitI} ); break;
@@ -99,8 +108,9 @@ void clickHandleMenuOptionSelected(uint32_t _buttonPressed) {
       case kMenuExtractor:;newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kExtractor, (union kSubType) {.extractor = kCropHarvester} ); break;
       case kMenuBin:;      clearLocation(getPlayerLookingAtLocation(), true, true); break; 
     }
+    */
   } else if (kButtonB    == _buttonPressed) {
-    setGameMode(kMenuSelect);
+    setGameMode(kWander);
     updateBlueprint();
   }
 }
@@ -123,17 +133,17 @@ void rotateHandleWander(float _rotation) {
   }
 }
 
-void rotateHandleMenuSelect(float _rotation) {
+void rotateHandlePlacement(float _rotation) {
   static float rot = 0.0f;
   rot += _rotation;
   if (rot > UI_ROTATE_ACTION) {
     rot = 0.0f;
-    modUISelectedRotation(true);
-    if (getGameMode() == kMenuOptionSelected) updateBlueprint();
+    rotateCursor(true);
+    if (getGameMode() == kPlacement) updateBlueprint();
   } else if (rot < -UI_ROTATE_ACTION) {
     rot = 0.0f;
-    modUISelectedRotation(false);
-    if (getGameMode() == kMenuOptionSelected) updateBlueprint();
+    rotateCursor(false);
+    if (getGameMode() == kPlacement) updateBlueprint();
   }
 }
 
@@ -147,7 +157,7 @@ void clickHandlerReplacement() {
   if (pushed & kButtonLeft) gameClickConfigHandler(kButtonLeft);
   if (released & kButtonB) gameClickConfigHandler(kButtonB);
   if (released & kButtonA) gameClickConfigHandler(kButtonA);
-  else if ((current & kButtonA) && getGameMode() == kMenuOptionSelected) {
+  else if ((current & kButtonA) && getGameMode() == kPlacement) {
     gameClickConfigHandler(kButtonA); // Special, allow placing rows of conveyors
   }
 
@@ -158,8 +168,9 @@ void clickHandlerReplacement() {
 
   switch (getGameMode()) {
     case kWander:; rotateHandleWander(pd->system->getCrankChange()); break;
-    case kMenuSelect:; // fall through
-    case kMenuOptionSelected:; rotateHandleMenuSelect(pd->system->getCrankChange());
+    case kMenuPlayer:; // fall through
+    case kPlacement:; rotateHandlePlacement(pd->system->getCrankChange()); break;
+    case kMenuBuy:; break;
   }
 
 }

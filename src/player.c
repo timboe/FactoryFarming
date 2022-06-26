@@ -300,6 +300,15 @@ void playerSpriteSetup() {
 }
 
 void resetPlayer() {
+  m_player.m_money = 0;
+  m_player.m_moneyCumulative = 0;
+  m_player.m_moneyHighWaterMark = 0;
+  for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_carryCargo[i] = 0;
+  for (int32_t i = 0; i < kNConvSubTypes; ++i) m_player.m_carryConveyor[i] = 0;
+  for (int32_t i = 0; i < kNUtilitySubTypes; ++i) m_player.m_carryUtility[i] = 0;
+  for (int32_t i = 0; i < kNPlantSubTypes; ++i) m_player.m_carryPlant[i] = 0;
+  for (int32_t i = 0; i < kNExtractorSubTypes; ++i) m_player.m_carryExtractor[i] = 0;
+  for (int32_t i = 0; i < kNFactorySubTypes; ++i) m_player.m_carryFactory[i] = 0;
   setPlayerPosition(SCREEN_PIX_X/2, SCREEN_PIX_Y/2);
   m_currentChunk = getChunk_noCheck(0,0);
 }

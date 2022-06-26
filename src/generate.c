@@ -4,6 +4,7 @@
 #include "chunk.h"
 #include "location.h"
 #include "building.h"
+#include "buildings/special.h"
 
 #include <math.h>
 
@@ -239,22 +240,24 @@ void doWetness(void) {
   }
 }
 
-const char* toStringWetness(struct Tile_t* _tile) {
-  if (_tile->m_wetness < 4) {
+const char* toStringWetness(uint8_t _wetness) {
+  if (_wetness == 0) {
+    return "Water";
+  } else if (_wetness < 4) {
     return "Wet";
-  } else if (_tile->m_wetness < 8) {
+  } else if (_wetness < 8) {
     return "Medium";
   } else {
     return "Dry";
   }
 }
 
-const char* toStringSoil(struct Tile_t* _tile) {
-  if (_tile->m_tile < 8) {
+const char* toStringSoil(uint8_t _tile) {
+  if (_tile < 8) {
     return "Silty Soil";
-  } else if (_tile->m_tile < 16) {
+  } else if (_tile < 16) {
     return "Chalky Soil";
-  } else if (_tile->m_tile < 24) {
+  } else if (_tile < 24) {
     return "Peaty Soil";
   } else {
     return "Sandy Soil";
@@ -638,8 +641,14 @@ void generate() {
 
   const uint16_t startX = TILES_PER_CHUNK_X/2;
 
-  //newBuilding(getLocation_noCheck(startX,      TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kShop} );
-  newBuilding(getLocation_noCheck(startX + 9,  TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kSellBox} );
+  struct Location_t* buyLoc = getLocation_noCheck(startX, TILES_PER_CHUNK_Y); 
+  newBuilding(buyLoc, SN, kSpecial, (union kSubType) {.special = kShop} );
+  setBuyBox(buyLoc->m_building);
+
+  struct Location_t* sellLoc = getLocation_noCheck(startX + 9, TILES_PER_CHUNK_Y); 
+  newBuilding(sellLoc, SN, kSpecial, (union kSubType) {.special = kSellBox} );
+  setSellBox(sellLoc->m_building);
+  
   //newBuilding(getLocation_noCheck(startX + 18, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kWarp} );
   //newBuilding(getLocation_noCheck(startX + 27, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kExportBox} );
   //newBuilding(getLocation_noCheck(startX + 36, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kImportBox} );
