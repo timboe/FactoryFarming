@@ -17,6 +17,7 @@ void plantSpawnCargo(struct Building_t* _building, struct Location_t* _loc) {
     case kCarrotPlant:; newCargo(_loc, kCarrot, false);
     case kAppleTree:;   newCargo(_loc, kApple, false);
     case kWheatPlant:;  newCargo(_loc, kWheat, false);
+    case kP4:; case kP5:; case kP6:; case kP7:; case kP8:; case kP9:; case kP10:; case kP11:; case kP12:; break; 
     case kNPlantSubTypes:; break;
   }
   // TODO growing bonuses?

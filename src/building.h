@@ -5,24 +5,41 @@
 enum kDir{SN, WE, NS, EW, kDirN};
 
 // All 48*48 should come after kExtractor
-enum kBuildingType {kNoBuilding, kConveyor, kPlant, kExtractor, kFactory, kSpecial, kNBuildingTypes};
+enum kBuildingType {kNoBuilding, kConveyor, kPlant, kUtility, kExtractor, kFactory, kSpecial, kNBuildingTypes};
 
 ///
 
-enum kConvSubType{kBelt, kSplitI, kSplitL, kSplitT, kFilterL, kTunnelIn, kTunnelOut, kNConvSubTypes};
+enum kConvSubType {kBelt, kSplitI, kSplitL, kSplitT, kFilterL, kTunnelIn, kTunnelOut, kNConvSubTypes};
+extern const uint32_t kConvUnlock[];
+extern const uint16_t kConvPrice[];
+extern const uint16_t kConvUIIcon[];
 
-enum kPlantSubType{kCarrotPlant, kAppleTree, kWheatPlant, kNPlantSubTypes};
+enum kPlantSubType{kCarrotPlant, kAppleTree, kWheatPlant, kP4, kP5, kP6, kP7, kP8, kP9, kP10, kP11, kP12, kNPlantSubTypes};
+extern const uint32_t kPlantUnlock[];
+extern const uint16_t kPlantPrice[];
+extern const uint16_t kPlantUIIcon[];
+
+enum kUtilitySubType{kWell, kNUtilitySubTypes};
+extern const uint32_t kUtilityUnlock[];
+extern const uint16_t kUtilityPrice[];
+extern const uint16_t kUtilityUIIcon[];
 
 enum kExtractorSubType{kCropHarvester, kPump, kNExtractorSubTypes};
+extern const uint32_t kExtractorUnlock[];
+extern const uint16_t kExtractorPrice[];
+extern const uint16_t kExtractorUIIcon[];
 
 enum kFactorySubType{kMakeSmall, kNFactorySubTypes};
+extern const uint32_t kFactoryUnlock[];
+extern const uint16_t kFactoryPrice[];
+extern const uint16_t kFactoryUIIcon[];
 
 enum kSpecialSubType{kShop, kSellBox, kExportBox, kImportBox, kWarp, kNSpecialSubTypes};
-
 
 union kSubType {
    enum kConvSubType conveyor;
    enum kPlantSubType plant;
+   enum kUtilitySubType utility;
    enum kExtractorSubType extractor;
    enum kFactorySubType factory;
    enum kSpecialSubType special; 

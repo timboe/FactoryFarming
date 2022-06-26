@@ -8,11 +8,15 @@ enum kChunkQuad{NE, SE, SW, NW};
 
 struct Player_t{
   // Persistent
+  uint8_t m_saveFormat;
   float m_pix_x; // Note: Centre
   float m_pix_y;
   uint32_t m_money;
+  uint32_t m_moneyCumulative;
+  uint32_t m_moneyHighWaterMark;
   uint16_t m_carryCargo[kNCargoType];
   uint16_t m_carryConveyor[kNConvSubTypes];
+  uint16_t m_carryUtility[kNUtilitySubTypes];
   uint16_t m_carryPlant[kNPlantSubTypes];
   uint16_t m_carryExtractor[kNExtractorSubTypes];
   uint16_t m_carryFactory[kNFactorySubTypes];
@@ -28,6 +32,8 @@ struct Player_t{
 };
 
 struct Player_t* getPlayer(void);
+
+bool modMoney(int32_t _amount);
 
 int16_t getOffX(void);
 

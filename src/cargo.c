@@ -80,13 +80,13 @@ void cargoSpriteSetup(struct Cargo_t* _cargo, uint16_t _x, uint16_t _y, uint16_t
 
 uint16_t getCargo_idx(enum kCargoType _type) {
   switch (_type) {
-    case kApple:;  return getSprite16_idx(8, 7);
-    case kCheese:; return getSprite16_idx(9, 7);
-    case kCarrot:; return getSprite16_idx(10, 7);
-    case kWheat:;  return getSprite16_idx(11, 7);
+    case kApple:;  return SPRITE16_ID(8, 7);
+    case kCheese:; return SPRITE16_ID(9, 7);
+    case kCarrot:; return SPRITE16_ID(10, 7);
+    case kWheat:;  return SPRITE16_ID(11, 7);
     case kNoCargo:; case kNCargoType:; 
   }
-  return getSprite16_idx(0, 2);
+  return SPRITE16_ID(0, 2);
 }
 
 uint16_t getCargoValue(enum kCargoType _type) {

@@ -13,9 +13,9 @@ void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick);
 
 void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick) {
   // Placing down
-  if (_building->m_next[0]->m_cargo == NULL) {
+  if (_building->m_next[0]->m_cargo == NULL && (_building->m_next[0]->m_building == NULL || _building->m_next[0]->m_building->m_type == kConveyor)) {
     for (int32_t try = 0; try < (MAX_STORE/2); ++try) {
-      if (_building->m_stored[try] && (_building->m_next[0]->m_building == NULL || _building->m_next[0]->m_building->m_type == kConveyor)) {
+      if (_building->m_stored[try]) {
         newCargo(_building->m_next[0], _building->m_stored[try + (MAX_STORE/2)], false);
         if (--_building->m_stored[try] == 0) {
           _building->m_stored[try + 3] = kNoCargo; // Reset the slot if we have run out of items 

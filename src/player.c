@@ -26,6 +26,9 @@ struct Location_t* m_currentLocation;
 
 struct Location_t* m_lookingAt;
 
+bool m_top = true;
+bool m_left = true;
+
 void setPlayerPosition(uint16_t _x, uint16_t _y);
 
 void movePlayerPosition(float _goalX, float _goalY);
@@ -215,6 +218,42 @@ bool movePlayer() {
     //pd->system->logToConsole("LA %i %i, off %i", m_lookingAt->m_x, m_lookingAt->m_y, m_lookingAtOffset);
   }
 
+  // Torus splitting
+  bool torusChanged = false;
+  if (m_top && m_player.m_pix_y > TOT_WORLD_PIX_Y/2) {
+    m_top = false;
+    torusChanged = true;
+  } else if (!m_top && m_player.m_pix_y <= TOT_WORLD_PIX_Y/2) {
+    m_top = true;
+    torusChanged = true;
+  }
+
+  if (m_left && m_player.m_pix_x > TOT_WORLD_PIX_X/2) {
+    m_left = false;
+    torusChanged = true;
+  } else if (!m_left && m_player.m_pix_x <= TOT_WORLD_PIX_X/2) {
+    m_left = true;
+    torusChanged = true;
+  }
+
+  if (torusChanged) {
+    chunkShiftTorus(m_top, m_left);
+  }
+
+  return true;
+}
+
+bool modMoney(int32_t _amount) {
+  if (_amount < 0 && (_amount * -1) > m_player.m_money) {
+    return false;
+  }
+  m_player.m_money += _amount;
+  if (m_player.m_money > m_player.m_moneyHighWaterMark) {
+    m_player.m_moneyHighWaterMark = m_player.m_money;
+  }
+  if (_amount > 0) {
+    m_player.m_moneyCumulative += _amount;
+  }
   return true;
 }
 
@@ -273,12 +312,18 @@ void initPlayer() {
 void serialisePlayer(struct json_encoder* je) {
   je->addTableMember(je, "player", 6);
   je->startTable(je);
+  je->addTableMember(je, "sf", 2); // Save format
+  je->writeInt(je, SAVE_FORMAT);
   je->addTableMember(je, "x", 1);
   je->writeInt(je, (int) m_player.m_pix_x);
   je->addTableMember(je, "y", 1);
   je->writeInt(je, (int) m_player.m_pix_y);
   je->addTableMember(je, "m", 1);
   je->writeInt(je, m_player.m_money);
+  je->addTableMember(je, "mhwm", 4);
+  je->writeInt(je, m_player.m_moneyHighWaterMark);
+  je->addTableMember(je, "mc", 2);
+  je->writeInt(je, m_player.m_moneyCumulative);
   je->addTableMember(je, "slot", 4);
   je->writeInt(je, getSlot());
   
@@ -306,6 +351,13 @@ void serialisePlayer(struct json_encoder* je) {
   }
   je->endArray(je);
 
+  je->addTableMember(je, "util", 4);
+  je->startArray(je);
+  for (int32_t i = 0; i < kNUtilitySubTypes; ++i) {
+    je->addArrayMember(je);
+    je->writeInt(je, m_player.m_carryUtility[i]);
+  }
+  je->endArray(je);
 
   je->addTableMember(je, "xtrcts", 6);
   je->startArray(je);
@@ -328,12 +380,18 @@ void serialisePlayer(struct json_encoder* je) {
 }
 
 void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _value) {
-  if (strcmp(_key, "x") == 0) {
+  if (strcmp(_key, "sf") == 0) {
+    m_player.m_saveFormat = json_intValue(_value);
+  } else if (strcmp(_key, "x") == 0) {
     m_player.m_pix_x = (float) json_intValue(_value);
   } else if (strcmp(_key, "y") == 0) {
     m_player.m_pix_y = json_intValue(_value);
   } else if (strcmp(_key, "m") == 0) {
     m_player.m_money = json_intValue(_value);
+  } else if (strcmp(_key, "mhwm") == 0) {
+    m_player.m_moneyHighWaterMark = json_intValue(_value);
+  } else if (strcmp(_key, "mc") == 0) {
+    m_player.m_moneyCumulative = json_intValue(_value);
   } else if (strcmp(_key, "slot") == 0) {
     setSlot( json_intValue(_value) ); 
     m_deserialiseArrayID = 0; // Note "one behind"
@@ -343,8 +401,10 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_deserialiseArrayID = 2;
   } else if (strcmp(_key, "plants") == 0) {
     m_deserialiseArrayID = 3;
-  } else if (strcmp(_key, "xtrcts") == 0) {
+  } else if (strcmp(_key, "util") == 0) {
     m_deserialiseArrayID = 4;
+  } else if (strcmp(_key, "xtrcts") == 0) {
+    m_deserialiseArrayID = 5;
   } else if (strcmp(_key, "facts") == 0) {
     // noop
   } else if (strcmp(_key, "player") == 0) {
@@ -361,8 +421,9 @@ void deserialiseArrayValuePlayer(json_decoder* jd, int _pos, json_value _value) 
     case 0: m_player.m_carryCargo[i] = v; break;
     case 1: m_player.m_carryConveyor[i] = v; break;
     case 2: m_player.m_carryPlant[i] = v; break;
-    case 3: m_player.m_carryExtractor[i] = v; break;
-    case 4: m_player.m_carryFactory[i] = v; break;
+    case 3: m_player.m_carryUtility[i] = v; break;
+    case 4: m_player.m_carryExtractor[i] = v; break;
+    case 5: m_player.m_carryFactory[i] = v; break;
   }
 }
 

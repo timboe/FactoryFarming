@@ -1,7 +1,8 @@
 #pragma once
 #include "game.h"
 
-enum kGameMode {kWander, kMenuSelect, kMenuOptionSelected};
+// TODO Kill kMenuSelect
+enum kGameMode {kWander, kMenuSelect, kMenuBuy, kMenuOptionSelected};
 
 enum kMenuSelections {kMenuConveyor, kMenuSplitI, kMenuSplitL, kMenuSplitT, kMenuFilterL, kMenuTunnel, kMenuApple, kMenuCarrot, kMenuWheat, kMenuCheese, kMenuExtractor, kMenuBin};
 

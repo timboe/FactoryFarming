@@ -8,15 +8,15 @@
 
 uint8_t m_pressed[4] = {0};
 
-
-
 uint8_t m_zoom = 1;
 
 bool characterMoveInput(uint32_t _buttonPressed);
 
 void clickHandleWander(uint32_t _buttonPressed);
 
-void clickHandleMenuSelect(uint32_t _buttonPressed);
+void clickHandleMenuSelect(uint32_t _buttonPressed); // Get rid of this
+
+void clickHandleMenuBuy(uint32_t _buttonPressed);
 
 void clickHandleMenuOptionSelected(uint32_t _buttonPressed);
 

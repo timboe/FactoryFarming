@@ -52,8 +52,8 @@
 #define CONV_START_Y 7
 
 // How big is the world in X and Y
-#define WORLD_CHUNKS_X 16
-#define WORLD_CHUNKS_Y 16
+#define WORLD_CHUNKS_X 8
+#define WORLD_CHUNKS_Y 8
 #define TOT_CHUNKS (WORLD_CHUNKS_X*WORLD_CHUNKS_Y)
 
 #define TOT_WORLD_PIX_X (WORLD_CHUNKS_X*CHUNK_PIX_X)
@@ -75,6 +75,11 @@
 
 #define Z_INDEX_UI_RIGHT 32765
 #define Z_INDEX_UI_BOTTOM 32766
+
+#define Z_INDEX_UI_T 32767
+#define Z_INDEX_UI_M 32766
+#define Z_INDEX_UI_B 32765
+
 #define Z_INDEX_MAX 32767
 #define Z_INDEX_CARGO 32763
 #define Z_INDEX_BLUEPRINT 32764
@@ -98,3 +103,6 @@
 #define WORLD_SAVE_SLOTS 16
 
 #define WORLD_NAME_LENGTH 32
+
+// Versioning
+#define SAVE_FORMAT 1

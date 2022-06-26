@@ -27,6 +27,52 @@ struct Chunk_t* getChunk_noCheck(const int32_t _x, const int32_t _y) {
   return &m_chunks[l];
 }
 
+void setChunkSpriteOffsets(struct Chunk_t* _c, int16_t _x, int16_t _y) {
+  for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+    PDRect bound = {.x = 0, .y = 0, .width = CHUNK_PIX_X*zoom, .height = CHUNK_PIX_Y*zoom};
+    pd->sprite->moveTo(_c->m_bkgSprite[zoom], (CHUNK_PIX_X*_c->m_x + CHUNK_PIX_X/2.0 + _x)*zoom, (CHUNK_PIX_Y*_c->m_y + CHUNK_PIX_Y/2.0 + _y)*zoom);
+  }
+}
+
+
+void chunkShiftTorus(bool _top, bool _left) {
+  return; // Come back to this...
+
+  for (int32_t x = 0; x < WORLD_CHUNKS_X; ++x) {
+    int32_t yMod = 0;
+    if (x == 0 && !_left) {
+      yMod = TOT_WORLD_PIX_X;
+    }
+
+
+    struct Chunk_t* top = getChunk_noCheck(x, 0);
+    struct Chunk_t* bottom = getChunk_noCheck(x, WORLD_CHUNKS_Y-1);
+    if (_top) {
+      setChunkSpriteOffsets(top, 0, 0);
+      setChunkSpriteOffsets(bottom, 0, -TOT_WORLD_PIX_Y);
+    } else {
+      setChunkSpriteOffsets(top, 0, TOT_WORLD_PIX_Y);
+      setChunkSpriteOffsets(bottom, 0, 0);
+    }
+  }
+}
+/*
+void chunkShiftTorusHorizontal(bool _left) {
+  for (int32_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
+    struct Chunk_t* left = getChunk_noCheck(0, y);
+    struct Chunk_t* right = getChunk_noCheck(WORLD_CHUNKS_X-1, y);
+    if (_left) {
+      setChunkSpriteOffsets(left, 0, 0);
+      setChunkSpriteOffsets(right, -TOT_WORLD_PIX_X, 0);
+    } else {
+      setChunkSpriteOffsets(left, TOT_WORLD_PIX_X, 0);
+      setChunkSpriteOffsets(right, 0, 0);
+    }
+  }
+}
+*/
+
+
 void chunkAddBuilding(struct Chunk_t* _chunk, struct Building_t* _building) {
   _chunk->m_buildings[ _chunk->m_nBuildings ] = _building;
   ++(_chunk->m_nBuildings);

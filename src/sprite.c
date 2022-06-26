@@ -53,7 +53,7 @@ LCDFont* loadFontAtPath(const char* _path) {
 }
 
 LCDBitmap* getSprite16(uint32_t _x, uint32_t _y, uint8_t _zoom) {
-  return getSprite16_byidx(getSprite16_idx(_x, _y), _zoom);
+  return getSprite16_byidx(SPRITE16_ID(_x, _y), _zoom);
 }
 
 LCDBitmap* getSprite16_byidx(uint32_t _idx, uint8_t _zoom) {
@@ -66,12 +66,8 @@ LCDBitmap* getSprite16_byidx(uint32_t _idx, uint8_t _zoom) {
   return NULL;
 }
 
-uint16_t getSprite16_idx(uint32_t _x, uint32_t _y) {
-  return (SHEET16_SIZE_X * _y) + _x;
-}
-
 LCDBitmap* getSprite48(uint32_t _x, uint32_t _y, uint8_t _zoom) {
-  return getSprite48_byidx(getSprite48_idx(_x, _y), _zoom);
+  return getSprite48_byidx(SPRITE48_ID(_x, _y), _zoom);
 }
 
 LCDBitmap* getSprite48_byidx(uint32_t _idx, uint8_t _zoom) {
@@ -82,10 +78,6 @@ LCDBitmap* getSprite48_byidx(uint32_t _idx, uint8_t _zoom) {
   }
   pd->system->error("getSprite48 Error");
   return NULL;
-}
-
-uint16_t getSprite48_idx(uint32_t _x, uint32_t _y) {
-  return (SHEET48_SIZE_X * _y) + _x;
 }
 
 void animateConveyor() {

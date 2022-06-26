@@ -80,12 +80,12 @@ bool canBePlacedConveyor(struct Location_t* _loc, enum kDir _dir, union kSubType
   bool floor = false;
   struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
   if (t->m_tile < FLOOR_TILES) floor = true;
-  else if (t->m_tile >= getSprite16_idx(8, 2) && t->m_tile < getSprite16_idx(8+4, 2)) floor = true;
+  else if (t->m_tile >= SPRITE16_ID(8, 2) && t->m_tile < SPRITE16_ID(8+4, 2)) floor = true;
 
   if (_subType.conveyor == kTunnelIn) {
     t = getTunnelOutTile(_loc, _dir);
     if (t->m_tile < FLOOR_TILES) floor &= true;
-    else if (t->m_tile >= getSprite16_idx(8, 2) && t->m_tile < getSprite16_idx(8+4, 2)) floor &= true;
+    else if (t->m_tile >= SPRITE16_ID(8, 2) && t->m_tile < SPRITE16_ID(8+4, 2)) floor &= true;
   }
 
   if (!floor) return false;

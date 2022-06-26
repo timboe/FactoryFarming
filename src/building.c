@@ -21,6 +21,31 @@ uint16_t m_deserialiseIndexBuilding = 0;
 
 struct Building_t* m_buildings;
 
+// Note: User can never themselves build a kTunnelOut
+//                             {kBelt,    kSplitI,  kSplitL,  kSplitT,  kFilterL, kTunnelIn, kTunnelOut, kNConvSubTypes};
+const uint32_t kConvUnlock[] = {0,        0,        0,        0,        0,        0,         UINT32_MAX};
+const uint16_t kConvPrice[]  = {1,        1,        1,        1,        1,        1,         1};
+const uint16_t kConvUIIcon[] = {SID(0,3), SID(0,4), SID(4,3), SID(4,4), SID(8,4), SID(8,3),  SID(8,3)};
+
+//                              {kCarrotPlant, kAppleTree, kWheatPlant, kP4,      klP5,     kP6,      kP7,      kP8,      kP9,      kP10,     kP11,     kP12, kNPlantSubTypes};
+const uint32_t kPlantUnlock[] = {0,            0,          0,           0,        0,        0,        0,        0,        0,        0,        0,        0};
+const uint16_t kPlantPrice[]  = {1,            1,          1,           1,        1,        1,        1,        1,        1,        1,        1,        1};
+const uint16_t kPlantUIIcon[] = {SID(10,7),    SID(8,7),   SID(11,7),   SID(9,7), SID(9,7), SID(9,7), SID(9,7), SID(9,7), SID(9,7), SID(9,7), SID(9,7), SID(9,7)};
+
+//                                {kWell, kNUtilitySubTypes};
+const uint32_t kUtilityUnlock[] = {0};
+const uint16_t kUtilityPrice[]  = {1};
+const uint16_t kUtilityUIIcon[] = {SID(0,0)};
+
+//                                  {kCropHarvester, kPump, kNExtractorSubTypes};
+const uint32_t kExtractorUnlock[] = {0,              0};
+const uint16_t kExtractorPrice[]  = {1,              1};
+const uint16_t kExtractorUIIcon[] = {SID(4,2)};
+
+//                                {kMakeSmall, kNFactorySubTypes};
+const uint32_t kFactoryUnlock[] = {0};
+const uint16_t kFactoryPrice[]  = {1};
+const uint16_t kFactoryUIIcon[] = {SID(0,0)};
 
 void buildingSetup(struct Building_t* _building);
 
@@ -49,7 +74,12 @@ const char* toStringBuilding(struct Building_t* _building) {
       case kCarrotPlant: return "Carrot Plant";
       case kAppleTree: return "Apple Tree";
       case kWheatPlant: return "Wheat Plant";
+      case kP4:; case kP5:; case kP6:; case kP7:; case kP8:; case kP9:; case kP10:; case kP11:; case kP12:; return "Placeholder";
       case kNPlantSubTypes: return "";
+    }
+    case kUtility: switch (_building->m_subType.utility) {
+      case kWell: return "Well";
+      case kNUtilitySubTypes: return "";
     }
     case kExtractor: switch (_building->m_subType.extractor) {
       case kCropHarvester: return "Automatic Harvester";
@@ -137,19 +167,29 @@ void buildingSetup(struct Building_t* _building) {
   switch (_building->m_type) {
     case kConveyor:; return buildingSetupConveyor(_building);
     case kPlant:; return buildingSetupPlant(_building);
+    case kUtility:; break;
     case kExtractor:; return buildingSetupExtractor(_building);
+    case kFactory:; break;
     case kSpecial:; return buildingSetupSpecial(_building);
-    default: break;
+    case kNBuildingTypes:; case kNoBuilding:; break;
   };
 }
+
+
+void PLACEHOLDERUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
+  return;
+}
+
 
 void assignUpdate(struct Building_t* _building) {
   switch (_building->m_type) {
     case kConveyor:; _building->m_updateFn = &conveyorUpdateFn; break;
     case kPlant:; _building->m_updateFn = &plantUpdateFn; break;
+    case kUtility:; _building->m_updateFn = &PLACEHOLDERUpdateFn; break;
     case kExtractor:; _building->m_updateFn = &extractorUpdateFn; break;
+    case kFactory:; _building->m_updateFn = &PLACEHOLDERUpdateFn; break;
     case kSpecial:; _building->m_updateFn = &specialUpdateFn; break;
-    default: break;
+    case kNBuildingTypes:; case kNoBuilding:; break;
   }
 }
 
@@ -158,10 +198,11 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   switch (_type) {
     case kConveyor:; canBePlaced = canBePlacedConveyor(_loc, _dir, _subType); break;
     case kPlant:;  canBePlaced = canBePlacedPlant(_loc, _dir, _subType); break;
+    case kUtility:; break;
     case kExtractor:;  canBePlaced = canBePlacedExtractor(_loc, _dir, _subType); break;
     case kSpecial:;  canBePlaced = canBePlacedSpecial(_loc, _dir, _subType); break;
     case kFactory:;  break;
-    case kNoBuilding:; case kNBuildingTypes:; canBePlaced = false; break;
+    case kNoBuilding:; case kNBuildingTypes:; break;
   }
   if (!canBePlaced) return false;
 
@@ -191,6 +232,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   switch (building->m_type) {
     case kConveyor:; building->m_subType.conveyor = _subType.conveyor; break;
     case kPlant:; building->m_subType.plant = _subType.plant; break;
+    case kUtility:; building->m_subType.utility = _subType.utility; break;
     case kExtractor:; building->m_subType.extractor = _subType.extractor; break;
     case kSpecial:; building->m_subType.special = _subType.special; break;
     case kFactory:; building->m_subType.factory = _subType.factory; break;
