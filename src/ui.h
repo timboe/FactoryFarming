@@ -1,7 +1,8 @@
 #pragma once
 #include "game.h"
 
-enum kGameMode {kWander, kMenuBuy, kMenuPlayer, kPlacement};
+// All Main Menu items should come after kMenuBuy
+enum kGameMode {kWander, kPlacement, kMenuBuy, kMenuPlayer};
 
 //enum kMenuSelections {kMenuConveyor, kMenuSplitI, kMenuSplitL, kMenuSplitT, kMenuFilterL, kMenuTunnel, kMenuApple, kMenuCarrot, kMenuWheat, kMenuCheese, kMenuExtractor, kMenuBin};
 
@@ -10,8 +11,6 @@ void addUIToSpriteList(void);
 void rotateCursor(bool _increment);
 
 void moveCursor(uint32_t _button);
-
-//uint16_t getUISelectedID(void);
 
 uint16_t getCursorRotation(void);
 
@@ -26,6 +25,8 @@ void updateUI(int _fc);
 void updateBlueprint(void);
 
 void drawUITop(const char* _text);
+
+void doPurchace(void);
 
 void setGameMode(enum kGameMode _mode);
 

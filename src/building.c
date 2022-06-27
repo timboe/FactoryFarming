@@ -22,10 +22,10 @@ uint16_t m_deserialiseIndexBuilding = 0;
 struct Building_t* m_buildings;
 
 // Note: User can never themselves build a kTunnelOut
-//                             {kBelt,    kSplitI,  kSplitL,  kSplitT,  kFilterL, kTunnelIn, kTunnelOut, kNConvSubTypes};
-const uint32_t kConvUnlock[] = {0,        0,        0,        0,        0,        0,         UINT32_MAX};
-const uint16_t kConvPrice[]  = {1,        1,        1,        1,        1,        1,         1};
-const uint16_t kConvUIIcon[] = {SID(0,3), SID(0,4), SID(4,3), SID(4,4), SID(8,4), SID(8,3),  SID(8,3)};
+//                             {kBelt,    kSplitI,  kSplitL,  kSplitT,  kFilterI,  kFilterL, kTunnelIn, kTunnelOut, kNConvSubTypes};
+const uint32_t kConvUnlock[] = {0,        0,        0,        0,        0,         0,        0,         UINT32_MAX};
+const uint16_t kConvPrice[]  = {1,        1,        1,        1,        1,         1,        1,         1};
+const uint16_t kConvUIIcon[] = {SID(0,3), SID(0,4), SID(4,3), SID(4,4), SID(12,4), SID(8,4), SID(8,3),  SID(8,3)};
 
 // Wetness: 0=Water, 1-3=Wet, 4-7=Medium, 8+=Dry
 // Soil: 0=Silty, 8=Chalky, 16=Peaty, 24=Sandy
@@ -36,10 +36,10 @@ const uint16_t kPlantUIIcon[]  = {SID(10,7),    SID(8,7),   SID(11,7),   SID(9,7
 const uint8_t  kPlantWetness[] = {1,            4,          8,           1,        4,        8,        1,        4,        8,        1,        4,        8};
 const uint8_t  kPlantSoil[]    = {0,            8,          16,          24,       0,        8,        16,       24,       0,        8,        16,       24};
 
-//                                {kWell, kNUtilitySubTypes};
-const uint32_t kUtilityUnlock[] = {0};
-const uint16_t kUtilityPrice[]  = {1};
-const uint16_t kUtilityUIIcon[] = {SID(0,0)};
+//                                {kWell,     kStorageBox, kConveyorGrease, kNUtilitySubTypes};
+const uint32_t kUtilityUnlock[] = {0,         0,           0};
+const uint16_t kUtilityPrice[]  = {1,         1,           1};
+const uint16_t kUtilityUIIcon[] = {SID(0,15), SID(4,15),   SID(8,15)};
 
 //                                  {kCropHarvester, kPump, kNExtractorSubTypes};
 const uint32_t kExtractorUnlock[] = {0,              0};
@@ -75,11 +75,12 @@ const char* toStringBuilding(struct Building_t* _building) {
     case kNoBuilding: return "NoBuilding";
     case kConveyor: switch (_building->m_subType.conveyor) {
       case kBelt: return "Conveyor Belt";
-      case kSplitI: return "Conveyor Belt 'I' Spliter";
-      case kSplitL: return "Conveyor Belt 'L' Splitter";
-      case kSplitT: return "Conveyor Belt 'T' Splitter";
-      case kFilterL: return "Conveyor Belt 'L' Filter";
-      case kTunnelIn: case kTunnelOut: return "Conveyor Belt Tunnel";
+      case kSplitI: return "'I' Spliter";
+      case kSplitL: return "'L' Splitter";
+      case kSplitT: return "'T' Splitter";
+      case kFilterI: return "'I' Filter";
+      case kFilterL: return "'L' Filter";
+      case kTunnelIn: case kTunnelOut: return "Tunnel";
       case kNConvSubTypes: return "";
     }
     case kPlant: switch (_building->m_subType.plant) {
@@ -91,10 +92,12 @@ const char* toStringBuilding(struct Building_t* _building) {
     }
     case kUtility: switch (_building->m_subType.utility) {
       case kWell: return "Well";
+      case kStorageBox: return "Storage Box";
+      case kConveyorGrease: return "Conveyor Grease";
       case kNUtilitySubTypes: return "";
     }
     case kExtractor: switch (_building->m_subType.extractor) {
-      case kCropHarvester: return "Automatic Harvester";
+      case kCropHarvester: return "Auto Harvester";
       case kPump: return "Water Pump";
       case kNExtractorSubTypes: return "";
     }

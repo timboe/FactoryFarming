@@ -21,14 +21,14 @@ int16_t distanceFromBuy() {
   struct Player_t* p = getPlayer();
   uint16_t dx = abs(p->m_pix_x - m_buyBox->m_pix_x);
   uint16_t dy = abs(p->m_pix_y - m_buyBox->m_pix_y);
-  return (dx < dy ? dx : dy);
+  return (dx < dy ? dy : dx);
 }
 
 int16_t distanceFromSell() {
   struct Player_t* p = getPlayer();
   uint16_t dx = abs(p->m_pix_x - m_sellBox->m_pix_x);
   uint16_t dy = abs(p->m_pix_y - m_sellBox->m_pix_y);
-  return (dx < dy ? dx : dy);
+  return (dx < dy ? dy : dx);
 }
 
 void sellBoxUpdateFn(struct Building_t* _building) {
@@ -36,7 +36,7 @@ void sellBoxUpdateFn(struct Building_t* _building) {
     for (int32_t y = _building->m_location->m_y - 1; y < _building->m_location->m_y + 2; ++y) {
       struct Location_t* loc = getLocation_noCheck(x, y); // Will never straddle the world boundary
       if (loc->m_cargo) {
-        getPlayer()->m_money += getCargoValue(loc->m_cargo->m_type);
+        modMoney( kCargoValue[loc->m_cargo->m_type] );
         clearLocation(loc, /*cargo*/ true, /*building*/ false);
       }
     }

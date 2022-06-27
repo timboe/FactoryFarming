@@ -3,6 +3,9 @@
 #include "building.h"
 #include "cargo.h"
 
+enum kToolType{kToolPickup, kToolInspect, kToolDestroy, kNToolTypes};
+extern const uint16_t kToolUIIcon[];
+
 // Chunk quadrants
 enum kChunkQuad{NE, SE, SW, NW};
 
@@ -21,6 +24,11 @@ struct Player_t{
   uint16_t m_carryExtractor[kNExtractorSubTypes];
   uint16_t m_carryFactory[kNFactorySubTypes];
 
+  // Settings. Persistent and NOT overwritten on reset
+  uint8_t m_soundSettings;
+  uint8_t m_autoUseConveyorBooster;
+  uint8_t m_enableConveyorAnimation;
+
   // Transient   
   LCDSprite* m_sprite[ZOOM_LEVELS]; // Index 0 not used - OWNED
   LCDSprite* m_blueprint[ZOOM_LEVELS]; // Index 0 not used - OWNED
@@ -32,6 +40,10 @@ struct Player_t{
 };
 
 struct Player_t* getPlayer(void);
+
+const char* toStringTool(enum kToolType _type);
+
+const char* toStringToolInfo(enum kToolType _type);
 
 bool modMoney(int32_t _amount);
 

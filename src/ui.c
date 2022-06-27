@@ -20,6 +20,7 @@ LCDSprite* m_UISpriteTop;
 LCDBitmap* m_UIBitmapBottom;
 
 LCDBitmap* m_UIBitmapRight;
+LCDBitmap* m_UIBitmapRightRotated;
 
 LCDBitmap* m_UIBitmapTop;
 
@@ -41,7 +42,7 @@ LCDBitmap* m_UIBitmapInfo;
 LCDSprite* m_UISpriteFull; // Main window backing
 LCDBitmap* m_UIBitmapFull;
 
-#define CATEGORIES 5
+#define CATEGORIES 7
 LCDSprite* m_UISpriteHeaders[CATEGORIES]; // Category headers: Crops. Conveyors. Utility. Harvesters. Factories. 
 LCDBitmap* m_UIBitmapHeaders[CATEGORIES]; // Category headers: Crops. Conveyors. Utility. Harvesters. Factories. 
 
@@ -75,7 +76,7 @@ void drawUIBottom(void);
 
 void drawUIRight(void);
 
-void drawUIBuy(void);
+void drawUIMain(void);
 
 void roundedRect(uint16_t _o, uint16_t _w, uint16_t _h, uint16_t _r, LCDColor _c);
 
@@ -139,7 +140,7 @@ void updateUI(int _fc) {
   }
   if (m_UIDirtyMain) {
     m_UIDirtyMain = false;
-    if (m_mode == kMenuBuy) drawUIBuy();
+    drawUIMain();
   }
 }
 
@@ -182,7 +183,7 @@ void addUIToSpriteList() {
   pd->sprite->addSprite(m_UISpriteTop);
   pd->sprite->addSprite(m_UISpriteRight);
 
-  if (m_mode == kMenuBuy || m_mode == kMenuPlayer) {
+  if (m_mode >= kMenuBuy) {
     pd->sprite->addSprite(m_UISpriteFull);
     pd->sprite->addSprite(m_UISpriteCursor);
     pd->sprite->addSprite(m_UISpriteSelected);
@@ -274,9 +275,22 @@ void drawUIBottom() {
   } else if (mode == 2) {
     struct Location_t* loc = getPlayerLocation();
     struct Tile_t* t = getTile_fromLocation(loc);
-    snprintf(text, 128, "%s (%s), B:%s, C:%s", 
-      toStringSoil(t->m_tile), toStringWetness(t->m_wetness), toStringBuilding(loc->m_building), toStringCargo(loc->m_cargo));
-    pd->graphics->drawText(text, 128, kASCIIEncoding, 0, 0);
+
+    if (loc->m_building && loc->m_cargo) {
+      snprintf(text, 128, "%s %s, %s, %s", 
+        toStringWetness(t->m_wetness), toStringSoil(t->m_tile), toStringBuilding(loc->m_building), toStringCargo(loc->m_cargo));
+    } else if (loc->m_building) {
+      snprintf(text, 128, "%s %s, %s", 
+        toStringWetness(t->m_wetness), toStringSoil(t->m_tile), toStringBuilding(loc->m_building));
+    } else if (loc->m_cargo) {
+      snprintf(text, 128, "%s %s, %s", 
+        toStringWetness(t->m_wetness), toStringSoil(t->m_tile), toStringCargo(loc->m_cargo));
+    } else {
+      snprintf(text, 128, "%s %s", 
+        toStringWetness(t->m_wetness), toStringSoil(t->m_tile));
+    }
+
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX/2, 0);
   }
 
 /*
@@ -302,24 +316,22 @@ void drawUIBottom() {
 }
 
 void drawUIRight() {
-  pd->graphics->pushContext(m_UIBitmapRight);
-  pd->graphics->fillRect(0, 0, TILE_PIX, DEVICE_PIX_Y, kColorBlack);
-  /*
-  const enum kGameMode gm = getGameMode();
-  for (uint32_t i = 0; i < UI_ITEMS; ++i) {
-    const uint16_t y = TILE_PIX*i;
-    const uint16_t offset = (i >= kMenuApple && i != kMenuExtractor) ? 0 : getUISelectedRotation();
-    pd->graphics->drawBitmap(getSprite16(m_UIIcons[i*2] + offset, m_UIIcons[(i*2)+1], 1), 0, y, kBitmapUnflipped);
-    if ((gm == kMenuSelect || gm == kPlacement) && i == getUISelectedID()) {
-      LCDBitmapDrawMode m = ((gm == kMenuSelect && getFrameCount() % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4) ? kDrawModeInverted : kDrawModeCopy );
-      pd->graphics->setDrawMode(m);
-      pd->graphics->drawBitmap(getSprite16(0, 2, 1), 0, y, kBitmapUnflipped);
-      pd->graphics->setDrawMode(kDrawModeCopy);
-    }
-  }
+  pd->graphics->pushContext(m_UIBitmapRightRotated);
+  pd->graphics->fillRect(0, 0, DEVICE_PIX_Y, TILE_PIX, kColorBlack);
+  static char text[32] = "";
+  snprintf(text, 32, "%u", (unsigned) getPlayer()->m_money);
+  pd->graphics->setDrawMode(kDrawModeFillWhite);
+  setRoobert10();
+  pd->graphics->drawText(text, 32, kASCIIEncoding, 2*TILE_PIX, 0);
+  pd->graphics->setDrawMode(kDrawModeCopy);
+  pd->graphics->drawBitmap(getSprite16(2, 2, 1), TILE_PIX/2, 0, kBitmapUnflipped);
   pd->graphics->popContext();
-  */
-  UIDirtyBottom();
+
+  pd->graphics->pushContext(m_UIBitmapRight);
+  pd->graphics->drawRotatedBitmap(m_UIBitmapRightRotated, 0, 0, 90.0f, 0.0f, 0.0f, 1.0f, 1.0f);  
+  pd->graphics->popContext();
+
+  UIDirtyBottom(); // why?
 }
 
 void drawUITop(const char* _text) {
@@ -329,7 +341,7 @@ void drawUITop(const char* _text) {
   }
   pd->graphics->pushContext(m_UIBitmapTop);
   pd->graphics->setLineCapStyle(kLineCapStyleRound);
-  pd->graphics->drawLine(TILE_PIX, TILE_PIX, SCREEN_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorBlack);
+  pd->graphics->drawLine(TILE_PIX, TILE_PIX - 2, SCREEN_PIX_X/2 - TILE_PIX, TILE_PIX - 2, TILE_PIX*2 - 2, kColorBlack);
   pd->graphics->setDrawMode(kDrawModeFillWhite);
   setRoobert24();
   pd->graphics->drawText(_text, 16, kASCIIEncoding, TILE_PIX, 0);
@@ -338,22 +350,26 @@ void drawUITop(const char* _text) {
 
 int32_t getUnlockCost(int32_t _c, int32_t _i) {
   switch (_c) {
-    case 0: return kPlantUnlock[_i];
-    case 1: return kConvUnlock[_i];
-    case 2: return kExtractorUnlock[_i];
-    case 3: return kFactoryUnlock[_i];
-    case 4: return kUtilityUnlock[_i];
+    case 0: return 0;
+    case 1: return kPlantUnlock[_i];
+    case 2: return kConvUnlock[_i];
+    case 3: return kExtractorUnlock[_i];
+    case 4: return kFactoryUnlock[_i];
+    case 5: return kUtilityUnlock[_i];
+    case 6: return 0;
   }
   return 0;
 }
 
 int32_t getPrice(int32_t _c, int32_t _i) {
   switch (_c) {
-    case 0: return kPlantPrice[_i];
-    case 1: return kConvPrice[_i];
-    case 2: return kExtractorPrice[_i];
-    case 3: return kFactoryPrice[_i];
-    case 4: return kUtilityPrice[_i];
+    case 0: return 0;
+    case 1: return kPlantPrice[_i];
+    case 2: return kConvPrice[_i];
+    case 3: return kExtractorPrice[_i];
+    case 4: return kFactoryPrice[_i];
+    case 5: return kUtilityPrice[_i];
+    case 6: return kCargoValue[_i];
   }
   return 0;
 }
@@ -361,33 +377,52 @@ int32_t getPrice(int32_t _c, int32_t _i) {
 uint16_t getOwned(int32_t _c, int32_t _i) {
   struct Player_t* p = getPlayer();
   switch (_c) {
-    case 0: return p->m_carryPlant[_i];
-    case 1: return p->m_carryConveyor[_i];
-    case 2: return p->m_carryExtractor[_i];
-    case 3: return p->m_carryFactory[_i];
-    case 4: return p->m_carryUtility[_i];
+    case 0: return 1;
+    case 1: return p->m_carryPlant[_i];
+    case 2: return p->m_carryConveyor[_i];
+    case 3: return p->m_carryExtractor[_i];
+    case 4: return p->m_carryFactory[_i];
+    case 5: return p->m_carryUtility[_i];
+    case 6: return p->m_carryCargo[_i];
   }
   return 0;
 }
 
+void modOwned(int32_t _c, int32_t _i, bool _add) {
+  struct Player_t* p = getPlayer();
+  switch (_c) {
+    case 0: return;
+    case 1: p->m_carryPlant[_i] += (_add ? 1 : -1); break;
+    case 2: p->m_carryConveyor[_i] += (_add ? 1 : -1); break;
+    case 3: p->m_carryExtractor[_i] += (_add ? 1 : -1); break;
+    case 4: p->m_carryFactory[_i] += (_add ? 1 : -1); break;
+    case 5: p->m_carryUtility[_i] += (_add ? 1 : -1); break;
+    case 6: p->m_carryCargo[_i] += (_add ? 1 : -1); break;
+  }
+}
+
 uint16_t getNSubTypes(int32_t _c) {
   switch (_c) {
-    case 0: return kNPlantSubTypes;
-    case 1: return kNConvSubTypes;
-    case 2: return kNExtractorSubTypes;
-    case 3: return kNFactorySubTypes;
-    case 4: return kNUtilitySubTypes;
+    case 0: return kNToolTypes;
+    case 1: return kNPlantSubTypes;
+    case 2: return kNConvSubTypes;
+    case 3: return kNExtractorSubTypes;
+    case 4: return kNFactorySubTypes;
+    case 5: return kNUtilitySubTypes;
+    case 6: return kNCargoType;
   }
   return 0;
 }
 
 enum kBuildingType getCatType(int32_t _c) {
   switch (_c) {
-    case 0: return kPlant;
-    case 1: return kConveyor;
-    case 2: return kExtractor;
-    case 3: return kFactory;
-    case 4: return kUtility;
+    case 0: return kNoBuilding;
+    case 1: return kPlant;
+    case 2: return kConveyor;
+    case 3: return kExtractor;
+    case 4: return kFactory;
+    case 5: return kUtility;
+    case 6: return kNoBuilding;
   }
   return kNoBuilding;
 }
@@ -425,6 +460,11 @@ void checkSel() {
       --m_selCol;
     }
   }
+  // special, force the top to be a title
+  if (m_cursorRowAbs == 0) {
+    --m_selRowOffset;
+    m_cursorRowAbs = 1;
+  }
 }
 
 void moveCursor(uint32_t _button) {
@@ -453,30 +493,32 @@ void moveCursor(uint32_t _button) {
       ++m_selCol;
     }
   }
-  // special, force the top to be a title
-  if (m_cursorRowAbs == 0) {
-    --m_selRowOffset;
-    m_cursorRowAbs = 1;
-  }
   checkSel();
   UIDirtyMain();
 }
 
-void drawUIBuy() {
+void doPurchace() {
+  const uint16_t selectedCat = m_contentCat[m_selRow][m_selCol];
+  const uint16_t selectedID =  m_contentID[m_selRow][m_selCol];
+  const int32_t selectedPrice = getPrice(selectedCat, selectedID);
+  if (modMoney(-selectedPrice)) {
+    modOwned(selectedCat, selectedID, /*add=*/ true);
+    UIDirtyMain();
+  }
+}
 
+void populateContentPlayer(void) {
   struct Player_t* p = getPlayer();
-  const uint32_t hwm = p->m_moneyHighWaterMark;
-
-  //LCDSprite* content[MAX_ROWS][ROW_WDTH] = {NULL};
-  //bool rowIsTitle[MAX_ROWS] = {false};
-  memset(m_contentSprite, 0, MAX_ROWS * ROW_WDTH * sizeof(LCDSprite*));
-  memset(m_rowIsTitle, 0, MAX_ROWS * sizeof(bool));
-
   int16_t column = 0, row = 0;
-
   for (int32_t c = 0; c < CATEGORIES; ++c) {
-    int32_t firstEntryCost = getUnlockCost(c, 0);
-    if (hwm < firstEntryCost) { // If can unlock 1st entry
+    bool owned = false;
+    for (int32_t i = 0; i < getNSubTypes(c); ++i) {
+      if (getOwned(c, i)) {
+        owned = true;
+        break;
+      }
+    }
+    if (!owned) { // Don't own anything in this category
       continue;
     }
     m_contentSprite[row][0] = m_UISpriteHeaders[c];
@@ -484,8 +526,8 @@ void drawUIBuy() {
     ++row;
     column = 0;
     for (int32_t i = 0; i < getNSubTypes(c); ++i) {
-      if (hwm < getUnlockCost(c, i)) {
-        break;
+      if (!getOwned(c, i)) {
+        continue;
       }
       m_contentSprite[row][column] = m_UISpriteItems[c][i][0];
       m_contentCat[row][column] = c;
@@ -497,57 +539,93 @@ void drawUIBuy() {
     }
     ++row;
   }
+}
 
-  // DRAW
 
-  // Mark invisible
-  for (int32_t c = 0; c < CATEGORIES; ++c) {
-    pd->sprite->setVisible(m_UISpriteHeaders[c], 0);
-    for (int32_t i = 0; i < MAX_PER_CAT; ++i) {
-      for (int32_t r = 0; r < 4; ++r) {
-        if (m_UISpriteItems[c][i][r] != NULL) {
-          pd->sprite->setVisible(m_UISpriteItems[c][i][r], 0);
-        }
+void populateContentBuy(void) {
+  struct Player_t* p = getPlayer();
+  const uint32_t hwm = p->m_moneyHighWaterMark;
+  int16_t column = 0, row = 0;
+  // Miss the first (Tools). Miss the last (Cargo)
+  for (int32_t c = 1; c < CATEGORIES-1; ++c) {
+    int32_t firstEntryCost = getUnlockCost(c, 0);
+    if (hwm < firstEntryCost) { // If can unlock 1st entry
+      continue;
+    }
+    m_contentSprite[row][0] = m_UISpriteHeaders[c];
+    m_rowIsTitle[row] = true;
+    ++row;
+    column = 0;
+    for (int32_t i = 0; i < getNSubTypes(c); ++i) {
+      if (hwm < getUnlockCost(c, i)) {
+        continue;
+      }
+      m_contentSprite[row][column] = m_UISpriteItems[c][i][0];
+      m_contentCat[row][column] = c;
+      m_contentID[row][column] = i; 
+      if (++column == ROW_WDTH) {
+        ++row;
+        column = 0;
       }
     }
+    ++row;
   }
+}
 
-  const uint32_t UIStartY = TILE_PIX*5; // 4 + 1 (centre)
-  const uint32_t UIStartX = TILE_PIX*3; // 2 + 1 (centre)
-
-  for (int32_t r = 0; r < 4; ++r) {
-    int32_t rID = r + m_selRowOffset;
-    if (rID >= MAX_ROWS) break;
-    if (m_contentSprite[rID][0] == NULL) break; // Not populated
-    if (m_rowIsTitle[rID]) {
-      pd->sprite->setVisible(m_contentSprite[rID][0], 1);
-      pd->sprite->moveTo(m_contentSprite[rID][0], SCREEN_PIX_X/2 - TILE_PIX, UIStartY + r*2*TILE_PIX);
-    } else {
-      for (int32_t c = 0; c < ROW_WDTH; ++c) {
-        if (m_contentSprite[rID][c] == NULL) break; // Not populated
-        pd->sprite->setVisible(m_contentSprite[rID][c], 1);
-        pd->sprite->moveTo(m_contentSprite[rID][c], UIStartX + c*2*TILE_PIX, UIStartY + r*2*TILE_PIX);
-      }
-    }
-  }
-
-  // CURSOR
-  bool visible = (getFrameCount() % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
-  pd->sprite->setVisible(m_UISpriteCursor, visible);
-  pd->sprite->moveTo(m_UISpriteCursor, UIStartX + m_selCol*2*TILE_PIX, UIStartY + m_cursorRowAbs*2*TILE_PIX);
-
-  // SELECTED
-  LCDSprite* selectedSprite = m_contentSprite[m_selRow][m_selCol];
+void populateInfoPlayer(void) {
   uint16_t selectedCat = m_contentCat[m_selRow][m_selCol];
   enum kBuildingType selectedCatType = getCatType(selectedCat);
   uint16_t selectedID =  m_contentID[m_selRow][m_selCol];
   int32_t selectedPrice = getPrice(selectedCat, selectedID);
   uint16_t selectedOwned = getOwned(selectedCat, selectedID);
-  pd->sprite->setImage(m_UISpriteSelected, pd->sprite->getImage(selectedSprite), kBitmapUnflipped);
+
+  // AFFORD (N/A)
+  pd->sprite->setVisible(m_UISpriteCannotAfford, 0);
+
+  // INFO
+  static char textA[128] = "";
+  static char textB[128] = "";
+  static char textC[128] = "";
+  setRoobert10();
+  pd->graphics->clearBitmap(m_UIBitmapInfo, kColorClear);
+  pd->graphics->pushContext(m_UIBitmapInfo);
+  roundedRect(1, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorBlack);
+  roundedRect(3, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorWhite);
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+  switch (selectedCat) {
+    case 0:  snprintf(textA, 128, "%s", toStringTool(selectedID)); snprintf(textB, 128, "%s", toStringToolInfo(selectedID)); break;
+    case 1:; snprintf(textA, 128, "%s, Likes: %s %s",
+      toStringBuildingByType(selectedCatType, (union kSubType) {.plant = selectedID}),
+      toStringWetness(kPlantWetness[selectedID]),
+      toStringSoil(kPlantSoil[selectedID])); break;
+    case 2:; snprintf(textA, 128, "%s", toStringBuildingByType(selectedCatType, (union kSubType) {.conveyor = selectedID})); break;
+    case 3:; snprintf(textA, 128, "%s", toStringBuildingByType(selectedCatType, (union kSubType) {.extractor = selectedID})); break;
+    case 4:; snprintf(textA, 128, "%s", toStringBuildingByType(selectedCatType, (union kSubType) {.factory = selectedID})); break;
+    case 5:; snprintf(textA, 128, "%s", toStringBuildingByType(selectedCatType, (union kSubType) {.utility = selectedID})); break;
+    case 6:; snprintf(textA, 128, "%s", toStringCargoByType(selectedID)); break;
+  }
+  if (selectedCat != 0) snprintf(textB, 128, "Inventory: %i", selectedOwned);
+  if (selectedCat == 6) snprintf(textC, 128, "Value:      %i", (int)selectedPrice);
+  pd->graphics->drawText(textA, 128, kASCIIEncoding, 1*TILE_PIX, +2);
+  pd->graphics->drawText(textB, 128, kASCIIEncoding, 1*TILE_PIX, TILE_PIX - 2);
+  pd->graphics->drawText(textC, 128, kASCIIEncoding, 9*TILE_PIX, TILE_PIX - 2);
+  pd->graphics->setDrawMode(kDrawModeCopy);
+  if (selectedCat == 6) pd->graphics->drawBitmap(getSprite16(2, 2, 1), 11*TILE_PIX + TILE_PIX/2, TILE_PIX - 2, kBitmapUnflipped);
+  pd->graphics->popContext();
+  pd->sprite->setVisible(m_UISpriteInfo, 1);
+}
+
+void populateInfoBuy(bool _visible) {
+  struct Player_t* p = getPlayer();
+  uint16_t selectedCat = m_contentCat[m_selRow][m_selCol];
+  enum kBuildingType selectedCatType = getCatType(selectedCat);
+  uint16_t selectedID =  m_contentID[m_selRow][m_selCol];
+  int32_t selectedPrice = getPrice(selectedCat, selectedID);
+  uint16_t selectedOwned = getOwned(selectedCat, selectedID);
 
   // AFFORD
   bool canAfford = (p->m_money >= selectedPrice);
-  pd->sprite->setVisible(m_UISpriteCannotAfford, !canAfford && visible);
+  pd->sprite->setVisible(m_UISpriteCannotAfford, !canAfford && _visible);
 
   // INFO
   static char textA[128] = "";
@@ -579,6 +657,70 @@ void drawUIBuy() {
   pd->graphics->drawBitmap(getSprite16(2, 2, 1), 11*TILE_PIX + TILE_PIX/4, TILE_PIX - 2, kBitmapUnflipped);
   pd->graphics->popContext();
   pd->sprite->setVisible(m_UISpriteInfo, 1);
+} 
+
+
+void drawUIMain() {
+
+  memset(m_contentSprite, 0, MAX_ROWS * ROW_WDTH * sizeof(LCDSprite*));
+  memset(m_rowIsTitle, 0, MAX_ROWS * sizeof(bool));
+
+  // POPULATE
+  switch (getGameMode()) {
+    case kMenuBuy:; populateContentBuy(); break;
+    case kMenuPlayer:; populateContentPlayer(); break;
+    default: break;
+  }
+
+  checkSel();
+
+  // DRAW
+  // Mark invisible
+  for (int32_t c = 0; c < CATEGORIES; ++c) {
+    pd->sprite->setVisible(m_UISpriteHeaders[c], 0);
+    for (int32_t i = 0; i < MAX_PER_CAT; ++i) {
+      for (int32_t r = 0; r < 4; ++r) {
+        if (m_UISpriteItems[c][i][r] != NULL) {
+          pd->sprite->setVisible(m_UISpriteItems[c][i][r], 0);
+        }
+      }
+    }
+  }
+
+  // Render
+  #define UISTARTX (TILE_PIX*3)
+  #define UISTARTY (TILE_PIX*5)
+  for (int32_t r = 0; r < 4; ++r) {
+    int32_t rID = r + m_selRowOffset;
+    if (rID >= MAX_ROWS) break;
+    if (m_contentSprite[rID][0] == NULL) break; // Not populated
+    if (m_rowIsTitle[rID]) {
+      pd->sprite->setVisible(m_contentSprite[rID][0], 1);
+      pd->sprite->moveTo(m_contentSprite[rID][0], SCREEN_PIX_X/2 - TILE_PIX, UISTARTY + r*2*TILE_PIX);
+    } else {
+      for (int32_t c = 0; c < ROW_WDTH; ++c) {
+        if (m_contentSprite[rID][c] == NULL) break; // Not populated
+        pd->sprite->setVisible(m_contentSprite[rID][c], 1);
+        pd->sprite->moveTo(m_contentSprite[rID][c], UISTARTX + c*2*TILE_PIX, UISTARTY + r*2*TILE_PIX);
+      }
+    }
+  }
+
+  // CURSOR
+  const bool visible = (getFrameCount() % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
+  pd->sprite->setVisible(m_UISpriteCursor, visible);
+  pd->sprite->moveTo(m_UISpriteCursor, UISTARTX + m_selCol*2*TILE_PIX, UISTARTY + m_cursorRowAbs*2*TILE_PIX);
+
+  // SELECTED
+  LCDSprite* selectedSprite = m_contentSprite[m_selRow][m_selCol];
+  pd->sprite->setImage(m_UISpriteSelected, pd->sprite->getImage(selectedSprite), kBitmapUnflipped);
+
+  // CUSTOM TOP AREA
+  switch (getGameMode()) {
+    case kMenuBuy:; populateInfoBuy(visible); break;
+    case kMenuPlayer:; populateInfoPlayer(); break;
+    default: break;
+  }
 
 ///XXX
 
@@ -592,9 +734,10 @@ void setGameMode(enum kGameMode _mode) {
 
   if (_mode == kPlacement) drawUITop("Place Mode");
   else if (_mode == kMenuBuy) drawUITop("The Shop");
+  else if (_mode == kMenuPlayer) drawUITop("Main Menu");
   else drawUITop(NULL);
 
-  if (m_mode == kMenuBuy) UIDirtyMain();
+  if (m_mode >= kMenuBuy) UIDirtyMain();
 
   updateRenderList();
 }
@@ -625,12 +768,11 @@ void initiUI() {
   m_UISpriteTop = pd->sprite->newSprite();
   m_UISpriteBottom = pd->sprite->newSprite();
   m_UISpriteRight = pd->sprite->newSprite();
-
   
   m_UIBitmapTop = pd->graphics->newBitmap(SCREEN_PIX_X/2, TILE_PIX*2, kColorClear);
   m_UIBitmapBottom = pd->graphics->newBitmap(DEVICE_PIX_X, TILE_PIX, kColorBlack);
   m_UIBitmapRight = pd->graphics->newBitmap(TILE_PIX, DEVICE_PIX_Y, kColorBlack);
-
+  m_UIBitmapRightRotated = pd->graphics->newBitmap(DEVICE_PIX_Y, TILE_PIX, kColorBlack);
 
   PDRect boundTop = {.x = 0, .y = 0, .width = SCREEN_PIX_X/2, .height = TILE_PIX*2};
   pd->sprite->setBounds(m_UISpriteTop, boundTop);
@@ -654,7 +796,7 @@ void initiUI() {
   pd->sprite->setZIndex(m_UISpriteRight, Z_INDEX_UI_RIGHT);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteRight, 1);
 
-  // Setup select / buy screen
+  // Setup main menu screen
 
   m_UIBitmapFull = pd->graphics->newBitmap(TILE_PIX*22, TILE_PIX*12, kColorClear);
   pd->graphics->pushContext(m_UIBitmapFull);
@@ -709,14 +851,16 @@ void initiUI() {
   for (int32_t c = 0; c < CATEGORIES; ++c) {
     m_UIBitmapHeaders[c] = pd->graphics->newBitmap(TILE_PIX*18, TILE_PIX*2, kColorClear);
     pd->graphics->pushContext(m_UIBitmapHeaders[c]);
-    roundedRect(0, TILE_PIX*18, TILE_PIX*2, TILE_PIX, kColorBlack);
+    roundedRect(1, TILE_PIX*18, TILE_PIX*2, TILE_PIX, kColorBlack);
     pd->graphics->setDrawMode(kDrawModeFillWhite);
     switch (c) {
-      case 0: pd->graphics->drawText("Crops", 5, kASCIIEncoding, TILE_PIX, 0); break;
-      case 1: pd->graphics->drawText("Conveyors", 9, kASCIIEncoding, TILE_PIX, 0); break;
-      case 2: pd->graphics->drawText("Harvesters", 10, kASCIIEncoding, TILE_PIX, 0); break;
-      case 3: pd->graphics->drawText("Factories", 9, kASCIIEncoding, TILE_PIX, 0); break;
-      case 4: pd->graphics->drawText("Utility", 7, kASCIIEncoding, TILE_PIX, 0); break;
+      case 0: pd->graphics->drawText("Tools", 5, kASCIIEncoding, TILE_PIX, 0); break;
+      case 1: pd->graphics->drawText("Crops", 5, kASCIIEncoding, TILE_PIX, 0); break;
+      case 2: pd->graphics->drawText("Conveyors", 9, kASCIIEncoding, TILE_PIX, 0); break;
+      case 3: pd->graphics->drawText("Harvesters", 10, kASCIIEncoding, TILE_PIX, 0); break;
+      case 4: pd->graphics->drawText("Factories", 9, kASCIIEncoding, TILE_PIX, 0); break;
+      case 5: pd->graphics->drawText("Utility", 7, kASCIIEncoding, TILE_PIX, 0); break;
+      case 6: pd->graphics->drawText("Cargo", 5, kASCIIEncoding, TILE_PIX, 0); break;
     }
     pd->graphics->popContext();
 
@@ -729,11 +873,13 @@ void initiUI() {
     for (int32_t i = 0; i < getNSubTypes(c); ++i) {
       uint16_t spriteID = 0;
       switch (c) {
-        case 0: spriteID = kPlantUIIcon[i]; break;
-        case 1: spriteID = kConvUIIcon[i]; break;
-        case 2: spriteID = kExtractorUIIcon[i]; break;
-        case 3: spriteID = kFactoryUIIcon[i]; break;
-        case 4: spriteID = kUtilityUIIcon[i]; break;
+        case 0: spriteID = kToolUIIcon[i]; break;
+        case 1: spriteID = kPlantUIIcon[i]; break;
+        case 2: spriteID = kConvUIIcon[i]; break;
+        case 3: spriteID = kExtractorUIIcon[i]; break;
+        case 4: spriteID = kFactoryUIIcon[i]; break;
+        case 5: spriteID = kUtilityUIIcon[i]; break;
+        case 6: spriteID = kCargoUIIcon[i]; break;
       }
       for (int32_t r = 0; r < 4; ++r) {
         m_UIBitmapItems[c][i][r] = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*2, kColorClear);
@@ -751,7 +897,7 @@ void initiUI() {
         pd->sprite->setZIndex(m_UISpriteItems[c][i][r], Z_INDEX_UI_M);
         pd->sprite->setIgnoresDrawOffset(m_UISpriteItems[c][i][r], 1);
 
-        if (c == 0 || c == 4) { // Crops & Utility don't have any rotation 
+        if (c == 0 || c == 1 || c == 6) { // Tools, Crops & Cargo don't have any rotation 
           break;
         }
       }

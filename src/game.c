@@ -186,7 +186,9 @@ int gameLoop(void* _data) {
     animateConveyor();
   }
   
-  movePlayer();
+  if (getGameMode() < kMenuBuy) {
+    movePlayer();
+  }
 
   tickNear();
   tickFar();

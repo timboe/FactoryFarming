@@ -9,7 +9,7 @@ enum kBuildingType {kNoBuilding, kConveyor, kPlant, kUtility, kExtractor, kFacto
 
 ///
 
-enum kConvSubType {kBelt, kSplitI, kSplitL, kSplitT, kFilterL, kTunnelIn, kTunnelOut, kNConvSubTypes};
+enum kConvSubType{kBelt, kSplitI, kSplitL, kSplitT, kFilterI, kFilterL, kTunnelIn, kTunnelOut, kNConvSubTypes};
 extern const uint32_t kConvUnlock[];
 extern const uint16_t kConvPrice[];
 extern const uint16_t kConvUIIcon[];
@@ -21,7 +21,7 @@ extern const uint16_t kPlantUIIcon[];
 extern const uint8_t  kPlantWetness[];
 extern const uint8_t  kPlantSoil[];
 
-enum kUtilitySubType{kWell, kNUtilitySubTypes};
+enum kUtilitySubType{kWell, kStorageBox, kConveyorGrease, kNUtilitySubTypes};
 extern const uint32_t kUtilityUnlock[];
 extern const uint16_t kUtilityPrice[];
 extern const uint16_t kUtilityUIIcon[];

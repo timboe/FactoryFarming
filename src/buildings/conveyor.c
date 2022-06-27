@@ -14,7 +14,7 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
 
     // Handle filters vs. splitters
     enum kDir direction;
-    if (_building->m_subType.conveyor == kFilterL) {
+    if (_building->m_subType.conveyor >= kFilterI) {
       // First encounter with an object? TODO can everything which can place an item on the chunk do this instead?
       if (_building->m_mode == kNoCargo) {
         _building->m_mode = loc->m_cargo->m_type; // Note: This CANNOT be undone without re-writing the building
@@ -44,7 +44,7 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
 
   // Handle filters vs. splitters
   struct Location_t* nextLoc = NULL;
-  if (_building->m_subType.conveyor == kFilterL) {
+  if (_building->m_subType.conveyor >= kFilterI) {
     nextLoc = (_building->m_mode == loc->m_cargo->m_type ? _building->m_next[1] :  _building->m_next[0]);  
   } else {
     nextLoc = _building->m_next[_building->m_mode];
@@ -71,7 +71,7 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
     switch (_building->m_subType.conveyor) {
       case kSplitI:; case kSplitL:; _building->m_mode = (_building->m_mode + 1) % 2; break;
       case kSplitT:; _building->m_mode = (_building->m_mode + 1) % 3; break;
-      case kBelt:; case kFilterL:; case kTunnelIn:; case kTunnelOut:; case kNConvSubTypes:; break;
+      case kBelt:; case kFilterI:; case kFilterL:; case kTunnelIn:; case kTunnelOut:; case kNConvSubTypes:; break;
     }
   }
 }
@@ -164,12 +164,16 @@ void assignNeighborsConveyor(struct Building_t* _building) {
                 _building->m_nextDir[0] = EW; break;
       case kDirN:; break;
     }
-  } else if (_building->m_subType.conveyor == kSplitI) {
+  } else if (_building->m_subType.conveyor == kSplitI || _building->m_subType.conveyor == kFilterI) {
     switch (_building->m_dir) {
-      case WE:; case EW:; _building->m_next[0]    = above; _building->m_next[1]    = below; 
-                          _building->m_nextDir[0] = SN;    _building->m_nextDir[1] = NS; break;
-      case SN:; case NS:; _building->m_next[0]    = left;  _building->m_next[1]    = right;
-                          _building->m_nextDir[0] = EW;    _building->m_nextDir[1] = WE; break;
+      case WE:; _building->m_next[0]    = above; _building->m_next[1]    = below; 
+                _building->m_nextDir[0] = SN;    _building->m_nextDir[1] = NS; break;
+      case SN:; _building->m_next[0]    = left;  _building->m_next[1]    = right;
+                _building->m_nextDir[0] = EW;    _building->m_nextDir[1] = WE; break;
+      case EW:; _building->m_next[0]    = below; _building->m_next[1]    = above; 
+                _building->m_nextDir[0] = NS;    _building->m_nextDir[1] = SN; break;
+      case NS:; _building->m_next[0]    = right; _building->m_next[1]    = left;
+                _building->m_nextDir[0] = WE;    _building->m_nextDir[1] = EW; break;
       case kDirN:; break;
     }
   } else if (_building->m_subType.conveyor == kSplitL || _building->m_subType.conveyor == kFilterL) {
@@ -203,13 +207,14 @@ void buildingSetupConveyor(struct Building_t* _building) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
 
     switch (_building->m_subType.conveyor) {
-      case kBelt:;     _building->m_image[zoom] = getSprite16(0, CONV_START_Y + _building->m_dir, zoom); break;
-      case kSplitI:;   _building->m_image[zoom] = getSprite16(0, 11 + _building->m_dir, zoom); break;
-      case kSplitL:;   _building->m_image[zoom] = getSprite16(1, 11 + _building->m_dir, zoom); break;
-      case kSplitT:;   _building->m_image[zoom] = getSprite16(2, 11 + _building->m_dir, zoom); break;
-      case kFilterL:;  _building->m_image[zoom] = getSprite16(3, 11 + _building->m_dir, zoom); break;
-      case kTunnelIn:; _building->m_image[zoom] = getSprite16(8, 11 + _building->m_dir, zoom); break;
-      case kTunnelOut:;_building->m_image[zoom] = getSprite16(9, 11 + _building->m_dir, zoom); break;
+      case kBelt:;     _building->m_image[zoom] = getSprite16(0,  CONV_START_Y + _building->m_dir, zoom); break;
+      case kSplitI:;   _building->m_image[zoom] = getSprite16(0,  11 + _building->m_dir, zoom); break;
+      case kSplitL:;   _building->m_image[zoom] = getSprite16(1,  11 + _building->m_dir, zoom); break;
+      case kSplitT:;   _building->m_image[zoom] = getSprite16(2,  11 + _building->m_dir, zoom); break;
+      case kFilterI:;  _building->m_image[zoom] = getSprite16(10, 11 + _building->m_dir, zoom); break;
+      case kFilterL:;  _building->m_image[zoom] = getSprite16(3,  11 + _building->m_dir, zoom); break;
+      case kTunnelIn:; _building->m_image[zoom] = getSprite16(8,  11 + _building->m_dir, zoom); break;
+      case kTunnelOut:;_building->m_image[zoom] = getSprite16(9,  11 + _building->m_dir, zoom); break;
       case kNConvSubTypes:; break;
     }
 

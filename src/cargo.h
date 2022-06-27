@@ -2,6 +2,8 @@
 #include "game.h"
 
 enum kCargoType {kNoCargo, kApple, kCheese, kCarrot, kWheat, kNCargoType};
+extern const uint16_t kCargoValue[];
+extern const uint16_t kCargoUIIcon[];
 
 struct Cargo_t{
   // Persistent
@@ -17,9 +19,9 @@ struct Location_t;
 
 uint16_t getNCargo(void);
 
-uint16_t getCargoValue(enum kCargoType _type);
-
 const char* toStringCargo(struct Cargo_t* _cargo);
+
+const char* toStringCargoByType(enum kCargoType _type);
 
 struct Cargo_t* cargoManagerNewCargo(enum kCargoType _type);
 

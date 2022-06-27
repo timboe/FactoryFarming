@@ -4,6 +4,10 @@
 #include "render.h"
 #include "input.h"
 #include "io.h"
+#include "ui.h"
+
+//                             {kToolPickup, kToolInspect, kToolDestroy, kNToolTypes};
+const uint16_t kToolUIIcon[] = {SID(8,10),   SID(9,10),    SID(1,2)};
 
 struct Player_t m_player;
 
@@ -38,6 +42,24 @@ void updatePlayerPosition(void);
 void playerSpriteSetup(void);
 
 /// ///
+
+const char* toStringTool(enum kToolType _type) {
+  switch(_type) {
+    case kToolPickup: return "Pickup Cargo Mode";
+    case kToolInspect: return "Inspection Mode";
+    case kToolDestroy: return "Demolition Mode";
+    default: return "Tool???";
+  }
+}
+
+const char* toStringToolInfo(enum kToolType _type) {
+  switch(_type) {
+    case kToolPickup: return "Get nearby cargo, empties chests";
+    case kToolInspect: return "See details about the next tile";
+    case kToolDestroy: return "Destroys buildings, belts and cargo";
+    default: return "Tool???";
+  }
+}
 
 int16_t getOffX() {
   return m_offX;
@@ -98,6 +120,7 @@ void updatePlayerPosition() {
 }
 
 bool movePlayer() {
+
   uint8_t zoom = getZoom();
   //updatePlayerPosition();
   float goalX = m_player.m_pix_x;
@@ -254,6 +277,7 @@ bool modMoney(int32_t _amount) {
   if (_amount > 0) {
     m_player.m_moneyCumulative += _amount;
   }
+  UIDirtyRight();
   return true;
 }
 
@@ -300,7 +324,7 @@ void playerSpriteSetup() {
 }
 
 void resetPlayer() {
-  m_player.m_money = 0;
+  m_player.m_money = 10; // DEBUG
   m_player.m_moneyCumulative = 0;
   m_player.m_moneyHighWaterMark = 0;
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_carryCargo[i] = 0;
@@ -335,6 +359,14 @@ void serialisePlayer(struct json_encoder* je) {
   je->writeInt(je, m_player.m_moneyCumulative);
   je->addTableMember(je, "slot", 4);
   je->writeInt(je, getSlot());
+
+  // Settings - not reset new games
+  je->addTableMember(je, "sets", 4);
+  je->writeInt(je, m_player.m_soundSettings);
+   je->addTableMember(je, "setb", 4);
+  je->writeInt(je, m_player.m_autoUseConveyorBooster);
+  je->addTableMember(je, "setc", 4);
+  je->writeInt(je, m_player.m_enableConveyorAnimation); 
   
   je->addTableMember(je, "cargos", 6);
   je->startArray(je);
@@ -403,6 +435,12 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_player.m_moneyCumulative = json_intValue(_value);
   } else if (strcmp(_key, "slot") == 0) {
     setSlot( json_intValue(_value) ); 
+  } else if (strcmp(_key, "sets") == 0) {
+    m_player.m_soundSettings = json_intValue(_value); 
+  } else if (strcmp(_key, "setb") == 0) {
+    m_player.m_autoUseConveyorBooster = json_intValue(_value); 
+  } else if (strcmp(_key, "setc") == 0) {
+    m_player.m_enableConveyorAnimation = json_intValue(_value); 
     m_deserialiseArrayID = 0; // Note "one behind"
   } else if (strcmp(_key, "cargos") == 0) {
     m_deserialiseArrayID = 1;

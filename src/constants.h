@@ -106,3 +106,5 @@
 
 // Versioning
 #define SAVE_FORMAT 1
+
+#define ACTIVATE_DISTANCE (TILE_PIX*4)

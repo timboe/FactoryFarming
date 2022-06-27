@@ -3,6 +3,10 @@
 #include "sprite.h"
 #include "render.h"
 
+//                              {kNoCargo, kApple,   kCheese,  kCarrot,   kWheat, kNCargoType};
+const uint16_t kCargoValue[] =  {0,        2,        8,        1,         4};
+const uint16_t kCargoUIIcon[] = {SID(0,0), SID(8,7), SID(9,7), SID(10,7), SID(11,7)};
+
 const int32_t SIZE_CARGO = TOT_CARGO_OR_BUILDINGS * sizeof(struct Cargo_t);
 
 uint16_t m_nCargo = 0;
@@ -16,13 +20,10 @@ struct Cargo_t* m_cargos;
 
 void cargoSpriteSetup(struct Cargo_t* _cargo, uint16_t _x, uint16_t _y, uint16_t _idx);
 
-uint16_t getCargo_idx(enum kCargoType _type);
-
 /// ///
 
-const char* toStringCargo(struct Cargo_t* _cargo) {
-  if (!_cargo) return "";
-  switch(_cargo->m_type) {
+const char* toStringCargoByType(enum kCargoType _type) {
+  switch(_type) {
     case kNoCargo: return "NoCargo";
     case kApple: return "Apple";
     case kCheese: return "Cheese";
@@ -30,6 +31,11 @@ const char* toStringCargo(struct Cargo_t* _cargo) {
     case kCarrot: return "Carrot";
     default: return "Cargo???";
   }
+}
+
+const char* toStringCargo(struct Cargo_t* _cargo) {
+  if (!_cargo) return "";
+  return toStringCargoByType(_cargo->m_type);
 }
 
 uint16_t getNCargo() {
@@ -78,28 +84,6 @@ void cargoSpriteSetup(struct Cargo_t* _cargo, uint16_t _x, uint16_t _y, uint16_t
   }
 }
 
-uint16_t getCargo_idx(enum kCargoType _type) {
-  switch (_type) {
-    case kApple:;  return SPRITE16_ID(8, 7);
-    case kCheese:; return SPRITE16_ID(9, 7);
-    case kCarrot:; return SPRITE16_ID(10, 7);
-    case kWheat:;  return SPRITE16_ID(11, 7);
-    case kNoCargo:; case kNCargoType:; 
-  }
-  return SPRITE16_ID(0, 2);
-}
-
-uint16_t getCargoValue(enum kCargoType _type) {
-  switch (_type) {
-    case kApple:;  return 2;
-    case kCheese:; return 8;
-    case kCarrot:; return 1;
-    case kWheat:;  return 4;
-    case kNoCargo:; case kNCargoType:; 
-  }
-  return 0;
-}
-
 bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addedByPlayer) {
   bool addedByPlayer = true;
   if (_loc->m_cargo != NULL) return false;
@@ -114,7 +98,7 @@ bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addedByPlaye
   cargoSpriteSetup(cargo, 
     TILE_PIX*_loc->m_x + TILE_PIX/2.0,
     TILE_PIX*_loc->m_y + TILE_PIX/2.0,
-    getCargo_idx(_type));
+    kCargoUIIcon[_type]);
 
   _loc->m_cargo = cargo;
   if (_loc->m_building) {
@@ -197,7 +181,7 @@ void* deserialiseStructDoneCargo(json_decoder* jd, const char* _name, json_value
   cargoSpriteSetup(cargo, 
     m_deserialiseXCargo,
     m_deserialiseYCargo,
-    getCargo_idx(cargo->m_type));
+    kCargoUIIcon[cargo->m_type]);
   ++m_nCargo;
 
   //pd->system->logToConsole("-- Cargo #%i, [%i] decoded to  %s, (%i, %i)", m_nCargo, m_deserialiseIndexCargo, toStringCargo(cargo), m_deserialiseXCargo, m_deserialiseYCargo);

@@ -5,6 +5,7 @@
 #include "render.h"
 #include "building.h"
 #include "ui.h"
+#include "buildings/special.h"
 
 uint8_t m_pressed[4] = {0};
 
@@ -64,14 +65,17 @@ void gameClickConfigHandler(uint32_t _buttonPressed) {
 
 void clickHandleWander(uint32_t _buttonPressed) {
   if (characterMoveInput(_buttonPressed)) {}
-  else if (kButtonA == _buttonPressed) setGameMode(kMenuBuy); // TODO use distance from Buy box
+  else if (kButtonA == _buttonPressed) {
+    if (distanceFromBuy() < ACTIVATE_DISTANCE) setGameMode(kMenuBuy);
+    else setGameMode(kMenuPlayer);
+  }
   //else if (kButtonB == _buttonPressed) toggleZoom();
 }
 
 void clickHandleMenuBuy(uint32_t _buttonPressed) {
-  if (kButtonA     == _buttonPressed) {
-    // do Buy
-  } else if (kButtonB   == _buttonPressed) {
+  if (kButtonA == _buttonPressed) {
+    doPurchace();
+  } else if (kButtonB == _buttonPressed) {
     setGameMode(kWander);
   } else {
     moveCursor(_buttonPressed);
@@ -149,6 +153,8 @@ void rotateHandlePlacement(float _rotation) {
 
 // Temporary until the playdate eventHandler is functional for inputs
 void clickHandlerReplacement() {
+  static uint8_t multiClickCount = 16, multiClickNext = 16;
+  enum kGameMode gm = getGameMode();
   PDButtons current, pushed, released = 0;
   pd->system->getButtonState(&current, &pushed, &released);
   if (pushed & kButtonUp) gameClickConfigHandler(kButtonUp);
@@ -157,16 +163,28 @@ void clickHandlerReplacement() {
   if (pushed & kButtonLeft) gameClickConfigHandler(kButtonLeft);
   if (released & kButtonB) gameClickConfigHandler(kButtonB);
   if (released & kButtonA) gameClickConfigHandler(kButtonA);
-  else if ((current & kButtonA) && getGameMode() == kPlacement) {
-    gameClickConfigHandler(kButtonA); // Special, allow placing rows of conveyors
+  else if (current & kButtonA)  {
+    if (gm == kPlacement) {
+      gameClickConfigHandler(kButtonA); // Special, allow placing rows of conveyors
+    } else if (gm >= kMenuBuy) {
+      if (--multiClickCount == 0) {
+        gameClickConfigHandler(kButtonA); // Special, allow speed buying/selling
+        if (multiClickNext > 2) --multiClickNext;
+        multiClickCount = multiClickNext;
+      }
+    }
   }
 
   if (released & kButtonLeft) m_pressed[0] = 0;
   if (released & kButtonRight) m_pressed[1] = 0;
   if (released & kButtonUp) m_pressed[2] = 0;
   if (released & kButtonDown) m_pressed[3] = 0;
+  if (released & kButtonA) {
+    multiClickCount = 16;
+    multiClickNext = 16;
+  }
 
-  switch (getGameMode()) {
+  switch (gm) {
     case kWander:; rotateHandleWander(pd->system->getCrankChange()); break;
     case kMenuPlayer:; // fall through
     case kPlacement:; rotateHandlePlacement(pd->system->getCrankChange()); break;
