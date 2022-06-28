@@ -2,7 +2,7 @@
 #include "game.h"
 
 // All Main Menu items should come after kMenuBuy
-enum kGameMode {kWander, kPlacement, kMenuBuy, kMenuPlayer};
+enum kGameMode {kWander, kPlacement, kBuild, kPlantMode, kPick, kInspect, kDestroy, kMenuBuy, kMenuSell, kMenuPlayer};
 
 //enum kMenuSelections {kMenuConveyor, kMenuSplitI, kMenuSplitL, kMenuSplitT, kMenuFilterL, kMenuTunnel, kMenuApple, kMenuCarrot, kMenuWheat, kMenuCheese, kMenuExtractor, kMenuBin};
 
@@ -27,6 +27,16 @@ void updateBlueprint(void);
 void drawUITop(const char* _text);
 
 void doPurchace(void);
+
+void doSale(void);
+
+void doPlace(void);
+
+void doPick(void);
+
+void doDestroy(void);
+
+void doPlayerMenuClick(void);
 
 void setGameMode(enum kGameMode _mode);
 

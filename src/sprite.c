@@ -106,6 +106,10 @@ void setRoobert24() {
   pd->graphics->setFont(m_fontRoobert24);
 }
 
+LCDFont* getRoobert24() {
+  return m_fontRoobert24;
+}
+
 void populateResizedSprites() {
   for (uint32_t zoom = 2; zoom < ZOOM_LEVELS; ++zoom) {
     for (uint32_t i = 0; i < SHEET16_SIZE; ++i) {

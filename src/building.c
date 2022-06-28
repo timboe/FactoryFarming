@@ -22,10 +22,10 @@ uint16_t m_deserialiseIndexBuilding = 0;
 struct Building_t* m_buildings;
 
 // Note: User can never themselves build a kTunnelOut
-//                             {kBelt,    kSplitI,  kSplitL,  kSplitT,  kFilterI,  kFilterL, kTunnelIn, kTunnelOut, kNConvSubTypes};
-const uint32_t kConvUnlock[] = {0,        0,        0,        0,        0,         0,        0,         UINT32_MAX};
-const uint16_t kConvPrice[]  = {1,        1,        1,        1,        1,         1,        1,         1};
-const uint16_t kConvUIIcon[] = {SID(0,3), SID(0,4), SID(4,3), SID(4,4), SID(12,4), SID(8,4), SID(8,3),  SID(8,3)};
+//                             {kBelt,    kSplitI,  kSplitL,  kSplitT,  kTunnelIn, kTunnelOut, kFilterI,  kFilterL, kNConvSubTypes};
+const uint32_t kConvUnlock[] = {0,        0,        0,        0,        0,         UINT32_MAX, 0,         0};
+const uint16_t kConvPrice[]  = {1,        1,        1,        1,        1,         1,          1,         1};
+const uint16_t kConvUIIcon[] = {SID(0,3), SID(0,4), SID(4,3), SID(4,4), SID(8,3),  SID(8,3),   SID(12,4), SID(8,4)};
 
 // Wetness: 0=Water, 1-3=Wet, 4-7=Medium, 8+=Dry
 // Soil: 0=Silty, 8=Chalky, 16=Peaty, 24=Sandy
@@ -44,12 +44,14 @@ const uint16_t kUtilityUIIcon[] = {SID(0,15), SID(4,15),   SID(8,15)};
 //                                  {kCropHarvester, kPump, kNExtractorSubTypes};
 const uint32_t kExtractorUnlock[] = {0,              0};
 const uint16_t kExtractorPrice[]  = {1,              1};
-const uint16_t kExtractorUIIcon[] = {SID(4,2)};
+const uint16_t kExtractorUIIcon[] = {SID(4,2),       SID(0,0)};
+const uint16_t kExtractorSprite[] = {BID(0,0),       BID(0,3)};
 
 //                                {kMakeSmall, kNFactorySubTypes};
 const uint32_t kFactoryUnlock[] = {0};
 const uint16_t kFactoryPrice[]  = {1};
 const uint16_t kFactoryUIIcon[] = {SID(0,0)};
+const uint16_t kFactorySprite[] = {BID(0,0)};
 
 void buildingSetup(struct Building_t* _building);
 
@@ -62,50 +64,42 @@ void setBuildingSubType(struct Building_t* _building, union kSubType _subType);
 
 /// ///
 
-const char* toStringBuildingByType(enum kBuildingType _type, union kSubType _subType) {
-  static struct Building_t dummyBuilding;
-  dummyBuilding.m_type = _type;
-  setBuildingSubType(&dummyBuilding, _subType);
-  return toStringBuilding(&dummyBuilding);
-}
-
-const char* toStringBuilding(struct Building_t* _building) {
-  if (!_building) return "";
-  switch(_building->m_type) {
+const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, bool _short) {
+  switch(_type) {
     case kNoBuilding: return "NoBuilding";
-    case kConveyor: switch (_building->m_subType.conveyor) {
-      case kBelt: return "Conveyor Belt";
-      case kSplitI: return "'I' Spliter";
-      case kSplitL: return "'L' Splitter";
-      case kSplitT: return "'T' Splitter";
-      case kFilterI: return "'I' Filter";
-      case kFilterL: return "'L' Filter";
-      case kTunnelIn: case kTunnelOut: return "Tunnel";
+    case kConveyor: switch (_subType.conveyor) {
+      case kBelt: return _short ? "Belt" : "Conveyor Belt";
+      case kSplitI: return _short ? "'I' Spliter": "Conveyor Belt 'I' Spliter";
+      case kSplitL: return _short ? "'L' Splitter" : "Conveyor Belt 'L' Splitter";
+      case kSplitT: return _short ? "'T' Splitter" : "Conveyor Belt 'T' Splitter";
+      case kFilterI: return _short ? "'I' Filter" : "Conveyor Belt 'I' Filter";
+      case kFilterL: return _short ? "'L' Filter" : "Conveyor Belt 'L' Filter";
+      case kTunnelIn: case kTunnelOut: return _short ? "Tunnel" : "Conveyor Belt Tunnel";
       case kNConvSubTypes: return "";
     }
-    case kPlant: switch (_building->m_subType.plant) {
+    case kPlant: switch (_subType.plant) {
       case kCarrotPlant: return "Carrot Plant";
       case kAppleTree: return "Apple Tree";
       case kWheatPlant: return "Wheat Plant";
       case kP4:; case kP5:; case kP6:; case kP7:; case kP8:; case kP9:; case kP10:; case kP11:; case kP12:; return "Placeholder";
       case kNPlantSubTypes: return "";
     }
-    case kUtility: switch (_building->m_subType.utility) {
+    case kUtility: switch (_subType.utility) {
       case kWell: return "Well";
       case kStorageBox: return "Storage Box";
       case kConveyorGrease: return "Conveyor Grease";
       case kNUtilitySubTypes: return "";
     }
-    case kExtractor: switch (_building->m_subType.extractor) {
-      case kCropHarvester: return "Auto Harvester";
+    case kExtractor: switch (_subType.extractor) {
+      case kCropHarvester: return _short ? "Auto Harvester" : "Automatic Harvester";
       case kPump: return "Water Pump";
       case kNExtractorSubTypes: return "";
     }
-    case kFactory: switch (_building->m_subType.factory) {
+    case kFactory: switch (_subType.factory) {
       case kMakeSmall: return "Placeholder";
       case kNFactorySubTypes: return "";
     }
-    case kSpecial: switch (_building->m_subType.special) {
+    case kSpecial: switch (_subType.special) {
       case kShop: return "The Shop";
       case kSellBox: return "Sell Box";
       case kExportBox: return "Item Exporter";
@@ -288,12 +282,12 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   // If placing an input tunnel, then also place the output tunnel too (canBePlacedConveyor will have thecked that this is all OK)
   if (_type == kConveyor && _subType.conveyor == kTunnelIn) {
     struct Location_t* tunnelOut = getTunnelOutLocation(_loc, _dir);
-    return newBuilding(tunnelOut, _dir, kConveyor, (union kSubType) {.conveyor = kTunnelOut});
+    newBuilding(tunnelOut, _dir, kConveyor, (union kSubType) {.conveyor = kTunnelOut});
   }
 
   updateRenderList();
 
-  return true;
+  return newToChunk;
 }
 
 void resetBuilding() {
@@ -429,7 +423,7 @@ void* deserialiseStructDoneBuilding(json_decoder* jd, const char* _name, json_va
   ++(m_nByType[building->m_type]);
 
   //pd->system->logToConsole("-- Building #%i [%i] decoded to %s, (%i, %i) dir:%i stype:%i prog:%i mode:%i store:[%i][%i, %i, %i, %i]",
-  //  m_nBuildings, m_deserialiseIndexBuilding, toStringBuilding(building),
+  //  m_nBuildings, m_deserialiseIndexBuilding, toStringBuilding(building->m_type, building->m_subType, true),
   //  building->m_pix_x, building->m_pix_y, building->m_dir, building->m_subType.conveyor, building->m_progress, building->m_mode,
   //  building->m_stored[0], building->m_stored[1], building->m_stored[2], building->m_stored[3], building->m_stored[4]
   //);

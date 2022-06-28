@@ -9,7 +9,7 @@ enum kBuildingType {kNoBuilding, kConveyor, kPlant, kUtility, kExtractor, kFacto
 
 ///
 
-enum kConvSubType{kBelt, kSplitI, kSplitL, kSplitT, kFilterI, kFilterL, kTunnelIn, kTunnelOut, kNConvSubTypes};
+enum kConvSubType{kBelt, kSplitI, kSplitL, kSplitT, kTunnelIn, kTunnelOut, kFilterI, kFilterL, kNConvSubTypes};
 extern const uint32_t kConvUnlock[];
 extern const uint16_t kConvPrice[];
 extern const uint16_t kConvUIIcon[];
@@ -30,11 +30,13 @@ enum kExtractorSubType{kCropHarvester, kPump, kNExtractorSubTypes};
 extern const uint32_t kExtractorUnlock[];
 extern const uint16_t kExtractorPrice[];
 extern const uint16_t kExtractorUIIcon[];
+extern const uint16_t kExtractorSprite[];
 
 enum kFactorySubType{kMakeSmall, kNFactorySubTypes};
 extern const uint32_t kFactoryUnlock[];
 extern const uint16_t kFactoryPrice[];
 extern const uint16_t kFactoryUIIcon[];
+extern const uint16_t kFactorySprite[];
 
 enum kSpecialSubType{kShop, kSellBox, kExportBox, kImportBox, kWarp, kNSpecialSubTypes};
 
@@ -86,9 +88,7 @@ uint16_t getNBuildings(void);
 
 uint16_t getNByType(enum kBuildingType _type);
 
-const char* toStringBuilding(struct Building_t* _building);
-
-const char* toStringBuildingByType(enum kBuildingType _type, union kSubType _subType);
+const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, bool _short);
 
 struct Building_t* buildingManagerNewBuilding(enum kBuildingType _asType);
 

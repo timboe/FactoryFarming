@@ -10,6 +10,8 @@ void setRoobert10(void);
 
 void setRoobert24(void);
 
+LCDFont* getRoobert24(void);
+
 LCDBitmap* getSprite16(uint32_t _x, uint32_t _y, uint8_t _zoom);
 
 LCDBitmap* getSprite16_byidx(uint32_t _idx, uint8_t _zoom);
@@ -20,8 +22,9 @@ LCDBitmap* getSprite48_byidx(uint32_t _idx, uint8_t _zoom);
 
 LCDBitmap* getConveyorMaster(uint8_t _zoom, enum kDir _dir);
 
-// Short-form version
+// Short-form versions too
 #define SID(X, Y) ((SHEET16_SIZE_X * Y) + X)
 #define SPRITE16_ID(X, Y) ((SHEET16_SIZE_X * Y) + X)
 
+#define BID(X, Y) ((SHEET48_SIZE_X * Y) + X)
 #define SPRITE48_ID(X, Y) ((SHEET48_SIZE_X * Y) + X)

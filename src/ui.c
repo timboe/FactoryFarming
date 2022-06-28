@@ -8,21 +8,26 @@
 #include "generate.h"
 #include "cargo.h"
 #include "render.h"
+#include "buildings/special.h"
 
 enum kGameMode m_mode;
 
 LCDSprite* m_UISpriteBottom;
-
-LCDSprite* m_UISpriteRight;
-
-LCDSprite* m_UISpriteTop;
-
 LCDBitmap* m_UIBitmapBottom;
 
+LCDSprite* m_UISpriteRight;
 LCDBitmap* m_UIBitmapRight;
 LCDBitmap* m_UIBitmapRightRotated;
 
+LCDSprite* m_UISpriteTop;
 LCDBitmap* m_UIBitmapTop;
+int16_t m_UITopOffset = 0;
+bool m_UITopVisible = false;
+
+#ifdef DEV
+LCDBitmap* m_UIBitmapDev;
+LCDSprite* m_UISpriteDev;
+#endif
 
 bool m_UIDirtyBottom = false;
 
@@ -70,6 +75,8 @@ bool m_rowIsTitle[MAX_ROWS] = {false};
 // Checks that the cursor selection is OK
 void checkSel(void);
 
+#define TOP_TITLE_OFFSET 34
+
 //
 
 void drawUIBottom(void);
@@ -81,6 +88,8 @@ void drawUIMain(void);
 void roundedRect(uint16_t _o, uint16_t _w, uint16_t _h, uint16_t _r, LCDColor _c);
 
 //const char* getRotationAsString(void);
+
+uint16_t getOwned(int32_t _c, int32_t _i);
 
 /// ///
 
@@ -115,6 +124,8 @@ void rotateCursor(bool _increment) {
     m_selRotation = (m_selRotation == 0 ? kDirN-1 : m_selRotation - 1);
   }
   if (m_mode == kMenuPlayer) UIDirtyMain();
+  UIDirtyRight();
+  updateBlueprint();
 }
 
 void updateUI(int _fc) {
@@ -125,9 +136,27 @@ void updateUI(int _fc) {
   } else if (m_mode == kPlacement && _fc % (TICK_FREQUENCY/4) == 0) {
     // Flashing blueprint 
     pd->sprite->setVisible(getPlayer()->m_blueprint[getZoom()], _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
-  } else if (m_mode == kWander && _fc % FAR_TICK_FREQUENCY == 0) {
+  }
+  if (_fc % FAR_TICK_FREQUENCY == 0) {
     // Update bottom ticker
     UIDirtyBottom();
+  }
+
+  if (m_mode == kWander) {
+    if (!m_UITopVisible) {
+      if      (distanceFromBuy()  < ACTIVATE_DISTANCE) drawUITop("The Shop");
+      else if (distanceFromSell() < ACTIVATE_DISTANCE) drawUITop("Sell Box");
+    } else {
+      if (distanceFromBuy() >= ACTIVATE_DISTANCE && distanceFromSell() >= ACTIVATE_DISTANCE) drawUITop(NULL);
+    }
+  }
+
+  if (m_UITopVisible && m_UITopOffset < TOP_TITLE_OFFSET) {
+    m_UITopOffset += 4;
+    pd->sprite->moveTo(m_UISpriteTop, SCREEN_PIX_X/2, TILE_PIX - TOP_TITLE_OFFSET + m_UITopOffset + 1 );
+  } else if (!m_UITopVisible && m_UITopOffset > 0) {
+    m_UITopOffset -= 4;
+    pd->sprite->moveTo(m_UISpriteTop, SCREEN_PIX_X/2, TILE_PIX - TOP_TITLE_OFFSET + m_UITopOffset + 1 );
   }
 
   if (m_UIDirtyRight) {
@@ -147,10 +176,38 @@ void updateUI(int _fc) {
 void updateBlueprint() {
   uint8_t zoom = getZoom();
   struct Player_t* player = getPlayer();
+  enum kGameMode gm = getGameMode();
   LCDSprite* bp = player->m_blueprint[zoom];
   LCDSprite* bpRadius = player->m_blueprintRadius[zoom];
-  if (getGameMode() == kPlacement) {
 
+  const uint16_t selectedCat = m_contentCat[m_selRow][m_selCol];
+  const uint16_t selectedID =  m_contentID[m_selRow][m_selCol];
+
+
+  if (gm == kPick) {
+    setPlayerLookingAtOffset(0);
+    pd->sprite->setImage(bp, getSprite16_byidx(0, zoom), kBitmapUnflipped); 
+    pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap3x3[zoom], kBitmapUnflipped);
+  } else if (gm == kPlacement) { // Of conveyors, cargo or utility
+    setPlayerLookingAtOffset(0);
+    pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
+    switch (selectedCat) {
+      case 2: pd->sprite->setImage(bp, getSprite16_byidx(kConvUIIcon[selectedID] + m_selRotation, zoom), kBitmapUnflipped); break;
+      case 5: pd->sprite->setImage(bp, getSprite16_byidx(kUtilityUIIcon[selectedID] + m_selRotation, zoom), kBitmapUnflipped); break;
+      case 6: pd->sprite->setImage(bp, getSprite16_byidx(kCargoUIIcon[selectedID], zoom), kBitmapUnflipped); break;
+    }
+  } else if (gm == kPlantMode) { // Of crops
+    setPlayerLookingAtOffset(0);
+    pd->sprite->setImage(bp, getSprite16_byidx(kPlantUIIcon[selectedID], zoom), kBitmapUnflipped); 
+    pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
+  } else if (gm == kBuild) { // Of factories and harvesters
+    setPlayerLookingAtOffset(2);
+    pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap7x7[zoom], kBitmapUnflipped);
+    switch (selectedCat) {
+      case 3: pd->sprite->setImage(bp, getSprite48_byidx(kExtractorSprite[selectedID] + m_selRotation, zoom), kBitmapUnflipped); break;
+      case 4: pd->sprite->setImage(bp, getSprite48_byidx(kFactorySprite[selectedID] + m_selRotation,   zoom), kBitmapUnflipped); break;
+    }
+  
 /*
 
     //pd->sprite->setVisible(getPlayer()->m_blueprint[zoom], true);
@@ -182,6 +239,9 @@ void addUIToSpriteList() {
   pd->sprite->addSprite(m_UISpriteBottom);
   pd->sprite->addSprite(m_UISpriteTop);
   pd->sprite->addSprite(m_UISpriteRight);
+  #ifdef DEV
+  pd->sprite->addSprite(m_UISpriteDev);
+  #endif
 
   if (m_mode >= kMenuBuy) {
     pd->sprite->addSprite(m_UISpriteFull);
@@ -202,32 +262,31 @@ void addUIToSpriteList() {
   }
 }
 
-/*
-const char* getRotationAsString() {
-  switch (m_UISelectedID) {
-    case kMenuConveyor:; case kMenuTunnel:;
-      switch (m_UISelectedRotation) {
+const char* getRotationAsString(void) {
+  switch (m_contentID[m_selRow][m_selCol]) {
+    case kBelt:; case kTunnelIn:;
+      switch (m_selRotation) {
         case 0: return "N";
         case 1: return "E";
         case 2: return "S";
         case 3: return "W";
       }
-    case kMenuSplitI:;
-      switch (m_UISelectedRotation) {
+    case kSplitI:; case kFilterI:;
+      switch (m_selRotation) {
         case 0: return "W, E";
         case 1: return "N, S";
         case 2: return "W, E";
         case 3: return "N, S";
       }
-    case kMenuSplitL:; case kMenuFilterL:;
-      switch (m_UISelectedRotation) {
+    case kSplitL:; case kFilterL:;
+      switch (m_selRotation) {
         case 0: return "N, E";
         case 1: return "E, S";
         case 2: return "S, W";
         case 3: return "W, N";
       }
-    case kMenuSplitT:;
-      switch (m_UISelectedRotation) {
+    case kSplitT:;
+      switch (m_selRotation) {
         case 0: return "W, N, E";
         case 1: return "N, E, S";
         case 2: return "E, S, W";
@@ -236,82 +295,49 @@ const char* getRotationAsString() {
   }
   return "!";
 }
-*/
+
 
 void drawUIBottom() {
   static char text[128];
+  setRoobert10();
+
+  #ifdef DEV
+  snprintf(text, 128, "SL:%u, NT:%u, FT:%u, B:%u, C:%u", 
+    pd->sprite->getSpriteCount(), getNearTickCount(), getFarTickCount(), getNBuildings(), getNCargo() );
+  pd->graphics->pushContext(m_UIBitmapDev);
+  pd->graphics->fillRect(0, 0, DEVICE_PIX_X, TILE_PIX, kColorClear);
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX + 1, 0);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX, +1);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX - 1, 0);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX, -1);
+  pd->graphics->setDrawMode(kDrawModeFillWhite);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX, 0);
+  pd->graphics->popContext();
+  #endif
+
   pd->graphics->pushContext(m_UIBitmapBottom);
   pd->graphics->fillRect(0, 0, DEVICE_PIX_X, TILE_PIX, kColorBlack);
-  setRoobert10();
   pd->graphics->setDrawMode(kDrawModeFillWhite);
-  //const enum kGameMode gm = getGameMode();
-  //if (gm == kWander) {
 
-  int32_t mode = 0;
-  if (pd->system->getElapsedTime() < 3.0f) {
-    mode = 0;
-  } else if (pd->system->getElapsedTime() < 6.0f) {
-    mode = 1;
-  } else if (pd->system->getElapsedTime() < 9.0f) {
-    mode = 2;
-  } else if (pd->system->getElapsedTime() > 12.0f) {
-    pd->system->resetElapsedTime();
+  struct Location_t* loc = getPlayerLocation();
+  struct Tile_t* t = getTile_fromLocation(loc);
+
+  if (loc->m_building && loc->m_cargo) {
+    snprintf(text, 128, "%s %s, %s, %s", 
+      toStringWetness(t->m_wetness), toStringSoil(t->m_tile), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo));
+  } else if (loc->m_building) {
+    snprintf(text, 128, "%s %s, %s", 
+      toStringWetness(t->m_wetness), toStringSoil(t->m_tile), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
+  } else if (loc->m_cargo) {
+    snprintf(text, 128, "%s %s, %s", 
+      toStringWetness(t->m_wetness), toStringSoil(t->m_tile), toStringCargo(loc->m_cargo));
+  } else {
+    snprintf(text, 128, "%s %s", 
+      toStringWetness(t->m_wetness), toStringSoil(t->m_tile));
   }
 
-  if (mode == 0) {
-    snprintf(text, 128, "Conveyors:%u", getNByType(kConveyor));
-    pd->graphics->drawText(text, 128, kASCIIEncoding, 0, 0);
-    snprintf(text, 128, "Cargo:%u", getNCargo());
-    pd->graphics->drawText(text, 128, kASCIIEncoding, 7*TILE_PIX, 0);
-    snprintf(text, 128, "Sprite List:%u", pd->sprite->getSpriteCount());
-    pd->graphics->drawText(text, 128, kASCIIEncoding, 12*TILE_PIX, 0);
-  } else if (mode == 1) {
-    snprintf(text, 128, "Near Ticks:%u", getNearTickCount());
-    pd->graphics->drawText(text, 128, kASCIIEncoding, 0, 0);
-    snprintf(text, 128, "Far Ticks:%u", getFarTickCount());
-    pd->graphics->drawText(text, 128, kASCIIEncoding, 7*TILE_PIX, 0);
-    snprintf(text, 128, "Money:%u", (unsigned) getPlayer()->m_money);
-    pd->graphics->drawText(text, 128, kASCIIEncoding, 14*TILE_PIX, 0);
-  } else if (mode == 2) {
-    struct Location_t* loc = getPlayerLocation();
-    struct Tile_t* t = getTile_fromLocation(loc);
-
-    if (loc->m_building && loc->m_cargo) {
-      snprintf(text, 128, "%s %s, %s, %s", 
-        toStringWetness(t->m_wetness), toStringSoil(t->m_tile), toStringBuilding(loc->m_building), toStringCargo(loc->m_cargo));
-    } else if (loc->m_building) {
-      snprintf(text, 128, "%s %s, %s", 
-        toStringWetness(t->m_wetness), toStringSoil(t->m_tile), toStringBuilding(loc->m_building));
-    } else if (loc->m_cargo) {
-      snprintf(text, 128, "%s %s, %s", 
-        toStringWetness(t->m_wetness), toStringSoil(t->m_tile), toStringCargo(loc->m_cargo));
-    } else {
-      snprintf(text, 128, "%s %s", 
-        toStringWetness(t->m_wetness), toStringSoil(t->m_tile));
-    }
-
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX/2, 0);
-  }
-
-/*
-  } else if (gm == kMenuSelect || gm == kPlacement) {
-    switch (m_UISelectedID) {
-      case kMenuConveyor:;  snprintf(text, 128, "Conveyor Belt (%s)", getRotationAsString()); break;
-      case kMenuSplitI:;    snprintf(text, 128, "'I' Conveyor Splitter (%s)", getRotationAsString()); break;
-      case kMenuSplitL:;    snprintf(text, 128, "'L' Conveyor Splitter (%s)", getRotationAsString()); break;
-      case kMenuSplitT:;    snprintf(text, 128, "'T' Conveyor Splitter (%s)", getRotationAsString()); break;
-      case kMenuFilterL:;   snprintf(text, 128, "'L' Conveyor Filter (%s)", getRotationAsString()); break;
-      case kMenuTunnel:;    snprintf(text, 128, "Conveyor Tunnel (%s)", getRotationAsString()); break;
-      case kMenuApple:;     snprintf(text, 128, "Apple tree, makes apples"); break;
-      case kMenuCarrot:;    snprintf(text, 128, "Carrot seeds, grows carrots"); break;
-      case kMenuWheat:;     snprintf(text, 128, "Wheat seeds, grows wheat"); break;
-      case kMenuCheese:;    snprintf(text, 128, "Cheese. Can be put on conveyors."); break;
-      case kMenuExtractor:; snprintf(text, 128, "Automatic Harvester"); break;
-      case kMenuBin:;       snprintf(text, 128, "Remove conveyors & cargo"); break;
-    }
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX, 0);
-  }
-*/
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX/2, 0);
   pd->graphics->popContext();
 }
 
@@ -325,6 +351,25 @@ void drawUIRight() {
   pd->graphics->drawText(text, 32, kASCIIEncoding, 2*TILE_PIX, 0);
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16(2, 2, 1), TILE_PIX/2, 0, kBitmapUnflipped);
+  enum kGameMode gm = getGameMode();
+  if (gm == kPlacement || gm == kPlantMode || gm == kBuild) {
+    int16_t rotMod = (m_selRotation == 0 ? 3 : m_selRotation - 1); // We are drawing this sideways, so need to rotate it by pi/2
+    const uint16_t selectedCat = m_contentCat[m_selRow][m_selCol];
+    const uint16_t selectedID =  m_contentID[m_selRow][m_selCol];
+    snprintf(text, 32, "%u", (unsigned) getOwned(selectedCat, selectedID));
+    switch (selectedCat) {
+      case 0: pd->graphics->drawBitmap(getSprite16_byidx(kToolUIIcon[selectedID], 1), DEVICE_PIX_Y/2, 0, kBitmapUnflipped); break;
+      case 1: pd->graphics->drawBitmap(getSprite16_byidx(kPlantUIIcon[selectedID], 1), DEVICE_PIX_Y/2, 0, kBitmapUnflipped); break;
+      case 2: pd->graphics->drawBitmap(getSprite16_byidx(kConvUIIcon[selectedID] + rotMod, 1), DEVICE_PIX_Y/2, 0, kBitmapUnflipped); break;
+      case 3: pd->graphics->drawBitmap(getSprite16_byidx(kExtractorUIIcon[selectedID] + rotMod, 1), DEVICE_PIX_Y/2, 0, kBitmapUnflipped); break;
+      case 4: pd->graphics->drawBitmap(getSprite16_byidx(kFactoryUIIcon[selectedID] + rotMod, 1), DEVICE_PIX_Y/2, 0, kBitmapUnflipped); break;
+      case 5: pd->graphics->drawBitmap(getSprite16_byidx(kUtilityUIIcon[selectedID] + rotMod, 1), DEVICE_PIX_Y/2, 0, kBitmapUnflipped); break;
+      case 6: pd->graphics->drawBitmap(getSprite16_byidx(kCargoUIIcon[selectedID], 1), DEVICE_PIX_Y/2, 0, kBitmapUnflipped); break;
+    }
+    pd->graphics->setDrawMode(kDrawModeFillWhite);
+    pd->graphics->drawText(text, 32, kASCIIEncoding, DEVICE_PIX_Y/2 + 2*TILE_PIX, 0);
+    pd->graphics->setDrawMode(kDrawModeCopy);
+  }
   pd->graphics->popContext();
 
   pd->graphics->pushContext(m_UIBitmapRight);
@@ -335,16 +380,17 @@ void drawUIRight() {
 }
 
 void drawUITop(const char* _text) {
-  pd->sprite->setVisible(m_UISpriteTop, !(_text == NULL) );
+  m_UITopVisible = (_text != NULL);
   if (_text == NULL) {
     return;
   }
   pd->graphics->pushContext(m_UIBitmapTop);
   pd->graphics->setLineCapStyle(kLineCapStyleRound);
-  pd->graphics->drawLine(TILE_PIX, TILE_PIX - 2, SCREEN_PIX_X/2 - TILE_PIX, TILE_PIX - 2, TILE_PIX*2 - 2, kColorBlack);
+  pd->graphics->drawLine(TILE_PIX, TILE_PIX, SCREEN_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorBlack);
   pd->graphics->setDrawMode(kDrawModeFillWhite);
   setRoobert24();
-  pd->graphics->drawText(_text, 16, kASCIIEncoding, TILE_PIX, 0);
+  int32_t len = pd->graphics->getTextWidth(getRoobert24(), _text, 16, kASCIIEncoding, 0);
+  pd->graphics->drawText(_text, 16, kASCIIEncoding, (SCREEN_PIX_X/2 - len)/2, 0);
   pd->graphics->popContext();
 }
 
@@ -399,6 +445,7 @@ void modOwned(int32_t _c, int32_t _i, bool _add) {
     case 5: p->m_carryUtility[_i] += (_add ? 1 : -1); break;
     case 6: p->m_carryCargo[_i] += (_add ? 1 : -1); break;
   }
+  UIDirtyRight();
 }
 
 uint16_t getNSubTypes(int32_t _c) {
@@ -452,7 +499,7 @@ void moveRow(bool _down) {
 }
 
 void checkSel() {
-  while (m_contentSprite[m_selRow][m_selCol] == NULL) {
+  while (m_contentSprite[m_selRow][m_selCol] == NULL || m_rowIsTitle[m_selRow]) {
     if (m_rowIsTitle[m_selRow] || m_selCol == 0) {
       moveRow(/*down=*/false);
       m_selCol = ROW_WDTH-1;
@@ -507,6 +554,88 @@ void doPurchace() {
   }
 }
 
+void doSale() {
+
+}
+
+void doPlayerMenuClick() {
+  const uint16_t selectedCat = m_contentCat[m_selRow][m_selCol];
+  const uint16_t selectedID =  m_contentID[m_selRow][m_selCol];
+  switch (selectedCat) {
+    case 0: switch(selectedID) {
+      case kToolPickup:; return setGameMode(kPick);
+      case kToolInspect:; return setGameMode(kInspect);
+      case kToolDestroy:; return setGameMode(kDestroy);
+      case kNToolTypes:; break;
+    } break;
+    case 1: return setGameMode(kPlantMode);
+    case 2: return setGameMode(kPlacement); 
+    case 3: return setGameMode(kBuild);
+    case 4: return setGameMode(kBuild);
+    case 5: return setGameMode(kPlacement);
+    case 6: return setGameMode(kPlacement); 
+  }
+}
+
+void doPlace() {
+  const uint16_t selectedCat = m_contentCat[m_selRow][m_selCol];
+  const uint16_t selectedID =  m_contentID[m_selRow][m_selCol];
+  if (getOwned(selectedCat, selectedID) == 0) {
+    return;
+  }
+  bool placed = false;
+  switch (selectedCat) {
+    case 1: placed = newBuilding(getPlayerLookingAtLocation(), SN, kPlant, (union kSubType) {.plant = selectedID} ); break;
+    case 2: placed = newBuilding(getPlayerLookingAtLocation(), m_selRotation, kConveyor, (union kSubType) {.conveyor = selectedID} ); break;
+    case 3: placed = newBuilding(getPlayerLookingAtLocation(), m_selRotation, kExtractor, (union kSubType) {.extractor = selectedID} ); break;
+    case 4: placed = newBuilding(getPlayerLookingAtLocation(), m_selRotation, kFactory, (union kSubType) {.factory = selectedID} ); break;
+    case 5: placed = newBuilding(getPlayerLookingAtLocation(), m_selRotation, kUtility, (union kSubType) {.utility = selectedID} ); break;
+    case 6: placed = newCargo(getPlayerLookingAtLocation(), selectedID, true); break;
+  }
+  if (placed) {
+    modOwned(selectedCat, selectedID, /*add=*/ false);
+  }
+}
+
+
+
+void doPick() {
+  bool update = false;
+  struct Location_t* ploc = getPlayerLocation();
+  for (int32_t x = -1; x < 2; ++x) {
+    for (int32_t y = -1; y < 2; ++y) {
+      struct Location_t* loc = getLocation(ploc->m_x + x, ploc->m_y + y);
+      if (loc->m_cargo) {
+        modOwned(6, loc->m_cargo->m_type, /*add=*/ true); // 6 is cargo TODO enum this
+        clearLocation(loc, /*cargo=*/ true, /*building=*/ false);
+        update = true;
+      }
+    }
+  }
+  if (update) updateRenderList();
+}
+
+void doDestroy() {
+
+
+}
+    /*
+    switch (getUISelectedID()) {
+      case kMenuConveyor:; newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kBelt}   ); break;
+      case kMenuSplitI:;   newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kSplitI} ); break;
+      case kMenuSplitL:;   newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kSplitL} ); break;
+      case kMenuSplitT:;   newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kSplitT} ); break;
+      case kMenuFilterL:;  newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kFilterL} ); break;
+      case kMenuTunnel:;   newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kTunnelIn} ); break;
+      case kMenuApple:;    newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kPlant, (union kSubType) {.plant = kAppleTree} ); break;
+      case kMenuCarrot:;   newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kPlant, (union kSubType) {.plant = kCarrotPlant} ); break;
+      case kMenuWheat:;    newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kPlant, (union kSubType) {.plant = kWheatPlant} ); break;
+      case kMenuCheese:;   newCargo(getPlayerLookingAtLocation(), kCheese, true); break;
+      case kMenuExtractor:;newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kExtractor, (union kSubType) {.extractor = kCropHarvester} ); break;
+      case kMenuBin:;      clearLocation(getPlayerLookingAtLocation(), true, true); break; 
+    }
+    */
+
 void populateContentPlayer(void) {
   struct Player_t* p = getPlayer();
   int16_t column = 0, row = 0;
@@ -529,7 +658,9 @@ void populateContentPlayer(void) {
       if (!getOwned(c, i)) {
         continue;
       }
-      m_contentSprite[row][column] = m_UISpriteItems[c][i][0];
+      int16_t rot = 0;
+      if (c >= 2 && c <= 5) rot = m_selRotation;
+      m_contentSprite[row][column] = m_UISpriteItems[c][i][rot];
       m_contentCat[row][column] = c;
       m_contentID[row][column] = i; 
       if (++column == ROW_WDTH) {
@@ -594,18 +725,19 @@ void populateInfoPlayer(void) {
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   switch (selectedCat) {
     case 0:  snprintf(textA, 128, "%s", toStringTool(selectedID)); snprintf(textB, 128, "%s", toStringToolInfo(selectedID)); break;
-    case 1:; snprintf(textA, 128, "%s, Likes: %s %s",
-      toStringBuildingByType(selectedCatType, (union kSubType) {.plant = selectedID}),
+    case 1:; snprintf(textA, 128, "Plant %s, Likes: %s %s",
+      toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
       toStringWetness(kPlantWetness[selectedID]),
       toStringSoil(kPlantSoil[selectedID])); break;
-    case 2:; snprintf(textA, 128, "%s", toStringBuildingByType(selectedCatType, (union kSubType) {.conveyor = selectedID})); break;
-    case 3:; snprintf(textA, 128, "%s", toStringBuildingByType(selectedCatType, (union kSubType) {.extractor = selectedID})); break;
-    case 4:; snprintf(textA, 128, "%s", toStringBuildingByType(selectedCatType, (union kSubType) {.factory = selectedID})); break;
-    case 5:; snprintf(textA, 128, "%s", toStringBuildingByType(selectedCatType, (union kSubType) {.utility = selectedID})); break;
-    case 6:; snprintf(textA, 128, "%s", toStringCargoByType(selectedID)); break;
+    case 2:; snprintf(textA, 128, "Place %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.conveyor = selectedID}, false), getRotationAsString()); break;
+    case 3:; snprintf(textA, 128, "Build %s", toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false)); break;
+    case 4:; snprintf(textA, 128, "Build %s", toStringBuilding(selectedCatType, (union kSubType) {.factory = selectedID}, false)); break;
+    case 5:; snprintf(textA, 128, "Place %s", toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false)); break;
+    case 6:; snprintf(textA, 128, "Place %s", toStringCargoByType(selectedID)); break;
   }
   if (selectedCat != 0) snprintf(textB, 128, "Inventory: %i", selectedOwned);
   if (selectedCat == 6) snprintf(textC, 128, "Value:      %i", (int)selectedPrice);
+  else snprintf(textC, 128, " ");
   pd->graphics->drawText(textA, 128, kASCIIEncoding, 1*TILE_PIX, +2);
   pd->graphics->drawText(textB, 128, kASCIIEncoding, 1*TILE_PIX, TILE_PIX - 2);
   pd->graphics->drawText(textC, 128, kASCIIEncoding, 9*TILE_PIX, TILE_PIX - 2);
@@ -638,14 +770,14 @@ void populateInfoBuy(bool _visible) {
   roundedRect(3, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorWhite);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   switch (selectedCatType) {
-    case kPlant:; snprintf(textA, 128, "%s, Likes: %s %s",
-      toStringBuildingByType(selectedCatType, (union kSubType) {.plant = selectedID}),
+    case kPlant:; snprintf(textA, 128, "Buy %s, Likes: %s %s",
+      toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
       toStringWetness(kPlantWetness[selectedID]),
       toStringSoil(kPlantSoil[selectedID])); break;
-    case kConveyor:; snprintf(textA, 128, "%s", toStringBuildingByType(selectedCatType, (union kSubType) {.conveyor = selectedID})); break;
-    case kExtractor:; snprintf(textA, 128, "%s", toStringBuildingByType(selectedCatType, (union kSubType) {.extractor = selectedID})); break;
-    case kFactory:; snprintf(textA, 128, "%s", toStringBuildingByType(selectedCatType, (union kSubType) {.factory = selectedID})); break;
-    case kUtility:; snprintf(textA, 128, "%s", toStringBuildingByType(selectedCatType, (union kSubType) {.utility = selectedID})); break;
+    case kConveyor:; snprintf(textA, 128, "Buy %s", toStringBuilding(selectedCatType, (union kSubType) {.conveyor = selectedID}, false)); break;
+    case kExtractor:; snprintf(textA, 128, "Buy %s", toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false)); break;
+    case kFactory:; snprintf(textA, 128, "Buy %s", toStringBuilding(selectedCatType, (union kSubType) {.factory = selectedID}, false)); break;
+    case kUtility:; snprintf(textA, 128, "Buy %s", toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false)); break;
     case kSpecial:; case kNoBuilding:; case kNBuildingTypes:; break;
   }
   snprintf(textB, 128, "Inventory: %i", selectedOwned);
@@ -732,13 +864,23 @@ void drawUIMain() {
 void setGameMode(enum kGameMode _mode) {
   m_mode = _mode;
 
-  if (_mode == kPlacement) drawUITop("Place Mode");
-  else if (_mode == kMenuBuy) drawUITop("The Shop");
-  else if (_mode == kMenuPlayer) drawUITop("Main Menu");
-  else drawUITop(NULL);
+  if (_mode == kPlacement) {
+    drawUITop("Place Mode");
+  } else if (_mode == kPlantMode) {
+    drawUITop("Plant Mode");
+  } else if (_mode == kBuild) {
+    drawUITop("Build Mode");
+  } else if (_mode == kPick) {
+    drawUITop("Pick Mode");
+  } else if (_mode == kMenuPlayer) {
+    drawUITop("Main Menu");
+  } else if (_mode == kMenuBuy || _mode == kMenuSell) {
+    /*noop*/ 
+  } else drawUITop(NULL);
 
   if (m_mode >= kMenuBuy) UIDirtyMain();
-
+  UIDirtyRight(); // Just safer to always do this here
+  updateBlueprint();
   updateRenderList();
 }
 
@@ -768,7 +910,7 @@ void initiUI() {
   m_UISpriteTop = pd->sprite->newSprite();
   m_UISpriteBottom = pd->sprite->newSprite();
   m_UISpriteRight = pd->sprite->newSprite();
-  
+
   m_UIBitmapTop = pd->graphics->newBitmap(SCREEN_PIX_X/2, TILE_PIX*2, kColorClear);
   m_UIBitmapBottom = pd->graphics->newBitmap(DEVICE_PIX_X, TILE_PIX, kColorBlack);
   m_UIBitmapRight = pd->graphics->newBitmap(TILE_PIX, DEVICE_PIX_Y, kColorBlack);
@@ -777,7 +919,7 @@ void initiUI() {
   PDRect boundTop = {.x = 0, .y = 0, .width = SCREEN_PIX_X/2, .height = TILE_PIX*2};
   pd->sprite->setBounds(m_UISpriteTop, boundTop);
   pd->sprite->setImage(m_UISpriteTop, m_UIBitmapTop, kBitmapUnflipped);
-  pd->sprite->moveTo(m_UISpriteTop, SCREEN_PIX_X/2, TILE_PIX);
+  pd->sprite->moveTo(m_UISpriteTop, SCREEN_PIX_X/2 - 32, TILE_PIX);
   pd->sprite->setZIndex(m_UISpriteTop, Z_INDEX_MAX);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteTop, 1);
   pd->sprite->setVisible(m_UISpriteTop, 1);
@@ -788,6 +930,15 @@ void initiUI() {
   pd->sprite->moveTo(m_UISpriteBottom, SCREEN_PIX_X + TILE_PIX/2, DEVICE_PIX_Y/2);
   pd->sprite->setZIndex(m_UISpriteBottom, Z_INDEX_UI_BOTTOM);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteBottom, 1);
+
+  #ifdef DEV
+  m_UIBitmapDev = pd->graphics->newBitmap(DEVICE_PIX_X, TILE_PIX, kColorClear);
+  m_UISpriteDev = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteDev, boundBottom);
+  pd->sprite->setImage(m_UISpriteDev, m_UIBitmapDev, kBitmapUnflipped);
+  pd->sprite->setZIndex(m_UISpriteDev, Z_INDEX_UI_BOTTOM);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteDev, 1);
+  #endif
 
   PDRect boundRight = {.x = 0, .y = 0, .width = DEVICE_PIX_X, .height = TILE_PIX};
   pd->sprite->setBounds(m_UISpriteRight, boundRight);
@@ -886,9 +1037,15 @@ void initiUI() {
         pd->graphics->pushContext(m_UIBitmapItems[c][i][r]);
         roundedRect(1, TILE_PIX*2, TILE_PIX*2, TILE_PIX/2, kColorBlack);
         roundedRect(3, TILE_PIX*2, TILE_PIX*2, TILE_PIX/2, kColorWhite);
-        pd->graphics->setDrawMode(kDrawModeNXOR);
-        pd->graphics->drawBitmap(getSprite16_byidx(spriteID + r, 2), 0, 0, kBitmapUnflipped);
-        pd->graphics->setDrawMode(kDrawModeCopy);
+        if (c == 1) { // Crops are seeds in a packet
+          pd->graphics->drawBitmap(getSprite16(3, 2, 2), 0, 0, kBitmapUnflipped);
+          pd->graphics->drawBitmap(getSprite16_byidx(spriteID + r, 1), TILE_PIX/2, TILE_PIX/2, kBitmapUnflipped);
+
+        } else {
+          pd->graphics->setDrawMode(kDrawModeNXOR);
+          pd->graphics->drawBitmap(getSprite16_byidx(spriteID + r, 2), 0, 0, kBitmapUnflipped);
+          pd->graphics->setDrawMode(kDrawModeCopy);
+        }
         pd->graphics->popContext();
 
         m_UISpriteItems[c][i][r] = pd->sprite->newSprite();

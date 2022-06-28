@@ -21,6 +21,12 @@ void clickHandleMenuPlayer(uint32_t _buttonPressed);
 
 void clickHandlePlacement(uint32_t _buttonPressed);
 
+void clickHandlePick(uint32_t _buttonPressed);
+
+void clickHandleInspect(uint32_t _buttonPressed);
+
+void clickHandleDestroy(uint32_t _buttonPressed);
+
 void rotateHandleWander(float _rotation);
 
 void rotateHandlePlacement(float _rotation);
@@ -58,8 +64,12 @@ void gameClickConfigHandler(uint32_t _buttonPressed) {
   switch (getGameMode()) {
     case kWander:; return clickHandleWander(_buttonPressed);
     case kMenuBuy:; return clickHandleMenuBuy(_buttonPressed);
+    case kMenuSell:; return clickHandleMenuBuy(_buttonPressed);
     case kMenuPlayer:; return clickHandleMenuPlayer(_buttonPressed);
-    case kPlacement:; return clickHandlePlacement(_buttonPressed);
+    case kPlacement:; case kBuild:; case kPlantMode:; return clickHandlePlacement(_buttonPressed);
+    case kPick:; return clickHandlePick(_buttonPressed);
+    case kInspect:; return clickHandleInspect(_buttonPressed);
+    case kDestroy:; return clickHandleDestroy(_buttonPressed);
   }
 }
 
@@ -82,10 +92,19 @@ void clickHandleMenuBuy(uint32_t _buttonPressed) {
   }
 }
 
+void clickHandleMenuSell(uint32_t _buttonPressed) {
+  if (kButtonA == _buttonPressed) {
+    //doSale();
+  } else if (kButtonB == _buttonPressed) {
+    setGameMode(kWander);
+  } else {
+    moveCursor(_buttonPressed);
+  }
+}
+
 void clickHandleMenuPlayer(uint32_t _buttonPressed) {
   if (kButtonA     == _buttonPressed) {
-    //setGameMode(kPlacement);
-    //updateBlueprint();
+    doPlayerMenuClick();
   } else if (kButtonB   == _buttonPressed) {
     setGameMode(kWander);
   } else {
@@ -97,25 +116,40 @@ void clickHandlePlacement(uint32_t _buttonPressed) {
   if (characterMoveInput(_buttonPressed)) {
     // noop
   } else if (kButtonA    == _buttonPressed) {
-    /*
-    switch (getUISelectedID()) {
-      case kMenuConveyor:; newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kBelt}   ); break;
-      case kMenuSplitI:;   newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kSplitI} ); break;
-      case kMenuSplitL:;   newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kSplitL} ); break;
-      case kMenuSplitT:;   newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kSplitT} ); break;
-      case kMenuFilterL:;  newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kFilterL} ); break;
-      case kMenuTunnel:;   newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kConveyor, (union kSubType) {.conveyor = kTunnelIn} ); break;
-      case kMenuApple:;    newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kPlant, (union kSubType) {.plant = kAppleTree} ); break;
-      case kMenuCarrot:;   newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kPlant, (union kSubType) {.plant = kCarrotPlant} ); break;
-      case kMenuWheat:;    newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kPlant, (union kSubType) {.plant = kWheatPlant} ); break;
-      case kMenuCheese:;   newCargo(getPlayerLookingAtLocation(), kCheese, true); break;
-      case kMenuExtractor:;newBuilding(getPlayerLookingAtLocation(), getUISelectedRotation(), kExtractor, (union kSubType) {.extractor = kCropHarvester} ); break;
-      case kMenuBin:;      clearLocation(getPlayerLookingAtLocation(), true, true); break; 
-    }
-    */
+    doPlace();
   } else if (kButtonB    == _buttonPressed) {
     setGameMode(kWander);
     updateBlueprint();
+  }
+}
+
+void clickHandlePick(uint32_t _buttonPressed) {
+  if (characterMoveInput(_buttonPressed)) {
+    // noop
+  } else if (kButtonA    == _buttonPressed) {
+    doPick();
+  } else if (kButtonB    == _buttonPressed) {
+    setGameMode(kWander);
+  }
+}
+
+void clickHandleInspect(uint32_t _buttonPressed) {
+  if (characterMoveInput(_buttonPressed)) {
+    // noop
+  } else if (kButtonA    == _buttonPressed) {
+    // noop
+  } else if (kButtonB    == _buttonPressed) {
+    setGameMode(kWander);
+  }
+}
+
+void clickHandleDestroy(uint32_t _buttonPressed) {
+  if (characterMoveInput(_buttonPressed)) {
+    // noop
+  } else if (kButtonA    == _buttonPressed) {
+    doDestroy();
+  } else if (kButtonB    == _buttonPressed) {
+    setGameMode(kWander);
   }
 }
 
@@ -143,11 +177,9 @@ void rotateHandlePlacement(float _rotation) {
   if (rot > UI_ROTATE_ACTION) {
     rot = 0.0f;
     rotateCursor(true);
-    if (getGameMode() == kPlacement) updateBlueprint();
   } else if (rot < -UI_ROTATE_ACTION) {
     rot = 0.0f;
     rotateCursor(false);
-    if (getGameMode() == kPlacement) updateBlueprint();
   }
 }
 
@@ -164,8 +196,8 @@ void clickHandlerReplacement() {
   if (released & kButtonB) gameClickConfigHandler(kButtonB);
   if (released & kButtonA) gameClickConfigHandler(kButtonA);
   else if (current & kButtonA)  {
-    if (gm == kPlacement) {
-      gameClickConfigHandler(kButtonA); // Special, allow placing rows of conveyors
+    if (gm == kPlacement || gm == kPick || gm == kPlantMode) {
+      gameClickConfigHandler(kButtonA); // Special, allow pick/placing rows of conveyors
     } else if (gm >= kMenuBuy) {
       if (--multiClickCount == 0) {
         gameClickConfigHandler(kButtonA); // Special, allow speed buying/selling
@@ -187,8 +219,9 @@ void clickHandlerReplacement() {
   switch (gm) {
     case kWander:; rotateHandleWander(pd->system->getCrankChange()); break;
     case kMenuPlayer:; // fall through
+    case kBuild:;
     case kPlacement:; rotateHandlePlacement(pd->system->getCrankChange()); break;
-    case kMenuBuy:; break;
+    case kMenuBuy:; case kMenuSell:; case kPick:; case kPlantMode:; case kDestroy:; case kInspect:; break;
   }
 
 }

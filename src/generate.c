@@ -246,7 +246,7 @@ const char* toStringWetness(uint8_t _wetness) {
   } else if (_wetness < 4) {
     return "Wet";
   } else if (_wetness < 8) {
-    return "Medium";
+    return "Moist";
   } else {
     return "Dry";
   }
