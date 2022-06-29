@@ -6,6 +6,9 @@
 #include "building.h"
 #include "ui.h"
 #include "buildings/special.h"
+#include "ui/mainmenu.h"
+#include "ui/sell.h"
+#include "ui/shop.h"
 
 uint8_t m_pressed[4] = {0};
 
@@ -62,14 +65,15 @@ bool characterMoveInput(uint32_t _buttonPressed) {
 
 void gameClickConfigHandler(uint32_t _buttonPressed) {
   switch (getGameMode()) {
-    case kWander:; return clickHandleWander(_buttonPressed);
+    case kWanderMode:; return clickHandleWander(_buttonPressed);
     case kMenuBuy:; return clickHandleMenuBuy(_buttonPressed);
     case kMenuSell:; return clickHandleMenuBuy(_buttonPressed);
     case kMenuPlayer:; return clickHandleMenuPlayer(_buttonPressed);
-    case kPlacement:; case kBuild:; case kPlantMode:; return clickHandlePlacement(_buttonPressed);
-    case kPick:; return clickHandlePick(_buttonPressed);
-    case kInspect:; return clickHandleInspect(_buttonPressed);
-    case kDestroy:; return clickHandleDestroy(_buttonPressed);
+    case kPlaceMode:; case kBuildMode:; case kPlantMode:; return clickHandlePlacement(_buttonPressed);
+    case kPickMode:; return clickHandlePick(_buttonPressed);
+    case kInspectMode:; return clickHandleInspect(_buttonPressed);
+    case kDestroyMode:; return clickHandleDestroy(_buttonPressed);
+    case kNGameModes:; break;
   }
 }
 
@@ -86,7 +90,7 @@ void clickHandleMenuBuy(uint32_t _buttonPressed) {
   if (kButtonA == _buttonPressed) {
     doPurchace();
   } else if (kButtonB == _buttonPressed) {
-    setGameMode(kWander);
+    setGameMode(kWanderMode);
   } else {
     moveCursor(_buttonPressed);
   }
@@ -96,7 +100,7 @@ void clickHandleMenuSell(uint32_t _buttonPressed) {
   if (kButtonA == _buttonPressed) {
     //doSale();
   } else if (kButtonB == _buttonPressed) {
-    setGameMode(kWander);
+    setGameMode(kWanderMode);
   } else {
     moveCursor(_buttonPressed);
   }
@@ -104,9 +108,9 @@ void clickHandleMenuSell(uint32_t _buttonPressed) {
 
 void clickHandleMenuPlayer(uint32_t _buttonPressed) {
   if (kButtonA     == _buttonPressed) {
-    doPlayerMenuClick();
+    doMainMenuClick();
   } else if (kButtonB   == _buttonPressed) {
-    setGameMode(kWander);
+    setGameMode(kWanderMode);
   } else {
     moveCursor(_buttonPressed);
   }
@@ -118,7 +122,7 @@ void clickHandlePlacement(uint32_t _buttonPressed) {
   } else if (kButtonA    == _buttonPressed) {
     doPlace();
   } else if (kButtonB    == _buttonPressed) {
-    setGameMode(kWander);
+    setGameMode(kWanderMode);
     updateBlueprint();
   }
 }
@@ -129,7 +133,7 @@ void clickHandlePick(uint32_t _buttonPressed) {
   } else if (kButtonA    == _buttonPressed) {
     doPick();
   } else if (kButtonB    == _buttonPressed) {
-    setGameMode(kWander);
+    setGameMode(kWanderMode);
   }
 }
 
@@ -139,7 +143,7 @@ void clickHandleInspect(uint32_t _buttonPressed) {
   } else if (kButtonA    == _buttonPressed) {
     // noop
   } else if (kButtonB    == _buttonPressed) {
-    setGameMode(kWander);
+    setGameMode(kWanderMode);
   }
 }
 
@@ -149,7 +153,7 @@ void clickHandleDestroy(uint32_t _buttonPressed) {
   } else if (kButtonA    == _buttonPressed) {
     doDestroy();
   } else if (kButtonB    == _buttonPressed) {
-    setGameMode(kWander);
+    setGameMode(kWanderMode);
   }
 }
 
@@ -196,7 +200,7 @@ void clickHandlerReplacement() {
   if (released & kButtonB) gameClickConfigHandler(kButtonB);
   if (released & kButtonA) gameClickConfigHandler(kButtonA);
   else if (current & kButtonA)  {
-    if (gm == kPlacement || gm == kPick || gm == kPlantMode) {
+    if (gm == kPlaceMode || gm == kPickMode || gm == kPlantMode) {
       gameClickConfigHandler(kButtonA); // Special, allow pick/placing rows of conveyors
     } else if (gm >= kMenuBuy) {
       if (--multiClickCount == 0) {
@@ -217,11 +221,11 @@ void clickHandlerReplacement() {
   }
 
   switch (gm) {
-    case kWander:; rotateHandleWander(pd->system->getCrankChange()); break;
+    case kWanderMode:; rotateHandleWander(pd->system->getCrankChange()); break;
     case kMenuPlayer:; // fall through
-    case kBuild:;
-    case kPlacement:; rotateHandlePlacement(pd->system->getCrankChange()); break;
-    case kMenuBuy:; case kMenuSell:; case kPick:; case kPlantMode:; case kDestroy:; case kInspect:; break;
+    case kBuildMode:;
+    case kPlaceMode:; rotateHandlePlacement(pd->system->getCrankChange()); break;
+    case kMenuBuy:; case kMenuSell:; case kPickMode:; case kPlantMode:; case kDestroyMode:; case kInspectMode:; case kNGameModes:; break;
   }
 
 }

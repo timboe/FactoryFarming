@@ -18,6 +18,7 @@ VPATH += Source
 # List C source files here
 SRC = $(wildcard src/*.c) \
       $(wildcard src/buildings/*.c) \
+      $(wildcard src/ui/*.c) \
 
 # List all user directories here
 UINCDIR = 

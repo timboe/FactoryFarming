@@ -259,8 +259,16 @@ const char* toStringSoil(uint8_t _tile) {
     return "Chalky Soil";
   } else if (_tile < 24) {
     return "Peaty Soil";
-  } else {
+  } else if (_tile < 32) {
     return "Sandy Soil";
+  } else if (_tile < 48) {
+    return "Paved Ground";
+  } else if (_tile < 192) {
+    return "Lake";
+  } else if (_tile < 208) {
+    return "River";
+  } else {
+    return "UNKNOWN Soil";
   }
 }
 
