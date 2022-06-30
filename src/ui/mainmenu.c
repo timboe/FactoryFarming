@@ -66,8 +66,14 @@ void doPick() {
 
 
 void doDestroy() {
-
-
+  bool update = false;
+  struct Location_t* ploc = getPlayerLocation();
+  for (int32_t x = -1; x < 2; ++x) {
+    for (int32_t y = -1; y < 2; ++y) {
+      struct Location_t* loc = getLocation(ploc->m_x + x, ploc->m_y + y);
+      clearLocation(loc, /*cargo=*/ true, /*building=*/ true);
+    }
+  }
 }
 
 void populateContentMainmenu(void) {

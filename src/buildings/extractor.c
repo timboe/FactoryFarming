@@ -7,6 +7,9 @@
 
 void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick);
 
+void pumpUpdateFn(struct Building_t* _building);
+
+
 /// ///
 
 #define COLLECT_TIME (TICKS_PER_SEC*8)
@@ -50,24 +53,37 @@ void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick) {
 
 }
 
+void pumpUpdateFn(struct Building_t* _building) {
+  if (_building->m_next[0]->m_cargo == NULL && (_building->m_next[0]->m_building == NULL || _building->m_next[0]->m_building->m_type == kConveyor)) {
+    newCargo(_building->m_next[0], kWater, false);
+  }
+}
+
+
 void extractorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   switch (_building->m_subType.extractor) {
     case kCropHarvester:; return cropHarveserUpdateFn(_building, _tick);
-    case kPump:;          return;
+    case kPump:;          return pumpUpdateFn(_building);
     case kNExtractorSubTypes:; break;
   }
 }
 
 bool canBePlacedExtractor(struct Location_t* _loc, enum kDir _dir, union kSubType _subType) {
+  bool hasWater = false;
   for (int32_t x = -1; x < 2; ++x) {
     for (int32_t y = -1; y < 2; ++y) {
       struct Tile_t* t = getTile(_loc->m_x + x, _loc->m_y + y);
-      if (t->m_tile > FLOOR_TILES) { pd->system->logToConsole("check FAILED 1"); return false; }
-      if (getLocation(_loc->m_x + x, _loc->m_y + y)->m_building != NULL) { pd->system->logToConsole("check FAILED 1"); return false; }
-      pd->system->logToConsole("check passed");
+      bool isWater = isWaterTile(_loc->m_x + x, _loc->m_y + y);
+      if (isWater) hasWater = true;
+      if (t->m_tile > FLOOR_TILES && !isWater) return false;
+      if (getLocation(_loc->m_x + x, _loc->m_y + y)->m_building != NULL) return false;
     }
   }
-  return true;
+  if (_subType.extractor == kPump) {
+    return hasWater;
+  } else {
+    return !hasWater;
+  }
 }
 
 void assignNeighborsExtractor(struct Building_t* _building) {
@@ -89,7 +105,7 @@ void buildingSetupExtractor(struct Building_t* _building) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     switch (_building->m_subType.extractor) {
       case kCropHarvester:; _building->m_image[zoom] = getSprite48(0 + _building->m_dir, 0, zoom); break;
-      case kPump:;          _building->m_image[zoom] = getSprite48(0 + _building->m_dir, 1, zoom); break;
+      case kPump:;          _building->m_image[zoom] = getSprite48(0 + _building->m_dir, 3, zoom); break;
       case kNExtractorSubTypes:; break;
     }
 

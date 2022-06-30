@@ -39,6 +39,14 @@ void clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
 
   if (_clearBuilding && _loc->m_building) {
 
+    // Special - well
+    bool wideRedraw = false;
+    if (_loc->m_building->m_type == kUtility && _loc->m_building->m_subType.utility == kWell) {
+      getTile(_loc->m_x, _loc->m_y)->m_tile = _loc->m_building->m_mode; // Undo before destroying
+      doWetness();
+      wideRedraw = true;
+    }
+
     // If a non-owned part of a multi block - then defer to the actual owned location
     if (_loc->m_notOwned) {
       return clearLocation(_loc->m_building->m_location, _clearCargo, _clearBuilding);
@@ -64,7 +72,7 @@ void clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
     chunkRemoveBuilding(_loc->m_chunk, _loc->m_building);
     buildingManagerFreeBuilding(_loc->m_building);
 
-    if (isMultiBlock) {
+    if (isMultiBlock || wideRedraw) {
       renderChunkBackgroundImageAround(_loc->m_chunk);
     } else {
       renderChunkBackgroundImage(_loc->m_chunk);

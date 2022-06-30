@@ -3,9 +3,9 @@
 #include "sprite.h"
 #include "render.h"
 
-//                              {kNoCargo, kApple,   kCheese,  kCarrot,   kWheat, kNCargoType};
-const uint16_t kCargoValue[] =  {0,        2,        8,        1,         4};
-const uint16_t kCargoUIIcon[] = {SID(0,0), SID(8,7), SID(9,7), SID(10,7), SID(11,7)};
+//                              {kNoCargo, kApple,   kCheese,  kCarrot,   kWheat,    kWater, kNCargoType};
+const uint16_t kCargoValue[] =  {0,        2,        8,        1,         4,         1};
+const uint16_t kCargoUIIcon[] = {SID(0,0), SID(8,7), SID(9,7), SID(10,7), SID(11,7), SID(12,7)};
 
 const int32_t SIZE_CARGO = TOT_CARGO_OR_BUILDINGS * sizeof(struct Cargo_t);
 
@@ -29,6 +29,7 @@ const char* toStringCargoByType(enum kCargoType _type) {
     case kCheese: return "Cheese";
     case kWheat: return "Wheat";
     case kCarrot: return "Carrot";
+    case kWater: return "Water";
     default: return "Cargo???";
   }
 }

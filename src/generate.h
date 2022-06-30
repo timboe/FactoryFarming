@@ -25,6 +25,8 @@ void setChunkBackgrounds(void);
 
 bool tileIsObstacle(struct Tile_t* _tile);
 
+bool isWaterTile(int32_t _x, int32_t _y);
+
 void addObstacles(void);
 
 void doWetness(void);

@@ -278,8 +278,19 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     }
   }
 
+  bool wideRedraw = false;
+
+  // Special - well
+  if (_type == kUtility && _subType.utility == kWell) {
+    struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
+    building->m_mode = t->m_tile;
+    t->m_tile = SPRITE16_ID(4,14);
+    doWetness();
+    wideRedraw = true;
+  }
+
   // Bake into the background
-  if (_type >= kExtractor) {
+  if (_type >= kExtractor || wideRedraw) {
     renderChunkBackgroundImageAround(_loc->m_chunk);
   } else {
     renderChunkBackgroundImage(_loc->m_chunk);

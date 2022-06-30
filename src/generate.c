@@ -217,18 +217,27 @@ void addBiome(int32_t _offX, int32_t _offY, uint16_t _imgStart) {
   }
 }
 
+bool isWaterTile(int32_t _x, int32_t _y) {
+  const uint16_t t = getTile(_x, _y)->m_tile;
+  if (t >= SPRITE16_ID(0, 5)  && t < SPRITE16_ID(0, 7)) return true;
+  if (t >= SPRITE16_ID(4, 11) && t < SPRITE16_ID(8, 11)) return true;
+  if (t >= SPRITE16_ID(4, 12) && t < SPRITE16_ID(6, 12)) return true;
+  if (t >= SPRITE16_ID(4, 13) && t < SPRITE16_ID(8, 13)) return true;
+  if (t >= SPRITE16_ID(4, 14) && t < SPRITE16_ID(8, 14)) return true;
+  return false;
+}
+
 uint8_t distanceFromWater(int32_t _x, int32_t _y) {
   uint8_t r = 0;
-  const uint16_t waterStart = SPRITE16_ID(0, 5);
-  if (getTile(_x, _y)->m_tile >= waterStart) return 0;
+  if (isWaterTile(_x, _y)) return 0;
   while (++r < 255) {
     for (int32_t x = _x - r; x < _x + r; ++x) {
-      if (getTile(x, _y - r)->m_tile >= waterStart) return r;
-      if (getTile(x, _y + r)->m_tile >= waterStart) return r;
+      if (isWaterTile(x, _y - r)) return r;
+      if (isWaterTile(x, _y + r)) return r;
     }
     for (int32_t y = _y - r; y < _y + r; ++y) {
-      if (getTile(_x + r, y)->m_tile >= waterStart) return r;
-      if (getTile(_x - r, y)->m_tile >= waterStart) return r;
+      if (isWaterTile(_x + r, y)) return r;
+      if (isWaterTile(_x - r, y)) return r;
     }
   }
   return 255;
@@ -267,7 +276,7 @@ const char* toStringSoil(uint8_t _tile) {
     return "Paved Ground";
   } else if (_tile < 192) {
     return "Lake";
-  } else if (_tile < 208) {
+  } else if (_tile < 232) {
     return "River";
   } else {
     return "UNKNOWN Soil";
@@ -621,7 +630,7 @@ bool tileIsObstacle(struct Tile_t* _tile) {
   //if (_tile->m_tile >= SPRITE16_ID(4,6) && _tile->m_tile <= SPRITE16_ID(7,6)) return false; // Water (only the border is obstacle)
   //if (_tile->m_tile >= SPRITE16_ID(8,2) && _tile->m_tile <= SPRITE16_ID(16,2)) return false; // Entry area tiles 
   //return _tile->m_tile > FLOOR_TILES;
-  return _tile->m_tile >= SPRITE16_ID(12, 13);
+  return _tile->m_tile >= SPRITE16_ID(12, 13) &&  _tile->m_tile <= SPRITE16_ID(13, 13);
 }
 
 void addObstacles() {

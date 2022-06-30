@@ -186,7 +186,7 @@ void updateBlueprint() {
   const enum kUICat selectedCat = getUIContentCategory();
   const uint16_t selectedID =  getUIContentID();
 
-  if (gm == kPickMode) {
+  if (gm == kPickMode || gm == kDestroyMode) {
     setPlayerLookingAtOffset(0);
     pd->sprite->setImage(bp, getSprite16_byidx(0, zoom), kBitmapUnflipped); 
     pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap3x3[zoom], kBitmapUnflipped);
