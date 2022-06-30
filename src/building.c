@@ -4,10 +4,14 @@
 #include "sprite.h"
 #include "render.h"
 #include "constants.h"
+#include "player.h"
+#include "ui.h"
 #include "buildings/conveyor.h"
 #include "buildings/plant.h"
 #include "buildings/extractor.h"
 #include "buildings/special.h"
+#include "buildings/factory.h"
+#include "buildings/utility.h"
 
 const int32_t SIZE_BUILDING = TOT_CARGO_OR_BUILDINGS * sizeof(struct Building_t);
 
@@ -167,8 +171,10 @@ void assignNeighbors(struct Building_t* _building) {
     case kConveyor:; return assignNeighborsConveyor(_building);
     case kPlant:; return assignNeighborsPlant(_building);
     case kExtractor:; return assignNeighborsExtractor(_building);
+    case kFactory:; return assignNeighborsFactory(_building);;
+    case kUtility:; return assignNeighborsUtility(_building);
     case kSpecial:; return assignNeighborsSpecial(_building);
-    default: break;
+    case kNBuildingTypes:  case kNoBuilding:; break;
   };
 }
 
@@ -176,27 +182,21 @@ void buildingSetup(struct Building_t* _building) {
   switch (_building->m_type) {
     case kConveyor:; return buildingSetupConveyor(_building);
     case kPlant:; return buildingSetupPlant(_building);
-    case kUtility:; break;
+    case kUtility:; return buildingSetupUtility(_building);
     case kExtractor:; return buildingSetupExtractor(_building);
-    case kFactory:; break;
+    case kFactory:; return buildingSetupFactory(_building);
     case kSpecial:; return buildingSetupSpecial(_building);
     case kNBuildingTypes:; case kNoBuilding:; break;
   };
 }
 
-
-void PLACEHOLDERUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
-  return;
-}
-
-
 void assignUpdate(struct Building_t* _building) {
   switch (_building->m_type) {
     case kConveyor:; _building->m_updateFn = &conveyorUpdateFn; break;
     case kPlant:; _building->m_updateFn = &plantUpdateFn; break;
-    case kUtility:; _building->m_updateFn = &PLACEHOLDERUpdateFn; break;
+    case kUtility:; _building->m_updateFn = &utilityUpdateFn; break;
     case kExtractor:; _building->m_updateFn = &extractorUpdateFn; break;
-    case kFactory:; _building->m_updateFn = &PLACEHOLDERUpdateFn; break;
+    case kFactory:; _building->m_updateFn = &factoryUpdateFn; break;
     case kSpecial:; _building->m_updateFn = &specialUpdateFn; break;
     case kNBuildingTypes:; case kNoBuilding:; break;
   }
@@ -219,10 +219,10 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   switch (_type) {
     case kConveyor:; canBePlaced = canBePlacedConveyor(_loc, _dir, _subType); break;
     case kPlant:;  canBePlaced = canBePlacedPlant(_loc, _dir, _subType); break;
-    case kUtility:; break;
+    case kUtility:; canBePlaced = canBePlacedUtility(_loc, _dir, _subType); break;
     case kExtractor:;  canBePlaced = canBePlacedExtractor(_loc, _dir, _subType); break;
     case kSpecial:;  canBePlaced = canBePlacedSpecial(_loc, _dir, _subType); break;
-    case kFactory:;  break;
+    case kFactory:;  canBePlaced = canBePlacedFactory(_loc, _dir, _subType); break;
     case kNoBuilding:; case kNBuildingTypes:; break;
   }
   if (!canBePlaced) return false;
@@ -270,6 +270,12 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   // Add to the active/render list
   if (newToChunk) {
     chunkAddBuilding(_loc->m_chunk, building); // Careful, no de-duplication in here, for speed
+
+    // Special - test auto upgrade of conveyor belts
+    if (_type == kConveyor && getPlayer()->m_autoUseConveyorBooster && getOwned(kUICatUtility, kConveyorGrease)) {
+      modOwned(kUICatUtility, kConveyorGrease, /*add*/ false);
+      building->m_stored[0] = 2;
+    }
   }
 
   // Bake into the background
@@ -279,7 +285,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     renderChunkBackgroundImage(_loc->m_chunk);
   }
 
-  // If placing an input tunnel, then also place the output tunnel too (canBePlacedConveyor will have thecked that this is all OK)
+  // Special - If placing an input tunnel, then also place the output tunnel too (canBePlacedConveyor will have checked that this is all OK)
   if (_type == kConveyor && _subType.conveyor == kTunnelIn) {
     struct Location_t* tunnelOut = getTunnelOutLocation(_loc, _dir);
     newBuilding(tunnelOut, _dir, kConveyor, (union kSubType) {.conveyor = kTunnelOut});
@@ -368,7 +374,7 @@ void serialiseBuilding(struct json_encoder* je) {
       je->writeInt(je, m_buildings[i].m_stored[4]);
     }
     if (m_buildings[i].m_stored[5]) {
-      je->addTableMember(je, "s4", 2);
+      je->addTableMember(je, "s5", 2);
       je->writeInt(je, m_buildings[i].m_stored[5]);
     }
     je->endTable(je);

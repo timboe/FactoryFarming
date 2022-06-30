@@ -284,13 +284,14 @@ bool modMoney(int32_t _amount) {
 void playerSpriteSetup() {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     m_player.m_sprite[zoom] = pd->sprite->newSprite();
-    PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
-    pd->sprite->setBounds(m_player.m_sprite[zoom], bound);
+    PDRect pBound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
+    PDRect cBound = {.x = (COLLISION_OFFSET/2)*zoom, .y = (COLLISION_OFFSET/2)*zoom, .width = (TILE_PIX - COLLISION_OFFSET)*zoom, .height = (TILE_PIX - COLLISION_OFFSET)*zoom};
+    pd->sprite->setBounds(m_player.m_sprite[zoom], pBound);
     pd->sprite->setImage(m_player.m_sprite[zoom], getSprite16(8, 5, zoom), kBitmapUnflipped);
-    pd->sprite->setCollideRect(m_player.m_sprite[zoom], bound);
+    pd->sprite->setCollideRect(m_player.m_sprite[zoom], cBound);
 
     m_player.m_blueprint[zoom] = pd->sprite->newSprite();
-    pd->sprite->setBounds(m_player.m_blueprint[zoom], bound);
+    pd->sprite->setBounds(m_player.m_blueprint[zoom], pBound);
     pd->sprite->setImage(m_player.m_blueprint[zoom], getSprite16(0, 0, zoom), kBitmapUnflipped);
     pd->sprite->setZIndex(m_player.m_blueprint[zoom], Z_INDEX_BLUEPRINT);
 
@@ -317,7 +318,7 @@ void playerSpriteSetup() {
     pd->graphics->popContext();
 
     m_player.m_blueprintRadius[zoom] = pd->sprite->newSprite();
-    pd->sprite->setBounds(m_player.m_blueprintRadius[zoom], bound);
+    pd->sprite->setBounds(m_player.m_blueprintRadius[zoom], pBound);
     pd->sprite->setImage(m_player.m_blueprintRadius[zoom], m_player.m_blueprintRadiusBitmap3x3[zoom], kBitmapUnflipped);
     pd->sprite->setZIndex(m_player.m_blueprintRadius[zoom], Z_INDEX_BLUEPRINT);
   }
@@ -327,6 +328,7 @@ void resetPlayer() {
   m_player.m_money = 10; // DEBUG
   m_player.m_moneyCumulative = 0;
   m_player.m_moneyHighWaterMark = 0;
+  m_player.m_saveTime = pd->system->getSecondsSinceEpoch(NULL);
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_carryCargo[i] = 0;
   for (int32_t i = 0; i < kNConvSubTypes; ++i) m_player.m_carryConveyor[i] = 0;
   for (int32_t i = 0; i < kNUtilitySubTypes; ++i) m_player.m_carryUtility[i] = 0;
@@ -357,6 +359,8 @@ void serialisePlayer(struct json_encoder* je) {
   je->writeInt(je, m_player.m_moneyHighWaterMark);
   je->addTableMember(je, "mc", 2);
   je->writeInt(je, m_player.m_moneyCumulative);
+  je->addTableMember(je, "st", 2);
+  je->writeInt(je, pd->system->getSecondsSinceEpoch(NULL));
   je->addTableMember(je, "slot", 4);
   je->writeInt(je, getSlot());
 
@@ -433,6 +437,8 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_player.m_moneyHighWaterMark = json_intValue(_value);
   } else if (strcmp(_key, "mc") == 0) {
     m_player.m_moneyCumulative = json_intValue(_value);
+  } else if (strcmp(_key, "st") == 0) {
+    m_player.m_saveTime = json_intValue(_value);
   } else if (strcmp(_key, "slot") == 0) {
     setSlot( json_intValue(_value) ); 
   } else if (strcmp(_key, "sets") == 0) {

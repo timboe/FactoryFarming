@@ -236,6 +236,6 @@ void buildingSetupConveyor(struct Building_t* _building) {
     }
   }
 
-  // Set the starting speed (TODO: Put this back to 1 and impliment an upgrade mechanic)
-  _building->m_stored[0] = 2;
+  // Set the starting speed 
+  _building->m_stored[0] = 1;
 }

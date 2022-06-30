@@ -88,7 +88,7 @@
 
 #define UI_ITEMS 12
 
-#define UI_ROTATE_ACTION 270.0f
+#define UI_ROTATE_ACTION 90.0f
 
 // Note: 1 larger than actual zoom levels (0 index unused)
 // TODO changing this will break the chunk->obstacle add/remove 
@@ -108,3 +108,9 @@
 #define SAVE_FORMAT 1
 
 #define ACTIVATE_DISTANCE (TILE_PIX*4)
+
+// Shrink the collision boxes from the edge of the sprite, feels better
+#define COLLISION_OFFSET (TILE_PIX/2 + 2)
+
+// Out of 1000
+#define CLUTTER_CHANCE 2

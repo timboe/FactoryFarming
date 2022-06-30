@@ -17,6 +17,7 @@ struct Player_t{
   uint32_t m_money;
   uint32_t m_moneyCumulative;
   uint32_t m_moneyHighWaterMark;
+  uint32_t m_saveTime;
   uint16_t m_carryCargo[kNCargoType];
   uint16_t m_carryConveyor[kNConvSubTypes];
   uint16_t m_carryUtility[kNUtilitySubTypes];

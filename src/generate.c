@@ -26,6 +26,8 @@ void addSpawn(void);
 
 void doLakesAndRivers(void);
 
+void doClutter(void);
+
 float pointDist(int32_t _x, int32_t _y, int32_t _x1, int32_t _y1, int32_t _x2, int32_t _y2);
 
 
@@ -278,6 +280,21 @@ const char* getWorldName() {
 
 void setWorldName(const char* _name) {
   strcpy(m_worldName, _name);
+}
+
+void doClutter() {
+  for (int32_t x = 0; x < TOT_TILES_X; ++x) {
+    for (int32_t y = 0; y < TOT_TILES_Y; ++y) {
+      if (rand() % 1000 >= CLUTTER_CHANCE) {
+        continue;
+      }
+      struct Tile_t* t = getTile(x,y);
+      if (t->m_tile >= FLOOR_TILES) {
+        continue;
+      }
+      t->m_tile = rand() % 2 ? SPRITE16_ID(12, 13) : SPRITE16_ID(13, 13);
+    }
+  }
 }
 
 #define LAKE_MIN 10
@@ -600,9 +617,11 @@ void* deserialiseStructDoneWorld(json_decoder* jd, const char* _name, json_value
 
 
 bool tileIsObstacle(struct Tile_t* _tile) {
-  if (_tile->m_tile >= SPRITE16_ID(4,6) && _tile->m_tile <= SPRITE16_ID(7,6)) return false; // Water (only the border is obstacle)
-  if (_tile->m_tile >= SPRITE16_ID(8,2) && _tile->m_tile <= SPRITE16_ID(16,2)) return false; // Entry area tiles 
-  return _tile->m_tile > FLOOR_TILES;
+  // With water as impassible
+  //if (_tile->m_tile >= SPRITE16_ID(4,6) && _tile->m_tile <= SPRITE16_ID(7,6)) return false; // Water (only the border is obstacle)
+  //if (_tile->m_tile >= SPRITE16_ID(8,2) && _tile->m_tile <= SPRITE16_ID(16,2)) return false; // Entry area tiles 
+  //return _tile->m_tile > FLOOR_TILES;
+  return _tile->m_tile >= SPRITE16_ID(12, 13);
 }
 
 void addObstacles() {
@@ -614,13 +633,13 @@ void addObstacles() {
       }
 
       LCDSprite* obstacle_x1 = pd->sprite->newSprite();
-      PDRect bound_x1 = {.x = 0, .y = 0, .width = TILE_PIX, .height = TILE_PIX};
+      PDRect bound_x1 = {.x = (COLLISION_OFFSET/2), .y = (COLLISION_OFFSET/2), .width = TILE_PIX - COLLISION_OFFSET, .height = TILE_PIX - COLLISION_OFFSET};
       pd->sprite->setCollideRect(obstacle_x1, bound_x1);
       pd->sprite->moveTo(obstacle_x1, x * TILE_PIX, y * TILE_PIX);
 
 
       LCDSprite* obstacle_x2 = pd->sprite->newSprite();
-      PDRect bound_x2 = {.x = 0, .y = 0, .width = TILE_PIX*2, .height = TILE_PIX*2};
+      PDRect bound_x2 = {.x = COLLISION_OFFSET, .y = COLLISION_OFFSET, .width = (TILE_PIX-COLLISION_OFFSET)*2, .height = (TILE_PIX-COLLISION_OFFSET)*2};
       pd->sprite->setCollideRect(obstacle_x2, bound_x2);
       pd->sprite->moveTo(obstacle_x2, (x * TILE_PIX)*2, (y * TILE_PIX)*2);
 
@@ -646,6 +665,7 @@ void generate() {
   addBiome(TOT_TILES_X/2, TOT_TILES_Y/2, SPRITE16_ID(8,1));
 
   doLakesAndRivers();
+  doClutter();
 
   const uint16_t startX = TILES_PER_CHUNK_X/2;
 
