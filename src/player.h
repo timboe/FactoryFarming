@@ -29,6 +29,7 @@ struct Player_t{
   uint8_t m_soundSettings;
   uint8_t m_autoUseConveyorBooster;
   uint8_t m_enableConveyorAnimation;
+  uint8_t m_enableTutorial;
 
   // Transient   
   LCDSprite* m_sprite[ZOOM_LEVELS]; // Index 0 not used - OWNED
@@ -36,6 +37,7 @@ struct Player_t{
   LCDSprite* m_blueprintRadius[ZOOM_LEVELS]; // Index 0 not used - OWNED
   LCDBitmap* m_blueprintRadiusBitmap3x3[ZOOM_LEVELS]; // Index 0 not used - OWNED
   LCDBitmap* m_blueprintRadiusBitmap7x7[ZOOM_LEVELS]; // Index 0 not used - OWNED
+  LCDBitmap* m_blueprintRadiusBitmap9x9[ZOOM_LEVELS]; // Index 0 not used - OWNED
   float m_vX;
   float m_vY;
 };

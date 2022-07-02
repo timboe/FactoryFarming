@@ -31,31 +31,35 @@ const uint32_t kConvUnlock[] = {0,        0,        0,        0,        0,      
 const uint16_t kConvPrice[]  = {1,        1,        1,        1,        1,         1,          1,         1};
 const uint16_t kConvUIIcon[] = {SID(0,3), SID(0,4), SID(4,3), SID(4,4), SID(8,3),  SID(8,3),   SID(12,4), SID(8,4)};
 
-// Wetness: 0=Water, 1-3=Wet, 4-7=Medium, 8+=Dry
-// Soil: 0=Silty, 8=Chalky, 16=Peaty, 24=Sandy
-//                              {kCarrotPlant, kAppleTree, kWheatPlant, kP4,      klP5,     kP6,      kP7,      kP8,      kP9,      kP10,     kP11,     kP12, kNPlantSubTypes};
-const uint32_t kPlantUnlock[]  = {0,            0,          0,           0,        0,        0,        0,        0,        0,        0,        0,        0};
-const uint16_t kPlantPrice[]   = {0,            1,          1,           1,        1,        1,        1,        1,        1,        1,        1,        1};
-const uint16_t kPlantUIIcon[]  = {SID(10,7),    SID(8,7),   SID(11,7),   SID(9,7), SID(9,7), SID(9,7), SID(9,7), SID(9,7), SID(9,7), SID(9,7), SID(9,7), SID(9,7)};
-const uint8_t  kPlantWetness[] = {1,            4,          8,           1,        4,        8,        1,        4,        8,        1,        4,        8};
-const uint8_t  kPlantSoil[]    = {0,            8,          16,          24,       0,        8,        16,       24,       0,        8,        16,       24};
+//                                          {kCarrotPlant, kAppleTree,    kWheatPlant,  kP4,          klP5,         kP6,          kP7,          kP8,          kP9,          kP10,         kP11,         kP12};
+const uint32_t kPlantUnlock[]             = {0,            0,             0,            0,            0,            0,            0,            0,            0,            0,            0,            0};
+const uint16_t kPlantPrice[]              = {0,            1,             1,            1,            1,            1,            1,            1,            1,            1,            1,            1};
+const uint16_t kPlantUIIcon[]             = {SID(10,7),    SID(8,7),      SID(11,7),    SID(9,7),     SID(9,7),     SID(9,7),     SID(9,7),     SID(9,7),     SID(9,7),     SID(9,7),     SID(9,7),     SID(9,7)};
+const enum kGroundWetness kPlantWetness[] = {kWet,         kMoist,        kDry,         kWet,         kMoist,       kDry,         kWet,         kMoist,       kDry,         kWet,         kMoist,       kDry};
+const enum kGroundType kPlantSoil[]       = {kSiltyGround, kChalkyGround, kPeatyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround};
 
 //                                {kWell,     kStorageBox, kConveyorGrease, kNUtilitySubTypes};
 const uint32_t kUtilityUnlock[] = {0,         0,           0};
 const uint16_t kUtilityPrice[]  = {1,         1,           1};
 const uint16_t kUtilityUIIcon[] = {SID(0,15), SID(4,15),   SID(8,15)};
 
-//                                  {kCropHarvester, kPump, kNExtractorSubTypes};
-const uint32_t kExtractorUnlock[] = {0,              0};
-const uint16_t kExtractorPrice[]  = {1,              1};
-const uint16_t kExtractorUIIcon[] = {SID(4,2),       SID(0,0)};
-const uint16_t kExtractorSprite[] = {BID(0,0),       BID(0,3)};
+//                                  {kCropHarvesterSmall, kPump,      kChalkQuarry, kkCropHarvesterLarge, kNExtractorSubTypes};
+const uint32_t kExtractorUnlock[] = {0,                   0,          0,            0};
+const uint16_t kExtractorPrice[]  = {1,                   1,          1,            1};
+const uint16_t kExtractorUIIcon[] = {SID(4,2),            SID(12,11), SID(12,12),   SID(4,2)};
+const uint16_t kExtractorSprite[] = {BID(0,0),            BID(0,3),   BID(0,5),     BID(0,0)};
 
-//                                {kMakeSmall, kNFactorySubTypes};
-const uint32_t kFactoryUnlock[] = {0};
-const uint16_t kFactoryPrice[]  = {1};
-const uint16_t kFactoryUIIcon[] = {SID(0,0)};
-const uint16_t kFactorySprite[] = {BID(0,0)};
+//                                  {kVitiminFac, kNFactorySubTypes};
+const uint32_t kFactoryUnlock[]     = {0};
+const uint16_t kFactoryPrice[]      = {1};
+const uint16_t kFactoryTime[]       = {1};
+const uint16_t kFactorySprite[]     = {BID(0,4)};
+const enum kCargoType kFactoryOut[] = {kVitamin};
+const enum kCargoType kFactoryIn1[] = {kCarrot};
+const enum kCargoType kFactoryIn2[] = {kChalk};
+const enum kCargoType kFactoryIn3[] = {kNoCargo};
+const enum kCargoType kFactoryIn4[] = {kNoCargo};
+const enum kCargoType kFactoryIn5[] = {kNoCargo};
 
 void buildingSetup(struct Building_t* _building);
 
@@ -68,23 +72,23 @@ void setBuildingSubType(struct Building_t* _building, union kSubType _subType);
 
 /// ///
 
-const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, bool _short) {
+const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, bool _inworld) {
   switch(_type) {
     case kNoBuilding: return "NoBuilding";
     case kConveyor: switch (_subType.conveyor) {
-      case kBelt: return _short ? "Belt" : "Conveyor Belt";
-      case kSplitI: return _short ? "'I' Spliter": "Conveyor Belt 'I' Spliter";
-      case kSplitL: return _short ? "'L' Splitter" : "Conveyor Belt 'L' Splitter";
-      case kSplitT: return _short ? "'T' Splitter" : "Conveyor Belt 'T' Splitter";
-      case kFilterI: return _short ? "'I' Filter" : "Conveyor Belt 'I' Filter";
-      case kFilterL: return _short ? "'L' Filter" : "Conveyor Belt 'L' Filter";
-      case kTunnelIn: case kTunnelOut: return _short ? "Tunnel" : "Conveyor Belt Tunnel";
+      case kBelt: return _inworld ? "Belt" : "Conveyor Belt";
+      case kSplitI: return _inworld ? "'I' Spliter": "Conveyor Belt 'I' Spliter";
+      case kSplitL: return _inworld ? "'L' Splitter" : "Conveyor Belt 'L' Splitter";
+      case kSplitT: return _inworld ? "'T' Splitter" : "Conveyor Belt 'T' Splitter";
+      case kFilterI: return _inworld ? "'I' Filter" : "Conveyor Belt 'I' Filter";
+      case kFilterL: return _inworld ? "'L' Filter" : "Conveyor Belt 'L' Filter";
+      case kTunnelIn: case kTunnelOut: return _inworld ? "Tunnel" : "Conveyor Belt Tunnel";
       case kNConvSubTypes: return "";
     }
     case kPlant: switch (_subType.plant) {
-      case kCarrotPlant: return "Carrot Plant";
-      case kAppleTree: return "Apple Tree";
-      case kWheatPlant: return "Wheat Plant";
+      case kCarrotPlant: return _inworld ? "Carrot Plant" : "Carrot Seeds";
+      case kAppleTree: return _inworld ? "Apple Tree" : "Apple Sapling";
+      case kWheatPlant: return _inworld ? "Wheat Plant" : "Wheet Seeds";
       case kP4:; case kP5:; case kP6:; case kP7:; case kP8:; case kP9:; case kP10:; case kP11:; case kP12:; return "Placeholder";
       case kNPlantSubTypes: return "";
     }
@@ -95,12 +99,14 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kNUtilitySubTypes: return "";
     }
     case kExtractor: switch (_subType.extractor) {
-      case kCropHarvester: return _short ? "Auto Harvester" : "Automatic Harvester";
+      case kCropHarvesterSmall: return _inworld ? "Harvester 7x7" : "Automatic Harvester (7x7)";
       case kPump: return "Water Pump";
+      case kChalkQuarry: return "Chalk Quarry";
+      case kCropHarvesterLarge: return _inworld ? "Harvester 9x9 " : "Automatic Harvester (9x9)";
       case kNExtractorSubTypes: return "";
     }
     case kFactory: switch (_subType.factory) {
-      case kMakeSmall: return "Placeholder";
+      case kVitiminFac: return "Vitamin Factory";
       case kNFactorySubTypes: return "";
     }
     case kSpecial: switch (_subType.special) {
@@ -278,9 +284,8 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     }
   }
 
-  bool wideRedraw = false;
-
   // Special - well
+  bool wideRedraw = false;
   if (_type == kUtility && _subType.utility == kWell) {
     struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
     building->m_mode = t->m_tile;

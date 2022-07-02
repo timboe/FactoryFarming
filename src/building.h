@@ -1,8 +1,7 @@
 #pragma once
 #include "game.h"
-
-// Building direction
-enum kDir{SN, WE, NS, EW, kDirN};
+#include "cargo.h"
+#include "generate.h"
 
 // All 48*48 should come after kExtractor
 enum kBuildingType {kNoBuilding, kConveyor, kPlant, kUtility, kExtractor, kFactory, kSpecial, kNBuildingTypes};
@@ -18,25 +17,31 @@ enum kPlantSubType{kCarrotPlant, kAppleTree, kWheatPlant, kP4, kP5, kP6, kP7, kP
 extern const uint32_t kPlantUnlock[];
 extern const uint16_t kPlantPrice[];
 extern const uint16_t kPlantUIIcon[];
-extern const uint8_t  kPlantWetness[];
-extern const uint8_t  kPlantSoil[];
+extern const enum kGroundWetness kPlantWetness[];
+extern const enum kGroundType kPlantSoil[];
 
 enum kUtilitySubType{kWell, kStorageBox, kConveyorGrease, kNUtilitySubTypes};
 extern const uint32_t kUtilityUnlock[];
 extern const uint16_t kUtilityPrice[];
 extern const uint16_t kUtilityUIIcon[];
 
-enum kExtractorSubType{kCropHarvester, kPump, kNExtractorSubTypes};
+enum kExtractorSubType{kCropHarvesterSmall, kPump, kChalkQuarry, kCropHarvesterLarge, kNExtractorSubTypes};
 extern const uint32_t kExtractorUnlock[];
 extern const uint16_t kExtractorPrice[];
 extern const uint16_t kExtractorUIIcon[];
 extern const uint16_t kExtractorSprite[];
 
-enum kFactorySubType{kMakeSmall, kNFactorySubTypes};
+enum kFactorySubType{kVitiminFac, kNFactorySubTypes};
 extern const uint32_t kFactoryUnlock[];
 extern const uint16_t kFactoryPrice[];
-extern const uint16_t kFactoryUIIcon[];
+extern const uint16_t kFactoryTime[];
 extern const uint16_t kFactorySprite[];
+extern const enum kCargoType kFactoryOut[];
+extern const enum kCargoType kFactoryIn1[];
+extern const enum kCargoType kFactoryIn2[];
+extern const enum kCargoType kFactoryIn3[];
+extern const enum kCargoType kFactoryIn4[];
+extern const enum kCargoType kFactoryIn5[];
 
 enum kSpecialSubType{kShop, kSellBox, kExportBox, kImportBox, kWarp, kNSpecialSubTypes};
 
@@ -89,7 +94,7 @@ uint16_t getNBuildings(void);
 
 uint16_t getNByType(enum kBuildingType _type);
 
-const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, bool _short);
+const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, bool _inworld);
 
 struct Building_t* buildingManagerNewBuilding(enum kBuildingType _asType);
 

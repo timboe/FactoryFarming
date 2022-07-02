@@ -11,6 +11,10 @@ struct Tile_t {
   // Transient
 };
 
+enum kGroundType{kSiltyGround, kChalkyGround, kPeatyGround, kSandyGround, kPavedGround, kLake, kRiver, kNGroundTypes};
+
+enum kGroundWetness{kWater, kWet, kMoist, kDry, kNGroundWetnesses};
+
 void generate(void);
 
 struct Tile_t* getTile(int32_t _x, int32_t _y);
@@ -31,9 +35,13 @@ void addObstacles(void);
 
 void doWetness(void);
 
-const char* toStringWetness(uint8_t _wetness);
+enum kGroundWetness getWetness(uint8_t _value);
 
-const char* toStringSoil(uint8_t _tile);
+enum kGroundType getGroundType(uint8_t _tile);
+
+const char* toStringWetness(enum kGroundWetness _wetness);
+
+const char* toStringSoil(enum kGroundType _type);
 
 const char* getWorldName(void);
 

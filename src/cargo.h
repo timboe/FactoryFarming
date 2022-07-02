@@ -1,7 +1,7 @@
 #pragma once
 #include "game.h"
 
-enum kCargoType {kNoCargo, kApple, kCheese, kCarrot, kWheat, kWater, kNCargoType};
+enum kCargoType {kNoCargo, kApple, kCheese, kCarrot, kWheat, kWaterBarrel, kChalk, kVitamin, kNCargoType};
 extern const uint16_t kCargoValue[];
 extern const uint16_t kCargoUIIcon[];
 

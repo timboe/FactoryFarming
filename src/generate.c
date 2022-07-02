@@ -3,6 +3,7 @@
 #include "sprite.h"
 #include "chunk.h"
 #include "location.h"
+#include "ui.h"
 #include "building.h"
 #include "buildings/special.h"
 
@@ -123,8 +124,12 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   // Render farmland
   for (uint32_t i = 0; i < _chunk->m_nBuildings; ++i) {
     struct Building_t* building = _chunk->m_buildings[i];
-    if (building->m_type == kPlant && building->m_mode >= N_CROPS_BEFORE_FARMLAND) { // Draw farm land
-      pd->graphics->drawBitmap(getSprite16(7,12,1), building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
+    if (building->m_type == kPlant) {
+      if (building->m_mode >= 2 * N_CROPS_BEFORE_FARMLAND) { // Draw farm land
+        pd->graphics->drawBitmap(getSprite16(7,12,1), building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
+      } else if (building->m_mode >= N_CROPS_BEFORE_FARMLAND) { // Draw farm land
+        pd->graphics->drawBitmap(getSprite16(6,12,1), building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
+      } 
     }
   }
 
@@ -145,10 +150,19 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
     struct Building_t* building = _chunk->m_buildings[i];
     if (building->m_type != kNoBuilding && building->m_image[1]) {
       if (building->m_type >= kExtractor) {
+        const bool invert = (building->m_type == kExtractor && building->m_subType.extractor == kCropHarvesterLarge);
+        pd->graphics->setDrawMode(invert ? kDrawModeInverted : kDrawModeCopy);
         pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - off48_x, building->m_pix_y - off48_y, kBitmapUnflipped);
+        pd->graphics->setDrawMode(kDrawModeCopy);
+        // If factory - draw also what is produced
+        if (building->m_type == kFactory) {
+          pd->graphics->drawBitmap(getSprite16_byidx(getUIIcon(kUICatFactory, building->m_subType.factory), 1), 
+            building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
+        }
       } else {
         // Fast conveyors get drawn inverted when zoomed out. Stored[0] is used to hold the speed
-        pd->graphics->setDrawMode((building->m_type == kConveyor && building->m_stored[0] >= 2) ? kDrawModeInverted : kDrawModeCopy);
+        const bool invert = (building->m_type == kConveyor && building->m_stored[0] >= 2);
+        pd->graphics->setDrawMode(invert ? kDrawModeInverted : kDrawModeCopy);
         pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
         pd->graphics->setDrawMode(kDrawModeCopy);
       }
@@ -166,7 +180,10 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
       for (uint32_t i = 0; i < otherChunk->m_nBuildings; ++i) {
         struct Building_t* building = otherChunk->m_buildings[i];
         if (building->m_type >= kExtractor && building->m_image[1]) {
+          const bool invert = (building->m_type == kExtractor && building->m_subType.extractor == kCropHarvesterLarge);
+          pd->graphics->setDrawMode(invert ? kDrawModeInverted : kDrawModeCopy);
           pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - chunkOffX, building->m_pix_y - chunkOffY, kBitmapUnflipped);
+          pd->graphics->setDrawMode(kDrawModeCopy);
         }
       }
     }
@@ -219,6 +236,7 @@ void addBiome(int32_t _offX, int32_t _offY, uint16_t _imgStart) {
 
 bool isWaterTile(int32_t _x, int32_t _y) {
   const uint16_t t = getTile(_x, _y)->m_tile;
+  if (t < FLOOR_TILES) return false;
   if (t >= SPRITE16_ID(0, 5)  && t < SPRITE16_ID(0, 7)) return true;
   if (t >= SPRITE16_ID(4, 11) && t < SPRITE16_ID(8, 11)) return true;
   if (t >= SPRITE16_ID(4, 12) && t < SPRITE16_ID(6, 12)) return true;
@@ -251,35 +269,57 @@ void doWetness(void) {
   }
 }
 
-const char* toStringWetness(uint8_t _wetness) {
+enum kGroundWetness getWetness(uint8_t _wetness) {
   if (_wetness == 0) {
-    return "Water";
+    return kWater;
   } else if (_wetness < 4) {
-    return "Wet";
+    return kWet;
   } else if (_wetness < 8) {
-    return "Moist";
+    return kMoist;
   } else {
-    return "Dry";
+    return kDry;
   }
 }
 
-const char* toStringSoil(uint8_t _tile) {
+enum kGroundType getGroundType(uint8_t _tile) {
   if (_tile < 8) {
-    return "Silty Soil";
+    return kSiltyGround;
   } else if (_tile < 16) {
-    return "Chalky Soil";
+    return kChalkyGround;
   } else if (_tile < 24) {
-    return "Peaty Soil";
+    return kPeatyGround;
   } else if (_tile < 32) {
-    return "Sandy Soil";
+    return kSandyGround;
   } else if (_tile < 48) {
-    return "Paved Ground";
+    return kPavedGround;
   } else if (_tile < 192) {
-    return "Lake";
+    return kLake;
   } else if (_tile < 232) {
-    return "River";
+    return kRiver;
   } else {
-    return "UNKNOWN Soil";
+    return kNGroundTypes;
+  }
+}
+
+const char* toStringWetness(enum kGroundWetness _wetness) {
+  switch (_wetness) {
+    case kWater: return "Water";
+    case kWet: return "Wet";
+    case kMoist: return "Moist";
+    default: return "Dry";
+  }
+}
+
+const char* toStringSoil(enum kGroundType _type) {
+  switch (_type) {
+    case kSiltyGround: return "Silty Soil";
+    case kChalkyGround: return "Chalky Soil";
+    case kPeatyGround: return "Peaty Soil";
+    case kSandyGround: return "Sandy Soil";
+    case kPavedGround: return "Paved Ground";
+    case kLake: return "Lake";
+    case kRiver: return "River";
+    case kNGroundTypes: default: return "UNKNOWN Soil";
   }
 }
 

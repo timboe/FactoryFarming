@@ -3,14 +3,58 @@
 #include "../sprite.h"
 #include "../generate.h"
 #include "../cargo.h"
-
+#include "../building.h"
 
 /// ///
 
 
 void factoryUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
-  switch (_building->m_subType.factory) {
-    default:; break;
+  
+  // Production
+  if (_building->m_stored[0] < 255 /*out*/                 && _building->m_stored[1]  && 
+    (kFactoryIn2[_building->m_subType.factory] == kNoCargo || _building->m_stored[2]) &&
+    (kFactoryIn3[_building->m_subType.factory] == kNoCargo || _building->m_stored[3]) &&
+    (kFactoryIn4[_building->m_subType.factory] == kNoCargo || _building->m_stored[4]) &&
+    (kFactoryIn5[_building->m_subType.factory] == kNoCargo || _building->m_stored[5])) 
+  {
+    _building->m_progress += _tick;
+    if (_building->m_progress >= kFactoryTime[_building->m_subType.factory] * TICKS_PER_SEC) {
+      _building->m_progress -= (kFactoryTime[_building->m_subType.factory] * TICKS_PER_SEC);
+      ++_building->m_stored[0];
+      for (int32_t i = 1; i < 6; ++i) if (_building->m_stored[i]) --_building->m_stored[i];
+    }
+  }
+
+  // Picking up
+  for (int32_t x = -1; x < 2; ++x) {
+    for (int32_t y = -1; y < 2; ++y) {
+      struct Location_t* loc = getLocation(_building->m_location->m_x + x, _building->m_location->m_y + y);
+      if (loc->m_cargo) {
+        // Is this one of out inputs?
+        if (loc->m_cargo->m_type == kFactoryIn1[_building->m_subType.factory] && _building->m_stored[1] < 255) {
+          ++_building->m_stored[1]; 
+          clearLocation(loc, /*clearCargo*/ true, /*clearBuilding*/ false);
+        } else if (loc->m_cargo->m_type == kFactoryIn2[_building->m_subType.factory] && _building->m_stored[2] < 255) {
+          ++_building->m_stored[2]; 
+          clearLocation(loc, /*clearCargo*/ true, /*clearBuilding*/ false);
+        } else if (loc->m_cargo->m_type == kFactoryIn3[_building->m_subType.factory] && _building->m_stored[3] < 255) {
+          ++_building->m_stored[3]; 
+          clearLocation(loc, /*clearCargo*/ true, /*clearBuilding*/ false);
+        } else if (loc->m_cargo->m_type == kFactoryIn4[_building->m_subType.factory] && _building->m_stored[4] < 255) {
+          ++_building->m_stored[4]; 
+          clearLocation(loc, /*clearCargo*/ true, /*clearBuilding*/ false);
+        } else if (loc->m_cargo->m_type == kFactoryIn5[_building->m_subType.factory] && _building->m_stored[5] < 255) {
+          ++_building->m_stored[5]; 
+          clearLocation(loc, /*clearCargo*/ true, /*clearBuilding*/ false);
+        }
+      }
+    }
+  }
+
+  // Placing down
+  if (_building->m_stored[0] && _building->m_next[0]->m_cargo == NULL) {
+    --_building->m_stored[0];
+    newCargo(_building->m_next[0], kFactoryOut[_building->m_subType.factory], /*added by player*/ false);
   }
 }
 
@@ -42,12 +86,9 @@ void assignNeighborsFactory(struct Building_t* _building) {
 
 void buildingSetupFactory(struct Building_t* _building) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
-    switch (_building->m_subType.extractor) {
-      //case kCropHarvester:; _building->m_image[zoom] = getSprite48(0 + _building->m_dir, 0, zoom); break;
-      default: break;
-    }
+    _building->m_image[zoom] = getSprite48(0 + _building->m_dir, 4, zoom); 
 
-    PDRect bound = {.x = 0, .y = 0, .width = EXTRACTOR_PIX*zoom, .height = EXTRACTOR_PIX*zoom};
+    PDRect bound = {.x = (COLLISION_OFFSET/2)*zoom, .y = (COLLISION_OFFSET/2)*zoom, .width = (EXTRACTOR_PIX - COLLISION_OFFSET)*zoom, .height = (EXTRACTOR_PIX - COLLISION_OFFSET)*zoom};
     if (_building->m_sprite[zoom] == NULL) _building->m_sprite[zoom] = pd->sprite->newSprite();
     pd->sprite->setCollideRect(_building->m_sprite[zoom], bound);
     pd->sprite->moveTo(_building->m_sprite[zoom], (_building->m_pix_x - EXTRACTOR_PIX/2)*zoom, (_building->m_pix_y - EXTRACTOR_PIX/2)*zoom);

@@ -2,10 +2,11 @@
 #include "chunk.h"
 #include "sprite.h"
 #include "render.h"
+#include "building.h"
 
-//                              {kNoCargo, kApple,   kCheese,  kCarrot,   kWheat,    kWater, kNCargoType};
-const uint16_t kCargoValue[] =  {0,        2,        8,        1,         4,         1};
-const uint16_t kCargoUIIcon[] = {SID(0,0), SID(8,7), SID(9,7), SID(10,7), SID(11,7), SID(12,7)};
+//                              {kNoCargo, kApple,   kCheese,  kCarrot,   kWheat,    kWaterBarrel, kChalk,    kVitamin, kNCargoType};
+const uint16_t kCargoValue[] =  {0,        2,        8,        1,         4,         1,            1,         1};
+const uint16_t kCargoUIIcon[] = {SID(0,0), SID(8,7), SID(9,7), SID(10,7), SID(11,7), SID(12,7),    SID(13,7), SID(12,8)};
 
 const int32_t SIZE_CARGO = TOT_CARGO_OR_BUILDINGS * sizeof(struct Cargo_t);
 
@@ -29,7 +30,9 @@ const char* toStringCargoByType(enum kCargoType _type) {
     case kCheese: return "Cheese";
     case kWheat: return "Wheat";
     case kCarrot: return "Carrot";
-    case kWater: return "Water";
+    case kWaterBarrel: return "Water Barrel";
+    case kChalk: return "Chalk";
+    case kVitamin: return "Vitamins";
     default: return "Cargo???";
   }
 }

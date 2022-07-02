@@ -5,6 +5,7 @@
 #include "input.h"
 #include "io.h"
 #include "ui.h"
+#include "generate.h"
 
 //                             {kToolPickup, kToolInspect, kToolDestroy, kNToolTypes};
 const uint16_t kToolUIIcon[] = {SID(8,10),   SID(9,10),    SID(1,2)};
@@ -149,10 +150,13 @@ bool movePlayer() {
   goalY += m_player.m_vY;
   */
 
-  if (getPressed(0)) { goalX -= 4 / zoom; m_facing = 0; } 
-  if (getPressed(1)) { goalX += 4 / zoom; m_facing = 1; }
-  if (getPressed(2)) { goalY -= 4 / zoom; m_facing = 2; }
-  if (getPressed(3)) { goalY += 4 / zoom; m_facing = 3; }
+  // TODO proper movement penalty / bonus
+  int16_t speed = isWaterTile(m_currentLocation->m_x, m_currentLocation->m_y) ? 2 : 4;
+
+  if (getPressed(0)) { goalX -= speed / zoom; m_facing = 0; } 
+  if (getPressed(1)) { goalX += speed / zoom; m_facing = 1; }
+  if (getPressed(2)) { goalY -= speed / zoom; m_facing = 2; }
+  if (getPressed(3)) { goalY += speed / zoom; m_facing = 3; }
 
 
   //pd->system->logToConsole("GOAL %f %f CURRENT %f %f", goalX, goalY, m_player.m_x, m_player.m_y);
@@ -199,8 +203,8 @@ bool movePlayer() {
   uint16_t chunkY = m_player.m_pix_y / (CHUNK_PIX_Y);
 
   // Subchunk change
-  uint8_t subChunkX = (uint16_t)(m_player.m_pix_x / ((float)(CHUNK_PIX_X)/2.0f)) % 2;
-  uint8_t subChunkY = (uint16_t)(m_player.m_pix_y / ((float)(CHUNK_PIX_Y)/2.0f)) % 2;
+  uint8_t subChunkX = (int16_t)m_player.m_pix_x / (CHUNK_PIX_X/2) % 2;
+  uint8_t subChunkY = (int16_t)m_player.m_pix_y / (CHUNK_PIX_Y/2) % 2;
   enum kChunkQuad quadrant = NW;
   if (subChunkX && subChunkY) {
     quadrant = SE;
@@ -297,6 +301,7 @@ void playerSpriteSetup() {
 
     m_player.m_blueprintRadiusBitmap3x3[zoom] = pd->graphics->newBitmap(TILE_PIX*3*zoom, TILE_PIX*3*zoom, kColorClear);
     m_player.m_blueprintRadiusBitmap7x7[zoom] = pd->graphics->newBitmap(TILE_PIX*7*zoom, TILE_PIX*7*zoom, kColorClear);
+    m_player.m_blueprintRadiusBitmap9x9[zoom] = pd->graphics->newBitmap(TILE_PIX*9*zoom, TILE_PIX*9*zoom, kColorClear);
 
     uint16_t start = 2*zoom, stop = (TILE_PIX*3 - 2)*zoom;
     pd->graphics->setLineCapStyle(kLineCapStyleRound);
@@ -317,6 +322,15 @@ void playerSpriteSetup() {
     pd->graphics->drawLine(stop, start, stop, stop, 2*zoom, kColorBlack);
     pd->graphics->popContext();
 
+    stop = (TILE_PIX*9 - 2)*zoom;
+    pd->graphics->pushContext(m_player.m_blueprintRadiusBitmap9x9[zoom]);
+    pd->graphics->setDrawMode(kDrawModeCopy);
+    pd->graphics->drawLine(start, start, stop, start, 2*zoom, kColorBlack);
+    pd->graphics->drawLine(start, start, start, stop, 2*zoom, kColorBlack);
+    pd->graphics->drawLine(start, stop, stop, stop, 2*zoom, kColorBlack);
+    pd->graphics->drawLine(stop, start, stop, stop, 2*zoom, kColorBlack);
+    pd->graphics->popContext();
+
     m_player.m_blueprintRadius[zoom] = pd->sprite->newSprite();
     pd->sprite->setBounds(m_player.m_blueprintRadius[zoom], pBound);
     pd->sprite->setImage(m_player.m_blueprintRadius[zoom], m_player.m_blueprintRadiusBitmap3x3[zoom], kBitmapUnflipped);
@@ -325,7 +339,7 @@ void playerSpriteSetup() {
 }
 
 void resetPlayer() {
-  m_player.m_money = 10; // DEBUG
+  m_player.m_money = 100000000; // DEBUG
   m_player.m_moneyCumulative = 0;
   m_player.m_moneyHighWaterMark = 0;
   m_player.m_saveTime = pd->system->getSecondsSinceEpoch(NULL);
@@ -361,6 +375,8 @@ void serialisePlayer(struct json_encoder* je) {
   je->writeInt(je, m_player.m_moneyCumulative);
   je->addTableMember(je, "st", 2);
   je->writeInt(je, pd->system->getSecondsSinceEpoch(NULL));
+  je->addTableMember(je, "sg", 2);
+  je->writeInt(je, m_player.m_enableTutorial);
   je->addTableMember(je, "slot", 4);
   je->writeInt(je, getSlot());
 
@@ -439,6 +455,8 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_player.m_moneyCumulative = json_intValue(_value);
   } else if (strcmp(_key, "st") == 0) {
     m_player.m_saveTime = json_intValue(_value);
+  } else if (strcmp(_key, "sg") == 0) {
+    m_player.m_enableTutorial = json_intValue(_value);
   } else if (strcmp(_key, "slot") == 0) {
     setSlot( json_intValue(_value) ); 
   } else if (strcmp(_key, "sets") == 0) {

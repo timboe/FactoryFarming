@@ -1,6 +1,5 @@
 #pragma once
 #include "game.h"
-#include "building.h"
 
 void initSprite(void);
 

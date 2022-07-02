@@ -11,6 +11,9 @@
 #include "pd_api.h"
 #include "constants.h"
 
+// Directions
+enum kDir{SN, WE, NS, EW, kDirN};
+
 extern PlaydateAPI* pd;
 
 void setPDPtr(PlaydateAPI* _p);

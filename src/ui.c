@@ -205,7 +205,15 @@ void updateBlueprint() {
     pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
   } else if (gm == kBuildMode) { // Of factories and harvesters
     setPlayerLookingAtOffset(2);
-    pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap7x7[zoom], kBitmapUnflipped);
+    if (selectedCat == kUICatExtractor) {
+      switch (selectedID) {
+        case kCropHarvesterLarge: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap9x9[zoom], kBitmapUnflipped); break;
+        case kCropHarvesterSmall: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap7x7[zoom], kBitmapUnflipped); break;
+        default: pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped); 
+      }
+    } else {
+      pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped); 
+    }
     switch (selectedCat) {
       case kUICatExtractor:; pd->sprite->setImage(bp, getSprite48_byidx(kExtractorSprite[selectedID] + m_selRotation, zoom), kBitmapUnflipped); break;
       case kUICatFactory:;   pd->sprite->setImage(bp, getSprite48_byidx(kFactorySprite[selectedID] + m_selRotation,   zoom), kBitmapUnflipped); break;
@@ -247,6 +255,15 @@ void addUIToSpriteList() {
 }
 
 const char* getRotationAsString(void) {
+  if (m_contentCat[m_selRow][m_selCol] != kUICatConv) {
+    switch (m_selRotation) {
+      case 0: return "N";
+      case 1: return "E";
+      case 2: return "S";
+      case 3: return "W";
+    }
+  }
+
   switch (m_contentID[m_selRow][m_selCol]) {
     case kBelt:; case kTunnelIn:;
       switch (m_selRotation) {
@@ -309,16 +326,16 @@ void drawUIBottom() {
 
   if (loc->m_building && loc->m_cargo) {
     snprintf(text, 128, "%s %s, %s, %s", 
-      toStringWetness(t->m_wetness), toStringSoil(t->m_tile), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo));
+      toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo));
   } else if (loc->m_building) {
     snprintf(text, 128, "%s %s, %s", 
-      toStringWetness(t->m_wetness), toStringSoil(t->m_tile), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
+      toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
   } else if (loc->m_cargo) {
     snprintf(text, 128, "%s %s, %s", 
-      toStringWetness(t->m_wetness), toStringSoil(t->m_tile), toStringCargo(loc->m_cargo));
+      toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringCargo(loc->m_cargo));
   } else {
     snprintf(text, 128, "%s %s", 
-      toStringWetness(t->m_wetness), toStringSoil(t->m_tile));
+      toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)));
   }
 
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX/2, 0);
@@ -464,7 +481,7 @@ uint16_t getUIIcon(enum kUICat _c, uint16_t _i) {
     case kUICatPlant: return kPlantUIIcon[_i];
     case kUICatConv: return kConvUIIcon[_i];
     case kUICatExtractor: return kExtractorUIIcon[_i];
-    case kUICatFactory: return kFactoryUIIcon[_i];
+    case kUICatFactory: return kCargoUIIcon[ kFactoryOut[_i] ];
     case kUICatUtility: return kUtilityUIIcon[_i];
     case kUICatCargo: return kCargoUIIcon[_i];
     case kNUICats: break;
@@ -796,9 +813,12 @@ void initiUI() {
         pd->graphics->pushContext(m_UIBitmapItems[c][i][r]);
         if (c == kUICatPlant) { // Crops are seeds in a packet
           pd->graphics->drawBitmap(getSprite16(3, 2, 2), 0, 0, kBitmapUnflipped);
-          pd->graphics->drawBitmap(getSprite16_byidx(spriteID + r, 1), TILE_PIX/2, TILE_PIX/2, kBitmapUnflipped);
+          pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), TILE_PIX/2, TILE_PIX/2, kBitmapUnflipped);
+        } else if (c == kUICatFactory) {
+          pd->graphics->drawBitmap(getSprite16(12 + r, 10, 2), 0, 0, kBitmapUnflipped);
+          pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), TILE_PIX/2, TILE_PIX/2, kBitmapUnflipped);
         } else {
-          if (c != kUICatConv) {
+          if (c != kUICatConv && c != kUICatExtractor) {
             roundedRect(1, TILE_PIX*2, TILE_PIX*2, TILE_PIX/2, kColorBlack);
             roundedRect(3, TILE_PIX*2, TILE_PIX*2, TILE_PIX/2, kColorWhite);
             pd->graphics->setDrawMode(kDrawModeNXOR);

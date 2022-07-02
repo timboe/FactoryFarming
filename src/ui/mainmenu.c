@@ -39,7 +39,7 @@ void doPlace() {
     case kUICatExtractor: placed = newBuilding(getPlayerLookingAtLocation(), getCursorRotation(), kExtractor, (union kSubType) {.extractor = selectedID} ); break;
     case kUICatFactory: placed = newBuilding(getPlayerLookingAtLocation(), getCursorRotation(), kFactory, (union kSubType) {.factory = selectedID} ); break;
     case kUICatUtility: placed = newBuilding(getPlayerLookingAtLocation(), getCursorRotation(), kUtility, (union kSubType) {.utility = selectedID} ); break;
-    case kUICatCargo: placed = newCargo(getPlayerLookingAtLocation(), selectedID, true); break;
+    case kUICatCargo: placed = newCargo(getPlayerLookingAtLocation(), selectedID, /*added by player*/ true); break;
     case kNUICats: break;
   }
   if (placed) {
@@ -137,9 +137,12 @@ void populateInfoMainmenu() {
       toStringWetness(kPlantWetness[selectedID]),
       toStringSoil(kPlantSoil[selectedID])); break;
     case kUICatConv:; snprintf(textA, 128, "Place %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.conveyor = selectedID}, false), getRotationAsString()); break;
-    case kUICatExtractor:; snprintf(textA, 128, "Build %s", toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false)); break;
-    case kUICatFactory:; snprintf(textA, 128, "Build %s", toStringBuilding(selectedCatType, (union kSubType) {.factory = selectedID}, false)); break;
-    case kUICatUtility:; snprintf(textA, 128, "Place %s", toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false)); break;
+    case kUICatExtractor:; snprintf(textA, 128, "Build %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false), getRotationAsString()); break;
+    case kUICatFactory:; snprintf(textA, 128, "Build %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.factory = selectedID}, false), getRotationAsString()); break;
+    case kUICatUtility:;
+      if (selectedID == kStorageBox) snprintf(textA, 128, "Place %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false), getRotationAsString());
+      else snprintf(textA, 128, "Place %s", toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false));
+      break;
     case kUICatCargo:; snprintf(textA, 128, "Place %s", toStringCargoByType(selectedID)); break;
     case kNUICats:; break;
   }
