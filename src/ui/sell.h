@@ -4,3 +4,6 @@
 
 void doSale(void);
 
+void populateContentSell(void);
+
+void populateInfoSell(void);

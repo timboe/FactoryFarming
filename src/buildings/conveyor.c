@@ -236,6 +236,6 @@ void buildingSetupConveyor(struct Building_t* _building) {
     }
   }
 
-  // Set the starting speed 
-  _building->m_stored[0] = 1;
+  // Set the starting speed (but don't downgrade)
+  if (_building->m_stored[0] == 0) _building->m_stored[0] = 1;
 }

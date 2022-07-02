@@ -260,7 +260,11 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   building->m_dir = _dir;
   building->m_progress = 0;
   building->m_mode = 0;
-  for (int32_t i = 0; i < MAX_STORE; ++i) building->m_stored[i] = 0;
+  for (int32_t i = 0; i < MAX_STORE; ++i) {
+    // Don't reset this for speedy conveyors, we only apply the auto-speed boost once
+    if (_type == kConveyor && i == 0 && building->m_stored[0] == 2) continue;
+    building->m_stored[i] = 0;
+  }
   for (int32_t i = 0; i < 4; ++i) {
     building->m_next[i] = NULL;
     building->m_nextDir[i] = SN;

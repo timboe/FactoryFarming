@@ -148,7 +148,7 @@ void updateUI(int _fc) {
   if (m_mode == kWanderMode) {
     if (!m_UITopVisible) {
       if      (distanceFromBuy()  < ACTIVATE_DISTANCE) drawUITop("The Shop");
-      else if (distanceFromSell() < ACTIVATE_DISTANCE) drawUITop("Sell Box");
+      else if (distanceFromSell() < ACTIVATE_DISTANCE) drawUITop("Sales");
     } else {
       if (distanceFromBuy() >= ACTIVATE_DISTANCE && distanceFromSell() >= ACTIVATE_DISTANCE) drawUITop(NULL);
     }
@@ -192,7 +192,11 @@ void updateBlueprint() {
     pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap3x3[zoom], kBitmapUnflipped);
   } else if (gm == kPlaceMode) { // Of conveyors, cargo or utility
     setPlayerLookingAtOffset(0);
-    pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
+    if (selectedCat == kUICatUtility && selectedID == kConveyorGrease) {
+      pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap3x3[zoom], kBitmapUnflipped);
+    } else {
+      pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
+    }
     switch (selectedCat) {
       case kUICatConv:;    pd->sprite->setImage(bp, getSprite16_byidx(kConvUIIcon[selectedID] + m_selRotation, zoom), kBitmapUnflipped); break;
       case kUICatUtility:; pd->sprite->setImage(bp, getSprite16_byidx(kUtilityUIIcon[selectedID] + m_selRotation, zoom), kBitmapUnflipped); break;
@@ -589,6 +593,7 @@ void drawUIMain() {
   switch (getGameMode()) {
     case kMenuBuy:; populateContentBuy(); break;
     case kMenuPlayer:; populateContentMainmenu(); break;
+    case kMenuSell:; populateContentSell(); break;
     default: break;
   }
 
@@ -639,6 +644,7 @@ void drawUIMain() {
   switch (getGameMode()) {
     case kMenuBuy:; populateInfoBuy(visible); break;
     case kMenuPlayer:; populateInfoMainmenu(); break;
+    case kMenuSell:; populateInfoSell(); break;
     default: break;
   }
 

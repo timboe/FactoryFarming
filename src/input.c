@@ -20,6 +20,8 @@ void clickHandleWander(uint32_t _buttonPressed);
 
 void clickHandleMenuBuy(uint32_t _buttonPressed);
 
+void clickHandleMenuSell(uint32_t _buttonPressed);
+
 void clickHandleMenuPlayer(uint32_t _buttonPressed);
 
 void clickHandlePlacement(uint32_t _buttonPressed);
@@ -67,7 +69,7 @@ void gameClickConfigHandler(uint32_t _buttonPressed) {
   switch (getGameMode()) {
     case kWanderMode:; return clickHandleWander(_buttonPressed);
     case kMenuBuy:; return clickHandleMenuBuy(_buttonPressed);
-    case kMenuSell:; return clickHandleMenuBuy(_buttonPressed);
+    case kMenuSell:; return clickHandleMenuSell(_buttonPressed);
     case kMenuPlayer:; return clickHandleMenuPlayer(_buttonPressed);
     case kPlaceMode:; case kBuildMode:; case kPlantMode:; return clickHandlePlacement(_buttonPressed);
     case kPickMode:; return clickHandlePick(_buttonPressed);
@@ -78,9 +80,10 @@ void gameClickConfigHandler(uint32_t _buttonPressed) {
 }
 
 void clickHandleWander(uint32_t _buttonPressed) {
-  if (characterMoveInput(_buttonPressed)) {}
+  if (characterMoveInput(_buttonPressed)) { /*noop*/ }
   else if (kButtonA == _buttonPressed) {
     if (distanceFromBuy() < ACTIVATE_DISTANCE) setGameMode(kMenuBuy);
+    else if (distanceFromSell() < ACTIVATE_DISTANCE) setGameMode(kMenuSell);
     else setGameMode(kMenuPlayer);
   }
   //else if (kButtonB == _buttonPressed) toggleZoom();
@@ -98,7 +101,7 @@ void clickHandleMenuBuy(uint32_t _buttonPressed) {
 
 void clickHandleMenuSell(uint32_t _buttonPressed) {
   if (kButtonA == _buttonPressed) {
-    //doSale();
+    doSale();
   } else if (kButtonB == _buttonPressed) {
     setGameMode(kWanderMode);
   } else {

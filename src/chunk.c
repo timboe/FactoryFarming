@@ -36,15 +36,8 @@ void setChunkSpriteOffsets(struct Chunk_t* _c, int16_t _x, int16_t _y) {
 
 
 void chunkShiftTorus(bool _top, bool _left) {
-  return; // Come back to this...
 
-  for (int32_t x = 0; x < WORLD_CHUNKS_X; ++x) {
-    int32_t yMod = 0;
-    if (x == 0 && !_left) {
-      yMod = TOT_WORLD_PIX_X;
-    }
-
-
+  for (int32_t x = 1; x < WORLD_CHUNKS_X - 1; ++x) {
     struct Chunk_t* top = getChunk_noCheck(x, 0);
     struct Chunk_t* bottom = getChunk_noCheck(x, WORLD_CHUNKS_Y-1);
     if (_top) {
@@ -55,6 +48,47 @@ void chunkShiftTorus(bool _top, bool _left) {
       setChunkSpriteOffsets(bottom, 0, 0);
     }
   }
+
+  for (int32_t y = 1; y < WORLD_CHUNKS_Y - 1; ++y) {
+    struct Chunk_t* left = getChunk_noCheck(0, y);
+    struct Chunk_t* right = getChunk_noCheck(WORLD_CHUNKS_X-1, y);
+    if (_left) {
+      setChunkSpriteOffsets(left, 0, 0);
+      setChunkSpriteOffsets(right, -TOT_WORLD_PIX_X, 0);
+    } else {
+      setChunkSpriteOffsets(left, TOT_WORLD_PIX_X, 0);
+      setChunkSpriteOffsets(right, 0, 0);
+    }
+  }
+
+  // Handle the corders
+  struct Chunk_t* TL = getChunk_noCheck(0, 0);
+  struct Chunk_t* TR = getChunk_noCheck(WORLD_CHUNKS_X-1, 0);
+  struct Chunk_t* BL = getChunk_noCheck(0, WORLD_CHUNKS_Y-1);
+  struct Chunk_t* BR = getChunk_noCheck(WORLD_CHUNKS_X-1, WORLD_CHUNKS_Y-1);
+
+  if (_top && _left) {
+    setChunkSpriteOffsets(TL, 0, 0);
+    setChunkSpriteOffsets(TR, -TOT_WORLD_PIX_X, 0);
+    setChunkSpriteOffsets(BL, 0, -TOT_WORLD_PIX_Y);
+    setChunkSpriteOffsets(BR, -TOT_WORLD_PIX_X, -TOT_WORLD_PIX_Y);
+  } else if (_top && !_left) {
+    setChunkSpriteOffsets(TL, +TOT_WORLD_PIX_X, 0);
+    setChunkSpriteOffsets(TR, 0, 0);
+    setChunkSpriteOffsets(BL, +TOT_WORLD_PIX_X, -TOT_WORLD_PIX_Y);
+    setChunkSpriteOffsets(BR, 0, -TOT_WORLD_PIX_Y);
+  } else if (!_top && _left) {
+    setChunkSpriteOffsets(TL, 0, +TOT_WORLD_PIX_Y);
+    setChunkSpriteOffsets(TR, -TOT_WORLD_PIX_X, +TOT_WORLD_PIX_Y);
+    setChunkSpriteOffsets(BL, 0, 0);
+    setChunkSpriteOffsets(BR, -TOT_WORLD_PIX_X, 0);
+  } else {
+    setChunkSpriteOffsets(TL, +TOT_WORLD_PIX_X, +TOT_WORLD_PIX_Y);
+    setChunkSpriteOffsets(TR, 0, +TOT_WORLD_PIX_Y);
+    setChunkSpriteOffsets(BL, +TOT_WORLD_PIX_X, 0);
+    setChunkSpriteOffsets(BR, 0, 0);
+  }
+
 }
 /*
 void chunkShiftTorusHorizontal(bool _left) {

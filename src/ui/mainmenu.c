@@ -5,6 +5,10 @@
 #include "../sprite.h"
 #include "../generate.h"
 
+bool doConveyorUpgrade(struct Location_t* _loc);
+
+/// ///
+
 void doMainMenuClick() {
   const enum kUICat selectedCat = getUIContentCategory();
   const uint16_t selectedID =  getUIContentID();
@@ -25,6 +29,21 @@ void doMainMenuClick() {
   }
 }
 
+bool doConveyorUpgrade(struct Location_t* _loc) {
+  for (int32_t x = -1; x < 2; ++x) {
+    for (int32_t y = -1; y < 2; ++y) {
+      struct Location_t* l = getLocation(_loc->m_x + x, _loc->m_y + y);
+      // Stored[0] is used to hold the conveyor speed
+      if (l->m_building && l->m_building->m_type == kConveyor && l->m_building->m_stored[0] == 1 && getOwned(kUICatUtility, kConveyorGrease)) {
+        l->m_building->m_stored[0] = 2;
+        modOwned(kUICatUtility, kConveyorGrease, /*add=*/ false);
+        renderChunkBackgroundImage(l->m_chunk);
+      }
+    }
+  }
+  return false; // We have handled the removal of the grease
+}
+
 void doPlace() {
   const enum kUICat selectedCat = getUIContentCategory();
   const uint16_t selectedID =  getUIContentID();
@@ -33,12 +52,15 @@ void doPlace() {
   }
   bool placed = false;
   switch (selectedCat) {
-  	case kUICatTool: break; // Impossible
+    case kUICatTool: break; // Impossible
     case kUICatPlant: placed = newBuilding(getPlayerLookingAtLocation(), SN, kPlant, (union kSubType) {.plant = selectedID} ); break;
     case kUICatConv: placed = newBuilding(getPlayerLookingAtLocation(), getCursorRotation(), kConveyor, (union kSubType) {.conveyor = selectedID} ); break;
     case kUICatExtractor: placed = newBuilding(getPlayerLookingAtLocation(), getCursorRotation(), kExtractor, (union kSubType) {.extractor = selectedID} ); break;
     case kUICatFactory: placed = newBuilding(getPlayerLookingAtLocation(), getCursorRotation(), kFactory, (union kSubType) {.factory = selectedID} ); break;
-    case kUICatUtility: placed = newBuilding(getPlayerLookingAtLocation(), getCursorRotation(), kUtility, (union kSubType) {.utility = selectedID} ); break;
+    case kUICatUtility: 
+      if (selectedID == kConveyorGrease) placed = doConveyorUpgrade(getPlayerLookingAtLocation());
+      else placed = newBuilding(getPlayerLookingAtLocation(), getCursorRotation(), kUtility, (union kSubType) {.utility = selectedID} );
+      break;
     case kUICatCargo: placed = newCargo(getPlayerLookingAtLocation(), selectedID, /*added by player*/ true); break;
     case kNUICats: break;
   }
@@ -153,6 +175,6 @@ void populateInfoMainmenu() {
   pd->graphics->drawText(textB, 128, kASCIIEncoding, 1*TILE_PIX, TILE_PIX - 2);
   pd->graphics->drawText(textC, 128, kASCIIEncoding, 9*TILE_PIX, TILE_PIX - 2);
   pd->graphics->setDrawMode(kDrawModeCopy);
-  if (selectedCat == 6) pd->graphics->drawBitmap(getSprite16(2, 2, 1), 11*TILE_PIX + TILE_PIX/2, TILE_PIX - 2, kBitmapUnflipped);
+  if (selectedCat == kUICatCargo) pd->graphics->drawBitmap(getSprite16(2, 2, 1), 11*TILE_PIX + TILE_PIX/2, TILE_PIX - 2, kBitmapUnflipped);
   pd->graphics->popContext();
 }
