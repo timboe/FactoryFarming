@@ -4,6 +4,7 @@
 #include "../render.h"
 #include "../sprite.h"
 #include "../generate.h"
+#include "../buildings/conveyor.h"
 
 bool doConveyorUpgrade(struct Location_t* _loc);
 
@@ -33,12 +34,7 @@ bool doConveyorUpgrade(struct Location_t* _loc) {
   for (int32_t x = -1; x < 2; ++x) {
     for (int32_t y = -1; y < 2; ++y) {
       struct Location_t* l = getLocation(_loc->m_x + x, _loc->m_y + y);
-      // Stored[0] is used to hold the conveyor speed
-      if (l->m_building && l->m_building->m_type == kConveyor && l->m_building->m_stored[0] == 1 && getOwned(kUICatUtility, kConveyorGrease)) {
-        l->m_building->m_stored[0] = 2;
-        modOwned(kUICatUtility, kConveyorGrease, /*add=*/ false);
-        renderChunkBackgroundImage(l->m_chunk);
-      }
+      upgradeConveyor(l->m_building);
     }
   }
   return false; // We have handled the removal of the grease

@@ -280,12 +280,11 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   // Add to the active/render list
   if (newToChunk) {
     chunkAddBuilding(_loc->m_chunk, building); // Careful, no de-duplication in here, for speed
+  }
 
-    // Special - test auto upgrade of conveyor belts
-    if (_type == kConveyor && getPlayer()->m_autoUseConveyorBooster && getOwned(kUICatUtility, kConveyorGrease)) {
-      modOwned(kUICatUtility, kConveyorGrease, /*add*/ false);
-      building->m_stored[0] = 2;
-    }
+  // Special - test auto upgrade of conveyor belts
+  if (_type == kConveyor && getPlayer()->m_autoUseConveyorBooster) {
+    upgradeConveyor(building);
   }
 
   // Special - well

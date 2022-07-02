@@ -91,7 +91,9 @@ void buildingSetupFactory(struct Building_t* _building) {
     PDRect bound = {.x = (COLLISION_OFFSET/2)*zoom, .y = (COLLISION_OFFSET/2)*zoom, .width = (EXTRACTOR_PIX - COLLISION_OFFSET)*zoom, .height = (EXTRACTOR_PIX - COLLISION_OFFSET)*zoom};
     if (_building->m_sprite[zoom] == NULL) _building->m_sprite[zoom] = pd->sprite->newSprite();
     pd->sprite->setCollideRect(_building->m_sprite[zoom], bound);
-    pd->sprite->moveTo(_building->m_sprite[zoom], (_building->m_pix_x - EXTRACTOR_PIX/2)*zoom, (_building->m_pix_y - EXTRACTOR_PIX/2)*zoom);
+    pd->sprite->moveTo(_building->m_sprite[zoom], 
+      (_building->m_pix_x + _building->m_location->m_pix_off_x - EXTRACTOR_PIX/2)*zoom, 
+      (_building->m_pix_y + _building->m_location->m_pix_off_y - EXTRACTOR_PIX/2)*zoom);
   }
 
   for (int32_t x = _building->m_location->m_x - 1; x < _building->m_location->m_x + 2; ++x) {

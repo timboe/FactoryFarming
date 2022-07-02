@@ -28,10 +28,47 @@ struct Chunk_t* getChunk_noCheck(const int32_t _x, const int32_t _y) {
 }
 
 void setChunkSpriteOffsets(struct Chunk_t* _c, int16_t _x, int16_t _y) {
+  // Move the background
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     PDRect bound = {.x = 0, .y = 0, .width = CHUNK_PIX_X*zoom, .height = CHUNK_PIX_Y*zoom};
     pd->sprite->moveTo(_c->m_bkgSprite[zoom], (CHUNK_PIX_X*_c->m_x + CHUNK_PIX_X/2.0 + _x)*zoom, (CHUNK_PIX_Y*_c->m_y + CHUNK_PIX_Y/2.0 + _y)*zoom);
   }
+  // Set the offet to all locations such that any other moveTo calls can also apply the correct offset
+  for (uint32_t x = TILES_PER_CHUNK_X * _c->m_x; x < TILES_PER_CHUNK_X * (_c->m_x + 1); ++x) {
+    for (uint32_t y = TILES_PER_CHUNK_Y * _c->m_y; y < TILES_PER_CHUNK_Y * (_c->m_y + 1); ++y) {
+      struct Location_t* loc = getLocation_noCheck(x, y);
+      loc->m_pix_off_x = _x;
+      loc->m_pix_off_y = _y; 
+      // Apply the offset to any cargo we come accross on the ground
+      if (loc->m_cargo && (!loc->m_building || loc->m_building->m_type != kConveyor)) {
+        for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+          pd->sprite->moveTo(loc->m_cargo->m_sprite[zoom], 
+            (TILE_PIX*loc->m_x + loc->m_pix_off_x + TILE_PIX/2.0)*zoom, 
+            (TILE_PIX*loc->m_y + loc->m_pix_off_y + TILE_PIX/2.0)*zoom);
+        }
+      }
+      // Apply the offset to any buildings which have animated or large collision sprites
+      if (loc->m_building) {
+        if (loc->m_building->m_type == kConveyor) {
+          for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+            pd->sprite->moveTo(loc->m_building->m_sprite[zoom], 
+              (loc->m_building->m_pix_x + loc->m_pix_off_x) * zoom, 
+              (loc->m_building->m_pix_y + loc->m_pix_off_y) * zoom);
+          }
+        } else if (loc->m_building->m_type >= kExtractor) {
+          for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+            // TODO report, this crashes
+            //pd->sprite->moveTo(loc->m_building->m_sprite[zoom], 
+            //  (loc->m_building->m_pix_x + loc->m_pix_off_x - EXTRACTOR_PIX/2)*zoom, 
+            //  (loc->m_building->m_pix_y + loc->m_pix_off_y - EXTRACTOR_PIX/2)*zoom);
+          }
+        }
+      }
+    }
+  }
+
+  // TODO move all building collision sprites
+
 }
 
 
@@ -88,24 +125,7 @@ void chunkShiftTorus(bool _top, bool _left) {
     setChunkSpriteOffsets(BL, +TOT_WORLD_PIX_X, 0);
     setChunkSpriteOffsets(BR, 0, 0);
   }
-
 }
-/*
-void chunkShiftTorusHorizontal(bool _left) {
-  for (int32_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
-    struct Chunk_t* left = getChunk_noCheck(0, y);
-    struct Chunk_t* right = getChunk_noCheck(WORLD_CHUNKS_X-1, y);
-    if (_left) {
-      setChunkSpriteOffsets(left, 0, 0);
-      setChunkSpriteOffsets(right, -TOT_WORLD_PIX_X, 0);
-    } else {
-      setChunkSpriteOffsets(left, TOT_WORLD_PIX_X, 0);
-      setChunkSpriteOffsets(right, 0, 0);
-    }
-  }
-}
-*/
-
 
 void chunkAddBuilding(struct Chunk_t* _chunk, struct Building_t* _building) {
   _chunk->m_buildings[ _chunk->m_nBuildings ] = _building;

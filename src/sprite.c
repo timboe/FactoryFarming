@@ -1,7 +1,7 @@
 #include "sprite.h"
 #include "input.h"
 
-LCDBitmap* m_conveyorMasters[ZOOM_LEVELS][kDirN] = {NULL}; // Only 1, 2 and 4 are used
+LCDBitmap* m_conveyorMasters[2][kDirN] = {NULL}; // For two different speed settings
 
 LCDBitmapTable* m_sheet16;
 
@@ -80,22 +80,31 @@ LCDBitmap* getSprite48_byidx(uint32_t _idx, uint8_t _zoom) {
   return NULL;
 }
 
+// Note: Only works at zoom level 2
 void animateConveyor() {
   static int8_t tick = 0;
   tick = (tick + 1) % 8;
-  uint8_t zoom = getZoom();
 
   pd->graphics->setDrawMode(kDrawModeCopy);
   for (int32_t i = 0; i < kDirN; ++i) {
-    pd->graphics->pushContext(m_conveyorMasters[zoom][i]);
-    pd->graphics->drawBitmap(getSprite16(tick, CONV_START_Y + i, zoom), 0, 0, kBitmapUnflipped);
+    pd->graphics->setDrawMode(kDrawModeInverted);
+    pd->graphics->pushContext(m_conveyorMasters[1][i]);
+    pd->graphics->drawBitmap(getSprite16(tick, CONV_START_Y + i, 2), 0, 0, kBitmapUnflipped);
+    pd->graphics->popContext();
+
+    pd->graphics->setDrawMode(kDrawModeCopy);
+    pd->graphics->pushContext(m_conveyorMasters[0][i]);
+    pd->graphics->drawBitmap(getSprite16(tick, CONV_START_Y + i, 2), 0, 0, kBitmapUnflipped);
     pd->graphics->popContext();
   }
-
 }
 
-LCDBitmap* getConveyorMaster(uint8_t _zoom, enum kDir _dir) {
-  return m_conveyorMasters[_zoom][_dir];
+LCDBitmap* getConveyorMaster(enum kDir _dir, uint8_t _speed) {
+  switch (_speed) {
+    case 1: m_conveyorMasters[0][_dir];
+    case 2: m_conveyorMasters[1][_dir];
+  }
+  return NULL;
 }
 
 void setRoobert10() {
@@ -136,9 +145,8 @@ void initSprite() {
   populateResizedSprites();
 
   for (int32_t i = 0; i < kDirN; ++i) {
-    for (int32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
-      m_conveyorMasters[zoom][i] = pd->graphics->copyBitmap(getSprite16(0, CONV_START_Y + i, zoom));
-    }
+    m_conveyorMasters[0][i] = pd->graphics->copyBitmap(getSprite16(0, CONV_START_Y + i, 2));
+    m_conveyorMasters[1][i] = pd->graphics->copyBitmap(getSprite16(0, CONV_START_Y + i, 2));
   }
 
   m_fontRoobert24 = loadFontAtPath("fonts/Roobert-24-Medium");

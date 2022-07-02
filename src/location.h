@@ -17,6 +17,8 @@ struct Location_t{
   struct Chunk_t* m_chunk;
   uint16_t m_x; // In location coords
   uint16_t m_y;
+  int16_t m_pix_off_x; // Pixel offset
+  int16_t m_pix_off_y; // Pixel offset
 };
 
 

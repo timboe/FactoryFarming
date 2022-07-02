@@ -39,8 +39,8 @@ void plantUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
     else if (_building->m_stored[0] == 0)                   _building->m_stored[1] = 0;
     pd->sprite->moveTo(
       _building->m_location->m_cargo->m_sprite[_zoom], 
-      _building->m_pix_x*_zoom, 
-      (_building->m_pix_y - _building->m_stored[0])*_zoom);
+      (_building->m_pix_x + _building->m_location->m_pix_off_x)*_zoom, 
+      (_building->m_pix_y + _building->m_location->m_pix_off_y - _building->m_stored[0])*_zoom);
   }
 
   if (_building->m_progress > 0) return;

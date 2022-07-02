@@ -100,8 +100,8 @@ bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addedByPlaye
   }
 
   cargoSpriteSetup(cargo, 
-    TILE_PIX*_loc->m_x + TILE_PIX/2.0,
-    TILE_PIX*_loc->m_y + TILE_PIX/2.0,
+    TILE_PIX*_loc->m_x + _loc->m_pix_off_x + TILE_PIX/2.0,
+    TILE_PIX*_loc->m_y + _loc->m_pix_off_y + TILE_PIX/2.0,
     kCargoUIIcon[_type]);
 
   _loc->m_cargo = cargo;

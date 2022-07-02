@@ -3,6 +3,7 @@
 #include "../location.h"
 #include "../sprite.h"
 #include "../generate.h"
+#include "../ui.h"
 
 /// ///
 
@@ -32,10 +33,18 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
       }
 
       switch (direction) {
-        case SN:; pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], (_building->m_pix_x + hide)*_zoom, (_building->m_pix_y - _building->m_progress + hide)*_zoom); break;
-        case NS:; pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], (_building->m_pix_x + hide)*_zoom, (_building->m_pix_y + _building->m_progress + hide)*_zoom); break;
-        case EW:; pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], (_building->m_pix_x - _building->m_progress + hide)*_zoom, (_building->m_pix_y + hide)*_zoom); break;
-        case WE:; pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], (_building->m_pix_x + _building->m_progress + hide)*_zoom, (_building->m_pix_y + hide)*_zoom); break;
+        case SN:; pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], 
+            (_building->m_pix_x + loc->m_pix_off_x + hide)*_zoom, 
+            (_building->m_pix_y + loc->m_pix_off_y - _building->m_progress + hide)*_zoom); break;
+        case NS:; pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], 
+          (_building->m_pix_x + loc->m_pix_off_x + hide)*_zoom, 
+          (_building->m_pix_y + loc->m_pix_off_y + _building->m_progress + hide)*_zoom); break;
+        case EW:; pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], 
+          (_building->m_pix_x + loc->m_pix_off_x - _building->m_progress + hide)*_zoom, 
+          (_building->m_pix_y + loc->m_pix_off_y + hide)*_zoom); break;
+        case WE:; pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], 
+          (_building->m_pix_x + loc->m_pix_off_x + _building->m_progress + hide)*_zoom, 
+          (_building->m_pix_y + loc->m_pix_off_y + hide)*_zoom); break;
         case kDirN:; break;
       }
     }
@@ -203,6 +212,18 @@ void assignNeighborsConveyor(struct Building_t* _building) {
   }
 }
 
+void upgradeConveyor(struct Building_t* _building) {
+  if (!_building) return;
+  if (_building->m_type != kConveyor) return;
+  if (_building->m_stored[0] == 2) return; // Already upgraded
+  if (!getOwned(kUICatUtility, kConveyorGrease)) return;
+
+  modOwned(kUICatUtility, kConveyorGrease, /*add*/ false);
+  _building->m_stored[0] = 2;
+  pd->sprite->setImage(_building->m_sprite[2], getConveyorMaster(_building->m_dir, 2), kBitmapUnflipped);
+  renderChunkBackgroundImage(_building->m_location->m_chunk);
+}
+
 void buildingSetupConveyor(struct Building_t* _building) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
 
@@ -225,8 +246,10 @@ void buildingSetupConveyor(struct Building_t* _building) {
         _building->m_sprite[zoom] = pd->sprite->newSprite();
       }
       pd->sprite->setBounds(_building->m_sprite[zoom], bound);
-      pd->sprite->setImage(_building->m_sprite[zoom], getConveyorMaster(zoom, _building->m_dir), kBitmapUnflipped);
-      pd->sprite->moveTo(_building->m_sprite[zoom], _building->m_pix_x*zoom, _building->m_pix_y*zoom);
+      if (zoom == 2) pd->sprite->setImage(_building->m_sprite[zoom], getConveyorMaster(_building->m_dir, _building->m_stored[0]), kBitmapUnflipped);
+      pd->sprite->moveTo(_building->m_sprite[zoom], 
+        (_building->m_pix_x + _building->m_location->m_pix_off_x) * zoom, 
+        (_building->m_pix_y + _building->m_location->m_pix_off_y) * zoom);
       pd->sprite->setZIndex(_building->m_sprite[zoom], Z_INDEX_CONVEYOR);
     } else {
       if (_building->m_sprite[zoom] == NULL) {
