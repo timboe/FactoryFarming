@@ -1,5 +1,6 @@
 #pragma once
 #include "game.h"
+#include "player.h"
 
 // All Main Menu items should come after kMenuBuy
 enum kGameMode {kWanderMode, kPlaceMode, kBuildMode, kPlantMode, kPickMode, kInspectMode, kDestroyMode, kMenuBuy, kMenuSell, kMenuPlayer, kNGameModes};
@@ -61,6 +62,8 @@ LCDSprite* getCannotAffordSprite(void);
 LCDBitmap* getInfoBitmap(void);
 
 const char* getRotationAsString(void);
+
+const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n);
 
 void setUIContentHeader(int32_t _row, enum kUICat _c);
 

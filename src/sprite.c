@@ -15,6 +15,8 @@ LCDFont* m_fontRoobert24;
 
 LCDFont* m_fontRoobert10;
 
+LCDFont* m_fontCooperHewitt12;
+
 LCDBitmap* loadImageAtPath(const char* _path);
 
 LCDBitmapTable* loadImageTableAtPath(const char* _path);
@@ -107,6 +109,10 @@ LCDBitmap* getConveyorMaster(enum kDir _dir, uint8_t _speed) {
   return NULL;
 }
 
+void setCooperHewitt12() {
+  pd->graphics->setFont(m_fontCooperHewitt12);
+}
+
 void setRoobert10() {
   pd->graphics->setFont(m_fontRoobert10);
 }
@@ -118,6 +124,15 @@ void setRoobert24() {
 LCDFont* getRoobert24() {
   return m_fontRoobert24;
 }
+
+LCDFont* getRoobert10(void) {
+  return m_fontRoobert10;
+}
+
+LCDFont* getCooperHewitt12(void) {
+  return m_fontCooperHewitt12;
+}
+
 
 void populateResizedSprites() {
   for (uint32_t zoom = 2; zoom < ZOOM_LEVELS; ++zoom) {
@@ -151,6 +166,7 @@ void initSprite() {
 
   m_fontRoobert24 = loadFontAtPath("fonts/Roobert-24-Medium");
   m_fontRoobert10 = loadFontAtPath("fonts/Roobert-10-Bold");
+  m_fontCooperHewitt12  = loadFontAtPath("fonts/CooperHewitt-Light");
   pd->graphics->setFont(m_fontRoobert24);
 
 }

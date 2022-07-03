@@ -3,6 +3,8 @@
 #include "building.h"
 #include "cargo.h"
 
+enum kUITutorialStage{kTutWelcome, kTutPlantCarrots, kTutGetCarrots, kTutSellCarrots, kTutBuildHarvester, kTutBuildConveyor, kTutBuildQuarry, kTutBuildVitamin, kTuTFinished, kNTutorialStages};
+
 enum kToolType{kToolPickup, kToolInspect, kToolDestroy, kNToolTypes};
 extern const uint16_t kToolUIIcon[];
 
@@ -18,6 +20,8 @@ struct Player_t{
   uint32_t m_moneyCumulative;
   uint32_t m_moneyHighWaterMark;
   uint32_t m_saveTime;
+  uint32_t m_playTime;
+  uint8_t m_tutorialProgress; // On each individual stage
   uint16_t m_carryCargo[kNCargoType];
   uint16_t m_carryConveyor[kNConvSubTypes];
   uint16_t m_carryUtility[kNUtilitySubTypes];
@@ -30,6 +34,7 @@ struct Player_t{
   uint8_t m_autoUseConveyorBooster;
   uint8_t m_enableConveyorAnimation;
   uint8_t m_enableTutorial;
+  uint8_t m_enableDebug;
 
   // Transient   
   LCDSprite* m_sprite[ZOOM_LEVELS]; // Index 0 not used - OWNED
@@ -63,6 +68,14 @@ struct Location_t* getPlayerLocation(void);
 struct Location_t* getPlayerLookingAtLocation(void);
 
 void setPlayerLookingAtOffset(int8_t _offset);
+
+enum kUITutorialStage getTutorialStage(void);
+
+void makeTutorialProgress(void);
+
+uint8_t getTutorialProgress(void);
+
+void nextTutorialStage(void);
 
 bool movePlayer(void);
 

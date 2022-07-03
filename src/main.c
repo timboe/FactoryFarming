@@ -33,8 +33,10 @@ static void init(void) {
   scanSlots();
 
   if (hasSaveData()) {
+    pd->system->logToConsole("Main: Requesting load");
     menuOptionsCallbackLoad(NULL);
   } else {
+    pd->system->logToConsole("Main: Requesting generate");
     menuOptionsCallbackRestart(NULL);
   }
 }

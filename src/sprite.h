@@ -5,11 +5,17 @@ void initSprite(void);
 
 void animateConveyor(void);
 
+void setCooperHewitt12(void);
+
 void setRoobert10(void);
 
 void setRoobert24(void);
 
 LCDFont* getRoobert24(void);
+
+LCDFont* getRoobert10(void);
+
+LCDFont* getCooperHewitt12(void);
 
 LCDBitmap* getSprite16(uint32_t _x, uint32_t _y, uint8_t _zoom);
 

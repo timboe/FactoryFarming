@@ -197,6 +197,8 @@ int gameLoop(void* _data) {
 
   render();
 
+  getPlayer()->m_playTime += 1;
+
   return 1;
 }
 

@@ -12,6 +12,7 @@
 #include "cargo.h"
 #include "render.h"
 #include "buildings/special.h"
+#include "buildings/factory.h"
 
 enum kGameMode m_mode;
 
@@ -27,10 +28,8 @@ LCDBitmap* m_UIBitmapTop;
 int16_t m_UITopOffset = 0;
 bool m_UITopVisible = false;
 
-#ifdef DEV
 LCDBitmap* m_UIBitmapDev;
 LCDSprite* m_UISpriteDev;
-#endif
 
 bool m_UIDirtyBottom = false;
 
@@ -50,16 +49,25 @@ LCDBitmap* m_UIBitmapInfo;
 LCDSprite* m_UISpriteFull; // Main window backing
 LCDBitmap* m_UIBitmapFull;
 
+#define INGREDIENTS_WIDTH (TILE_PIX*10)
+#define INGREDIENTS_HEIGHT (TILE_PIX*6)
+LCDSprite* m_UISpriteIngredients; // Main window backing
+LCDBitmap* m_UIBitmapIngredients[kNFactorySubTypes];
+
+LCDSprite* m_UISpriteIngredients; // Main window backing
+LCDBitmap* m_UIBitmapIngredients[kNFactorySubTypes];
+
+LCDSprite* m_UISpriteTutorialMain; 
+LCDBitmap* m_UIBitmapTutorialMain[kNFactorySubTypes];
+
+LCDSprite* m_UISpriteTutorialHint; 
+LCDBitmap* m_UIBitmapTutorialHint[kNFactorySubTypes];
+
 LCDSprite* m_UISpriteHeaders[kNUICats]; // Category headers: Crops. Conveyors. Utility. Harvesters. Factories. 
 LCDBitmap* m_UIBitmapHeaders[kNUICats]; // Category headers: Crops. Conveyors. Utility. Harvesters. Factories. 
 
-
-
-
 LCDSprite* m_UISpriteItems[kNUICats][MAX_PER_CAT][4]; // Final 4 is for rotation states
 LCDBitmap* m_UIBitmapItems[kNUICats][MAX_PER_CAT][4];
-
-
 
 uint16_t m_selCol = 0, m_selRow = 1, m_selRotation = 0;
 uint16_t m_selRowOffset = 0, m_cursorRowAbs = 1;
@@ -230,12 +238,18 @@ void updateBlueprint() {
 }
 
 void addUIToSpriteList() {
+  struct Player_t* p = getPlayer();
   pd->sprite->addSprite(m_UISpriteBottom);
   pd->sprite->addSprite(m_UISpriteTop);
   pd->sprite->addSprite(m_UISpriteRight);
-  #ifdef DEV
-  pd->sprite->addSprite(m_UISpriteDev);
-  #endif
+  if (p->m_enableDebug) {
+    pd->sprite->addSprite(m_UISpriteDev);
+  }
+
+  if (p->m_enableTutorial < kNTutorialStages) {
+    pd->sprite->addSprite(m_UISpriteTutorialMain);
+    pd->sprite->addSprite(m_UISpriteTutorialHint);
+  }
 
   if (m_mode >= kMenuBuy) {
     pd->sprite->addSprite(m_UISpriteFull);
@@ -243,6 +257,7 @@ void addUIToSpriteList() {
     pd->sprite->addSprite(m_UISpriteSelected);
     pd->sprite->addSprite(m_UISpriteCannotAfford);
     pd->sprite->addSprite(m_UISpriteInfo);
+    pd->sprite->addSprite(m_UISpriteIngredients);
     for (enum kUICat c = 0; c < kNUICats; ++c) {
       if (m_UISpriteHeaders[c] != NULL) {
         pd->sprite->addSprite(m_UISpriteHeaders[c]);
@@ -306,20 +321,20 @@ void drawUIBottom() {
   static char text[128];
   setRoobert10();
 
-  #ifdef DEV
-  snprintf(text, 128, "SL:%u, NT:%u, FT:%u, B:%u, C:%u", 
-    pd->sprite->getSpriteCount(), getNearTickCount(), getFarTickCount(), getNBuildings(), getNCargo() );
-  pd->graphics->pushContext(m_UIBitmapDev);
-  pd->graphics->fillRect(0, 0, DEVICE_PIX_X, TILE_PIX, kColorClear);
-  pd->graphics->setDrawMode(kDrawModeFillBlack);
-  pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX + 1, 0);
-  pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX, +1);
-  pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX - 1, 0);
-  pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX, -1);
-  pd->graphics->setDrawMode(kDrawModeFillWhite);
-  pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX, 0);
-  pd->graphics->popContext();
-  #endif
+  if (getPlayer()->m_enableDebug) {
+    snprintf(text, 128, "SL:%u, NT:%u, FT:%u, B:%u, C:%u", 
+      pd->sprite->getSpriteCount(), getNearTickCount(), getFarTickCount(), getNBuildings(), getNCargo() );
+    pd->graphics->pushContext(m_UIBitmapDev);
+    pd->graphics->fillRect(0, 0, DEVICE_PIX_X, TILE_PIX, kColorClear);
+    pd->graphics->setDrawMode(kDrawModeFillBlack);
+    pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX + 1, 0);
+    pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX, +1);
+    pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX - 1, 0);
+    pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX, -1);
+    pd->graphics->setDrawMode(kDrawModeFillWhite);
+    pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX, 0);
+    pd->graphics->popContext();
+  }
 
   pd->graphics->pushContext(m_UIBitmapBottom);
   pd->graphics->fillRect(0, 0, DEVICE_PIX_X, TILE_PIX, kColorBlack);
@@ -640,6 +655,16 @@ void drawUIMain() {
   LCDSprite* selectedSprite = m_contentSprite[m_selRow][m_selCol];
   pd->sprite->setImage(m_UISpriteSelected, pd->sprite->getImage(selectedSprite), kBitmapUnflipped);
 
+  // INGREDIENTS
+  if (m_contentCat[m_selRow][m_selCol] == kUICatFactory) {
+    int32_t x = UISTARTX + (m_selCol < ROW_WDTH/2 + 1 ? TILE_PIX*14 : TILE_PIX*4);
+    pd->sprite->setImage(m_UISpriteIngredients, m_UIBitmapIngredients[getUIContentID()], kBitmapUnflipped);
+    pd->sprite->moveTo(m_UISpriteIngredients, x, TILE_PIX*8);
+    pd->sprite->setVisible(m_UISpriteIngredients, 1);
+  } else {
+   pd->sprite->setVisible(m_UISpriteIngredients, 0);
+  }
+
   // CUSTOM TOP AREA
   switch (getGameMode()) {
     case kMenuBuy:; populateInfoBuy(visible); break;
@@ -649,7 +674,6 @@ void drawUIMain() {
   }
 
 }
-
 
 void setGameMode(enum kGameMode _mode) {
   m_mode = _mode;
@@ -721,14 +745,12 @@ void initiUI() {
   pd->sprite->setZIndex(m_UISpriteBottom, Z_INDEX_UI_BOTTOM);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteBottom, 1);
 
-  #ifdef DEV
   m_UIBitmapDev = pd->graphics->newBitmap(DEVICE_PIX_X, TILE_PIX, kColorClear);
   m_UISpriteDev = pd->sprite->newSprite();
   pd->sprite->setBounds(m_UISpriteDev, boundBottom);
   pd->sprite->setImage(m_UISpriteDev, m_UIBitmapDev, kBitmapUnflipped);
   pd->sprite->setZIndex(m_UISpriteDev, Z_INDEX_UI_BOTTOM);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteDev, 1);
-  #endif
 
   PDRect boundRight = {.x = 0, .y = 0, .width = DEVICE_PIX_X, .height = TILE_PIX};
   pd->sprite->setBounds(m_UISpriteRight, boundRight);
@@ -747,10 +769,15 @@ void initiUI() {
   roundedRect(11, TILE_PIX*22, TILE_PIX*12, TILE_PIX, kColorWhite);
   pd->graphics->popContext();
 
+  #define TUTORIAL_WIDTH DEVICE_PIX_X
+  #define TUTORIAL_HEIGHT (TILE_PIX*6)
+
   PDRect fBound = {.x = 0, .y = 0, .width = TILE_PIX*22, .height = TILE_PIX*12};
   PDRect cBound = {.x = 0, .y = 0, .width = TILE_PIX*10, .height = TILE_PIX*2};
   PDRect iBound = {.x = 0, .y = 0, .width = TILE_PIX*2, .height = TILE_PIX*2};
   PDRect infoBound = {.x = 0, .y = 0, .width = TILE_PIX*18, .height = TILE_PIX*2};
+  PDRect ingBound = {.x = 0, .y = 0, .width = INGREDIENTS_WIDTH, .height = INGREDIENTS_HEIGHT};
+  PDRect tutBound = {.x = 0, .y = 0, .width = TUTORIAL_WIDTH, .height = TUTORIAL_HEIGHT};
 
   m_UISpriteFull = pd->sprite->newSprite();
   pd->sprite->setBounds(m_UISpriteFull, fBound);
@@ -779,13 +806,57 @@ void initiUI() {
   pd->sprite->moveTo(m_UISpriteCannotAfford, TILE_PIX*3, TILE_PIX*3);
 
   m_UIBitmapInfo = pd->graphics->newBitmap(TILE_PIX*18, TILE_PIX*2, kColorClear);
-
   m_UISpriteInfo = pd->sprite->newSprite();
   pd->sprite->setBounds(m_UISpriteInfo, infoBound);
   pd->sprite->setImage(m_UISpriteInfo, m_UIBitmapInfo, kBitmapUnflipped);
   pd->sprite->setZIndex(m_UISpriteInfo, Z_INDEX_UI_M);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteInfo, 1);
   pd->sprite->moveTo(m_UISpriteInfo, TILE_PIX*(9+4), TILE_PIX*3);
+
+  // Populate Tutorial
+
+  m_UISpriteTutorialMain = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteTutorialMain, tutBound);
+  pd->sprite->setZIndex(m_UISpriteTutorialMain, Z_INDEX_UI_T);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteTutorialMain, 1);
+  pd->sprite->moveTo(m_UISpriteTutorialMain, TUTORIAL_WIDTH/2, TILE_PIX*12);
+
+  m_UISpriteTutorialHint = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteTutorialHint, tutBound);
+  pd->sprite->setZIndex(m_UISpriteTutorialHint, Z_INDEX_UI_M);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteTutorialHint, 1);
+  pd->sprite->moveTo(m_UISpriteTutorialHint, TUTORIAL_WIDTH/2, TILE_PIX*12);
+
+  #define TUT_Y_SPACING 13
+  #define Y_SHFT 4
+  char text[128];
+  for (int32_t t = 0; t < kNTutorialStages; ++t) {
+    uint8_t y = 0;
+    m_UIBitmapTutorialMain[t] = pd->graphics->newBitmap(TUTORIAL_WIDTH, TUTORIAL_HEIGHT, kColorWhite);
+    pd->graphics->pushContext(m_UIBitmapTutorialMain[t]);
+    pd->graphics->drawRect(0, 0, TUTORIAL_WIDTH, TUTORIAL_HEIGHT, kColorBlack);
+    pd->graphics->drawRect(3, 3, TUTORIAL_WIDTH-6, TUTORIAL_HEIGHT-6, kColorBlack);
+    pd->graphics->drawRect(4, 4, TUTORIAL_WIDTH-8, TUTORIAL_HEIGHT-8, kColorBlack);
+    pd->graphics->drawBitmap(getSprite16(9, 10, 2), TILE_PIX/2, TILE_PIX/2 - Y_SHFT, kBitmapUnflipped);
+    pd->graphics->drawBitmap(getSprite16(9, 10, 2), TUTORIAL_WIDTH - (TILE_PIX/2) - TILE_PIX*2, TILE_PIX/2 - Y_SHFT, kBitmapUnflipped);
+    pd->graphics->drawBitmap(getSprite16(10, 10, 1), TUTORIAL_WIDTH - (TILE_PIX/2) - TILE_PIX, TUTORIAL_HEIGHT - (TILE_PIX/2) - TILE_PIX, kBitmapUnflipped);
+    pd->graphics->setDrawMode(kDrawModeFillBlack);
+    setRoobert10();
+    //fff
+    snprintf(text, 128, "--- Tutorial Stage %u/%u ---", (unsigned) t+1, (unsigned) kNTutorialStages);
+    int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, 128, kASCIIEncoding, 0);
+    pd->graphics->drawText(text, 128, kASCIIEncoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - Y_SHFT);
+    for (int32_t l = 0; l < 5; ++l) {
+      const char* txt = toStringTutorial(t, l);
+      width = pd->graphics->getTextWidth(getRoobert10(), txt, 128, kUTF8Encoding, 0);
+      pd->graphics->drawText(txt, width, kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - Y_SHFT);
+    }
+    pd->graphics->setDrawMode(kDrawModeCopy);
+  }
+  // temp
+  pd->sprite->setImage(m_UISpriteTutorialMain, m_UIBitmapTutorialMain[8], kBitmapUnflipped);
+
+  // Populate main UI
 
   setRoobert24();
 
@@ -847,6 +918,125 @@ void initiUI() {
     }
   }
 
+  // Populate Ingredients
+
+  m_UISpriteIngredients = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteIngredients, ingBound);
+  pd->sprite->setZIndex(m_UISpriteIngredients, Z_INDEX_UI_T);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteIngredients, 1);
+
+  #define ING_X_START 6
+  #define ING_Y_START 20
+  #define ING_ROW_SIZE 12
+  #define ING_ROW_MAX (INGREDIENTS_WIDTH - (ING_X_START*2))
+  uint8_t textSize = pd->graphics->getFontHeight(getRoobert10());
+  for (enum kFactorySubType fac = 0; fac < kNFactorySubTypes; ++fac) {
+    m_UIBitmapIngredients[fac] = pd->graphics->newBitmap(INGREDIENTS_WIDTH, INGREDIENTS_HEIGHT, kColorWhite);
+    pd->graphics->pushContext(m_UIBitmapIngredients[fac]);
+    pd->graphics->drawRect(0, 0, INGREDIENTS_WIDTH, INGREDIENTS_HEIGHT, kColorBlack);
+    pd->graphics->drawRect(3, 3, INGREDIENTS_WIDTH-6, INGREDIENTS_HEIGHT-6, kColorBlack);
+    pd->graphics->drawRect(4, 4, INGREDIENTS_WIDTH-8, INGREDIENTS_HEIGHT-8, kColorBlack);
+    pd->graphics->setDrawMode(kDrawModeFillBlack);
+    setRoobert10();
+    pd->graphics->drawText("Ingredients:", 12, kASCIIEncoding, 6, 6);
+    int16_t cur_x = ING_X_START;
+    int16_t cur_y = ING_Y_START;
+    for (int32_t w = 0; w < getNIngreindientsText(fac); ++w) {
+      bool isFlavourText;
+      const char* str = toStringIngredients(fac, w, &isFlavourText);
+      isFlavourText ? setCooperHewitt12() : setRoobert10();
+      int16_t len = strlen(str);
+      int32_t width = pd->graphics->getTextWidth(isFlavourText ? getCooperHewitt12() : getRoobert10(), str, len, kASCIIEncoding, 0);
+      if (cur_x + width > ING_ROW_MAX) {
+        cur_y += textSize;
+        cur_x = ING_X_START;
+      }
+      pd->graphics->drawText(str, len, kASCIIEncoding, cur_x, cur_y);
+      cur_x += width;
+    }
+    pd->graphics->popContext();
+  }
+
   UIDirtyBottom();
   UIDirtyRight();
+}
+
+
+const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
+  switch (_stage) {
+    case kTutWelcome:;
+      switch (_n) {
+        case 0: return "-- The Initial Seed Purchase --";
+        case 1: return "Welcome to Factory Farming! There's money to be";
+        case 2: return "made, and it won't make itself! So let's get started by";
+        case 3: return "vising The Shop with Ⓐ and buying some Carrot";
+        case 4: return "Seeds. Use Ⓑ to exit any mode or menu.";
+      }
+    case kTutPlantCarrots:;
+      switch (_n) {
+        case 0: return "-- The First Crops --";
+        case 1: return "Good, carrots will grow well in the Silty Soil near to the";
+        case 2: return "shop. Pay attention to the Soil & Water each plant likes.";
+        case 3: return "Find a good nearby spot, open your inventory";
+        case 4: return "with Ⓐ, select the seeds, and plant 10 Carrots.";
+      }
+    case kTutGetCarrots:;
+      switch (_n) {
+        case 0: return "-- The First Harvest --";
+        case 1: return "Great, crops normally take some time to yield produce,";
+        case 2: return "but let's speed up these carrot plants. Press Ⓐ and";
+        case 3: return "enter 'Pickup Mode' and harvest 10 grown carrots.";
+        case 4: return "You can pickup any cargo in the world, or in buildings.";
+      }
+    case kTutSellCarrots:;
+      switch (_n) {
+        case 0: return "-- The First Sale --";
+        case 1: return "Nice, you know what we can do with Cargo like those";
+        case 2: return "fresh Carrots? Sell them for a profit! Visit the Sales Box";
+        case 3: return "(next to The Shop) and press Ⓐ to access the";
+        case 4: return "sales menu. Sell 10 carrots to continue.";
+      }
+    case kTutBuildHarvester:;
+      switch (_n) {
+        case 0: return "-- The First Automated Harvest --";
+        case 1: return "Sweet, but that was a lot of manual labor... Let's";
+        case 2: return "use an Automatic Harvester instead! Buy one from";
+        case 3: return "The Shop and build it where some Carrot Plants are";
+        case 4: return "within its harvest catchment area.";
+      }
+    case kTutBuildConveyor:;
+      switch (_n) {
+        case 0: return "-- The First Cargo Line --";
+        case 1: return "Good, We're harvesting Carrots. But we need to get them";
+        case 2: return "to the Sales Box. We need Conveyor Belts! Buy around";
+        case 3: return "50 from The Shop and lay the path to move & sell";
+        case 4: return "sell the carrots. Rotate belt pieces with The Crank.";
+      }
+    case kTutBuildQuarry:
+      switch (_n) {
+        case 0: return "-- Mining The Earth --";
+        case 1: return "OK. But not all exploitable resources are grown.";
+        case 2: return "Some are dug up, or pumped out. Let's build a Chalk";
+        case 3: return "Mine next. Buy one from The Shop and build it on";
+        case 4: return "Chalky Soil. There should be some to the South.";
+      }
+    case kTutBuildVitamin:
+      switch (_n) {
+        case 0: return "-- Mining The Earth --";
+        case 1: return "Nice. We can finally set up a full production line!";
+        case 2: return "Buy a Vitamin Factory from The Shop, supply it with";
+        case 3: return "both Chalk and Carrots, and transport the Vitamins";
+        case 4: return "to the Sales Box for a much bigger profit!";
+      }
+    case kTuTFinished:
+      switch (_n) {
+        case 0: return "-- Go Forth And Consume --";
+        case 1: return "Excellent! You now know all the basics of exploiting";
+        case 2: return "the world for profit. As your bank account swells,";
+        case 3: return "more Crops, Factories, and other items will unlock.";
+        case 4: return "Use them well to maximise profit.";
+      }
+    default: return " ";
+  }
+  return " ";
 }

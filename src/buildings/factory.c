@@ -103,3 +103,32 @@ void buildingSetupFactory(struct Building_t* _building) {
   }
 
 }
+
+uint16_t getNIngreindientsText(enum kFactorySubType _type) {
+  switch (_type) {
+    case kVitiminFac:; return 11;
+    default: return 0;
+  }
+  return 0;
+}
+
+const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _isFlavour) {
+  *_isFlavour = true;
+  switch (_type) {
+    case kVitiminFac:;
+      switch (_n) {
+        case 0: return "Gelatin, ";
+        case 1: return "Glycerin, ";
+        case 2: return "Beta-";
+        case 3: return "Carotene ";
+        case 4: *_isFlavour = false; return "(Carrots)";
+        case 5: return ", ";
+        case 6: return "Soy ";
+        case 7: return "Lecithin, ";
+        case 8: return "Calcium ";
+        case 9: return "Carbonate ";
+        case 10: *_isFlavour = false; return "(Chalk)";
+      }
+    default: return "";
+  }
+}

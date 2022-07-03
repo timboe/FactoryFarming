@@ -23,9 +23,9 @@ void render() {
   }
 
   // Draw FPS indicator (dbg only)
-  #ifdef DEBUG_MODE
-  pd->system->drawFPS(0, 0);
-  #endif 
+  if (getPlayer()->m_enableDebug) {
+    pd->system->drawFPS(0, 0);
+  }
 }
 
 void chunkAddToRender(struct Chunk_t* _chunk, uint8_t _zoom) {

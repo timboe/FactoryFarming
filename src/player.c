@@ -14,25 +14,26 @@ struct Player_t m_player;
 
 int16_t m_offX, m_offY = 0; // Screen offsets
 
-uint8_t m_facing;
+uint8_t m_facing = 0;
 
-uint8_t m_lookingAtOffset;
+uint8_t m_lookingAtOffset = 0;
 
 bool m_updateLookingAt = false;
 
 uint16_t m_deserialiseXPlayer = 0, m_deserialiseYPlayer = 0;
 int16_t m_deserialiseArrayID = -1;
 
-struct Chunk_t* m_currentChunk;
+struct Chunk_t* m_currentChunk = NULL;
 
 enum kChunkQuad m_quadrant = 0;
 
-struct Location_t* m_currentLocation;
+struct Location_t* m_currentLocation = NULL;
 
-struct Location_t* m_lookingAt;
+struct Location_t* m_lookingAt = NULL;
 
 bool m_top = true;
 bool m_left = true;
+bool m_forceTorus = true;
 
 void setPlayerPosition(uint16_t _x, uint16_t _y);
 
@@ -60,6 +61,23 @@ const char* toStringToolInfo(enum kToolType _type) {
     case kToolDestroy: return "Destroys buildings, belts and cargo";
     default: return "Tool???";
   }
+}
+
+enum kUITutorialStage getTutorialStage() {
+  return (enum kUITutorialStage) m_player.m_enableTutorial;
+}
+
+void makeTutorialProgress() {
+  ++m_player.m_tutorialProgress;
+}
+
+uint8_t getTutorialProgress() {
+  return m_player.m_tutorialProgress;
+}
+
+void nextTutorialStage() {
+  ++m_player.m_enableTutorial;
+  m_player.m_tutorialProgress = 0;
 }
 
 int16_t getOffX() {
@@ -151,7 +169,12 @@ bool movePlayer() {
   */
 
   // TODO proper movement penalty / bonus
-  int16_t speed = isWaterTile(m_currentLocation->m_x, m_currentLocation->m_y) ? 2 : 4;
+  int16_t speed = 4;
+  //if (m_currentLocation != NULL) {
+  //  if (isWaterTile(m_currentLocation->m_x, m_currentLocation->m_y)) {
+  //    speed = 2;
+  //  }
+  //}
 
   if (getPressed(0)) { goalX -= speed / zoom; m_facing = 0; } 
   if (getPressed(1)) { goalX += speed / zoom; m_facing = 1; }
@@ -263,8 +286,9 @@ bool movePlayer() {
     torusChanged = true;
   }
 
-  if (torusChanged) {
+  if (torusChanged || m_forceTorus) {
     chunkShiftTorus(m_top, m_left);
+    m_forceTorus = false;
   }
 
   return true;
@@ -343,6 +367,9 @@ void resetPlayer() {
   m_player.m_moneyCumulative = 0;
   m_player.m_moneyHighWaterMark = 0;
   m_player.m_saveTime = pd->system->getSecondsSinceEpoch(NULL);
+  m_player.m_playTime = 0;
+  m_player.m_tutorialProgress = 0;
+  if (m_player.m_enableTutorial != 255) m_player.m_enableTutorial = 0; // 255 is disabled
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_carryCargo[i] = 0;
   for (int32_t i = 0; i < kNConvSubTypes; ++i) m_player.m_carryConveyor[i] = 0;
   for (int32_t i = 0; i < kNUtilitySubTypes; ++i) m_player.m_carryUtility[i] = 0;
@@ -351,6 +378,7 @@ void resetPlayer() {
   for (int32_t i = 0; i < kNFactorySubTypes; ++i) m_player.m_carryFactory[i] = 0;
   setPlayerPosition(SCREEN_PIX_X/2, SCREEN_PIX_Y/2);
   m_currentChunk = getChunk_noCheck(0,0);
+  m_forceTorus = true;
 }
 
 
@@ -375,8 +403,11 @@ void serialisePlayer(struct json_encoder* je) {
   je->writeInt(je, m_player.m_moneyCumulative);
   je->addTableMember(je, "st", 2);
   je->writeInt(je, pd->system->getSecondsSinceEpoch(NULL));
-  je->addTableMember(je, "sg", 2);
-  je->writeInt(je, m_player.m_enableTutorial);
+  je->addTableMember(je, "pt", 2);
+  je->writeInt(je, m_player.m_playTime);
+  je->addTableMember(je, "tutstage", 8);
+  je->writeInt(je, m_player.m_tutorialProgress);
+
   je->addTableMember(je, "slot", 4);
   je->writeInt(je, getSlot());
 
@@ -387,6 +418,10 @@ void serialisePlayer(struct json_encoder* je) {
   je->writeInt(je, m_player.m_autoUseConveyorBooster);
   je->addTableMember(je, "setc", 4);
   je->writeInt(je, m_player.m_enableConveyorAnimation); 
+  je->addTableMember(je, "sett", 4);
+  je->writeInt(je, m_player.m_enableTutorial);
+  je->addTableMember(je, "setd", 2);
+  je->writeInt(je, m_player.m_enableDebug);
   
   je->addTableMember(je, "cargos", 6);
   je->startArray(je);
@@ -455,8 +490,10 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_player.m_moneyCumulative = json_intValue(_value);
   } else if (strcmp(_key, "st") == 0) {
     m_player.m_saveTime = json_intValue(_value);
-  } else if (strcmp(_key, "sg") == 0) {
-    m_player.m_enableTutorial = json_intValue(_value);
+  } else if (strcmp(_key, "pt") == 0) {
+    m_player.m_playTime = json_intValue(_value);
+  } else if (strcmp(_key, "tutstage") == 0) {
+    m_player.m_tutorialProgress = json_intValue(_value);
   } else if (strcmp(_key, "slot") == 0) {
     setSlot( json_intValue(_value) ); 
   } else if (strcmp(_key, "sets") == 0) {
@@ -464,7 +501,11 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
   } else if (strcmp(_key, "setb") == 0) {
     m_player.m_autoUseConveyorBooster = json_intValue(_value); 
   } else if (strcmp(_key, "setc") == 0) {
-    m_player.m_enableConveyorAnimation = json_intValue(_value); 
+    m_player.m_enableConveyorAnimation = json_intValue(_value);
+  } else if (strcmp(_key, "sett") == 0) {
+    m_player.m_enableTutorial = json_intValue(_value);
+  } else if (strcmp(_key, "setd") == 0) {
+    m_player.m_enableDebug = json_intValue(_value); 
     m_deserialiseArrayID = 0; // Note "one behind"
   } else if (strcmp(_key, "cargos") == 0) {
     m_deserialiseArrayID = 1;

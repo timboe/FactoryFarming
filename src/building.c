@@ -26,10 +26,10 @@ uint16_t m_deserialiseIndexBuilding = 0;
 struct Building_t* m_buildings;
 
 // Note: User can never themselves build a kTunnelOut
-//                             {kBelt,    kSplitI,  kSplitL,  kSplitT,  kTunnelIn, kTunnelOut, kFilterI,  kFilterL, kNConvSubTypes};
+//                             {kBelt,    kSplitL,  kSplitI,  kSplitT,  kTunnelIn, kTunnelOut, kFilterL,  kFilterI, kNConvSubTypes};
 const uint32_t kConvUnlock[] = {0,        0,        0,        0,        0,         UINT32_MAX, 0,         0};
 const uint16_t kConvPrice[]  = {1,        1,        1,        1,        1,         1,          1,         1};
-const uint16_t kConvUIIcon[] = {SID(0,3), SID(0,4), SID(4,3), SID(4,4), SID(8,3),  SID(8,3),   SID(12,4), SID(8,4)};
+const uint16_t kConvUIIcon[] = {SID(0,3), SID(4,3), SID(0,4), SID(4,4), SID(8,3),  SID(8,3),   SID(8,4),  SID(12,4)};
 
 //                                          {kCarrotPlant, kAppleTree,    kWheatPlant,  kP4,          klP5,         kP6,          kP7,          kP8,          kP9,          kP10,         kP11,         kP12};
 const uint32_t kPlantUnlock[]             = {0,            0,             0,            0,            0,            0,            0,            0,            0,            0,            0,            0};
@@ -49,17 +49,17 @@ const uint16_t kExtractorPrice[]  = {1,                   1,          1,        
 const uint16_t kExtractorUIIcon[] = {SID(4,2),            SID(12,11), SID(12,12),   SID(4,2)};
 const uint16_t kExtractorSprite[] = {BID(0,0),            BID(0,3),   BID(0,5),     BID(0,0)};
 
-//                                  {kVitiminFac, kNFactorySubTypes};
-const uint32_t kFactoryUnlock[]     = {0};
-const uint16_t kFactoryPrice[]      = {1};
-const uint16_t kFactoryTime[]       = {1};
-const uint16_t kFactorySprite[]     = {BID(0,4)};
-const enum kCargoType kFactoryOut[] = {kVitamin};
-const enum kCargoType kFactoryIn1[] = {kCarrot};
-const enum kCargoType kFactoryIn2[] = {kChalk};
-const enum kCargoType kFactoryIn3[] = {kNoCargo};
-const enum kCargoType kFactoryIn4[] = {kNoCargo};
-const enum kCargoType kFactoryIn5[] = {kNoCargo};
+//                                    {kVitiminFac, kF2,      kF3,      kF4,      kF5,      kF6,      kF7,      kF8,      kF9,      k10,      kF11 kNFactorySubTypes};
+const uint32_t kFactoryUnlock[]     = {0,           0,        0,        0,        0,        0,        0,        0,        0,        0,        0,};
+const uint16_t kFactoryPrice[]      = {1,           1,        1,        1,        1,        1,        1,        1,        1,        1,        1};
+const uint16_t kFactoryTime[]       = {1,           1,        1,        1,        1,        1,        1,        1,        1,        1,        1};
+const uint16_t kFactorySprite[]     = {BID(0,4),    BID(0,4), BID(0,4), BID(0,4), BID(0,4), BID(0,4), BID(0,4), BID(0,4), BID(0,4), BID(0,4), BID(0,4)};
+const enum kCargoType kFactoryOut[] = {kVitamin,    kVitamin, kVitamin, kVitamin, kVitamin, kVitamin, kVitamin, kVitamin, kVitamin, kVitamin, kVitamin};
+const enum kCargoType kFactoryIn1[] = {kCarrot,     kCarrot,  kCarrot,  kCarrot,  kCarrot,  kCarrot,  kCarrot,  kCarrot,  kCarrot,  kCarrot,  kCarrot};
+const enum kCargoType kFactoryIn2[] = {kChalk,      kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo};
+const enum kCargoType kFactoryIn3[] = {kNoCargo,    kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo};
+const enum kCargoType kFactoryIn4[] = {kNoCargo,    kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo};
+const enum kCargoType kFactoryIn5[] = {kNoCargo,    kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo};
 
 void buildingSetup(struct Building_t* _building);
 
@@ -107,6 +107,7 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
     }
     case kFactory: switch (_subType.factory) {
       case kVitiminFac: return "Vitamin Factory";
+      case kF2: case kF3: case kF4: case kF5: case kF6: case kF7: case kF8: case kF9: case kF10: case kF11: return "FPlaceholder"; 
       case kNFactorySubTypes: return "";
     }
     case kSpecial: switch (_subType.special) {
@@ -121,6 +122,8 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
   }
   return "";
 }
+
+
 
 uint16_t getNBuildings() {
   return m_nBuildings;

@@ -12,3 +12,5 @@ uint8_t getSlot(void);
 void scanSlots(void);
 
 bool hasSaveData(void);
+
+void hardReset(void);
