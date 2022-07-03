@@ -247,7 +247,7 @@ void addUIToSpriteList() {
   }
 
   if (p->m_enableTutorial < kNTutorialStages) {
-    pd->sprite->addSprite(m_UISpriteTutorialMain);
+    //pd->sprite->addSprite(m_UISpriteTutorialMain);
     pd->sprite->addSprite(m_UISpriteTutorialHint);
   }
 
@@ -848,13 +848,32 @@ void initiUI() {
     pd->graphics->drawText(text, 128, kASCIIEncoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - Y_SHFT);
     for (int32_t l = 0; l < 5; ++l) {
       const char* txt = toStringTutorial(t, l);
-      width = pd->graphics->getTextWidth(getRoobert10(), txt, 128, kUTF8Encoding, 0);
-      pd->graphics->drawText(txt, width, kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - Y_SHFT);
+      width = pd->graphics->getTextWidth(getRoobert10(), txt, strlen(txt), kUTF8Encoding, 0);
+      pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - Y_SHFT);
     }
+    pd->graphics->popContext();
+
+    m_UIBitmapTutorialHint[t] = pd->graphics->newBitmap(TUTORIAL_WIDTH, TUTORIAL_HEIGHT, kColorClear);
+    pd->graphics->pushContext(m_UIBitmapTutorialHint[t]);
+    y = 1;
+    setRoobert10();
+    for (int32_t l = 5; l < 9; ++l) {
+      const char* txt = toStringTutorial(t, l);
+      width = pd->graphics->getTextWidth(getRoobert10(), txt, strlen(txt), kUTF8Encoding, 0);
+      pd->graphics->setDrawMode(kDrawModeFillWhite);
+      pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2 + 1, TUT_Y_SPACING*(++y) - Y_SHFT);
+      pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - Y_SHFT + 1);
+      pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2 - 1, TUT_Y_SPACING*(y) - Y_SHFT);
+      pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - Y_SHFT - 1);
+      pd->graphics->setDrawMode(kDrawModeFillBlack);
+      pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - Y_SHFT);
+    }
+    pd->graphics->popContext();
     pd->graphics->setDrawMode(kDrawModeCopy);
   }
   // temp
   pd->sprite->setImage(m_UISpriteTutorialMain, m_UIBitmapTutorialMain[8], kBitmapUnflipped);
+  pd->sprite->setImage(m_UISpriteTutorialHint, m_UIBitmapTutorialHint[0], kBitmapUnflipped);
 
   // Populate main UI
 
@@ -971,6 +990,11 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 2: return "made, and it won't make itself! So let's get started by";
         case 3: return "vising The Shop with Ⓐ and buying some Carrot";
         case 4: return "Seeds. Use Ⓑ to exit any mode or menu.";
+
+        case 5: return "Move with the D-Pad. Zoom in & out with the Crank.";
+        case 6: return "Go to The Shop and press Ⓐ.";
+        case 7: return "Buy 10 Carrot Seeds from The Shop with Ⓐ.";
+        case 8: return "Press Ⓑ to exit The Shop.";
       }
     case kTutPlantCarrots:;
       switch (_n) {
