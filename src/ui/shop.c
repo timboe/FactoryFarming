@@ -10,6 +10,10 @@ void doPurchace() {
   if (modMoney(-selectedPrice)) {
     modOwned(selectedCat, selectedID, /*add=*/ true);
     UIDirtyMain();
+    // Tutorial
+    if (getTutorialStage() == kTutWelcomeBuySeeds && selectedCat == kUICatPlant && selectedID == kCarrotPlant) {
+      makeTutorialProgress();
+    }
   }
 }
 

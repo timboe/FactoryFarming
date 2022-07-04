@@ -49,6 +49,9 @@ LCDBitmap* m_UIBitmapInfo;
 LCDSprite* m_UISpriteFull; // Main window backing
 LCDBitmap* m_UIBitmapFull;
 
+#define TUTORIAL_WIDTH DEVICE_PIX_X
+#define TUTORIAL_HEIGHT (TILE_PIX*6)
+
 #define INGREDIENTS_WIDTH (TILE_PIX*10)
 #define INGREDIENTS_HEIGHT (TILE_PIX*6)
 LCDSprite* m_UISpriteIngredients; // Main window backing
@@ -58,10 +61,10 @@ LCDSprite* m_UISpriteIngredients; // Main window backing
 LCDBitmap* m_UIBitmapIngredients[kNFactorySubTypes];
 
 LCDSprite* m_UISpriteTutorialMain; 
-LCDBitmap* m_UIBitmapTutorialMain[kNFactorySubTypes];
+LCDBitmap* m_UIBitmapTutorialMain;
 
 LCDSprite* m_UISpriteTutorialHint; 
-LCDBitmap* m_UIBitmapTutorialHint[kNFactorySubTypes];
+LCDBitmap* m_UIBitmapTutorialHint;
 
 LCDSprite* m_UISpriteHeaders[kNUICats]; // Category headers: Crops. Conveyors. Utility. Harvesters. Factories. 
 LCDBitmap* m_UIBitmapHeaders[kNUICats]; // Category headers: Crops. Conveyors. Utility. Harvesters. Factories. 
@@ -151,6 +154,15 @@ void updateUI(int _fc) {
   if (_fc % FAR_TICK_FREQUENCY == 0) {
     // Update bottom ticker
     UIDirtyBottom();
+
+    // Tutorial
+    if (getTutorialStage() == kTutBuildConveyor && m_mode == kWanderMode && getTutorialProgress()) {
+      nextTutorialStage();
+    }
+    // Tutorial
+    if (getTutorialStage() == kTutBuildVitamin && m_mode == kWanderMode && getTutorialProgress()) {
+      nextTutorialStage();
+    }
   }
 
   if (m_mode == kWanderMode) {
@@ -246,8 +258,8 @@ void addUIToSpriteList() {
     pd->sprite->addSprite(m_UISpriteDev);
   }
 
-  if (p->m_enableTutorial < kNTutorialStages) {
-    //pd->sprite->addSprite(m_UISpriteTutorialMain);
+  if (p->m_enableTutorial < 254) { // 254: finished. 255: disabled
+    pd->sprite->addSprite(m_UISpriteTutorialMain);
     pd->sprite->addSprite(m_UISpriteTutorialHint);
   }
 
@@ -271,6 +283,63 @@ void addUIToSpriteList() {
       }
     }
   }
+}
+
+void showTutorialMsg(enum kUITutorialStage _stage) {
+  pd->sprite->setVisible(m_UISpriteTutorialMain, 1);
+  #define TUT_Y_SPACING 13
+  #define Y_SHFT 4
+  char text[128];
+  uint8_t y = 0;
+  pd->graphics->clearBitmap(m_UIBitmapTutorialMain, kColorWhite);
+  pd->graphics->clearBitmap(m_UIBitmapTutorialHint, kColorClear);
+  pd->graphics->pushContext(m_UIBitmapTutorialMain);
+  pd->graphics->drawRect(0, 0, TUTORIAL_WIDTH, TUTORIAL_HEIGHT, kColorBlack);
+  pd->graphics->drawRect(3, 3, TUTORIAL_WIDTH-6, TUTORIAL_HEIGHT-6, kColorBlack);
+  pd->graphics->drawRect(4, 4, TUTORIAL_WIDTH-8, TUTORIAL_HEIGHT-8, kColorBlack);
+  pd->graphics->drawBitmap(getSprite16(9, 10, 2), TILE_PIX/2, TILE_PIX/2 - Y_SHFT, kBitmapUnflipped);
+  pd->graphics->drawBitmap(getSprite16(9, 10, 2), TUTORIAL_WIDTH - (TILE_PIX/2) - TILE_PIX*2, TILE_PIX/2 - Y_SHFT, kBitmapUnflipped);
+  pd->graphics->drawBitmap(getSprite16(10, 10, 1), TUTORIAL_WIDTH - (TILE_PIX/2) - TILE_PIX, TUTORIAL_HEIGHT - (TILE_PIX/2) - TILE_PIX, kBitmapUnflipped);
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+  setRoobert10();
+  snprintf(text, 128, "--- Tutorial Stage %u/%u ---", (unsigned) _stage+1, (unsigned) kNTutorialStages);
+  int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, 128, kASCIIEncoding, 0);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - Y_SHFT);
+  for (int32_t l = 0; l < 5; ++l) {
+    const char* txt = toStringTutorial(_stage, l);
+    width = pd->graphics->getTextWidth(getRoobert10(), txt, strlen(txt), kUTF8Encoding, 0);
+    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - Y_SHFT);
+  }
+  pd->graphics->popContext();
+
+  pd->graphics->pushContext(m_UIBitmapTutorialHint);
+  y = 1;
+  setRoobert10();
+  for (int32_t l = 5; l < 9; ++l) {
+    const char* txt = toStringTutorial(_stage, l);
+    width = pd->graphics->getTextWidth(getRoobert10(), txt, strlen(txt), kUTF8Encoding, 0);
+    pd->graphics->setDrawMode(kDrawModeFillWhite);
+    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2 + 1, TUT_Y_SPACING*(++y) - Y_SHFT);
+    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - Y_SHFT + 1);
+    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2 - 1, TUT_Y_SPACING*(y) - Y_SHFT);
+    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - Y_SHFT - 1);
+    pd->graphics->setDrawMode(kDrawModeFillBlack);
+    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - Y_SHFT);
+  }
+  pd->graphics->popContext();
+  pd->graphics->setDrawMode(kDrawModeCopy);
+}
+
+bool checkReturnDismissTutorialMsg() {
+  if (pd->sprite->isVisible(m_UISpriteTutorialMain)) {
+    pd->sprite->setVisible(m_UISpriteTutorialMain, 0);
+    // Tutorial - end of a tutorial stage
+    if (getTutorialStage() == kTutFinishedOne || getTutorialStage() == kTutFinishedTwo) {
+      nextTutorialStage();
+    }
+    return true;
+  }
+  return false;
 }
 
 const char* getRotationAsString(void) {
@@ -378,7 +447,7 @@ void drawUIRight() {
     const uint16_t selectedID =  getUIContentID();
     snprintf(text, 32, "%u", (unsigned) getOwned(selectedCat, selectedID));
     uint16_t spriteID = getUIIcon(selectedCat, selectedID);
-    if (selectedCat >= kUICatConv && selectedCat <= kUICatUtility) spriteID += rotMod;
+    if (selectedCat != kUICatFactory && selectedCat >= kUICatConv && selectedCat <= kUICatUtility) spriteID += rotMod;
     pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), DEVICE_PIX_Y/2, 0, kBitmapUnflipped);
     pd->graphics->setDrawMode(kDrawModeFillWhite);
     pd->graphics->drawText(text, 32, kASCIIEncoding, DEVICE_PIX_Y/2 + 2*TILE_PIX, 0);
@@ -769,8 +838,6 @@ void initiUI() {
   roundedRect(11, TILE_PIX*22, TILE_PIX*12, TILE_PIX, kColorWhite);
   pd->graphics->popContext();
 
-  #define TUTORIAL_WIDTH DEVICE_PIX_X
-  #define TUTORIAL_HEIGHT (TILE_PIX*6)
 
   PDRect fBound = {.x = 0, .y = 0, .width = TILE_PIX*22, .height = TILE_PIX*12};
   PDRect cBound = {.x = 0, .y = 0, .width = TILE_PIX*10, .height = TILE_PIX*2};
@@ -814,66 +881,22 @@ void initiUI() {
   pd->sprite->moveTo(m_UISpriteInfo, TILE_PIX*(9+4), TILE_PIX*3);
 
   // Populate Tutorial
+  m_UIBitmapTutorialMain = pd->graphics->newBitmap(TUTORIAL_WIDTH, TUTORIAL_HEIGHT, kColorWhite);
+  m_UIBitmapTutorialHint = pd->graphics->newBitmap(TUTORIAL_WIDTH, TUTORIAL_HEIGHT, kColorClear);
 
   m_UISpriteTutorialMain = pd->sprite->newSprite();
   pd->sprite->setBounds(m_UISpriteTutorialMain, tutBound);
-  pd->sprite->setZIndex(m_UISpriteTutorialMain, Z_INDEX_UI_T);
+  pd->sprite->setZIndex(m_UISpriteTutorialMain, Z_INDEX_MAX);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteTutorialMain, 1);
   pd->sprite->moveTo(m_UISpriteTutorialMain, TUTORIAL_WIDTH/2, TILE_PIX*12);
+  pd->sprite->setImage(m_UISpriteTutorialMain, m_UIBitmapTutorialMain, kBitmapUnflipped);
 
   m_UISpriteTutorialHint = pd->sprite->newSprite();
   pd->sprite->setBounds(m_UISpriteTutorialHint, tutBound);
-  pd->sprite->setZIndex(m_UISpriteTutorialHint, Z_INDEX_UI_M);
+  pd->sprite->setZIndex(m_UISpriteTutorialHint, Z_INDEX_UI_BB);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteTutorialHint, 1);
   pd->sprite->moveTo(m_UISpriteTutorialHint, TUTORIAL_WIDTH/2, TILE_PIX*12);
-
-  #define TUT_Y_SPACING 13
-  #define Y_SHFT 4
-  char text[128];
-  for (int32_t t = 0; t < kNTutorialStages; ++t) {
-    uint8_t y = 0;
-    m_UIBitmapTutorialMain[t] = pd->graphics->newBitmap(TUTORIAL_WIDTH, TUTORIAL_HEIGHT, kColorWhite);
-    pd->graphics->pushContext(m_UIBitmapTutorialMain[t]);
-    pd->graphics->drawRect(0, 0, TUTORIAL_WIDTH, TUTORIAL_HEIGHT, kColorBlack);
-    pd->graphics->drawRect(3, 3, TUTORIAL_WIDTH-6, TUTORIAL_HEIGHT-6, kColorBlack);
-    pd->graphics->drawRect(4, 4, TUTORIAL_WIDTH-8, TUTORIAL_HEIGHT-8, kColorBlack);
-    pd->graphics->drawBitmap(getSprite16(9, 10, 2), TILE_PIX/2, TILE_PIX/2 - Y_SHFT, kBitmapUnflipped);
-    pd->graphics->drawBitmap(getSprite16(9, 10, 2), TUTORIAL_WIDTH - (TILE_PIX/2) - TILE_PIX*2, TILE_PIX/2 - Y_SHFT, kBitmapUnflipped);
-    pd->graphics->drawBitmap(getSprite16(10, 10, 1), TUTORIAL_WIDTH - (TILE_PIX/2) - TILE_PIX, TUTORIAL_HEIGHT - (TILE_PIX/2) - TILE_PIX, kBitmapUnflipped);
-    pd->graphics->setDrawMode(kDrawModeFillBlack);
-    setRoobert10();
-    //fff
-    snprintf(text, 128, "--- Tutorial Stage %u/%u ---", (unsigned) t+1, (unsigned) kNTutorialStages);
-    int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, 128, kASCIIEncoding, 0);
-    pd->graphics->drawText(text, 128, kASCIIEncoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - Y_SHFT);
-    for (int32_t l = 0; l < 5; ++l) {
-      const char* txt = toStringTutorial(t, l);
-      width = pd->graphics->getTextWidth(getRoobert10(), txt, strlen(txt), kUTF8Encoding, 0);
-      pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - Y_SHFT);
-    }
-    pd->graphics->popContext();
-
-    m_UIBitmapTutorialHint[t] = pd->graphics->newBitmap(TUTORIAL_WIDTH, TUTORIAL_HEIGHT, kColorClear);
-    pd->graphics->pushContext(m_UIBitmapTutorialHint[t]);
-    y = 1;
-    setRoobert10();
-    for (int32_t l = 5; l < 9; ++l) {
-      const char* txt = toStringTutorial(t, l);
-      width = pd->graphics->getTextWidth(getRoobert10(), txt, strlen(txt), kUTF8Encoding, 0);
-      pd->graphics->setDrawMode(kDrawModeFillWhite);
-      pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2 + 1, TUT_Y_SPACING*(++y) - Y_SHFT);
-      pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - Y_SHFT + 1);
-      pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2 - 1, TUT_Y_SPACING*(y) - Y_SHFT);
-      pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - Y_SHFT - 1);
-      pd->graphics->setDrawMode(kDrawModeFillBlack);
-      pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - Y_SHFT);
-    }
-    pd->graphics->popContext();
-    pd->graphics->setDrawMode(kDrawModeCopy);
-  }
-  // temp
-  pd->sprite->setImage(m_UISpriteTutorialMain, m_UIBitmapTutorialMain[8], kBitmapUnflipped);
-  pd->sprite->setImage(m_UISpriteTutorialHint, m_UIBitmapTutorialHint[0], kBitmapUnflipped);
+  pd->sprite->setImage(m_UISpriteTutorialHint, m_UIBitmapTutorialHint, kBitmapUnflipped);
 
   // Populate main UI
 
@@ -983,7 +1006,7 @@ void initiUI() {
 
 const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
   switch (_stage) {
-    case kTutWelcome:;
+    case kTutWelcomeBuySeeds:;
       switch (_n) {
         case 0: return "-- The Initial Seed Purchase --";
         case 1: return "Welcome to Factory Farming! There's money to be";
@@ -1031,7 +1054,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 4: return "sales menu. Sell 10 carrots to continue.";
           
         case 5: return "Go to the Sales Box (next to The Shop). ";
-        case 6: return "Press Ⓐ, choose the harvested Carrots;
+        case 6: return "Press Ⓐ, choose the harvested Carrots";
         case 7: return "Press or hold Ⓐ to sell at least 10 Carrots.";
         case 8: return "Press Ⓑ to close the Sales Box window.";
       }
@@ -1054,7 +1077,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 1: return "Good, We're harvesting Carrots. But we need to get them";
         case 2: return "to the Sales Box. We need Conveyor Belts! Buy around";
         case 3: return "50 from The Shop and lay the path to move & sell";
-        case 4: return "sell the carrots. Rotate belt pieces with The Crank.";
+        case 4: return "the carrots. Rotate belt pieces with The Crank.";
           
         case 5: return "Go to the The Shop, buy around 50 an Conveyor Belts.";
         case 6: return "Press Ⓐ and choose these from your inventory.";
@@ -1087,7 +1110,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 7: return "supply it with Carrots and Chalk. Use a more Belts";
         case 8: return "to transport the Vitamins to the Sell Box.";
       }
-    case kTuTFinished:
+    case kTutFinishedOne:
       switch (_n) {
         case 0: return "-- Go Forth And Consume --";
         case 1: return "Excellent! You now know all the basics of exploiting";

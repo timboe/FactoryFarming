@@ -3,7 +3,7 @@
 #include "building.h"
 #include "cargo.h"
 
-enum kUITutorialStage{kTutWelcome, kTutPlantCarrots, kTutGetCarrots, kTutSellCarrots, kTutBuildHarvester, kTutBuildConveyor, kTutBuildQuarry, kTutBuildVitamin, kTuTFinished, kNTutorialStages};
+enum kUITutorialStage{kTutWelcomeBuySeeds, kTutPlantCarrots, kTutGetCarrots, kTutSellCarrots, kTutBuildHarvester, kTutBuildConveyor, kTutBuildQuarry, kTutBuildVitamin, kTutFinishedOne, kTutBreakOne, kTut2A, kTut2B, kTut2C, kTut2D, kTutFinishedTwo, kTutBreakTwo, kNTutorialStages};
 
 enum kToolType{kToolPickup, kToolInspect, kToolDestroy, kNToolTypes};
 extern const uint16_t kToolUIIcon[];

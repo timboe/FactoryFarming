@@ -165,6 +165,13 @@ void buildingManagerFreeBuilding(struct Building_t* _building) {
   m_buildingSearchLocation = _building->m_index;
 }
 
+void growAtAll() {
+  for (uint32_t b = 0; b < TOT_CARGO_OR_BUILDINGS; ++b) {
+    if (m_buildings[b].m_type == kPlant) plantTrySpawnCargo(&m_buildings[b]);
+  }
+}
+
+
 void getBuildingNeighbors(struct Building_t* _building, int8_t _offset, struct Location_t** _above, struct Location_t** _below, struct Location_t** _left, struct Location_t** _right) {
   uint16_t locX = _building->m_location->m_x;
   uint16_t locY = _building->m_location->m_y;;

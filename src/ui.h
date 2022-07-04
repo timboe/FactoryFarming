@@ -65,6 +65,10 @@ const char* getRotationAsString(void);
 
 const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n);
 
+bool checkReturnDismissTutorialMsg(void);
+
+void showTutorialMsg(enum kUITutorialStage _stage);
+
 void setUIContentHeader(int32_t _row, enum kUICat _c);
 
 void setUIContentItem(int32_t _row, int32_t _col, enum kUICat _c, uint16_t _i, uint16_t _r);

@@ -82,11 +82,14 @@ void gameClickConfigHandler(uint32_t _buttonPressed) {
 void clickHandleWander(uint32_t _buttonPressed) {
   if (characterMoveInput(_buttonPressed)) { /*noop*/ }
   else if (kButtonA == _buttonPressed) {
-    if (distanceFromBuy() < ACTIVATE_DISTANCE) setGameMode(kMenuBuy);
+    // 254: tutorial finised, 255: tutorial disabled
+    if (getTutorialStage() < 254 && checkReturnDismissTutorialMsg()) { /*noop*/ } // NOTE: The second function call has side-effects
+    else if (distanceFromBuy() < ACTIVATE_DISTANCE) setGameMode(kMenuBuy);
     else if (distanceFromSell() < ACTIVATE_DISTANCE) setGameMode(kMenuSell);
     else setGameMode(kMenuPlayer);
   }
-  //else if (kButtonB == _buttonPressed) toggleZoom();
+  //else if (kButtonB == _buttonPressed) toggleZoom(); // Press B to change zoom?
+  // Hold down B to go faster?
 }
 
 void clickHandleMenuBuy(uint32_t _buttonPressed) {
@@ -94,6 +97,10 @@ void clickHandleMenuBuy(uint32_t _buttonPressed) {
     doPurchace();
   } else if (kButtonB == _buttonPressed) {
     setGameMode(kWanderMode);
+    // Tutorial
+    if (getTutorialStage() == kTutWelcomeBuySeeds && getTutorialProgress() >= 10) {
+      nextTutorialStage();
+    }
   } else {
     moveCursor(_buttonPressed);
   }
@@ -104,6 +111,10 @@ void clickHandleMenuSell(uint32_t _buttonPressed) {
     doSale();
   } else if (kButtonB == _buttonPressed) {
     setGameMode(kWanderMode);
+    // Tutorial
+    if (getTutorialStage() == kTutSellCarrots && getTutorialProgress() >= 10) {
+      nextTutorialStage();
+    }
   } else {
     moveCursor(_buttonPressed);
   }
@@ -127,6 +138,18 @@ void clickHandlePlacement(uint32_t _buttonPressed) {
   } else if (kButtonB    == _buttonPressed) {
     setGameMode(kWanderMode);
     updateBlueprint();
+    // Tutorial
+    if (getTutorialStage() == kTutPlantCarrots && getTutorialProgress() >= 10) {
+      nextTutorialStage();
+    }
+    // Tutorial
+    if (getTutorialStage() == kTutBuildHarvester && getTutorialProgress()) {
+      nextTutorialStage();
+    }
+    // Tutorial 
+    if (getTutorialStage() == kTutBuildQuarry && getTutorialProgress()) {
+      nextTutorialStage();
+    }
   }
 }
 
@@ -137,6 +160,10 @@ void clickHandlePick(uint32_t _buttonPressed) {
     doPick();
   } else if (kButtonB    == _buttonPressed) {
     setGameMode(kWanderMode);
+    // Tutorial
+    if (getTutorialStage() == kTutGetCarrots && getTutorialProgress() >= 10) {
+      nextTutorialStage();
+    }
   }
 }
 

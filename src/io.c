@@ -132,7 +132,7 @@ void scanDidDecode(json_decoder* jd, const char* _key, json_value _value) {
 
 bool save() {
   uint8_t pretty = 0;
-  #ifdef DEBUG_MODE
+  #ifdef DEV
   pretty = 1;
   #endif
 

@@ -8,6 +8,8 @@
 
 bool doConveyorUpgrade(struct Location_t* _loc);
 
+bool isInRangeOfCarrotPlant(struct Location_t* _placeLocation);
+
 /// ///
 
 void doMainMenuClick() {
@@ -37,7 +39,20 @@ bool doConveyorUpgrade(struct Location_t* _loc) {
       upgradeConveyor(l->m_building);
     }
   }
-  return false; // We have handled the removal of the grease
+  return false; // We have handled the removal of the grease(es) inside upgradeConveyor
+}
+
+// TODO make this more generic if needed...
+bool isInRangeOfCarrotPlant(struct Location_t* _placeLocation) {
+  for (int32_t x = -3; x < 4; ++x) {
+    for (int32_t y = -3; y < 4; ++y) {
+      struct Location_t* loc = getLocation(_placeLocation->m_x + x, _placeLocation->m_y + y);
+      if (loc->m_building && loc->m_building->m_type == kPlant && loc->m_building->m_subType.plant == kCarrotPlant) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 void doPlace() {
@@ -46,22 +61,36 @@ void doPlace() {
   if (getOwned(selectedCat, selectedID) == 0) {
     return;
   }
+  struct Location_t* placeLocation = getPlayerLookingAtLocation();
   bool placed = false;
   switch (selectedCat) {
     case kUICatTool: break; // Impossible
-    case kUICatPlant: placed = newBuilding(getPlayerLookingAtLocation(), SN, kPlant, (union kSubType) {.plant = selectedID} ); break;
-    case kUICatConv: placed = newBuilding(getPlayerLookingAtLocation(), getCursorRotation(), kConveyor, (union kSubType) {.conveyor = selectedID} ); break;
-    case kUICatExtractor: placed = newBuilding(getPlayerLookingAtLocation(), getCursorRotation(), kExtractor, (union kSubType) {.extractor = selectedID} ); break;
-    case kUICatFactory: placed = newBuilding(getPlayerLookingAtLocation(), getCursorRotation(), kFactory, (union kSubType) {.factory = selectedID} ); break;
+    case kUICatPlant: placed = newBuilding(placeLocation, SN, kPlant, (union kSubType) {.plant = selectedID} ); break;
+    case kUICatConv: placed = newBuilding(placeLocation, getCursorRotation(), kConveyor, (union kSubType) {.conveyor = selectedID} ); break;
+    case kUICatExtractor: placed = newBuilding(placeLocation, getCursorRotation(), kExtractor, (union kSubType) {.extractor = selectedID} ); break;
+    case kUICatFactory: placed = newBuilding(placeLocation, getCursorRotation(), kFactory, (union kSubType) {.factory = selectedID} ); break;
     case kUICatUtility: 
-      if (selectedID == kConveyorGrease) placed = doConveyorUpgrade(getPlayerLookingAtLocation());
-      else placed = newBuilding(getPlayerLookingAtLocation(), getCursorRotation(), kUtility, (union kSubType) {.utility = selectedID} );
+      if (selectedID == kConveyorGrease) placed = doConveyorUpgrade(placeLocation);
+      else placed = newBuilding(placeLocation, getCursorRotation(), kUtility, (union kSubType) {.utility = selectedID} );
       break;
-    case kUICatCargo: placed = newCargo(getPlayerLookingAtLocation(), selectedID, /*added by player*/ true); break;
+    case kUICatCargo: placed = newCargo(placeLocation, selectedID, /*added by player*/ true); break;
     case kNUICats: break;
   }
   if (placed) {
     modOwned(selectedCat, selectedID, /*add=*/ false);
+    const enum kUITutorialStage tut = getTutorialStage(); 
+    // Tutorial
+    if (tut == kTutPlantCarrots && selectedCat == kUICatPlant && selectedID == kCarrotPlant) {
+      makeTutorialProgress();
+    }
+    // Tutorial
+    if (tut == kTutBuildHarvester && selectedCat == kUICatExtractor && selectedID == kCropHarvesterSmall && isInRangeOfCarrotPlant(placeLocation)) {
+      makeTutorialProgress();
+    }
+    // Tutorial
+    if (tut == kTutBuildQuarry && selectedCat == kUICatExtractor && selectedID == kChalkQuarry) {
+      makeTutorialProgress();
+    }
   }
 }
 
@@ -74,6 +103,10 @@ void doPick() {
       struct Location_t* loc = getLocation(ploc->m_x + x, ploc->m_y + y);
       if (loc->m_cargo) {
         modOwned(kUICatCargo, loc->m_cargo->m_type, /*add=*/ true);
+        // Tutorial
+        if (getTutorialStage() == kTutGetCarrots && loc->m_cargo->m_type == kCarrot) {
+          makeTutorialProgress();
+        }
         clearLocation(loc, /*cargo=*/ true, /*building=*/ false);
         update = true;
       }

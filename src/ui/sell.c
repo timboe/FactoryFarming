@@ -9,6 +9,10 @@ void doSale() {
   if (modMoney(selectedPrice)) {
     modOwned(kUICatCargo, selectedID, /*add=*/ false);
     UIDirtyMain();
+    // Tutorial
+    if (getTutorialStage() == kTutSellCarrots && selectedID == kCarrot) {
+      makeTutorialProgress();
+    }
   }
 }
 

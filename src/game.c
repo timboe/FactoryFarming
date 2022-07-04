@@ -207,6 +207,7 @@ void menuOptionsCallbackRestart(void* blank) {
   generate();
   addObstacles();
   setChunkBackgrounds();
+  showTutorialMsg(kTutWelcomeBuySeeds);
   updateRenderList();
 }
 
@@ -216,6 +217,7 @@ void menuOptionsCallbackLoad(void* blank) {
   addObstacles();
   doWetness();
   setChunkBackgrounds();
+  showTutorialMsg(getTutorialStage());
   updateRenderList();
 }
 

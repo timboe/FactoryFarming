@@ -76,8 +76,16 @@ uint8_t getTutorialProgress() {
 }
 
 void nextTutorialStage() {
-  ++m_player.m_enableTutorial;
   m_player.m_tutorialProgress = 0;
+  ++m_player.m_enableTutorial;
+  if (m_player.m_enableTutorial == kTutBreakOne || m_player.m_enableTutorial == kTutBreakTwo) {
+    m_player.m_enableTutorial = 254;
+    return;
+  }
+  if (m_player.m_enableTutorial == kTutGetCarrots) {
+    growAtAll(); // Force all plants to grow
+  }
+  showTutorialMsg(m_player.m_enableTutorial);
 }
 
 int16_t getOffX() {

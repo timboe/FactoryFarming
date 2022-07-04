@@ -4,34 +4,34 @@
 #include "../generate.h"
 #include "../cargo.h"
 
-void plantSpawnCargo(struct Building_t* _building, struct Location_t* _loc);
-
 /// ///
 
 // Note: with current settings, anything under 72 cannot be kept up with by a single harvester
 #define GROW_TIME (TICKS_PER_SEC*52)
 #define GROW_RANDOM (TICKS_PER_SEC*40)
 
-void plantSpawnCargo(struct Building_t* _building, struct Location_t* _loc) {
+void plantTrySpawnCargo(struct Building_t* _building) {
+  struct Location_t* loc = _building->m_location;
+  if (loc->m_cargo != NULL) {
+    return;
+  }
   switch (_building->m_subType.plant) {
-    case kCarrotPlant:; newCargo(_loc, kCarrot, false);
-    case kAppleTree:;   newCargo(_loc, kApple, false);
-    case kWheatPlant:;  newCargo(_loc, kWheat, false);
+    case kCarrotPlant:; newCargo(loc, kCarrot, false);
+    case kAppleTree:;   newCargo(loc, kApple, false);
+    case kWheatPlant:;  newCargo(loc, kWheat, false);
     case kP4:; case kP5:; case kP6:; case kP7:; case kP8:; case kP9:; case kP10:; case kP11:; case kP12:; break; 
     case kNPlantSubTypes:; break;
   }
   // TODO growing bonuses?
   _building->m_progress = GROW_TIME + rand() % GROW_RANDOM;
-  if (++_building->m_mode == N_CROPS_BEFORE_FARMLAND) {
-    renderChunkBackgroundImage(_loc->m_chunk);
+  if (++_building->m_mode == N_CROPS_BEFORE_FARMLAND || _building->m_mode == 2*N_CROPS_BEFORE_FARMLAND ) {
+    renderChunkBackgroundImage(loc->m_chunk);
   }
 }
 
 #define CARGO_BOUNCE_OFFSET 4
 void plantUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   _building->m_progress -= _tick;
-
-
 
   if (_tick == NEAR_TICK_AMOUNT && _building->m_location->m_cargo) {
     _building->m_stored[0] = _building->m_stored[0] + (_building->m_stored[1] == 0 ? 1 : -1);
@@ -47,22 +47,8 @@ void plantUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
 
   // TODO: Growning penalties?
 
+  plantTrySpawnCargo(_building);
 
-  if (_building->m_location->m_cargo == NULL) {
-    plantSpawnCargo(_building, _building->m_location);
-  }
-
-  // Removed the need for harvesters?  
-  /*
-  } else {
-    for (uint32_t i = 0; i < 4; ++i) {
-      if (_building->m_next[i]->m_cargo == NULL && (_building->m_next[i]->m_building == NULL || _building->m_next[i]->m_building->m_type == kConveyor)) {
-        plantSpawnCargo(_building, _building->m_next[i]);
-        break;
-      }
-    }
-  }
-  */
 }
 
 bool canBePlacedPlant(struct Location_t* _loc, enum kDir _dir, union kSubType _subType) {

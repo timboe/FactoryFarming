@@ -11,6 +11,8 @@ struct Building_t* m_buyBox = NULL;
 
 void sellBoxUpdateFn(struct Building_t* _building);
 
+bool nearbyConveyor(struct Building_t* _building);
+
 /// ///
 
 void setBuyBox(struct Building_t* _buyBox) { m_buyBox = _buyBox; }
@@ -33,12 +35,33 @@ int16_t distanceFromSell() {
   return (dx < dy ? dy : dx);
 }
 
+bool nearbyConveyor(struct Building_t* _building) {
+  for (int32_t x = -2; x < 3; ++x) {
+    for (int32_t y = -2; y < 3; ++y) {
+      struct Location_t* loc = getLocation(_building->m_location->m_x + x, _building->m_location->m_y + y);
+      if (loc->m_building && loc->m_building->m_type == kConveyor) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 void sellBoxUpdateFn(struct Building_t* _building) {
   for (int32_t x = _building->m_location->m_x - 1; x < _building->m_location->m_x + 2; ++x) {
     for (int32_t y = _building->m_location->m_y - 1; y < _building->m_location->m_y + 2; ++y) {
       struct Location_t* loc = getLocation_noCheck(x, y); // Will never straddle the world boundary
       if (loc->m_cargo) {
         modMoney( kCargoValue[loc->m_cargo->m_type] );
+        // Tutorial
+        const enum kUITutorialStage tut = getTutorialStage(); 
+        if (tut == kTutBuildConveyor && loc->m_cargo->m_type == kCarrot && nearbyConveyor(_building)) {
+          makeTutorialProgress();
+        }
+        // Tutorial 
+        if (tut == kTutBuildVitamin && loc->m_cargo->m_type == kVitamin && nearbyConveyor(_building)) {
+          makeTutorialProgress();
+        }
         clearLocation(loc, /*cargo*/ true, /*building*/ false);
       }
     }

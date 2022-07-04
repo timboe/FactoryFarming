@@ -100,6 +100,8 @@ struct Building_t* buildingManagerNewBuilding(enum kBuildingType _asType);
 
 struct Building_t* buildingManagerGetByIndex(uint16_t _index);
 
+void growAtAll(void);
+
 void buildingManagerFreeBuilding(struct Building_t* _buildings);
 
 bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _type, union kSubType _subType);
