@@ -1003,6 +1003,11 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 2: return "shop. Pay attention to the Soil & Water each plant likes.";
         case 3: return "Find a good nearby spot, open your inventory";
         case 4: return "with Ⓐ, select the seeds, and plant 10 Carrots.";
+          
+        case 5: return "Find a nearby area of Silty Soil, preferably Moist. ";
+        case 6: return "Press Ⓐ to enter your inventory, select the Carrot";
+        case 7: return "Seeds and press Ⓐ again. Plant 10 Carrot Plants on";
+        case 8: return "empty patches of Silty Soil, then press Ⓑ.";
       }
     case kTutGetCarrots:;
       switch (_n) {
@@ -1011,6 +1016,11 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 2: return "but let's speed up these carrot plants. Press Ⓐ and";
         case 3: return "enter 'Pickup Mode' and harvest 10 grown carrots.";
         case 4: return "You can pickup any cargo in the world, or in buildings.";
+          
+        case 5: return "Go to where you planted your Carrot Seeds. ";
+        case 6: return "Press Ⓐ to enter your inventory, select 'Pickup";
+        case 7: return "Mode' and press Ⓐ again. Press or hold Ⓐ when";
+        case 8: return "moving, pickup 10 grown Carrots.";
       }
     case kTutSellCarrots:;
       switch (_n) {
@@ -1019,6 +1029,11 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 2: return "fresh Carrots? Sell them for a profit! Visit the Sales Box";
         case 3: return "(next to The Shop) and press Ⓐ to access the";
         case 4: return "sales menu. Sell 10 carrots to continue.";
+          
+        case 5: return "Go to the Sales Box (next to The Shop). ";
+        case 6: return "Press Ⓐ, choose the harvested Carrots;
+        case 7: return "Press or hold Ⓐ to sell at least 10 Carrots.";
+        case 8: return "Press Ⓑ to close the Sales Box window.";
       }
     case kTutBuildHarvester:;
       switch (_n) {
@@ -1027,6 +1042,11 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 2: return "use an Automatic Harvester instead! Buy one from";
         case 3: return "The Shop and build it where some Carrot Plants are";
         case 4: return "within its harvest catchment area.";
+          
+        case 5: return "Go to the The Shop, buy an Automatic Harvester.";
+        case 6: return "Press Ⓐ and choose this from your inventory.";
+        case 7: return "Place the harvester such that it located on empty";
+        case 8: return "soil, and Carrot Plants are within its harvest range.";
       }
     case kTutBuildConveyor:;
       switch (_n) {
@@ -1035,6 +1055,11 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 2: return "to the Sales Box. We need Conveyor Belts! Buy around";
         case 3: return "50 from The Shop and lay the path to move & sell";
         case 4: return "sell the carrots. Rotate belt pieces with The Crank.";
+          
+        case 5: return "Go to the The Shop, buy around 50 an Conveyor Belts.";
+        case 6: return "Press Ⓐ and choose these from your inventory.";
+        case 7: return "Make a chain of belts from the Automatic Harvester to";
+        case 8: return "the Sell Box. Rotate the Belts with The Crank.";
       }
     case kTutBuildQuarry:
       switch (_n) {
@@ -1043,6 +1068,11 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 2: return "Some are dug up, or pumped out. Let's build a Chalk";
         case 3: return "Mine next. Buy one from The Shop and build it on";
         case 4: return "Chalky Soil. There should be some to the South.";
+          
+        case 5: return "Go to the The Shop, buy a Chalk Mine.";
+        case 6: return "Press Ⓐ and choose this from your inventory.";
+        case 7: return "Go South from The Shop and look for Chalky Soil.";
+        case 8: return "Place the Mine on at least one Chalky Soil tile.";
       }
     case kTutBuildVitamin:
       switch (_n) {
@@ -1051,6 +1081,11 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 2: return "Buy a Vitamin Factory from The Shop, supply it with";
         case 3: return "both Chalk and Carrots, and transport the Vitamins";
         case 4: return "to the Sales Box for a much bigger profit!";
+          
+        case 5: return "Go to the The Shop, buy a Vitamin Factory.";
+        case 6: return "Place it in a good spot. Use Conveyor Belts to";
+        case 7: return "supply it with Carrots and Chalk. Use a more Belts";
+        case 8: return "to transport the Vitamins to the Sell Box.";
       }
     case kTuTFinished:
       switch (_n) {
@@ -1059,6 +1094,11 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 2: return "the world for profit. As your bank account swells,";
         case 3: return "more Crops, Factories, and other items will unlock.";
         case 4: return "Use them well to maximise profit.";
+          
+        case 5: return " ";
+        case 6: return " ";
+        case 7: return " ";
+        case 8: return " ";
       }
     default: return " ";
   }
