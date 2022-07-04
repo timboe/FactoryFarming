@@ -1,6 +1,5 @@
 #pragma once
 
-#define DEBUG_MODE
 #define DEV
 
 #define PRETEND_ZOOMED_IN false

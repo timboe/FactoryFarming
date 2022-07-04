@@ -16,6 +16,7 @@ extern const uint16_t kConvUIIcon[];
 enum kPlantSubType{kCarrotPlant, kAppleTree, kWheatPlant, kP4, kP5, kP6, kP7, kP8, kP9, kP10, kP11, kP12, kNPlantSubTypes};
 extern const uint32_t kPlantUnlock[];
 extern const uint16_t kPlantPrice[];
+extern const uint16_t kPlantGrowT[];
 extern const uint16_t kPlantUIIcon[];
 extern const enum kGroundWetness kPlantWetness[];
 extern const enum kGroundType kPlantSoil[];

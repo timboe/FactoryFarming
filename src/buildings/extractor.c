@@ -90,20 +90,24 @@ void extractorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoo
 
 bool canBePlacedExtractor(struct Location_t* _loc, enum kDir _dir, union kSubType _subType) {
   bool hasWater = false;
+  bool hasChalk = false;
   for (int32_t x = -1; x < 2; ++x) {
     for (int32_t y = -1; y < 2; ++y) {
       struct Tile_t* t = getTile(_loc->m_x + x, _loc->m_y + y);
       bool isWater = isWaterTile(_loc->m_x + x, _loc->m_y + y);
+      bool isChalk = isGrounTypeTile(_loc->m_x + x, _loc->m_y + y, kChalkyGround);
       if (isWater) hasWater = true;
-      if (t->m_tile > FLOOR_TILES && !isWater) return false;
+      if (isChalk) hasChalk = true;
+      if (t->m_tile > TOT_FLOOR_TILES && !isWater) return false;
       if (getLocation(_loc->m_x + x, _loc->m_y + y)->m_building != NULL) return false;
     }
   }
   if (_subType.extractor == kPump) {
     return hasWater;
-  } else {
-    return !hasWater;
+  } else if (_subType.extractor == kChalkQuarry) {
+    return hasChalk && !hasWater;
   }
+ return !hasWater;
 }
 
 void assignNeighborsExtractor(struct Building_t* _building) {

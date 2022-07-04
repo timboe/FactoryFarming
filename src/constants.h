@@ -36,7 +36,7 @@
 
 // 16x16 sprite sheet has how many rows/columns
 #define SHEET16_SIZE_X 16
-#define SHEET16_SIZE_Y 16
+#define SHEET16_SIZE_Y 32
 #define SHEET16_SIZE (SHEET16_SIZE_X*SHEET16_SIZE_Y)
 
 #define SHEET48_SIZE_X 8
@@ -46,7 +46,9 @@
 #define TOT_CARGO_OR_BUILDINGS 4096
 
 // Number of available floor sprites
-#define FLOOR_TILES (8*4)
+#define FLOOR_TYPES 6
+#define FLOOR_VARIETIES 8
+#define TOT_FLOOR_TILES (FLOOR_VARIETIES*FLOOR_TYPES)
 
 // Where the conveyor tiles start from in Y
 #define CONV_START_Y 7

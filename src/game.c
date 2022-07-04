@@ -4,6 +4,7 @@
 #include "sprite.h"
 #include "generate.h"
 #include "render.h"
+#include "chunk.h"
 #include "sound.h"
 #include "player.h"
 #include "input.h"

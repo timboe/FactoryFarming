@@ -1,6 +1,5 @@
 #pragma once
 #include "game.h"
-#include "sprite.h"
 #include "chunk.h"
 
 struct Tile_t {
@@ -11,7 +10,8 @@ struct Tile_t {
   // Transient
 };
 
-enum kGroundType{kSiltyGround, kChalkyGround, kPeatyGround, kSandyGround, kPavedGround, kLake, kRiver, kNGroundTypes};
+// Paved must come after the plantable ground types
+enum kGroundType{kSiltyGround, kChalkyGround, kPeatyGround, kSandyGround, kClayGround, kLoamyGround, kPavedGround, kLake, kRiver, kNGroundTypes};
 
 enum kGroundWetness{kWater, kWet, kMoist, kDry, kNGroundWetnesses};
 
@@ -30,6 +30,8 @@ void setChunkBackgrounds(void);
 bool tileIsObstacle(struct Tile_t* _tile);
 
 bool isWaterTile(int32_t _x, int32_t _y);
+
+bool isGrounTypeTile(int32_t _x, int32_t _y, enum kGroundType);
 
 void addObstacles(void);
 

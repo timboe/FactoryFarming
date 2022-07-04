@@ -8,7 +8,7 @@
 #include "generate.h"
 
 //                             {kToolPickup, kToolInspect, kToolDestroy, kNToolTypes};
-const uint16_t kToolUIIcon[] = {SID(8,10),   SID(9,10),    SID(1,2)};
+const uint16_t kToolUIIcon[] = {SID(8,10),   SID(9,10),    SID(1,16)};
 
 struct Player_t m_player;
 
@@ -178,11 +178,9 @@ bool movePlayer() {
 
   // TODO proper movement penalty / bonus
   int16_t speed = 4;
-  //if (m_currentLocation != NULL) {
-  //  if (isWaterTile(m_currentLocation->m_x, m_currentLocation->m_y)) {
-  //    speed = 2;
-  //  }
-  //}
+  if (m_currentLocation != NULL && isWaterTile(m_currentLocation->m_x, m_currentLocation->m_y)) {
+    speed = 2;
+  }
 
   if (getPressed(0)) { goalX -= speed / zoom; m_facing = 0; } 
   if (getPressed(1)) { goalX += speed / zoom; m_facing = 1; }

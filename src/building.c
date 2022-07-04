@@ -26,15 +26,18 @@ uint16_t m_deserialiseIndexBuilding = 0;
 struct Building_t* m_buildings;
 
 // Note: User can never themselves build a kTunnelOut
-//                             {kBelt,    kSplitL,  kSplitI,  kSplitT,  kTunnelIn, kTunnelOut, kFilterL,  kFilterI, kNConvSubTypes};
-const uint32_t kConvUnlock[] = {0,        0,        0,        0,        0,         UINT32_MAX, 0,         0};
-const uint16_t kConvPrice[]  = {1,        1,        1,        1,        1,         1,          1,         1};
-const uint16_t kConvUIIcon[] = {SID(0,3), SID(4,3), SID(0,4), SID(4,4), SID(8,3),  SID(8,3),   SID(8,4),  SID(12,4)};
+//                             {kBelt,     kSplitL,   kSplitI,  kSplitT,  kTunnelIn, kTunnelOut, kFilterL,  kFilterI, kNConvSubTypes};
+const uint32_t kConvUnlock[] = {0,         0,         0,        0,        0,         UINT32_MAX, 0,         0};
+const uint16_t kConvPrice[]  = {1,         1,         1,        1,        1,         1,          1,         1};
+const uint16_t kConvUIIcon[] = {SID(0,17), SID(4,17), SID(0,4), SID(4,4), SID(8,17), SID(8,16),  SID(8,4),  SID(12,4)};
+
+#define DIS UINT32_MAX
 
 //                                          {kCarrotPlant, kAppleTree,    kWheatPlant,  kP4,          klP5,         kP6,          kP7,          kP8,          kP9,          kP10,         kP11,         kP12};
-const uint32_t kPlantUnlock[]             = {0,            0,             0,            0,            0,            0,            0,            0,            0,            0,            0,            0};
+const uint32_t kPlantUnlock[]             = {0,            0,             0,            DIS,          DIS,          DIS,          DIS,          DIS,          DIS,          DIS,          DIS,          DIS};
 const uint16_t kPlantPrice[]              = {0,            1,             1,            1,            1,            1,            1,            1,            1,            1,            1,            1};
 const uint16_t kPlantUIIcon[]             = {SID(10,7),    SID(8,7),      SID(11,7),    SID(9,7),     SID(9,7),     SID(9,7),     SID(9,7),     SID(9,7),     SID(9,7),     SID(9,7),     SID(9,7),     SID(9,7)};
+const uint16_t kPlantGrowT[]              = {50,           50,            50,           50,           50,           50,           50,           50,           50,           50,           50,           50};
 const enum kGroundWetness kPlantWetness[] = {kWet,         kMoist,        kDry,         kWet,         kMoist,       kDry,         kWet,         kMoist,       kDry,         kWet,         kMoist,       kDry};
 const enum kGroundType kPlantSoil[]       = {kSiltyGround, kChalkyGround, kPeatyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround};
 
@@ -43,14 +46,14 @@ const uint32_t kUtilityUnlock[] = {0,         0,           0};
 const uint16_t kUtilityPrice[]  = {1,         1,           1};
 const uint16_t kUtilityUIIcon[] = {SID(0,15), SID(4,15),   SID(8,15)};
 
-//                                  {kCropHarvesterSmall, kPump,      kChalkQuarry, kkCropHarvesterLarge, kNExtractorSubTypes};
+//                                  {kCropHarvesterSmall, kPump,      kChalkQuarry, kCropHarvesterLarge, kNExtractorSubTypes};
 const uint32_t kExtractorUnlock[] = {0,                   0,          0,            0};
 const uint16_t kExtractorPrice[]  = {1,                   1,          1,            1};
-const uint16_t kExtractorUIIcon[] = {SID(4,2),            SID(12,11), SID(12,12),   SID(4,2)};
+const uint16_t kExtractorUIIcon[] = {SID(4,16),           SID(12,11), SID(12,12),   SID(8,16)};
 const uint16_t kExtractorSprite[] = {BID(0,0),            BID(0,3),   BID(0,5),     BID(0,0)};
 
 //                                    {kVitiminFac, kF2,      kF3,      kF4,      kF5,      kF6,      kF7,      kF8,      kF9,      k10,      kF11 kNFactorySubTypes};
-const uint32_t kFactoryUnlock[]     = {0,           0,        0,        0,        0,        0,        0,        0,        0,        0,        0,};
+const uint32_t kFactoryUnlock[]     = {0,           DIS,      DIS,      DIS,      DIS,      DIS,      DIS,      DIS,      DIS,      DIS,      DIS};
 const uint16_t kFactoryPrice[]      = {1,           1,        1,        1,        1,        1,        1,        1,        1,        1,        1};
 const uint16_t kFactoryTime[]       = {1,           1,        1,        1,        1,        1,        1,        1,        1,        1,        1};
 const uint16_t kFactorySprite[]     = {BID(0,4),    BID(0,4), BID(0,4), BID(0,4), BID(0,4), BID(0,4), BID(0,4), BID(0,4), BID(0,4), BID(0,4), BID(0,4)};

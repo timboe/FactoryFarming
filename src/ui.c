@@ -206,6 +206,8 @@ void updateBlueprint() {
   const enum kUICat selectedCat = getUIContentCategory();
   const uint16_t selectedID =  getUIContentID();
 
+  pd->sprite->setDrawMode(bp, kDrawModeCopy);
+
   if (gm == kPickMode || gm == kDestroyMode) {
     setPlayerLookingAtOffset(0);
     pd->sprite->setImage(bp, getSprite16_byidx(0, zoom), kBitmapUnflipped); 
@@ -231,7 +233,8 @@ void updateBlueprint() {
     setPlayerLookingAtOffset(2);
     if (selectedCat == kUICatExtractor) {
       switch (selectedID) {
-        case kCropHarvesterLarge: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap9x9[zoom], kBitmapUnflipped); break;
+        case kCropHarvesterLarge: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap9x9[zoom], kBitmapUnflipped);
+                                  pd->sprite->setDrawMode(bp, kDrawModeInverted); break;
         case kCropHarvesterSmall: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap7x7[zoom], kBitmapUnflipped); break;
         default: pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped); 
       }
@@ -439,7 +442,7 @@ void drawUIRight() {
   setRoobert10();
   pd->graphics->drawText(text, 32, kASCIIEncoding, 2*TILE_PIX, 0);
   pd->graphics->setDrawMode(kDrawModeCopy);
-  pd->graphics->drawBitmap(getSprite16(2, 2, 1), TILE_PIX/2, 0, kBitmapUnflipped);
+  pd->graphics->drawBitmap(getSprite16(2, 16, 1), TILE_PIX/2, 0, kBitmapUnflipped); // Coin
   enum kGameMode gm = getGameMode();
   if (gm == kPlaceMode || gm == kPlantMode || gm == kBuildMode) {
     int16_t rotMod = (m_selRotation == 0 ? 3 : m_selRotation - 1); // We are drawing this sideways, so need to rotate it by pi/2
@@ -855,7 +858,7 @@ void initiUI() {
 
   m_UISpriteCursor = pd->sprite->newSprite();
   pd->sprite->setBounds(m_UISpriteCursor, iBound);
-  pd->sprite->setImage(m_UISpriteCursor, getSprite16(0, 2, 2), kBitmapUnflipped);
+  pd->sprite->setImage(m_UISpriteCursor, getSprite16(0, 16, 2), kBitmapUnflipped);
   pd->sprite->setZIndex(m_UISpriteCursor, Z_INDEX_UI_T);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteCursor, 1);
 
@@ -867,7 +870,7 @@ void initiUI() {
 
   m_UISpriteCannotAfford = pd->sprite->newSprite();
   pd->sprite->setBounds(m_UISpriteCannotAfford, iBound);
-  pd->sprite->setImage(m_UISpriteCannotAfford, getSprite16(1, 2, 2), kBitmapUnflipped);
+  pd->sprite->setImage(m_UISpriteCannotAfford, getSprite16(1, 16, 2), kBitmapUnflipped);
   pd->sprite->setZIndex(m_UISpriteCannotAfford, Z_INDEX_UI_T);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteCannotAfford, 1);
   pd->sprite->moveTo(m_UISpriteCannotAfford, TILE_PIX*3, TILE_PIX*3);
@@ -931,7 +934,7 @@ void initiUI() {
         m_UIBitmapItems[c][i][r] = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*2, kColorClear);
         pd->graphics->pushContext(m_UIBitmapItems[c][i][r]);
         if (c == kUICatPlant) { // Crops are seeds in a packet
-          pd->graphics->drawBitmap(getSprite16(3, 2, 2), 0, 0, kBitmapUnflipped);
+          pd->graphics->drawBitmap(getSprite16(3, 16, 2), 0, 0, kBitmapUnflipped);
           pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), TILE_PIX/2, TILE_PIX/2, kBitmapUnflipped);
         } else if (c == kUICatFactory) {
           pd->graphics->drawBitmap(getSprite16(12 + r, 10, 2), 0, 0, kBitmapUnflipped);

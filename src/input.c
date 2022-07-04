@@ -246,8 +246,8 @@ void clickHandlerReplacement() {
   if (released & kButtonUp) m_pressed[2] = 0;
   if (released & kButtonDown) m_pressed[3] = 0;
   if (released & kButtonA) {
-    multiClickCount = 16;
-    multiClickNext = 16;
+    multiClickCount = 8;
+    multiClickNext = 8;
   }
 
   switch (gm) {
