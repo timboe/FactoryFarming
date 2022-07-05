@@ -8,6 +8,8 @@
 void doSale() {
   const uint16_t selectedID =  getUIContentID();
   const int32_t selectedPrice = getPrice(kUICatCargo, selectedID);
+  if (selectedID == kNoCargo) return;
+  if (getOwned(kUICatCargo, selectedID) == 0) return;
   if (modMoney(selectedPrice)) {
     modOwned(kUICatCargo, selectedID, /*add=*/ false);
     UIDirtyMain();
@@ -50,19 +52,22 @@ void populateInfoSell() {
 
 
 
-void populateContentSell(void) {
+bool populateContentSell(void) {
   struct Player_t* p = getPlayer();
   int16_t column = 0, row = 0;
   setUIContentHeader(row, kUICatCargo);
+  bool empty = true;
   ++row;
   for (int32_t i = 0; i < getNSubTypes(kUICatCargo); ++i) {
     if (!getOwned(kUICatCargo, i)) {
       continue;
     }
     setUIContentItem(row, column, kUICatCargo, i, 0);
+    empty = false;
     if (++column == ROW_WDTH) {
       ++row;
       column = 0;
     }
   }
+  return empty;
 }

@@ -163,6 +163,12 @@ struct Building_t* buildingManagerGetByIndex(uint16_t _index) {
 void buildingManagerFreeBuilding(struct Building_t* _building) {
   --(m_nByType[_building->m_type]);
   --m_nBuildings;
+  for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+    if (_building->m_sprite[zoom]) { 
+      pd->sprite->freeSprite(_building->m_sprite[zoom]);
+      _building->m_sprite[zoom] = NULL;
+    }
+  }
   _building->m_type = kNoBuilding;
   _building->m_updateFn = NULL;
   m_buildingSearchLocation = _building->m_index;
@@ -338,6 +344,12 @@ void resetBuilding() {
   for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
     m_buildings[i].m_index = i;
   }
+  // Max alocate?
+//  for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
+//    for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+//    m_buildings[i].m_sprite[zoom] = pd->sprite->newSprite();
+//    }
+//  }
   m_deserialiseIndexBuilding = 0;
   m_buildingSearchLocation = 0;
   m_nBuildings = 0;

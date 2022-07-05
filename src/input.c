@@ -38,6 +38,8 @@ void rotateHandlePlacement(float _rotation);
 
 void toggleZoom(void);
 
+bool m_b;
+
 /// ///
 
 uint8_t getZoom() {
@@ -46,6 +48,10 @@ uint8_t getZoom() {
 
 uint8_t getPressed(uint32_t _i) {
   return m_pressed[_i];
+}
+
+bool bPressed() {
+  return m_b;
 }
 
 void toggleZoom() {
@@ -227,9 +233,16 @@ void clickHandlerReplacement() {
   if (pushed & kButtonRight) gameClickConfigHandler(kButtonRight);
   if (pushed & kButtonDown) gameClickConfigHandler(kButtonDown);
   if (pushed & kButtonLeft) gameClickConfigHandler(kButtonLeft);
-  if (released & kButtonB) gameClickConfigHandler(kButtonB);
-  if (released & kButtonA) gameClickConfigHandler(kButtonA);
-  else if (current & kButtonA)  {
+  if (pushed & kButtonB) m_b = true;
+  if (released & kButtonB) {
+    gameClickConfigHandler(kButtonB);
+    m_b = false;
+  }
+  if (released & kButtonA) {
+    gameClickConfigHandler(kButtonA);
+    multiClickCount = 8;
+    multiClickNext = 8;
+  } else if (current & kButtonA)  {
     if (gm == kPlaceMode || gm == kPickMode || gm == kPlantMode) {
       gameClickConfigHandler(kButtonA); // Special, allow pick/placing rows of conveyors
     } else if (gm >= kMenuBuy) {
@@ -245,10 +258,6 @@ void clickHandlerReplacement() {
   if (released & kButtonRight) m_pressed[1] = 0;
   if (released & kButtonUp) m_pressed[2] = 0;
   if (released & kButtonDown) m_pressed[3] = 0;
-  if (released & kButtonA) {
-    multiClickCount = 8;
-    multiClickNext = 8;
-  }
 
   switch (gm) {
     case kWanderMode:; rotateHandleWander(pd->system->getCrankChange()); break;

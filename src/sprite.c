@@ -103,8 +103,9 @@ void animateConveyor() {
 
 LCDBitmap* getConveyorMaster(enum kDir _dir, uint8_t _speed) {
   switch (_speed) {
-    case 1: m_conveyorMasters[0][_dir];
-    case 2: m_conveyorMasters[1][_dir];
+    case 1: return m_conveyorMasters[0][_dir];
+    case 2: return m_conveyorMasters[1][_dir];
+    default: pd->system->error("Error unknown conveyor speed %i", _speed);
   }
   return NULL;
 }

@@ -225,6 +225,10 @@ void upgradeConveyor(struct Building_t* _building) {
 }
 
 void buildingSetupConveyor(struct Building_t* _building) {
+
+  // Set the starting speed (but don't downgrade)
+  if (_building->m_stored[0] == 0) _building->m_stored[0] = 1;
+
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
 
     switch (_building->m_subType.conveyor) {
@@ -240,13 +244,13 @@ void buildingSetupConveyor(struct Building_t* _building) {
     }
 
     // Animate the belt at zoom=2
-    if (_building->m_subType.conveyor == kBelt) {
+    if (_building->m_subType.conveyor == kBelt && zoom == 2) {
       PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
       if (_building->m_sprite[zoom] == NULL) {
         _building->m_sprite[zoom] = pd->sprite->newSprite();
       }
       pd->sprite->setBounds(_building->m_sprite[zoom], bound);
-      if (zoom == 2) pd->sprite->setImage(_building->m_sprite[zoom], getConveyorMaster(_building->m_dir, _building->m_stored[0]), kBitmapUnflipped);
+      pd->sprite->setImage(_building->m_sprite[zoom], getConveyorMaster(_building->m_dir, _building->m_stored[0]), kBitmapUnflipped);
       pd->sprite->moveTo(_building->m_sprite[zoom], 
         (_building->m_pix_x + _building->m_location->m_pix_off_x) * zoom, 
         (_building->m_pix_y + _building->m_location->m_pix_off_y) * zoom);
@@ -258,7 +262,4 @@ void buildingSetupConveyor(struct Building_t* _building) {
       }
     }
   }
-
-  // Set the starting speed (but don't downgrade)
-  if (_building->m_stored[0] == 0) _building->m_stored[0] = 1;
 }

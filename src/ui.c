@@ -646,7 +646,7 @@ void moveCursor(uint32_t _button) {
       ++m_selCol;
     }
   }
-  checkSel();
+  //checkSel();
   UIDirtyMain();
 }
 
@@ -677,14 +677,15 @@ void drawUIMain() {
   memset(m_rowIsTitle, 0, MAX_ROWS * sizeof(bool));
 
   // POPULATE
+  bool empty = false;
   switch (getGameMode()) {
     case kMenuBuy:; populateContentBuy(); break;
     case kMenuPlayer:; populateContentMainmenu(); break;
-    case kMenuSell:; populateContentSell(); break;
+    case kMenuSell:; empty = populateContentSell(); break;
     default: break;
   }
 
-  checkSel();
+  if (!empty) checkSel();
 
   // DRAW
   // Mark invisible
@@ -699,9 +700,22 @@ void drawUIMain() {
     }
   }
 
-  // Render
   #define UISTARTX (TILE_PIX*3)
   #define UISTARTY (TILE_PIX*5)
+
+  if (empty) {
+    pd->sprite->setVisible(m_UISpriteSelected, 0);
+    pd->sprite->setVisible(m_UISpriteCursor, 0);
+    pd->sprite->setVisible(m_UISpriteIngredients, 0);
+    pd->sprite->setVisible(m_UISpriteInfo, 0);
+    pd->sprite->setVisible(m_UISpriteCannotAfford, 1);
+    pd->sprite->setVisible(m_contentSprite[0][0], 1); // Still have the title
+    pd->sprite->moveTo(m_contentSprite[0][0], SCREEN_PIX_X/2 - TILE_PIX, UISTARTY);
+    return;
+  }
+  pd->sprite->setVisible(m_UISpriteInfo, 1);
+
+  // Render
   for (int32_t r = 0; r < 4; ++r) {
     int32_t rID = r + m_selRowOffset;
     if (rID >= MAX_ROWS) break;
@@ -725,6 +739,7 @@ void drawUIMain() {
 
   // SELECTED
   LCDSprite* selectedSprite = m_contentSprite[m_selRow][m_selCol];
+  pd->sprite->setVisible(m_UISpriteSelected, 1);
   pd->sprite->setImage(m_UISpriteSelected, pd->sprite->getImage(selectedSprite), kBitmapUnflipped);
 
   // INGREDIENTS

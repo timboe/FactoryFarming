@@ -181,6 +181,7 @@ bool movePlayer() {
   if (m_currentLocation != NULL && isWaterTile(m_currentLocation->m_x, m_currentLocation->m_y)) {
     speed = 2;
   }
+  if (bPressed()) speed += 2;
 
   if (getPressed(0)) { goalX -= speed / zoom; m_facing = 0; } 
   if (getPressed(1)) { goalX += speed / zoom; m_facing = 1; }

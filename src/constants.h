@@ -54,8 +54,8 @@
 #define CONV_START_Y 7
 
 // How big is the world in X and Y
-#define WORLD_CHUNKS_X 8
-#define WORLD_CHUNKS_Y 8
+#define WORLD_CHUNKS_X 12
+#define WORLD_CHUNKS_Y 12
 #define TOT_CHUNKS (WORLD_CHUNKS_X*WORLD_CHUNKS_Y)
 
 #define TOT_WORLD_PIX_X (WORLD_CHUNKS_X*CHUNK_PIX_X)

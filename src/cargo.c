@@ -71,6 +71,12 @@ struct Cargo_t* cargoManagerGetByIndex(uint16_t _index) {
 
 void cargoManagerFreeCargo(struct Cargo_t* _cargo) {
   _cargo->m_type = kNoCargo;
+  for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+    if (_cargo->m_sprite[zoom]) {
+      pd->sprite->freeSprite(_cargo->m_sprite[zoom]);
+      _cargo->m_sprite[zoom] = NULL;
+    }
+  }
   m_cargoSearchLocation = _cargo->m_index;
   --m_nCargo;
 }
@@ -127,6 +133,12 @@ void resetCargo() {
   for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
     m_cargos[i].m_index = i;
   }
+  // Max alocate?
+//  for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
+//    for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+//      m_cargos[i].m_sprite[zoom] = pd->sprite->newSprite();
+//    }
+//  }
   m_deserialiseIndexCargo = 0;
   m_cargoSearchLocation = 0;
   m_nCargo = 0;
