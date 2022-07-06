@@ -11,7 +11,7 @@ struct Tile_t {
 };
 
 // Paved must come after the plantable ground types
-enum kGroundType{kSiltyGround, kChalkyGround, kPeatyGround, kSandyGround, kClayGround, kLoamyGround, kPavedGround, kLake, kRiver, kNGroundTypes};
+enum kGroundType{kSiltyGround, kChalkyGround, kPeatyGround, kSandyGround, kClayGround, kLoamyGround, kPavedGround, kObstructedGround, kLake, kRiver, kNGroundTypes};
 
 enum kGroundWetness{kWater, kWet, kMoist, kDry, kNGroundWetnesses};
 

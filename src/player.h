@@ -19,6 +19,7 @@ struct Player_t{
   uint32_t m_money;
   uint32_t m_moneyCumulative;
   uint32_t m_moneyHighWaterMark;
+  uint32_t m_moneyHighWaterMarkMenu; // Indicates how many unlocks the player has been shown up to
   uint32_t m_saveTime;
   uint32_t m_playTime;
   uint8_t m_tutorialProgress; // On each individual stage

@@ -291,16 +291,22 @@ enum kGroundWetness getWetness(uint8_t _wetness) {
 }
 
 enum kGroundType getGroundType(uint8_t _tile) {
-  if (_tile < 8) {
+  if (_tile < FLOOR_VARIETIES) {
     return kSiltyGround;
-  } else if (_tile < 16) {
+  } else if (_tile < FLOOR_VARIETIES*2) {
     return kChalkyGround;
-  } else if (_tile < 24) {
+  } else if (_tile < FLOOR_VARIETIES*3) {
     return kPeatyGround;
-  } else if (_tile < 32) {
+  } else if (_tile < FLOOR_VARIETIES*4) {
     return kSandyGround;
-  } else if (_tile < 48) {
+  } else if (_tile < FLOOR_VARIETIES*5) {
+    return kClayGround;
+  } else if (_tile < FLOOR_VARIETIES*6) {
+    return kLoamyGround;
+  } else if (_tile < FLOOR_VARIETIES*7) {
     return kPavedGround;
+  } else if (_tile == SID(12,13) || _tile == SID(13,13)) {
+    return kObstructedGround;
   } else if (_tile < 192) {
     return kLake;
   } else if (_tile < 232) {
@@ -325,11 +331,15 @@ const char* toStringSoil(enum kGroundType _type) {
     case kChalkyGround: return "Chalky Soil";
     case kPeatyGround: return "Peaty Soil";
     case kSandyGround: return "Sandy Soil";
+    case kClayGround: return "Clay Soil";
+    case kLoamyGround: return "Loamy Soil";
     case kPavedGround: return "Paved Ground";
+    case kObstructedGround: return "Obstructed Ground";
     case kLake: return "Lake";
     case kRiver: return "River";
-    case kNGroundTypes: default: return "UNKNOWN Soil";
+    case kNGroundTypes: return "UNKNOWN Soil";
   }
+  return "UNKNOWN Soil";
 }
 
 const char* getWorldName() {

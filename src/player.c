@@ -80,11 +80,21 @@ void nextTutorialStage() {
   ++m_player.m_enableTutorial;
   if (m_player.m_enableTutorial == kTutBreakOne || m_player.m_enableTutorial == kTutBreakTwo) {
     m_player.m_enableTutorial = 254;
+    // TEMP - end of tutorial cash
+    modMoney(100000);
     return;
-  }
-  if (m_player.m_enableTutorial == kTutGetCarrots) {
+  } else if (m_player.m_enableTutorial == kTutGetCarrots) {
     growAtAll(); // Force all plants to grow
+  } else if (m_player.m_enableTutorial == kTutBuildHarvester) {
+    modMoney(kExtractorUnlock[kCropHarvesterSmall]);
+  } else if (m_player.m_enableTutorial == kTutBuildConveyor) {
+    modMoney(kConvUnlock[kBelt]);
+  } else if (m_player.m_enableTutorial == kTutBuildQuarry) {
+    modMoney(kExtractorUnlock[kChalkQuarry]);
+  } else if (m_player.m_enableTutorial == kTutBuildVitamin) {
+    modMoney(kFactoryUnlock[kVitiminFac]);
   }
+
   showTutorialMsg(m_player.m_enableTutorial);
 }
 
@@ -370,9 +380,10 @@ void playerSpriteSetup() {
 }
 
 void resetPlayer() {
-  m_player.m_money = 100000000; // DEBUG
+  m_player.m_money = 0;
   m_player.m_moneyCumulative = 0;
   m_player.m_moneyHighWaterMark = 0;
+  m_player.m_moneyHighWaterMarkMenu = 0;
   m_player.m_saveTime = pd->system->getSecondsSinceEpoch(NULL);
   m_player.m_playTime = 0;
   m_player.m_tutorialProgress = 0;
@@ -383,7 +394,7 @@ void resetPlayer() {
   for (int32_t i = 0; i < kNPlantSubTypes; ++i) m_player.m_carryPlant[i] = 0;
   for (int32_t i = 0; i < kNExtractorSubTypes; ++i) m_player.m_carryExtractor[i] = 0;
   for (int32_t i = 0; i < kNFactorySubTypes; ++i) m_player.m_carryFactory[i] = 0;
-  setPlayerPosition(SCREEN_PIX_X/2, SCREEN_PIX_Y/2);
+  setPlayerPosition(SCREEN_PIX_X/4, (3*SCREEN_PIX_Y)/4);
   m_currentChunk = getChunk_noCheck(0,0);
   m_forceTorus = true;
 }
@@ -406,6 +417,8 @@ void serialisePlayer(struct json_encoder* je) {
   je->writeInt(je, m_player.m_money);
   je->addTableMember(je, "mhwm", 4);
   je->writeInt(je, m_player.m_moneyHighWaterMark);
+  je->addTableMember(je, "mhwmm", 5);
+  je->writeInt(je, m_player.m_moneyHighWaterMarkMenu);
   je->addTableMember(je, "mc", 2);
   je->writeInt(je, m_player.m_moneyCumulative);
   je->addTableMember(je, "st", 2);
@@ -427,7 +440,7 @@ void serialisePlayer(struct json_encoder* je) {
   je->writeInt(je, m_player.m_enableConveyorAnimation); 
   je->addTableMember(je, "sett", 4);
   je->writeInt(je, m_player.m_enableTutorial);
-  je->addTableMember(je, "setd", 2);
+  je->addTableMember(je, "setd", 4);
   je->writeInt(je, m_player.m_enableDebug);
   
   je->addTableMember(je, "cargos", 6);
@@ -493,6 +506,8 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_player.m_money = json_intValue(_value);
   } else if (strcmp(_key, "mhwm") == 0) {
     m_player.m_moneyHighWaterMark = json_intValue(_value);
+  } else if (strcmp(_key, "mhwmm") == 0) {
+    m_player.m_moneyHighWaterMarkMenu = json_intValue(_value);
   } else if (strcmp(_key, "mc") == 0) {
     m_player.m_moneyCumulative = json_intValue(_value);
   } else if (strcmp(_key, "st") == 0) {

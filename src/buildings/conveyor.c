@@ -88,12 +88,13 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
 bool canBePlacedConveyor(struct Location_t* _loc, enum kDir _dir, union kSubType _subType) {
   bool floor = false;
   struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
-  if (t->m_tile < TOT_FLOOR_TILES) floor = true;
+  // + FLOOR_VARIETIES for PAVED ground, can make conveyors here
+  if (t->m_tile < TOT_FLOOR_TILES + FLOOR_VARIETIES) floor = true;
   else if (t->m_tile >= SPRITE16_ID(8, 16) && t->m_tile < SPRITE16_ID(8+4, 16)) floor = true;
 
   if (_subType.conveyor == kTunnelIn) {
     t = getTunnelOutTile(_loc, _dir);
-    if (t->m_tile < TOT_FLOOR_TILES) floor &= true;
+    if (t->m_tile < TOT_FLOOR_TILES + FLOOR_VARIETIES) floor &= true;
     else if (t->m_tile >= SPRITE16_ID(8, 16) && t->m_tile < SPRITE16_ID(8+4, 16)) floor &= true;
   }
 

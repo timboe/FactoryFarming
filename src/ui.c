@@ -147,7 +147,7 @@ void updateUI(int _fc) {
   if ((m_mode >= kMenuBuy) && _fc % (TICK_FREQUENCY/4) == 0) {
     // Flashing cursor
     UIDirtyMain();
-  } else if (m_mode == kPlaceMode && _fc % (TICK_FREQUENCY/4) == 0) {
+  } else if ((m_mode == kPlaceMode || m_mode == kBuildMode || m_mode == kPlantMode) && _fc % (TICK_FREQUENCY/4) == 0) {
     // Flashing blueprint 
     pd->sprite->setVisible(getPlayer()->m_blueprint[getZoom()], _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
   }
@@ -305,7 +305,7 @@ void showTutorialMsg(enum kUITutorialStage _stage) {
   pd->graphics->drawBitmap(getSprite16(10, 10, 1), TUTORIAL_WIDTH - (TILE_PIX/2) - TILE_PIX, TUTORIAL_HEIGHT - (TILE_PIX/2) - TILE_PIX, kBitmapUnflipped);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   setRoobert10();
-  snprintf(text, 128, "--- Tutorial Stage %u/%u ---", (unsigned) _stage+1, (unsigned) kNTutorialStages);
+  snprintf(text, 128, "--- Tutorial Stage %u/%u ---", (unsigned) _stage+1, (unsigned) kTutBreakOne);
   int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, 128, kASCIIEncoding, 0);
   pd->graphics->drawText(text, 128, kASCIIEncoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - Y_SHFT);
   for (int32_t l = 0; l < 5; ++l) {
@@ -1047,7 +1047,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
           
         case 5: return "Find a nearby area of Silty Soil, preferably Moist. ";
         case 6: return "Press Ⓐ to enter your inventory, select the Carrot";
-        case 7: return "Seeds and press Ⓐ again. Plant 10 Carrot Plants on";
+        case 7: return "Seeds and press Ⓐ again. Plant 10 Carrot Seeds on";
         case 8: return "empty patches of Silty Soil, then press Ⓑ.";
       }
     case kTutGetCarrots:;
@@ -1107,17 +1107,17 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 0: return "-- Mining The Earth --";
         case 1: return "OK. But not all exploitable resources are grown.";
         case 2: return "Some are dug up, or pumped out. Let's build a Chalk";
-        case 3: return "Mine next. Buy one from The Shop and build it on";
-        case 4: return "Chalky Soil. There should be some to the South.";
+        case 3: return "Quarry next. Buy one from The Shop and build it on";
+        case 4: return "Chalky Soil. There should be some to the West.";
           
-        case 5: return "Go to the The Shop, buy a Chalk Mine.";
+        case 5: return "Go to the The Shop, buy a Chalk Quarry.";
         case 6: return "Press Ⓐ and choose this from your inventory.";
-        case 7: return "Go South from The Shop and look for Chalky Soil.";
-        case 8: return "Place the Mine on at least one Chalky Soil tile.";
+        case 7: return "Go West from The Shop and look for Chalky Soil.";
+        case 8: return "Place the Quarry on at least one Chalky Soil tile.";
       }
     case kTutBuildVitamin:
       switch (_n) {
-        case 0: return "-- Mining The Earth --";
+        case 0: return "-- Manufacturing Value --";
         case 1: return "Nice. We can finally set up a full production line!";
         case 2: return "Buy a Vitamin Factory from The Shop, supply it with";
         case 3: return "both Chalk and Carrots, and transport the Vitamins";
@@ -1132,9 +1132,12 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
       switch (_n) {
         case 0: return "-- Go Forth And Consume --";
         case 1: return "Excellent! You now know all the basics of exploiting";
-        case 2: return "the world for profit. As your bank account swells,";
-        case 3: return "more Crops, Factories, and other items will unlock.";
-        case 4: return "Use them well to maximise profit.";
+        //case 2: return "the world for profit. As your bank account swells,";
+        //case 3: return "more Crops, Factories, and other items will unlock.";
+        //case 4: return "Use them well to maximise profit.";
+        case 2: return "the world for profit. This ends the tutorial,";
+        case 3: return "the remaining items available in this Alpha build";
+        case 4: return "have all been unlocked and you have been given 100k.";
           
         case 5: return " ";
         case 6: return " ";

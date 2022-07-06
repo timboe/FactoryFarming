@@ -9,6 +9,7 @@ int8_t getWaterBonus(enum kGroundWetness _likes, enum kGroundWetness _has);
 
 int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has);
 
+void setGrowdownTimer(struct Building_t* _building);
 
 /// ///
 
@@ -29,13 +30,16 @@ void plantTrySpawnCargo(struct Building_t* _building) {
     case kNPlantSubTypes:; break;
   }
 
-  // TODO growing bonuses?
-  _building->m_progress = kPlantGrowT[_building->m_subType.plant];
-  // + rand() % (kPlantGrowT[_building->m_subType.plant] / 4);
+  setGrowdownTimer(_building);
   
   if (++_building->m_mode == N_CROPS_BEFORE_FARMLAND || _building->m_mode == 2*N_CROPS_BEFORE_FARMLAND ) {
     renderChunkBackgroundImage(loc->m_chunk);
   }
+}
+
+void setGrowdownTimer(struct Building_t* _building) {
+  // TODO growing bonuses?
+  _building->m_progress = kPlantGrowT[_building->m_subType.plant] * TICKS_PER_SEC;
 }
 
 #define CARGO_BOUNCE_OFFSET 4
@@ -53,8 +57,6 @@ void plantUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   }
 
   if (_building->m_progress > 0) return;
-
-  // TODO: Growning penalties?
 
   plantTrySpawnCargo(_building);
 
@@ -92,7 +94,7 @@ void buildingSetupPlant(struct Building_t* _building) {
 
   clearLocation(_building->m_location, /*cargo*/ true, /*building*/ false);
 
-  _building->m_progress = kPlantGrowT[_building->m_subType.plant];//GROW_TIME + rand() % GROW_RANDOM; // Somewhere better to put the initial timer?
+  setGrowdownTimer(_building);
 
 }
 
@@ -146,6 +148,7 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
         case kClayGround: return 0;
         case kLoamyGround: return 0;
         case kPavedGround: return -3;
+        case kObstructedGround: return -3;
         case kLake: return -3;
         case kRiver: return -3;
         case kNGroundTypes: return 0;
@@ -159,6 +162,7 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
         case kClayGround: return 0;
         case kLoamyGround: return 0;
         case kPavedGround: return -3;
+        case kObstructedGround: return -3;
         case kLake: return -3;
         case kRiver: return -3;
         case kNGroundTypes: return 0;
@@ -172,6 +176,7 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
         case kClayGround: return 0;
         case kLoamyGround: return 0;
         case kPavedGround: return 0;
+        case kObstructedGround: return -3;
         case kLake: return -3;
         case kRiver: return -3;
         case kNGroundTypes: return 0;
@@ -185,6 +190,7 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
         case kClayGround: return 0;
         case kLoamyGround: return 0;
         case kPavedGround: return -3;
+        case kObstructedGround: return -3;
         case kLake: return -3;
         case kRiver: return -3;
         case kNGroundTypes: return 0;
@@ -198,6 +204,7 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
         case kClayGround: return +1;
         case kLoamyGround: return 0;
         case kPavedGround: return -3;
+        case kObstructedGround: return -3;
         case kLake: return -3;
         case kRiver: return -3;
         case kNGroundTypes: return 0;
@@ -211,6 +218,7 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
         case kClayGround: return 0;
         case kLoamyGround: return +1;
         case kPavedGround: return -3;
+        case kObstructedGround: return -3;
         case kLake: return -3;
         case kRiver: return -3;
         case kNGroundTypes: return 0;
@@ -224,10 +232,12 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
         case kClayGround: return 0;
         case kLoamyGround: return 0;
         case kPavedGround: return +1;
+        case kObstructedGround: return -3;
         case kLake: return -3;
         case kRiver: return -3;
         case kNGroundTypes: return 0;
       }
+    case kObstructedGround: return -3;
     case kLake:
       switch (_has) {
         case kSiltyGround: return -3;
@@ -237,6 +247,7 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
         case kClayGround: return 0;
         case kLoamyGround: return 0;
         case kPavedGround: return -3;
+        case kObstructedGround: return -3;
         case kLake: return +1;
         case kRiver: return +1;
         case kNGroundTypes: return 0;
@@ -250,6 +261,7 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
         case kClayGround: return 0;
         case kLoamyGround: return 0;
         case kPavedGround: return -3;
+        case kObstructedGround: return -3;
         case kLake: return +1;
         case kRiver: return +1;
         case kNGroundTypes: return 0;

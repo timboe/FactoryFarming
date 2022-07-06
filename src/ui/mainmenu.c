@@ -122,7 +122,9 @@ void doDestroy() {
   for (int32_t x = -1; x < 2; ++x) {
     for (int32_t y = -1; y < 2; ++y) {
       struct Location_t* loc = getLocation(ploc->m_x + x, ploc->m_y + y);
-      clearLocation(loc, /*cargo=*/ true, /*building=*/ true);
+      bool doBuilding = true; 
+      if (loc->m_building && loc->m_building->m_type == kSpecial) doBuilding = false;
+      clearLocation(loc, /*cargo=*/ true, /*building=*/ doBuilding);
     }
   }
 }

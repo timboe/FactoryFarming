@@ -93,7 +93,10 @@ void clickHandleWander(uint32_t _buttonPressed) {
     else if (distanceFromBuy() < ACTIVATE_DISTANCE) setGameMode(kMenuBuy);
     else if (distanceFromSell() < ACTIVATE_DISTANCE) setGameMode(kMenuSell);
     else setGameMode(kMenuPlayer);
+  } else if (kButtonB == _buttonPressed) {
+    if (getTutorialStage() < 254) checkReturnDismissTutorialMsg();
   }
+
   //else if (kButtonB == _buttonPressed) toggleZoom(); // Press B to change zoom?
   // Hold down B to go faster?
 }
