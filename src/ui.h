@@ -19,6 +19,8 @@ enum kUICat {kUICatTool, kUICatPlant, kUICatConv, kUICatExtractor, kUICatFactory
 
 #define TOP_TITLE_OFFSET 34
 
+void queueSave(void);
+
 void addUIToSpriteList(void);
 
 void rotateCursor(bool _increment);

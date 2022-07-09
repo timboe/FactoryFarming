@@ -62,21 +62,19 @@ void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick) {
       }
     }
   }
-
 }
 
 void pumpUpdateFn(struct Building_t* _building) {
-  if (_building->m_next[0]->m_cargo == NULL && (_building->m_next[0]->m_building == NULL || _building->m_next[0]->m_building->m_type == kConveyor)) {
+  if (_building->m_next[0]->m_cargo == NULL) {
     newCargo(_building->m_next[0], kWaterBarrel, false);
   }
 }
 
 void quarryUpdateFn(struct Building_t* _building) {
-  if (_building->m_next[0]->m_cargo == NULL && (_building->m_next[0]->m_building == NULL || _building->m_next[0]->m_building->m_type == kConveyor)) {
+  if (_building->m_next[0]->m_cargo == NULL) {
     newCargo(_building->m_next[0], kChalk, false);
   }
 }
-
 
 void extractorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   switch (_building->m_subType.extractor) {

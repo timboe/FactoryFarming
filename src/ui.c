@@ -11,10 +11,13 @@
 #include "generate.h"
 #include "cargo.h"
 #include "render.h"
+#include "io.h"
 #include "buildings/special.h"
 #include "buildings/factory.h"
 
 enum kGameMode m_mode;
+
+uint8_t m_queueSave;
 
 LCDSprite* m_UISpriteBottom;
 LCDBitmap* m_UIBitmapBottom;
@@ -22,6 +25,9 @@ LCDBitmap* m_UIBitmapBottom;
 LCDSprite* m_UISpriteRight;
 LCDBitmap* m_UIBitmapRight;
 LCDBitmap* m_UIBitmapRightRotated;
+
+LCDSprite* m_UISpriteTopSave;
+LCDBitmap* m_UIBitmapTopSave;
 
 LCDSprite* m_UISpriteTop;
 LCDBitmap* m_UIBitmapTop;
@@ -94,6 +100,10 @@ void drawUIRight(void);
 void drawUIMain(void);
 
 /// ///
+
+void queueSave() {
+  m_queueSave = 1;
+}
 
 enum kGameMode getGameMode() {
   return m_mode;
@@ -174,6 +184,17 @@ void updateUI(int _fc) {
     }
   }
 
+  if (m_queueSave) {
+    if (m_queueSave == 1) {
+      pd->sprite->addSprite(m_UISpriteTopSave);
+      m_queueSave = 2;
+    } else if (m_queueSave == 2) {
+      save();
+      m_queueSave = 0;
+      pd->sprite->removeSprite(m_UISpriteTopSave);
+    }
+  }
+
   if (m_UITopVisible && m_UITopOffset < TOP_TITLE_OFFSET) {
     m_UITopOffset += 4;
     pd->sprite->moveTo(m_UISpriteTop, SCREEN_PIX_X/2, TILE_PIX - TOP_TITLE_OFFSET + m_UITopOffset + 1 );
@@ -190,7 +211,7 @@ void updateUI(int _fc) {
     m_UIDirtyBottom = false;
     drawUIBottom();
   }
-  if (m_UIDirtyMain) {
+  if (m_UIDirtyMain && m_mode >= kMenuBuy) {
     m_UIDirtyMain = false;
     drawUIMain();
   }
@@ -230,7 +251,7 @@ void updateBlueprint() {
     pd->sprite->setImage(bp, getSprite16_byidx(kPlantUIIcon[selectedID], zoom), kBitmapUnflipped); 
     pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
   } else if (gm == kBuildMode) { // Of factories and harvesters
-    setPlayerLookingAtOffset(2);
+    setPlayerLookingAtOffset(0);
     if (selectedCat == kUICatExtractor) {
       switch (selectedID) {
         case kCropHarvesterLarge: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap9x9[zoom], kBitmapUnflipped);
@@ -809,10 +830,12 @@ void roundedRect(uint16_t _o, uint16_t _w, uint16_t _h, uint16_t _r, LCDColor _c
 
 void initiUI() {
   m_UISpriteTop = pd->sprite->newSprite();
+  m_UISpriteTopSave = pd->sprite->newSprite();
   m_UISpriteBottom = pd->sprite->newSprite();
   m_UISpriteRight = pd->sprite->newSprite();
 
   m_UIBitmapTop = pd->graphics->newBitmap(SCREEN_PIX_X/2, TILE_PIX*2, kColorClear);
+  m_UIBitmapTopSave = pd->graphics->newBitmap(SCREEN_PIX_X/2, TILE_PIX*2, kColorClear);
   m_UIBitmapBottom = pd->graphics->newBitmap(DEVICE_PIX_X, TILE_PIX, kColorBlack);
   m_UIBitmapRight = pd->graphics->newBitmap(TILE_PIX, DEVICE_PIX_Y, kColorBlack);
   m_UIBitmapRightRotated = pd->graphics->newBitmap(DEVICE_PIX_Y, TILE_PIX, kColorBlack);
@@ -821,9 +844,25 @@ void initiUI() {
   pd->sprite->setBounds(m_UISpriteTop, boundTop);
   pd->sprite->setImage(m_UISpriteTop, m_UIBitmapTop, kBitmapUnflipped);
   pd->sprite->moveTo(m_UISpriteTop, SCREEN_PIX_X/2 - 32, TILE_PIX);
-  pd->sprite->setZIndex(m_UISpriteTop, Z_INDEX_MAX);
+  pd->sprite->setZIndex(m_UISpriteTop, Z_INDEX_UI_T);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteTop, 1);
   pd->sprite->setVisible(m_UISpriteTop, 1);
+
+  pd->sprite->setBounds(m_UISpriteTopSave, boundTop);
+  pd->sprite->setImage(m_UISpriteTopSave, m_UIBitmapTopSave, kBitmapUnflipped);
+  pd->sprite->moveTo(m_UISpriteTopSave, SCREEN_PIX_X/2, TILE_PIX);
+  pd->sprite->setZIndex(m_UISpriteTopSave, Z_INDEX_UI_TT);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteTopSave, 1);
+  pd->sprite->setVisible(m_UISpriteTopSave, 1);
+
+  pd->graphics->pushContext(m_UIBitmapTopSave);
+  pd->graphics->setLineCapStyle(kLineCapStyleRound);
+  pd->graphics->drawLine(TILE_PIX, TILE_PIX, SCREEN_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorBlack);
+  pd->graphics->setDrawMode(kDrawModeFillWhite);
+  setRoobert24();
+  int32_t tlen = pd->graphics->getTextWidth(getRoobert24(), "SAVING", 16, kASCIIEncoding, 0);
+  pd->graphics->drawText("SAVING", 6, kASCIIEncoding, (SCREEN_PIX_X/2 - tlen)/2, 0);
+  pd->graphics->popContext();
 
   PDRect boundBottom = {.x = 0, .y = 0, .width = DEVICE_PIX_X, .height = TILE_PIX};
   pd->sprite->setBounds(m_UISpriteBottom, boundBottom);

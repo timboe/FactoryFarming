@@ -158,9 +158,12 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
         pd->graphics->setDrawMode(invert ? kDrawModeInverted : kDrawModeCopy);
         pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - off48_x, building->m_pix_y - off48_y, kBitmapUnflipped);
         pd->graphics->setDrawMode(kDrawModeCopy);
-        // If factory - draw also what is produced
+        // If factory or farm - draw also what is produced
         if (building->m_type == kFactory) {
           pd->graphics->drawBitmap(getSprite16_byidx(getUIIcon(kUICatFactory, building->m_subType.factory), 1), 
+            building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
+        } else if (building->m_type == kExtractor) {
+          pd->graphics->drawBitmap(getSprite16_byidx(getUIIcon(kUICatExtractor, building->m_subType.extractor), 1), 
             building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
         }
       } else {

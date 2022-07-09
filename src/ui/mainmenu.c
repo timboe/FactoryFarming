@@ -73,7 +73,7 @@ void doPlace() {
       if (selectedID == kConveyorGrease) placed = doConveyorUpgrade(placeLocation);
       else placed = newBuilding(placeLocation, getCursorRotation(), kUtility, (union kSubType) {.utility = selectedID} );
       break;
-    case kUICatCargo: placed = newCargo(placeLocation, selectedID, /*added by player*/ true); break;
+    case kUICatCargo: placed = newCargo(placeLocation, selectedID, /*add to display*/ true); break;
     case kNUICats: break;
   }
   if (placed) {

@@ -176,7 +176,7 @@ void buildingManagerFreeBuilding(struct Building_t* _building) {
 
 void growAtAll() {
   for (uint32_t b = 0; b < TOT_CARGO_OR_BUILDINGS; ++b) {
-    if (m_buildings[b].m_type == kPlant) plantTrySpawnCargo(&m_buildings[b]);
+    if (m_buildings[b].m_type == kPlant) plantTrySpawnCargo(&m_buildings[b], NEAR_TICK_AMOUNT);
   }
 }
 

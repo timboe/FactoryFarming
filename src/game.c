@@ -223,7 +223,7 @@ void menuOptionsCallbackLoad(void* blank) {
 }
 
 void menuOptionsCallbackSave(void* blank) {
-  save();
+  queueSave();
 }
 
 // Call prior to loading anything

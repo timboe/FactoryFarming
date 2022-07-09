@@ -29,7 +29,7 @@ struct Cargo_t* cargoManagerGetByIndex(uint16_t _index);
 
 void cargoManagerFreeCargo(struct Cargo_t* _cargo);
 
-bool newCargo(struct Location_t* loc, enum kCargoType _type, bool _addedByPlayer);
+bool newCargo(struct Location_t* loc, enum kCargoType _type, bool _addToDisplay);
 
 void initCargo(void);
 

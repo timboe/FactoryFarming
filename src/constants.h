@@ -112,7 +112,7 @@
 #define WORLD_NAME_LENGTH 32
 
 // Versioning
-#define SAVE_FORMAT 1
+#define SAVE_FORMAT 2
 
 #define ACTIVATE_DISTANCE (TILE_PIX*4)
 

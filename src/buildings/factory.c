@@ -54,7 +54,7 @@ void factoryUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom)
   // Placing down
   if (_building->m_stored[0] && _building->m_next[0]->m_cargo == NULL) {
     --_building->m_stored[0];
-    newCargo(_building->m_next[0], kFactoryOut[_building->m_subType.factory], /*added by player*/ false);
+    newCargo(_building->m_next[0], kFactoryOut[_building->m_subType.factory], _tick == NEAR_TICK_AMOUNT);
   }
 }
 

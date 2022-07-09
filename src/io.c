@@ -179,6 +179,9 @@ bool save() {
 
   status &= pd->file->close(file);
 
+  //float f;
+  //for (int32_t i = 0; i < 10000; ++i) for (int32_t j = 0; j < 100000; ++j) { f*=i*j; }
+
   pd->system->logToConsole("save to %u, status %i", m_slot, status);
   return true;
 

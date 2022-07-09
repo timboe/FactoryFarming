@@ -3,6 +3,7 @@
 #include "sprite.h"
 #include "render.h"
 #include "building.h"
+#include "input.h"
 
 //                              {kNoCargo, kApple,   kCheese,  kCarrot,   kWheat,    kWaterBarrel, kChalk,    kVitamin, kNCargoType};
 const uint16_t kCargoValue[] =  {0,        2,        8,        1,         4,         1,            1,         1};
@@ -94,7 +95,7 @@ void cargoSpriteSetup(struct Cargo_t* _cargo, uint16_t _x, uint16_t _y, uint16_t
   }
 }
 
-bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addedByPlayer) {
+bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addToDisplay) {
   bool addedByPlayer = true;
   if (_loc->m_cargo != NULL) return false;
 
@@ -118,8 +119,8 @@ bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addedByPlaye
   struct Chunk_t* chunk = _loc->m_chunk;
   chunkAddCargo(chunk, cargo);
 
-  if (_addedByPlayer) updateRenderList(); // Do we want to do this here?
-  else queueUpdateRenderList();
+  if (_addToDisplay) pd->sprite->addSprite(cargo->m_sprite[getZoom()]);
+  else queueUpdateRenderList(); // TODO, make this tick in the background at the slow tick rate
   return true;
 }
 

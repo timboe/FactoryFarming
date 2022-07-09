@@ -17,15 +17,15 @@ void setGrowdownTimer(struct Building_t* _building);
 //#define GROW_TIME (TICKS_PER_SEC*52)
 //#define GROW_RANDOM (TICKS_PER_SEC*40)
 
-void plantTrySpawnCargo(struct Building_t* _building) {
+void plantTrySpawnCargo(struct Building_t* _building, uint8_t _tick) {
   struct Location_t* loc = _building->m_location;
   if (loc->m_cargo != NULL) {
     return;
   }
   switch (_building->m_subType.plant) {
-    case kCarrotPlant:; newCargo(loc, kCarrot, false);
-    case kAppleTree:;   newCargo(loc, kApple, false);
-    case kWheatPlant:;  newCargo(loc, kWheat, false);
+    case kCarrotPlant:; newCargo(loc, kCarrot, _tick == NEAR_TICK_AMOUNT);
+    case kAppleTree:;   newCargo(loc, kApple, _tick == NEAR_TICK_AMOUNT);
+    case kWheatPlant:;  newCargo(loc, kWheat, _tick == NEAR_TICK_AMOUNT);
     case kP4:; case kP5:; case kP6:; case kP7:; case kP8:; case kP9:; case kP10:; case kP11:; case kP12:; break; 
     case kNPlantSubTypes:; break;
   }
@@ -58,7 +58,7 @@ void plantUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
 
   if (_building->m_progress > 0) return;
 
-  plantTrySpawnCargo(_building);
+  plantTrySpawnCargo(_building, _tick);
 
 }
 
