@@ -134,3 +134,35 @@ void buildingSetupSpecial(struct Building_t* _building) {
     }
   }
 }
+
+
+
+int32_t m_exportTimer = 0;
+bool m_exportParity = true;
+uint16_t m_exportItemCountA[kNCargoType];
+uint16_t m_exportItemCountB[kNCargoType];
+
+void exportUpdateFn(struct Building_t* _building) {
+
+  // Pickup items 
+  const int32_t min = -1, max =2;
+  // Picking up
+  for (int32_t x = min; x < max; ++x) {
+    for (int32_t y = min; y < max; ++y) {
+      struct Location_t* loc = getLocation(_building->m_location->m_x + x, _building->m_location->m_y + y);
+      if (loc->m_cargo) {
+        if (m_exportParity) {
+          m_exportItemCountA[loc->m_cargo->m_type]++;
+        } else {
+          m_exportItemCountB[loc->m_cargo->m_type]++;
+        }
+        clearLocation(loc, /*clearCargo*/ true, /*clearBuilding*/ false);
+      }
+    }
+  }
+
+}
+
+void importtUpdateFn(struct Building_t* _building) {
+  
+}
