@@ -2,7 +2,6 @@
 #include "../player.h"
 #include "../sprite.h"
 
-
 /// ///
 
 void doSale() {

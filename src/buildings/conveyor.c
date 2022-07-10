@@ -7,6 +7,20 @@
 
 /// ///
 
+void conveyorLocationUpdate(struct Building_t* _building, uint8_t _zoom) {
+  const int8_t x = (int8_t) _building->m_stored[1];
+  const int8_t y = (int8_t) _building->m_stored[2];
+  const bool hide  = _building->m_stored[3];
+  struct Location_t* loc = _building->m_location;
+  if (hide) {
+    pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], 65536, 65536);
+  } else {
+    pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], 
+                      (_building->m_pix_x + loc->m_pix_off_x + x)*_zoom, 
+                      (_building->m_pix_y + loc->m_pix_off_y + y)*_zoom);
+  }
+}
+
 void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   struct Location_t* loc = _building->m_location;
   if (loc->m_cargo == NULL) return;
@@ -25,28 +39,19 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
       direction = _building->m_nextDir[_building->m_mode.mode16];
     }
 
-    // All of this only needs to be done if we are rendering
-    if (_tick == NEAR_TICK_AMOUNT) {
-      uint16_t hide = 0;
-      if (_building->m_subType.conveyor == kTunnelIn) {
-        hide = (TOT_WORLD_PIX_X * 2);
-      }
+    _building->m_stored[3] = (_building->m_subType.conveyor == kTunnelIn); // hide 
 
-      switch (direction) {
-        case SN:; pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], 
-            (_building->m_pix_x + loc->m_pix_off_x + hide)*_zoom, 
-            (_building->m_pix_y + loc->m_pix_off_y - _building->m_progress + hide)*_zoom); break;
-        case NS:; pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], 
-          (_building->m_pix_x + loc->m_pix_off_x + hide)*_zoom, 
-          (_building->m_pix_y + loc->m_pix_off_y + _building->m_progress + hide)*_zoom); break;
-        case EW:; pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], 
-          (_building->m_pix_x + loc->m_pix_off_x - _building->m_progress + hide)*_zoom, 
-          (_building->m_pix_y + loc->m_pix_off_y + hide)*_zoom); break;
-        case WE:; pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], 
-          (_building->m_pix_x + loc->m_pix_off_x + _building->m_progress + hide)*_zoom, 
-          (_building->m_pix_y + loc->m_pix_off_y + hide)*_zoom); break;
-        case kDirN:; break;
-      }
+    switch (direction) {
+      case SN:; _building->m_stored[1] = 0; _building->m_stored[2] = (uint8_t) -_building->m_progress; break;
+      case NS:; _building->m_stored[1] = 0; _building->m_stored[2] = _building->m_progress; break;
+      case EW:; _building->m_stored[1] = (uint8_t) -_building->m_progress; _building->m_stored[2] = 0; break;
+      case WE:; _building->m_stored[1] = _building->m_progress; _building->m_stored[2] = 0; break;
+      case kDirN:; break;
+    }
+
+    // Only needs to be done if we are rendering
+    if (_tick == NEAR_TICK_AMOUNT) {
+      conveyorLocationUpdate(_building, _zoom);
     }
     //pd->system->logToConsole("MOVE %i %i, %i", loc->m_pix_x, loc->m_pix_y, loc->m_progress);
   }

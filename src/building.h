@@ -80,13 +80,13 @@ struct Building_t{
   // Conveyor Filter (16): my filter item
   // Plant (16): how many plants have grown
   // Well (16): The underlying tile type, before we overwrote it with water (replaced on destruct)
-  // Import box (8): The ID and capacity of the 4th item slot (West)
+  // Import box (8,8): The ID [0] and capacity [1] of the 4th item slot: West. (N, E, S are stored in m_stored)
   union kMode m_mode; 
   // m_stored
   // For locations which store/produce fixed items, location 0 is always for produced items, 1-5 for inputs.
   // For locations which store variable items, locations 0,1,2 are the number of items, 3,4,5 are the item ID 
   // For plants: locations 0, 1 are used for item animation.
-  // For conveyors, location 0 stores the conveyor's speed multiplier (1 or 2)
+  // For conveyors, location 0 stores the conveyor's speed multiplier (1 or 2). Location 1 stores the current cargo x and 2 the y SIGNED offset.
   uint8_t m_stored[MAX_STORE]; 
 
   // Transient

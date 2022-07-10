@@ -7,6 +7,7 @@
 #include "chunk.h"
 #include "input.h"
 #include "ui.h"
+#include "buildings/conveyor.h"
 
 void chunkAddToRender(struct Chunk_t* _chunk, uint8_t _zoom);
 
@@ -33,8 +34,13 @@ void chunkAddToRender(struct Chunk_t* _chunk, uint8_t _zoom) {
   //pd->system->logToConsole("CATR %i %i", _chunk->m_x, _chunk->m_y);
   pd->sprite->addSprite(_chunk->m_bkgSprite[_zoom]);
   for (uint32_t i = 0; i < _chunk->m_nBuildings; ++i) {
-    if ((_chunk->m_buildings[i]->m_type != kConveyor || getZoom() == 2) && (_chunk->m_buildings[i]->m_sprite[_zoom])) {
-      pd->sprite->addSprite(_chunk->m_buildings[i]->m_sprite[_zoom]);
+    struct Building_t* b = _chunk->m_buildings[i];
+    if ((b->m_type != kConveyor || getZoom() == 2) && (b->m_sprite[_zoom])) {
+      pd->sprite->addSprite(b->m_sprite[_zoom]);
+    }
+    // Force update the drawing of the current location of the cargo
+    if (b->m_type == kConveyor && b->m_location->m_cargo) {
+      conveyorLocationUpdate(b, _zoom);
     }
   }
   for (uint32_t i = 0; i < _chunk->m_nCargos; ++i) {
