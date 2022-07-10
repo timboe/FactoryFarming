@@ -14,6 +14,8 @@ int16_t distanceFromBuy(void);
 
 int16_t distanceFromSell(void);
 
-void setBuyBox(struct Building_t* _buyBox);
+int16_t distanceFromWarp(void);
 
-void setSellBox(struct Building_t* _sellBox);
+int16_t distanceFromOut(void);
+
+int16_t distanceFromIn(void);

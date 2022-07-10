@@ -53,6 +53,9 @@
 // Where the conveyor tiles start from in Y
 #define CONV_START_Y 7
 
+#define TUTORIAL_DISABLED 255
+#define TUTORIAL_FINISHED 254
+
 // How big is the world in X and Y
 #define WORLD_CHUNKS_X 12
 #define WORLD_CHUNKS_Y 12
@@ -108,8 +111,6 @@
 #define N_CROPS_BEFORE_FARMLAND 4
 
 #define WORLD_SAVE_SLOTS 8
-
-#define WORLD_NAME_LENGTH 32
 
 // Versioning
 #define SAVE_FORMAT 2

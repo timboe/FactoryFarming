@@ -50,8 +50,6 @@ void populateInfoSell() {
   pd->graphics->popContext();
 }
 
-
-
 bool populateContentSell(void) {
   struct Player_t* p = getPlayer();
   int16_t column = 0, row = 0;

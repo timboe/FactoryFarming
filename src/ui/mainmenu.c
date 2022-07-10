@@ -3,6 +3,7 @@
 #include "../location.h"
 #include "../render.h"
 #include "../sprite.h"
+#include "../input.h"
 #include "../generate.h"
 #include "../buildings/conveyor.h"
 
@@ -28,6 +29,7 @@ void doMainMenuClick() {
     case kUICatFactory: return setGameMode(kBuildMode);
     case kUICatUtility: return setGameMode(kPlaceMode);
     case kUICatCargo: return setGameMode(kPlaceMode); 
+    case kUICatWarp: break;
     case kNUICats: break;
   }
 }
@@ -74,6 +76,7 @@ void doPlace() {
       else placed = newBuilding(placeLocation, getCursorRotation(), kUtility, (union kSubType) {.utility = selectedID} );
       break;
     case kUICatCargo: placed = newCargo(placeLocation, selectedID, /*add to display*/ true); break;
+    case kUICatWarp: break;
     case kNUICats: break;
   }
   if (placed) {
@@ -97,9 +100,15 @@ void doPlace() {
 // TODO pick up from buildings, crates, etc.
 void doPick() {
   bool update = false;
+  int32_t min = 0, max = 0;
+  switch (getRadius()) {
+    case 1: min = 0; max = 1; break;
+    case 3: min = -1; max = 2; break;
+    case 5: min = -2; max = 3; break;
+  }
   struct Location_t* ploc = getPlayerLocation();
-  for (int32_t x = -1; x < 2; ++x) {
-    for (int32_t y = -1; y < 2; ++y) {
+  for (int32_t x = min; x < max; ++x) {
+    for (int32_t y = min; y < max; ++y) {
       struct Location_t* loc = getLocation(ploc->m_x + x, ploc->m_y + y);
       if (loc->m_cargo) {
         modOwned(kUICatCargo, loc->m_cargo->m_type, /*add=*/ true);
@@ -118,9 +127,15 @@ void doPick() {
 
 void doDestroy() {
   bool update = false;
+  int32_t min = 0, max = 0;
+  switch (getRadius()) {
+    case 1: min = 0; max = 1; break;
+    case 3: min = -1; max = 2; break;
+    case 5: min = -2; max = 3; break;
+  }
   struct Location_t* ploc = getPlayerLocation();
-  for (int32_t x = -1; x < 2; ++x) {
-    for (int32_t y = -1; y < 2; ++y) {
+  for (int32_t x = min; x < max; ++x) {
+    for (int32_t y = min; y < max; ++y) {
       struct Location_t* loc = getLocation(ploc->m_x + x, ploc->m_y + y);
       bool doBuilding = true; 
       if (loc->m_building && loc->m_building->m_type == kSpecial) doBuilding = false;
@@ -132,7 +147,7 @@ void doDestroy() {
 void populateContentMainmenu(void) {
   struct Player_t* p = getPlayer();
   int16_t column = 0, row = 0;
-  for (enum kUICat c = 0; c < kNUICats; ++c) {
+  for (enum kUICat c = 0; c <= kUICatCargo; ++c) {
     bool owned = false;
     for (int32_t i = 0; i < getNSubTypes(c); ++i) {
       if (getOwned(c, i)) {
@@ -197,6 +212,7 @@ void populateInfoMainmenu() {
       else snprintf(textA, 128, "Place %s", toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false));
       break;
     case kUICatCargo:; snprintf(textA, 128, "Place %s", toStringCargoByType(selectedID)); break;
+    case kUICatWarp:; break;
     case kNUICats:; break;
   }
   if (selectedCat != kUICatTool) snprintf(textB, 128, "Inventory: %i", selectedOwned);

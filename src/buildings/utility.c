@@ -1,14 +1,43 @@
 #include "utility.h"
+#include "extractor.h"
 #include "../location.h"
 #include "../sprite.h"
 #include "../generate.h"
 #include "../cargo.h"
 
+void binUpdateFn(struct Building_t* _building);
+
+void storageUpdateFn(struct Building_t* _building, uint8_t _tick);
+
 /// ///
 
+void storageUpdateFn(struct Building_t* _building, uint8_t _tick) {
+
+  // Pickup
+  if (_building->m_location->m_cargo) {
+    tryPickupAnyCargo(_building->m_location, _building);
+  }
+
+  // Putdown
+  _building->m_progress += _tick;
+  if (_building->m_progress >= TILE_PIX/2) {
+    _building->m_progress = 0;
+    tryPutdownAnyCargo(_building, _tick);
+  }
+
+}
+
+void binUpdateFn(struct Building_t* _building) {
+  if (_building->m_location->m_cargo) {
+    clearLocation(_building->m_location, /*clearCargo*/ true, /*clearBuilding*/ false);
+  }
+}
+
 void utilityUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
-  if (_building->m_subType.utility != kStorageBox) {
-  	return;
+  if (_building->m_subType.utility == kBin) {
+  	return binUpdateFn(_building);
+  } else if (_building->m_subType.utility == kStorageBox) {
+    return storageUpdateFn(_building, _tick);
   }
 }
 
@@ -38,6 +67,7 @@ void assignNeighborsUtility(struct Building_t* _building) {
 void buildingSetupUtility(struct Building_t* _building) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     switch (_building->m_subType.utility) {
+      case kBin:; _building->m_image[zoom] = getSprite16(14, 14, zoom); break;
       case kWell:; _building->m_image[zoom] = getSprite16(12, 14, zoom); break;
       case kStorageBox:; _building->m_image[zoom] = getSprite16(4 + _building->m_dir, 15, zoom); break;
       case kConveyorGrease:; case kNUtilitySubTypes:; break;

@@ -7,20 +7,33 @@
 
 void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick);
 
-void pumpUpdateFn(struct Building_t* _building);
+void pumpUpdateFn(struct Building_t* _building, uint8_t _tick);
 
-void quarryUpdateFn(struct Building_t* _building);
+void quarryUpdateFn(struct Building_t* _building, uint8_t _tick);
 
 /// ///
 
 #define COLLECT_TIME (TICKS_PER_SEC*8)
 
-void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick) {
-  // Placing down
+void tryPickupAnyCargo(struct Location_t* _from, struct Building_t* _building) {
+  for (int32_t try = 0; try < (MAX_STORE/2); ++try) {
+    // Do we already store of this type? Or do we store nothing in this type?
+    if (_building->m_stored[try + (MAX_STORE/2)] == kNoCargo || _building->m_stored[try + (MAX_STORE/2)] == _from->m_cargo->m_type) {
+      _building->m_stored[try + (MAX_STORE/2)] = _from->m_cargo->m_type;
+      if (_building->m_stored[try] < 255) {
+        ++_building->m_stored[try]; 
+        clearLocation(_from, /*clearCargo*/ true, /*clearBuilding*/ false);
+      }
+      break;
+    }
+  }
+}
+
+void tryPutdownAnyCargo(struct Building_t* _building, uint8_t _tick) {
   if (_building->m_next[0]->m_cargo == NULL) {
     for (int32_t try = 0; try < (MAX_STORE/2); ++try) {
       if (_building->m_stored[try]) {
-        newCargo(_building->m_next[0], _building->m_stored[try + (MAX_STORE/2)], false);
+        newCargo(_building->m_next[0], _building->m_stored[try + (MAX_STORE/2)], _tick == NEAR_TICK_AMOUNT);
         if (--_building->m_stored[try] == 0) {
           _building->m_stored[try + 3] = kNoCargo; // Reset the slot if we have run out of items 
         }
@@ -28,6 +41,11 @@ void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick) {
       }
     }
   }
+}
+
+void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick) {
+  // Placing down
+  tryPutdownAnyCargo(_building, _tick);
 
   _building->m_progress -= _tick;
   if (_building->m_progress > 0) return;
@@ -47,40 +65,38 @@ void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick) {
     for (int32_t y = min; y < max; ++y) {
       struct Location_t* loc = getLocation(_building->m_location->m_x + x, _building->m_location->m_y + y);
       if (loc->m_cargo && (loc->m_building == NULL || loc->m_building->m_type == kPlant)) {
-        // For our three storage locations
-        for (int32_t try = 0; try < (MAX_STORE/2); ++try) {
-          // Do we already store of this type? Or do we store nothing in this type?
-          if (_building->m_stored[try + (MAX_STORE/2)] == kNoCargo || _building->m_stored[try + (MAX_STORE/2)] == loc->m_cargo->m_type) {
-            _building->m_stored[try + (MAX_STORE/2)] = loc->m_cargo->m_type;
-            if (_building->m_stored[try] < 255) {
-              ++_building->m_stored[try]; 
-              clearLocation(loc, /*clearCargo*/ true, /*clearBuilding*/ false);
-            }
-            break;
-          }
-        }
+        // Into  our three storage locations
+        tryPickupAnyCargo(loc, _building);
       }
     }
   }
 }
 
-void pumpUpdateFn(struct Building_t* _building) {
-  if (_building->m_next[0]->m_cargo == NULL) {
-    newCargo(_building->m_next[0], kWaterBarrel, false);
+enum kCargoType getExtractorOutput(enum kExtractorSubType _subType) {
+  switch (_subType) {
+    case kPump:; return kWaterBarrel;
+    case kChalkQuarry:; return kChalk;
+    default: return kNoCargo;
   }
 }
 
-void quarryUpdateFn(struct Building_t* _building) {
+void pumpUpdateFn(struct Building_t* _building, uint8_t _tick) {
   if (_building->m_next[0]->m_cargo == NULL) {
-    newCargo(_building->m_next[0], kChalk, false);
+    newCargo(_building->m_next[0], kWaterBarrel, _tick == NEAR_TICK_AMOUNT);
+  }
+}
+
+void quarryUpdateFn(struct Building_t* _building, uint8_t _tick) {
+  if (_building->m_next[0]->m_cargo == NULL) {
+    newCargo(_building->m_next[0], kChalk, _tick == NEAR_TICK_AMOUNT);
   }
 }
 
 void extractorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   switch (_building->m_subType.extractor) {
     case kCropHarvesterSmall:; return cropHarveserUpdateFn(_building, _tick);
-    case kPump:; return pumpUpdateFn(_building);
-    case kChalkQuarry:; return quarryUpdateFn(_building);
+    case kPump:; return pumpUpdateFn(_building, _tick);
+    case kChalkQuarry:; return quarryUpdateFn(_building, _tick);
     case kCropHarvesterLarge:; return cropHarveserUpdateFn(_building, _tick);
     case kNExtractorSubTypes:; break;
   }

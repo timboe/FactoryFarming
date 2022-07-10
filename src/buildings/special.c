@@ -9,15 +9,17 @@ struct Building_t* m_sellBox = NULL;
 
 struct Building_t* m_buyBox = NULL;
 
+struct Building_t* m_warp = NULL;
+
+struct Building_t* m_exportBox = NULL;
+
+struct Building_t* m_importBox = NULL;
+
 void sellBoxUpdateFn(struct Building_t* _building);
 
 bool nearbyConveyor(struct Building_t* _building);
 
 /// ///
-
-void setBuyBox(struct Building_t* _buyBox) { m_buyBox = _buyBox; }
-
-void setSellBox(struct Building_t* _sellBox) { m_sellBox = _sellBox; }
 
 int16_t distanceFromBuy() {
   if (!m_buyBox) return 1000;
@@ -32,6 +34,30 @@ int16_t distanceFromSell() {
   struct Player_t* p = getPlayer();
   uint16_t dx = abs(p->m_pix_x - m_sellBox->m_pix_x);
   uint16_t dy = abs(p->m_pix_y - m_sellBox->m_pix_y);
+  return (dx < dy ? dy : dx);
+}
+
+int16_t distanceFromWarp() {
+  if (!m_warp) return 1000;
+  struct Player_t* p = getPlayer();
+  uint16_t dx = abs(p->m_pix_x - m_warp->m_pix_x);
+  uint16_t dy = abs(p->m_pix_y - m_warp->m_pix_y);
+  return (dx < dy ? dy : dx);
+}
+
+int16_t distanceFromOut() {
+  if (!m_exportBox) return 1000;
+  struct Player_t* p = getPlayer();
+  uint16_t dx = abs(p->m_pix_x - m_exportBox->m_pix_x);
+  uint16_t dy = abs(p->m_pix_y - m_exportBox->m_pix_y);
+  return (dx < dy ? dy : dx);
+}
+
+int16_t distanceFromIn() {
+  if (!m_importBox) return 1000;
+  struct Player_t* p = getPlayer();
+  uint16_t dx = abs(p->m_pix_x - m_importBox->m_pix_x);
+  uint16_t dy = abs(p->m_pix_y - m_importBox->m_pix_y);
   return (dx < dy ? dy : dx);
 }
 
@@ -86,11 +112,11 @@ void assignNeighborsSpecial(struct Building_t* _building) {
 void buildingSetupSpecial(struct Building_t* _building) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     switch (_building->m_subType.special) {
-      case kShop:;      _building->m_image[zoom] = getSprite48(1, 1, zoom); break;
-      case kSellBox:;   _building->m_image[zoom] = getSprite48(0, 1, zoom); break;
-      case kExportBox:; _building->m_image[zoom] = getSprite48(2, 1, zoom); break;
-      case kImportBox:; _building->m_image[zoom] = getSprite48(3, 1, zoom); break;
-      case kWarp:;      _building->m_image[zoom] = getSprite48(0, 2, zoom); break;
+      case kShop:;      _building->m_image[zoom] = getSprite48(1, 1, zoom); m_buyBox = _building; break;
+      case kSellBox:;   _building->m_image[zoom] = getSprite48(0, 1, zoom); m_sellBox = _building; break;
+      case kExportBox:; _building->m_image[zoom] = getSprite48(2, 1, zoom); m_exportBox = _building; break;
+      case kImportBox:; _building->m_image[zoom] = getSprite48(3, 1, zoom); m_importBox = _building; break;
+      case kWarp:;      _building->m_image[zoom] = getSprite48(0, 2, zoom); m_warp = _building; break;
       case kNSpecialSubTypes:;
     }
 

@@ -13,6 +13,10 @@ struct Tile_t {
 // Paved must come after the plantable ground types
 enum kGroundType{kSiltyGround, kChalkyGround, kPeatyGround, kSandyGround, kClayGround, kLoamyGround, kPavedGround, kObstructedGround, kLake, kRiver, kNGroundTypes};
 
+enum kWorldType{kSiltWorld, kChalkWorld, kPeatWorld, kSandWorld, kClayWorld, kLoamWoarld, kWaterWorld, kEmptyWorld};
+extern const uint16_t kWarpUIIcon[];
+extern const uint16_t kWarpPrice[];
+
 enum kGroundWetness{kWater, kWet, kMoist, kDry, kNGroundWetnesses};
 
 void generate(void);
@@ -41,11 +45,13 @@ enum kGroundWetness getWetness(uint8_t _value);
 
 enum kGroundType getGroundType(uint8_t _tile);
 
+enum kGroundType getWorldGround(uint8_t _slotNumber, uint8_t _groundCounter);
+
 const char* toStringWetness(enum kGroundWetness _wetness);
 
 const char* toStringSoil(enum kGroundType _type);
 
-const char* getWorldName(void);
+const char* getWorldName(enum kWorldType _type, bool _mask);
 
 void setWorldName(const char* _name);
 

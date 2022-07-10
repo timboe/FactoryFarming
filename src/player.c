@@ -67,6 +67,10 @@ enum kUITutorialStage getTutorialStage() {
   return (enum kUITutorialStage) m_player.m_enableTutorial;
 }
 
+bool tutorialEnabled() {
+  return (m_player.m_tutorialProgress != TUTORIAL_DISABLED);
+} 
+
 void makeTutorialProgress() {
   ++m_player.m_tutorialProgress;
 }
@@ -79,7 +83,7 @@ void nextTutorialStage() {
   m_player.m_tutorialProgress = 0;
   ++m_player.m_enableTutorial;
   if (m_player.m_enableTutorial == kTutBreakOne || m_player.m_enableTutorial == kTutBreakTwo) {
-    m_player.m_enableTutorial = 254;
+    m_player.m_enableTutorial = TUTORIAL_FINISHED;
     // TEMP - end of tutorial cash
     modMoney(100000);
     return;
@@ -340,13 +344,35 @@ void playerSpriteSetup() {
     pd->sprite->setImage(m_player.m_blueprint[zoom], getSprite16(0, 0, zoom), kBitmapUnflipped);
     pd->sprite->setZIndex(m_player.m_blueprint[zoom], Z_INDEX_BLUEPRINT);
 
+    m_player.m_blueprintRadiusBitmap1x1[zoom] = pd->graphics->newBitmap(TILE_PIX*1*zoom, TILE_PIX*1*zoom, kColorClear);
     m_player.m_blueprintRadiusBitmap3x3[zoom] = pd->graphics->newBitmap(TILE_PIX*3*zoom, TILE_PIX*3*zoom, kColorClear);
+    m_player.m_blueprintRadiusBitmap5x5[zoom] = pd->graphics->newBitmap(TILE_PIX*5*zoom, TILE_PIX*5*zoom, kColorClear);
     m_player.m_blueprintRadiusBitmap7x7[zoom] = pd->graphics->newBitmap(TILE_PIX*7*zoom, TILE_PIX*7*zoom, kColorClear);
     m_player.m_blueprintRadiusBitmap9x9[zoom] = pd->graphics->newBitmap(TILE_PIX*9*zoom, TILE_PIX*9*zoom, kColorClear);
 
-    uint16_t start = 2*zoom, stop = (TILE_PIX*3 - 2)*zoom;
+    uint16_t start = 2*zoom, stop = (TILE_PIX*1 - 2)*zoom;
+
+    pd->graphics->setLineCapStyle(kLineCapStyleRound);
+    pd->graphics->pushContext(m_player.m_blueprintRadiusBitmap1x1[zoom]);
+    pd->graphics->setDrawMode(kDrawModeCopy);
+    pd->graphics->drawLine(start, start, stop, start, 2*zoom, kColorBlack);
+    pd->graphics->drawLine(start, start, start, stop, 2*zoom, kColorBlack);
+    pd->graphics->drawLine(start, stop, stop, stop, 2*zoom, kColorBlack);
+    pd->graphics->drawLine(stop, start, stop, stop, 2*zoom, kColorBlack);
+    pd->graphics->popContext();
+
+    stop = (TILE_PIX*3 - 2)*zoom;
     pd->graphics->setLineCapStyle(kLineCapStyleRound);
     pd->graphics->pushContext(m_player.m_blueprintRadiusBitmap3x3[zoom]);
+    pd->graphics->setDrawMode(kDrawModeCopy);
+    pd->graphics->drawLine(start, start, stop, start, 2*zoom, kColorBlack);
+    pd->graphics->drawLine(start, start, start, stop, 2*zoom, kColorBlack);
+    pd->graphics->drawLine(start, stop, stop, stop, 2*zoom, kColorBlack);
+    pd->graphics->drawLine(stop, start, stop, stop, 2*zoom, kColorBlack);
+    pd->graphics->popContext();
+
+    stop = (TILE_PIX*5 - 2)*zoom;
+    pd->graphics->pushContext(m_player.m_blueprintRadiusBitmap5x5[zoom]);
     pd->graphics->setDrawMode(kDrawModeCopy);
     pd->graphics->drawLine(start, start, stop, start, 2*zoom, kColorBlack);
     pd->graphics->drawLine(start, start, start, stop, 2*zoom, kColorBlack);
@@ -387,7 +413,7 @@ void resetPlayer() {
   m_player.m_saveTime = pd->system->getSecondsSinceEpoch(NULL);
   m_player.m_playTime = 0;
   m_player.m_tutorialProgress = 0;
-  if (m_player.m_enableTutorial != 255) m_player.m_enableTutorial = 0; // 255 is disabled
+  if (m_player.m_enableTutorial != TUTORIAL_DISABLED) m_player.m_enableTutorial = 0;
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_carryCargo[i] = 0;
   for (int32_t i = 0; i < kNConvSubTypes; ++i) m_player.m_carryConveyor[i] = 0;
   for (int32_t i = 0; i < kNUtilitySubTypes; ++i) m_player.m_carryUtility[i] = 0;
@@ -397,6 +423,7 @@ void resetPlayer() {
   setPlayerPosition(SCREEN_PIX_X/4, (3*SCREEN_PIX_Y)/4);
   m_currentChunk = getChunk_noCheck(0,0);
   m_forceTorus = true;
+  modMoney(1000); // TEMP
 }
 
 
@@ -442,6 +469,8 @@ void serialisePlayer(struct json_encoder* je) {
   je->writeInt(je, m_player.m_enableTutorial);
   je->addTableMember(je, "setd", 4);
   je->writeInt(je, m_player.m_enableDebug);
+  je->addTableMember(je, "seta", 4);
+  je->writeInt(je, m_player.m_enableAutosave);
   
   je->addTableMember(je, "cargos", 6);
   je->startArray(je);
@@ -528,6 +557,8 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_player.m_enableTutorial = json_intValue(_value);
   } else if (strcmp(_key, "setd") == 0) {
     m_player.m_enableDebug = json_intValue(_value); 
+  } else if (strcmp(_key, "seta") == 0) {
+    m_player.m_enableAutosave = json_intValue(_value); 
     m_deserialiseArrayID = 0; // Note "one behind"
   } else if (strcmp(_key, "cargos") == 0) {
     m_deserialiseArrayID = 1;

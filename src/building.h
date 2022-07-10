@@ -21,7 +21,7 @@ extern const uint16_t kPlantUIIcon[];
 extern const enum kGroundWetness kPlantWetness[];
 extern const enum kGroundType kPlantSoil[];
 
-enum kUtilitySubType{kWell, kStorageBox, kConveyorGrease, kNUtilitySubTypes};
+enum kUtilitySubType{kBin, kWell, kStorageBox, kConveyorGrease, kNUtilitySubTypes};
 extern const uint32_t kUtilityUnlock[];
 extern const uint16_t kUtilityPrice[];
 extern const uint16_t kUtilityUIIcon[];

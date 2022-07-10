@@ -19,6 +19,8 @@ uint16_t m_nearTickCount = 0;
 
 uint16_t m_farTickCount = 0;
 
+uint16_t m_autoSaveTimer = 0;
+
 bool m_queueUpdateRenderList = false;
 
 void tickNear(void);
@@ -198,23 +200,35 @@ int gameLoop(void* _data) {
 
   render();
 
-  getPlayer()->m_playTime += 1;
+  struct Player_t* p = getPlayer(); 
+  ++p->m_playTime;
+
+  if (p->m_enableAutosave) {
+    if (++m_autoSaveTimer > 600*TICK_FREQUENCY) {
+      m_autoSaveTimer = 0;
+      queueSave();
+    }
+  }
 
   return 1;
 }
 
 void menuOptionsCallbackRestart(void* blank) {
+  hardReset(); // Delets all save files
   reset();
+  setSlot(0);
   generate();
   addObstacles();
   setChunkBackgrounds();
-  showTutorialMsg(kTutWelcomeBuySeeds);
+  if (tutorialEnabled()) showTutorialMsg(kTutWelcomeBuySeeds);
   updateRenderList();
+  save();
+  scanSlots();
 }
 
 void menuOptionsCallbackLoad(void* blank) {
   reset();
-  load();
+  load(-1); // -1 loads from the slot stored in the player's save file
   addObstacles();
   doWetness();
   setChunkBackgrounds();

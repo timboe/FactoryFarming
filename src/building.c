@@ -41,16 +41,16 @@ const uint16_t kPlantGrowT[]              = {50,           50,            50,   
 const enum kGroundWetness kPlantWetness[] = {kMoist,       kMoist,        kDry,         kWet,         kMoist,       kDry,         kWet,         kMoist,       kDry,         kWet,         kMoist,       kDry};
 const enum kGroundType kPlantSoil[]       = {kSiltyGround, kChalkyGround, kPeatyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround};
 
-//                                {kWell,     kStorageBox, kConveyorGrease, kNUtilitySubTypes};
-const uint32_t kUtilityUnlock[] = {10000,     DIS,         10000};
-const uint16_t kUtilityPrice[]  = {1000,      1,           100};
-const uint16_t kUtilityUIIcon[] = {SID(0,15), SID(4,15),   SID(8,15)};
+//                                {kBin,       kWell,     kStorageBox, kConveyorGrease, kNUtilitySubTypes};
+const uint32_t kUtilityUnlock[] = {100,        10000,     100,         10000};
+const uint16_t kUtilityPrice[]  = {100,        1000,      1,           100};
+const uint16_t kUtilityUIIcon[] = {SID(12,15), SID(0,15), SID(4,15),   SID(8,15)};
 
 //                                  {kCropHarvesterSmall, kPump,      kChalkQuarry, kCropHarvesterLarge, kNExtractorSubTypes};
 const uint32_t kExtractorUnlock[] = {500,                 10000,      750,          10000};
 const uint16_t kExtractorPrice[]  = {50,                  100,        75,           500};
 const uint16_t kExtractorUIIcon[] = {SID(4,16),           SID(12,11), SID(12,12),   SID(8,16)};
-const uint16_t kExtractorSprite[] = {BID(0,0),            BID(0,3),   BID(0,5),     BID(0,0)};
+const uint16_t kExtractorSprite[] = {BID(0,0),            BID(0,3),   BID(0,6),     BID(0,0)};
 
 //                                    {kVitiminFac, kF2,      kF3,      kF4,      kF5,      kF6,      kF7,      kF8,      kF9,      k10,      kF11 kNFactorySubTypes};
 const uint32_t kFactoryUnlock[]     = {2000,        DIS,      DIS,      DIS,      DIS,      DIS,      DIS,      DIS,      DIS,      DIS,      DIS};
@@ -96,6 +96,7 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kNPlantSubTypes: return "";
     }
     case kUtility: switch (_subType.utility) {
+      case kBin: return "Trash Bin";
       case kWell: return "Well";
       case kStorageBox: return "Storage Box";
       case kConveyorGrease: return "Conveyor Grease";

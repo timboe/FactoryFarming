@@ -9,10 +9,13 @@
 #include "ui/mainmenu.h"
 #include "ui/sell.h"
 #include "ui/shop.h"
+#include "ui/warp.h"
 
 uint8_t m_pressed[4] = {0};
 
 uint8_t m_zoom = 1;
+
+uint8_t m_pickRadius = 3;
 
 bool characterMoveInput(uint32_t _buttonPressed);
 
@@ -21,6 +24,8 @@ void clickHandleWander(uint32_t _buttonPressed);
 void clickHandleMenuBuy(uint32_t _buttonPressed);
 
 void clickHandleMenuSell(uint32_t _buttonPressed);
+
+void clickHandleMenuWarp(uint32_t _buttonPressed);
 
 void clickHandleMenuPlayer(uint32_t _buttonPressed);
 
@@ -36,14 +41,34 @@ void rotateHandleWander(float _rotation);
 
 void rotateHandlePlacement(float _rotation);
 
+void rotateHandlePick(float _rotation);
+
 void toggleZoom(void);
+
+void modRadius(bool _inc);
 
 bool m_b;
 
 /// ///
 
+void modRadius(bool _inc) {
+  if (_inc) {
+    m_pickRadius += 2;
+    if (m_pickRadius == 7) m_pickRadius = 1;
+  } else {
+    if (m_pickRadius == 1) m_pickRadius = 7;
+    m_pickRadius -= 2;
+  }
+  updateRenderList();
+  updateBlueprint();
+}
+
 uint8_t getZoom() {
   return m_zoom;
+}
+
+uint8_t getRadius() {
+ return m_pickRadius;
 }
 
 uint8_t getPressed(uint32_t _i) {
@@ -77,6 +102,7 @@ void gameClickConfigHandler(uint32_t _buttonPressed) {
     case kMenuBuy:; return clickHandleMenuBuy(_buttonPressed);
     case kMenuSell:; return clickHandleMenuSell(_buttonPressed);
     case kMenuPlayer:; return clickHandleMenuPlayer(_buttonPressed);
+    case kMenuWarp:; return clickHandleMenuWarp(_buttonPressed);
     case kPlaceMode:; case kBuildMode:; case kPlantMode:; return clickHandlePlacement(_buttonPressed);
     case kPickMode:; return clickHandlePick(_buttonPressed);
     case kInspectMode:; return clickHandleInspect(_buttonPressed);
@@ -89,12 +115,13 @@ void clickHandleWander(uint32_t _buttonPressed) {
   if (characterMoveInput(_buttonPressed)) { /*noop*/ }
   else if (kButtonA == _buttonPressed) {
     // 254: tutorial finised, 255: tutorial disabled
-    if (getTutorialStage() < 254 && checkReturnDismissTutorialMsg()) { /*noop*/ } // NOTE: The second function call has side-effects
+    if (getTutorialStage() < TUTORIAL_FINISHED && checkReturnDismissTutorialMsg()) { /*noop*/ } // NOTE: The second function call has side-effects
     else if (distanceFromBuy() < ACTIVATE_DISTANCE) setGameMode(kMenuBuy);
     else if (distanceFromSell() < ACTIVATE_DISTANCE) setGameMode(kMenuSell);
+    else if (distanceFromWarp() < ACTIVATE_DISTANCE) setGameMode(kMenuWarp);
     else setGameMode(kMenuPlayer);
   } else if (kButtonB == _buttonPressed) {
-    if (getTutorialStage() < 254) checkReturnDismissTutorialMsg();
+    if (getTutorialStage() < TUTORIAL_FINISHED) checkReturnDismissTutorialMsg();
   }
 
   //else if (kButtonB == _buttonPressed) toggleZoom(); // Press B to change zoom?
@@ -133,6 +160,16 @@ void clickHandleMenuPlayer(uint32_t _buttonPressed) {
   if (kButtonA     == _buttonPressed) {
     doMainMenuClick();
   } else if (kButtonB   == _buttonPressed) {
+    setGameMode(kWanderMode);
+  } else {
+    moveCursor(_buttonPressed);
+  }
+}
+
+void clickHandleMenuWarp(uint32_t _buttonPressed) {
+  if (kButtonA == _buttonPressed) {
+    doWarp();
+  } else if (kButtonB == _buttonPressed) {
     setGameMode(kWanderMode);
   } else {
     moveCursor(_buttonPressed);
@@ -226,6 +263,18 @@ void rotateHandlePlacement(float _rotation) {
   }
 }
 
+void rotateHandlePick(float _rotation) {
+  static float rot = 0.0f;
+  rot += _rotation;
+  if (rot > UI_ROTATE_ACTION) {
+    rot = 0.0f;
+    modRadius(true);
+  } else if (rot < -UI_ROTATE_ACTION) {
+    rot = 0.0f;
+    modRadius(false);
+  }
+}
+
 // Temporary until the playdate eventHandler is functional for inputs
 void clickHandlerReplacement() {
   static uint8_t multiClickCount = 16, multiClickNext = 16;
@@ -246,7 +295,7 @@ void clickHandlerReplacement() {
     multiClickCount = 8;
     multiClickNext = 8;
   } else if (current & kButtonA)  {
-    if (gm == kPlaceMode || gm == kPickMode || gm == kPlantMode) {
+    if (gm == kPlaceMode || gm == kPickMode || gm == kPlantMode || gm == kDestroyMode) {
       gameClickConfigHandler(kButtonA); // Special, allow pick/placing rows of conveyors
     } else if (gm >= kMenuBuy) {
       if (--multiClickCount == 0) {
@@ -267,7 +316,9 @@ void clickHandlerReplacement() {
     case kMenuPlayer:; // fall through
     case kBuildMode:;
     case kPlaceMode:; rotateHandlePlacement(pd->system->getCrankChange()); break;
-    case kMenuBuy:; case kMenuSell:; case kPickMode:; case kPlantMode:; case kDestroyMode:; case kInspectMode:; case kNGameModes:; break;
+    case kPickMode:; // fall through
+    case kDestroyMode:; rotateHandlePick(pd->system->getCrankChange()); break;
+    case kMenuBuy:; case kMenuSell:; case kMenuWarp:; case kPlantMode:; case kInspectMode:; case kNGameModes:; break;
   }
 
 }

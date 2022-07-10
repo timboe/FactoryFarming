@@ -36,12 +36,15 @@ struct Player_t{
   uint8_t m_enableConveyorAnimation;
   uint8_t m_enableTutorial;
   uint8_t m_enableDebug;
+  uint8_t m_enableAutosave;
 
   // Transient   
   LCDSprite* m_sprite[ZOOM_LEVELS]; // Index 0 not used - OWNED
   LCDSprite* m_blueprint[ZOOM_LEVELS]; // Index 0 not used - OWNED
   LCDSprite* m_blueprintRadius[ZOOM_LEVELS]; // Index 0 not used - OWNED
+  LCDBitmap* m_blueprintRadiusBitmap1x1[ZOOM_LEVELS]; // Index 0 not used - OWNED
   LCDBitmap* m_blueprintRadiusBitmap3x3[ZOOM_LEVELS]; // Index 0 not used - OWNED
+  LCDBitmap* m_blueprintRadiusBitmap5x5[ZOOM_LEVELS]; // Index 0 not used - OWNED
   LCDBitmap* m_blueprintRadiusBitmap7x7[ZOOM_LEVELS]; // Index 0 not used - OWNED
   LCDBitmap* m_blueprintRadiusBitmap9x9[ZOOM_LEVELS]; // Index 0 not used - OWNED
   float m_vX;
@@ -69,6 +72,8 @@ struct Location_t* getPlayerLocation(void);
 struct Location_t* getPlayerLookingAtLocation(void);
 
 void setPlayerLookingAtOffset(int8_t _offset);
+
+bool tutorialEnabled(void);
 
 enum kUITutorialStage getTutorialStage(void);
 

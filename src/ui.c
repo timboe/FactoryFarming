@@ -2,6 +2,7 @@
 #include "ui/mainmenu.h"
 #include "ui/sell.h"
 #include "ui/shop.h"
+#include "ui/warp.h"
 #include "sprite.h"
 #include "player.h"
 #include "input.h"
@@ -101,6 +102,11 @@ void drawUIMain(void);
 
 /// ///
 
+
+LCDBitmap* getUIContentItemBitmap(enum kUICat _c, uint16_t _i, uint16_t _r) {
+  return m_UIBitmapItems[_c][_i][_r];
+}
+
 void queueSave() {
   m_queueSave = 1;
 }
@@ -177,10 +183,19 @@ void updateUI(int _fc) {
 
   if (m_mode == kWanderMode) {
     if (!m_UITopVisible) {
-      if      (distanceFromBuy()  < ACTIVATE_DISTANCE) drawUITop("The Shop");
-      else if (distanceFromSell() < ACTIVATE_DISTANCE) drawUITop("Sales");
+      if (_fc % (TICK_FREQUENCY/2) == 0) {
+        if      (distanceFromBuy()  < ACTIVATE_DISTANCE) drawUITop("The Shop");
+        else if (distanceFromSell() < ACTIVATE_DISTANCE) drawUITop("Sales");
+        else if (distanceFromWarp() < ACTIVATE_DISTANCE) drawUITop("Location");
+        else if (distanceFromOut() < ACTIVATE_DISTANCE) drawUITop("Exports");
+        else if (distanceFromIn() < ACTIVATE_DISTANCE) drawUITop("Imports");
+      }
     } else {
-      if (distanceFromBuy() >= ACTIVATE_DISTANCE && distanceFromSell() >= ACTIVATE_DISTANCE) drawUITop(NULL);
+      if (distanceFromBuy() >= ACTIVATE_DISTANCE && 
+          distanceFromSell() >= ACTIVATE_DISTANCE &&
+          distanceFromWarp() >= ACTIVATE_DISTANCE &&
+          distanceFromOut() >= ACTIVATE_DISTANCE &&
+          distanceFromIn() >= ACTIVATE_DISTANCE) drawUITop(NULL);
     }
   }
 
@@ -232,7 +247,11 @@ void updateBlueprint() {
   if (gm == kPickMode || gm == kDestroyMode) {
     setPlayerLookingAtOffset(0);
     pd->sprite->setImage(bp, getSprite16_byidx(0, zoom), kBitmapUnflipped); 
-    pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap3x3[zoom], kBitmapUnflipped);
+    switch (getRadius()) {
+      case 1: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap1x1[zoom], kBitmapUnflipped); break;
+      case 3: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap3x3[zoom], kBitmapUnflipped); break;
+      case 5: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap5x5[zoom], kBitmapUnflipped); break;
+    }
   } else if (gm == kPlaceMode) { // Of conveyors, cargo or utility
     setPlayerLookingAtOffset(0);
     if (selectedCat == kUICatUtility && selectedID == kConveyorGrease) {
@@ -244,7 +263,7 @@ void updateBlueprint() {
       case kUICatConv:;    pd->sprite->setImage(bp, getSprite16_byidx(kConvUIIcon[selectedID] + m_selRotation, zoom), kBitmapUnflipped); break;
       case kUICatUtility:; pd->sprite->setImage(bp, getSprite16_byidx(kUtilityUIIcon[selectedID] + m_selRotation, zoom), kBitmapUnflipped); break;
       case kUICatCargo:;   pd->sprite->setImage(bp, getSprite16_byidx(kCargoUIIcon[selectedID], zoom), kBitmapUnflipped); break;
-      case kUICatTool:; case kUICatPlant:; case kUICatExtractor:; case kUICatFactory:; case kNUICats:; break;
+      case kUICatTool:; case kUICatPlant:; case kUICatExtractor:; case kUICatFactory:; case kUICatWarp:; case kNUICats:; break;
     }
   } else if (gm == kPlantMode) { // Of crops
     setPlayerLookingAtOffset(0);
@@ -265,7 +284,7 @@ void updateBlueprint() {
     switch (selectedCat) {
       case kUICatExtractor:; pd->sprite->setImage(bp, getSprite48_byidx(kExtractorSprite[selectedID] + m_selRotation, zoom), kBitmapUnflipped); break;
       case kUICatFactory:;   pd->sprite->setImage(bp, getSprite48_byidx(kFactorySprite[selectedID] + m_selRotation,   zoom), kBitmapUnflipped); break;
-      case kUICatTool:; case kUICatPlant:; case kUICatConv:; case kUICatUtility:; case kUICatCargo:; case kNUICats:; break;
+      case kUICatTool:; case kUICatPlant:; case kUICatConv:; case kUICatUtility:; case kUICatCargo:; case kUICatWarp:; case kNUICats:; break;
     }
   } else { // Clear blueprint
     pd->sprite->setImage(bp, getSprite16_byidx(0, zoom), kBitmapUnflipped);
@@ -282,7 +301,7 @@ void addUIToSpriteList() {
     pd->sprite->addSprite(m_UISpriteDev);
   }
 
-  if (p->m_enableTutorial < 254) { // 254: finished. 255: disabled
+  if (p->m_enableTutorial < TUTORIAL_FINISHED) { // 254: finished. 255: disabled
     pd->sprite->addSprite(m_UISpriteTutorialMain);
     pd->sprite->addSprite(m_UISpriteTutorialHint);
   }
@@ -310,6 +329,8 @@ void addUIToSpriteList() {
 }
 
 void showTutorialMsg(enum kUITutorialStage _stage) {
+  if (_stage == TUTORIAL_DISABLED || _stage == TUTORIAL_FINISHED) return;
+
   pd->sprite->setVisible(m_UISpriteTutorialMain, 1);
   #define TUT_Y_SPACING 13
   #define Y_SHFT 4
@@ -510,6 +531,7 @@ int32_t getUnlockCost(enum kUICat _c, int32_t _i) {
     case kUICatFactory: return kFactoryUnlock[_i];
     case kUICatUtility: return kUtilityUnlock[_i];
     case kUICatCargo: return 0;
+    case kUICatWarp:; return 0;
     case kNUICats: return 0;
   }
   return 0;
@@ -524,6 +546,7 @@ int32_t getPrice(enum kUICat _c, int32_t _i) {
     case kUICatFactory: return kFactoryPrice[_i];
     case kUICatUtility: return kUtilityPrice[_i];
     case kUICatCargo: return kCargoValue[_i];
+    case kUICatWarp: return kWarpPrice[_i];
     case kNUICats: return 0;
   }
   return 0;
@@ -539,6 +562,7 @@ uint16_t getOwned(enum kUICat _c, int32_t _i) {
     case kUICatFactory: return p->m_carryFactory[_i];
     case kUICatUtility: return p->m_carryUtility[_i];
     case kUICatCargo: return p->m_carryCargo[_i];
+    case kUICatWarp: return hasWorld(_i);
     case kNUICats: return 0;
   }
   return 0;
@@ -554,6 +578,7 @@ void modOwned(enum kUICat _c, int32_t _i, bool _add) {
     case kUICatFactory: p->m_carryFactory[_i] += (_add ? 1 : -1); break;
     case kUICatUtility: p->m_carryUtility[_i] += (_add ? 1 : -1); break;
     case kUICatCargo: p->m_carryCargo[_i] += (_add ? 1 : -1); break;
+    case kUICatWarp: break;
     case kNUICats: break;
   }
   UIDirtyRight();
@@ -568,6 +593,7 @@ uint16_t getNSubTypes(enum kUICat _c) {
     case kUICatFactory: return kNFactorySubTypes;
     case kUICatUtility: return kNUtilitySubTypes;
     case kUICatCargo: return kNCargoType;
+    case kUICatWarp: return WORLD_SAVE_SLOTS;
     case kNUICats: return 0;
   }
   return 0;
@@ -582,6 +608,7 @@ enum kBuildingType getCatBuildingSubType(enum kUICat _c) {
     case kUICatFactory: return kFactory;
     case kUICatUtility: return kUtility;
     case kUICatCargo: return kNoBuilding;
+    case kUICatWarp: return kNoBuilding;
     case kNUICats: return kNoBuilding;
   }
   return kNoBuilding;
@@ -596,6 +623,7 @@ uint16_t getUIIcon(enum kUICat _c, uint16_t _i) {
     case kUICatFactory: return kCargoUIIcon[ kFactoryOut[_i] ];
     case kUICatUtility: return kUtilityUIIcon[_i];
     case kUICatCargo: return kCargoUIIcon[_i];
+    case kUICatWarp: return kWarpUIIcon[_i];
     case kNUICats: break;
   }
   return 0;
@@ -703,6 +731,7 @@ void drawUIMain() {
     case kMenuBuy:; populateContentBuy(); break;
     case kMenuPlayer:; populateContentMainmenu(); break;
     case kMenuSell:; empty = populateContentSell(); break;
+    case kMenuWarp:; populateContentWarp(); break;
     default: break;
   }
 
@@ -778,6 +807,7 @@ void drawUIMain() {
     case kMenuBuy:; populateInfoBuy(visible); break;
     case kMenuPlayer:; populateInfoMainmenu(); break;
     case kMenuSell:; populateInfoSell(); break;
+    case kMenuWarp:; populateInfoWarp(); break;
     default: break;
   }
 
@@ -796,7 +826,7 @@ void setGameMode(enum kGameMode _mode) {
     drawUITop("Pick Mode");
   } else if (_mode == kMenuPlayer) {
     drawUITop("Main Menu");
-  } else if (_mode == kMenuBuy || _mode == kMenuSell) {
+  } else if (_mode == kMenuBuy || _mode == kMenuSell || _mode == kMenuWarp) {
     /*noop*/ 
   } else drawUITop(NULL);
 
@@ -972,6 +1002,7 @@ void initiUI() {
       case kUICatFactory: pd->graphics->drawText("Factories", 9, kASCIIEncoding, TILE_PIX, 0); break;
       case kUICatUtility: pd->graphics->drawText("Utility", 7, kASCIIEncoding, TILE_PIX, 0); break;
       case kUICatCargo: pd->graphics->drawText("Cargo", 5, kASCIIEncoding, TILE_PIX, 0); break;
+      case kUICatWarp: pd->graphics->drawText("Destinations", 12, kASCIIEncoding, TILE_PIX, 0); break;
       case kNUICats: break;
     }
     pd->graphics->popContext();
@@ -994,7 +1025,7 @@ void initiUI() {
           pd->graphics->drawBitmap(getSprite16(12 + r, 10, 2), 0, 0, kBitmapUnflipped);
           pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), TILE_PIX/2, TILE_PIX/2, kBitmapUnflipped);
         } else {
-          if (c != kUICatConv && c != kUICatExtractor) {
+          if (c != kUICatConv && c != kUICatExtractor && c != kUICatWarp) {
             roundedRect(1, TILE_PIX*2, TILE_PIX*2, TILE_PIX/2, kColorBlack);
             roundedRect(3, TILE_PIX*2, TILE_PIX*2, TILE_PIX/2, kColorWhite);
             pd->graphics->setDrawMode(kDrawModeNXOR);
@@ -1010,7 +1041,7 @@ void initiUI() {
         pd->sprite->setZIndex(m_UISpriteItems[c][i][r], Z_INDEX_UI_M);
         pd->sprite->setIgnoresDrawOffset(m_UISpriteItems[c][i][r], 1);
 
-        if (c == kUICatTool || c == kUICatPlant || c == kUICatCargo) { // Tools, Crops & Cargo don't have any rotation 
+        if (c == kUICatTool || c == kUICatPlant || c == kUICatCargo || c == kUICatWarp) { // Tools, Crops, Cargo & Warp don't have any rotation 
           break;
         }
       }

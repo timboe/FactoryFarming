@@ -3,16 +3,20 @@
 #include "location.h"
 #include "ui.h"
 #include "io.h"
+#include "sprite.h"
 #include "building.h"
 #include "buildings/special.h"
+#include "buildings/extractor.h"
 
 #include <math.h>
+
+//                             {kSiltWorld, kChalkWorld, kPeatWorld, kSandWorld, kClayWorld, kLoamWoarld, kWaterWorld, kEmptyWorld};
+const uint16_t kWarpUIIcon[] = {SID(0,18),  SID(1,18),   SID(2,18),  SID(3,18),  SID(4,18),  SID(5,18),   SID(6,18),   SID(7,18)};
+const uint16_t kWarpPrice[]  = {0,          100,         200,        300,        400,        500,         600,         700};
 
 struct Tile_t* m_tiles = NULL;
 
 uint16_t m_deserialiseIndexWorld = 0;
-
-char m_worldName[WORLD_NAME_LENGTH];
 
 const int32_t SIZE_GENERATE = TOT_TILES * sizeof(struct Tile_t);
  
@@ -30,7 +34,6 @@ void doClutter(void);
 
 float pointDist(int32_t _x, int32_t _y, int32_t _x1, int32_t _y1, int32_t _x2, int32_t _y2);
 
-enum kGroundType getWorldGround(uint8_t _slotNumber, uint8_t _groundCounter);
 
 /// ///
 
@@ -163,7 +166,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
           pd->graphics->drawBitmap(getSprite16_byidx(getUIIcon(kUICatFactory, building->m_subType.factory), 1), 
             building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
         } else if (building->m_type == kExtractor) {
-          pd->graphics->drawBitmap(getSprite16_byidx(getUIIcon(kUICatExtractor, building->m_subType.extractor), 1), 
+          pd->graphics->drawBitmap(getSprite16_byidx(kCargoUIIcon[getExtractorOutput(building->m_subType.extractor)], 1), 
             building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
         }
       } else {
@@ -345,12 +348,18 @@ const char* toStringSoil(enum kGroundType _type) {
   return "UNKNOWN Soil";
 }
 
-const char* getWorldName() {
-  return m_worldName;
-}
-
-void setWorldName(const char* _name) {
-  strcpy(m_worldName, _name);
+const char* getWorldName(enum kWorldType _type, bool _mask) {
+  switch (_type) {
+    case kSiltWorld: return _mask ? "??? ?????????" : "The Grasslands"; // Main: Silt
+    case kChalkWorld: return _mask ? "??? ????? ??????" : "The Stony Plateu"; // Main: Chalk
+    case kPeatWorld: return _mask ? "??? ????? ??????" : "The Boggy Hollow"; // Main: Peat
+    case kSandWorld: return _mask ? "??? ??????" : "The Desert"; // Main: Sand
+    case kClayWorld: return _mask ? "??? ???????" :"The Estuary"; // Main: Clay
+    case kLoamWoarld: return _mask ? "??? ??????? ?????" :"The Fertile Hills"; // Main: Loaamy
+    case kWaterWorld: return _mask ? "??? ??? ?????" :"The Mud Flats"; // Special, Main: Water
+    case kEmptyWorld: return _mask ? "??? ??????" :"The Plains"; // Special, all Silty - Empty
+  }
+  return "UNKNOWN World";
 }
 
 void doClutter() {
@@ -663,16 +672,6 @@ void serialiseWorld(struct json_encoder* je) {
   je->endArray(je);
 }
 
-void didDecodeWorldName(json_decoder* jd, const char* _key, json_value _value) {
-  if (strcmp(_key, "name") == 0) {
-    char* name = json_stringValue(_value);
-    pd->system->logToConsole("Loading world %s", name);
-    setWorldName(name);
-  } else {
-    pd->system->error("WORLD NAME DECODE ISSUE, %s", _key);
-  }
-}
-
 void deserialiseValueWorld(json_decoder* jd, const char* _key, json_value _value) {
   if (strcmp(_key, "tile") == 0) {
     m_tiles[m_deserialiseIndexWorld].m_tile = json_intValue(_value);
@@ -728,7 +727,7 @@ void generate() {
     
   // Worldgen is very basic for now
   for (uint16_t i = 0; i < TOT_TILES; ++i) {
-    m_tiles[i].m_tile = floorMain + rand() % FLOOR_VARIETIES;
+    m_tiles[i].m_tile = (FLOOR_VARIETIES * floorMain) + rand() % FLOOR_VARIETIES;
   } 
 
   addSpawn();
@@ -745,19 +744,15 @@ void generate() {
 
   struct Location_t* buyLoc = getLocation_noCheck(startX, TILES_PER_CHUNK_Y); 
   newBuilding(buyLoc, SN, kSpecial, (union kSubType) {.special = kShop} );
-  setBuyBox(buyLoc->m_building);
 
   struct Location_t* sellLoc = getLocation_noCheck(startX + 9, TILES_PER_CHUNK_Y); 
   newBuilding(sellLoc, SN, kSpecial, (union kSubType) {.special = kSellBox} );
-  setSellBox(sellLoc->m_building);
   
-  //newBuilding(getLocation_noCheck(startX + 18, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kWarp} );
-  //newBuilding(getLocation_noCheck(startX + 27, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kExportBox} );
-  //newBuilding(getLocation_noCheck(startX + 36, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kImportBox} );
+  newBuilding(getLocation_noCheck(startX + 18, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kWarp} );
+  newBuilding(getLocation_noCheck(startX + 27, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kExportBox} );
+  newBuilding(getLocation_noCheck(startX + 36, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kImportBox} );
 
   doWetness();
 
-  snprintf(m_worldName, WORLD_NAME_LENGTH, "World %c%c%c%c%c", 'A'+rand()%26, 'a'+rand()%26, 'a'+rand()%26, 'a'+rand()%26, 'a'+rand()%26);
-
-  pd->system->logToConsole("Generated %s", m_worldName);
+  pd->system->logToConsole("Generated %s",  getWorldName(slot, /*mask*/ false));
 }

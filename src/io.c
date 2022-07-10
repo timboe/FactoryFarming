@@ -11,9 +11,7 @@ uint8_t m_slot = 0;
 
 uint8_t m_scanSlot = 0;
 
-char m_filePath[16];
-
-char m_worldNames[WORLD_SAVE_SLOTS][WORLD_NAME_LENGTH];
+char m_filePath[32];
 
 uint8_t m_worldVersions[WORLD_SAVE_SLOTS];
 
@@ -34,6 +32,8 @@ int scanShouldDecodeTableValueForKey(json_decoder* jd, const char* _key);
 /// ///
 
 bool hasSaveData() { return m_foundSaveData; }
+
+bool hasWorld(uint8_t _slot) { return m_worldExists[_slot]; }
 
 int doRead(void* _userdata, uint8_t* _buf, int _bufsize) {
   return pd->file->read((SDFile*)_userdata, _buf, _bufsize);
@@ -64,13 +64,12 @@ void hardReset() {
 ///
 
 void scanSlots() {
-  for (uint16_t ss = 0; ss < WORLD_SAVE_SLOTS; ++ss) {
-    snprintf(m_filePath, 16, "world%u.json", (unsigned)ss);
-    strcpy(m_worldNames[ss], "");
+  for (m_scanSlot = 0; m_scanSlot < WORLD_SAVE_SLOTS; ++m_scanSlot) {
+    snprintf(m_filePath, 16, "world%u.json", (unsigned)m_scanSlot);
     SDFile* file = pd->file->open(m_filePath, kFileRead|kFileReadData);
     if (!file) {
-      pd->system->logToConsole("Scan world: Slot:%u, No Save", ss);
-      m_worldExists[ss] = false;
+      pd->system->logToConsole("Scan world: Slot:%u, No Save", m_scanSlot);
+      m_worldExists[m_scanSlot] = false;
       continue;
     }
 
@@ -83,8 +82,8 @@ void scanSlots() {
     pd->json->decode(&jd, (json_reader){ .read = doRead, .userdata = file }, NULL);
     pd->file->close(file);
 
-    pd->system->logToConsole("Scan world: Slot:%u, World:%s, Version:%i", (unsigned)ss, m_worldNames[ss], m_worldVersions[ss]);
-    m_worldExists[ss] = true;
+    pd->system->logToConsole("Scan world: Slot:%u, Version:%i", (unsigned)m_scanSlot, m_worldVersions[m_scanSlot]);
+    m_worldExists[m_scanSlot] = true;
     m_foundSaveData = true;
   }
 
@@ -113,14 +112,11 @@ void scanSlots() {
 
 
 int scanShouldDecodeTableValueForKey(json_decoder* jd, const char* _key) {
-  return (strcmp(_key, "name") == 0 || strcmp(_key, "sf") == 0);
+  return (strcmp(_key, "sf") == 0);
 }
 
 void scanDidDecode(json_decoder* jd, const char* _key, json_value _value) {
-  if (strcmp(_key, "name") == 0) {
-    char* name = json_stringValue(_value);
-    strcpy(m_worldNames[m_scanSlot], name);
-  } else if (strcmp(_key, "sf") == 0) {
+  if (strcmp(_key, "sf") == 0) {
     m_worldVersions[m_scanSlot] = json_intValue(_value);
   } else {
     pd->system->error("scanDidDecode DECODE ISSUE, %s", _key);
@@ -140,7 +136,7 @@ bool save() {
 
   json_encoder je_p;
 
-  snprintf(m_filePath, 16, "player.json");
+  snprintf(m_filePath, 32, "TMP_player.json");
   SDFile* file_p = pd->file->open(m_filePath, kFileWrite);
 
   pd->json->initEncoder(&je_p, doWrite, file_p, pretty);
@@ -157,15 +153,12 @@ bool save() {
 
   json_encoder je;
 
-  snprintf(m_filePath, 16, "world%i.json", m_slot);
+  snprintf(m_filePath, 32, "TMP_world%i.json", m_slot);
   SDFile* file = pd->file->open(m_filePath, kFileWrite);
 
   pd->json->initEncoder(&je, doWrite, file, pretty);
 
   je.startTable(&je);
-
-  je.addTableMember(&je, "name", 4);
-  je.writeString(&je, getWorldName(), strlen(getWorldName()));
 
   je.addTableMember(&je, "sf", 2);
   je.writeInt(&je, SAVE_FORMAT);
@@ -179,17 +172,27 @@ bool save() {
 
   status &= pd->file->close(file);
 
-  //float f;
-  //for (int32_t i = 0; i < 10000; ++i) for (int32_t j = 0; j < 100000; ++j) { f*=i*j; }
+  //float f; for (int32_t i = 0; i < 10000; ++i) for (int32_t j = 0; j < 100000; ++j) { f*=i*j; }
 
   pd->system->logToConsole("save to %u, status %i", m_slot, status);
-  return true;
 
+  // Finish by moving into location
+  char filePathFinal[32];
+
+  snprintf(m_filePath, 32, "TMP_player.json");
+  snprintf(filePathFinal, 32, "player.json");
+  pd->file->rename(m_filePath, filePathFinal);
+
+  snprintf(m_filePath, 32, "TMP_world%i.json", m_slot);
+  snprintf(filePathFinal, 32, "world%i.json", m_slot);
+  pd->file->rename(m_filePath, filePathFinal);
+
+  return true;
 }
 
 ///
 
-bool load() {
+bool load(int32_t _forceSlot) {
 
   pd->system->logToConsole("START load player");
 
@@ -206,7 +209,11 @@ bool load() {
 
   pd->file->close(file_p);
 
-  /// /// We have now loaded the correct slot number for this player-save
+  // We have now loaded the correct slot number for this player-save.
+  // But we might want to be loading into a different world 
+  if (_forceSlot != -1) {
+    setSlot(_forceSlot);
+  }
 
   pd->system->logToConsole("START load from slot %i", m_slot);
 
@@ -233,9 +240,7 @@ void willDecodeSublist(json_decoder* jd, const char* _name, json_value_type _typ
   strncpy(truncated, _name, 5);
   truncated[5] = '\0';
 
-  if (strcmp(_name, "name") == 0 && _type == kJSONTable) {
-    jd->didDecodeTableValue = didDecodeWorldName;
-  } else if (strcmp(truncated, "sf") == 0 && _type == kJSONTable) {
+  if (strcmp(truncated, "sf") == 0 && _type == kJSONTable) {
     jd->didDecodeTableValue = NULL;
   } else if (strcmp(truncated, "cargo") == 0 && _type == kJSONTable) {
     jd->didDecodeTableValue = deserialiseValueCargo;

@@ -3,9 +3,9 @@
 #include "player.h"
 
 // All Main Menu items should come after kMenuBuy
-enum kGameMode {kWanderMode, kPlaceMode, kBuildMode, kPlantMode, kPickMode, kInspectMode, kDestroyMode, kMenuBuy, kMenuSell, kMenuPlayer, kNGameModes};
+enum kGameMode {kWanderMode, kPlaceMode, kBuildMode, kPlantMode, kPickMode, kInspectMode, kDestroyMode, kMenuBuy, kMenuSell, kMenuPlayer, kMenuWarp, kNGameModes};
 
-enum kUICat {kUICatTool, kUICatPlant, kUICatConv, kUICatExtractor, kUICatFactory, kUICatUtility, kUICatCargo, kNUICats}; 
+enum kUICat {kUICatTool, kUICatPlant, kUICatConv, kUICatExtractor, kUICatFactory, kUICatUtility, kUICatCargo, kUICatWarp, kNUICats}; 
 
 #define ROW_WDTH 9
 
@@ -74,6 +74,8 @@ void showTutorialMsg(enum kUITutorialStage _stage);
 void setUIContentHeader(int32_t _row, enum kUICat _c);
 
 void setUIContentItem(int32_t _row, int32_t _col, enum kUICat _c, uint16_t _i, uint16_t _r);
+
+LCDBitmap* getUIContentItemBitmap(enum kUICat _c, uint16_t _i, uint16_t _r);
 
 void setGameMode(enum kGameMode _mode);
 
