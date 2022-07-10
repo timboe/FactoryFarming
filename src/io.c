@@ -4,6 +4,7 @@
 #include "location.h"
 #include "generate.h"
 #include "player.h"
+#include "buildings/special.h"
 
 bool m_foundSaveData = false;
 
@@ -133,6 +134,9 @@ bool save() {
   #endif
 
   pd->system->logToConsole("START save player");
+
+  // Should get the latest export averages, guaranteed to be between 60 and 120s worth of data
+  updateExport();
 
   json_encoder je_p;
 

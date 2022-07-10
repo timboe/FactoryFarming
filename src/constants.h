@@ -104,18 +104,20 @@
 // TODO changing this will break the chunk->obstacle add/remove 
 #define ZOOM_LEVELS 3
 
-// 5 fixed inputs plus 1 fixed output. Or three variable self-describings outputs. CAUTION: changing this currently requires manual change to de/serialisation
+// 5 fixed inputs plus 1 fixed output. Or three variable self-describings outputs. 
+//CAUTION: changing this currently requires manual change to de/serialisation
 #define MAX_STORE 6
 
 // Number of crops before a plot upgrades to farmland
-#define N_CROPS_BEFORE_FARMLAND 4
+#define N_CROPS_BEFORE_FARMLAND 8
 
+//CAUTION: changing this currently requires manual change to de/serialisation
 #define WORLD_SAVE_SLOTS 8
 
 // Versioning
 #define SAVE_FORMAT 2
 
-#define ACTIVATE_DISTANCE (TILE_PIX*4)
+#define ACTIVATE_DISTANCE (TILE_PIX*3)
 
 // Shrink the collision boxes from the edge of the sprite, feels better
 #define COLLISION_OFFSET (TILE_PIX/2 + 2)

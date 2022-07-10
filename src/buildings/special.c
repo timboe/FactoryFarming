@@ -4,6 +4,7 @@
 #include "../generate.h"
 #include "../cargo.h"
 #include "../player.h"
+#include "../io.h"
 
 struct Building_t* m_sellBox = NULL;
 
@@ -15,7 +16,21 @@ struct Building_t* m_exportBox = NULL;
 
 struct Building_t* m_importBox = NULL;
 
+int32_t m_exportTimer = 0;
+bool m_exportParity = false;
+uint16_t m_exportItemCountA[kNCargoType];
+uint16_t m_exportItemCountB[kNCargoType];
+
+#define ONE_MIN (60*TICKS_PER_SEC)
+#define TWO_MIN (120*TICKS_PER_SEC)
+#define IMPORT_SECONDS 10
+#define IMPORT_SEC_IN_TICKS (IMPORT_SECONDS*TICKS_PER_SEC)
+
 void sellBoxUpdateFn(struct Building_t* _building);
+
+void exportUpdateFn(struct Building_t* _building, uint8_t _tick);
+
+void importUpdateFn(struct Building_t* _building, uint8_t _tick);
 
 bool nearbyConveyor(struct Building_t* _building);
 
@@ -97,7 +112,9 @@ void sellBoxUpdateFn(struct Building_t* _building) {
 void specialUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   switch (_building->m_subType.special) {
     case kSellBox:; return sellBoxUpdateFn(_building);
-    case kShop:; case kExportBox:; case kImportBox:; case kWarp:; return;
+    case kExportBox:; return exportUpdateFn(_building, _tick);
+    case kImportBox:; return importUpdateFn(_building, _tick);
+    case kShop:; case kWarp:; return;
     case kNSpecialSubTypes:; return;
   }
 }
@@ -135,15 +152,7 @@ void buildingSetupSpecial(struct Building_t* _building) {
   }
 }
 
-
-
-int32_t m_exportTimer = 0;
-bool m_exportParity = true;
-uint16_t m_exportItemCountA[kNCargoType];
-uint16_t m_exportItemCountB[kNCargoType];
-
-void exportUpdateFn(struct Building_t* _building) {
-
+void exportUpdateFn(struct Building_t* _building, uint8_t _tick) {
   // Pickup items 
   const int32_t min = -1, max =2;
   // Picking up
@@ -151,18 +160,143 @@ void exportUpdateFn(struct Building_t* _building) {
     for (int32_t y = min; y < max; ++y) {
       struct Location_t* loc = getLocation(_building->m_location->m_x + x, _building->m_location->m_y + y);
       if (loc->m_cargo) {
-        if (m_exportParity) {
+        if (m_exportTimer < ONE_MIN) {
           m_exportItemCountA[loc->m_cargo->m_type]++;
         } else {
-          m_exportItemCountB[loc->m_cargo->m_type]++;
+          if (m_exportParity) m_exportItemCountA[loc->m_cargo->m_type]++;
+          else                m_exportItemCountB[loc->m_cargo->m_type]++;
         }
         clearLocation(loc, /*clearCargo*/ true, /*clearBuilding*/ false);
       }
     }
   }
 
+  m_exportTimer += _tick;
+  if (m_exportTimer < TWO_MIN) return;
+
+  updateExport();
+  m_exportTimer -= ONE_MIN;
+  m_exportParity = !m_exportParity;
+  if (m_exportParity) memset(m_exportItemCountA, 0, sizeof(uint16_t)*kNCargoType);
+  else                memset(m_exportItemCountB, 0, sizeof(uint16_t)*kNCargoType);
 }
 
-void importtUpdateFn(struct Building_t* _building) {
-  
+
+void importUpdateFn(struct Building_t* _building, uint8_t _tick) {
+
+  struct Location_t* loc = NULL;
+
+  // NORTH
+  if (_building->m_stored[0]) {
+    for (int32_t s = -1; s < 2; ++s) {
+      loc = getLocation(_building->m_location->m_x + s, _building->m_location->m_y - 2);
+      if (_building->m_stored[0] && loc->m_cargo == NULL) {
+        newCargo(loc, _building->m_stored[3], _tick == NEAR_TICK_AMOUNT);
+        --_building->m_stored[0];
+      }
+    }
+  }
+
+  // EAST
+  if (_building->m_stored[1]) {
+    for (int32_t s = -1; s < 2; ++s) {
+      loc = getLocation(_building->m_location->m_x + 2, _building->m_location->m_y + s);
+      if (_building->m_stored[1] && loc->m_cargo == NULL) {
+        newCargo(loc, _building->m_stored[4], _tick == NEAR_TICK_AMOUNT);
+        --_building->m_stored[1];
+      }
+    }
+  }
+
+  // SOUTH
+  if (_building->m_stored[2]) {
+    for (int32_t s = -1; s < 2; ++s) {
+      loc = getLocation(_building->m_location->m_x + s, _building->m_location->m_y + 2);
+      if (_building->m_stored[2] && loc->m_cargo == NULL) {
+        newCargo(loc, _building->m_stored[5], _tick == NEAR_TICK_AMOUNT);
+        --_building->m_stored[2];
+      }
+    }
+  }
+
+  // WEST - NOTE: Uses the m_mode slot as we are out of space in m_stored 
+  if (_building->m_mode.mode8[0]) {
+    for (int32_t s = -1; s < 2; ++s) {
+      loc = getLocation(_building->m_location->m_x - 2, _building->m_location->m_y + s);
+      if (_building->m_mode.mode8[0] && loc->m_cargo == NULL) {
+        newCargo(loc, _building->m_mode.mode8[1], _tick == NEAR_TICK_AMOUNT);
+        --_building->m_mode.mode8[0];
+      }
+    }
+  }
+
+  // Add new items
+  _building->m_progress += _tick;
+  if (_building->m_progress < IMPORT_SEC_IN_TICKS) return;
+  _building->m_progress -= IMPORT_SEC_IN_TICKS;
+
+  struct Player_t* p = getPlayer();
+
+  static float fractional[kNCargoType] = {0.0f}; // Keep track of partial cargos
+
+  for (int32_t d = 0; d < 4; ++d) {
+
+    enum kCargoType c = (d == 3 ? _building->m_mode.mode8[1] : _building->m_stored[(MAX_STORE/2) + d]);
+
+    if (c == kNoCargo) {
+      continue;
+    }
+
+    float totInput = 0.0f;
+    for (int32_t w = 0; w < WORLD_SAVE_SLOTS; ++w) {
+      totInput += p->m_exportPerWorld[w][c];
+    }
+    totInput *= IMPORT_SECONDS;
+
+    float input = totInput / p->m_importConsumers[c];
+    fractional[c] += input - (uint32_t)input;
+    uint32_t input_int = (int32_t)input;
+
+    if (input_int && input_int + (d == 3 ? _building->m_mode.mode8[0] : _building->m_stored[d]) <= 255) {
+      switch (d) {
+        case 0: _building->m_stored[0] += input_int; break;
+        case 1: _building->m_stored[1] += input_int; break;
+        case 2: _building->m_stored[2] += input_int; break;
+        case 3: _building->m_mode.mode8[0] += input_int; break;
+      }
+    }
+
+    // Accumulated an extra one?
+    if (fractional[c] > 1.0f && (d == 3 ? _building->m_mode.mode8[0] : _building->m_stored[d]) < 255) {
+      fractional[c] -= 1.0f;
+      switch (d) {
+        case 0: _building->m_stored[0]++; break;
+        case 1: _building->m_stored[1]++; break;
+        case 2: _building->m_stored[2]++; break;
+        case 3: _building->m_mode.mode8[0]++; break;
+      }
+    }
+  }
+
+}
+
+void updateExport() {
+  struct Player_t* p = getPlayer();
+  const uint8_t slot = getSlot();
+
+  for (int32_t c = 1; c < kNCargoType; ++c) {
+    float collected = m_exportItemCountA[c] + m_exportItemCountB[c];
+    float av = collected / (m_exportTimer / TICKS_PER_SEC);
+    p->m_exportPerWorld[slot][c] = av;
+    if (collected) pd->system->logToConsole("Integrated over %i s, the av exported %s is %f /s", (m_exportTimer / TICKS_PER_SEC), toStringCargoByType(c), (float)av);
+  }
+}
+
+void resetExport() {
+  m_exportTimer = 0;
+  m_exportParity = false;
+  for (int32_t i = 0; i < kNCargoType; ++i) {
+    m_exportItemCountA[i] = 0;
+    m_exportItemCountB[i] = 0; 
+  }
 }

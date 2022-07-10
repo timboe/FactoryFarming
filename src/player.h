@@ -30,6 +30,10 @@ struct Player_t{
   uint16_t m_carryExtractor[kNExtractorSubTypes];
   uint16_t m_carryFactory[kNFactorySubTypes];
 
+  float m_exportPerWorld[WORLD_SAVE_SLOTS][kNCargoType];
+
+  uint16_t m_importConsumers[kNCargoType];
+
   // Settings. Persistent and NOT overwritten on reset
   uint8_t m_soundSettings;
   uint8_t m_autoUseConveyorBooster;

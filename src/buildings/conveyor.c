@@ -17,12 +17,12 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
     enum kDir direction;
     if (_building->m_subType.conveyor >= kFilterI) {
       // First encounter with an object? TODO can everything which can place an item on the chunk do this instead?
-      if (_building->m_mode == kNoCargo) {
-        _building->m_mode = loc->m_cargo->m_type; // Note: This CANNOT be undone without re-writing the building
+      if (_building->m_mode.mode16 == kNoCargo) {
+        _building->m_mode.mode16 = loc->m_cargo->m_type; // Note: This CANNOT be undone without re-writing the building
       }
-      direction = (_building->m_mode == loc->m_cargo->m_type ? _building->m_nextDir[1] :  _building->m_nextDir[0]);  
+      direction = (_building->m_mode.mode16 == loc->m_cargo->m_type ? _building->m_nextDir[1] :  _building->m_nextDir[0]);  
     } else {
-      direction = _building->m_nextDir[_building->m_mode];
+      direction = _building->m_nextDir[_building->m_mode.mode16];
     }
 
     // All of this only needs to be done if we are rendering
@@ -54,9 +54,9 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
   // Handle filters vs. splitters
   struct Location_t* nextLoc = NULL;
   if (_building->m_subType.conveyor >= kFilterI) {
-    nextLoc = (_building->m_mode == loc->m_cargo->m_type ? _building->m_next[1] :  _building->m_next[0]);  
+    nextLoc = (_building->m_mode.mode16 == loc->m_cargo->m_type ? _building->m_next[1] :  _building->m_next[0]);  
   } else {
-    nextLoc = _building->m_next[_building->m_mode];
+    nextLoc = _building->m_next[_building->m_mode.mode16];
   }
 
   if (_building->m_progress >= TILE_PIX && nextLoc->m_cargo == NULL) {
@@ -78,8 +78,8 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
     }
     // Cycle outputs
     switch (_building->m_subType.conveyor) {
-      case kSplitI:; case kSplitL:; _building->m_mode = (_building->m_mode + 1) % 2; break;
-      case kSplitT:; _building->m_mode = (_building->m_mode + 1) % 3; break;
+      case kSplitI:; case kSplitL:; _building->m_mode.mode16 = (_building->m_mode.mode16 + 1) % 2; break;
+      case kSplitT:; _building->m_mode.mode16 = (_building->m_mode.mode16 + 1) % 3; break;
       case kBelt:; case kFilterI:; case kFilterL:; case kTunnelIn:; case kTunnelOut:; case kNConvSubTypes:; break;
     }
   }
@@ -257,7 +257,7 @@ void buildingSetupConveyor(struct Building_t* _building) {
         (_building->m_pix_y + _building->m_location->m_pix_off_y) * zoom);
       pd->sprite->setZIndex(_building->m_sprite[zoom], Z_INDEX_CONVEYOR);
     } else {
-      if (_building->m_sprite[zoom] == NULL) {
+      if (_building->m_sprite[zoom] != NULL) {
         pd->sprite->freeSprite(_building->m_sprite[zoom]);
         _building->m_sprite[zoom] = NULL;
       }

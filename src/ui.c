@@ -255,7 +255,11 @@ void updateBlueprint() {
   } else if (gm == kPlaceMode) { // Of conveyors, cargo or utility
     setPlayerLookingAtOffset(0);
     if (selectedCat == kUICatUtility && selectedID == kConveyorGrease) {
-      pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap3x3[zoom], kBitmapUnflipped);
+      switch (getRadius()) {
+        case 1: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap1x1[zoom], kBitmapUnflipped); break;
+        case 3: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap3x3[zoom], kBitmapUnflipped); break;
+        case 5: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap5x5[zoom], kBitmapUnflipped); break;
+      }
     } else {
       pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
     }

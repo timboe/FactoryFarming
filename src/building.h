@@ -53,12 +53,13 @@ union kSubType {
   enum kExtractorSubType extractor;
   enum kFactorySubType factory;
   enum kSpecialSubType special; 
+  uint32_t raw;
 };
 
 union kMode {
   uint16_t mode16;
   uint8_t mode8[2];
-}
+};
 
 ///
 

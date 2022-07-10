@@ -35,8 +35,14 @@ void doMainMenuClick() {
 }
 
 bool doConveyorUpgrade(struct Location_t* _loc) {
-  for (int32_t x = -1; x < 2; ++x) {
-    for (int32_t y = -1; y < 2; ++y) {
+  int32_t min = 0, max = 0;
+  switch (getRadius()) {
+    case 1: min = 0; max = 1; break;
+    case 3: min = -1; max = 2; break;
+    case 5: min = -2; max = 3; break;
+  }
+  for (int32_t x = min; x < max; ++x) {
+    for (int32_t y = min; y < max; ++y) {
       struct Location_t* l = getLocation(_loc->m_x + x, _loc->m_y + y);
       upgradeConveyor(l->m_building);
     }

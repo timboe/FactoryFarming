@@ -32,7 +32,7 @@ void plantTrySpawnCargo(struct Building_t* _building, uint8_t _tick) {
 
   setGrowdownTimer(_building);
   
-  if (++_building->m_mode == N_CROPS_BEFORE_FARMLAND || _building->m_mode == 2*N_CROPS_BEFORE_FARMLAND ) {
+  if (++_building->m_mode.mode16 == N_CROPS_BEFORE_FARMLAND || _building->m_mode.mode16 == 2*N_CROPS_BEFORE_FARMLAND ) {
     renderChunkBackgroundImage(loc->m_chunk);
   }
 }

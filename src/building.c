@@ -279,7 +279,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   setBuildingSubType(building, _subType);
   building->m_dir = _dir;
   building->m_progress = 0;
-  building->m_mode = 0;
+  building->m_mode.mode16 = 0;
   for (int32_t i = 0; i < MAX_STORE; ++i) {
     // Don't reset this for speedy conveyors, we only apply the auto-speed boost once
     if (_type == kConveyor && i == 0 && building->m_stored[0] == 2) continue;
@@ -311,7 +311,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   bool wideRedraw = false;
   if (_type == kUtility && _subType.utility == kWell) {
     struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
-    building->m_mode = t->m_tile;
+    building->m_mode.mode16 = t->m_tile;
     t->m_tile = SPRITE16_ID(4,14);
     doWetness();
     wideRedraw = true;
@@ -382,9 +382,9 @@ void serialiseBuilding(struct json_encoder* je) {
       je->addTableMember(je, "dir", 3);
       je->writeInt(je, m_buildings[i].m_dir);
     }
-    if (m_buildings[i].m_subType.conveyor) { // Which union member we access does not matter here
+    if (m_buildings[i].m_subType.raw) {
       je->addTableMember(je, "stype", 5);
-      je->writeInt(je, m_buildings[i].m_subType.conveyor);
+      je->writeInt(je, m_buildings[i].m_subType.raw);
     }
     je->addTableMember(je, "x", 1);
     je->writeInt(je, m_buildings[i].m_pix_x);
@@ -394,9 +394,9 @@ void serialiseBuilding(struct json_encoder* je) {
       je->addTableMember(je, "prog", 4);
       je->writeInt(je, m_buildings[i].m_progress);
     }
-    if (m_buildings[i].m_mode) {
+    if (m_buildings[i].m_mode.mode16) {
       je->addTableMember(je, "mode", 4);
-      je->writeInt(je, m_buildings[i].m_mode);
+      je->writeInt(je, m_buildings[i].m_mode.mode16);
     }
     if (m_buildings[i].m_stored[0]) {
       je->addTableMember(je, "s0", 2);
@@ -437,7 +437,7 @@ void deserialiseValueBuilding(json_decoder* jd, const char* _key, json_value _va
   } else if (strcmp(_key, "dir") == 0) {
     m_buildings[m_deserialiseIndexBuilding].m_dir = json_intValue(_value);
   } else if (strcmp(_key, "stype") == 0) {
-    m_buildings[m_deserialiseIndexBuilding].m_subType.conveyor = json_intValue(_value); // The union type does not matter here
+    m_buildings[m_deserialiseIndexBuilding].m_subType.raw = json_intValue(_value);
   } else if (strcmp(_key, "x") == 0) {
     m_buildings[m_deserialiseIndexBuilding].m_pix_x = json_intValue(_value);
   } else if (strcmp(_key, "y") == 0) {
@@ -445,7 +445,7 @@ void deserialiseValueBuilding(json_decoder* jd, const char* _key, json_value _va
   } else if (strcmp(_key, "prog") == 0) {
     m_buildings[m_deserialiseIndexBuilding].m_progress = json_intValue(_value);
   } else if (strcmp(_key, "mode") == 0) {
-    m_buildings[m_deserialiseIndexBuilding].m_mode = json_intValue(_value);
+    m_buildings[m_deserialiseIndexBuilding].m_mode.mode16 = json_intValue(_value);
   } else if (strcmp(_key, "s0") == 0) {
     m_buildings[m_deserialiseIndexBuilding].m_stored[0] = json_intValue(_value);
   } else if (strcmp(_key, "s1") == 0) {

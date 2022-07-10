@@ -330,6 +330,11 @@ bool modMoney(int32_t _amount) {
   return true;
 }
 
+// TODO this is named wrong in the docs
+SpriteCollisionResponseType playerLCDSpriteCollisionFilterProc(LCDSprite* _player, LCDSprite* _other) {
+  return kCollisionTypeSlide;
+}
+
 void playerSpriteSetup() {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     m_player.m_sprite[zoom] = pd->sprite->newSprite();
@@ -338,6 +343,7 @@ void playerSpriteSetup() {
     pd->sprite->setBounds(m_player.m_sprite[zoom], pBound);
     pd->sprite->setImage(m_player.m_sprite[zoom], getSprite16(8, 5, zoom), kBitmapUnflipped);
     pd->sprite->setCollideRect(m_player.m_sprite[zoom], cBound);
+    pd->sprite->setCollisionResponseFunction(m_player.m_sprite[zoom], playerLCDSpriteCollisionFilterProc);
 
     m_player.m_blueprint[zoom] = pd->sprite->newSprite();
     pd->sprite->setBounds(m_player.m_blueprint[zoom], pBound);
@@ -413,6 +419,7 @@ void resetPlayer() {
   m_player.m_saveTime = pd->system->getSecondsSinceEpoch(NULL);
   m_player.m_playTime = 0;
   m_player.m_tutorialProgress = 0;
+  memset(m_player.m_exportPerWorld, 0, sizeof(float)*WORLD_SAVE_SLOTS*kNCargoType);
   if (m_player.m_enableTutorial != TUTORIAL_DISABLED) m_player.m_enableTutorial = 0;
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_carryCargo[i] = 0;
   for (int32_t i = 0; i < kNConvSubTypes; ++i) m_player.m_carryConveyor[i] = 0;
@@ -420,10 +427,11 @@ void resetPlayer() {
   for (int32_t i = 0; i < kNPlantSubTypes; ++i) m_player.m_carryPlant[i] = 0;
   for (int32_t i = 0; i < kNExtractorSubTypes; ++i) m_player.m_carryExtractor[i] = 0;
   for (int32_t i = 0; i < kNFactorySubTypes; ++i) m_player.m_carryFactory[i] = 0;
+  for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_importConsumers[i] = 0;
   setPlayerPosition(SCREEN_PIX_X/4, (3*SCREEN_PIX_Y)/4);
   m_currentChunk = getChunk_noCheck(0,0);
   m_forceTorus = true;
-  modMoney(1000); // TEMP
+  modMoney(100000); // TEMP
 }
 
 
@@ -521,6 +529,26 @@ void serialisePlayer(struct json_encoder* je) {
   }
   je->endArray(je);
 
+  for (int32_t w = 0; w < WORLD_SAVE_SLOTS; ++w) {
+    char txt[] = "expw00";
+    snprintf(txt, 6, "expw%i", (int)w);
+    je->addTableMember(je, txt, 6);
+    je->startArray(je);
+    for (int32_t i = 0; i < kNCargoType; ++i) {
+      je->addArrayMember(je);
+      je->writeInt(je, m_player.m_exportPerWorld[w][i]);
+    }
+    je->endArray(je);
+  }
+
+  je->addTableMember(je, "impc", 4);
+  je->startArray(je);
+  for (int32_t i = 0; i < kNCargoType; ++i) {
+    je->addArrayMember(je);
+    je->writeInt(je, m_player.m_importConsumers[i]);
+  }
+  je->endArray(je);
+
   je->endTable(je);
 }
 
@@ -571,6 +599,24 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
   } else if (strcmp(_key, "xtrcts") == 0) {
     m_deserialiseArrayID = 5;
   } else if (strcmp(_key, "facts") == 0) {
+    m_deserialiseArrayID = 6;
+  } else if (strcmp(_key, "expw0") == 0) {
+    m_deserialiseArrayID = 7;
+  } else if (strcmp(_key, "expw1") == 0) {
+    m_deserialiseArrayID = 8;
+  } else if (strcmp(_key, "expw2") == 0) {
+    m_deserialiseArrayID = 9;
+  } else if (strcmp(_key, "expw3") == 0) {
+    m_deserialiseArrayID = 10;
+  } else if (strcmp(_key, "expw4") == 0) {
+    m_deserialiseArrayID = 11;
+  } else if (strcmp(_key, "expw5") == 0) {
+    m_deserialiseArrayID = 12;
+  } else if (strcmp(_key, "expw6") == 0) {
+    m_deserialiseArrayID = 13;
+  } else if (strcmp(_key, "expw7") == 0) {
+    m_deserialiseArrayID = 14;
+  } else if (strcmp(_key, "impc") == 0) {
     // noop
   } else if (strcmp(_key, "player") == 0) {
     jd->didDecodeSublist = deserialiseStructDonePlayer;
@@ -589,6 +635,17 @@ void deserialiseArrayValuePlayer(json_decoder* jd, int _pos, json_value _value) 
     case 3: m_player.m_carryUtility[i] = v; break;
     case 4: m_player.m_carryExtractor[i] = v; break;
     case 5: m_player.m_carryFactory[i] = v; break;
+
+    case 6: m_player.m_exportPerWorld[0][i] = v; break;
+    case 7: m_player.m_exportPerWorld[1][i] = v; break;
+    case 8: m_player.m_exportPerWorld[2][i] = v; break;
+    case 9: m_player.m_exportPerWorld[3][i] = v; break;
+    case 10: m_player.m_exportPerWorld[4][i] = v; break;
+    case 11: m_player.m_exportPerWorld[5][i] = v; break;
+    case 12: m_player.m_exportPerWorld[6][i] = v; break;
+    case 13: m_player.m_exportPerWorld[7][i] = v; break;
+
+    case 14: m_player.m_importConsumers[i] = v; break;
   }
 }
 

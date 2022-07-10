@@ -10,6 +10,7 @@
 #include "input.h"
 #include "ui.h"
 #include "io.h"
+#include "buildings/special.h"
 
 PlaydateAPI* pd = NULL;
 
@@ -244,6 +245,7 @@ void menuOptionsCallbackSave(void* blank) {
 void reset() {
   resetCargo();
   resetBuilding();
+  resetExport(); // Essentially "reset special"
   resetLocation();
   resetChunk();
   resetWorld();

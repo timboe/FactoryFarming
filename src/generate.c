@@ -132,9 +132,9 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   for (uint32_t i = 0; i < _chunk->m_nBuildings; ++i) {
     struct Building_t* building = _chunk->m_buildings[i];
     if (building->m_type == kPlant) {
-      if (building->m_mode >= 2 * N_CROPS_BEFORE_FARMLAND) { // Draw farm land
+      if (building->m_mode.mode16 >= 2 * N_CROPS_BEFORE_FARMLAND) { // Draw farm land
         pd->graphics->drawBitmap(getSprite16(7,12,1), building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
-      } else if (building->m_mode >= N_CROPS_BEFORE_FARMLAND) { // Draw farm land
+      } else if (building->m_mode.mode16 >= N_CROPS_BEFORE_FARMLAND) { // Draw farm land
         pd->graphics->drawBitmap(getSprite16(6,12,1), building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
       } 
     }

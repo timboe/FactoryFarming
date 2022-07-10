@@ -19,3 +19,7 @@ int16_t distanceFromWarp(void);
 int16_t distanceFromOut(void);
 
 int16_t distanceFromIn(void);
+
+void updateExport(void);
+
+void resetExport(void);
