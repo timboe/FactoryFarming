@@ -10,3 +10,4 @@ void buildingSetupUtility(struct Building_t* _building);
 
 bool canBePlacedUtility(struct Location_t* _loc, enum kDir _dir, union kSubType _subType);
 
+void drawUIInspectUtility(struct Building_t* _building);

@@ -210,11 +210,11 @@ void populateInfoMainmenu() {
       toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
       toStringWetness(kPlantWetness[selectedID]),
       toStringSoil(kPlantSoil[selectedID])); break;
-    case kUICatConv:; snprintf(textA, 128, "Place %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.conveyor = selectedID}, false), getRotationAsString()); break;
-    case kUICatExtractor:; snprintf(textA, 128, "Build %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false), getRotationAsString()); break;
-    case kUICatFactory:; snprintf(textA, 128, "Build %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.factory = selectedID}, false), getRotationAsString()); break;
+    case kUICatConv:; snprintf(textA, 128, "Place %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.conveyor = selectedID}, false), getRotationAsString(getUIContentCategory(), getCursorRotation())); break;
+    case kUICatExtractor:; snprintf(textA, 128, "Build %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false), getRotationAsString(getUIContentCategory(), getCursorRotation())); break;
+    case kUICatFactory:; snprintf(textA, 128, "Build %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.factory = selectedID}, false), getRotationAsString(getUIContentCategory(), getCursorRotation())); break;
     case kUICatUtility:;
-      if (selectedID == kStorageBox) snprintf(textA, 128, "Place %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false), getRotationAsString());
+      if (selectedID == kStorageBox) snprintf(textA, 128, "Place %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false), getRotationAsString(getUIContentCategory(), getCursorRotation()));
       else snprintf(textA, 128, "Place %s", toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false));
       break;
     case kUICatCargo:; snprintf(textA, 128, "Place %s", toStringCargoByType(selectedID)); break;

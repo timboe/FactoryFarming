@@ -29,7 +29,7 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
 
     // Handle filters vs. splitters
     enum kDir direction;
-    if (_building->m_subType.conveyor >= kFilterI) {
+    if (_building->m_subType.conveyor >= kFilterL) {
       // First encounter with an object? TODO can everything which can place an item on the chunk do this instead?
       if (_building->m_mode.mode16 == kNoCargo) {
         _building->m_mode.mode16 = loc->m_cargo->m_type; // Note: This CANNOT be undone without re-writing the building
@@ -58,7 +58,7 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
 
   // Handle filters vs. splitters
   struct Location_t* nextLoc = NULL;
-  if (_building->m_subType.conveyor >= kFilterI) {
+  if (_building->m_subType.conveyor >= kFilterL) {
     nextLoc = (_building->m_mode.mode16 == loc->m_cargo->m_type ? _building->m_next[1] :  _building->m_next[0]);  
   } else {
     nextLoc = _building->m_next[_building->m_mode.mode16];
@@ -87,6 +87,15 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
       case kSplitT:; _building->m_mode.mode16 = (_building->m_mode.mode16 + 1) % 3; break;
       case kBelt:; case kFilterI:; case kFilterL:; case kTunnelIn:; case kTunnelOut:; case kNConvSubTypes:; break;
     }
+
+    // Cycle outputs varient 2
+    //uint16_t next = 0;
+    //switch (_building->m_subType.conveyor) {
+    //  case kSplitI:; case kSplitL:; next = (_building->m_mode.mode16 + 1) % 2; break;
+    //  case kSplitT:; next = (_building->m_mode.mode16 + 1) % 3; break;
+    //  case kBelt:; case kFilterI:; case kFilterL:; case kTunnelIn:; case kTunnelOut:; case kNConvSubTypes:; break;
+    //}
+    //if (_building->m_next[ next ]->m_cargo == NULL) _building->m_mode.mode16 = next;
   }
 }
 
@@ -267,5 +276,18 @@ void buildingSetupConveyor(struct Building_t* _building) {
         _building->m_sprite[zoom] = NULL;
       }
     }
+  }
+}
+
+void drawUIInspectConveyor(struct Building_t* _building) {
+  static char text[128];
+  uint8_t y = 2;
+  snprintf(text, 128, "Speed Multiplier: %s", _building->m_stored[0] == 1 ? "x1" : "x2");
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  if (_building->m_subType.conveyor >= kFilterL && _building->m_mode.mode16 != kNoCargo) {
+    snprintf(text, 128, "Filters On:      %s", toStringCargoByType(_building->m_mode.mode16));
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->setDrawMode(kDrawModeCopy);
+    pd->graphics->drawBitmap(getSprite16_byidx(kCargoUIIcon[ _building->m_mode.mode16 ], 1), TILE_PIX*6 + 4, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
   }
 }

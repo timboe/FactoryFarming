@@ -270,3 +270,7 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
   }
   return 0;
 }
+
+void drawUIInspectPlant(struct Building_t* _building) {
+  
+}

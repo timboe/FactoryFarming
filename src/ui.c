@@ -17,6 +17,10 @@
 #include "io.h"
 #include "buildings/special.h"
 #include "buildings/factory.h"
+#include "buildings/conveyor.h"
+#include "buildings/extractor.h"
+#include "buildings/plant.h"
+#include "buildings/utility.h"
 
 enum kGameMode m_mode;
 
@@ -107,6 +111,10 @@ void drawUIBottom(void);
 void drawUIRight(void);
 
 void drawUIMain(void);
+
+void drawUIInspect(void);
+
+void renderTutorialInspectRect(bool _bothSides);
 
 /// ///
 
@@ -315,7 +323,7 @@ void addUIToSpriteList() {
     pd->sprite->addSprite(m_UISpriteDev);
   }
 
-  if (p->m_enableTutorial < TUTORIAL_FINISHED) { // 254: finished. 255: disabled
+  if (p->m_enableTutorial < TUTORIAL_FINISHED || m_mode == kInspectMode) { // 254: finished. 255: disabled
     pd->sprite->addSprite(m_UISpriteTutorialMain);
     pd->sprite->addSprite(m_UISpriteTutorialHint);
   }
@@ -349,28 +357,20 @@ void showTutorialMsg(enum kUITutorialStage _stage) {
   if (_stage >= TUTORIAL_FINISHED) return; // Finished = 254, disabled = 255
 
   pd->sprite->setVisible(m_UISpriteTutorialMain, 1);
-  #define TUT_Y_SPACING 13
-  #define Y_SHFT 4
   char text[128];
   uint8_t y = 0;
-  pd->graphics->clearBitmap(m_UIBitmapTutorialMain, kColorWhite);
   pd->graphics->clearBitmap(m_UIBitmapTutorialHint, kColorClear);
   pd->graphics->pushContext(m_UIBitmapTutorialMain);
-  pd->graphics->drawRect(0, 0, TUTORIAL_WIDTH, TUTORIAL_HEIGHT, kColorBlack);
-  pd->graphics->drawRect(3, 3, TUTORIAL_WIDTH-6, TUTORIAL_HEIGHT-6, kColorBlack);
-  pd->graphics->drawRect(4, 4, TUTORIAL_WIDTH-8, TUTORIAL_HEIGHT-8, kColorBlack);
-  pd->graphics->drawBitmap(getSprite16(9, 10, 2), TILE_PIX/2, TILE_PIX/2 - Y_SHFT, kBitmapUnflipped);
-  pd->graphics->drawBitmap(getSprite16(9, 10, 2), TUTORIAL_WIDTH - (TILE_PIX/2) - TILE_PIX*2, TILE_PIX/2 - Y_SHFT, kBitmapUnflipped);
-  pd->graphics->drawBitmap(getSprite16(10, 10, 1), TUTORIAL_WIDTH - (TILE_PIX/2) - TILE_PIX, TUTORIAL_HEIGHT - (TILE_PIX/2) - TILE_PIX, kBitmapUnflipped);
+  renderTutorialInspectRect(true);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   setRoobert10();
   snprintf(text, 128, "--- Tutorial Stage %u/%u ---", (unsigned) _stage+1, (unsigned) kTutBreakOne);
   int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, 128, kASCIIEncoding, 0);
-  pd->graphics->drawText(text, 128, kASCIIEncoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - Y_SHFT);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   for (int32_t l = 0; l < 5; ++l) {
     const char* txt = toStringTutorial(_stage, l);
     width = pd->graphics->getTextWidth(getRoobert10(), txt, strlen(txt), kUTF8Encoding, 0);
-    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - Y_SHFT);
+    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   }
   pd->graphics->popContext();
 
@@ -381,12 +381,12 @@ void showTutorialMsg(enum kUITutorialStage _stage) {
     const char* txt = toStringTutorial(_stage, l);
     width = pd->graphics->getTextWidth(getRoobert10(), txt, strlen(txt), kUTF8Encoding, 0);
     pd->graphics->setDrawMode(kDrawModeFillWhite);
-    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2 + 1, TUT_Y_SPACING*(++y) - Y_SHFT);
-    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - Y_SHFT + 1);
-    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2 - 1, TUT_Y_SPACING*(y) - Y_SHFT);
-    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - Y_SHFT - 1);
+    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2 + 1, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - TUT_Y_SHFT + 1);
+    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2 - 1, TUT_Y_SPACING*(y) - TUT_Y_SHFT);
+    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - TUT_Y_SHFT - 1);
     pd->graphics->setDrawMode(kDrawModeFillBlack);
-    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - Y_SHFT);
+    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - TUT_Y_SHFT);
   }
   pd->graphics->popContext();
   pd->graphics->setDrawMode(kDrawModeCopy);
@@ -404,9 +404,9 @@ bool checkReturnDismissTutorialMsg() {
   return false;
 }
 
-const char* getRotationAsString(void) {
-  if (m_contentCat[m_selRow][m_selCol] != kUICatConv) {
-    switch (m_selRotation) {
+const char* getRotationAsString(enum kUICat _cat, uint16_t _rotation) {
+  if (_cat != kUICatConv) {
+    switch (_rotation) {
       case 0: return "N";
       case 1: return "E";
       case 2: return "S";
@@ -414,41 +414,98 @@ const char* getRotationAsString(void) {
     }
   }
 
-  switch (m_contentID[m_selRow][m_selCol]) {
+  switch (_cat) {
     case kBelt:; case kTunnelIn:;
-      switch (m_selRotation) {
+      switch (_rotation) {
         case 0: return "N";
         case 1: return "E";
         case 2: return "S";
         case 3: return "W";
       }
     case kSplitI:; case kFilterI:;
-      switch (m_selRotation) {
+      switch (_rotation) {
         case 0: return "W, E";
         case 1: return "N, S";
         case 2: return "W, E";
         case 3: return "N, S";
       }
     case kSplitL:; case kFilterL:;
-      switch (m_selRotation) {
+      switch (_rotation) {
         case 0: return "N, E";
         case 1: return "E, S";
         case 2: return "S, W";
         case 3: return "W, N";
       }
     case kSplitT:;
-      switch (m_selRotation) {
+      switch (_rotation) {
         case 0: return "W, N, E";
         case 1: return "N, E, S";
         case 2: return "E, S, W";
         case 3: return "S, W, N";
       }
+    default: return "!";
   }
   return "!";
 }
 
+void renderTutorialInspectRect(bool _bothSides) {
+  pd->graphics->clearBitmap(m_UIBitmapTutorialMain, kColorWhite);
+  pd->graphics->drawRect(0, 0, TUTORIAL_WIDTH, TUTORIAL_HEIGHT, kColorBlack);
+  pd->graphics->drawRect(3, 3, TUTORIAL_WIDTH-6, TUTORIAL_HEIGHT-6, kColorBlack);
+  pd->graphics->drawRect(4, 4, TUTORIAL_WIDTH-8, TUTORIAL_HEIGHT-8, kColorBlack);
+  pd->graphics->drawBitmap(getSprite16(9, 10, 2), TILE_PIX/2, TILE_PIX/2 - TUT_Y_SHFT, kBitmapUnflipped);
+  if (_bothSides) pd->graphics->drawBitmap(getSprite16(9, 10, 2), TUTORIAL_WIDTH - (TILE_PIX/2) - TILE_PIX*2, TILE_PIX/2 - TUT_Y_SHFT, kBitmapUnflipped);
+  pd->graphics->drawBitmap(getSprite16(10, 10, 1), TUTORIAL_WIDTH - (TILE_PIX/2) - TILE_PIX, TUTORIAL_HEIGHT - (TILE_PIX/2) - TILE_PIX, kBitmapUnflipped);
+}
+
+void drawUIInspect() {
+  // Tutorial sprite is used for inspection too
+  pd->sprite->setVisible(m_UISpriteTutorialMain, 1);
+  static char text[128];
+  uint8_t y = 0;
+  pd->graphics->pushContext(m_UIBitmapTutorialMain);
+  renderTutorialInspectRect(false);
+
+  struct Location_t* loc = getPlayerLocation();
+  struct Tile_t* t = getTile_fromLocation(loc);
+  if (loc->m_cargo) {
+    snprintf(text, 128, "(%i, %i)  %s %s, %s",
+      loc->m_x, loc->m_y, toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringCargoByType(loc->m_cargo->m_type));
+  } else {
+    snprintf(text, 128, "(%i, %i)  %s %s",
+      loc->m_x, loc->m_y, toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)));
+  }
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+  setRoobert10();
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  
+  if (loc->m_building) {
+    // TODO add rotation?
+    snprintf(text, 128, "%s", toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, false));
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
+    for (int32_t b = 0; b < 4; ++b) {
+      pd->graphics->drawRect(TILE_PIX, TUT_Y_SPACING*(3+b) - TUT_Y_SHFT, SCREEN_PIX_X-2*TILE_PIX, TUT_Y_SPACING + 1, kColorBlack);
+    }
+
+    switch (loc->m_building->m_type) {
+      case kConveyor:; drawUIInspectConveyor(loc->m_building); break;
+      case kPlant:; drawUIInspectPlant(loc->m_building); break;
+      case kUtility:; drawUIInspectUtility(loc->m_building); break;
+      case kExtractor:; drawUIInspectExtractor(loc->m_building); break;
+      case kFactory:; drawUIInspectFactory(loc->m_building); break;
+      case kSpecial:; drawUIInspectSpecial(loc->m_building); break;
+      case kNoBuilding:; case kNBuildingTypes:; break;;
+    }
+  }
+  pd->graphics->popContext();
+
+  pd->graphics->setDrawMode(kDrawModeCopy);
+}
 
 void drawUIBottom() {
+  if (m_mode == kInspectMode) return drawUIInspect();
+
   static char text[128];
   setRoobert10();
 
@@ -865,6 +922,8 @@ void setGameMode(enum kGameMode _mode) {
     drawUITop("Pick Mode");
   } else if (_mode == kMenuPlayer) {
     drawUITop("Main Menu");
+  } else if (_mode == kInspectMode) {
+    drawUITop("Inspect");
   } else if (_mode >= kMenuBuy) {
     /*noop*/ 
   } else drawUITop(NULL);

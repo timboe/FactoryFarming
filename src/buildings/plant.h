@@ -11,3 +11,5 @@ void buildingSetupPlant(struct Building_t* _building);
 bool canBePlacedPlant(struct Location_t* _loc, enum kDir _dir, union kSubType _subType);
 
 void plantTrySpawnCargo(struct Building_t* _building, uint8_t _tick);
+
+void drawUIInspectPlant(struct Building_t* _building);

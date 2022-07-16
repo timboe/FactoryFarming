@@ -159,3 +159,7 @@ void buildingSetupExtractor(struct Building_t* _building) {
 
   _building->m_progress = COLLECT_TIME;
 }
+
+void drawUIInspectExtractor(struct Building_t* _building) {
+  
+}

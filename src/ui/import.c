@@ -40,10 +40,10 @@ void doImport() {
     // If currentExport == newExport, then toggle the export to off
 
     switch (selectedCat) {
-      case kUICatImportN:; import->m_stored[3] = kNoCargo; break;
-      case kUICatImportE:; import->m_stored[4] = kNoCargo; break;
-      case kUICatImportS:; import->m_stored[5] = kNoCargo; break;
-      case kUICatImportW:; import->m_mode.mode8[1] = kNoCargo; break;
+      case kUICatImportN:; import->m_stored[0] = 0; import->m_stored[3] = kNoCargo; break;
+      case kUICatImportE:; import->m_stored[1] = 0; import->m_stored[4] = kNoCargo; break;
+      case kUICatImportS:; import->m_stored[2] = 0; import->m_stored[5] = kNoCargo; break;
+      case kUICatImportW:; import->m_mode.mode8[0] = 0; import->m_mode.mode8[1] = kNoCargo; break;
       default: break;
     }
 

@@ -164,6 +164,12 @@ void exportUpdateFn(struct Building_t* _building, uint8_t _tick) {
     for (int32_t y = min; y < max; ++y) {
       struct Location_t* loc = getLocation(_building->m_location->m_x + x, _building->m_location->m_y + y);
       if (loc->m_cargo) {
+        // We do not allow export of any imports
+        // Oterwise you can break the game too easily....
+        const enum kCargoType ct = loc->m_cargo->m_type;
+        if (ct == m_importBox->m_stored[3] || ct == m_importBox->m_stored[4] || ct == m_importBox->m_stored[5] || ct == m_importBox->m_mode.mode8[1]) {
+          continue;
+        }
         if (m_exportTimer < ONE_MIN) {
           m_exportItemCountA[loc->m_cargo->m_type]++;
         } else {
@@ -306,4 +312,8 @@ void resetExport() {
     m_exportItemCountA[i] = 0;
     m_exportItemCountB[i] = 0; 
   }
+}
+
+void drawUIInspectSpecial(struct Building_t* _building) {
+  
 }

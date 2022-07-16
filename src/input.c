@@ -230,23 +230,15 @@ void clickHandlePick(uint32_t _buttonPressed) {
 }
 
 void clickHandleInspect(uint32_t _buttonPressed) {
-  if (characterMoveInput(_buttonPressed)) {
-    // noop
-  } else if (kButtonA    == _buttonPressed) {
-    // noop
-  } else if (kButtonB    == _buttonPressed) {
-    setGameMode(kWanderMode);
-  }
+  if (characterMoveInput(_buttonPressed)) { /*noop*/} 
+  else if (kButtonA == _buttonPressed) setGameMode(kWanderMode);
+  else if (kButtonB == _buttonPressed) setGameMode(kWanderMode);
 }
 
 void clickHandleDestroy(uint32_t _buttonPressed) {
-  if (characterMoveInput(_buttonPressed)) {
-    // noop
-  } else if (kButtonA    == _buttonPressed) {
-    doDestroy();
-  } else if (kButtonB    == _buttonPressed) {
-    setGameMode(kWanderMode);
-  }
+  if (characterMoveInput(_buttonPressed)) { /*noop*/ }
+  else if (kButtonA == _buttonPressed) doDestroy();
+  else if (kButtonB == _buttonPressed) setGameMode(kWanderMode);
 }
 
 void rotateHandleWander(float _rotation) {

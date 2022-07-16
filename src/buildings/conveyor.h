@@ -17,3 +17,5 @@ struct Tile_t* getTunnelOutTile(struct Location_t* _in, enum kDir _dir);
 void upgradeConveyor(struct Building_t* _building);
 
 void conveyorLocationUpdate(struct Building_t* _building, uint8_t _zoom);
+
+void drawUIInspectConveyor(struct Building_t* _building);

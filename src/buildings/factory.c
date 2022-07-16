@@ -132,3 +132,7 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
     default: return "";
   }
 }
+
+void drawUIInspectFactory(struct Building_t* _building) {
+  
+}

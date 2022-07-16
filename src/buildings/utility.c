@@ -74,3 +74,7 @@ void buildingSetupUtility(struct Building_t* _building) {
     }
   }
 }
+
+void drawUIInspectUtility(struct Building_t* _building) {
+  
+}

@@ -16,3 +16,5 @@ void tryPickupAnyCargo(struct Location_t* _from, struct Building_t* _building);
 void tryPutdownAnyCargo(struct Building_t* _building, uint8_t _tick);
 
 enum kCargoType getExtractorOutput(enum kExtractorSubType _subType);
+
+void drawUIInspectExtractor(struct Building_t* _building);

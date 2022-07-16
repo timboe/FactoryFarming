@@ -5,9 +5,9 @@
 #include "building.h"
 #include "input.h"
 
-//                              {kNoCargo, kApple,   kCheese,  kCarrot,   kWheat,    kWaterBarrel, kChalk,    kVitamin, kNCargoType};
-const uint16_t kCargoValue[] =  {0,        2,        8,        1,         4,         1,            1,         1};
-const uint16_t kCargoUIIcon[] = {SID(0,0), SID(8,7), SID(9,7), SID(10,7), SID(11,7), SID(12,7),    SID(13,7), SID(12,8)};
+//                              {kNoCargo,   kApple,   kCheese,  kCarrot,   kWheat,    kWaterBarrel, kChalk,    kVitamin, kNCargoType};
+const uint16_t kCargoValue[] =  {0,          2,        8,        1,         4,         1,            1,         1};
+const uint16_t kCargoUIIcon[] = {SID(11,10), SID(8,7), SID(9,7), SID(10,7), SID(11,7), SID(12,7),    SID(13,7), SID(12,8)};
 
 const int32_t SIZE_CARGO = TOT_CARGO_OR_BUILDINGS * sizeof(struct Cargo_t);
 

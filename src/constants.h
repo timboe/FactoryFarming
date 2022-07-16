@@ -56,6 +56,9 @@
 #define TUTORIAL_DISABLED 255
 #define TUTORIAL_FINISHED 254
 
+ #define TUT_Y_SPACING 13
+ #define TUT_Y_SHFT 4
+
 // How big is the world in X and Y
 #define WORLD_CHUNKS_X 12
 #define WORLD_CHUNKS_Y 12
