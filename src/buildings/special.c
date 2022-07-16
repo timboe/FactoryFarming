@@ -295,7 +295,7 @@ void updateExport() {
     float collected = m_exportItemCountA[c] + m_exportItemCountB[c];
     float av = collected / (m_exportTimer / TICKS_PER_SEC);
     p->m_exportPerWorld[slot][c] = av;
-    if (collected) pd->system->logToConsole("Integrated over %i s, the av exported %s is %f /s", (m_exportTimer / TICKS_PER_SEC), toStringCargoByType(c), (float)av);
+    if (collected) pd->system->logToConsole("Integrated over %i s, the av exported %s is %f /s", (m_exportTimer / TICKS_PER_SEC), toStringCargoByType(c), (double)av);
   }
 }
 

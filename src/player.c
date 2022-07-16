@@ -14,7 +14,7 @@ struct Player_t m_player;
 
 int16_t m_offX, m_offY = 0; // Screen offsets
 
-uint8_t m_facing = 0;
+uint8_t m_facing = 0, m_wasFacing = 0, m_stepCounter = 0, m_animFrame = 0;
 
 uint8_t m_lookingAtOffset = 0;
 
@@ -213,10 +213,24 @@ bool movePlayer() {
   }
   if (bPressed()) speed += 2;
 
-  if (getPressed(0)) { goalX -= speed / zoom; m_facing = 0; } 
-  if (getPressed(1)) { goalX += speed / zoom; m_facing = 1; }
-  if (getPressed(2)) { goalY -= speed / zoom; m_facing = 2; }
-  if (getPressed(3)) { goalY += speed / zoom; m_facing = 3; }
+  bool moving = false;
+  if (getPressed(0)) { goalX -= speed / zoom; m_facing = 0; moving = true; } 
+  if (getPressed(1)) { goalX += speed / zoom; m_facing = 1; moving = true; }
+  if (getPressed(2)) { goalY -= speed / zoom; m_facing = 2; moving = true; }
+  if (getPressed(3)) { goalY += speed / zoom; m_facing = 3; moving = true; }
+
+  #define PLAYER_ANIM_FRAMES 6
+  #define PLAYER_ANIM_DELAY 16
+  #define P_SS_Y 19
+
+  if (moving) {
+    if (++m_stepCounter * speed > PLAYER_ANIM_DELAY || m_facing != m_wasFacing) {
+      m_animFrame = (m_animFrame + 1) % PLAYER_ANIM_FRAMES;
+      m_stepCounter = 0;
+      pd->sprite->setImage(m_player.m_sprite[zoom], getSprite16(m_animFrame, P_SS_Y + m_facing, zoom), kBitmapUnflipped);
+    }
+    m_wasFacing = m_facing;
+  }
 
 
   //pd->system->logToConsole("GOAL %f %f CURRENT %f %f", goalX, goalY, m_player.m_x, m_player.m_y);
@@ -357,7 +371,7 @@ void playerSpriteSetup() {
     PDRect pBound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
     PDRect cBound = {.x = (COLLISION_OFFSET/2)*zoom, .y = (COLLISION_OFFSET/2)*zoom, .width = (TILE_PIX - COLLISION_OFFSET)*zoom, .height = (TILE_PIX - COLLISION_OFFSET)*zoom};
     pd->sprite->setBounds(m_player.m_sprite[zoom], pBound);
-    pd->sprite->setImage(m_player.m_sprite[zoom], getSprite16(8, 5, zoom), kBitmapUnflipped);
+    pd->sprite->setImage(m_player.m_sprite[zoom], getSprite16(0, P_SS_Y+3, zoom), kBitmapUnflipped);
     pd->sprite->setCollideRect(m_player.m_sprite[zoom], cBound);
     pd->sprite->setCollisionResponseFunction(m_player.m_sprite[zoom], playerLCDSpriteCollisionFilterProc);
 
