@@ -3,6 +3,8 @@
 #include "ui/sell.h"
 #include "ui/shop.h"
 #include "ui/warp.h"
+#include "ui/import.h"
+#include "ui/export.h"
 #include "sprite.h"
 #include "player.h"
 #include "input.h"
@@ -27,8 +29,11 @@ LCDSprite* m_UISpriteRight;
 LCDBitmap* m_UIBitmapRight;
 LCDBitmap* m_UIBitmapRightRotated;
 
-LCDSprite* m_UISpriteTopSave;
-LCDBitmap* m_UIBitmapTopSave;
+LCDSprite* m_UISpriteSave;
+LCDSprite* m_UISpriteLoad;
+
+LCDBitmap* m_UIBitmapSave;
+LCDBitmap* m_UIBitmapLoad;
 
 LCDSprite* m_UISpriteTop;
 LCDBitmap* m_UIBitmapTop;
@@ -79,10 +84,13 @@ LCDBitmap* m_UIBitmapHeaders[kNUICats]; // Category headers: Crops. Conveyors. U
 LCDSprite* m_UISpriteItems[kNUICats][MAX_PER_CAT][4]; // Final 4 is for rotation states
 LCDBitmap* m_UIBitmapItems[kNUICats][MAX_PER_CAT][4];
 
+LCDSprite* m_UISpriteStickySelected[4];
+
 uint16_t m_selCol = 0, m_selRow = 1, m_selRotation = 0;
 uint16_t m_selRowOffset = 0, m_cursorRowAbs = 1;
 
 LCDSprite* m_contentSprite[MAX_ROWS][ROW_WDTH] = {NULL};
+LCDSprite* m_contentStickySelected[MAX_ROWS][ROW_WDTH] = {NULL};
 enum kUICat m_contentCat[MAX_ROWS][ROW_WDTH];
 uint16_t m_contentID[MAX_ROWS][ROW_WDTH];
 
@@ -186,7 +194,7 @@ void updateUI(int _fc) {
       if (_fc % (TICK_FREQUENCY/2) == 0) {
         if      (distanceFromBuy()  < ACTIVATE_DISTANCE) drawUITop("The Shop");
         else if (distanceFromSell() < ACTIVATE_DISTANCE) drawUITop("Sales");
-        else if (distanceFromWarp() < ACTIVATE_DISTANCE) drawUITop("Location");
+        else if (distanceFromWarp() < ACTIVATE_DISTANCE) drawUITop("Plots");
         else if (distanceFromOut() < ACTIVATE_DISTANCE) drawUITop("Exports");
         else if (distanceFromIn() < ACTIVATE_DISTANCE) drawUITop("Imports");
       }
@@ -201,12 +209,12 @@ void updateUI(int _fc) {
 
   if (m_queueSave) {
     if (m_queueSave == 1) {
-      pd->sprite->addSprite(m_UISpriteTopSave);
+      pd->sprite->addSprite(m_UISpriteSave);
       m_queueSave = 2;
     } else if (m_queueSave == 2) {
       save();
       m_queueSave = 0;
-      pd->sprite->removeSprite(m_UISpriteTopSave);
+      pd->sprite->removeSprite(m_UISpriteSave);
     }
   }
 
@@ -267,7 +275,8 @@ void updateBlueprint() {
       case kUICatConv:;    pd->sprite->setImage(bp, getSprite16_byidx(kConvUIIcon[selectedID] + m_selRotation, zoom), kBitmapUnflipped); break;
       case kUICatUtility:; pd->sprite->setImage(bp, getSprite16_byidx(kUtilityUIIcon[selectedID] + m_selRotation, zoom), kBitmapUnflipped); break;
       case kUICatCargo:;   pd->sprite->setImage(bp, getSprite16_byidx(kCargoUIIcon[selectedID], zoom), kBitmapUnflipped); break;
-      case kUICatTool:; case kUICatPlant:; case kUICatExtractor:; case kUICatFactory:; case kUICatWarp:; case kNUICats:; break;
+      case kUICatTool:; case kUICatPlant:; case kUICatExtractor:; case kUICatFactory:; case kUICatWarp:; break;
+      case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; case kNUICats:; break;
     }
   } else if (gm == kPlantMode) { // Of crops
     setPlayerLookingAtOffset(0);
@@ -288,7 +297,8 @@ void updateBlueprint() {
     switch (selectedCat) {
       case kUICatExtractor:; pd->sprite->setImage(bp, getSprite48_byidx(kExtractorSprite[selectedID] + m_selRotation, zoom), kBitmapUnflipped); break;
       case kUICatFactory:;   pd->sprite->setImage(bp, getSprite48_byidx(kFactorySprite[selectedID] + m_selRotation,   zoom), kBitmapUnflipped); break;
-      case kUICatTool:; case kUICatPlant:; case kUICatConv:; case kUICatUtility:; case kUICatCargo:; case kUICatWarp:; case kNUICats:; break;
+      case kUICatTool:; case kUICatPlant:; case kUICatConv:; case kUICatUtility:; case kUICatCargo:; case kUICatWarp:; break;
+      case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; case kNUICats:; break;
     }
   } else { // Clear blueprint
     pd->sprite->setImage(bp, getSprite16_byidx(0, zoom), kBitmapUnflipped);
@@ -317,6 +327,9 @@ void addUIToSpriteList() {
     pd->sprite->addSprite(m_UISpriteCannotAfford);
     pd->sprite->addSprite(m_UISpriteInfo);
     pd->sprite->addSprite(m_UISpriteIngredients);
+    for (int32_t i = 0; i < 4; ++i) {
+      pd->sprite->addSprite(m_UISpriteStickySelected[i]);
+    }
     for (enum kUICat c = 0; c < kNUICats; ++c) {
       if (m_UISpriteHeaders[c] != NULL) {
         pd->sprite->addSprite(m_UISpriteHeaders[c]);
@@ -333,7 +346,7 @@ void addUIToSpriteList() {
 }
 
 void showTutorialMsg(enum kUITutorialStage _stage) {
-  if (_stage == TUTORIAL_DISABLED || _stage == TUTORIAL_FINISHED) return;
+  if (_stage >= TUTORIAL_FINISHED) return; // Finished = 254, disabled = 255
 
   pd->sprite->setVisible(m_UISpriteTutorialMain, 1);
   #define TUT_Y_SPACING 13
@@ -536,6 +549,7 @@ int32_t getUnlockCost(enum kUICat _c, int32_t _i) {
     case kUICatUtility: return kUtilityUnlock[_i];
     case kUICatCargo: return 0;
     case kUICatWarp:; return 0;
+    case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; return 0;
     case kNUICats: return 0;
   }
   return 0;
@@ -551,6 +565,7 @@ int32_t getPrice(enum kUICat _c, int32_t _i) {
     case kUICatUtility: return kUtilityPrice[_i];
     case kUICatCargo: return kCargoValue[_i];
     case kUICatWarp: return kWarpPrice[_i];
+    case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; return 0;
     case kNUICats: return 0;
   }
   return 0;
@@ -567,6 +582,7 @@ uint16_t getOwned(enum kUICat _c, int32_t _i) {
     case kUICatUtility: return p->m_carryUtility[_i];
     case kUICatCargo: return p->m_carryCargo[_i];
     case kUICatWarp: return hasWorld(_i);
+    case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; return 0;
     case kNUICats: return 0;
   }
   return 0;
@@ -583,6 +599,7 @@ void modOwned(enum kUICat _c, int32_t _i, bool _add) {
     case kUICatUtility: p->m_carryUtility[_i] += (_add ? 1 : -1); break;
     case kUICatCargo: p->m_carryCargo[_i] += (_add ? 1 : -1); break;
     case kUICatWarp: break;
+    case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; break;
     case kNUICats: break;
   }
   UIDirtyRight();
@@ -598,6 +615,7 @@ uint16_t getNSubTypes(enum kUICat _c) {
     case kUICatUtility: return kNUtilitySubTypes;
     case kUICatCargo: return kNCargoType;
     case kUICatWarp: return WORLD_SAVE_SLOTS;
+    case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; return kNCargoType;
     case kNUICats: return 0;
   }
   return 0;
@@ -613,6 +631,7 @@ enum kBuildingType getCatBuildingSubType(enum kUICat _c) {
     case kUICatUtility: return kUtility;
     case kUICatCargo: return kNoBuilding;
     case kUICatWarp: return kNoBuilding;
+    case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; return kNoBuilding;
     case kNUICats: return kNoBuilding;
   }
   return kNoBuilding;
@@ -628,6 +647,7 @@ uint16_t getUIIcon(enum kUICat _c, uint16_t _i) {
     case kUICatUtility: return kUtilityUIIcon[_i];
     case kUICatCargo: return kCargoUIIcon[_i];
     case kUICatWarp: return kWarpUIIcon[_i];
+    case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; return kCargoUIIcon[_i];
     case kNUICats: break;
   }
   return 0;
@@ -707,7 +727,10 @@ void moveCursor(uint32_t _button) {
 void setUIContentHeader(int32_t _row, enum kUICat _c) {
   m_contentSprite[_row][0] = m_UISpriteHeaders[_c];
   m_rowIsTitle[_row] = true;
+}
 
+void setUIContentStickySelected(int32_t _row, int32_t _col, uint8_t _selID) {
+  m_contentStickySelected[_row][_col] = m_UISpriteStickySelected[_selID];
 }
 
 void setUIContentItem(int32_t _row, int32_t _col, enum kUICat _c, uint16_t _i, uint16_t _r) {
@@ -727,6 +750,7 @@ LCDBitmap* getInfoBitmap() {
 void drawUIMain() {
 
   memset(m_contentSprite, 0, MAX_ROWS * ROW_WDTH * sizeof(LCDSprite*));
+  memset(m_contentStickySelected, 0, MAX_ROWS * ROW_WDTH * sizeof(LCDSprite*));
   memset(m_rowIsTitle, 0, MAX_ROWS * sizeof(bool));
 
   // POPULATE
@@ -736,6 +760,8 @@ void drawUIMain() {
     case kMenuPlayer:; populateContentMainmenu(); break;
     case kMenuSell:; empty = populateContentSell(); break;
     case kMenuWarp:; populateContentWarp(); break;
+    case kMenuExport:; empty = populateContentExport(); break;
+    case kMenuImport:; empty = populateContentImport(); break;
     default: break;
   }
 
@@ -752,6 +778,9 @@ void drawUIMain() {
         }
       }
     }
+  }
+  for (int32_t i = 0; i < 4; ++i) {
+    pd->sprite->setVisible(m_UISpriteStickySelected[i], 0);
   }
 
   #define UISTARTX (TILE_PIX*3)
@@ -782,6 +811,10 @@ void drawUIMain() {
         if (m_contentSprite[rID][c] == NULL) break; // Not populated
         pd->sprite->setVisible(m_contentSprite[rID][c], 1);
         pd->sprite->moveTo(m_contentSprite[rID][c], UISTARTX + c*2*TILE_PIX, UISTARTY + r*2*TILE_PIX);
+        if (m_contentStickySelected[rID][c] != NULL) {
+          pd->sprite->setVisible(m_contentStickySelected[rID][c], 1);
+          pd->sprite->moveTo(m_contentStickySelected[rID][c], UISTARTX + c*2*TILE_PIX, UISTARTY + r*2*TILE_PIX);
+        }
       }
     }
   }
@@ -811,7 +844,9 @@ void drawUIMain() {
     case kMenuBuy:; populateInfoBuy(visible); break;
     case kMenuPlayer:; populateInfoMainmenu(); break;
     case kMenuSell:; populateInfoSell(); break;
-    case kMenuWarp:; populateInfoWarp(); break;
+    case kMenuWarp:; populateInfoWarp(visible); break;
+    case kMenuExport:; populateInfoExport(); break;
+    case kMenuImport:; populateInfoImport(); break;
     default: break;
   }
 
@@ -830,7 +865,7 @@ void setGameMode(enum kGameMode _mode) {
     drawUITop("Pick Mode");
   } else if (_mode == kMenuPlayer) {
     drawUITop("Main Menu");
-  } else if (_mode == kMenuBuy || _mode == kMenuSell || _mode == kMenuWarp) {
+  } else if (_mode >= kMenuBuy) {
     /*noop*/ 
   } else drawUITop(NULL);
 
@@ -864,12 +899,14 @@ void roundedRect(uint16_t _o, uint16_t _w, uint16_t _h, uint16_t _r, LCDColor _c
 
 void initiUI() {
   m_UISpriteTop = pd->sprite->newSprite();
-  m_UISpriteTopSave = pd->sprite->newSprite();
+  m_UISpriteSave = pd->sprite->newSprite();
+  m_UISpriteLoad = pd->sprite->newSprite();
   m_UISpriteBottom = pd->sprite->newSprite();
   m_UISpriteRight = pd->sprite->newSprite();
 
   m_UIBitmapTop = pd->graphics->newBitmap(SCREEN_PIX_X/2, TILE_PIX*2, kColorClear);
-  m_UIBitmapTopSave = pd->graphics->newBitmap(SCREEN_PIX_X/2, TILE_PIX*2, kColorClear);
+  m_UIBitmapSave = pd->graphics->newBitmap(SCREEN_PIX_X/2, TILE_PIX*2, kColorClear);
+  m_UIBitmapLoad = pd->graphics->newBitmap(SCREEN_PIX_X/2, TILE_PIX*2, kColorClear);
   m_UIBitmapBottom = pd->graphics->newBitmap(DEVICE_PIX_X, TILE_PIX, kColorBlack);
   m_UIBitmapRight = pd->graphics->newBitmap(TILE_PIX, DEVICE_PIX_Y, kColorBlack);
   m_UIBitmapRightRotated = pd->graphics->newBitmap(DEVICE_PIX_Y, TILE_PIX, kColorBlack);
@@ -882,20 +919,36 @@ void initiUI() {
   pd->sprite->setIgnoresDrawOffset(m_UISpriteTop, 1);
   pd->sprite->setVisible(m_UISpriteTop, 1);
 
-  pd->sprite->setBounds(m_UISpriteTopSave, boundTop);
-  pd->sprite->setImage(m_UISpriteTopSave, m_UIBitmapTopSave, kBitmapUnflipped);
-  pd->sprite->moveTo(m_UISpriteTopSave, SCREEN_PIX_X/2, TILE_PIX);
-  pd->sprite->setZIndex(m_UISpriteTopSave, Z_INDEX_UI_TT);
-  pd->sprite->setIgnoresDrawOffset(m_UISpriteTopSave, 1);
-  pd->sprite->setVisible(m_UISpriteTopSave, 1);
+  pd->sprite->setBounds(m_UISpriteSave, boundTop);
+  pd->sprite->setImage(m_UISpriteSave, m_UIBitmapSave, kBitmapUnflipped);
+  pd->sprite->moveTo(m_UISpriteSave, SCREEN_PIX_X/2, SCREEN_PIX_Y/2);
+  pd->sprite->setZIndex(m_UISpriteSave, Z_INDEX_UI_TT);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteSave, 1);
+  pd->sprite->setVisible(m_UISpriteSave, 1);
 
-  pd->graphics->pushContext(m_UIBitmapTopSave);
+  pd->graphics->pushContext(m_UIBitmapSave);
   pd->graphics->setLineCapStyle(kLineCapStyleRound);
   pd->graphics->drawLine(TILE_PIX, TILE_PIX, SCREEN_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorBlack);
   pd->graphics->setDrawMode(kDrawModeFillWhite);
   setRoobert24();
   int32_t tlen = pd->graphics->getTextWidth(getRoobert24(), "SAVING", 16, kASCIIEncoding, 0);
   pd->graphics->drawText("SAVING", 6, kASCIIEncoding, (SCREEN_PIX_X/2 - tlen)/2, 0);
+  pd->graphics->popContext();
+
+  pd->sprite->setBounds(m_UISpriteLoad, boundTop);
+  pd->sprite->setImage(m_UISpriteLoad, m_UIBitmapSave, kBitmapUnflipped);
+  pd->sprite->moveTo(m_UISpriteLoad, SCREEN_PIX_X/2, SCREEN_PIX_Y/2);
+  pd->sprite->setZIndex(m_UISpriteLoad, Z_INDEX_UI_TT);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteLoad, 1);
+  pd->sprite->setVisible(m_UISpriteLoad, 1);
+
+  pd->graphics->pushContext(m_UIBitmapLoad);
+  pd->graphics->setLineCapStyle(kLineCapStyleRound);
+  pd->graphics->drawLine(TILE_PIX, TILE_PIX, SCREEN_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorBlack);
+  pd->graphics->setDrawMode(kDrawModeFillWhite);
+  setRoobert24();
+  tlen = pd->graphics->getTextWidth(getRoobert24(), "LOADING", 16, kASCIIEncoding, 0);
+  pd->graphics->drawText("LOADING", 6, kASCIIEncoding, (SCREEN_PIX_X/2 - tlen)/2, 0);
   pd->graphics->popContext();
 
   PDRect boundBottom = {.x = 0, .y = 0, .width = DEVICE_PIX_X, .height = TILE_PIX};
@@ -936,6 +989,7 @@ void initiUI() {
   PDRect infoBound = {.x = 0, .y = 0, .width = TILE_PIX*18, .height = TILE_PIX*2};
   PDRect ingBound = {.x = 0, .y = 0, .width = INGREDIENTS_WIDTH, .height = INGREDIENTS_HEIGHT};
   PDRect tutBound = {.x = 0, .y = 0, .width = TUTORIAL_WIDTH, .height = TUTORIAL_HEIGHT};
+  PDRect stickyBound = {.x = 0, .y = 0, .width = 38, .height = 38};
 
   m_UISpriteFull = pd->sprite->newSprite();
   pd->sprite->setBounds(m_UISpriteFull, fBound);
@@ -989,6 +1043,14 @@ void initiUI() {
   pd->sprite->moveTo(m_UISpriteTutorialHint, TUTORIAL_WIDTH/2, TILE_PIX*12);
   pd->sprite->setImage(m_UISpriteTutorialHint, m_UIBitmapTutorialHint, kBitmapUnflipped);
 
+  for (uint32_t i = 0; i < 4; ++i) {
+    m_UISpriteStickySelected[i] = pd->sprite->newSprite();
+    pd->sprite->setBounds(m_UISpriteStickySelected[i], stickyBound);
+    pd->sprite->setZIndex(m_UISpriteStickySelected[i], Z_INDEX_UI_TT);
+    pd->sprite->setIgnoresDrawOffset(m_UISpriteStickySelected[i], 1);
+    pd->sprite->setImage(m_UISpriteStickySelected[i], getStickySelectedBitmap(), kBitmapUnflipped);
+  }
+
   // Populate main UI
 
   setRoobert24();
@@ -1007,6 +1069,10 @@ void initiUI() {
       case kUICatUtility: pd->graphics->drawText("Utility", 7, kASCIIEncoding, TILE_PIX, 0); break;
       case kUICatCargo: pd->graphics->drawText("Cargo", 5, kASCIIEncoding, TILE_PIX, 0); break;
       case kUICatWarp: pd->graphics->drawText("Destinations", 12, kASCIIEncoding, TILE_PIX, 0); break;
+      case kUICatImportN:; pd->graphics->drawText("Import (North)", 14, kASCIIEncoding, TILE_PIX, 0); break; 
+      case kUICatImportE:; pd->graphics->drawText("Import (East)", 13, kASCIIEncoding, TILE_PIX, 0); break;
+      case kUICatImportS:; pd->graphics->drawText("Import (South)", 14, kASCIIEncoding, TILE_PIX, 0); break;
+      case kUICatImportW:; pd->graphics->drawText("Import (West)", 13, kASCIIEncoding, TILE_PIX, 0); break;
       case kNUICats: break;
     }
     pd->graphics->popContext();
@@ -1045,7 +1111,7 @@ void initiUI() {
         pd->sprite->setZIndex(m_UISpriteItems[c][i][r], Z_INDEX_UI_M);
         pd->sprite->setIgnoresDrawOffset(m_UISpriteItems[c][i][r], 1);
 
-        if (c == kUICatTool || c == kUICatPlant || c == kUICatCargo || c == kUICatWarp) { // Tools, Crops, Cargo & Warp don't have any rotation 
+        if (c == kUICatTool || c == kUICatPlant || c >= kUICatCargo) { // Tools, Crops, Cargo, Warp, Import don't have any rotation 
           break;
         }
       }

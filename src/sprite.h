@@ -27,6 +27,8 @@ LCDBitmap* getSprite48_byidx(uint32_t _idx, uint8_t _zoom);
 
 LCDBitmap* getConveyorMaster(enum kDir _dir, uint8_t _speed);
 
+LCDBitmap* getStickySelectedBitmap(void);
+
 // Short-form versions too
 #define SID(X, Y) ((SHEET16_SIZE_X * Y) + X)
 #define SPRITE16_ID(X, Y) ((SHEET16_SIZE_X * Y) + X)

@@ -39,6 +39,6 @@ void queueUpdateRenderList(void);
 
 void initGame(void);
 
-void reset(void);
+void reset(bool _resetThePlayer);
 
 

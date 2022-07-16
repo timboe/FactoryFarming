@@ -216,7 +216,7 @@ int gameLoop(void* _data) {
 
 void menuOptionsCallbackRestart(void* blank) {
   hardReset(); // Delets all save files
-  reset();
+  reset(true);
   setSlot(0);
   generate();
   addObstacles();
@@ -228,7 +228,7 @@ void menuOptionsCallbackRestart(void* blank) {
 }
 
 void menuOptionsCallbackLoad(void* blank) {
-  reset();
+  reset(true);
   load(-1); // -1 loads from the slot stored in the player's save file
   addObstacles();
   doWetness();
@@ -242,14 +242,15 @@ void menuOptionsCallbackSave(void* blank) {
 }
 
 // Call prior to loading anything
-void reset() {
+void reset(bool _resetThePlayer) {
   resetCargo();
   resetBuilding();
   resetExport(); // Essentially "reset special"
   resetLocation();
   resetChunk();
   resetWorld();
-  resetPlayer();
+  if (_resetThePlayer) resetPlayer();
+  forceTorus();
   resetUI();
 }
 

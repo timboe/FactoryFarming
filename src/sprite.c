@@ -11,6 +11,8 @@ LCDBitmap* m_bitmap16_zoom[ZOOM_LEVELS][SHEET16_SIZE];
 
 LCDBitmap* m_bitmap48_zoom[ZOOM_LEVELS][SHEET48_SIZE];
 
+LCDBitmap* m_stickySelected;
+
 LCDFont* m_fontRoobert24;
 
 LCDFont* m_fontRoobert10;
@@ -110,6 +112,11 @@ LCDBitmap* getConveyorMaster(enum kDir _dir, uint8_t _speed) {
   return NULL;
 }
 
+
+LCDBitmap* getStickySelectedBitmap() {
+  return m_stickySelected;
+}
+
 void setCooperHewitt12() {
   pd->graphics->setFont(m_fontCooperHewitt12);
 }
@@ -158,6 +165,8 @@ void initSprite() {
   pd->graphics->setDrawMode(kDrawModeCopy);
   m_sheet16 = loadImageTableAtPath("images/sheet16");
   m_sheet48 = loadImageTableAtPath("images/sheet48");
+  m_stickySelected = loadImageAtPath("images/selected");
+
   populateResizedSprites();
 
   for (int32_t i = 0; i < kDirN; ++i) {

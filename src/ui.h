@@ -3,9 +3,11 @@
 #include "player.h"
 
 // All Main Menu items should come after kMenuBuy
-enum kGameMode {kWanderMode, kPlaceMode, kBuildMode, kPlantMode, kPickMode, kInspectMode, kDestroyMode, kMenuBuy, kMenuSell, kMenuPlayer, kMenuWarp, kNGameModes};
+enum kGameMode {kWanderMode, kPlaceMode, kBuildMode, kPlantMode, kPickMode, kInspectMode, kDestroyMode, 
+	            kMenuBuy, kMenuSell, kMenuPlayer, kMenuWarp, kMenuExport, kMenuImport, kNGameModes};
 
-enum kUICat {kUICatTool, kUICatPlant, kUICatConv, kUICatExtractor, kUICatFactory, kUICatUtility, kUICatCargo, kUICatWarp, kNUICats}; 
+enum kUICat {kUICatTool, kUICatPlant, kUICatConv, kUICatExtractor, kUICatFactory, kUICatUtility, 
+	         kUICatCargo, kUICatWarp, kUICatImportN, kUICatImportE, kUICatImportS, kUICatImportW, kNUICats}; 
 
 #define ROW_WDTH 9
 
@@ -74,6 +76,8 @@ void showTutorialMsg(enum kUITutorialStage _stage);
 void setUIContentHeader(int32_t _row, enum kUICat _c);
 
 void setUIContentItem(int32_t _row, int32_t _col, enum kUICat _c, uint16_t _i, uint16_t _r);
+
+void setUIContentStickySelected(int32_t _row, int32_t _col, uint8_t _selID);
 
 LCDBitmap* getUIContentItemBitmap(enum kUICat _c, uint16_t _i, uint16_t _r);
 

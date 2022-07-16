@@ -61,11 +61,19 @@ const char* toStringTool(enum kToolType _type);
 
 const char* toStringToolInfo(enum kToolType _type);
 
+float getTotalCargoExport(enum kCargoType _cargo);
+
+float getThisWorldCargoExport(enum kCargoType _cargo);
+
+uint16_t getCargoImportConsumers(enum kCargoType _cargo);
+
 bool modMoney(int32_t _amount);
 
 int16_t getOffX(void);
 
 int16_t getOffY(void);
+
+void forceTorus(void);
 
 struct Chunk_t* getCurrentChunk(void);
 

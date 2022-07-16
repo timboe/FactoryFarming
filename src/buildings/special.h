@@ -23,3 +23,5 @@ int16_t distanceFromIn(void);
 void updateExport(void);
 
 void resetExport(void);
+
+struct Building_t* getImportBox(void);

@@ -10,6 +10,8 @@
 #include "ui/sell.h"
 #include "ui/shop.h"
 #include "ui/warp.h"
+#include "ui/import.h"
+#include "ui/export.h"
 
 uint8_t m_pressed[4] = {0};
 
@@ -26,6 +28,12 @@ void clickHandleMenuBuy(uint32_t _buttonPressed);
 void clickHandleMenuSell(uint32_t _buttonPressed);
 
 void clickHandleMenuWarp(uint32_t _buttonPressed);
+
+void clickHandleMenuWarp(uint32_t _buttonPressed);
+
+void clickHandleMenuImport(uint32_t _buttonPressed);
+
+void clickHandleMenuExport(uint32_t _buttonPressed);
 
 void clickHandleMenuPlayer(uint32_t _buttonPressed);
 
@@ -103,6 +111,8 @@ void gameClickConfigHandler(uint32_t _buttonPressed) {
     case kMenuSell:; return clickHandleMenuSell(_buttonPressed);
     case kMenuPlayer:; return clickHandleMenuPlayer(_buttonPressed);
     case kMenuWarp:; return clickHandleMenuWarp(_buttonPressed);
+    case kMenuExport:; return clickHandleMenuExport(_buttonPressed);
+    case kMenuImport:; return clickHandleMenuImport(_buttonPressed);
     case kPlaceMode:; case kBuildMode:; case kPlantMode:; return clickHandlePlacement(_buttonPressed);
     case kPickMode:; return clickHandlePick(_buttonPressed);
     case kInspectMode:; return clickHandleInspect(_buttonPressed);
@@ -119,6 +129,8 @@ void clickHandleWander(uint32_t _buttonPressed) {
     else if (distanceFromBuy() < ACTIVATE_DISTANCE) setGameMode(kMenuBuy);
     else if (distanceFromSell() < ACTIVATE_DISTANCE) setGameMode(kMenuSell);
     else if (distanceFromWarp() < ACTIVATE_DISTANCE) setGameMode(kMenuWarp);
+    else if (distanceFromOut() < ACTIVATE_DISTANCE) setGameMode(kMenuExport);
+    else if (distanceFromIn() < ACTIVATE_DISTANCE) setGameMode(kMenuImport);
     else setGameMode(kMenuPlayer);
   } else if (kButtonB == _buttonPressed) {
     if (getTutorialStage() < TUTORIAL_FINISHED) checkReturnDismissTutorialMsg();
@@ -157,23 +169,27 @@ void clickHandleMenuSell(uint32_t _buttonPressed) {
 }
 
 void clickHandleMenuPlayer(uint32_t _buttonPressed) {
-  if (kButtonA     == _buttonPressed) {
-    doMainMenuClick();
-  } else if (kButtonB   == _buttonPressed) {
-    setGameMode(kWanderMode);
-  } else {
-    moveCursor(_buttonPressed);
-  }
+  if (kButtonA     == _buttonPressed) doMainMenuClick();
+  else if (kButtonB   == _buttonPressed) setGameMode(kWanderMode);
+  else moveCursor(_buttonPressed);
 }
 
 void clickHandleMenuWarp(uint32_t _buttonPressed) {
-  if (kButtonA == _buttonPressed) {
-    doWarp();
-  } else if (kButtonB == _buttonPressed) {
-    setGameMode(kWanderMode);
-  } else {
-    moveCursor(_buttonPressed);
-  }
+  if (kButtonA == _buttonPressed) doWarp();
+  else if (kButtonB == _buttonPressed) setGameMode(kWanderMode);
+  else moveCursor(_buttonPressed);
+}
+
+void clickHandleMenuExport(uint32_t _buttonPressed) {
+  if (kButtonA == _buttonPressed) doExport();
+  else if (kButtonB == _buttonPressed) setGameMode(kWanderMode);
+  else moveCursor(_buttonPressed);
+}
+
+void clickHandleMenuImport(uint32_t _buttonPressed) {
+  if (kButtonA == _buttonPressed) doImport();
+  else if (kButtonB == _buttonPressed) setGameMode(kWanderMode);
+  else moveCursor(_buttonPressed);
 }
 
 void clickHandlePlacement(uint32_t _buttonPressed) {
@@ -318,7 +334,8 @@ void clickHandlerReplacement() {
     case kPlaceMode:; rotateHandlePlacement(pd->system->getCrankChange()); break;
     case kPickMode:; // fall through
     case kDestroyMode:; rotateHandlePick(pd->system->getCrankChange()); break;
-    case kMenuBuy:; case kMenuSell:; case kMenuWarp:; case kPlantMode:; case kInspectMode:; case kNGameModes:; break;
+    case kMenuBuy:; case kMenuSell:; case kMenuWarp:; case kMenuExport:; case kMenuImport:; break;
+    case kPlantMode:; case kInspectMode:; case kNGameModes:; break;
   }
 
 }

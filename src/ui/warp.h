@@ -6,4 +6,4 @@ void doWarp(void);
 
 void populateContentWarp(void);
 
-void populateInfoWarp(void);
+void populateInfoWarp(bool _visible);

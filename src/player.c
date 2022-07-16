@@ -63,6 +63,22 @@ const char* toStringToolInfo(enum kToolType _type) {
   }
 }
 
+float getTotalCargoExport(enum kCargoType _cargo) {
+  float ret = 0.0f;
+  for (int32_t i = 0; i < WORLD_SAVE_SLOTS; ++i) {
+    ret += m_player.m_exportPerWorld[i][_cargo];
+  }
+  return ret;
+}
+
+float getThisWorldCargoExport(enum kCargoType _cargo) {
+  return m_player.m_exportPerWorld[getSlot()][_cargo];
+}
+
+uint16_t getCargoImportConsumers(enum kCargoType _cargo) {
+  return m_player.m_importConsumers[_cargo];
+}
+
 enum kUITutorialStage getTutorialStage() {
   return (enum kUITutorialStage) m_player.m_enableTutorial;
 }
@@ -411,6 +427,8 @@ void playerSpriteSetup() {
   }
 }
 
+void forceTorus() { m_forceTorus = true; }
+
 void resetPlayer() {
   m_player.m_money = 0;
   m_player.m_moneyCumulative = 0;
@@ -430,7 +448,6 @@ void resetPlayer() {
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_importConsumers[i] = 0;
   setPlayerPosition(SCREEN_PIX_X/4, (3*SCREEN_PIX_Y)/4);
   m_currentChunk = getChunk_noCheck(0,0);
-  m_forceTorus = true;
   modMoney(100000); // TEMP
 }
 
@@ -530,13 +547,13 @@ void serialisePlayer(struct json_encoder* je) {
   je->endArray(je);
 
   for (int32_t w = 0; w < WORLD_SAVE_SLOTS; ++w) {
-    char txt[] = "expw00";
-    snprintf(txt, 6, "expw%i", (int)w);
+    char txt[12] = "";
+    snprintf(txt, 12, "expw%02i", (int)w);
     je->addTableMember(je, txt, 6);
     je->startArray(je);
     for (int32_t i = 0; i < kNCargoType; ++i) {
       je->addArrayMember(je);
-      je->writeInt(je, m_player.m_exportPerWorld[w][i]);
+      je->writeDouble(je, m_player.m_exportPerWorld[w][i]);
     }
     je->endArray(je);
   }
@@ -600,21 +617,21 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_deserialiseArrayID = 5;
   } else if (strcmp(_key, "facts") == 0) {
     m_deserialiseArrayID = 6;
-  } else if (strcmp(_key, "expw0") == 0) {
+  } else if (strcmp(_key, "expw00") == 0) {
     m_deserialiseArrayID = 7;
-  } else if (strcmp(_key, "expw1") == 0) {
+  } else if (strcmp(_key, "expw01") == 0) {
     m_deserialiseArrayID = 8;
-  } else if (strcmp(_key, "expw2") == 0) {
+  } else if (strcmp(_key, "expw02") == 0) {
     m_deserialiseArrayID = 9;
-  } else if (strcmp(_key, "expw3") == 0) {
+  } else if (strcmp(_key, "expw03") == 0) {
     m_deserialiseArrayID = 10;
-  } else if (strcmp(_key, "expw4") == 0) {
+  } else if (strcmp(_key, "expw04") == 0) {
     m_deserialiseArrayID = 11;
-  } else if (strcmp(_key, "expw5") == 0) {
+  } else if (strcmp(_key, "expw05") == 0) {
     m_deserialiseArrayID = 12;
-  } else if (strcmp(_key, "expw6") == 0) {
+  } else if (strcmp(_key, "expw06") == 0) {
     m_deserialiseArrayID = 13;
-  } else if (strcmp(_key, "expw7") == 0) {
+  } else if (strcmp(_key, "expw07") == 0) {
     m_deserialiseArrayID = 14;
   } else if (strcmp(_key, "impc") == 0) {
     // noop
@@ -627,6 +644,7 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
 
 void deserialiseArrayValuePlayer(json_decoder* jd, int _pos, json_value _value) {
   int v = json_intValue(_value);
+  float f = json_floatValue(_value);
   int i = _pos - 1;
   switch (m_deserialiseArrayID) {
     case 0: m_player.m_carryCargo[i] = v; break;
@@ -636,14 +654,14 @@ void deserialiseArrayValuePlayer(json_decoder* jd, int _pos, json_value _value) 
     case 4: m_player.m_carryExtractor[i] = v; break;
     case 5: m_player.m_carryFactory[i] = v; break;
 
-    case 6: m_player.m_exportPerWorld[0][i] = v; break;
-    case 7: m_player.m_exportPerWorld[1][i] = v; break;
-    case 8: m_player.m_exportPerWorld[2][i] = v; break;
-    case 9: m_player.m_exportPerWorld[3][i] = v; break;
-    case 10: m_player.m_exportPerWorld[4][i] = v; break;
-    case 11: m_player.m_exportPerWorld[5][i] = v; break;
-    case 12: m_player.m_exportPerWorld[6][i] = v; break;
-    case 13: m_player.m_exportPerWorld[7][i] = v; break;
+    case 6: m_player.m_exportPerWorld[0][i] = f; break;
+    case 7: m_player.m_exportPerWorld[1][i] = f; break;
+    case 8: m_player.m_exportPerWorld[2][i] = f; break;
+    case 9: m_player.m_exportPerWorld[3][i] = f; break;
+    case 10: m_player.m_exportPerWorld[4][i] = f; break;
+    case 11: m_player.m_exportPerWorld[5][i] = f; break;
+    case 12: m_player.m_exportPerWorld[6][i] = f; break;
+    case 13: m_player.m_exportPerWorld[7][i] = f; break;
 
     case 14: m_player.m_importConsumers[i] = v; break;
   }

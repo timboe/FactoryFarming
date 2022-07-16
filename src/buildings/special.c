@@ -36,6 +36,10 @@ bool nearbyConveyor(struct Building_t* _building);
 
 /// ///
 
+struct Building_t* getImportBox(void) {
+  return m_importBox;
+}
+
 int16_t distanceFromBuy() {
   if (!m_buyBox) return 1000;
   struct Player_t* p = getPlayer();
@@ -235,8 +239,6 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tick) {
   if (_building->m_progress < IMPORT_SEC_IN_TICKS) return;
   _building->m_progress -= IMPORT_SEC_IN_TICKS;
 
-  struct Player_t* p = getPlayer();
-
   static float fractional[kNCargoType] = {0.0f}; // Keep track of partial cargos
 
   for (int32_t d = 0; d < 4; ++d) {
@@ -247,22 +249,27 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tick) {
       continue;
     }
 
-    float totInput = 0.0f;
-    for (int32_t w = 0; w < WORLD_SAVE_SLOTS; ++w) {
-      totInput += p->m_exportPerWorld[w][c];
-    }
-    totInput *= IMPORT_SECONDS;
+    float totInput = getTotalCargoExport(c) * IMPORT_SECONDS;
 
-    float input = totInput / p->m_importConsumers[c];
+    float input = totInput / getCargoImportConsumers(c);
     fractional[c] += input - (uint32_t)input;
     uint32_t input_int = (int32_t)input;
 
-    if (input_int && input_int + (d == 3 ? _building->m_mode.mode8[0] : _building->m_stored[d]) <= 255) {
-      switch (d) {
-        case 0: _building->m_stored[0] += input_int; break;
-        case 1: _building->m_stored[1] += input_int; break;
-        case 2: _building->m_stored[2] += input_int; break;
-        case 3: _building->m_mode.mode8[0] += input_int; break;
+    if (input_int) {
+      if (input_int + (d == 3 ? _building->m_mode.mode8[0] : _building->m_stored[d]) <= 255) {
+        switch (d) {
+          case 0: _building->m_stored[0] += input_int; break;
+          case 1: _building->m_stored[1] += input_int; break;
+          case 2: _building->m_stored[2] += input_int; break;
+          case 3: _building->m_mode.mode8[0] += input_int; break;
+        }
+      } else {
+        switch (d) {
+          case 0: _building->m_stored[0] = 255; break;
+          case 1: _building->m_stored[1] = 255; break;
+          case 2: _building->m_stored[2] = 255; break;
+          case 3: _building->m_mode.mode8[0] = 255; break;
+        }
       }
     }
 

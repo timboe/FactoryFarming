@@ -18,7 +18,7 @@ void doWarp() {
       // First save!
       save();
       // Create and go to new world!
-      reset();
+      reset(false); // Don't reset the player!
       setSlot(selectedID);
       generate();
       addObstacles();
@@ -34,7 +34,7 @@ void doWarp() {
     // First save!
     save();
     // Load existing world
-    reset();
+    reset(false); // Don't reset the player!
     load(selectedID);
     addObstacles();
     doWetness();
@@ -45,13 +45,13 @@ void doWarp() {
 
 }
 
-void populateInfoWarp() {
+void populateInfoWarp(bool _visible) {
   const uint16_t selectedID =  getUIContentID();
   const int32_t selectedPrice = getPrice(kUICatWarp, selectedID);
   const uint16_t selectedOwned = getOwned(kUICatWarp, selectedID);
 
   bool canAfford = (getPlayer()->m_money >= selectedPrice);
-  pd->sprite->setVisible(getCannotAffordSprite(), !canAfford || !selectedOwned);
+  pd->sprite->setVisible(getCannotAffordSprite(), _visible && (!canAfford && !selectedOwned));
 
   // INFO
   LCDBitmap* infoBitmap = getInfoBitmap();
@@ -103,6 +103,9 @@ void populateContentWarp() {
       pd->graphics->drawBitmap(getSprite16(11,10,2), 0, 0, kBitmapUnflipped);
     }
     pd->graphics->popContext();
+    if (column == getSlot()) {
+      setUIContentStickySelected(row, column, 0);
+    }
     if (++column == ROW_WDTH) {
       ++row;
       column = 0;
