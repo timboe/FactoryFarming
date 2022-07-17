@@ -99,7 +99,7 @@ bool canBePlacedExtractor(struct Location_t* _loc, enum kDir _dir, union kSubTyp
     for (int32_t y = -1; y < 2; ++y) {
       struct Tile_t* t = getTile(_loc->m_x + x, _loc->m_y + y);
       bool isWater = isWaterTile(_loc->m_x + x, _loc->m_y + y);
-      bool isChalk = isGrounTypeTile(_loc->m_x + x, _loc->m_y + y, kChalkyGround);
+      bool isChalk = isGroundTypeTile(_loc->m_x + x, _loc->m_y + y, kChalkyGround);
       if (isWater) hasWater = true;
       if (isChalk) hasChalk = true;
       if (t->m_tile > TOT_FLOOR_TILES && !isWater) return false;

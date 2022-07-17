@@ -133,7 +133,7 @@
 
 // Shrink the collision boxes from the edge of the sprite, feels better
 #define COLLISION_OFFSET_BIG TILE_PIX
-#define COLLISION_OFFSET_SMALL (TILE_PIX/2)
+#define COLLISION_OFFSET_SMALL (TILE_PIX/2 + 2)
 
 // Out of 1000
 #define CLUTTER_CHANCE 2
