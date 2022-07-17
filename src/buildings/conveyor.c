@@ -281,7 +281,10 @@ void buildingSetupConveyor(struct Building_t* _building) {
 
 void drawUIInspectConveyor(struct Building_t* _building) {
   static char text[128];
-  uint8_t y = 2;
+  uint8_t y = 1;
+  snprintf(text, 128, "%s", toStringBuilding(_building->m_type, _building->m_subType, false));
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
   snprintf(text, 128, "Speed Multiplier: %s", _building->m_stored[0] == 1 ? "x1" : "x2");
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   if (_building->m_subType.conveyor >= kFilterL && _building->m_mode.mode16 != kNoCargo) {

@@ -134,5 +134,56 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
 }
 
 void drawUIInspectFactory(struct Building_t* _building) {
-  
+  pd->graphics->drawLine(SCREEN_PIX_X/2, TUT_Y_SPACING*3 - 4, SCREEN_PIX_X/2, TUT_Y_SPACING*7 - 4, 1, kColorBlack);
+  enum kFactorySubType fst = _building->m_subType.factory;
+
+  static char text[128];
+  uint8_t y = 1;
+  snprintf(text, 128, "%s (Time: %is)", toStringBuilding(_building->m_type, _building->m_subType, false), kFactoryTime[fst]);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
+  snprintf(text, 128, "Out:      %s (%i)", toStringCargoByType(kFactoryOut[fst]), _building->m_stored[0]);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  pd->graphics->setDrawMode(kDrawModeCopy);
+  pd->graphics->drawBitmap(getSprite16_byidx(kCargoUIIcon[kFactoryOut[fst]], 1), TILE_PIX*3 + 12, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+
+  snprintf(text, 128, "In 1:       %s (%i)", toStringCargoByType(kFactoryIn1[fst]), _building->m_stored[1]);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
+  pd->graphics->setDrawMode(kDrawModeCopy);
+  pd->graphics->drawBitmap(getSprite16_byidx(kCargoUIIcon[kFactoryIn1[fst]], 1), TILE_PIX*14 + 12, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+
+  if (kFactoryIn2[_building->m_subType.factory] == kNoCargo) return;
+
+  snprintf(text, 128, "In 2:       %s (%i)", toStringCargoByType(kFactoryIn2[fst]), _building->m_stored[2]);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  pd->graphics->setDrawMode(kDrawModeCopy);
+  pd->graphics->drawBitmap(getSprite16_byidx(kCargoUIIcon[kFactoryIn2[fst]], 1), TILE_PIX*3 + 12, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+
+  if (kFactoryIn3[_building->m_subType.factory] == kNoCargo) return;
+
+  snprintf(text, 128, "In 3:       %s (%i)", toStringCargoByType(kFactoryIn3[fst]), _building->m_stored[3]);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
+  pd->graphics->setDrawMode(kDrawModeCopy);
+  pd->graphics->drawBitmap(getSprite16_byidx(kCargoUIIcon[kFactoryIn3[fst]], 1), TILE_PIX*14 + 12, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+
+  if (kFactoryIn4[_building->m_subType.factory] == kNoCargo) return;
+
+  snprintf(text, 128, "In 4:       %s (%i)", toStringCargoByType(kFactoryIn4[fst]), _building->m_stored[4]);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  pd->graphics->setDrawMode(kDrawModeCopy);
+  pd->graphics->drawBitmap(getSprite16_byidx(kCargoUIIcon[kFactoryIn4[fst]], 1), TILE_PIX*3 + 12, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+
+  if (kFactoryIn5[_building->m_subType.factory] == kNoCargo) return;
+
+  snprintf(text, 128, "In 5:       %s (%i)", toStringCargoByType(kFactoryIn5[fst]), _building->m_stored[5]);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
+  pd->graphics->setDrawMode(kDrawModeCopy);
+  pd->graphics->drawBitmap(getSprite16_byidx(kCargoUIIcon[kFactoryIn5[fst]], 1), TILE_PIX*14 + 12, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+
 }
