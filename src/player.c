@@ -476,6 +476,8 @@ void serialisePlayer(struct json_encoder* je) {
   je->writeInt(je, m_player.m_enableDebug);
   je->addTableMember(je, "seta", 4);
   je->writeInt(je, m_player.m_enableAutosave);
+  je->addTableMember(je, "setp", 4);
+  je->writeInt(je, m_player.m_enablePickupOnDestroy);
   
   je->addTableMember(je, "cargos", 6);
   je->startArray(je);
@@ -582,6 +584,8 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_player.m_enableTutorial = json_intValue(_value);
   } else if (strcmp(_key, "setd") == 0) {
     m_player.m_enableDebug = json_intValue(_value); 
+  } else if (strcmp(_key, "setp") == 0) {
+    m_player.m_enablePickupOnDestroy = json_intValue(_value); 
   } else if (strcmp(_key, "seta") == 0) {
     m_player.m_enableAutosave = json_intValue(_value); 
     m_deserialiseArrayID = 0; // Note "one behind"

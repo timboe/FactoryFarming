@@ -411,7 +411,7 @@ const char* getRotationAsString(enum kUICat _cat, int16_t _selectedID, uint16_t 
   }
 
   switch (_selectedID) {
-    case kBelt:; case kTunnelIn:;
+    case kBelt:; case kTunnelIn:; case kTunnelOut:;
       switch (_rotation) {
         case 0: return "N";
         case 1: return "E";
@@ -1120,7 +1120,7 @@ void initiUI() {
       case kUICatFactory: pd->graphics->drawText("Factories", 9, kASCIIEncoding, TILE_PIX, 0); break;
       case kUICatUtility: pd->graphics->drawText("Utility", 7, kASCIIEncoding, TILE_PIX, 0); break;
       case kUICatCargo: pd->graphics->drawText("Cargo", 5, kASCIIEncoding, TILE_PIX, 0); break;
-      case kUICatWarp: pd->graphics->drawText("Destinations", 12, kASCIIEncoding, TILE_PIX, 0); break;
+      case kUICatWarp: pd->graphics->drawText("Plot Locations", 14, kASCIIEncoding, TILE_PIX, 0); break;
       case kUICatImportN:; pd->graphics->drawText("Import (North)", 14, kASCIIEncoding, TILE_PIX, 0); break; 
       case kUICatImportE:; pd->graphics->drawText("Import (East)", 13, kASCIIEncoding, TILE_PIX, 0); break;
       case kUICatImportS:; pd->graphics->drawText("Import (South)", 14, kASCIIEncoding, TILE_PIX, 0); break;

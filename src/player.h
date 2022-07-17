@@ -41,6 +41,8 @@ struct Player_t{
   uint8_t m_enableTutorial;
   uint8_t m_enableDebug;
   uint8_t m_enableAutosave;
+  uint8_t m_enablePickupOnDestroy;
+
 
   // Transient   
   LCDSprite* m_sprite[ZOOM_LEVELS]; // Index 0 not used - OWNED

@@ -159,13 +159,13 @@ void drawUIInspectExtractor(struct Building_t* _building) {
     for (int32_t hopper = 0; hopper < 3; ++hopper) {
       if (!_building->m_stored[hopper]) continue;
 
-      snprintf(text, 128, "Hopper %i:       %s (%i)", 
-        (int)hopper, 
+      snprintf(text, 128, "Hopper %i/3:       %s (%i)", 
+        (int)hopper+1, 
         toStringCargoByType( _building->m_stored[(MAX_STORE/2) + hopper] ), 
         _building->m_stored[hopper]);
       pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
       pd->graphics->setDrawMode(kDrawModeCopy);
-      pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ _building->m_stored[(MAX_STORE/2) + hopper] ].UIIcon, 1), TILE_PIX*6 + TILE_PIX/4, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+      pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ _building->m_stored[(MAX_STORE/2) + hopper] ].UIIcon, 1), TILE_PIX*7 + TILE_PIX/4, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
       pd->graphics->setDrawMode(kDrawModeFillBlack);
     }
 

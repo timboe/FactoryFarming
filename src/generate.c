@@ -263,12 +263,12 @@ bool isWaterTile(int32_t _x, int32_t _y) {
 uint8_t distanceFromWater(int32_t _x, int32_t _y) {
   uint8_t r = 0;
   if (isWaterTile(_x, _y)) return 0;
-  while (++r < 255) {
-    for (int32_t x = _x - r; x < _x + r; ++x) {
+  while (++r < 16) {
+    for (int32_t x = _x - r; x < _x + r + 1; ++x) {
       if (isWaterTile(x, _y - r)) return r;
       if (isWaterTile(x, _y + r)) return r;
     }
-    for (int32_t y = _y - r; y < _y + r; ++y) {
+    for (int32_t y = _y - r; y < _y + r + 1; ++y) {
       if (isWaterTile(_x + r, y)) return r;
       if (isWaterTile(_x - r, y)) return r;
     }

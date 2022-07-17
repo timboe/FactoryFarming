@@ -51,7 +51,7 @@ void populateInfoWarp(bool _visible) {
   const uint16_t selectedOwned = getOwned(kUICatWarp, selectedID);
 
   bool canAfford = (getPlayer()->m_money >= selectedPrice);
-  pd->sprite->setVisible(getCannotAffordSprite(), _visible && (!canAfford && !selectedOwned));
+  pd->sprite->setVisible(getCannotAffordSprite(), _visible && !canAfford && !selectedOwned);
 
   // INFO
   LCDBitmap* infoBitmap = getInfoBitmap();
@@ -63,7 +63,7 @@ void populateInfoWarp(bool _visible) {
   roundedRect(1, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorBlack);
   roundedRect(3, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorWhite);
   if (selectedOwned) {
-    snprintf(textA, 128, "Location: %s", getWorldName(selectedID, /*mask*/ false));
+    snprintf(textA, 128, "Plot Location: %s", getWorldName(selectedID, /*mask*/ false));
     if (selectedID < FLOOR_TYPES) {
       snprintf(textB, 128, "Soils: %s, %s, %s", 
         toStringSoil(getWorldGround(selectedID, 0)),
@@ -75,7 +75,7 @@ void populateInfoWarp(bool _visible) {
       snprintf(textB, 128, "Soils: %s", toStringSoil(getWorldGround(kSiltWorld, 0)));
     }
   } else { 
-    snprintf(textA, 128, "Location: %s", getWorldName(selectedID, /*mask*/ true));
+    snprintf(textA, 128, "Plot Location: %s", getWorldName(selectedID, /*mask*/ true));
     snprintf(textB, 128, "Price:       %u", (unsigned)selectedPrice);
     pd->graphics->drawBitmap(getSprite16(2, 16, 1), 3*TILE_PIX + TILE_PIX/2, TILE_PIX - 2, kBitmapUnflipped);
   }

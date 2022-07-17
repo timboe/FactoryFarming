@@ -4,6 +4,7 @@
 #include "../sprite.h"
 #include "../generate.h"
 #include "../cargo.h"
+#include "../ui.h"
 
 void binUpdateFn(struct Building_t* _building);
 
@@ -76,5 +77,46 @@ void buildingSetupUtility(struct Building_t* _building) {
 }
 
 void drawUIInspectUtility(struct Building_t* _building) {
-  
+  const enum kUtilitySubType ust = _building->m_subType.utility;
+
+  static char text[128];
+  uint8_t y = 1;
+
+  if (ust == kStorageBox) {
+    snprintf(text, 128, "%s (%s)", 
+      toStringBuilding(_building->m_type, _building->m_subType, false), 
+      getRotationAsString(kUICatConv, kBelt, _building->m_dir) );
+  } else {
+    snprintf(text, 128, "%s", toStringBuilding(_building->m_type, _building->m_subType, false));
+  }
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
+  if (ust == kBin) {
+
+    snprintf(text, 128, "Permanently erases unwanted Cargo.");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 128, "Drop the unwanted Cargo, or use Conveyors");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
+  } else if (ust == kWell) {
+
+    snprintf(text, 128, "Creates a surrounding area of Wet and Moist soil.");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
+  } else if (ust == kStorageBox) {
+
+    for (int32_t compartment = 0; compartment < 3; ++compartment) {
+      if (!_building->m_stored[compartment]) continue;
+
+      snprintf(text, 128, "Compartment %i/3:       %s (%i)", 
+        (int)compartment+1, 
+        toStringCargoByType( _building->m_stored[(MAX_STORE/2) + compartment] ), 
+        _building->m_stored[compartment]);
+      pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+      pd->graphics->setDrawMode(kDrawModeCopy);
+      pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ _building->m_stored[(MAX_STORE/2) + compartment] ].UIIcon, 1), TILE_PIX*10, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+      pd->graphics->setDrawMode(kDrawModeFillBlack);
+    }
+
+  }
 }

@@ -11,6 +11,8 @@ bool doConveyorUpgrade(struct Location_t* _loc);
 
 bool isInRangeOfCarrotPlant(struct Location_t* _placeLocation);
 
+bool doPickAtLocation(struct Location_t* _loc);
+
 /// ///
 
 void doMainMenuClick() {
@@ -105,7 +107,6 @@ void doPlace() {
   }
 }
 
-// TODO pick up from buildings, crates, etc.
 void doPick() {
   bool update = false;
   int32_t min = 0, max = 0;
@@ -118,18 +119,71 @@ void doPick() {
   for (int32_t x = min; x < max; ++x) {
     for (int32_t y = min; y < max; ++y) {
       struct Location_t* loc = getLocation(ploc->m_x + x, ploc->m_y + y);
-      if (loc->m_cargo) {
-        modOwned(kUICatCargo, loc->m_cargo->m_type, /*add=*/ true);
-        // Tutorial
-        if (getTutorialStage() == kTutGetCarrots && loc->m_cargo->m_type == kCarrot) {
-          makeTutorialProgress();
-        }
-        clearLocation(loc, /*cargo=*/ true, /*building=*/ false);
-        update = true;
-      }
+      update |= doPickAtLocation(loc);
     }
   }
   if (update) updateRenderList();
+}
+
+bool doPickAtLocation(struct Location_t* _loc) {
+  bool update = false;
+  if (_loc->m_cargo) {
+    modOwned(kUICatCargo, _loc->m_cargo->m_type, /*add=*/ true);
+    // Tutorial
+    if (getTutorialStage() == kTutGetCarrots && _loc->m_cargo->m_type == kCarrot) {
+      makeTutorialProgress();
+    }
+    clearLocation(_loc, /*cargo=*/ true, /*building=*/ false);
+    update = true;
+  }
+  if (_loc->m_building) {
+    struct Building_t* building = _loc->m_building;
+    struct Player_t* p = getPlayer();
+    bool doBoxHarvest = false;
+    if (building->m_type == kExtractor) {
+      if (building->m_subType.extractor == kCropHarvesterSmall) doBoxHarvest = true;
+      if (building->m_subType.extractor == kCropHarvesterLarge) doBoxHarvest = true;
+    }
+    if (building->m_type == kUtility) {
+      if (building->m_subType.utility == kStorageBox) doBoxHarvest = true;
+    }
+    if (doBoxHarvest) {
+      for (int32_t compartment = 0; compartment < 3; ++compartment) {
+        if (!building->m_stored[compartment]) continue;
+
+        p->m_carryCargo[ building->m_stored[(MAX_STORE/2) + compartment] ] += building->m_stored[compartment];
+        building->m_stored[compartment] = 0;
+        building->m_stored[(MAX_STORE/2) + compartment] = kNoCargo;
+      }
+    }
+    if (building->m_type == kFactory) {
+      if (building->m_stored[0]) {
+        p->m_carryCargo[ FDesc[building->m_subType.factory].out ] += building->m_stored[0];
+        building->m_stored[0] = 0;
+      }
+      if (building->m_stored[1]) {
+        p->m_carryCargo[ FDesc[building->m_subType.factory].in1 ] += building->m_stored[1];
+        building->m_stored[1] = 0;
+      }
+      if (building->m_stored[2]) {
+        p->m_carryCargo[ FDesc[building->m_subType.factory].in2 ] += building->m_stored[2];
+        building->m_stored[2] = 0;
+      }
+      if (building->m_stored[3]) {
+        p->m_carryCargo[ FDesc[building->m_subType.factory].in3 ] += building->m_stored[3];
+        building->m_stored[3] = 0;
+      }
+      if (building->m_stored[4]) {
+        p->m_carryCargo[ FDesc[building->m_subType.factory].in4 ] += building->m_stored[4];
+        building->m_stored[4] = 0;
+      }
+      if (building->m_stored[5]) {
+        p->m_carryCargo[ FDesc[building->m_subType.factory].in5 ] += building->m_stored[5];
+        building->m_stored[5] = 0;
+      }
+    }
+  }
+  return update;
 }
 
 
@@ -145,6 +199,9 @@ void doDestroy() {
   for (int32_t x = min; x < max; ++x) {
     for (int32_t y = min; y < max; ++y) {
       struct Location_t* loc = getLocation(ploc->m_x + x, ploc->m_y + y);
+      if (getPlayer()->m_enablePickupOnDestroy) {
+        doPickAtLocation(loc);
+      }
       bool doBuilding = true; 
       if (loc->m_building && loc->m_building->m_type == kSpecial) doBuilding = false;
       clearLocation(loc, /*cargo=*/ true, /*building=*/ doBuilding);
