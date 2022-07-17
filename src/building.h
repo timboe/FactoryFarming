@@ -14,6 +14,8 @@ struct ConveyorDescriptor_t {
   uint32_t unlock;
   uint16_t price;
   uint16_t UIIcon;
+  uint8_t spriteX;
+  uint8_t spriteY;
 };
 extern const struct ConveyorDescriptor_t CDesc[];
 

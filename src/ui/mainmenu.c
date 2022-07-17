@@ -207,17 +207,28 @@ void populateInfoMainmenu() {
   roundedRect(3, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorWhite);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   switch (selectedCat) {
-    case kUICatTool:  snprintf(textA, 128, "%s", toStringTool(selectedID)); snprintf(textB, 128, "%s", toStringToolInfo(selectedID)); break;
+    case kUICatTool:  snprintf(textA, 128, "%s", 
+      toStringTool(selectedID)); snprintf(textB, 128, "%s", 
+      toStringToolInfo(selectedID)); break;
     case kUICatPlant:; snprintf(textA, 128, "Plant %s, Likes: %s %s",
       toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
       toStringWetness(PDesc[selectedID].wetness),
       toStringSoil(PDesc[selectedID].soil)); break;
-    case kUICatConv:; snprintf(textA, 128, "Place %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.conveyor = selectedID}, false), getRotationAsString(getUIContentCategory(), getCursorRotation())); break;
-    case kUICatExtractor:; snprintf(textA, 128, "Build %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false), getRotationAsString(getUIContentCategory(), getCursorRotation())); break;
-    case kUICatFactory:; snprintf(textA, 128, "Build %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.factory = selectedID}, false), getRotationAsString(getUIContentCategory(), getCursorRotation())); break;
+    case kUICatConv:; snprintf(textA, 128, "Place %s (%s)", 
+      toStringBuilding(selectedCatType, (union kSubType) {.conveyor = selectedID}, false), 
+      getRotationAsString(getUIContentCategory(), getUIContentID(), getCursorRotation())); break;
+    case kUICatExtractor:; snprintf(textA, 128, "Build %s (%s)", 
+      toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false), 
+      getRotationAsString(getUIContentCategory(), getUIContentID(), getCursorRotation())); break;
+    case kUICatFactory:; snprintf(textA, 128, "Build %s (%s)", 
+      toStringBuilding(selectedCatType, (union kSubType) {.factory = selectedID}, false), 
+      getRotationAsString(getUIContentCategory(), getUIContentID(), getCursorRotation())); break;
     case kUICatUtility:;
-      if (selectedID == kStorageBox) snprintf(textA, 128, "Place %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false), getRotationAsString(getUIContentCategory(), getCursorRotation()));
-      else snprintf(textA, 128, "Place %s", toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false));
+      if (selectedID == kStorageBox) snprintf(textA, 128, "Place %s (%s)", 
+        toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false), 
+        getRotationAsString(getUIContentCategory(), getUIContentID(), getCursorRotation()));
+      else snprintf(textA, 128, "Place %s", 
+        toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false));
       break;
     case kUICatCargo:; snprintf(textA, 128, "Place %s", toStringCargoByType(selectedID)); break;
     case kUICatWarp:; break;

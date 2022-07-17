@@ -404,7 +404,7 @@ bool checkReturnDismissTutorialMsg() {
   return false;
 }
 
-const char* getRotationAsString(enum kUICat _cat, uint16_t _rotation) {
+const char* getRotationAsString(enum kUICat _cat, int16_t _selectedID, uint16_t _rotation) {
   if (_cat != kUICatConv) {
     switch (_rotation) {
       case 0: return "N";
@@ -414,7 +414,7 @@ const char* getRotationAsString(enum kUICat _cat, uint16_t _rotation) {
     }
   }
 
-  switch (_cat) {
+  switch (_selectedID) {
     case kBelt:; case kTunnelIn:;
       switch (_rotation) {
         case 0: return "N";

@@ -5,6 +5,10 @@
 #include "../generate.h"
 #include "../ui.h"
 
+int8_t getConveyorDirection(enum kConvSubType _subType, enum kDir _dir, uint8_t _progress );
+
+const char* getTransitText(int8_t _d);
+
 /// ///
 
 void conveyorLocationUpdate(struct Building_t* _building, uint8_t _zoom) {
@@ -151,18 +155,50 @@ struct Tile_t* getTunnelOutTile(struct Location_t* _in, enum kDir _dir) {
   return NULL;
 }
 
+#define N 0
+#define E 1
+#define S 2
+#define W 3
+
 void assignNeighborsConveyor(struct Building_t* _building) {
   struct Location_t* above;
   struct Location_t* below;
   struct Location_t* left;
   struct Location_t* right;
-  getBuildingNeighbors(_building, 1, &above, &below, &left, &right);
+  enum kConvSubType bst = _building->m_subType.conveyor;
 
-  struct Location_t* aboveTunnel;
-  struct Location_t* belowTunnel;
-  struct Location_t* leftTunnel;
-  struct Location_t* rightTunnel;
-  getBuildingNeighbors(_building, TUNNEL_HOPS, &aboveTunnel, &belowTunnel, &leftTunnel, &rightTunnel);
+  if (bst == kTunnelIn) {
+    getBuildingNeighbors(_building, TUNNEL_HOPS, &above, &below, &left, &right);
+  } else {
+    getBuildingNeighbors(_building, 1, &above, &below, &left, &right);
+  }
+
+  switch (getConveyorDirection(bst, _building->m_dir, 0)) {
+    case N: _building->m_next[0] = above; _building->m_nextDir[0] = SN; break;
+    case E: _building->m_next[0] = right; _building->m_nextDir[0] = WE; break;
+    case S: _building->m_next[0] = below; _building->m_nextDir[0] = NS; break;
+    case W: _building->m_next[0] = left;  _building->m_nextDir[0] = EW; break;
+  }
+
+  if (bst == kBelt || bst == kTunnelOut || bst == kTunnelIn) return;
+
+  switch (getConveyorDirection(bst, _building->m_dir, 1)) {
+    case N: _building->m_next[1] = above; _building->m_nextDir[1] = SN; break;
+    case E: _building->m_next[1] = right; _building->m_nextDir[1] = WE; break;
+    case S: _building->m_next[1] = below; _building->m_nextDir[1] = NS; break;
+    case W: _building->m_next[1] = left;  _building->m_nextDir[1] = EW; break;
+  }
+
+  if (bst == kSplitI || bst == kFilterI || bst == kSplitL || bst == kFilterL ) return;
+
+  switch (getConveyorDirection(bst, _building->m_dir, 2)) {
+    case N: _building->m_next[2] = above; _building->m_nextDir[2] = SN; break;
+    case E: _building->m_next[2] = right; _building->m_nextDir[2] = WE; break;
+    case S: _building->m_next[2] = below; _building->m_nextDir[2] = NS; break;
+    case W: _building->m_next[2] = left;  _building->m_nextDir[2] = EW; break;
+  }
+
+/*
 
   if (_building->m_subType.conveyor == kBelt || _building->m_subType.conveyor == kTunnelOut) {
     switch (_building->m_dir) {
@@ -225,7 +261,46 @@ void assignNeighborsConveyor(struct Building_t* _building) {
       case kDirN:; break;
     }
   }
+  */
 }
+
+int8_t getConveyorDirection(enum kConvSubType _subType, enum kDir _dir, uint8_t _progress ) {
+  if (_subType == kBelt || _subType == kTunnelOut || _subType == kTunnelIn) {
+    switch (_dir) {
+      case SN:; return N;
+      case NS:; return S;
+      case WE:; return E;
+      case EW:; return W;
+      case kDirN:; return 4;
+    }
+  } else if (_subType == kSplitI || _subType == kFilterI) {
+    switch (_dir) {
+      case WE:; if (_progress == 0) { return N; } else { return S; }
+      case SN:; if (_progress == 0) { return W; } else { return E; }
+      case EW:; if (_progress == 0) { return S; } else { return N; }
+      case NS:; if (_progress == 0) { return E; } else { return W; }
+      case kDirN:; return 4;
+    }
+  } else if (_subType == kSplitL || _subType == kFilterL) {
+    switch (_dir) {
+      case SN:; if (_progress == 0) { return N; } else { return E; }
+      case WE:; if (_progress == 0) { return E; } else { return S; }
+      case NS:; if (_progress == 0) { return S; } else { return W; }
+      case EW:; if (_progress == 0) { return W; } else { return N; }
+      case kDirN:; return 4;
+    }
+  } else if (_subType == kSplitT) {
+    switch (_dir) {
+      case SN:; if (_progress == 0) { return W; } else if (_progress == 1) { return N; } else { return E; }
+      case WE:; if (_progress == 0) { return N; } else if (_progress == 1) { return E; } else { return S; }
+      case NS:; if (_progress == 0) { return E; } else if (_progress == 1) { return S; } else { return W; }
+      case EW:; if (_progress == 0) { return S; } else if (_progress == 1) { return W; } else { return N; }
+      case kDirN:; return 4;
+    }
+  }
+  return 4;
+}
+
 
 void upgradeConveyor(struct Building_t* _building) {
   if (!_building) return;
@@ -243,9 +318,11 @@ void buildingSetupConveyor(struct Building_t* _building) {
 
   // Set the starting speed (but don't downgrade)
   if (_building->m_stored[0] == 0) _building->m_stored[0] = 1;
+  enum kConvSubType cst = _building->m_subType.conveyor;
 
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
-
+    _building->m_image[zoom] = getSprite16( CDesc[cst].spriteX, CDesc[cst].spriteY + _building->m_dir, zoom);
+    /*
     switch (_building->m_subType.conveyor) {
       case kBelt:;     _building->m_image[zoom] = getSprite16(0,  CONV_START_Y + _building->m_dir, zoom); break;
       case kSplitI:;   _building->m_image[zoom] = getSprite16(0,  11 + _building->m_dir, zoom); break;
@@ -257,9 +334,10 @@ void buildingSetupConveyor(struct Building_t* _building) {
       case kTunnelOut:;_building->m_image[zoom] = getSprite16(9,  11 + _building->m_dir, zoom); break;
       case kNConvSubTypes:; break;
     }
+    */
 
     // Animate the belt at zoom=2
-    if (_building->m_subType.conveyor == kBelt && zoom == 2) {
+    if (cst == kBelt && zoom == 2) {
       PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
       if (_building->m_sprite[zoom] == NULL) {
         _building->m_sprite[zoom] = pd->sprite->newSprite();
@@ -279,18 +357,38 @@ void buildingSetupConveyor(struct Building_t* _building) {
   }
 }
 
+const char* getTransitText(int8_t _d) {
+  switch (_d) {
+    case N: return "North";
+    case E: return "East";
+    case S: return "South";
+    case W: return "West";
+  }
+  return "????";
+}
+
 void drawUIInspectConveyor(struct Building_t* _building) {
   static char text[128];
   uint8_t y = 1;
-  snprintf(text, 128, "%s", toStringBuilding(_building->m_type, _building->m_subType, false));
+  snprintf(text, 128, "%s (%s)", 
+    toStringBuilding(_building->m_type, _building->m_subType, false), 
+    getRotationAsString(kUICatConv, _building->m_subType.conveyor, _building->m_dir) );
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   snprintf(text, 128, "Speed Multiplier: %s", _building->m_stored[0] == 1 ? "x1" : "x2");
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-  if (_building->m_subType.conveyor >= kFilterL && _building->m_mode.mode16 != kNoCargo) {
-    snprintf(text, 128, "Filters On:      %s", toStringCargoByType(_building->m_mode.mode16));
+  if (_building->m_subType.conveyor >= kFilterL) {
+    if (_building->m_mode.mode16 == kNoCargo) {
+      snprintf(text, 128, "Filter Not Yet Set");
+      pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    } else {
+      snprintf(text, 128, "Filters On:      %s", toStringCargoByType(_building->m_mode.mode16));
+      pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+      pd->graphics->setDrawMode(kDrawModeCopy);
+      pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[ _building->m_mode.mode16 ].UIIcon, 1), TILE_PIX*6 + 4, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+    }
+  } else {
+    snprintf(text, 128, "Next Transit: %s", getTransitText( getConveyorDirection(_building->m_subType.conveyor, _building->m_dir, _building->m_mode.mode16) ));
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    pd->graphics->setDrawMode(kDrawModeCopy);
-    pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[ _building->m_mode.mode16 ].UIIcon, 1), TILE_PIX*6 + 4, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
   }
 }

@@ -30,14 +30,14 @@ struct Building_t* m_buildings;
 // Note: User can never themselves build a kTunnelOut
 //{kBelt, kSplitL, kSplitI, kSplitT, kTunnelIn, kTunnelOut, kFilterL,  kFilterI, kNConvSubTypes};
 const struct ConveyorDescriptor_t CDesc[] = {
-  {.subType = kBelt, .unlock = 1000, .price = 10, .UIIcon = SID(0,17)},
-  {.subType = kSplitL, .unlock = 2000, .price = 50, .UIIcon = SID(4,17)},
-  {.subType = kSplitI, .unlock = 10000, .price = 50, .UIIcon = SID(0,4)},
-  {.subType = kSplitT, .unlock = 10000, .price = 50, .UIIcon = SID(4,4)},
-  {.subType = kTunnelIn, .unlock = 10000, .price = 100, .UIIcon = SID(8,17)},
-  {.subType = kTunnelOut, .unlock = UINT32_MAX, .price = UINT16_MAX, .UIIcon = SID(8,16)},
-  {.subType = kFilterL, .unlock = 10000, .price = 75, .UIIcon = SID(8,4)},
-  {.subType = kFilterI, .unlock = 10000, .price = 75, .UIIcon = SID(12,4)}
+  {.subType = kBelt,      .unlock = 1000,       .price = 10,         .UIIcon = SID(0,17), .spriteX = 0,  .spriteY = 7},
+  {.subType = kSplitL,    .unlock = 2000,       .price = 50,         .UIIcon = SID(4,17), .spriteX = 0,  .spriteY = 11},
+  {.subType = kSplitI,    .unlock = 10000,      .price = 50,         .UIIcon = SID(0,4),  .spriteX = 1,  .spriteY = 11},
+  {.subType = kSplitT,    .unlock = 10000,      .price = 50,         .UIIcon = SID(4,4),  .spriteX = 2,  .spriteY = 11},
+  {.subType = kTunnelIn,  .unlock = 10000,      .price = 100,        .UIIcon = SID(8,17), .spriteX = 8,  .spriteY = 11},
+  {.subType = kTunnelOut, .unlock = UINT32_MAX, .price = UINT16_MAX, .UIIcon = SID(8,16), .spriteX = 9,  .spriteY = 11},
+  {.subType = kFilterL,   .unlock = 10000,      .price = 75,         .UIIcon = SID(8,4),  .spriteX = 3,  .spriteY = 11},
+  {.subType = kFilterI,   .unlock = 10000,      .price = 75,         .UIIcon = SID(12,4), .spriteX = 10, .spriteY = 11}
 };
 
 //{kCarrotPlant, kAppleTree, kWheatPlant, kP4, klP5, kP6, kP7, kP8, kP9, kP10, kP11, kP12};
