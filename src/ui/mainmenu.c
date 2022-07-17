@@ -70,7 +70,7 @@ void doPlace() {
   if (getOwned(selectedCat, selectedID) == 0) {
     return;
   }
-  struct Location_t* placeLocation = getPlayerLookingAtLocation();
+  struct Location_t* placeLocation = getPlayerLocation();
   bool placed = false;
   switch (selectedCat) {
     case kUICatTool: break; // Impossible

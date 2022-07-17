@@ -261,7 +261,6 @@ void updateBlueprint() {
   pd->sprite->setDrawMode(bp, kDrawModeCopy);
 
   if (gm == kPickMode || gm == kDestroyMode) {
-    setPlayerLookingAtOffset(0);
     pd->sprite->setImage(bp, getSprite16_byidx(0, zoom), kBitmapUnflipped); 
     switch (getRadius()) {
       case 1: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap1x1[zoom], kBitmapUnflipped); break;
@@ -269,7 +268,6 @@ void updateBlueprint() {
       case 5: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap5x5[zoom], kBitmapUnflipped); break;
     }
   } else if (gm == kPlaceMode) { // Of conveyors, cargo or utility
-    setPlayerLookingAtOffset(0);
     if (selectedCat == kUICatUtility && selectedID == kConveyorGrease) {
       switch (getRadius()) {
         case 1: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap1x1[zoom], kBitmapUnflipped); break;
@@ -287,11 +285,9 @@ void updateBlueprint() {
       case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; case kNUICats:; break;
     }
   } else if (gm == kPlantMode) { // Of crops
-    setPlayerLookingAtOffset(0);
     pd->sprite->setImage(bp, getSprite16_byidx( CargoDesc[ PDesc[selectedID].out ].UIIcon, zoom), kBitmapUnflipped); 
     pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
   } else if (gm == kBuildMode) { // Of factories and harvesters
-    setPlayerLookingAtOffset(0);
     if (selectedCat == kUICatExtractor) {
       switch (selectedID) {
         case kCropHarvesterLarge: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap9x9[zoom], kBitmapUnflipped);

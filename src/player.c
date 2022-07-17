@@ -16,10 +16,6 @@ int16_t m_offX, m_offY = 0; // Screen offsets
 
 uint8_t m_facing = 0, m_wasFacing = 0, m_stepCounter = 0, m_animFrame = 0;
 
-uint8_t m_lookingAtOffset = 0;
-
-bool m_updateLookingAt = false;
-
 uint16_t m_deserialiseXPlayer = 0, m_deserialiseYPlayer = 0;
 int16_t m_deserialiseArrayID = -1;
 
@@ -28,8 +24,6 @@ struct Chunk_t* m_currentChunk = NULL;
 enum kChunkQuad m_quadrant = 0;
 
 struct Location_t* m_currentLocation = NULL;
-
-struct Location_t* m_lookingAt = NULL;
 
 bool m_top = true;
 bool m_left = true;
@@ -140,15 +134,6 @@ enum kChunkQuad getCurrentQuadrant() {
 
 struct Location_t* getPlayerLocation() {
   return m_currentLocation;
-}
-
-struct Location_t* getPlayerLookingAtLocation() {
-  return m_lookingAt;
-}
-
-void setPlayerLookingAtOffset(int8_t _offset) {
-  m_lookingAtOffset = _offset;
-  m_updateLookingAt = true;
 }
 
 void setPlayerPosition(uint16_t _x, uint16_t _y) {
@@ -299,24 +284,6 @@ bool movePlayer() {
 
   struct Location_t* wasAt = m_currentLocation;
   m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
-
-  switch (m_facing) {
-    case 0: m_lookingAt = getLocation(m_currentLocation->m_x - m_lookingAtOffset, m_currentLocation->m_y); break;
-    case 1: m_lookingAt = getLocation(m_currentLocation->m_x + m_lookingAtOffset, m_currentLocation->m_y); break;
-    case 2: m_lookingAt = getLocation(m_currentLocation->m_x, m_currentLocation->m_y - m_lookingAtOffset); break;
-    case 3: m_lookingAt = getLocation(m_currentLocation->m_x, m_currentLocation->m_y + m_lookingAtOffset); break;
-  }
-
-  //pd->system->logToConsole("LA %i", (int) m_lookingAt);
-  if (m_lookingAt && (wasAt != m_currentLocation || m_updateLookingAt)) {
-    m_updateLookingAt = false;
-    int32_t bpX = (TILE_PIX*m_lookingAt->m_x + TILE_PIX/2.0) * zoom, bpY = (TILE_PIX*m_lookingAt->m_y  + TILE_PIX/2.0) * zoom;
-
-    pd->sprite->moveTo(m_player.m_blueprint[zoom], bpX, bpY);
-    pd->sprite->moveTo(m_player.m_blueprintRadius[zoom], bpX, bpY);
-
-    //pd->system->logToConsole("LA %i %i, off %i", m_lookingAt->m_x, m_lookingAt->m_y, m_lookingAtOffset);
-  }
 
   // Torus splitting
   bool torusChanged = false;
