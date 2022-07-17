@@ -5,9 +5,17 @@
 #include "building.h"
 #include "input.h"
 
-//                              {kNoCargo,   kApple,   kCheese,  kCarrot,   kWheat,    kWaterBarrel, kChalk,    kVitamin, kNCargoType};
-const uint16_t kCargoValue[] =  {0,          2,        8,        1,         4,         1,            1,         1};
-const uint16_t kCargoUIIcon[] = {SID(11,10), SID(8,7), SID(9,7), SID(10,7), SID(11,7), SID(12,7),    SID(13,7), SID(12,8)};
+//{kNoCargo, kApple, kCheese, kCarrot, kWheat, kWaterBarrel, kChalk, kVitamin, kNCargoType};
+const struct CargoDescriptor_t CargoDesc[] = {
+  {.subType = kNoCargo, .price = 0, .UIIcon = SID(11,10)},
+  {.subType = kApple, .price = 2, .UIIcon = SID(8,7)},
+  {.subType = kCheese, .price = 8, .UIIcon = SID(9,7)},
+  {.subType = kCarrot, .price = 1, .UIIcon = SID(10,7)},
+  {.subType = kWheat, .price = 4, .UIIcon = SID(11,7)},
+  {.subType = kWaterBarrel, .price = 1, .UIIcon = SID(12,7)},
+  {.subType = kChalk, .price = 1, .UIIcon = SID(13,7)},
+  {.subType = kVitamin, .price = 16, .UIIcon = SID(12,8)}
+};
 
 const int32_t SIZE_CARGO = TOT_CARGO_OR_BUILDINGS * sizeof(struct Cargo_t);
 
@@ -109,7 +117,7 @@ bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addToDisplay
   cargoSpriteSetup(cargo, 
     TILE_PIX*_loc->m_x + _loc->m_pix_off_x + TILE_PIX/2.0,
     TILE_PIX*_loc->m_y + _loc->m_pix_off_y + TILE_PIX/2.0,
-    kCargoUIIcon[_type]);
+    CargoDesc[_type].UIIcon);
 
   _loc->m_cargo = cargo;
   if (_loc->m_building) {
@@ -198,7 +206,7 @@ void* deserialiseStructDoneCargo(json_decoder* jd, const char* _name, json_value
   cargoSpriteSetup(cargo, 
     m_deserialiseXCargo,
     m_deserialiseYCargo,
-    kCargoUIIcon[cargo->m_type]);
+    CargoDesc[cargo->m_type].UIIcon);
   ++m_nCargo;
 
   //pd->system->logToConsole("-- Cargo #%i, [%i] decoded to  %s, (%i, %i)", m_nCargo, m_deserialiseIndexCargo, toStringCargo(cargo), m_deserialiseXCargo, m_deserialiseYCargo);

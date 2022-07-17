@@ -22,13 +22,8 @@ void plantTrySpawnCargo(struct Building_t* _building, uint8_t _tick) {
   if (loc->m_cargo != NULL) {
     return;
   }
-  switch (_building->m_subType.plant) {
-    case kCarrotPlant:; newCargo(loc, kCarrot, _tick == NEAR_TICK_AMOUNT);
-    case kAppleTree:;   newCargo(loc, kApple, _tick == NEAR_TICK_AMOUNT);
-    case kWheatPlant:;  newCargo(loc, kWheat, _tick == NEAR_TICK_AMOUNT);
-    case kP4:; case kP5:; case kP6:; case kP7:; case kP8:; case kP9:; case kP10:; case kP11:; case kP12:; break; 
-    case kNPlantSubTypes:; break;
-  }
+
+  newCargo(loc, PDesc[_building->m_subType.plant].out, _tick == NEAR_TICK_AMOUNT);
 
   setGrowdownTimer(_building);
   
@@ -39,7 +34,7 @@ void plantTrySpawnCargo(struct Building_t* _building, uint8_t _tick) {
 
 void setGrowdownTimer(struct Building_t* _building) {
   // TODO growing bonuses?
-  _building->m_progress = kPlantGrowT[_building->m_subType.plant] * TICKS_PER_SEC;
+  _building->m_progress = PDesc[_building->m_subType.plant].time * TICKS_PER_SEC;
 }
 
 #define CARGO_BOUNCE_OFFSET 4
@@ -84,18 +79,12 @@ void assignNeighborsPlant(struct Building_t* _building) {
 
 void buildingSetupPlant(struct Building_t* _building) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
-    switch (_building->m_subType.plant) {
-      case kCarrotPlant:; _building->m_image[zoom] = getSprite16(10, 8, zoom); break;
-      case kAppleTree:;   _building->m_image[zoom] = getSprite16(8,  8, zoom); break;
-      case kWheatPlant:;  _building->m_image[zoom] = getSprite16(11,  8, zoom); break;
-      case kNPlantSubTypes:; default: break;
-    }
+    _building->m_image[zoom] = getSprite16_byidx( PDesc[_building->m_subType.plant].sprite, zoom); break;
   }
 
   clearLocation(_building->m_location, /*cargo*/ true, /*building*/ false);
 
   setGrowdownTimer(_building);
-
 }
 
 int8_t getWaterBonus(enum kGroundWetness _likes, enum kGroundWetness _has) {

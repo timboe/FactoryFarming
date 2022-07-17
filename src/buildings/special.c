@@ -97,7 +97,7 @@ void sellBoxUpdateFn(struct Building_t* _building) {
     for (int32_t y = _building->m_location->m_y - 1; y < _building->m_location->m_y + 2; ++y) {
       struct Location_t* loc = getLocation_noCheck(x, y); // Will never straddle the world boundary
       if (loc->m_cargo) {
-        modMoney( kCargoValue[loc->m_cargo->m_type] );
+        modMoney( CargoDesc[loc->m_cargo->m_type].price );
         // Tutorial
         const enum kUITutorialStage tut = getTutorialStage(); 
         if (tut == kTutBuildConveyor && loc->m_cargo->m_type == kCarrot && nearbyConveyor(_building)) {

@@ -166,7 +166,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
           pd->graphics->drawBitmap(getSprite16_byidx(getUIIcon(kUICatFactory, building->m_subType.factory), 1), 
             building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
         } else if (building->m_type == kExtractor) {
-          pd->graphics->drawBitmap(getSprite16_byidx(kCargoUIIcon[getExtractorOutput(building->m_subType.extractor)], 1), 
+          pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ EDesc[building->m_subType.extractor].out ].UIIcon, 1), 
             building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
         }
       } else {

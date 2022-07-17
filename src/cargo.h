@@ -2,8 +2,14 @@
 #include "game.h"
 
 enum kCargoType {kNoCargo, kApple, kCheese, kCarrot, kWheat, kWaterBarrel, kChalk, kVitamin, kNCargoType};
-extern const uint16_t kCargoValue[];
-extern const uint16_t kCargoUIIcon[];
+struct CargoDescriptor_t {
+  enum kCargoType subType;
+  uint32_t price;
+  uint16_t UIIcon;
+};
+extern const struct CargoDescriptor_t CargoDesc[];
+
+///
 
 struct Cargo_t{
   // Persistent
@@ -14,6 +20,8 @@ struct Cargo_t{
   // Transient
   LCDSprite* m_sprite[ZOOM_LEVELS]; // Location 0 is unused - OWNED
 };
+
+///
 
 struct Location_t;
 

@@ -7,9 +7,8 @@
 
 void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick);
 
-void pumpUpdateFn(struct Building_t* _building, uint8_t _tick);
+void mineUpdateFn(struct Building_t* _building, uint8_t _tick);
 
-void quarryUpdateFn(struct Building_t* _building, uint8_t _tick);
 
 /// ///
 
@@ -72,31 +71,18 @@ void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick) {
   }
 }
 
-enum kCargoType getExtractorOutput(enum kExtractorSubType _subType) {
-  switch (_subType) {
-    case kPump:; return kWaterBarrel;
-    case kChalkQuarry:; return kChalk;
-    default: return kNoCargo;
-  }
-}
 
-void pumpUpdateFn(struct Building_t* _building, uint8_t _tick) {
+void mineUpdateFn(struct Building_t* _building, uint8_t _tick) {
   if (_building->m_next[0]->m_cargo == NULL) {
-    newCargo(_building->m_next[0], kWaterBarrel, _tick == NEAR_TICK_AMOUNT);
-  }
-}
-
-void quarryUpdateFn(struct Building_t* _building, uint8_t _tick) {
-  if (_building->m_next[0]->m_cargo == NULL) {
-    newCargo(_building->m_next[0], kChalk, _tick == NEAR_TICK_AMOUNT);
+    newCargo(_building->m_next[0], EDesc[_building->m_subType.extractor].out, _tick == NEAR_TICK_AMOUNT);
   }
 }
 
 void extractorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   switch (_building->m_subType.extractor) {
     case kCropHarvesterSmall:; return cropHarveserUpdateFn(_building, _tick);
-    case kPump:; return pumpUpdateFn(_building, _tick);
-    case kChalkQuarry:; return quarryUpdateFn(_building, _tick);
+    case kPump:; return mineUpdateFn(_building, _tick);
+    case kChalkQuarry:; return mineUpdateFn(_building, _tick);
     case kCropHarvesterLarge:; return cropHarveserUpdateFn(_building, _tick);
     case kNExtractorSubTypes:; break;
   }
@@ -141,7 +127,7 @@ void assignNeighborsExtractor(struct Building_t* _building) {
 
 void buildingSetupExtractor(struct Building_t* _building) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
-    _building->m_image[zoom] = getSprite48_byidx( kExtractorSprite[_building->m_subType.extractor] + _building->m_dir, zoom); 
+    _building->m_image[zoom] = getSprite48_byidx( EDesc[_building->m_subType.extractor].sprite + _building->m_dir, zoom); 
 
     PDRect bound = {.x = (COLLISION_OFFSET/2)*zoom, .y = (COLLISION_OFFSET/2)*zoom, .width = (EXTRACTOR_PIX - COLLISION_OFFSET)*zoom, .height = (EXTRACTOR_PIX - COLLISION_OFFSET)*zoom};
     if (_building->m_sprite[zoom] == NULL) _building->m_sprite[zoom] = pd->sprite->newSprite();

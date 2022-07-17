@@ -10,6 +10,7 @@
 #include "input.h"
 #include "ui.h"
 #include "io.h"
+#include "building.h"
 #include "buildings/special.h"
 
 PlaydateAPI* pd = NULL;
@@ -255,6 +256,27 @@ void reset(bool _resetThePlayer) {
 }
 
 void initGame() {
+
+  // Perform runtime sanity check
+  for (int32_t i = 0; i < kNFactorySubTypes; ++i) {
+    if (i != FDesc[i].subType) pd->system->error("FACTORY DESCRIPTOR ORDERING IS WRONG!");
+  }
+  for (int32_t i = 0; i < kNUtilitySubTypes; ++i) {
+    if (i != UDesc[i].subType) pd->system->error("UTILITY DESCRIPTOR ORDERING IS WRONG!");
+  }
+  for (int32_t i = 0; i < kNConvSubTypes; ++i) {
+    if (i != CDesc[i].subType) pd->system->error("CONVEYOR DESCRIPTOR ORDERING IS WRONG!");
+  }
+  for (int32_t i = 0; i < kNPlantSubTypes; ++i) {
+    if (i != PDesc[i].subType) pd->system->error("PLANT DESCRIPTOR ORDERING IS WRONG!");
+  }
+  for (int32_t i = 0; i < kNExtractorSubTypes; ++i) {
+    if (i != EDesc[i].subType) pd->system->error("EXTRACTOR DESCRIPTOR ORDERING IS WRONG!");
+  }
+  for (int32_t i = 0; i < kNCargoType; ++i) {
+    if (i != CargoDesc[i].subType) pd->system->error("CARGO DESCRIPTOR ORDERING IS WRONG!");
+  }
+
   pd->system->addMenuItem("restart", menuOptionsCallbackRestart, NULL);
 
   pd->system->addMenuItem("load", menuOptionsCallbackLoad, NULL);

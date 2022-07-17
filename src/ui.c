@@ -280,15 +280,15 @@ void updateBlueprint() {
       pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
     }
     switch (selectedCat) {
-      case kUICatConv:;    pd->sprite->setImage(bp, getSprite16_byidx(kConvUIIcon[selectedID] + m_selRotation, zoom), kBitmapUnflipped); break;
-      case kUICatUtility:; pd->sprite->setImage(bp, getSprite16_byidx(kUtilityUIIcon[selectedID] + m_selRotation, zoom), kBitmapUnflipped); break;
-      case kUICatCargo:;   pd->sprite->setImage(bp, getSprite16_byidx(kCargoUIIcon[selectedID], zoom), kBitmapUnflipped); break;
+      case kUICatConv:;    pd->sprite->setImage(bp, getSprite16_byidx( CDesc[selectedID].UIIcon + m_selRotation, zoom), kBitmapUnflipped); break;
+      case kUICatUtility:; pd->sprite->setImage(bp, getSprite16_byidx( UDesc[selectedID].UIIcon + m_selRotation, zoom), kBitmapUnflipped); break;
+      case kUICatCargo:;   pd->sprite->setImage(bp, getSprite16_byidx( CargoDesc[selectedID].UIIcon, zoom), kBitmapUnflipped); break;
       case kUICatTool:; case kUICatPlant:; case kUICatExtractor:; case kUICatFactory:; case kUICatWarp:; break;
       case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; case kNUICats:; break;
     }
   } else if (gm == kPlantMode) { // Of crops
     setPlayerLookingAtOffset(0);
-    pd->sprite->setImage(bp, getSprite16_byidx(kPlantUIIcon[selectedID], zoom), kBitmapUnflipped); 
+    pd->sprite->setImage(bp, getSprite16_byidx( CargoDesc[ PDesc[selectedID].out ].UIIcon, zoom), kBitmapUnflipped); 
     pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
   } else if (gm == kBuildMode) { // Of factories and harvesters
     setPlayerLookingAtOffset(0);
@@ -303,8 +303,8 @@ void updateBlueprint() {
       pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped); 
     }
     switch (selectedCat) {
-      case kUICatExtractor:; pd->sprite->setImage(bp, getSprite48_byidx(kExtractorSprite[selectedID] + m_selRotation, zoom), kBitmapUnflipped); break;
-      case kUICatFactory:;   pd->sprite->setImage(bp, getSprite48_byidx(kFactorySprite[selectedID] + m_selRotation,   zoom), kBitmapUnflipped); break;
+      case kUICatExtractor:; pd->sprite->setImage(bp, getSprite48_byidx( EDesc[selectedID].sprite + m_selRotation, zoom), kBitmapUnflipped); break;
+      case kUICatFactory:;   pd->sprite->setImage(bp, getSprite48_byidx( FDesc[selectedID].sprite + m_selRotation,   zoom), kBitmapUnflipped); break;
       case kUICatTool:; case kUICatPlant:; case kUICatConv:; case kUICatUtility:; case kUICatCargo:; case kUICatWarp:; break;
       case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; case kNUICats:; break;
     }
@@ -596,11 +596,11 @@ void drawUITop(const char* _text) {
 int32_t getUnlockCost(enum kUICat _c, int32_t _i) {
   switch (_c) {
     case kUICatTool: return 0;
-    case kUICatPlant: return kPlantUnlock[_i];
-    case kUICatConv: return kConvUnlock[_i];
-    case kUICatExtractor: return kExtractorUnlock[_i];
-    case kUICatFactory: return kFactoryUnlock[_i];
-    case kUICatUtility: return kUtilityUnlock[_i];
+    case kUICatPlant: return PDesc[_i].unlock;
+    case kUICatConv: return CDesc[_i].unlock;
+    case kUICatExtractor: return EDesc[_i].unlock;
+    case kUICatFactory: return FDesc[_i].unlock;
+    case kUICatUtility: return UDesc[_i].unlock;
     case kUICatCargo: return 0;
     case kUICatWarp:; return 0;
     case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; return 0;
@@ -612,12 +612,12 @@ int32_t getUnlockCost(enum kUICat _c, int32_t _i) {
 int32_t getPrice(enum kUICat _c, int32_t _i) {
   switch (_c) {
     case kUICatTool: return 0;
-    case kUICatPlant: return kPlantPrice[_i];
-    case kUICatConv: return kConvPrice[_i];
-    case kUICatExtractor: return kExtractorPrice[_i];
-    case kUICatFactory: return kFactoryPrice[_i];
-    case kUICatUtility: return kUtilityPrice[_i];
-    case kUICatCargo: return kCargoValue[_i];
+    case kUICatPlant: return PDesc[_i].price;
+    case kUICatConv: return CDesc[_i].price;
+    case kUICatExtractor: return EDesc[_i].price;
+    case kUICatFactory: return FDesc[_i].price;
+    case kUICatUtility: return UDesc[_i].price;
+    case kUICatCargo: return CargoDesc[_i].price;
     case kUICatWarp: return kWarpPrice[_i];
     case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; return 0;
     case kNUICats: return 0;
@@ -694,14 +694,14 @@ enum kBuildingType getCatBuildingSubType(enum kUICat _c) {
 uint16_t getUIIcon(enum kUICat _c, uint16_t _i) {
   switch (_c) {
     case kUICatTool: return kToolUIIcon[_i];
-    case kUICatPlant: return kPlantUIIcon[_i];
-    case kUICatConv: return kConvUIIcon[_i];
-    case kUICatExtractor: return kExtractorUIIcon[_i];
-    case kUICatFactory: return kCargoUIIcon[ kFactoryOut[_i] ];
-    case kUICatUtility: return kUtilityUIIcon[_i];
-    case kUICatCargo: return kCargoUIIcon[_i];
+    case kUICatPlant: return CargoDesc[ PDesc[_i].out ].UIIcon;
+    case kUICatConv: return CDesc[_i].UIIcon;
+    case kUICatExtractor: return EDesc[_i].UIIcon;
+    case kUICatFactory: return CargoDesc[ FDesc[_i].out ].UIIcon;
+    case kUICatUtility: return UDesc[_i].UIIcon;
+    case kUICatCargo: return CargoDesc[_i].UIIcon;
     case kUICatWarp: return kWarpUIIcon[_i];
-    case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; return kCargoUIIcon[_i];
+    case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; return CargoDesc[_i].UIIcon;
     case kNUICats: break;
   }
   return 0;

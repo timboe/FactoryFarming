@@ -9,42 +9,66 @@ enum kBuildingType {kNoBuilding, kConveyor, kPlant, kUtility, kExtractor, kFacto
 ///
 
 enum kConvSubType{kBelt, kSplitL, kSplitI, kSplitT, kTunnelIn, kTunnelOut, kFilterL, kFilterI, kNConvSubTypes};
-extern const uint32_t kConvUnlock[];
-extern const uint16_t kConvPrice[];
-extern const uint16_t kConvUIIcon[];
+struct ConveyorDescriptor_t {
+  enum kConvSubType subType;
+  uint32_t unlock;
+  uint16_t price;
+  uint16_t UIIcon;
+};
+extern const struct ConveyorDescriptor_t CDesc[];
 
 enum kPlantSubType{kCarrotPlant, kAppleTree, kWheatPlant, kP4, kP5, kP6, kP7, kP8, kP9, kP10, kP11, kP12, kNPlantSubTypes};
-extern const uint32_t kPlantUnlock[];
-extern const uint16_t kPlantPrice[];
-extern const uint16_t kPlantGrowT[];
-extern const uint16_t kPlantUIIcon[];
-extern const enum kGroundWetness kPlantWetness[];
-extern const enum kGroundType kPlantSoil[];
+struct PlantDescriptor_t {
+  enum kPlantSubType subType;
+  uint32_t unlock;
+  uint16_t price;
+  uint16_t sprite;
+  uint16_t time;
+  enum kGroundWetness wetness;
+  enum kGroundType soil;
+  enum kCargoType out;
+};
+extern const struct PlantDescriptor_t PDesc[];
 
 enum kUtilitySubType{kBin, kWell, kStorageBox, kConveyorGrease, kNUtilitySubTypes};
-extern const uint32_t kUtilityUnlock[];
-extern const uint16_t kUtilityPrice[];
-extern const uint16_t kUtilityUIIcon[];
+struct UtilityDescriptor_t {
+  enum kUtilitySubType subType;
+  uint32_t unlock;
+  uint16_t price;
+  uint16_t UIIcon;
+};
+extern const struct UtilityDescriptor_t UDesc[];
 
 enum kExtractorSubType{kCropHarvesterSmall, kPump, kChalkQuarry, kCropHarvesterLarge, kNExtractorSubTypes};
-extern const uint32_t kExtractorUnlock[];
-extern const uint16_t kExtractorPrice[];
-extern const uint16_t kExtractorUIIcon[];
-extern const uint16_t kExtractorSprite[];
+struct ExtractorDescriptor_t {
+  enum kExtractorSubType subType;
+  uint32_t unlock;
+  uint16_t price;
+  uint16_t UIIcon;
+  uint16_t sprite;
+  enum kCargoType out;
+};
+extern const struct ExtractorDescriptor_t EDesc[];
 
 enum kFactorySubType{kVitiminFac, kF2, kF3, kF4, kF5, kF6, kF7, kF8, kF9, kF10, kF11, kNFactorySubTypes};
-extern const uint32_t kFactoryUnlock[];
-extern const uint16_t kFactoryPrice[];
-extern const uint16_t kFactoryTime[];
-extern const uint16_t kFactorySprite[];
-extern const enum kCargoType kFactoryOut[];
-extern const enum kCargoType kFactoryIn1[];
-extern const enum kCargoType kFactoryIn2[];
-extern const enum kCargoType kFactoryIn3[];
-extern const enum kCargoType kFactoryIn4[];
-extern const enum kCargoType kFactoryIn5[];
+struct FactoryDescriptor_t {
+  enum kFactorySubType subType;
+  uint16_t price;
+  uint32_t unlock;
+  uint16_t time;
+  uint16_t sprite;
+  enum kCargoType out;
+  enum kCargoType in1;
+  enum kCargoType in2;
+  enum kCargoType in3;
+  enum kCargoType in4;
+  enum kCargoType in5;
+};
+extern const struct FactoryDescriptor_t FDesc[];
 
 enum kSpecialSubType{kShop, kSellBox, kExportBox, kImportBox, kWarp, kNSpecialSubTypes};
+
+///
 
 union kSubType {
   enum kConvSubType conveyor;
@@ -97,6 +121,8 @@ struct Building_t{
   enum kDir m_nextDir[4];// Where to animate outputs (conveyor only)
   void (*m_updateFn)(struct Building_t*, uint8_t, uint8_t);
 };
+
+///
 
 uint16_t getNBuildings(void);
 

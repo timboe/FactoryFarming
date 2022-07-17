@@ -30,6 +30,7 @@ void doMainMenuClick() {
     case kUICatUtility: return setGameMode(kPlaceMode);
     case kUICatCargo: return setGameMode(kPlaceMode); 
     case kUICatWarp: break;
+    case kUICatImportN: case kUICatImportE: case kUICatImportS: case kUICatImportW: break; 
     case kNUICats: break;
   }
 }
@@ -83,6 +84,7 @@ void doPlace() {
       break;
     case kUICatCargo: placed = newCargo(placeLocation, selectedID, /*add to display*/ true); break;
     case kUICatWarp: break;
+    case kUICatImportN: case kUICatImportE: case kUICatImportS: case kUICatImportW: break; 
     case kNUICats: break;
   }
   if (placed) {
@@ -208,8 +210,8 @@ void populateInfoMainmenu() {
     case kUICatTool:  snprintf(textA, 128, "%s", toStringTool(selectedID)); snprintf(textB, 128, "%s", toStringToolInfo(selectedID)); break;
     case kUICatPlant:; snprintf(textA, 128, "Plant %s, Likes: %s %s",
       toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
-      toStringWetness(kPlantWetness[selectedID]),
-      toStringSoil(kPlantSoil[selectedID])); break;
+      toStringWetness(PDesc[selectedID].wetness),
+      toStringSoil(PDesc[selectedID].soil)); break;
     case kUICatConv:; snprintf(textA, 128, "Place %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.conveyor = selectedID}, false), getRotationAsString(getUIContentCategory(), getCursorRotation())); break;
     case kUICatExtractor:; snprintf(textA, 128, "Build %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false), getRotationAsString(getUIContentCategory(), getCursorRotation())); break;
     case kUICatFactory:; snprintf(textA, 128, "Build %s (%s)", toStringBuilding(selectedCatType, (union kSubType) {.factory = selectedID}, false), getRotationAsString(getUIContentCategory(), getCursorRotation())); break;
@@ -219,6 +221,7 @@ void populateInfoMainmenu() {
       break;
     case kUICatCargo:; snprintf(textA, 128, "Place %s", toStringCargoByType(selectedID)); break;
     case kUICatWarp:; break;
+    case kUICatImportN: case kUICatImportE: case kUICatImportS: case kUICatImportW: break; 
     case kNUICats:; break;
   }
   if (selectedCat != kUICatTool) snprintf(textB, 128, "Inventory: %i", selectedOwned);

@@ -291,6 +291,6 @@ void drawUIInspectConveyor(struct Building_t* _building) {
     snprintf(text, 128, "Filters On:      %s", toStringCargoByType(_building->m_mode.mode16));
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
     pd->graphics->setDrawMode(kDrawModeCopy);
-    pd->graphics->drawBitmap(getSprite16_byidx(kCargoUIIcon[ _building->m_mode.mode16 ], 1), TILE_PIX*6 + 4, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+    pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[ _building->m_mode.mode16 ].UIIcon, 1), TILE_PIX*6 + 4, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
   }
 }

@@ -25,44 +25,67 @@ uint16_t m_deserialiseIndexBuilding = 0;
 
 struct Building_t* m_buildings;
 
-// Note: User can never themselves build a kTunnelOut
-//                             {kBelt,     kSplitL,   kSplitI,  kSplitT,  kTunnelIn, kTunnelOut, kFilterL,  kFilterI, kNConvSubTypes};
-const uint32_t kConvUnlock[] = {1000,      2000,      10000,    10000,    10000,     UINT32_MAX, 10000,     10000};
-const uint16_t kConvPrice[]  = {10,        50,        50,       50,       100,       1,          75,        75};
-const uint16_t kConvUIIcon[] = {SID(0,17), SID(4,17), SID(0,4), SID(4,4), SID(8,17), SID(8,16),  SID(8,4),  SID(12,4)};
-
 #define DIS UINT32_MAX
 
-//                                          {kCarrotPlant, kAppleTree,    kWheatPlant,  kP4,          klP5,         kP6,          kP7,          kP8,          kP9,          kP10,         kP11,         kP12};
-const uint32_t kPlantUnlock[]             = {0,            10000,         10000,        DIS,          DIS,          DIS,          DIS,          DIS,          DIS,          DIS,          DIS,          DIS};
-const uint16_t kPlantPrice[]              = {0,            100,           100,          1,            1,            1,            1,            1,            1,            1,            1,            1};
-const uint16_t kPlantUIIcon[]             = {SID(10,7),    SID(8,7),      SID(11,7),    SID(9,7),     SID(9,7),     SID(9,7),     SID(9,7),     SID(9,7),     SID(9,7),     SID(9,7),     SID(9,7),     SID(9,7)};
-const uint16_t kPlantGrowT[]              = {50,           50,            50,           50,           50,           50,           50,           50,           50,           50,           50,           50};
-const enum kGroundWetness kPlantWetness[] = {kMoist,       kMoist,        kDry,         kWet,         kMoist,       kDry,         kWet,         kMoist,       kDry,         kWet,         kMoist,       kDry};
-const enum kGroundType kPlantSoil[]       = {kSiltyGround, kChalkyGround, kPeatyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround, kSandyGround};
+// Note: User can never themselves build a kTunnelOut
+//{kBelt, kSplitL, kSplitI, kSplitT, kTunnelIn, kTunnelOut, kFilterL,  kFilterI, kNConvSubTypes};
+const struct ConveyorDescriptor_t CDesc[] = {
+  {.subType = kBelt, .unlock = 1000, .price = 10, .UIIcon = SID(0,17)},
+  {.subType = kSplitL, .unlock = 2000, .price = 50, .UIIcon = SID(4,17)},
+  {.subType = kSplitI, .unlock = 10000, .price = 50, .UIIcon = SID(0,4)},
+  {.subType = kSplitT, .unlock = 10000, .price = 50, .UIIcon = SID(4,4)},
+  {.subType = kTunnelIn, .unlock = 10000, .price = 100, .UIIcon = SID(8,17)},
+  {.subType = kTunnelOut, .unlock = UINT32_MAX, .price = UINT16_MAX, .UIIcon = SID(8,16)},
+  {.subType = kFilterL, .unlock = 10000, .price = 75, .UIIcon = SID(8,4)},
+  {.subType = kFilterI, .unlock = 10000, .price = 75, .UIIcon = SID(12,4)}
+};
 
-//                                {kBin,       kWell,     kStorageBox, kConveyorGrease, kNUtilitySubTypes};
-const uint32_t kUtilityUnlock[] = {100,        10000,     100,         10000};
-const uint16_t kUtilityPrice[]  = {100,        1000,      1,           100};
-const uint16_t kUtilityUIIcon[] = {SID(12,15), SID(0,15), SID(4,15),   SID(8,15)};
+//{kCarrotPlant, kAppleTree, kWheatPlant, kP4, klP5, kP6, kP7, kP8, kP9, kP10, kP11, kP12};
+const struct PlantDescriptor_t PDesc[] = {
+  {.subType = kCarrotPlant, .unlock = 0, .price = 0, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSiltyGround, .out = kCarrot},
+  {.subType = kAppleTree, .unlock = 10000, .price = 100, .sprite = SID(8, 8), .time = 50, .wetness = kMoist, .soil = kChalkyGround, .out = kApple},
+  {.subType = kWheatPlant, .unlock = 10000, .price = 100, .sprite = SID(1, 8), .time = 50, .wetness = kDry, .soil = kPeatyGround, .out = kWheat},
+  {.subType = kP4, .unlock = DIS, .price = 1, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kCarrot},
+  {.subType = kP5, .unlock = DIS, .price = 1, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kCarrot},
+  {.subType = kP6, .unlock = DIS, .price = 1, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kCarrot},
+  {.subType = kP7, .unlock = DIS, .price = 1, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kCarrot},
+  {.subType = kP8, .unlock = DIS, .price = 1, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kCarrot},
+  {.subType = kP9, .unlock = DIS, .price = 1, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kCarrot},
+  {.subType = kP10, .unlock = DIS, .price = 1, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kCarrot},
+  {.subType = kP11, .unlock = DIS, .price = 1, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kCarrot},
+  {.subType = kP12, .unlock = DIS, .price = 1, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kCarrot}
+};
 
-//                                  {kCropHarvesterSmall, kPump,      kChalkQuarry, kCropHarvesterLarge, kNExtractorSubTypes};
-const uint32_t kExtractorUnlock[] = {500,                 10000,      750,          10000};
-const uint16_t kExtractorPrice[]  = {50,                  100,        75,           500};
-const uint16_t kExtractorUIIcon[] = {SID(4,16),           SID(12,11), SID(12,12),   SID(8,16)};
-const uint16_t kExtractorSprite[] = {BID(0,0),            BID(0,3),   BID(0,6),     BID(0,0)};
+//{kBin, kWell, kStorageBox, kConveyorGrease, kNUtilitySubTypes};
+const struct UtilityDescriptor_t UDesc[] = {
+  {.subType = kBin, .unlock = 100, .price = 100, .UIIcon = SID(12,15)},
+  {.subType = kWell, .unlock = 10000, .price = 1000, .UIIcon = SID(0,15)},
+  {.subType = kStorageBox, .unlock = 100, .price = 1, .UIIcon = SID(4,15)},
+  {.subType = kConveyorGrease, .unlock = 10000, .price = 100, .UIIcon = SID(8,15),}
+};
 
-//                                    {kVitiminFac, kF2,      kF3,      kF4,      kF5,      kF6,      kF7,      kF8,      kF9,      k10,      kF11 kNFactorySubTypes};
-const uint32_t kFactoryUnlock[]     = {2000,        DIS,      DIS,      DIS,      DIS,      DIS,      DIS,      DIS,      DIS,      DIS,      DIS};
-const uint16_t kFactoryPrice[]      = {100,         1,        1,        1,        1,        1,        1,        1,        1,        1,        1};
-const uint16_t kFactoryTime[]       = {1,           1,        1,        1,        1,        1,        1,        1,        1,        1,        1};
-const uint16_t kFactorySprite[]     = {BID(0,4),    BID(0,4), BID(0,4), BID(0,4), BID(0,4), BID(0,4), BID(0,4), BID(0,4), BID(0,4), BID(0,4), BID(0,4)};
-const enum kCargoType kFactoryOut[] = {kVitamin,    kVitamin, kVitamin, kVitamin, kVitamin, kVitamin, kVitamin, kVitamin, kVitamin, kVitamin, kVitamin};
-const enum kCargoType kFactoryIn1[] = {kCarrot,     kCarrot,  kCarrot,  kCarrot,  kCarrot,  kCarrot,  kCarrot,  kCarrot,  kCarrot,  kCarrot,  kCarrot};
-const enum kCargoType kFactoryIn2[] = {kChalk,      kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo};
-const enum kCargoType kFactoryIn3[] = {kNoCargo,    kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo};
-const enum kCargoType kFactoryIn4[] = {kNoCargo,    kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo};
-const enum kCargoType kFactoryIn5[] = {kNoCargo,    kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo, kNoCargo};
+//{kCropHarvesterSmall, kPump, kChalkQuarry, kCropHarvesterLarge, kNExtractorSubTypes};
+const struct ExtractorDescriptor_t EDesc[] = {
+  {.subType = kCropHarvesterSmall, .unlock = 500, .price = 50, .UIIcon = SID(4,16), .sprite = BID(0,0), .out = kNoCargo},
+  {.subType = kPump, .unlock = 10000, .price = 100, .UIIcon = SID(12,1), .sprite = BID(0,3), .out = kWaterBarrel},
+  {.subType = kChalkQuarry, .unlock = 750, .price = 75, .UIIcon = SID(12,12), .sprite = BID(0,6), .out = kChalk},
+  {.subType = kCropHarvesterLarge, .unlock = 10000, .price = 500, .UIIcon = SID(8,16), .sprite = BID(0,0), .out = kNoCargo}
+};
+
+//{kVitiminFac, kF2, kF3, kF4, kF5, kF6, kF7, kF8, kF9,  k10, kF11 kNFactorySubTypes};
+const struct FactoryDescriptor_t FDesc[] = {
+  {.subType = kVitiminFac, .unlock = 2000, .price = 100, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kChalk, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kF2, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kF3, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kF4, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kF5, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kF6, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kF7, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kF8, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kF9, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kF10, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kF11, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo}
+};
 
 void buildingSetup(struct Building_t* _building);
 

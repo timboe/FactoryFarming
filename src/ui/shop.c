@@ -70,8 +70,8 @@ void populateInfoBuy(bool _visible) {
   switch (selectedCatType) {
     case kPlant:; snprintf(textA, 128, "Buy %s, Likes: %s %s",
       toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
-      toStringWetness(kPlantWetness[selectedID]),
-      toStringSoil(kPlantSoil[selectedID])); break;
+      toStringWetness( PDesc[selectedID].wetness ),
+      toStringSoil( PDesc[selectedID].soil )); break;
     case kConveyor:; snprintf(textA, 128, "Buy %s", toStringBuilding(selectedCatType, (union kSubType) {.conveyor = selectedID}, false)); break;
     case kExtractor:; snprintf(textA, 128, "Buy %s", toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false)); break;
     case kFactory:; snprintf(textA, 128, "Buy %s", toStringBuilding(selectedCatType, (union kSubType) {.factory = selectedID}, false)); break;

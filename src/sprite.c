@@ -5,9 +5,13 @@ LCDBitmap* m_conveyorMasters[2][kDirN] = {NULL}; // For two different speed sett
 
 LCDBitmapTable* m_sheet16;
 
+LCDBitmapTable* m_sheet18;
+
 LCDBitmapTable* m_sheet48;
 
 LCDBitmap* m_bitmap16_zoom[ZOOM_LEVELS][SHEET16_SIZE];
+
+LCDBitmap* m_bitmap18_zoom[ZOOM_LEVELS][SHEET16_SIZE];
 
 LCDBitmap* m_bitmap48_zoom[ZOOM_LEVELS][SHEET48_SIZE];
 
@@ -69,6 +73,21 @@ LCDBitmap* getSprite16_byidx(uint32_t _idx, uint8_t _zoom) {
   pd->system->error("getSprite16 Error");
   return NULL;
 }
+
+LCDBitmap* getSprite18(uint32_t _x, uint32_t _y, uint8_t _zoom) {
+  return getSprite18_byidx(SPRITE18_ID(_x, _y), _zoom);
+}
+
+LCDBitmap* getSprite18_byidx(uint32_t _idx, uint8_t _zoom) {
+  if (_zoom == 1) {
+    return pd->graphics->getTableBitmap(m_sheet18, _idx);
+  } else if (_zoom < ZOOM_LEVELS) {
+    return m_bitmap18_zoom[_zoom][_idx];
+  }
+  pd->system->error("getSprite18 Error");
+  return NULL;
+}
+
 
 LCDBitmap* getSprite48(uint32_t _x, uint32_t _y, uint8_t _zoom) {
   return getSprite48_byidx(SPRITE48_ID(_x, _y), _zoom);
@@ -151,6 +170,13 @@ void populateResizedSprites() {
       pd->graphics->drawScaledBitmap(original, 0, 0, zoom, zoom);
       pd->graphics->popContext();
     }
+    for (uint32_t i = 0; i < SHEET18_SIZE; ++i) {
+      LCDBitmap* original = pd->graphics->getTableBitmap(m_sheet18, i);
+      m_bitmap18_zoom[zoom][i] = pd->graphics->newBitmap(TILE_PIX*2, 18*2, kColorClear);
+      pd->graphics->pushContext(m_bitmap18_zoom[zoom][i]);
+      pd->graphics->drawScaledBitmap(original, 0, 0, zoom, zoom);
+      pd->graphics->popContext();
+    }
     for (uint32_t i = 0; i < SHEET48_SIZE; ++i) {
       LCDBitmap* original = pd->graphics->getTableBitmap(m_sheet48, i);
       m_bitmap48_zoom[zoom][i] = pd->graphics->newBitmap(TILE_PIX*3*2, TILE_PIX*3*2, kColorClear);
@@ -164,6 +190,7 @@ void populateResizedSprites() {
 void initSprite() {
   pd->graphics->setDrawMode(kDrawModeCopy);
   m_sheet16 = loadImageTableAtPath("images/sheet16");
+  m_sheet18 = loadImageTableAtPath("images/sheet18");
   m_sheet48 = loadImageTableAtPath("images/sheet48");
   m_stickySelected = loadImageAtPath("images/selected");
 

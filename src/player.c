@@ -106,13 +106,13 @@ void nextTutorialStage() {
   } else if (m_player.m_enableTutorial == kTutGetCarrots) {
     growAtAll(); // Force all plants to grow
   } else if (m_player.m_enableTutorial == kTutBuildHarvester) {
-    modMoney(kExtractorUnlock[kCropHarvesterSmall]);
+    modMoney( EDesc[kCropHarvesterSmall].unlock );
   } else if (m_player.m_enableTutorial == kTutBuildConveyor) {
-    modMoney(kConvUnlock[kBelt]);
+    modMoney( CDesc[kBelt].unlock );
   } else if (m_player.m_enableTutorial == kTutBuildQuarry) {
-    modMoney(kExtractorUnlock[kChalkQuarry]);
+    modMoney( EDesc[kChalkQuarry].unlock );
   } else if (m_player.m_enableTutorial == kTutBuildVitamin) {
-    modMoney(kFactoryUnlock[kVitiminFac]);
+    modMoney( FDesc[kVitiminFac].unlock );
   }
 
   showTutorialMsg(m_player.m_enableTutorial);
@@ -221,13 +221,12 @@ bool movePlayer() {
 
   #define PLAYER_ANIM_FRAMES 6
   #define PLAYER_ANIM_DELAY 16
-  #define P_SS_Y 19
 
   if (moving) {
     if (++m_stepCounter * speed > PLAYER_ANIM_DELAY || m_facing != m_wasFacing) {
       m_animFrame = (m_animFrame + 1) % PLAYER_ANIM_FRAMES;
       m_stepCounter = 0;
-      pd->sprite->setImage(m_player.m_sprite[zoom], getSprite16(m_animFrame, P_SS_Y + m_facing, zoom), kBitmapUnflipped);
+      pd->sprite->setImage(m_player.m_sprite[zoom], getSprite18(m_animFrame, m_facing, zoom), kBitmapUnflipped);
     }
     m_wasFacing = m_facing;
   }
@@ -368,10 +367,10 @@ SpriteCollisionResponseType playerLCDSpriteCollisionFilterProc(LCDSprite* _playe
 void playerSpriteSetup() {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     m_player.m_sprite[zoom] = pd->sprite->newSprite();
-    PDRect pBound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
+    PDRect pBound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = 18*zoom};
     PDRect cBound = {.x = (COLLISION_OFFSET/2)*zoom, .y = (COLLISION_OFFSET/2)*zoom, .width = (TILE_PIX - COLLISION_OFFSET)*zoom, .height = (TILE_PIX - COLLISION_OFFSET)*zoom};
     pd->sprite->setBounds(m_player.m_sprite[zoom], pBound);
-    pd->sprite->setImage(m_player.m_sprite[zoom], getSprite16(0, P_SS_Y+3, zoom), kBitmapUnflipped);
+    pd->sprite->setImage(m_player.m_sprite[zoom], getSprite18(0, 3, zoom), kBitmapUnflipped);
     pd->sprite->setCollideRect(m_player.m_sprite[zoom], cBound);
     pd->sprite->setCollisionResponseFunction(m_player.m_sprite[zoom], playerLCDSpriteCollisionFilterProc);
 
