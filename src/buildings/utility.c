@@ -21,7 +21,7 @@ void storageUpdateFn(struct Building_t* _building, uint8_t _tick) {
 
   // Putdown
   _building->m_progress += _tick;
-  if (_building->m_progress >= TILE_PIX/2) {
+  if (_building->m_progress >= MAX_DROP_RATE) {
     _building->m_progress = 0;
     tryPutdownAnyCargo(_building, _tick);
   }

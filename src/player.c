@@ -285,6 +285,12 @@ bool movePlayer() {
   struct Location_t* wasAt = m_currentLocation;
   m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
 
+  if (wasAt != m_currentLocation) {
+    int32_t bpX = (TILE_PIX*m_currentLocation->m_x + TILE_PIX/2.0) * zoom, bpY = (TILE_PIX*m_currentLocation->m_y  + TILE_PIX/2.0) * zoom;
+    pd->sprite->moveTo(m_player.m_blueprint[zoom], bpX, bpY);
+    pd->sprite->moveTo(m_player.m_blueprintRadius[zoom], bpX, bpY);
+  }
+
   // Torus splitting
   bool torusChanged = false;
   if (m_top && m_player.m_pix_y > TOT_WORLD_PIX_Y/2) {
@@ -335,7 +341,7 @@ void playerSpriteSetup() {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     m_player.m_sprite[zoom] = pd->sprite->newSprite();
     PDRect pBound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = 18*zoom};
-    PDRect cBound = {.x = (COLLISION_OFFSET/2)*zoom, .y = (COLLISION_OFFSET/2)*zoom, .width = (TILE_PIX - COLLISION_OFFSET)*zoom, .height = (TILE_PIX - COLLISION_OFFSET)*zoom};
+    PDRect cBound = {.x = (COLLISION_OFFSET_SMALL/2)*zoom, .y = (COLLISION_OFFSET_SMALL/2)*zoom, .width = (TILE_PIX - COLLISION_OFFSET_SMALL)*zoom, .height = (TILE_PIX - COLLISION_OFFSET_SMALL)*zoom};
     pd->sprite->setBounds(m_player.m_sprite[zoom], pBound);
     pd->sprite->setImage(m_player.m_sprite[zoom], getSprite18(0, 3, zoom), kBitmapUnflipped);
     pd->sprite->setCollideRect(m_player.m_sprite[zoom], cBound);
@@ -478,6 +484,8 @@ void serialisePlayer(struct json_encoder* je) {
   je->writeInt(je, m_player.m_enableAutosave);
   je->addTableMember(je, "setp", 4);
   je->writeInt(je, m_player.m_enablePickupOnDestroy);
+  je->addTableMember(je, "seth", 4);
+  je->writeInt(je, m_player.m_enableScreenShake);
   
   je->addTableMember(je, "cargos", 6);
   je->startArray(je);
@@ -586,6 +594,8 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_player.m_enableDebug = json_intValue(_value); 
   } else if (strcmp(_key, "setp") == 0) {
     m_player.m_enablePickupOnDestroy = json_intValue(_value); 
+  } else if (strcmp(_key, "seth") == 0) {
+    m_player.m_enableScreenShake = json_intValue(_value); 
   } else if (strcmp(_key, "seta") == 0) {
     m_player.m_enableAutosave = json_intValue(_value); 
     m_deserialiseArrayID = 0; // Note "one behind"

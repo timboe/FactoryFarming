@@ -9,11 +9,29 @@
 #include "ui.h"
 #include "buildings/conveyor.h"
 
+float m_trauma = 0.0f, m_decay = 0.0f;
+
 void chunkAddToRender(struct Chunk_t* _chunk, uint8_t _zoom);
 
 /// ///
 
+void addTrauma(float _amount) {
+  m_trauma += _amount;
+  m_decay = _amount;
+}
+
 void render() {
+
+  struct Player_t* p = getPlayer();
+
+  if (p->m_enableScreenShake && m_decay > 0.0f) {
+    m_decay -= TRAUMA_DECAY;
+    m_trauma += (m_trauma > 0 ? -m_decay : m_decay);
+    pd->display->setOffset(0, m_trauma * TRAUMA_AMPLIFICATION);
+  } else {
+    pd->display->setOffset(0, 0);
+  }
+
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->setDrawOffset(getOffX(), getOffY());
 
@@ -24,7 +42,7 @@ void render() {
   }
 
   // Draw FPS indicator (dbg only)
-  if (getPlayer()->m_enableDebug) {
+  if (p->m_enableDebug) {
     pd->system->drawFPS(0, 0);
   }
 }

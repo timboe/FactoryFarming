@@ -4,3 +4,5 @@
 void render(void);
 
 void updateRenderList(void);
+
+void addTrauma(float _amount);

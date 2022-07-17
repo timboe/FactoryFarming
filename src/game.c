@@ -182,6 +182,8 @@ void tickFar() {
   }
 } 
 
+
+
 int gameLoop(void* _data) {
   ++m_frameCount;
 
@@ -194,7 +196,7 @@ int gameLoop(void* _data) {
   if (getGameMode() < kMenuBuy) {
     movePlayer();
   }
-
+  
   tickNear();
   tickFar();
 
@@ -282,4 +284,6 @@ void initGame() {
   pd->system->addMenuItem("load", menuOptionsCallbackLoad, NULL);
 
   pd->system->addMenuItem("save", menuOptionsCallbackSave, NULL);
+
+  pd->graphics->setBackgroundColor(kColorBlack);
 }

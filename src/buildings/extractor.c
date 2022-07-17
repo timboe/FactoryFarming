@@ -73,8 +73,12 @@ void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick) {
 
 
 void mineUpdateFn(struct Building_t* _building, uint8_t _tick) {
-  if (_building->m_next[0]->m_cargo == NULL) {
-    newCargo(_building->m_next[0], EDesc[_building->m_subType.extractor].out, _tick == NEAR_TICK_AMOUNT);
+  _building->m_progress += _tick;
+  if (_building->m_progress >= MAX_DROP_RATE) {
+    _building->m_progress = 0;
+    if (_building->m_next[0]->m_cargo == NULL) {
+      newCargo(_building->m_next[0], EDesc[_building->m_subType.extractor].out, _tick == NEAR_TICK_AMOUNT);
+    }
   }
 }
 
@@ -129,7 +133,7 @@ void buildingSetupExtractor(struct Building_t* _building) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     _building->m_image[zoom] = getSprite48_byidx( EDesc[_building->m_subType.extractor].sprite + _building->m_dir, zoom); 
 
-    PDRect bound = {.x = (COLLISION_OFFSET/2)*zoom, .y = (COLLISION_OFFSET/2)*zoom, .width = (EXTRACTOR_PIX - COLLISION_OFFSET)*zoom, .height = (EXTRACTOR_PIX - COLLISION_OFFSET)*zoom};
+    PDRect bound = {.x = (COLLISION_OFFSET_BIG/2)*zoom, .y = (COLLISION_OFFSET_BIG/2)*zoom, .width = (EXTRACTOR_PIX - COLLISION_OFFSET_BIG)*zoom, .height = (EXTRACTOR_PIX - COLLISION_OFFSET_BIG)*zoom};
     if (_building->m_sprite[zoom] == NULL) _building->m_sprite[zoom] = pd->sprite->newSprite();
     pd->sprite->setCollideRect(_building->m_sprite[zoom], bound);
     pd->sprite->moveTo(_building->m_sprite[zoom], 

@@ -90,6 +90,15 @@ void doPlace() {
     case kNUICats: break;
   }
   if (placed) {
+    switch (selectedCat) {
+      case kUICatPlant:  addTrauma(0.5f); break;
+      case kUICatConv:  addTrauma(0.5f); break;
+      case kUICatExtractor: addTrauma(1.0f); break;
+      case kUICatFactory: addTrauma(1.0f); break;
+      case kUICatUtility: if (selectedID != kConveyorGrease) addTrauma(0.5f); break;
+      default: break;
+    }
+    
     modOwned(selectedCat, selectedID, /*add=*/ false);
     const enum kUITutorialStage tut = getTutorialStage(); 
     // Tutorial

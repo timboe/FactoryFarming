@@ -63,6 +63,11 @@
  #define TUT_Y_SPACING 13
  #define TUT_Y_SHFT 4
 
+#define MAX_DROP_RATE 8
+
+#define TRAUMA_DECAY 0.05f;
+#define TRAUMA_AMPLIFICATION 4
+
 // How big is the world in X and Y
 #define WORLD_CHUNKS_X 12
 #define WORLD_CHUNKS_Y 12
@@ -127,7 +132,8 @@
 #define ACTIVATE_DISTANCE (TILE_PIX*3)
 
 // Shrink the collision boxes from the edge of the sprite, feels better
-#define COLLISION_OFFSET (TILE_PIX/2 + 2)
+#define COLLISION_OFFSET_BIG TILE_PIX
+#define COLLISION_OFFSET_SMALL (TILE_PIX/2)
 
 // Out of 1000
 #define CLUTTER_CHANCE 2

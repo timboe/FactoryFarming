@@ -141,7 +141,7 @@ void buildingSetupSpecial(struct Building_t* _building) {
       case kNSpecialSubTypes:;
     }
 
-    PDRect bound = {.x = (COLLISION_OFFSET/2)*zoom, .y = (COLLISION_OFFSET/2)*zoom, .width = (EXTRACTOR_PIX-COLLISION_OFFSET)*zoom, .height = (EXTRACTOR_PIX-COLLISION_OFFSET)*zoom};
+    PDRect bound = {.x = (COLLISION_OFFSET_BIG/2)*zoom, .y = (COLLISION_OFFSET_BIG/2)*zoom, .width = (EXTRACTOR_PIX-COLLISION_OFFSET_BIG)*zoom, .height = (EXTRACTOR_PIX-COLLISION_OFFSET_BIG)*zoom};
     if (_building->m_sprite[zoom] == NULL) _building->m_sprite[zoom] = pd->sprite->newSprite();
     pd->sprite->setCollideRect(_building->m_sprite[zoom], bound);
     pd->sprite->moveTo(_building->m_sprite[zoom], 

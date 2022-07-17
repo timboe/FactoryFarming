@@ -703,13 +703,13 @@ void addObstacles() {
       }
 
       LCDSprite* obstacle_x1 = pd->sprite->newSprite();
-      PDRect bound_x1 = {.x = (COLLISION_OFFSET/2), .y = (COLLISION_OFFSET/2), .width = TILE_PIX - COLLISION_OFFSET, .height = TILE_PIX - COLLISION_OFFSET};
+      PDRect bound_x1 = {.x = (COLLISION_OFFSET_SMALL/2), .y = (COLLISION_OFFSET_SMALL/2), .width = TILE_PIX - COLLISION_OFFSET_SMALL, .height = TILE_PIX - COLLISION_OFFSET_SMALL};
       pd->sprite->setCollideRect(obstacle_x1, bound_x1);
       pd->sprite->moveTo(obstacle_x1, x * TILE_PIX, y * TILE_PIX);
 
 
       LCDSprite* obstacle_x2 = pd->sprite->newSprite();
-      PDRect bound_x2 = {.x = COLLISION_OFFSET, .y = COLLISION_OFFSET, .width = (TILE_PIX-COLLISION_OFFSET)*2, .height = (TILE_PIX-COLLISION_OFFSET)*2};
+      PDRect bound_x2 = {.x = COLLISION_OFFSET_SMALL, .y = COLLISION_OFFSET_SMALL, .width = (TILE_PIX-COLLISION_OFFSET_SMALL)*2, .height = (TILE_PIX-COLLISION_OFFSET_SMALL)*2};
       pd->sprite->setCollideRect(obstacle_x2, bound_x2);
       pd->sprite->moveTo(obstacle_x2, (x * TILE_PIX)*2, (y * TILE_PIX)*2);
 
