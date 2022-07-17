@@ -140,8 +140,14 @@ void drawUIInspectFactory(struct Building_t* _building) {
 
   static char text[128];
   uint8_t y = 1;
-  snprintf(text, 128, "%s (Time: %is)", toStringBuilding(_building->m_type, _building->m_subType, false), FDesc[fst].time);
+  snprintf(text, 128, "%s", toStringBuilding(_building->m_type, _building->m_subType, false));
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
+  snprintf(text, 128, "Prod. Time: %is", FDesc[fst].time);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*6 - TUT_Y_SHFT);
+
+  snprintf(text, 128, "Time Remaining: %is", FDesc[fst].time - (_building->m_progress) / TICKS_PER_SEC);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*13, TUT_Y_SPACING*6 - TUT_Y_SHFT);
 
   snprintf(text, 128, "Out:      %s (%i)", toStringCargoByType( FDesc[fst].out ), _building->m_stored[0]);
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);

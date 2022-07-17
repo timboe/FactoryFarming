@@ -44,7 +44,7 @@ const struct ConveyorDescriptor_t CDesc[] = {
 const struct PlantDescriptor_t PDesc[] = {
   {.subType = kCarrotPlant, .unlock = 0, .price = 0, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSiltyGround, .out = kCarrot},
   {.subType = kAppleTree, .unlock = 10000, .price = 100, .sprite = SID(8, 8), .time = 50, .wetness = kMoist, .soil = kChalkyGround, .out = kApple},
-  {.subType = kWheatPlant, .unlock = 10000, .price = 100, .sprite = SID(1, 8), .time = 50, .wetness = kDry, .soil = kPeatyGround, .out = kWheat},
+  {.subType = kWheatPlant, .unlock = 10000, .price = 100, .sprite = SID(11, 8), .time = 50, .wetness = kDry, .soil = kPeatyGround, .out = kWheat},
   {.subType = kP4, .unlock = DIS, .price = 1, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kCarrot},
   {.subType = kP5, .unlock = DIS, .price = 1, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kCarrot},
   {.subType = kP6, .unlock = DIS, .price = 1, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kCarrot},
@@ -67,14 +67,14 @@ const struct UtilityDescriptor_t UDesc[] = {
 //{kCropHarvesterSmall, kPump, kChalkQuarry, kCropHarvesterLarge, kNExtractorSubTypes};
 const struct ExtractorDescriptor_t EDesc[] = {
   {.subType = kCropHarvesterSmall, .unlock = 500, .price = 50, .UIIcon = SID(4,16), .sprite = BID(0,0), .out = kNoCargo},
-  {.subType = kPump, .unlock = 10000, .price = 100, .UIIcon = SID(12,1), .sprite = BID(0,3), .out = kWaterBarrel},
+  {.subType = kPump, .unlock = 10000, .price = 100, .UIIcon = SID(12,11), .sprite = BID(0,3), .out = kWaterBarrel},
   {.subType = kChalkQuarry, .unlock = 750, .price = 75, .UIIcon = SID(12,12), .sprite = BID(0,6), .out = kChalk},
   {.subType = kCropHarvesterLarge, .unlock = 10000, .price = 500, .UIIcon = SID(8,16), .sprite = BID(0,0), .out = kNoCargo}
 };
 
 //{kVitiminFac, kF2, kF3, kF4, kF5, kF6, kF7, kF8, kF9,  k10, kF11 kNFactorySubTypes};
 const struct FactoryDescriptor_t FDesc[] = {
-  {.subType = kVitiminFac, .unlock = 2000, .price = 100, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kChalk, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kVitiminFac, .unlock = 2000, .price = 100, .time = 2, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kChalk, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kF2, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kF3, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kF4, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},

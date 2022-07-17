@@ -466,6 +466,11 @@ void drawUIInspect() {
   pd->graphics->pushContext(m_UIBitmapTutorialMain);
   renderTutorialInspectRect(false);
 
+  // Draw grid
+  for (int32_t b = 0; b < 4; ++b) {
+    pd->graphics->drawRect(TILE_PIX, TUT_Y_SPACING*(3+b) - TUT_Y_SHFT, SCREEN_PIX_X-2*TILE_PIX, TUT_Y_SPACING + 1, kColorBlack);
+  }
+
   struct Location_t* loc = getPlayerLocation();
   struct Tile_t* t = getTile_fromLocation(loc);
   if (loc->m_cargo) {
@@ -480,11 +485,6 @@ void drawUIInspect() {
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   
   if (loc->m_building) {
-    // TODO add rotation?
-    for (int32_t b = 0; b < 4; ++b) {
-      pd->graphics->drawRect(TILE_PIX, TUT_Y_SPACING*(3+b) - TUT_Y_SHFT, SCREEN_PIX_X-2*TILE_PIX, TUT_Y_SPACING + 1, kColorBlack);
-    }
-    
     switch (loc->m_building->m_type) {
       case kConveyor:; drawUIInspectConveyor(loc->m_building); break;
       case kPlant:; drawUIInspectPlant(loc->m_building); break;

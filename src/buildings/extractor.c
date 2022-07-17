@@ -147,5 +147,35 @@ void buildingSetupExtractor(struct Building_t* _building) {
 }
 
 void drawUIInspectExtractor(struct Building_t* _building) {
-  
+  const enum kExtractorSubType est = _building->m_subType.extractor;
+
+  static char text[128];
+  uint8_t y = 1;
+  snprintf(text, 128, "%s", toStringBuilding(_building->m_type, _building->m_subType, false));
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
+  if (est == kCropHarvesterSmall || est == kCropHarvesterLarge) {
+
+    for (int32_t hopper = 0; hopper < 3; ++hopper) {
+      if (!_building->m_stored[hopper]) continue;
+
+      snprintf(text, 128, "Hopper %i:       %s (%i)", 
+        (int)hopper, 
+        toStringCargoByType( _building->m_stored[(MAX_STORE/2) + hopper] ), 
+        _building->m_stored[hopper]);
+      pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+      pd->graphics->setDrawMode(kDrawModeCopy);
+      pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ _building->m_stored[(MAX_STORE/2) + hopper] ].UIIcon, 1), TILE_PIX*6 + TILE_PIX/4, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+      pd->graphics->setDrawMode(kDrawModeFillBlack);
+    }
+
+  } else {
+
+    snprintf(text, 128, "Out:       %s", toStringCargoByType( EDesc[est].out ));
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->setDrawMode(kDrawModeCopy);
+    pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ EDesc[est].out ].UIIcon, 1), TILE_PIX*4, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+    pd->graphics->setDrawMode(kDrawModeFillBlack);
+
+  }
 }

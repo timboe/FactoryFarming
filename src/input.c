@@ -231,8 +231,9 @@ void clickHandlePick(uint32_t _buttonPressed) {
 
 void clickHandleInspect(uint32_t _buttonPressed) {
   if (characterMoveInput(_buttonPressed)) { /*noop*/} 
-  else if (kButtonA == _buttonPressed) setGameMode(kWanderMode);
-  else if (kButtonB == _buttonPressed) setGameMode(kWanderMode);
+  // Note: The tutorial and inspect boxes share the samme UI component
+  else if (kButtonA == _buttonPressed) { checkReturnDismissTutorialMsg(); setGameMode(kWanderMode); }
+  else if (kButtonB == _buttonPressed) { checkReturnDismissTutorialMsg(); setGameMode(kWanderMode); }
 }
 
 void clickHandleDestroy(uint32_t _buttonPressed) {

@@ -9,7 +9,7 @@ int8_t getWaterBonus(enum kGroundWetness _likes, enum kGroundWetness _has);
 
 int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has);
 
-void setGrowdownTimer(struct Building_t* _building);
+uint16_t getGrowdownTimer(struct Building_t* _building);
 
 /// ///
 
@@ -25,21 +25,38 @@ void plantTrySpawnCargo(struct Building_t* _building, uint8_t _tick) {
 
   newCargo(loc, PDesc[_building->m_subType.plant].out, _tick == NEAR_TICK_AMOUNT);
 
-  setGrowdownTimer(_building);
+  _building->m_progress = getGrowdownTimer(_building);
   
   if (++_building->m_mode.mode16 == N_CROPS_BEFORE_FARMLAND || _building->m_mode.mode16 == 2*N_CROPS_BEFORE_FARMLAND ) {
     renderChunkBackgroundImage(loc->m_chunk);
   }
 }
 
-void setGrowdownTimer(struct Building_t* _building) {
-  // TODO growing bonuses?
-  _building->m_progress = PDesc[_building->m_subType.plant].time * TICKS_PER_SEC;
+uint16_t getGrowdownTimer(struct Building_t* _building) {
+  const enum kPlantSubType pst = _building->m_subType.plant;
+  const struct Tile_t* t = getTile_fromLocation( _building->m_location );
+  const int8_t gb = getGroundBonus( PDesc[pst].soil, getGroundType( t->m_tile ) );
+  const int8_t wb = getWaterBonus( PDesc[pst].wetness, getWetness( t->m_wetness ) );
+  const int8_t bonus = gb + wb;
+  float growTime = PDesc[_building->m_subType.plant].time * TICKS_PER_SEC;
+  if (bonus >= 2) {
+    growTime *= 0.7f;
+  } else if (bonus == 1) {
+    growTime *= 0.9f;
+  } else if (bonus == -1) {
+    growTime *= 2.0f;
+  } else if (bonus <= -2) {
+    growTime = UINT16_MAX;
+  }
+  return (uint16_t)growTime;
 }
 
 #define CARGO_BOUNCE_OFFSET 4
 void plantUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
-  _building->m_progress -= _tick;
+
+  if (_building->m_location->m_cargo == NULL) {
+    _building->m_progress -= _tick;
+  }
 
   if (_tick == NEAR_TICK_AMOUNT && _building->m_location->m_cargo) {
     _building->m_stored[0] = _building->m_stored[0] + (_building->m_stored[1] == 0 ? 1 : -1);
@@ -84,7 +101,7 @@ void buildingSetupPlant(struct Building_t* _building) {
 
   clearLocation(_building->m_location, /*cargo*/ true, /*building*/ false);
 
-  setGrowdownTimer(_building);
+  _building->m_progress = getGrowdownTimer(_building);
 }
 
 int8_t getWaterBonus(enum kGroundWetness _likes, enum kGroundWetness _has) {
@@ -261,5 +278,60 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
 }
 
 void drawUIInspectPlant(struct Building_t* _building) {
-  
+  pd->graphics->drawLine(SCREEN_PIX_X/2, TUT_Y_SPACING*3 - 4, SCREEN_PIX_X/2, TUT_Y_SPACING*7 - 4, 1, kColorBlack);
+  pd->graphics->drawLine(TILE_PIX*21,    TUT_Y_SPACING*3 - 4, TILE_PIX*21,    TUT_Y_SPACING*7 - 4, 1, kColorBlack);
+
+  const enum kPlantSubType pst = _building->m_subType.plant;
+
+  static char text[128];
+  uint8_t y = 1;
+  snprintf(text, 128, "%s", toStringBuilding(_building->m_type, _building->m_subType, false));
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
+  const struct Tile_t* t = getTile_fromLocation( _building->m_location );
+  const int8_t gb = getGroundBonus( PDesc[pst].soil, getGroundType( t->m_tile ) );
+  const int8_t wb = getWaterBonus( PDesc[pst].wetness, getWetness( t->m_wetness ) );
+  const uint16_t growTime = getGrowdownTimer(_building);
+
+  snprintf(text, 128, "Likes: %s", toStringSoil( PDesc[pst].soil ) );
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
+  snprintf(text, 128, "Has: %s", toStringSoil( getGroundType( t->m_tile )) ); 
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
+
+  snprintf(text, 128, "Likes: %s Soil", toStringWetness( PDesc[pst].wetness ) ); 
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
+  snprintf(text, 128, "Has: %s Soil", toStringWetness( getWetness(t->m_wetness) ) ); 
+  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
+
+  if (_building->m_progress > UINT16_MAX/2) {
+    snprintf(text, 128, "Grow Time: Cannot Grow Here"); 
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 128, "Time Remaining: ---"); 
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  } else {
+    snprintf(text, 128, "Grow Time: %is", growTime / TICKS_PER_SEC); 
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 128, "Time Remaining: %is", _building->m_progress / TICKS_PER_SEC); 
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  }
+
+  pd->graphics->setDrawMode(kDrawModeCopy);
+  int16_t sprite = 0;
+  if (gb < 0)   sprite = SPRITE16_ID(1, 19);
+  else if (!gb) sprite = SPRITE16_ID(2, 19);
+  else          sprite = SPRITE16_ID(0, 19);
+  pd->graphics->drawBitmap(getSprite16_byidx(sprite, 1), TILE_PIX*21 + TILE_PIX/2, TUT_Y_SPACING*3 - TUT_Y_SHFT - 1, kBitmapUnflipped);
+
+  if (wb < 0)   sprite = SPRITE16_ID(1, 19);
+  else if (!wb) sprite = SPRITE16_ID(2, 19);
+  else          sprite = SPRITE16_ID(0, 19);
+  pd->graphics->drawBitmap(getSprite16_byidx(sprite, 1), TILE_PIX*21 + TILE_PIX/2, TUT_Y_SPACING*4 - TUT_Y_SHFT - 1, kBitmapUnflipped);
+
+  if (gb+wb < 0)       sprite = SPRITE16_ID(1, 19);
+  else if (gb+wb == 0) sprite = SPRITE16_ID(2, 19);
+  else                 sprite = SPRITE16_ID(0, 19);
+  pd->graphics->drawBitmap(getSprite16_byidx(sprite, 1), TILE_PIX*21 + TILE_PIX/2, TUT_Y_SPACING*5 - TUT_Y_SHFT - 1, kBitmapUnflipped);
+
 }
