@@ -75,7 +75,7 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
     nextLoc->m_cargo = theCargo;
     loc->m_cargo = NULL;
     // Carry over any excess ticks
-    if (nextLoc->m_building) {
+    if (nextLoc->m_building && nextLoc->m_building->m_type == kConveyor) {
       nextLoc->m_building->m_progress = _building->m_progress - TILE_PIX;
     }
     // Cargo moves between chunks?
@@ -86,20 +86,20 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
       queueUpdateRenderList();
     }
     // Cycle outputs
-    switch (_building->m_subType.conveyor) {
-      case kSplitI:; case kSplitL:; _building->m_mode.mode16 = (_building->m_mode.mode16 + 1) % 2; break;
-      case kSplitT:; _building->m_mode.mode16 = (_building->m_mode.mode16 + 1) % 3; break;
-      case kBelt:; case kFilterI:; case kFilterL:; case kTunnelIn:; case kTunnelOut:; case kNConvSubTypes:; break;
-    }
-
-    // Cycle outputs varient 2
-    //uint16_t next = 0;
     //switch (_building->m_subType.conveyor) {
-    //  case kSplitI:; case kSplitL:; next = (_building->m_mode.mode16 + 1) % 2; break;
-    //  case kSplitT:; next = (_building->m_mode.mode16 + 1) % 3; break;
+    //  case kSplitI:; case kSplitL:; _building->m_mode.mode16 = (_building->m_mode.mode16 + 1) % 2; break;
+    //  case kSplitT:; _building->m_mode.mode16 = (_building->m_mode.mode16 + 1) % 3; break;
     //  case kBelt:; case kFilterI:; case kFilterL:; case kTunnelIn:; case kTunnelOut:; case kNConvSubTypes:; break;
     //}
-    //if (_building->m_next[ next ]->m_cargo == NULL) _building->m_mode.mode16 = next;
+
+    // Cycle outputs varient 2
+    uint16_t next = 0;
+    switch (_building->m_subType.conveyor) {
+      case kSplitI:; case kSplitL:; next = (_building->m_mode.mode16 + 1) % 2; break;
+      case kSplitT:; next = (_building->m_mode.mode16 + 1) % 3; break;
+      case kBelt:; case kFilterI:; case kFilterL:; case kTunnelIn:; case kTunnelOut:; case kNConvSubTypes:; break;
+    }
+    if (_building->m_next[ next ]->m_cargo == NULL) _building->m_mode.mode16 = next;
   }
 }
 

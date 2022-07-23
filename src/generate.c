@@ -129,7 +129,6 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
       } else {
         // For other tiles, draw them on top of a background tile
         uint16_t nearby = getNearbyBackground(_chunk, u, v);
-        pd->system->logToConsole("NEABY %i", nearby);
         pd->graphics->drawBitmap(getSprite16_byidx(nearby, 1), 
           u * TILE_PIX, v * TILE_PIX, kBitmapUnflipped);
       }

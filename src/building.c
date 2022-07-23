@@ -74,7 +74,7 @@ const struct ExtractorDescriptor_t EDesc[] = {
 
 //{kVitiminFac, kF2, kF3, kF4, kF5, kF6, kF7, kF8, kF9,  k10, kF11 kNFactorySubTypes};
 const struct FactoryDescriptor_t FDesc[] = {
-  {.subType = kVitiminFac, .unlock = 2000, .price = 100, .time = 2, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kChalk, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kVitiminFac, .unlock = 2000, .price = 100, .time = 6, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kChalk, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kF2, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kF3, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kF4, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},

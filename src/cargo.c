@@ -7,7 +7,7 @@
 
 //{kNoCargo, kApple, kCheese, kCarrot, kWheat, kWaterBarrel, kChalk, kVitamin, kNCargoType};
 const struct CargoDescriptor_t CargoDesc[] = {
-  {.subType = kNoCargo, .price = 0, .UIIcon = SID(11,10)},
+  {.subType = kNoCargo, .price = 0, .UIIcon = SID(0,0)},
   {.subType = kApple, .price = 2, .UIIcon = SID(8,7)},
   {.subType = kCheese, .price = 8, .UIIcon = SID(9,7)},
   {.subType = kCarrot, .price = 1, .UIIcon = SID(10,7)},
