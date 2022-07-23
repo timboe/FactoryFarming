@@ -83,7 +83,6 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
       //pd->system->logToConsole("CHANGE CHUNK");
       chunkRemoveCargo(loc->m_chunk, theCargo);
       chunkAddCargo(nextLoc->m_chunk, theCargo);
-      queueUpdateRenderList();
     }
     // Cycle outputs
     //switch (_building->m_subType.conveyor) {

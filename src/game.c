@@ -23,8 +23,6 @@ uint16_t m_farTickCount = 0;
 
 uint16_t m_autoSaveTimer = 0;
 
-bool m_queueUpdateRenderList = false;
-
 void tickNear(void);
 
 void tickFar(void);
@@ -33,10 +31,6 @@ void tickFar(void);
 
 void setPDPtr(PlaydateAPI* _p) {
   pd = _p;
-}
-
-void queueUpdateRenderList() {
-  m_queueUpdateRenderList = true;
 }
 
 uint16_t getNearTickCount() {
@@ -108,10 +102,7 @@ void tickFar() {
   }
   m_farTickCount = 0;
 
-  if (m_queueUpdateRenderList) {
-    m_queueUpdateRenderList = false;
-    updateRenderList();
-  }
+  updateRenderList();
 
   static uint32_t tickTock = 0;
   uint8_t zoom = getZoom();
@@ -196,7 +187,7 @@ int gameLoop(void* _data) {
   if (getGameMode() < kMenuBuy) {
     movePlayer();
   }
-  
+
   tickNear();
   tickFar();
 
@@ -285,5 +276,4 @@ void initGame() {
 
   pd->system->addMenuItem("save", menuOptionsCallbackSave, NULL);
 
-  pd->graphics->setBackgroundColor(kColorBlack);
 }

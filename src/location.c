@@ -28,13 +28,11 @@ struct Location_t* getLocation(int32_t _x, int32_t _y) {
 }
 
 void clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuilding) {
-  bool removed = false;
 
   if (_clearCargo && _loc->m_cargo) {
     chunkRemoveCargo(_loc->m_chunk, _loc->m_cargo);
     cargoManagerFreeCargo(_loc->m_cargo);
     _loc->m_cargo = NULL;
-    removed = true;
   }
 
   if (_clearBuilding && _loc->m_building) {
@@ -80,12 +78,8 @@ void clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
 
     _loc->m_building = NULL;
     _loc->m_notOwned = false;
-    removed = true;
   }
 
-  if (removed) {
-    queueUpdateRenderList();
-  }
 }
 
 

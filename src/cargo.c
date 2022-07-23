@@ -128,7 +128,6 @@ bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addToDisplay
   chunkAddCargo(chunk, cargo);
 
   if (_addToDisplay) pd->sprite->addSprite(cargo->m_sprite[getZoom()]);
-  else queueUpdateRenderList(); // TODO, make this tick in the background at the slow tick rate
   return true;
 }
 
