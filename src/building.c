@@ -340,20 +340,26 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     wideRedraw = true;
   }
 
-  // Bake into the background
-  if (_type >= kExtractor || wideRedraw) {
-    renderChunkBackgroundImageAround(_loc->m_chunk);
-  } else {
-    renderChunkBackgroundImage(_loc->m_chunk);
-  }
+  // The Special objects get added during gen - don't redraw for these
+  if (_type != kSpecial) {
 
-  // Special - If placing an input tunnel, then also place the output tunnel too (canBePlacedConveyor will have checked that this is all OK)
-  if (_type == kConveyor && _subType.conveyor == kTunnelIn) {
-    struct Location_t* tunnelOut = getTunnelOutLocation(_loc, _dir);
-    newBuilding(tunnelOut, _dir, kConveyor, (union kSubType) {.conveyor = kTunnelOut});
-  }
+    // Bake into the background
+    if (_type >= kExtractor || wideRedraw) {
+      renderChunkBackgroundImageAround(_loc->m_chunk);
+    } else {
+      renderChunkBackgroundImage(_loc->m_chunk);
+    }
 
-  updateRenderList();
+    // Special - If placing an input tunnel, then also place the output tunnel too (canBePlacedConveyor will have checked that this is all OK)
+    if (_type == kConveyor && _subType.conveyor == kTunnelIn) {
+      struct Location_t* tunnelOut = getTunnelOutLocation(_loc, _dir);
+      newBuilding(tunnelOut, _dir, kConveyor, (union kSubType) {.conveyor = kTunnelOut});
+    }
+
+    // We add these at generate, we don't want to be updating the sprite list here
+     updateRenderList();
+
+   }
 
   return newToChunk;
 }

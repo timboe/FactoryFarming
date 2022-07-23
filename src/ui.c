@@ -25,8 +25,6 @@
 
 enum kGameMode m_mode;
 
-uint8_t m_queueSave;
-
 LCDSprite* m_UISpriteBottom;
 LCDBitmap* m_UIBitmapBottom;
 
@@ -36,9 +34,11 @@ LCDBitmap* m_UIBitmapRightRotated;
 
 LCDSprite* m_UISpriteSave;
 LCDSprite* m_UISpriteLoad;
+LCDSprite* m_UISpriteGen;
 
 LCDBitmap* m_UIBitmapSave;
 LCDBitmap* m_UIBitmapLoad;
+LCDBitmap* m_UIBitmapGen;
 
 LCDSprite* m_UISpriteTop;
 LCDBitmap* m_UIBitmapTop;
@@ -141,10 +141,6 @@ LCDBitmap* getUIContentItemBitmap(enum kUICat _c, uint16_t _i, uint16_t _r) {
   return m_UIBitmapItems[_c][_i][_r];
 }
 
-void queueSave() {
-  m_queueSave = 1;
-}
-
 enum kGameMode getGameMode() {
   return m_mode;
 }
@@ -160,6 +156,12 @@ void UIDirtyRight() {
 void UIDirtyMain() {
   m_UIDirtyMain = true;
 }
+
+LCDSprite* getSaveSprite() { return m_UISpriteSave; } 
+
+LCDSprite* getLoadSprite() { return m_UISpriteLoad; }
+
+LCDSprite* getGenSprite() { return m_UISpriteGen; }
 
 uint16_t getCursorRotation() {
   enum kUICat c = m_mode;
@@ -236,17 +238,6 @@ void updateUI(int _fc) {
           distanceFromWarp() >= ACTIVATE_DISTANCE &&
           distanceFromOut() >= ACTIVATE_DISTANCE &&
           distanceFromIn() >= ACTIVATE_DISTANCE) drawUITop(NULL);
-    }
-  }
-
-  if (m_queueSave) {
-    if (m_queueSave == 1) {
-      pd->sprite->addSprite(m_UISpriteSave);
-      m_queueSave = 2;
-    } else if (m_queueSave == 2) {
-      save();
-      m_queueSave = 0;
-      pd->sprite->removeSprite(m_UISpriteSave);
     }
   }
 
@@ -1051,12 +1042,14 @@ void initiUI() {
   m_UISpriteTop = pd->sprite->newSprite();
   m_UISpriteSave = pd->sprite->newSprite();
   m_UISpriteLoad = pd->sprite->newSprite();
+  m_UISpriteGen = pd->sprite->newSprite();
   m_UISpriteBottom = pd->sprite->newSprite();
   m_UISpriteRight = pd->sprite->newSprite();
 
   m_UIBitmapTop = pd->graphics->newBitmap(SCREEN_PIX_X/2, TILE_PIX*2, kColorClear);
-  m_UIBitmapSave = pd->graphics->newBitmap(SCREEN_PIX_X/2, TILE_PIX*2, kColorClear);
-  m_UIBitmapLoad = pd->graphics->newBitmap(SCREEN_PIX_X/2, TILE_PIX*2, kColorClear);
+  m_UIBitmapSave = pd->graphics->newBitmap(DEVICE_PIX_X/2, TILE_PIX*2, kColorClear);
+  m_UIBitmapGen = pd->graphics->newBitmap(DEVICE_PIX_X/2, TILE_PIX*2, kColorClear);
+  m_UIBitmapLoad = pd->graphics->newBitmap(DEVICE_PIX_X/2, TILE_PIX*2, kColorClear);
   m_UIBitmapBottom = pd->graphics->newBitmap(DEVICE_PIX_X, TILE_PIX, kColorBlack);
   m_UIBitmapRight = pd->graphics->newBitmap(TILE_PIX, DEVICE_PIX_Y, kColorBlack);
   m_UIBitmapRightRotated = pd->graphics->newBitmap(DEVICE_PIX_Y, TILE_PIX, kColorBlack);
@@ -1071,35 +1064,52 @@ void initiUI() {
 
   pd->sprite->setBounds(m_UISpriteSave, boundTop);
   pd->sprite->setImage(m_UISpriteSave, m_UIBitmapSave, kBitmapUnflipped);
-  pd->sprite->moveTo(m_UISpriteSave, SCREEN_PIX_X/2, SCREEN_PIX_Y/2);
+  pd->sprite->moveTo(m_UISpriteSave, DEVICE_PIX_X/2, DEVICE_PIX_Y/2);
   pd->sprite->setZIndex(m_UISpriteSave, Z_INDEX_UI_TT);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteSave, 1);
   pd->sprite->setVisible(m_UISpriteSave, 1);
 
   pd->graphics->pushContext(m_UIBitmapSave);
   pd->graphics->setLineCapStyle(kLineCapStyleRound);
-  pd->graphics->drawLine(TILE_PIX, TILE_PIX, SCREEN_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorBlack);
-  pd->graphics->setDrawMode(kDrawModeFillWhite);
+  pd->graphics->drawLine(TILE_PIX, TILE_PIX, DEVICE_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorWhite);
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
   setRoobert24();
-  int32_t tlen = pd->graphics->getTextWidth(getRoobert24(), "SAVING", 16, kASCIIEncoding, 0);
-  pd->graphics->drawText("SAVING", 6, kASCIIEncoding, (SCREEN_PIX_X/2 - tlen)/2, 0);
+  int32_t tlen = pd->graphics->getTextWidth(getRoobert24(), "SAVING", 6, kASCIIEncoding, 0);
+  pd->graphics->drawText("SAVING", 6, kASCIIEncoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
+  pd->graphics->popContext();
+
+  pd->sprite->setBounds(m_UISpriteGen, boundTop);
+  pd->sprite->setImage(m_UISpriteGen, m_UIBitmapGen, kBitmapUnflipped);
+  pd->sprite->moveTo(m_UISpriteGen, DEVICE_PIX_X/2, DEVICE_PIX_Y/2);
+  pd->sprite->setZIndex(m_UISpriteGen, Z_INDEX_UI_TT);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteGen, 1);
+  pd->sprite->setVisible(m_UISpriteGen, 1);
+
+  pd->graphics->pushContext(m_UIBitmapGen);
+  pd->graphics->setLineCapStyle(kLineCapStyleRound);
+  pd->graphics->drawLine(TILE_PIX, TILE_PIX, DEVICE_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorWhite);
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+  setRoobert24();
+  tlen = pd->graphics->getTextWidth(getRoobert24(), "GENERATING", 10, kASCIIEncoding, 0);
+  pd->graphics->drawText("GENERATING", 10, kASCIIEncoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
   pd->graphics->popContext();
 
   pd->sprite->setBounds(m_UISpriteLoad, boundTop);
-  pd->sprite->setImage(m_UISpriteLoad, m_UIBitmapSave, kBitmapUnflipped);
-  pd->sprite->moveTo(m_UISpriteLoad, SCREEN_PIX_X/2, SCREEN_PIX_Y/2);
+  pd->sprite->setImage(m_UISpriteLoad, m_UIBitmapLoad, kBitmapUnflipped);
+  pd->sprite->moveTo(m_UISpriteLoad, DEVICE_PIX_X/2, DEVICE_PIX_Y/2);
   pd->sprite->setZIndex(m_UISpriteLoad, Z_INDEX_UI_TT);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteLoad, 1);
   pd->sprite->setVisible(m_UISpriteLoad, 1);
 
   pd->graphics->pushContext(m_UIBitmapLoad);
   pd->graphics->setLineCapStyle(kLineCapStyleRound);
-  pd->graphics->drawLine(TILE_PIX, TILE_PIX, SCREEN_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorBlack);
-  pd->graphics->setDrawMode(kDrawModeFillWhite);
+  pd->graphics->drawLine(TILE_PIX, TILE_PIX, DEVICE_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorWhite);
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
   setRoobert24();
-  tlen = pd->graphics->getTextWidth(getRoobert24(), "LOADING", 16, kASCIIEncoding, 0);
-  pd->graphics->drawText("LOADING", 6, kASCIIEncoding, (SCREEN_PIX_X/2 - tlen)/2, 0);
+  tlen = pd->graphics->getTextWidth(getRoobert24(), "LOADING", 7, kASCIIEncoding, 0);
+  pd->graphics->drawText("LOADING", 7, kASCIIEncoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
   pd->graphics->popContext();
+  pd->graphics->setDrawMode(kDrawModeCopy);
 
   PDRect boundBottom = {.x = 0, .y = 0, .width = DEVICE_PIX_X, .height = TILE_PIX};
   pd->sprite->setBounds(m_UISpriteBottom, boundBottom);

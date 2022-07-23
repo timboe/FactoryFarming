@@ -15,34 +15,13 @@ void doWarp() {
   } else if (getOwned(kUICatWarp, selectedID) == 0) { // Not yet unlocked
     const int32_t selectedPrice = getPrice(kUICatWarp, selectedID);
     if (modMoney(-selectedPrice)) {
-      // First save!
-      save();
-      // Create and go to new world!
-      reset(false); // Don't reset the player!
-      setSlot(selectedID);
-      generate();
-      addObstacles();
-      setChunkBackgrounds();
-      showTutorialMsg(getTutorialStage());
-      updateRenderList();
-      // Save this new world to disk too
-      save();
-      // Pick up its availability
-      scanSlots();
+      setForceSlot(selectedID); // This will be the ID of the world we generate
+      doIO(kDoSave, /*and then*/ kDoNewWorld);
     }
   } else { // Unlocked world, switch
-    // First save!
-    save();
-    // Load existing world
-    reset(false); // Don't reset the player!
-    load(selectedID);
-    addObstacles();
-    doWetness();
-    setChunkBackgrounds();
-    showTutorialMsg(getTutorialStage());
-    updateRenderList();
+    setForceSlot(selectedID); // This will be the ID of the slot we load from
+    doIO(kDoSave, /*and then*/ kDoLoad);
   }
-
 }
 
 void populateInfoWarp(bool _visible) {

@@ -771,38 +771,63 @@ void addObstacles() {
   }
 }
 
-void generate() {
-  srand(pd->system->getSecondsSinceEpoch(NULL));
+void generate(uint32_t _actionProgress) {
 
   const uint8_t slot = getSlot();
   uint8_t floorMain = getWorldGround(slot, 0);
-    
-  // Worldgen is very basic for now
-  for (uint16_t i = 0; i < TOT_TILES; ++i) {
-    m_tiles[i].m_tile = (FLOOR_VARIETIES * floorMain) + rand() % FLOOR_VARIETIES;
-  } 
 
-  addSpawn();
+  if (_actionProgress == 1) {
 
-  if (slot == kEmptyWorld) {
+    srand(pd->system->getSecondsSinceEpoch(NULL));
 
-  } else {
-    addBiome(TOT_TILES_X/2, 0, FLOOR_VARIETIES*getWorldGround(slot, 1));
-    addBiome(0, TOT_TILES_Y/2, FLOOR_VARIETIES*getWorldGround(slot, 2));
+  } else if (_actionProgress == 2) {
 
-    doLakesAndRivers(slot);
-    doClutterObstacles();
+      
+    // Worldgen is very basic for now
+    for (uint16_t i = 0; i < TOT_TILES; ++i) {
+      m_tiles[i].m_tile = (FLOOR_VARIETIES * floorMain) + rand() % FLOOR_VARIETIES;
+    } 
+
+  } else if (_actionProgress == 3) {
+
+    addSpawn();
+
+  } else if (_actionProgress == 4) {
+
+    if (slot != kEmptyWorld) {
+      addBiome(TOT_TILES_X/2, 0, FLOOR_VARIETIES*getWorldGround(slot, 1));
+      addBiome(0, TOT_TILES_Y/2, FLOOR_VARIETIES*getWorldGround(slot, 2));
+    }
+
+  } else if (_actionProgress == 5) {
+
+    if (slot != kEmptyWorld) {
+      doLakesAndRivers(slot);
+    }
+
+  } else if (_actionProgress == 6) {
+
+    if (slot != kEmptyWorld) {
+      doClutterObstacles();
+    }
+
+  } else if (_actionProgress == 7) {
+
+    #define STARTX (TILES_PER_CHUNK_X/2)
+
+    newBuilding(getLocation_noCheck(STARTX + 0, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kShop} );
+    newBuilding(getLocation_noCheck(STARTX + 9, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kSellBox} );
+    newBuilding(getLocation_noCheck(STARTX + 18, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kWarp} );
+    newBuilding(getLocation_noCheck(STARTX + 27, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kExportBox} );
+    newBuilding(getLocation_noCheck(STARTX + 36, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kImportBox} );
+
+  } else if (_actionProgress == 8) {
+
+    doWetness();
+
+    // Finished
+    float f; for (int32_t i = 0; i < 10000; ++i) for (int32_t j = 0; j < 100000; ++j) { f*=i*j; }
+    pd->system->logToConsole("Generated %s",  getWorldName(slot, /*mask*/ false));
+
   }
-
-  const uint16_t startX = TILES_PER_CHUNK_X/2;
-
-  newBuilding(getLocation_noCheck(startX + 0, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kShop} );
-  newBuilding(getLocation_noCheck(startX + 9, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kSellBox} );
-  newBuilding(getLocation_noCheck(startX + 18, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kWarp} );
-  newBuilding(getLocation_noCheck(startX + 27, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kExportBox} );
-  newBuilding(getLocation_noCheck(startX + 36, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kImportBox} );
-
-  doWetness();
-
-  pd->system->logToConsole("Generated %s",  getWorldName(slot, /*mask*/ false));
 }

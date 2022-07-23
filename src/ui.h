@@ -24,8 +24,6 @@ enum kUICat {kUICatTool, kUICatPlant, kUICatConv, kUICatExtractor, kUICatFactory
 
 #define TOP_TITLE_OFFSET 34
 
-void queueSave(void);
-
 void addUIToSpriteList(void);
 
 void rotateCursor(bool _increment);
@@ -66,6 +64,12 @@ enum kBuildingType getCatBuildingSubType(enum kUICat _c);
 
 LCDSprite* getCannotAffordSprite(void);
 
+LCDSprite* getSaveSprite(void);
+
+LCDSprite* getLoadSprite(void);
+
+LCDSprite* getGenSprite(void);
+
 LCDBitmap* getInfoBitmap(void);
 
 const char* getRotationAsString(enum kUICat _cat, int16_t _selectedID, uint16_t _rotation);
@@ -93,3 +97,4 @@ void roundedRect(uint16_t _o, uint16_t _w, uint16_t _h, uint16_t _r, LCDColor _c
 void initiUI(void);
 
 void resetUI(void);
+

@@ -177,6 +177,14 @@ void tickFar() {
 
 int gameLoop(void* _data) {
   ++m_frameCount;
+  pd->graphics->setBackgroundColor(kColorBlack);
+
+  if (currentIOAction() != kDoNothing) { 
+    pd->sprite->removeAllSprites();
+    enactIO();
+    pd->sprite->drawSprites();
+    return 1;
+  }
 
   clickHandlerReplacement();
 
@@ -201,7 +209,7 @@ int gameLoop(void* _data) {
   if (p->m_enableAutosave) {
     if (++m_autoSaveTimer > 600*TICK_FREQUENCY) {
       m_autoSaveTimer = 0;
-      queueSave();
+      doIO(kDoSave, /*and then*/ kDoNothing);
     }
   }
 
@@ -209,30 +217,20 @@ int gameLoop(void* _data) {
 }
 
 void menuOptionsCallbackRestart(void* blank) {
-  hardReset(); // Delets all save files
-  reset(true);
-  setSlot(0);
-  generate();
-  addObstacles();
-  setChunkBackgrounds();
-  if (tutorialEnabled()) showTutorialMsg(kTutWelcomeBuySeeds);
-  updateRenderList();
-  save();
-  scanSlots();
+  pd->system->logToConsole("menuOptionsCallbackRestart");
+  doIO(kDoReset, /*and then*/ kDoSave);
 }
 
 void menuOptionsCallbackLoad(void* blank) {
-  reset(true);
-  load(-1); // -1 loads from the slot stored in the player's save file
-  addObstacles();
-  doWetness();
-  setChunkBackgrounds();
-  showTutorialMsg(getTutorialStage());
-  updateRenderList();
+  pd->system->logToConsole("menuOptionsCallbackLoad");
+  setForceSlot(-1); // -1 loads from the slot stored in the player's save file
+  doIO(kDoLoad, /*and then*/ kDoNothing);
 }
 
 void menuOptionsCallbackSave(void* blank) {
-  queueSave();
+  pd->system->logToConsole("menuOptionsCallbackSave");
+  doIO(kDoSave, /*and then*/ kDoNothing);
+  //queueSave();
 }
 
 // Call prior to loading anything

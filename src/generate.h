@@ -19,7 +19,7 @@ extern const uint16_t kWarpPrice[];
 
 enum kGroundWetness{kWater, kWet, kMoist, kDry, kNGroundWetnesses};
 
-void generate(void);
+void generate(uint32_t _actionProgress);
 
 struct Tile_t* getTile(int32_t _x, int32_t _y);
 

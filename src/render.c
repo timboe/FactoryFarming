@@ -24,9 +24,6 @@ void render() {
 
   struct Player_t* p = getPlayer();
 
-  pd->graphics->setBackgroundColor(kColorBlack);
-
-
   if (p->m_enableScreenShake && m_decay > 0.0f) {
     m_decay -= TRAUMA_DECAY;
     m_trauma += (m_trauma > 0 ? -m_decay : m_decay);

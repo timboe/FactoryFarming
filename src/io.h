@@ -1,11 +1,13 @@
 #pragma once
 #include "game.h"
 
-bool save(void);
+enum kSaveLoadRequest {kDoNothing, kDoSave, kDoLoad, kDoNewWorld, kDoReset};
 
-bool load(int32_t _forceSlot);
+void synchronousSave(void);
 
 void setSlot(uint8_t _slot);
+
+void setForceSlot(int8_t _slot);
 
 uint8_t getSlot(void);
 
@@ -16,3 +18,9 @@ bool hasSaveData(void);
 bool hasWorld(uint8_t _slot);
 
 void hardReset(void);
+
+void doIO(enum kSaveLoadRequest _first, enum kSaveLoadRequest _andThen);
+
+enum kSaveLoadRequest currentIOAction(void);
+
+void enactIO(void);
