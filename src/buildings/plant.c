@@ -9,7 +9,7 @@ int8_t getWaterBonus(enum kGroundWetness _likes, enum kGroundWetness _has);
 
 int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has);
 
-uint16_t getGrowdownTimer(struct Building_t* _building);
+uint16_t getGrowdownTimer(struct Building_t* _building, bool _smear);
 
 /// ///
 
@@ -25,14 +25,14 @@ void plantTrySpawnCargo(struct Building_t* _building, uint8_t _tick) {
 
   newCargo(loc, PDesc[_building->m_subType.plant].out, _tick == NEAR_TICK_AMOUNT);
 
-  _building->m_progress = getGrowdownTimer(_building);
+  _building->m_progress = getGrowdownTimer(_building, true);
   
   if (++_building->m_mode.mode16 == N_CROPS_BEFORE_FARMLAND || _building->m_mode.mode16 == 2*N_CROPS_BEFORE_FARMLAND ) {
     renderChunkBackgroundImage(loc->m_chunk);
   }
 }
 
-uint16_t getGrowdownTimer(struct Building_t* _building) {
+uint16_t getGrowdownTimer(struct Building_t* _building, bool _smear) {
   const enum kPlantSubType pst = _building->m_subType.plant;
   const struct Tile_t* t = getTile_fromLocation( _building->m_location );
   const int8_t gb = getGroundBonus( PDesc[pst].soil, getGroundType( t->m_tile ) );
@@ -48,7 +48,8 @@ uint16_t getGrowdownTimer(struct Building_t* _building) {
   } else if (bonus <= -2) {
     growTime = UINT16_MAX;
   }
-  return (uint16_t)growTime;
+  uint8_t smear = (_smear ? rand() % (TICKS_PER_SEC * 3) : 0);
+  return (uint16_t)growTime - smear;
 }
 
 #define CARGO_BOUNCE_OFFSET 4
@@ -101,7 +102,9 @@ void buildingSetupPlant(struct Building_t* _building) {
 
   clearLocation(_building->m_location, /*cargo*/ true, /*building*/ false);
 
-  _building->m_progress = getGrowdownTimer(_building);
+  if (_building->m_progress <= 0) {
+    _building->m_progress = getGrowdownTimer(_building, true);
+  }
 }
 
 int8_t getWaterBonus(enum kGroundWetness _likes, enum kGroundWetness _has) {
@@ -285,13 +288,13 @@ void drawUIInspectPlant(struct Building_t* _building) {
 
   static char text[128];
   uint8_t y = 1;
-  snprintf(text, 128, "%s", toStringBuilding(_building->m_type, _building->m_subType, false));
+  snprintf(text, 128, "%s", toStringBuilding(_building->m_type, _building->m_subType, true));
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   const struct Tile_t* t = getTile_fromLocation( _building->m_location );
   const int8_t gb = getGroundBonus( PDesc[pst].soil, getGroundType( t->m_tile ) );
   const int8_t wb = getWaterBonus( PDesc[pst].wetness, getWetness( t->m_wetness ) );
-  const uint16_t growTime = getGrowdownTimer(_building);
+  const uint16_t growTime = getGrowdownTimer(_building, false);
 
   snprintf(text, 128, "Likes: %s", toStringSoil( PDesc[pst].soil ) );
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);

@@ -12,6 +12,7 @@
 #include "ui/warp.h"
 #include "ui/import.h"
 #include "ui/export.h"
+#include "ui/new.h"
 
 uint8_t m_pressed[4] = {0};
 
@@ -24,6 +25,8 @@ bool characterMoveInput(uint32_t _buttonPressed);
 void clickHandleWander(uint32_t _buttonPressed);
 
 void clickHandleMenuBuy(uint32_t _buttonPressed);
+
+void clickHandleMenuNew(uint32_t _buttonPressed);
 
 void clickHandleMenuSell(uint32_t _buttonPressed);
 
@@ -108,6 +111,7 @@ void gameClickConfigHandler(uint32_t _buttonPressed) {
   switch (getGameMode()) {
     case kWanderMode:; return clickHandleWander(_buttonPressed);
     case kMenuBuy:; return clickHandleMenuBuy(_buttonPressed);
+    case kMenuNew:; return clickHandleMenuNew(_buttonPressed);
     case kMenuSell:; return clickHandleMenuSell(_buttonPressed);
     case kMenuPlayer:; return clickHandleMenuPlayer(_buttonPressed);
     case kMenuWarp:; return clickHandleMenuWarp(_buttonPressed);
@@ -126,7 +130,7 @@ void clickHandleWander(uint32_t _buttonPressed) {
   else if (kButtonA == _buttonPressed) {
     // 254: tutorial finised, 255: tutorial disabled
     if (getTutorialStage() < TUTORIAL_FINISHED && checkReturnDismissTutorialMsg()) { /*noop*/ } // NOTE: The second function call has side-effects
-    else if (distanceFromBuy() < ACTIVATE_DISTANCE) setGameMode(kMenuBuy);
+    else if (distanceFromBuy() < ACTIVATE_DISTANCE) { if (!checkShowNew()) setGameMode(kMenuBuy); }
     else if (distanceFromSell() < ACTIVATE_DISTANCE) setGameMode(kMenuSell);
     else if (distanceFromWarp() < ACTIVATE_DISTANCE) setGameMode(kMenuWarp);
     else if (distanceFromOut() < ACTIVATE_DISTANCE) setGameMode(kMenuExport);
@@ -151,6 +155,14 @@ void clickHandleMenuBuy(uint32_t _buttonPressed) {
     }
   } else {
     moveCursor(_buttonPressed);
+  }
+}
+
+void clickHandleMenuNew(uint32_t _buttonPressed) {
+  if (kButtonA == _buttonPressed || kButtonB == _buttonPressed) {
+    if (!checkShowNew()) {
+      setGameMode(kMenuBuy);
+    }
   }
 }
 
@@ -323,6 +335,7 @@ void clickHandlerReplacement() {
   switch (gm) {
     case kWanderMode:; rotateHandleWander(pd->system->getCrankChange()); break;
     case kMenuPlayer:; // fall through
+    case kMenuNew:;
     case kBuildMode:;
     case kPlaceMode:; rotateHandlePlacement(pd->system->getCrankChange()); break;
     case kPickMode:; // fall through

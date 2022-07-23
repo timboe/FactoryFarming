@@ -4,7 +4,7 @@
 
 // All Main Menu items should come after kMenuBuy
 enum kGameMode {kWanderMode, kPlaceMode, kBuildMode, kPlantMode, kPickMode, kInspectMode, kDestroyMode, 
-	            kMenuBuy, kMenuSell, kMenuPlayer, kMenuWarp, kMenuExport, kMenuImport, kNGameModes};
+	            kMenuBuy, kMenuNew, kMenuSell, kMenuPlayer, kMenuWarp, kMenuExport, kMenuImport, kNGameModes};
 
 enum kUICat {kUICatTool, kUICatPlant, kUICatConv, kUICatExtractor, kUICatFactory, kUICatUtility, 
 	         kUICatCargo, kUICatWarp, kUICatImportN, kUICatImportE, kUICatImportS, kUICatImportW, kNUICats}; 
@@ -15,7 +15,10 @@ enum kUICat {kUICatTool, kUICatPlant, kUICatConv, kUICatExtractor, kUICatFactory
 
 #define MAX_PER_CAT (ROW_WDTH * MAX_ROW_PER_CAT)
 
-#define MAX_ROWS (MAX_ROW_PER_CAT*kNUICats + kNUICats)
+// We need an extra buffer of kNUICats on the end,
+// however no one screen ever uses every cat all at once.
+// so this is obtained automatically
+#define MAX_ROWS (MAX_ROW_PER_CAT*kNUICats)
 
 #define MAX_ROWS_VISIBLE 4
 

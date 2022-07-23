@@ -30,21 +30,21 @@ struct Building_t* m_buildings;
 // Note: User can never themselves build a kTunnelOut
 //{kBelt, kSplitL, kSplitI, kSplitT, kTunnelIn, kTunnelOut, kFilterL,  kFilterI, kNConvSubTypes};
 const struct ConveyorDescriptor_t CDesc[] = {
-  {.subType = kBelt,      .unlock = 1000,       .price = 10,         .UIIcon = SID(0,17), .spriteX = 0,  .spriteY = 7},
-  {.subType = kSplitL,    .unlock = 2000,       .price = 50,         .UIIcon = SID(4,17), .spriteX = 0,  .spriteY = 11},
-  {.subType = kSplitI,    .unlock = 10000,      .price = 50,         .UIIcon = SID(0,4),  .spriteX = 1,  .spriteY = 11},
-  {.subType = kSplitT,    .unlock = 10000,      .price = 50,         .UIIcon = SID(4,4),  .spriteX = 2,  .spriteY = 11},
-  {.subType = kTunnelIn,  .unlock = 10000,      .price = 100,        .UIIcon = SID(8,17), .spriteX = 8,  .spriteY = 11},
+  {.subType = kBelt,      .unlock = 5,       .price = 10,         .UIIcon = SID(0,17), .spriteX = 0,  .spriteY = 7},
+  {.subType = kSplitL,    .unlock = 10,       .price = 50,         .UIIcon = SID(4,17), .spriteX = 0,  .spriteY = 11},
+  {.subType = kSplitI,    .unlock = 15,      .price = 50,         .UIIcon = SID(0,4),  .spriteX = 1,  .spriteY = 11},
+  {.subType = kSplitT,    .unlock = 20,      .price = 50,         .UIIcon = SID(4,4),  .spriteX = 2,  .spriteY = 11},
+  {.subType = kTunnelIn,  .unlock = 25,      .price = 100,        .UIIcon = SID(8,17), .spriteX = 8,  .spriteY = 11},
   {.subType = kTunnelOut, .unlock = UINT32_MAX, .price = UINT16_MAX, .UIIcon = SID(8,16), .spriteX = 9,  .spriteY = 11},
-  {.subType = kFilterL,   .unlock = 10000,      .price = 75,         .UIIcon = SID(8,4),  .spriteX = 3,  .spriteY = 11},
-  {.subType = kFilterI,   .unlock = 10000,      .price = 75,         .UIIcon = SID(12,4), .spriteX = 10, .spriteY = 11}
+  {.subType = kFilterL,   .unlock = 30,      .price = 75,         .UIIcon = SID(8,4),  .spriteX = 3,  .spriteY = 11},
+  {.subType = kFilterI,   .unlock = 35,      .price = 75,         .UIIcon = SID(12,4), .spriteX = 10, .spriteY = 11}
 };
 
 //{kCarrotPlant, kAppleTree, kWheatPlant, kP4, klP5, kP6, kP7, kP8, kP9, kP10, kP11, kP12};
 const struct PlantDescriptor_t PDesc[] = {
-  {.subType = kCarrotPlant, .unlock = 0, .price = 0, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSiltyGround, .out = kCarrot},
-  {.subType = kAppleTree, .unlock = 10000, .price = 100, .sprite = SID(8, 8), .time = 50, .wetness = kMoist, .soil = kChalkyGround, .out = kApple},
-  {.subType = kWheatPlant, .unlock = 10000, .price = 100, .sprite = SID(11, 8), .time = 50, .wetness = kDry, .soil = kPeatyGround, .out = kWheat},
+  {.subType = kCarrotPlant, .unlock = 1, .price = 0, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSiltyGround, .out = kCarrot},
+  {.subType = kAppleTree, .unlock = 36, .price = 100, .sprite = SID(8, 8), .time = 50, .wetness = kMoist, .soil = kChalkyGround, .out = kApple},
+  {.subType = kWheatPlant, .unlock = 37, .price = 100, .sprite = SID(11, 8), .time = 50, .wetness = kDry, .soil = kPeatyGround, .out = kWheat},
   {.subType = kP4, .unlock = DIS, .price = 1, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kCarrot},
   {.subType = kP5, .unlock = DIS, .price = 1, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kCarrot},
   {.subType = kP6, .unlock = DIS, .price = 1, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kCarrot},
@@ -58,23 +58,23 @@ const struct PlantDescriptor_t PDesc[] = {
 
 //{kBin, kWell, kStorageBox, kConveyorGrease, kNUtilitySubTypes};
 const struct UtilityDescriptor_t UDesc[] = {
-  {.subType = kBin, .unlock = 100, .price = 100, .UIIcon = SID(12,15)},
-  {.subType = kWell, .unlock = 10000, .price = 1000, .UIIcon = SID(0,15)},
-  {.subType = kStorageBox, .unlock = 100, .price = 1, .UIIcon = SID(4,15)},
-  {.subType = kConveyorGrease, .unlock = 10000, .price = 100, .UIIcon = SID(8,15),}
+  {.subType = kBin, .unlock = 38, .price = 100, .UIIcon = SID(12,15)},
+  {.subType = kWell, .unlock = 39, .price = 1000, .UIIcon = SID(0,15)},
+  {.subType = kStorageBox, .unlock = 40, .price = 1, .UIIcon = SID(4,15)},
+  {.subType = kConveyorGrease, .unlock = 41, .price = 100, .UIIcon = SID(8,15),}
 };
 
 //{kCropHarvesterSmall, kPump, kChalkQuarry, kCropHarvesterLarge, kNExtractorSubTypes};
 const struct ExtractorDescriptor_t EDesc[] = {
-  {.subType = kCropHarvesterSmall, .unlock = 500, .price = 50, .UIIcon = SID(4,16), .sprite = BID(0,0), .out = kNoCargo},
-  {.subType = kPump, .unlock = 10000, .price = 100, .UIIcon = SID(12,11), .sprite = BID(0,3), .out = kWaterBarrel},
-  {.subType = kChalkQuarry, .unlock = 750, .price = 75, .UIIcon = SID(12,12), .sprite = BID(0,6), .out = kChalk},
-  {.subType = kCropHarvesterLarge, .unlock = 10000, .price = 500, .UIIcon = SID(8,16), .sprite = BID(0,0), .out = kNoCargo}
+  {.subType = kCropHarvesterSmall, .unlock = 42, .price = 50, .UIIcon = SID(4,16), .sprite = BID(0,0), .out = kNoCargo},
+  {.subType = kPump, .unlock = 43, .price = 100, .UIIcon = SID(12,11), .sprite = BID(0,3), .out = kWaterBarrel},
+  {.subType = kChalkQuarry, .unlock = 44, .price = 75, .UIIcon = SID(12,12), .sprite = BID(0,6), .out = kChalk},
+  {.subType = kCropHarvesterLarge, .unlock = 45, .price = 500, .UIIcon = SID(8,16), .sprite = BID(0,0), .out = kNoCargo}
 };
 
 //{kVitiminFac, kF2, kF3, kF4, kF5, kF6, kF7, kF8, kF9,  k10, kF11 kNFactorySubTypes};
 const struct FactoryDescriptor_t FDesc[] = {
-  {.subType = kVitiminFac, .unlock = 2000, .price = 100, .time = 6, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kChalk, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kVitiminFac, .unlock = 46, .price = 100, .time = 6, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kChalk, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kF2, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kF3, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kF4, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
@@ -103,7 +103,7 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
     case kNoBuilding: return "NoBuilding";
     case kConveyor: switch (_subType.conveyor) {
       case kBelt: return _inworld ? "Belt" : "Conveyor Belt";
-      case kSplitI: return _inworld ? "'I' Spliter": "Conveyor Belt 'I' Spliter";
+      case kSplitI: return _inworld ? "'I' Splitter": "Conveyor Belt 'I' Splitter";
       case kSplitL: return _inworld ? "'L' Splitter" : "Conveyor Belt 'L' Splitter";
       case kSplitT: return _inworld ? "'T' Splitter" : "Conveyor Belt 'T' Splitter";
       case kFilterI: return _inworld ? "'I' Filter" : "Conveyor Belt 'I' Filter";

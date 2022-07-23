@@ -17,6 +17,8 @@ LCDBitmap* m_bitmap48_zoom[ZOOM_LEVELS][SHEET48_SIZE];
 
 LCDBitmap* m_stickySelected;
 
+LCDBitmap* m_new;
+
 LCDFont* m_fontRoobert24;
 
 LCDFont* m_fontRoobert10;
@@ -59,6 +61,8 @@ LCDFont* loadFontAtPath(const char* _path) {
   }
   return _f;
 }
+
+LCDBitmap* getSpriteNew() { return m_new; }
 
 LCDBitmap* getSprite16(uint32_t _x, uint32_t _y, uint8_t _zoom) {
   return getSprite16_byidx(SPRITE16_ID(_x, _y), _zoom);
@@ -193,6 +197,7 @@ void initSprite() {
   m_sheet18 = loadImageTableAtPath("images/sheet18");
   m_sheet48 = loadImageTableAtPath("images/sheet48");
   m_stickySelected = loadImageAtPath("images/selected");
+  m_new = loadImageAtPath("images/new");
 
   populateResizedSprites();
 

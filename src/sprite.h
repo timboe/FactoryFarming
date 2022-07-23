@@ -29,6 +29,8 @@ LCDBitmap* getSprite18(uint32_t _x, uint32_t _y, uint8_t _zoom);
 
 LCDBitmap* getSprite18_byidx(uint32_t _idx, uint8_t _zoom);
 
+LCDBitmap* getSpriteNew(void);
+
 LCDBitmap* getConveyorMaster(enum kDir _dir, uint8_t _speed);
 
 LCDBitmap* getStickySelectedBitmap(void);

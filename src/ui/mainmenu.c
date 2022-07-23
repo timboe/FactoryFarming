@@ -302,8 +302,13 @@ void populateInfoMainmenu() {
     case kNUICats:; break;
   }
   if (selectedCat != kUICatTool) snprintf(textB, 128, "Inventory: %i", selectedOwned);
-  if (selectedCat == kUICatCargo) snprintf(textC, 128, "Value:      %i", (int)selectedPrice);
-  else snprintf(textC, 128, " ");
+  snprintf(textC, 2, " ");
+  if (selectedCat == kUICatCargo) {
+    snprintf(textC, 128, "Value:      %i", (int)selectedPrice);
+  } else if (selectedCat == kUICatExtractor) {
+    if (selectedID == kChalkQuarry) snprintf(textC, 128, "Build on Chalky Soil");
+    else if (selectedID == kPump) snprintf(textC, 128, "Build on Water");
+  } 
   pd->graphics->drawText(textA, 128, kASCIIEncoding, 1*TILE_PIX, +2);
   pd->graphics->drawText(textB, 128, kASCIIEncoding, 1*TILE_PIX, TILE_PIX - 2);
   pd->graphics->drawText(textC, 128, kASCIIEncoding, 9*TILE_PIX, TILE_PIX - 2);

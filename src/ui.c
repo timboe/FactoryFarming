@@ -5,6 +5,7 @@
 #include "ui/warp.h"
 #include "ui/import.h"
 #include "ui/export.h"
+#include "ui/new.h"
 #include "sprite.h"
 #include "player.h"
 #include "input.h"
@@ -53,7 +54,21 @@ bool m_UIDirtyRight = false;
 
 bool m_UIDirtyMain = false;
 
-// Buy / select screen
+// Menu screens
+
+LCDSprite* m_UISpriteNewBanner;
+LCDBitmap* m_UIBitmapNewBanner[kNUICats] = {NULL};
+
+LCDSprite* m_UISpriteNewSplash;
+LCDBitmap* m_UIBitmapNewSplash;
+
+LCDSprite* m_UISpriteNewItem;
+LCDBitmap* m_UIBitmapNewItem;
+
+LCDSprite* m_UISpriteNewText;
+LCDBitmap* m_UIBitmapNewText;
+
+// ^ special new
 
 LCDSprite* m_UISpriteCursor;
 
@@ -90,8 +105,8 @@ LCDBitmap* m_UIBitmapItems[kNUICats][MAX_PER_CAT][4];
 
 LCDSprite* m_UISpriteStickySelected[4];
 
-uint16_t m_selCol = 0, m_selRow = 1, m_selRotation = 0;
-uint16_t m_selRowOffset = 0, m_cursorRowAbs = 1;
+uint16_t m_selCol[kNGameModes] = {0}, m_selRow[kNGameModes] = {1}, m_selRotation[kNGameModes] = {0};
+uint16_t m_selRowOffset[kNGameModes] = {0}, m_cursorRowAbs[kNGameModes] = {1};
 
 LCDSprite* m_contentSprite[MAX_ROWS][ROW_WDTH] = {NULL};
 LCDSprite* m_contentStickySelected[MAX_ROWS][ROW_WDTH] = {NULL};
@@ -103,6 +118,7 @@ bool m_rowIsTitle[MAX_ROWS] = {false};
 // Checks that the cursor selection is OK
 void checkSel(void);
 
+const char* newBannerText(enum kUICat _c);
 
 //
 
@@ -115,6 +131,8 @@ void drawUIMain(void);
 void drawUIInspect(void);
 
 void renderTutorialInspectRect(bool _bothSides);
+
+void renderNewUI(void);
 
 /// ///
 
@@ -144,15 +162,21 @@ void UIDirtyMain() {
 }
 
 uint16_t getCursorRotation() {
-  return m_selRotation;
+  enum kUICat c = m_mode;
+  if (m_mode == kPlaceMode || m_mode == kPlantMode || m_mode == kBuildMode) c = kMenuPlayer;
+  return m_selRotation[c];
 }
 
 enum kUICat getUIContentCategory() {
-  return m_contentCat[m_selRow][m_selCol];
+  enum kUICat c = m_mode;
+  if (m_mode == kPlaceMode || m_mode == kPlantMode || m_mode == kBuildMode) c = kMenuPlayer;
+  return m_contentCat[ m_selRow[c] ][ m_selCol[c] ];
 }
 
 uint16_t getUIContentID() {
-  return m_contentID[m_selRow][m_selCol];
+  enum kUICat c = m_mode;
+  if (m_mode == kPlaceMode || m_mode == kPlantMode || m_mode == kBuildMode) c = kMenuPlayer;
+  return m_contentID[ m_selRow[c] ][ m_selCol[c] ];
 }
 
 //LCDSprite* getUIHeader(enum kUICat _c) {
@@ -165,9 +189,9 @@ uint16_t getUIContentID() {
 
 void rotateCursor(bool _increment) {
   if (_increment) {
-    m_selRotation = (m_selRotation == kDirN-1 ? 0 : m_selRotation + 1);
+    m_selRotation[m_mode] = (m_selRotation[m_mode] == kDirN-1 ? 0 : m_selRotation[m_mode] + 1);
   } else {
-    m_selRotation = (m_selRotation == 0 ? kDirN-1 : m_selRotation - 1);
+    m_selRotation[m_mode] = (m_selRotation[m_mode] == 0 ? kDirN-1 : m_selRotation[m_mode] - 1);
   }
   if (m_mode >= kMenuPlayer) UIDirtyMain();
   UIDirtyRight();
@@ -278,8 +302,8 @@ void updateBlueprint() {
       pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
     }
     switch (selectedCat) {
-      case kUICatConv:;    pd->sprite->setImage(bp, getSprite16_byidx( CDesc[selectedID].UIIcon + m_selRotation, zoom), kBitmapUnflipped); break;
-      case kUICatUtility:; pd->sprite->setImage(bp, getSprite16_byidx( UDesc[selectedID].UIIcon + m_selRotation, zoom), kBitmapUnflipped); break;
+      case kUICatConv:;    pd->sprite->setImage(bp, getSprite16_byidx( CDesc[selectedID].UIIcon + m_selRotation[m_mode], zoom), kBitmapUnflipped); break;
+      case kUICatUtility:; pd->sprite->setImage(bp, getSprite16_byidx( UDesc[selectedID].UIIcon + m_selRotation[m_mode], zoom), kBitmapUnflipped); break;
       case kUICatCargo:;   pd->sprite->setImage(bp, getSprite16_byidx( CargoDesc[selectedID].UIIcon, zoom), kBitmapUnflipped); break;
       case kUICatTool:; case kUICatPlant:; case kUICatExtractor:; case kUICatFactory:; case kUICatWarp:; break;
       case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; case kNUICats:; break;
@@ -299,8 +323,8 @@ void updateBlueprint() {
       pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped); 
     }
     switch (selectedCat) {
-      case kUICatExtractor:; pd->sprite->setImage(bp, getSprite48_byidx( EDesc[selectedID].sprite + m_selRotation, zoom), kBitmapUnflipped); break;
-      case kUICatFactory:;   pd->sprite->setImage(bp, getSprite48_byidx( FDesc[selectedID].sprite + m_selRotation,   zoom), kBitmapUnflipped); break;
+      case kUICatExtractor:; pd->sprite->setImage(bp, getSprite48_byidx( EDesc[selectedID].sprite + m_selRotation[m_mode], zoom), kBitmapUnflipped); break;
+      case kUICatFactory:;   pd->sprite->setImage(bp, getSprite48_byidx( FDesc[selectedID].sprite + m_selRotation[m_mode], zoom), kBitmapUnflipped); break;
       case kUICatTool:; case kUICatPlant:; case kUICatConv:; case kUICatUtility:; case kUICatCargo:; case kUICatWarp:; break;
       case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; case kNUICats:; break;
     }
@@ -326,22 +350,29 @@ void addUIToSpriteList() {
 
   if (m_mode >= kMenuBuy) {
     pd->sprite->addSprite(m_UISpriteFull);
-    pd->sprite->addSprite(m_UISpriteCursor);
-    pd->sprite->addSprite(m_UISpriteSelected);
-    pd->sprite->addSprite(m_UISpriteCannotAfford);
-    pd->sprite->addSprite(m_UISpriteInfo);
-    pd->sprite->addSprite(m_UISpriteIngredients);
-    for (int32_t i = 0; i < 4; ++i) {
-      pd->sprite->addSprite(m_UISpriteStickySelected[i]);
-    }
-    for (enum kUICat c = 0; c < kNUICats; ++c) {
-      if (m_UISpriteHeaders[c] != NULL) {
-        pd->sprite->addSprite(m_UISpriteHeaders[c]);
+    if (m_mode == kMenuNew) {
+      pd->sprite->addSprite(m_UISpriteNewBanner);
+      pd->sprite->addSprite(m_UISpriteNewSplash);
+      pd->sprite->addSprite(m_UISpriteNewItem);
+      pd->sprite->addSprite(m_UISpriteNewText);
+    } else {    
+      pd->sprite->addSprite(m_UISpriteCursor);
+      pd->sprite->addSprite(m_UISpriteSelected);
+      pd->sprite->addSprite(m_UISpriteCannotAfford);
+      pd->sprite->addSprite(m_UISpriteInfo);
+      pd->sprite->addSprite(m_UISpriteIngredients);
+      for (int32_t i = 0; i < 4; ++i) {
+        pd->sprite->addSprite(m_UISpriteStickySelected[i]);
       }
-      for (int32_t i = 0; i < MAX_PER_CAT; ++i) {
-        for (int32_t r = 0; r < 4; ++r) {
-          if (m_UISpriteItems[c][i][r] != NULL) {
-            pd->sprite->addSprite(m_UISpriteItems[c][i][r]);
+      for (enum kUICat c = 0; c < kNUICats; ++c) {
+        if (m_UISpriteHeaders[c] != NULL) {
+          pd->sprite->addSprite(m_UISpriteHeaders[c]);
+        }
+        for (int32_t i = 0; i < MAX_PER_CAT; ++i) {
+          for (int32_t r = 0; r < 4; ++r) {
+            if (m_UISpriteItems[c][i][r] != NULL) {
+              pd->sprite->addSprite(m_UISpriteItems[c][i][r]);
+            }
           }
         }
       }
@@ -554,7 +585,7 @@ void drawUIRight() {
   pd->graphics->drawBitmap(getSprite16(2, 16, 1), TILE_PIX/2, 0, kBitmapUnflipped); // Coin
   enum kGameMode gm = getGameMode();
   if (gm == kPlaceMode || gm == kPlantMode || gm == kBuildMode) {
-    int16_t rotMod = (m_selRotation == 0 ? 3 : m_selRotation - 1); // We are drawing this sideways, so need to rotate it by pi/2
+    int16_t rotMod = (m_selRotation[kMenuPlayer] == 0 ? 3 : m_selRotation[kMenuPlayer] - 1); // We are drawing this sideways, so need to rotate it by pi/2
     const enum kUICat selectedCat = getUIContentCategory();
     const uint16_t selectedID =  getUIContentID();
     snprintf(text, 32, "%u", (unsigned) getOwned(selectedCat, selectedID));
@@ -705,47 +736,47 @@ uint16_t getUIIcon(enum kUICat _c, uint16_t _i) {
 
 void moveRow(bool _down) {
   if (_down) {
-    ++m_selRow;
-    if (m_cursorRowAbs == MAX_ROWS_VISIBLE-1) ++m_selRowOffset;
-    else ++m_cursorRowAbs;
+    ++m_selRow[m_mode];
+    if (m_cursorRowAbs[m_mode] == MAX_ROWS_VISIBLE-1) ++m_selRowOffset[m_mode];
+    else ++m_cursorRowAbs[m_mode];
     //
-    if (m_rowIsTitle[m_selRow]) {
-      ++m_selRow;
-      if (m_cursorRowAbs == MAX_ROWS_VISIBLE-1) ++m_selRowOffset;
-      else ++m_cursorRowAbs;
+    if (m_rowIsTitle[ m_selRow[m_mode] ]) {
+      ++m_selRow[m_mode];
+      if (m_cursorRowAbs[m_mode] == MAX_ROWS_VISIBLE-1) ++m_selRowOffset[m_mode];
+      else ++m_cursorRowAbs[m_mode];
     }
   } else { // Up
-    --m_selRow;
-    if (m_cursorRowAbs == 0) --m_selRowOffset;
-    else --m_cursorRowAbs;
+    --m_selRow[m_mode];
+    if (m_cursorRowAbs[m_mode] == 0) --m_selRowOffset[m_mode];
+    else --m_cursorRowAbs[m_mode];
     //
-    if (m_rowIsTitle[m_selRow]) {
-      --m_selRow;
-      if (m_cursorRowAbs == 0) --m_selRowOffset;
-      else --m_cursorRowAbs;
+    if (m_rowIsTitle[ m_selRow[m_mode] ]) {
+      --m_selRow[m_mode];
+      if (m_cursorRowAbs[m_mode] == 0) --m_selRowOffset[m_mode];
+      else --m_cursorRowAbs[m_mode];
     }
   }
 }
 
 void checkSel() {
-  while (m_contentSprite[m_selRow][m_selCol] == NULL || m_rowIsTitle[m_selRow]) {
-    if (m_rowIsTitle[m_selRow] || m_selCol == 0) {
+  while (m_contentSprite[ m_selRow[m_mode] ][ m_selCol[m_mode] ] == NULL || m_rowIsTitle[ m_selRow[m_mode] ]) {
+    if (m_rowIsTitle[ m_selRow[m_mode] ] || m_selCol[m_mode] == 0) {
       moveRow(/*down=*/false);
-      m_selCol = ROW_WDTH-1;
+      m_selCol[m_mode] = ROW_WDTH-1;
     } else {
-      --m_selCol;
+      --m_selCol[m_mode];
     }
   }
   // special, force the top to be a title
-  if (m_cursorRowAbs == 0) {
-    --m_selRowOffset;
-    ++m_cursorRowAbs;
+  if (m_cursorRowAbs[m_mode] == 0) {
+    --m_selRowOffset[m_mode];
+    ++m_cursorRowAbs[m_mode];
   }
 }
 
 void moveCursor(uint32_t _button) {
   if (kButtonUp    == _button) {
-    if (m_selRow == 1) {
+    if (m_selRow[m_mode] == 1) {
       // noop
     } else {
       moveRow(/*down=*/false);
@@ -753,20 +784,20 @@ void moveCursor(uint32_t _button) {
   } else if (kButtonDown  == _button) {
     moveRow(/*down=*/true);
   } else if (kButtonLeft  == _button) {
-    if (m_selCol == 0 && m_selRow == 1) {
+    if (m_selCol[m_mode] == 0 && m_selRow[m_mode] == 1) {
       // noop
-    } else if (m_selCol == 0) {
+    } else if (m_selCol[m_mode] == 0) {
       moveRow(/*down=*/false);
-      m_selCol = ROW_WDTH-1;
+      m_selCol[m_mode] = ROW_WDTH-1;
     } else {
-      --m_selCol;
+      --m_selCol[m_mode];
     }
   } else if (kButtonRight == _button) {
-    if (m_selCol == ROW_WDTH-1 || m_contentSprite[m_selRow][m_selCol + 1] == NULL) {
+    if (m_selCol[m_mode] == ROW_WDTH-1 || m_contentSprite[ m_selRow[m_mode] ][ m_selCol[m_mode] + 1] == NULL) {
       moveRow(/*down=*/true);
-      m_selCol = 0;
+      m_selCol[m_mode] = 0;
     } else {
-      ++m_selCol;
+      ++m_selCol[m_mode];
     }
   }
   //checkSel();
@@ -803,10 +834,13 @@ void drawUIMain() {
   memset(m_contentStickySelected, 0, MAX_ROWS * ROW_WDTH * sizeof(LCDSprite*));
   memset(m_rowIsTitle, 0, MAX_ROWS * sizeof(bool));
 
+  const enum kGameMode gm = getGameMode();
+
   // POPULATE
   bool empty = false;
-  switch (getGameMode()) {
+  switch (gm) {
     case kMenuBuy:; populateContentBuy(); break;
+    case kMenuNew:; empty = true; break;
     case kMenuPlayer:; populateContentMainmenu(); break;
     case kMenuSell:; empty = populateContentSell(); break;
     case kMenuWarp:; populateContentWarp(); break;
@@ -836,6 +870,10 @@ void drawUIMain() {
   #define UISTARTX (TILE_PIX*3)
   #define UISTARTY (TILE_PIX*5)
 
+  if (gm == kMenuNew) {
+    return renderNewUI();
+  }
+
   if (empty) {
     pd->sprite->setVisible(m_UISpriteSelected, 0);
     pd->sprite->setVisible(m_UISpriteCursor, 0);
@@ -850,7 +888,7 @@ void drawUIMain() {
 
   // Render
   for (int32_t r = 0; r < 4; ++r) {
-    int32_t rID = r + m_selRowOffset;
+    int32_t rID = r + m_selRowOffset[m_mode];
     if (rID >= MAX_ROWS) break;
     if (m_contentSprite[rID][0] == NULL) break; // Not populated
     if (m_rowIsTitle[rID]) {
@@ -872,16 +910,16 @@ void drawUIMain() {
   // CURSOR
   const bool visible = (getFrameCount() % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
   pd->sprite->setVisible(m_UISpriteCursor, visible);
-  pd->sprite->moveTo(m_UISpriteCursor, UISTARTX + m_selCol*2*TILE_PIX, UISTARTY + m_cursorRowAbs*2*TILE_PIX);
+  pd->sprite->moveTo(m_UISpriteCursor, UISTARTX + m_selCol[m_mode]*2*TILE_PIX, UISTARTY + m_cursorRowAbs[m_mode]*2*TILE_PIX);
 
   // SELECTED
-  LCDSprite* selectedSprite = m_contentSprite[m_selRow][m_selCol];
+  LCDSprite* selectedSprite = m_contentSprite[ m_selRow[m_mode] ][ m_selCol[m_mode] ];
   pd->sprite->setVisible(m_UISpriteSelected, 1);
   pd->sprite->setImage(m_UISpriteSelected, pd->sprite->getImage(selectedSprite), kBitmapUnflipped);
 
   // INGREDIENTS
-  if (m_contentCat[m_selRow][m_selCol] == kUICatFactory) {
-    int32_t x = UISTARTX + (m_selCol < ROW_WDTH/2 + 1 ? TILE_PIX*14 : TILE_PIX*4);
+  if (m_contentCat[ m_selRow[m_mode] ][ m_selCol[m_mode] ] == kUICatFactory) {
+    int32_t x = UISTARTX + (m_selCol[m_mode] < ROW_WDTH/2 + 1 ? TILE_PIX*14 : TILE_PIX*4);
     pd->sprite->setImage(m_UISpriteIngredients, m_UIBitmapIngredients[getUIContentID()], kBitmapUnflipped);
     pd->sprite->moveTo(m_UISpriteIngredients, x, TILE_PIX*8);
     pd->sprite->setVisible(m_UISpriteIngredients, 1);
@@ -890,7 +928,7 @@ void drawUIMain() {
   }
 
   // CUSTOM TOP AREA
-  switch (getGameMode()) {
+  switch (gm) {
     case kMenuBuy:; populateInfoBuy(visible); break;
     case kMenuPlayer:; populateInfoMainmenu(); break;
     case kMenuSell:; populateInfoSell(); break;
@@ -900,6 +938,52 @@ void drawUIMain() {
     default: break;
   }
 
+}
+
+void renderNewUI() {
+  const enum kUICat newCat = getNewCategory();
+  const uint32_t newID = getNewID();
+  pd->sprite->setImage(m_UISpriteNewBanner, m_UIBitmapNewBanner[newCat], kBitmapUnflipped);
+
+  pd->graphics->clearBitmap(m_UIBitmapNewItem, kColorClear);
+  pd->graphics->pushContext(m_UIBitmapNewItem);
+  pd->graphics->drawScaledBitmap(m_UIBitmapItems[newCat][newID][0], 0, 0, 2, 2);
+  pd->graphics->popContext();
+
+  pd->graphics->clearBitmap(m_UIBitmapNewText, kColorClear);
+  pd->graphics->pushContext(m_UIBitmapNewText);
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+
+  const char* t0 = toStringBuilding(getCatBuildingSubType(newCat), (union kSubType) {.raw = newID}, false);
+  int16_t len0 = strlen(t0);
+  int32_t width0 = pd->graphics->getTextWidth(getRoobert10(), t0, len0, kASCIIEncoding, 0);
+
+  const char* t1 = getNewText();
+  int16_t len1 = strlen(t1);
+  int32_t width1 = pd->graphics->getTextWidth(getRoobert10(), t1, len1, kASCIIEncoding, 0);
+
+  pd->graphics->setDrawMode(kDrawModeFillWhite);
+  //
+  pd->graphics->drawText(t0, len0, kASCIIEncoding, TILE_PIX*10 - width0/2 + 1, 0);
+  pd->graphics->drawText(t1, len1, kASCIIEncoding, TILE_PIX*10 - width1/2 + 1, TILE_PIX);
+  //
+  pd->graphics->drawText(t0, len0, kASCIIEncoding, TILE_PIX*10 - width0/2 - 1, 0);
+  pd->graphics->drawText(t1, len1, kASCIIEncoding, TILE_PIX*10 - width1/2 - 1, TILE_PIX);
+  //
+  pd->graphics->drawText(t0, len0, kASCIIEncoding, TILE_PIX*10 - width0/2, 1);
+  pd->graphics->drawText(t1, len1, kASCIIEncoding, TILE_PIX*10 - width1/2, TILE_PIX + 1);
+  //
+  pd->graphics->drawText(t0, len0, kASCIIEncoding, TILE_PIX*10 - width0/2, -1);
+  pd->graphics->drawText(t1, len1, kASCIIEncoding, TILE_PIX*10 - width1/2, TILE_PIX- 1);
+  //
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+  //
+  pd->graphics->drawText(t0, len0, kASCIIEncoding, TILE_PIX*10 - width0/2, 0);
+  pd->graphics->drawText(t1, len1, kASCIIEncoding, TILE_PIX*10 - width1/2, TILE_PIX);
+  //
+  pd->graphics->setDrawMode(kDrawModeCopy);
+
+  pd->graphics->popContext();
 }
 
 void setGameMode(enum kGameMode _mode) {
@@ -928,11 +1012,13 @@ void setGameMode(enum kGameMode _mode) {
 }
 
 void resetUI() {
-  m_selCol = 0;
-  m_selRow = 1;
-  m_selRotation = 0;
-  m_selRowOffset = 0;
-  m_cursorRowAbs = 1;
+  for (int32_t i = 0; i < kNGameModes; ++i) {
+    m_selCol[i] = 0;
+    m_selRow[i] = 1;
+    m_selRotation[i] = 0;
+    m_selRowOffset[i] = 0;
+    m_cursorRowAbs[i] = 1;
+  }
   setGameMode(kWanderMode);
   updateBlueprint();
 }
@@ -947,6 +1033,18 @@ void roundedRect(uint16_t _o, uint16_t _w, uint16_t _h, uint16_t _r, LCDColor _c
   pd->graphics->drawLine(_o + _r/2, _o + _h - _r/2, _o + _w - _r/2, _o + _h - _r/2, _r, _c);
   pd->graphics->drawLine(_o + _r/2, _o + _r/2, _o + _r/2, _o + _h - _r/2, _r, _c);
   pd->graphics->drawLine(_o + _w - _r/2, _o + _r/2, _o + _w - _r/2, _o + _h - _r/2, _r, _c);
+}
+
+const char* newBannerText(enum kUICat _c) {
+  switch (_c) {
+    case kUICatPlant: return "New Crop!";
+    case kUICatConv: return "New Conveyor!";
+    case kUICatExtractor: return "New Harvester!";
+    case kUICatFactory: return "New Factory!";
+    case kUICatUtility: return "New Utility!";
+    default: break;
+  }
+  return "?";
 }
 
 void initiUI() {
@@ -1034,14 +1132,63 @@ void initiUI() {
   roundedRect(11, TILE_PIX*22, TILE_PIX*12, TILE_PIX, kColorWhite);
   pd->graphics->popContext();
 
-
   PDRect fBound = {.x = 0, .y = 0, .width = TILE_PIX*22, .height = TILE_PIX*12};
   PDRect cBound = {.x = 0, .y = 0, .width = TILE_PIX*10, .height = TILE_PIX*2};
   PDRect iBound = {.x = 0, .y = 0, .width = TILE_PIX*2, .height = TILE_PIX*2};
   PDRect infoBound = {.x = 0, .y = 0, .width = TILE_PIX*18, .height = TILE_PIX*2};
+  PDRect bannerBound = {.x = 0, .y = 0, .width = TILE_PIX*20, .height = TILE_PIX*2};
+  PDRect splashBound = {.x = 0, .y = 0, .width = TILE_PIX*8, .height = TILE_PIX*8};
+  PDRect itemBound = {.x = 0, .y = 0, .width = TILE_PIX*4, .height = TILE_PIX*4};
   PDRect ingBound = {.x = 0, .y = 0, .width = INGREDIENTS_WIDTH, .height = INGREDIENTS_HEIGHT};
   PDRect tutBound = {.x = 0, .y = 0, .width = TUTORIAL_WIDTH, .height = TUTORIAL_HEIGHT};
   PDRect stickyBound = {.x = 0, .y = 0, .width = 38, .height = 38};
+
+  // New stuff
+
+  for (int32_t i = 0; i < kNUICats; ++i) {
+    if (i == kUICatTool || i > kUICatUtility) continue;
+    m_UIBitmapNewBanner[i] = pd->graphics->newBitmap(TILE_PIX*20, TILE_PIX*2, kColorClear);
+    pd->graphics->pushContext(m_UIBitmapNewBanner[i]);
+    roundedRect(1, TILE_PIX*20, TILE_PIX*2, TILE_PIX, kColorBlack);
+    pd->graphics->setDrawMode(kDrawModeFillWhite);
+    const char* t = newBannerText(i);
+    int16_t len = strlen(t);
+    int32_t width = pd->graphics->getTextWidth(getRoobert24(), t, len, kASCIIEncoding, 0);
+    pd->graphics->drawText(t, len, kASCIIEncoding, TILE_PIX*10 - width/2, 0);
+    pd->graphics->setDrawMode(kDrawModeCopy);
+    pd->graphics->popContext();
+  }
+
+  m_UISpriteNewBanner = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteNewBanner, bannerBound);
+  pd->sprite->setZIndex(m_UISpriteNewBanner, Z_INDEX_UI_T);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteNewBanner, 1);  
+  pd->sprite->moveTo(m_UISpriteNewBanner, SCREEN_PIX_X/2, TILE_PIX*3);
+
+  m_UISpriteNewSplash = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteNewSplash, splashBound);
+  pd->sprite->setImage(m_UISpriteNewSplash, getSpriteNew(), kBitmapUnflipped);
+  pd->sprite->setZIndex(m_UISpriteNewSplash, Z_INDEX_UI_M);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteNewSplash, 1);  
+  pd->sprite->moveTo(m_UISpriteNewSplash, SCREEN_PIX_X/2, SCREEN_PIX_Y/2);
+
+  m_UIBitmapNewItem = pd->graphics->newBitmap(TILE_PIX*4, TILE_PIX*4, kColorClear);
+  m_UISpriteNewItem = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteNewItem, itemBound);
+  pd->sprite->setImage(m_UISpriteNewItem, m_UIBitmapNewItem, kBitmapUnflipped);
+  pd->sprite->setZIndex(m_UISpriteNewItem, Z_INDEX_UI_T);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteNewItem, 1);  
+  pd->sprite->moveTo(m_UISpriteNewItem, SCREEN_PIX_X/2, SCREEN_PIX_Y/2);
+
+  m_UIBitmapNewText = pd->graphics->newBitmap(TILE_PIX*20, TILE_PIX*2, kColorClear);
+  m_UISpriteNewText = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteNewText, infoBound);
+  pd->sprite->setImage(m_UISpriteNewText, m_UIBitmapNewText, kBitmapUnflipped);
+  pd->sprite->setZIndex(m_UISpriteNewText, Z_INDEX_UI_TT);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteNewText, 1);  
+  pd->sprite->moveTo(m_UISpriteNewText, SCREEN_PIX_X/2, TILE_PIX*11);
+
+  // Menu stuff
 
   m_UISpriteFull = pd->sprite->newSprite();
   pd->sprite->setBounds(m_UISpriteFull, fBound);

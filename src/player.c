@@ -418,7 +418,7 @@ void forceTorus() { m_forceTorus = true; }
 void resetPlayer() {
   m_player.m_money = 0;
   m_player.m_moneyCumulative = 0;
-  m_player.m_moneyHighWaterMark = 0;
+  m_player.m_moneyHighWaterMark = 1;
   m_player.m_moneyHighWaterMarkMenu = 0;
   m_player.m_saveTime = pd->system->getSecondsSinceEpoch(NULL);
   m_player.m_playTime = 0;
@@ -434,7 +434,7 @@ void resetPlayer() {
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_importConsumers[i] = 0;
   setPlayerPosition(SCREEN_PIX_X/4, (3*SCREEN_PIX_Y)/4);
   m_currentChunk = getChunk_noCheck(0,0);
-  modMoney(100000); // TEMP
+  //modMoney(100000); // TEMP
 }
 
 
