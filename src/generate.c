@@ -182,8 +182,9 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
     if (building->m_type != kNoBuilding && building->m_image[1]) {
       if (building->m_type >= kExtractor) {
         const bool invert = (building->m_type == kExtractor && building->m_subType.extractor == kCropHarvesterLarge);
+        const bool flip = (building->m_type == kSpecial && building->m_subType.special == kImportBox && building->m_dir != SN);
         pd->graphics->setDrawMode(invert ? kDrawModeInverted : kDrawModeCopy);
-        pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - off48_x, building->m_pix_y - off48_y, kBitmapUnflipped);
+        pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - off48_x, building->m_pix_y - off48_y, flip ? kBitmapFlippedX : kBitmapUnflipped);
         pd->graphics->setDrawMode(kDrawModeCopy);
         // If factory or farm - draw also what is produced
         if (building->m_type == kFactory) {
@@ -194,7 +195,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
             building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
         }
       } else {
-        // Fast conveyors get drawn inverted when zoomed out. Stored[0] is used to hold the speed
+        // Fast conveyors get drawn inverted. Stored[0] is used to hold the speed
         const bool invert = (building->m_type == kConveyor && building->m_stored[0] >= 2);
         pd->graphics->setDrawMode(invert ? kDrawModeInverted : kDrawModeCopy);
         pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
@@ -815,11 +816,12 @@ void generate(uint32_t _actionProgress) {
 
     #define STARTX (TILES_PER_CHUNK_X/2)
 
+    // By setting EW, we camouflage these buildings in the early game
     newBuilding(getLocation_noCheck(STARTX + 0, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kShop} );
     newBuilding(getLocation_noCheck(STARTX + 9, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kSellBox} );
-    newBuilding(getLocation_noCheck(STARTX + 18, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kWarp} );
-    newBuilding(getLocation_noCheck(STARTX + 27, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kExportBox} );
-    newBuilding(getLocation_noCheck(STARTX + 36, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kImportBox} );
+    newBuilding(getLocation_noCheck(STARTX + 18, TILES_PER_CHUNK_Y), EW, kSpecial, (union kSubType) {.special = kWarp} );
+    newBuilding(getLocation_noCheck(STARTX + 27, TILES_PER_CHUNK_Y), EW, kSpecial, (union kSubType) {.special = kExportBox} );
+    newBuilding(getLocation_noCheck(STARTX + 36, TILES_PER_CHUNK_Y), EW, kSpecial, (union kSubType) {.special = kImportBox} );
 
   } else if (_actionProgress == 8) {
 

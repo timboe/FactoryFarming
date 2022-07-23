@@ -226,11 +226,12 @@ void updateUI(int _fc) {
   if (m_mode == kWanderMode) {
     if (!m_UITopVisible) {
       if (_fc % (TICK_FREQUENCY/2) == 0) {
+        const bool ic = isCamouflaged();
         if      (distanceFromBuy()  < ACTIVATE_DISTANCE) drawUITop("The Shop");
         else if (distanceFromSell() < ACTIVATE_DISTANCE) drawUITop("Sales");
-        else if (distanceFromWarp() < ACTIVATE_DISTANCE) drawUITop("Plots");
-        else if (distanceFromOut() < ACTIVATE_DISTANCE) drawUITop("Exports");
-        else if (distanceFromIn() < ACTIVATE_DISTANCE) drawUITop("Imports");
+        else if (!ic && distanceFromWarp() < ACTIVATE_DISTANCE) drawUITop("Plots");
+        else if (!ic && distanceFromOut() < ACTIVATE_DISTANCE) drawUITop("Exports");
+        else if (!ic && distanceFromIn() < ACTIVATE_DISTANCE) drawUITop("Imports");
       }
     } else {
       if (distanceFromBuy() >= ACTIVATE_DISTANCE && 

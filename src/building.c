@@ -140,9 +140,9 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
     case kSpecial: switch (_subType.special) {
       case kShop: return "The Shop";
       case kSellBox: return "Sell Box";
-      case kExportBox: return "Cargo Exporter";
-      case kImportBox: return "Cargo Importer";
-      case kWarp: return "Plot Manager";
+      case kExportBox: return isCamouflaged() ? "A Suspicious Rock" : "Cargo Exporter";
+      case kImportBox: return isCamouflaged() ? "A Suspicious Rock" : "Cargo Importer";
+      case kWarp: return isCamouflaged() ? "A Suspicious Rock" : "Plot Manager";
       case kNSpecialSubTypes: return "";
     }
     case kNBuildingTypes: return "";

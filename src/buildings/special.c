@@ -130,6 +130,10 @@ bool canBePlacedSpecial(struct Location_t* _loc, enum kDir _dir, union kSubType 
 void assignNeighborsSpecial(struct Building_t* _building) {
 }
 
+bool isCamouflaged() {
+  return m_warp->m_dir != SN;
+}
+
 void buildingSetupSpecial(struct Building_t* _building) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     switch (_building->m_subType.special) {
@@ -139,6 +143,16 @@ void buildingSetupSpecial(struct Building_t* _building) {
       case kImportBox:; _building->m_image[zoom] = getSprite48(3, 1, zoom); m_importBox = _building; break;
       case kWarp:;      _building->m_image[zoom] = getSprite48(0, 2, zoom); m_warp = _building; break;
       case kNSpecialSubTypes:;
+    }
+
+    // Start of the game?
+    if (_building->m_dir != SN) {
+      switch (_building->m_subType.special) {
+        case kExportBox:; _building->m_image[zoom] = getSprite48(3, 2, zoom); break;
+        case kImportBox:; _building->m_image[zoom] = getSprite48(2, 2, zoom); break;
+        case kWarp:;      _building->m_image[zoom] = getSprite48(2, 2, zoom); break;
+        default: break;
+      }
     }
 
     PDRect bound = {.x = (COLLISION_OFFSET_BIG/2)*zoom, .y = (COLLISION_OFFSET_BIG/2)*zoom, .width = (EXTRACTOR_PIX-COLLISION_OFFSET_BIG)*zoom, .height = (EXTRACTOR_PIX-COLLISION_OFFSET_BIG)*zoom};
@@ -157,6 +171,8 @@ void buildingSetupSpecial(struct Building_t* _building) {
 }
 
 void exportUpdateFn(struct Building_t* _building, uint8_t _tick) {
+  if (_building->m_dir != SN) return;
+
   // Pickup items 
   const int32_t min = -1, max =2;
   // Picking up
@@ -193,6 +209,7 @@ void exportUpdateFn(struct Building_t* _building, uint8_t _tick) {
 
 
 void importUpdateFn(struct Building_t* _building, uint8_t _tick) {
+  if (_building->m_dir != SN) return;
 
   struct Location_t* loc = NULL;
 

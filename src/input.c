@@ -129,12 +129,13 @@ void clickHandleWander(uint32_t _buttonPressed) {
   if (characterMoveInput(_buttonPressed)) { /*noop*/ }
   else if (kButtonA == _buttonPressed) {
     // 254: tutorial finised, 255: tutorial disabled
+    const bool ic = isCamouflaged();
     if (getTutorialStage() < TUTORIAL_FINISHED && checkReturnDismissTutorialMsg()) { /*noop*/ } // NOTE: The second function call has side-effects
     else if (distanceFromBuy() < ACTIVATE_DISTANCE) { if (!checkShowNew()) setGameMode(kMenuBuy); }
     else if (distanceFromSell() < ACTIVATE_DISTANCE) setGameMode(kMenuSell);
-    else if (distanceFromWarp() < ACTIVATE_DISTANCE) setGameMode(kMenuWarp);
-    else if (distanceFromOut() < ACTIVATE_DISTANCE) setGameMode(kMenuExport);
-    else if (distanceFromIn() < ACTIVATE_DISTANCE) setGameMode(kMenuImport);
+    else if (!ic && distanceFromWarp() < ACTIVATE_DISTANCE) setGameMode(kMenuWarp);
+    else if (!ic && distanceFromOut() < ACTIVATE_DISTANCE) setGameMode(kMenuExport);
+    else if (!ic && distanceFromIn() < ACTIVATE_DISTANCE) setGameMode(kMenuImport);
     else setGameMode(kMenuPlayer);
   } else if (kButtonB == _buttonPressed) {
     if (getTutorialStage() < TUTORIAL_FINISHED) checkReturnDismissTutorialMsg();

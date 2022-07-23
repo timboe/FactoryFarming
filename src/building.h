@@ -97,7 +97,7 @@ struct Building_t{
   // Populated at construct
   enum kBuildingType m_type;
   union kSubType m_subType;
-  enum kDir m_dir; // Direction
+  enum kDir m_dir; // Direction. For special: Non-SN is camouflaged.
   uint16_t m_pix_x; // Note: centre
   uint16_t m_pix_y;
   int16_t m_progress; // Counts towards the location's progress
