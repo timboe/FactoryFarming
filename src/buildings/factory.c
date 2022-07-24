@@ -59,7 +59,7 @@ void factoryUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom)
   }
 }
 
-bool canBePlacedFactory(struct Location_t* _loc, enum kDir _dir, union kSubType _subType) {
+bool canBePlacedFactory(struct Location_t* _loc) {
   for (int32_t x = -1; x < 2; ++x) {
     for (int32_t y = -1; y < 2; ++y) {
       struct Tile_t* t = getTile(_loc->m_x + x, _loc->m_y + y);
@@ -107,7 +107,9 @@ void buildingSetupFactory(struct Building_t* _building) {
 
 uint16_t getNIngreindientsText(enum kFactorySubType _type) {
   switch (_type) {
-    case kVitiminFac:; return 11;
+    case kVitiminFac: return 11;
+    case kVegOilFac: return 3;
+    case kCrispsFac: return 8;
     default: return 0;
   }
   return 0;
@@ -129,6 +131,23 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 8: return "Calcium ";
         case 9: return "Carbonate ";
         case 10: *_isFlavour = false; return "(Chalk)";
+      }
+    case kVegOilFac:;
+      switch (_n) {
+        case 0: *_isFlavour = false; return "Sunflower";
+        case 1: return ", ";
+        case 2: return "Stabalisers";
+      }
+    case kCrispsFac:
+      switch (_n) {
+        case 0: *_isFlavour = false; return "Potato";
+        case 1: return ", ";
+        case 2: *_isFlavour = false; return "Vegtable Oil";
+        case 3: return ", ";
+        case 4: *_isFlavour = false; return "Salt";
+        case 5: return ", ";
+        case 6: return "Artificial ";
+        case 7: return "Flavourings";
       }
     default: return "";
   }

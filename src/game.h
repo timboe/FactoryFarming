@@ -29,7 +29,7 @@ uint16_t locToPix(uint16_t _loc);
 
 uint16_t pixToLoc(uint16_t _pix);
 
-void menuOptionsCallbackRestart(void*);
+void menuOptionsCallbackDelete(void* _save);
 
 void menuOptionsCallbackLoad(void*);
 

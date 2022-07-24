@@ -220,9 +220,11 @@ int gameLoop(void* _data) {
   return 1;
 }
 
-void menuOptionsCallbackRestart(void* blank) {
-  pd->system->logToConsole("menuOptionsCallbackRestart");
-  doIO(kDoReset, /*and then*/ kDoSave);
+void menuOptionsCallbackDelete(void* _save) {
+  int save = (uintptr_t) _save;
+  pd->system->logToConsole("menuOptionsCallbackDelete %i", save);
+  setSave(save);
+  doIO(kDoSaveDelete, /*and then*/ kDoScanSlots);
 }
 
 void menuOptionsCallbackLoad(void* blank) {
@@ -234,7 +236,6 @@ void menuOptionsCallbackLoad(void* blank) {
 void menuOptionsCallbackSave(void* blank) {
   pd->system->logToConsole("menuOptionsCallbackSave");
   doIO(kDoSave, /*and then*/ kDoNothing);
-  //queueSave();
 }
 
 // Call prior to loading anything
@@ -272,7 +273,7 @@ void initGame() {
     if (i != CargoDesc[i].subType) pd->system->error("CARGO DESCRIPTOR ORDERING IS WRONG!");
   }
 
-  pd->system->addMenuItem("restart", menuOptionsCallbackRestart, NULL);
+  //pd->system->addMenuItem("restart", menuOptionsCallbackRestart, NULL);
 
   pd->system->addMenuItem("load", menuOptionsCallbackLoad, NULL);
 

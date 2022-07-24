@@ -30,6 +30,11 @@ static void init(void) {
   initSound();
   initGame();
 
+  setSave(0);
+  scanSlots();
+  setSave(1);
+  scanSlots();
+  setSave(2);
   scanSlots();
 
   doIO(kDoTitle, /*and then*/ kDoNothing);
@@ -60,8 +65,12 @@ int eventHandler(PlaydateAPI* playdate, PDSystemEvent event, uint32_t arg) {
       #ifdef DEV
       playdate->system->logToConsole("EH: terminate/lock/low-p, %i", event);
       #endif
-      if (getGameMode() != kTitles) synchronousSave();
-      if (event == kEventTerminate) deinit();
+      if (getGameMode() != kTitles && !IOOperationInProgress()) {
+        synchronousSave();
+      }
+      if (event == kEventTerminate) {
+        deinit();
+      }
       break;
     case kEventUnlock:;
       #ifdef DEV

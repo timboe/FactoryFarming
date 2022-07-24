@@ -68,7 +68,7 @@ void populateInfoBuy(bool _visible) {
   roundedRect(3, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorWhite);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   switch (selectedCatType) {
-    case kPlant:; snprintf(textA, 128, "Buy %s, Likes: %s %s",
+    case kPlant:; snprintf(textA, 128, "Buy %s (%s %s)",
       toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
       toStringWetness( PDesc[selectedID].wetness ),
       toStringSoil( PDesc[selectedID].soil )); break;

@@ -276,7 +276,7 @@ void populateInfoMainmenu() {
     case kUICatTool:  snprintf(textA, 128, "%s", 
       toStringTool(selectedID)); snprintf(textB, 128, "%s", 
       toStringToolInfo(selectedID)); break;
-    case kUICatPlant:; snprintf(textA, 128, "Plant %s, Likes: %s %s",
+    case kUICatPlant:; snprintf(textA, 128, "Plant %s (%s %s)",
       toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
       toStringWetness(PDesc[selectedID].wetness),
       toStringSoil(PDesc[selectedID].soil)); break;
@@ -306,8 +306,9 @@ void populateInfoMainmenu() {
   if (selectedCat == kUICatCargo) {
     snprintf(textC, 128, "Value:      %i", (int)selectedPrice);
   } else if (selectedCat == kUICatExtractor) {
-    if (selectedID == kChalkQuarry) snprintf(textC, 128, "Build on Chalky Soil");
+    if (selectedID == kChalkQuarry) snprintf(textC, 128, "Build on %s", toStringSoil(kChalkyGround));
     else if (selectedID == kPump) snprintf(textC, 128, "Build on Water");
+    else if (selectedID == kSaltMine) snprintf(textC, 128, "Build on %s", toStringSoil(kPeatyGround));
   } 
   pd->graphics->drawText(textA, 128, kASCIIEncoding, 1*TILE_PIX, +2);
   pd->graphics->drawText(textB, 128, kASCIIEncoding, 1*TILE_PIX, TILE_PIX - 2);

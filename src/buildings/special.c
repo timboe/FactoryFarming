@@ -123,10 +123,6 @@ void specialUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom)
   }
 }
 
-bool canBePlacedSpecial(struct Location_t* _loc, enum kDir _dir, union kSubType _subType) {
-  return true;
-}
-
 void assignNeighborsSpecial(struct Building_t* _building) {
 }
 
@@ -355,7 +351,7 @@ void drawUIInspectSpecial(struct Building_t* _building) {
     snprintf(text, 128, "Receive money for every sold item.");
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
-  } else if (sst == kWarp) {
+  } else if (sst == kWarp && _building->m_dir == SN) {
 
     snprintf(text, 128, "View available plots of land.");
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
@@ -364,7 +360,7 @@ void drawUIInspectSpecial(struct Building_t* _building) {
     snprintf(text, 128, "Move between your owned plots.");
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
     
-  } else if (sst == kExportBox) {
+  } else if (sst == kExportBox && _building->m_dir == SN) {
 
     snprintf(text, 128, "Export Cargo for use in other plots.");
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
@@ -375,7 +371,7 @@ void drawUIInspectSpecial(struct Building_t* _building) {
     snprintf(text, 128, "Imported into this plot.");
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
-  } else if (sst == kImportBox) {
+  } else if (sst == kImportBox && _building->m_dir == SN) {
 
     snprintf(text, 128, "Import Cargo from other plots. You can select an");
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
@@ -386,5 +382,17 @@ void drawUIInspectSpecial(struct Building_t* _building) {
     snprintf(text, 128, "depends on the total number of importers.");
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
+  } else {
+
+    snprintf(text, 128, "A large boulder blocks the ground here.");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 128, "Maybe it will become important later on?");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 128, " ");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 128, " ");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
   }
+
 }

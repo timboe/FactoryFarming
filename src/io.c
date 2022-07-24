@@ -9,7 +9,7 @@
 #include "player.h"
 #include "buildings/special.h"
 
-bool m_foundSaveData = false;
+uint8_t m_save = 0;
 
 uint8_t m_slot = 0;
 
@@ -17,9 +17,11 @@ uint8_t m_scanSlot = 0;
 
 char m_filePath[32];
 
-uint8_t m_worldVersions[WORLD_SAVE_SLOTS];
+uint8_t m_worldVersions[N_SAVES][WORLD_SAVE_SLOTS] = {0};
 
-bool m_worldExists[WORLD_SAVE_SLOTS];
+bool m_worldExists[N_SAVES][WORLD_SAVE_SLOTS] = {false};
+
+bool m_foundSaveData[N_SAVES] = {false};
 
 enum kSaveLoadRequest m_doFirst = kDoNothing, m_andThen = kDoNothing;
 
@@ -41,7 +43,7 @@ bool doLoad(void);
 
 bool doNewWorld(void);
 
-bool doReset(void);
+bool doSaveDelete(void);
 
 bool doTitle(void);
 
@@ -94,7 +96,9 @@ void enactIO() {
     case kDoLoad: finished = doLoad(); break;
     case kDoNewWorld: finished = doNewWorld(); break;
     case kDoTitle: finished = doTitle(); break;
-    case kDoReset: finished = doReset(); break;
+    case kDoSaveDelete: finished = doSaveDelete(); break;
+    case kDoScanSlots: finished = true; scanSlots(); break;
+    case kDoResetPlayer: finished = true; resetPlayer(); break;
   }
 
   if (finished) {
@@ -116,9 +120,11 @@ void enactIO() {
   }
 }
 
-bool hasSaveData() { return m_foundSaveData; }
+bool hasSaveData(uint8_t _save) { return m_foundSaveData[_save]; }
 
-bool hasWorld(uint8_t _slot) { return m_worldExists[_slot]; }
+void setSave(uint8_t _save) { m_save = _save; }
+
+bool hasWorld(uint8_t _slot) { return m_worldExists[m_save][_slot]; }
 
 int doRead(void* _userdata, uint8_t* _buf, int _bufsize) {
   return pd->file->read((SDFile*)_userdata, _buf, _bufsize);
@@ -130,15 +136,14 @@ void doWrite(void* _userdata, const char* _str, int _len) {
 
 void decodeError(json_decoder* jd, const char* _error, int _linenum) {
   pd->system->logToConsole("decode error line %i: %s", _linenum, _error);
+  doIO(kDoTitle, /*and then*/ kDoNothing);
 }
 
 void setSlot(uint8_t _slot) { m_slot = _slot; }
 
 uint8_t getSlot() { return m_slot; }
 
-void setForceSlot(int8_t _slot) {
-  m_forceSlot = _slot;
-}
+void setForceSlot(int8_t _slot) { m_forceSlot = _slot; }
 
 ///
 
@@ -150,6 +155,12 @@ bool doTitle() {
   setGameMode(kTitles);
   unZoom();
   setPlayerPosition((3*DEVICE_PIX_X)/4, (3*DEVICE_PIX_Y)/4, /*update current location = */ true);
+
+  pd->system->removeAllMenuItems();
+  pd->system->addMenuItem("delete save a", menuOptionsCallbackDelete, (void*)0);
+  pd->system->addMenuItem("delete save b", menuOptionsCallbackDelete, (void*)1);
+  pd->system->addMenuItem("delete save c", menuOptionsCallbackDelete, (void*)2);
+
   return true;
 }
 
@@ -177,6 +188,9 @@ bool doNewWorld() {
   } else if (m_actionProgress == 10) {
 
     setChunkBackgrounds(/*for title = */ false);
+
+    setGameMode(kWanderMode);
+
     // Finished
     // Need to save now, so issue another doIO command from here
     doIO(kDoSave, kDoNothing);
@@ -189,52 +203,31 @@ bool doNewWorld() {
 
 ///
 
-bool doReset() {
-  pd->system->logToConsole("RESET: Progress %i", m_actionProgress);
-  pd->sprite->addSprite(getGenSprite());
+bool doSaveDelete() {
+  pd->system->logToConsole("SAVE DELTE Save:%i", m_save);
 
-  if (m_actionProgress == 0) {
-
-    // Hard file system reset
-    for (uint16_t ss = 0; ss < WORLD_SAVE_SLOTS; ++ss) {
-      snprintf(m_filePath, 16, "world%u.json", (unsigned)ss);
-      pd->file->unlink(m_filePath, 0);
-    }
-    pd->file->unlink("player.json", 0);
-
-    // Internal full reset
-    reset(true);
-    setSlot(0);
-
-  } else if (m_actionProgress < 9) {
-
-    generate(m_actionProgress);
-
-  } else if (m_actionProgress == 9) {
-
-    addObstacles();
-
-  } else if (m_actionProgress == 10) {
-
-    setChunkBackgrounds(/*for title = */ false);
-
-    // Finished
-    return true;
+  // Hard file system reset
+  for (uint16_t ss = 0; ss < WORLD_SAVE_SLOTS; ++ss) {
+    snprintf(m_filePath, 32, "world_%i_%i.json", m_save, ss);
+    pd->file->unlink(m_filePath, 0);
   }
+  snprintf(m_filePath, 32, "player_%i.json", m_save);
+  pd->file->unlink(m_filePath, 0);
 
-  ++m_actionProgress;
-  return false;
+  // Finished
+  return true;
 }
 
 ///
 
 void scanSlots() {
+  m_foundSaveData[m_save] = false;
   for (m_scanSlot = 0; m_scanSlot < WORLD_SAVE_SLOTS; ++m_scanSlot) {
-    snprintf(m_filePath, 16, "world%u.json", (unsigned)m_scanSlot);
+    snprintf(m_filePath, 32, "world_%i_%i.json", m_save, m_scanSlot);
     SDFile* file = pd->file->open(m_filePath, kFileRead|kFileReadData);
     if (!file) {
-      pd->system->logToConsole("Scan world: Slot:%u, No Save", m_scanSlot);
-      m_worldExists[m_scanSlot] = false;
+      pd->system->logToConsole("Scan world: Save:%i, Slot:%i, No Save", m_save, m_scanSlot);
+      m_worldExists[m_save][m_scanSlot] = false;
       continue;
     }
 
@@ -247,31 +240,31 @@ void scanSlots() {
     pd->json->decode(&jd, (json_reader){ .read = doRead, .userdata = file }, NULL);
     pd->file->close(file);
 
-    pd->system->logToConsole("Scan world: Slot:%u, Version:%i", (unsigned)m_scanSlot, m_worldVersions[m_scanSlot]);
-    m_worldExists[m_scanSlot] = true;
-    m_foundSaveData = true;
+    pd->system->logToConsole("Scan world: Save:%i, Slot:%i, Version:%i", m_save, m_scanSlot, m_worldVersions[m_save][m_scanSlot]);
+    m_worldExists[m_save][m_scanSlot] = true;
+    m_foundSaveData[m_save] = true;
   }
 
   // Filter
   for (uint16_t ss = 0; ss < WORLD_SAVE_SLOTS; ++ss) {
-    if (m_worldExists[ss]) {
-      if (m_worldVersions[ss] == 0) {
+    if (m_worldExists[m_save][ss]) {
+      if (m_worldVersions[m_save][ss] == 0) {
         pd->system->logToConsole("Scan world: OLD WORLD DETECTED! Version 0. ACTION: Delete everything and start again");
-        m_foundSaveData = false;
-        doReset();
+        m_foundSaveData[m_save] = false;
       }
     }
   }
 
   {
-    SDFile* file = pd->file->open("player.json", kFileRead|kFileReadData);
+    snprintf(m_filePath, 32, "player_%i.json", m_save);
+    SDFile* file = pd->file->open(m_filePath, kFileRead|kFileReadData);
     if (!file) {
-      m_foundSaveData = false;
+      m_foundSaveData[m_save] = false;
       pd->system->logToConsole("Scan world: No Player data found!");
     }
   }
 
-  pd->system->logToConsole("Scan world: overall result:%s", m_foundSaveData ? "CAN-BE-LOADED" : "CANNOT-LOAD");
+  pd->system->logToConsole("Scan world: overall result for Save:%i - %s", m_save, m_foundSaveData[m_save] ? "CAN-BE-LOADED" : "CANNOT-LOAD");
 }
 
 int scanShouldDecodeTableValueForKey(json_decoder* jd, const char* _key) {
@@ -280,7 +273,7 @@ int scanShouldDecodeTableValueForKey(json_decoder* jd, const char* _key) {
 
 void scanDidDecode(json_decoder* jd, const char* _key, json_value _value) {
   if (strcmp(_key, "sf") == 0) {
-    m_worldVersions[m_scanSlot] = json_intValue(_value);
+    m_worldVersions[m_save][m_scanSlot] = json_intValue(_value);
   } else {
     pd->system->error("scanDidDecode DECODE ISSUE, %s", _key);
   }
@@ -303,14 +296,14 @@ bool doSave(bool _synchronous) {
   #endif
 
   if (!_synchronous) pd->sprite->addSprite(getSaveSprite());
-  pd->system->logToConsole("SAVE: Sync:%i, Progress %i", _synchronous, m_actionProgress);
+  pd->system->logToConsole("SAVE: Save:%i, Sync:%i, Progress %i", m_save, _synchronous, m_actionProgress);
 
   if (m_actionProgress == 0) {
 
     // Should get the latest export averages, guaranteed to be between 60 and 120s worth of data
     updateExport();
 
-    snprintf(m_filePath, 32, "TMP_player.json");
+    snprintf(m_filePath, 32, "TMP_player_%i.json", m_save);
     m_file = pd->file->open(m_filePath, kFileWrite);
 
     pd->json->initEncoder(&m_je, doWrite, m_file, pretty);
@@ -325,7 +318,7 @@ bool doSave(bool _synchronous) {
 
   } else if (m_actionProgress == 2) {
 
-    snprintf(m_filePath, 32, "TMP_world%i.json", m_slot);
+    snprintf(m_filePath, 32, "TMP_world_%i_%i.json", m_save, m_slot);
     SDFile* file = pd->file->open(m_filePath, kFileWrite);
 
     pd->json->initEncoder(&m_je, doWrite, m_file, pretty);
@@ -349,17 +342,17 @@ bool doSave(bool _synchronous) {
     int status = pd->file->close(m_file);
     m_file = NULL;
 
-    pd->system->logToConsole("SAVE: Saved to slot %u, save status %i", m_slot, status);
+    pd->system->logToConsole("SAVE: Saved to Save:%i, Slot %u, save status %i", m_save, m_slot, status);
 
     // Finish by moving into location
     char filePathFinal[32];
 
-    snprintf(m_filePath, 32, "TMP_player.json");
-    snprintf(filePathFinal, 32, "player.json");
+    snprintf(m_filePath, 32, "TMP_player_%i.json", m_save);
+    snprintf(filePathFinal, 32, "player_%i.json", m_save);
     pd->file->rename(m_filePath, filePathFinal);
 
-    snprintf(m_filePath, 32, "TMP_world%i.json", m_slot);
-    snprintf(filePathFinal, 32, "world%i.json", m_slot);
+    snprintf(m_filePath, 32, "TMP_world_%i_%i.json", m_save, m_slot);
+    snprintf(filePathFinal, 32, "world_%i_%i.json", m_save, m_slot);
     pd->file->rename(m_filePath, filePathFinal);
 
   } else if (m_actionProgress == 8) {
@@ -379,7 +372,7 @@ bool doSave(bool _synchronous) {
 bool doLoad() {
 
   pd->sprite->addSprite(getLoadSprite());
-  pd->system->logToConsole("LOAD: Progress %i", m_actionProgress);
+  pd->system->logToConsole("LOAD: Save:%i, Progress %i", m_save, m_actionProgress);
 
   if (m_actionProgress == 0) {
 
@@ -387,7 +380,7 @@ bool doLoad() {
     const bool resetThePlayerToo = (m_forceSlot == -1);
     reset(resetThePlayerToo);
 
-    snprintf(m_filePath, 16, "player.json");
+    snprintf(m_filePath, 32, "player_%i.json", m_save);
     m_file = pd->file->open(m_filePath, kFileRead|kFileReadData);
 
     pd->json->decode(&m_jd_p, (json_reader){ .read = doRead, .userdata = m_file }, NULL);
@@ -400,11 +393,11 @@ bool doLoad() {
     // We have now loaded the correct slot number for this player-save.
     // But we might want to be loading into a different world 
     if (m_forceSlot != -1) {
-      pd->system->logToConsole("LOAD: Slot Override from %i to %i", m_slot, m_forceSlot);
+      pd->system->logToConsole("LOAD: Save:%i, Slot Override from %i to %i", m_save, m_slot, m_forceSlot);
       setSlot(m_forceSlot);
     }
 
-    snprintf(m_filePath, 16, "world%i.json", m_slot);
+    snprintf(m_filePath, 32, "world_%i_%i.json", m_save, m_slot);
     m_file = pd->file->open(m_filePath, kFileRead|kFileReadData);
 
     // TODO - call this many times, each time with a different WILL DECODE
@@ -420,6 +413,8 @@ bool doLoad() {
     doWetness(/*for titles = */ false);
     setChunkBackgrounds(/*for title = */ false);
     showTutorialMsg(getTutorialStage());
+
+    setGameMode(kWanderMode);
 
     // Finished
     float f; for (int32_t i = 0; i < 10000; ++i) for (int32_t j = 0; j < 100000; ++j) { f*=i*j; }

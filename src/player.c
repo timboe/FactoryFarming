@@ -48,8 +48,8 @@ const char* toStringTool(enum kToolType _type) {
 
 const char* toStringToolInfo(enum kToolType _type) {
   switch(_type) {
-    case kToolPickup: return "Get nearby cargo, empties chests";
-    case kToolInspect: return "See details about the next tile";
+    case kToolPickup: return "Get nearby cargo, empties buildings";
+    case kToolInspect: return "See details about the current tile";
     case kToolDestroy: return "Destroys buildings, belts and cargo";
     default: return "Tool???";
   }
@@ -436,7 +436,7 @@ void resetPlayer() {
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_importConsumers[i] = 0;
   setPlayerPosition(SCREEN_PIX_X/4, (3*SCREEN_PIX_Y)/4, /*update current location = */ true);
   m_currentChunk = getChunk_noCheck(0,0);
-  //modMoney(100000); // TEMP
+  modMoney(100000); // TEMP
 }
 
 

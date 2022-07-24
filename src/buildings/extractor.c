@@ -84,24 +84,25 @@ void mineUpdateFn(struct Building_t* _building, uint8_t _tick) {
 
 void extractorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   switch (_building->m_subType.extractor) {
-    case kCropHarvesterSmall:; return cropHarveserUpdateFn(_building, _tick);
-    case kPump:; return mineUpdateFn(_building, _tick);
-    case kChalkQuarry:; return mineUpdateFn(_building, _tick);
-    case kCropHarvesterLarge:; return cropHarveserUpdateFn(_building, _tick);
+    case kCropHarvesterSmall:; case kCropHarvesterLarge:; return cropHarveserUpdateFn(_building, _tick);
+    case kChalkQuarry:; case kPump:; case kSaltMine:; return mineUpdateFn(_building, _tick);
     case kNExtractorSubTypes:; break;
   }
 }
 
-bool canBePlacedExtractor(struct Location_t* _loc, enum kDir _dir, union kSubType _subType) {
+bool canBePlacedExtractor(struct Location_t* _loc, union kSubType _subType) {
   bool hasWater = false;
   bool hasChalk = false;
+  bool hasPeat = false;
   for (int32_t x = -1; x < 2; ++x) {
     for (int32_t y = -1; y < 2; ++y) {
       struct Tile_t* t = getTile(_loc->m_x + x, _loc->m_y + y);
       bool isWater = isWaterTile(_loc->m_x + x, _loc->m_y + y);
       bool isChalk = isGroundTypeTile(_loc->m_x + x, _loc->m_y + y, kChalkyGround);
+      bool isPeat = isGroundTypeTile(_loc->m_x + x, _loc->m_y + y, kPeatyGround);
       if (isWater) hasWater = true;
       if (isChalk) hasChalk = true;
+      if (isPeat) hasPeat = true;
       if (t->m_tile > TOT_FLOOR_TILES && !isWater) return false;
       if (getLocation(_loc->m_x + x, _loc->m_y + y)->m_building != NULL) return false;
     }
@@ -110,6 +111,8 @@ bool canBePlacedExtractor(struct Location_t* _loc, enum kDir _dir, union kSubTyp
     return hasWater;
   } else if (_subType.extractor == kChalkQuarry) {
     return hasChalk && !hasWater;
+  } else if (_subType.extractor == kSaltMine) {
+    return hasPeat && !hasWater;
   }
  return !hasWater;
 }

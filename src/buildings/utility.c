@@ -42,7 +42,7 @@ void utilityUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom)
   }
 }
 
-bool canBePlacedUtility(struct Location_t* _loc, enum kDir _dir, union kSubType _subType) {
+bool canBePlacedUtility(struct Location_t* _loc) {
   struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
   if (t->m_tile > TOT_FLOOR_TILES) return false;
   if (_loc->m_building != NULL) return false;

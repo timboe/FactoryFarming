@@ -5,6 +5,7 @@
 #include "render.h"
 #include "building.h"
 #include "ui.h"
+#include "io.h"
 #include "buildings/special.h"
 #include "ui/mainmenu.h"
 #include "ui/sell.h"
@@ -153,7 +154,20 @@ void clickHandleWander(uint32_t _buttonPressed) {
 }
 
 void clickHandleTitles(uint32_t _buttonPressed) {
-
+  if (kButtonA == _buttonPressed) {
+    setSave(getTitleCursorSelected());
+    if (hasSaveData(getTitleCursorSelected())) {
+      setForceSlot(-1); // -1 loads from the slot stored in the player's save file
+      doIO(kDoLoad, /*and then*/ kDoNothing);
+    } else {
+      setForceSlot(0); // This will be the ID of the world we generate
+      doIO(kDoResetPlayer, /*and then*/ kDoNewWorld);
+    }
+  } else if (kButtonLeft == _buttonPressed) {
+    modTitleCursor(false);
+  } else if (kButtonRight == _buttonPressed) {
+    modTitleCursor(true);
+  }
 }
 
 void clickHandleMenuBuy(uint32_t _buttonPressed) {

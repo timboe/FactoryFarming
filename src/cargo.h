@@ -1,7 +1,9 @@
 #pragma once
 #include "game.h"
 
-enum kCargoType {kNoCargo, kApple, kCheese, kCarrot, kWheat, kWaterBarrel, kChalk, kVitamin, kNCargoType};
+enum kCargoType {kNoCargo, kApple, kCheese, kCarrot, kWheat, kWaterBarrel, kChalk, kVitamin, 
+  kSunflower, kOil, kPotato, kSalt, kCrisps, kNCargoType};
+
 struct CargoDescriptor_t {
   enum kCargoType subType;
   uint32_t price;
@@ -38,6 +40,8 @@ struct Cargo_t* cargoManagerGetByIndex(uint16_t _index);
 void cargoManagerFreeCargo(struct Cargo_t* _cargo);
 
 bool newCargo(struct Location_t* loc, enum kCargoType _type, bool _addToDisplay);
+
+bool canBePlacedCargo(struct Location_t* loc);
 
 void initCargo(void);
 

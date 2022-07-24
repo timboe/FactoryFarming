@@ -8,7 +8,7 @@ void assignNeighborsPlant(struct Building_t* _building);
 
 void buildingSetupPlant(struct Building_t* _building);
 
-bool canBePlacedPlant(struct Location_t* _loc, enum kDir _dir, union kSubType _subType);
+bool canBePlacedPlant(struct Location_t* _loc);
 
 void plantTrySpawnCargo(struct Building_t* _building, uint8_t _tick);
 

@@ -1,9 +1,11 @@
 #pragma once
 #include "game.h"
 
-enum kSaveLoadRequest {kDoNothing, kDoSave, kDoLoad, kDoNewWorld, kDoReset, kDoTitle};
+enum kSaveLoadRequest {kDoNothing, kDoSave, kDoLoad, kDoNewWorld, kDoSaveDelete, kDoScanSlots, kDoResetPlayer, kDoTitle};
 
 void synchronousSave(void);
+
+void setSave(uint8_t _save);
 
 void setSlot(uint8_t _slot);
 
@@ -13,7 +15,7 @@ uint8_t getSlot(void);
 
 void scanSlots(void);
 
-bool hasSaveData(void);
+bool hasSaveData(uint8_t _save);
 
 bool hasWorld(uint8_t _slot);
 

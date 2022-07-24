@@ -31,8 +31,8 @@ struct Building_t* m_buildings;
 //{kBelt, kSplitL, kSplitI, kSplitT, kTunnelIn, kTunnelOut, kFilterL,  kFilterI, kNConvSubTypes};
 const struct ConveyorDescriptor_t CDesc[] = {
   {.subType = kBelt,      .unlock = 5,       .price = 10,         .UIIcon = SID(0,17), .spriteX = 0,  .spriteY = 7},
-  {.subType = kSplitL,    .unlock = 10,       .price = 50,         .UIIcon = SID(4,17), .spriteX = 0,  .spriteY = 11},
-  {.subType = kSplitI,    .unlock = 15,      .price = 50,         .UIIcon = SID(0,4),  .spriteX = 1,  .spriteY = 11},
+  {.subType = kSplitL,    .unlock = 10,      .price = 50,         .UIIcon = SID(4,17), .spriteX = 1,  .spriteY = 11},
+  {.subType = kSplitI,    .unlock = 15,      .price = 50,         .UIIcon = SID(0,4),  .spriteX = 0,  .spriteY = 11},
   {.subType = kSplitT,    .unlock = 20,      .price = 50,         .UIIcon = SID(4,4),  .spriteX = 2,  .spriteY = 11},
   {.subType = kTunnelIn,  .unlock = 25,      .price = 100,        .UIIcon = SID(8,17), .spriteX = 8,  .spriteY = 11},
   {.subType = kTunnelOut, .unlock = UINT32_MAX, .price = UINT16_MAX, .UIIcon = SID(8,16), .spriteX = 9,  .spriteY = 11},
@@ -40,9 +40,11 @@ const struct ConveyorDescriptor_t CDesc[] = {
   {.subType = kFilterI,   .unlock = 35,      .price = 75,         .UIIcon = SID(12,4), .spriteX = 10, .spriteY = 11}
 };
 
-//{kCarrotPlant, kAppleTree, kWheatPlant, kP4, klP5, kP6, kP7, kP8, kP9, kP10, kP11, kP12};
+//{kkCarrotPlant, kPotatoPlant, kSunflowerPlant, kAppleTree, kWheatPlant, kP4, kP5, kP6, kP7, kP8, kP9, kP10, kP11, kP12};
 const struct PlantDescriptor_t PDesc[] = {
   {.subType = kCarrotPlant, .unlock = 1, .price = 0, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSiltyGround, .out = kCarrot},
+  {.subType = kPotatoPlant, .unlock = 2, .price = 0, .sprite = SID(14, 8), .time = 50, .wetness = kWet, .soil = kPeatyGround, .out = kPotato},
+  {.subType = kSunflowerPlant, .unlock = 3, .price = 0, .sprite = SID(15, 8), .time = 50, .wetness = kDry, .soil = kSiltyGround, .out = kSunflower},
   {.subType = kAppleTree, .unlock = 36, .price = 100, .sprite = SID(8, 8), .time = 50, .wetness = kMoist, .soil = kChalkyGround, .out = kApple},
   {.subType = kWheatPlant, .unlock = 37, .price = 100, .sprite = SID(11, 8), .time = 50, .wetness = kDry, .soil = kPeatyGround, .out = kWheat},
   {.subType = kP4, .unlock = DIS, .price = 1, .sprite = SID(10, 8), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kCarrot},
@@ -64,19 +66,20 @@ const struct UtilityDescriptor_t UDesc[] = {
   {.subType = kConveyorGrease, .unlock = 41, .price = 100, .UIIcon = SID(8,15),}
 };
 
-//{kCropHarvesterSmall, kPump, kChalkQuarry, kCropHarvesterLarge, kNExtractorSubTypes};
+//{kCropHarvesterSmall, kChalkQuarry, kSaltMine, kPump, kCropHarvesterLarge, kNExtractorSubTypes};
 const struct ExtractorDescriptor_t EDesc[] = {
   {.subType = kCropHarvesterSmall, .unlock = 42, .price = 50, .UIIcon = SID(4,16), .sprite = BID(0,0), .out = kNoCargo},
-  {.subType = kPump, .unlock = 43, .price = 100, .UIIcon = SID(12,11), .sprite = BID(0,3), .out = kWaterBarrel},
   {.subType = kChalkQuarry, .unlock = 44, .price = 75, .UIIcon = SID(12,12), .sprite = BID(0,6), .out = kChalk},
+  {.subType = kSaltMine, .unlock = 55, .price = 10, .UIIcon = SID(12,12), .sprite = BID(0,6), .out = kSalt},
+  {.subType = kPump, .unlock = 43, .price = 100, .UIIcon = SID(12,11), .sprite = BID(0,3), .out = kWaterBarrel},
   {.subType = kCropHarvesterLarge, .unlock = 45, .price = 500, .UIIcon = SID(8,16), .sprite = BID(0,0), .out = kNoCargo}
 };
 
-//{kVitiminFac, kF2, kF3, kF4, kF5, kF6, kF7, kF8, kF9,  k10, kF11 kNFactorySubTypes};
+//{kVitiminFac, kVegOilFac, kCrispsFac, kF4, kF5, kF6, kF7, kF8, kF9,  k10, kF11 kNFactorySubTypes};
 const struct FactoryDescriptor_t FDesc[] = {
   {.subType = kVitiminFac, .unlock = 46, .price = 100, .time = 6, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kChalk, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
-  {.subType = kF2, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
-  {.subType = kF3, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kVegOilFac, .unlock = 56, .price = 1, .time = 2, .sprite = BID(0,4), .out = kOil, .in1 = kSunflower, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kCrispsFac, .unlock = 57, .price = 1, .time = 2, .sprite = BID(0,4), .out = kCrisps, .in1 = kOil, .in2 = kPotato, .in3 = kSalt, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kF4, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kF5, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kF6, .unlock = DIS, .price = 1, .time = 1, .sprite = BID(0,4), .out = kVitamin, .in1 = kCarrot, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
@@ -113,6 +116,8 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
     }
     case kPlant: switch (_subType.plant) {
       case kCarrotPlant: return _inworld ? "Carrot Plant" : "Carrot Seeds";
+      case kPotatoPlant: return _inworld ? "Potato Plant" : "Seed Potato";
+      case kSunflowerPlant: return _inworld ? "Sunflower Plant" : "Sunflower Seeds";
       case kAppleTree: return _inworld ? "Apple Tree" : "Apple Sapling";
       case kWheatPlant: return _inworld ? "Wheat Plant" : "Wheet Seeds";
       case kP4:; case kP5:; case kP6:; case kP7:; case kP8:; case kP9:; case kP10:; case kP11:; case kP12:; return "Placeholder";
@@ -129,17 +134,20 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kCropHarvesterSmall: return _inworld ? "Harvester 7x7" : "Automatic Harvester (7x7)";
       case kPump: return "Water Pump";
       case kChalkQuarry: return "Chalk Quarry";
+      case kSaltMine: return "Salt Mine";
       case kCropHarvesterLarge: return _inworld ? "Harvester 9x9 " : "Automatic Harvester (9x9)";
       case kNExtractorSubTypes: return "";
     }
     case kFactory: switch (_subType.factory) {
       case kVitiminFac: return "Vitamin Factory";
-      case kF2: case kF3: case kF4: case kF5: case kF6: case kF7: case kF8: case kF9: case kF10: case kF11: return "FPlaceholder"; 
+      case kVegOilFac: return "Vegtable Oil Factory";
+      case kCrispsFac: return "Potato Chip Factory";
+      case kF4: case kF5: case kF6: case kF7: case kF8: case kF9: case kF10: case kF11: return "FPlaceholder"; 
       case kNFactorySubTypes: return "";
     }
     case kSpecial: switch (_subType.special) {
       case kShop: return "The Shop";
-      case kSellBox: return "Sell Box";
+      case kSellBox: return "Sales";
       case kExportBox: return isCamouflaged() ? "A Suspicious Rock" : "Cargo Exporter";
       case kImportBox: return isCamouflaged() ? "A Suspicious Rock" : "Cargo Importer";
       case kWarp: return isCamouflaged() ? "A Suspicious Rock" : "Plot Manager";
@@ -267,11 +275,11 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   bool canBePlaced = false;
   switch (_type) {
     case kConveyor:; canBePlaced = canBePlacedConveyor(_loc, _dir, _subType); break;
-    case kPlant:;  canBePlaced = canBePlacedPlant(_loc, _dir, _subType); break;
-    case kUtility:; canBePlaced = canBePlacedUtility(_loc, _dir, _subType); break;
-    case kExtractor:;  canBePlaced = canBePlacedExtractor(_loc, _dir, _subType); break;
-    case kSpecial:;  canBePlaced = canBePlacedSpecial(_loc, _dir, _subType); break;
-    case kFactory:;  canBePlaced = canBePlacedFactory(_loc, _dir, _subType); break;
+    case kPlant:;  canBePlaced = canBePlacedPlant(_loc); break;
+    case kUtility:; canBePlaced = canBePlacedUtility(_loc); break;
+    case kExtractor:;  canBePlaced = canBePlacedExtractor(_loc, _subType); break;
+    case kSpecial:;  canBePlaced = true; break;
+    case kFactory:;  canBePlaced = canBePlacedFactory(_loc); break;
     case kNoBuilding:; case kNBuildingTypes:; break;
   }
   if (!canBePlaced) return false;
@@ -297,6 +305,11 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
         }
       }
     }
+  }
+
+  if (!newToChunk) {
+    // Refund existing.
+    modOwned(kUICatConv, building->m_subType.raw, /*add = */ true);
   }
 
   setBuildingSubType(building, _subType);
@@ -361,7 +374,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
 
    }
 
-  return newToChunk;
+  return true;
 }
 
 void resetBuilding() {

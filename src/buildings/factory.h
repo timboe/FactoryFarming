@@ -8,7 +8,7 @@ void assignNeighborsFactory(struct Building_t* _building);
 
 void buildingSetupFactory(struct Building_t* _building);
 
-bool canBePlacedFactory(struct Location_t* _loc, enum kDir _dir, union kSubType _subType);
+bool canBePlacedFactory(struct Location_t* _loc);
 
 uint16_t getNIngreindientsText(enum kFactorySubType _type);
 

@@ -5,7 +5,8 @@
 #include "building.h"
 #include "input.h"
 
-//{kNoCargo, kApple, kCheese, kCarrot, kWheat, kWaterBarrel, kChalk, kVitamin, kNCargoType};
+//{kNoCargo, kApple, kCheese, kCarrot, kWheat, kWaterBarrel, kChalk, kVitamin, 
+// kSunflowe, kOil, kPotato, kSalt, kNCargoType};
 const struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kNoCargo, .price = 0, .UIIcon = SID(0,0)},
   {.subType = kApple, .price = 2, .UIIcon = SID(8,7)},
@@ -14,7 +15,12 @@ const struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kWheat, .price = 4, .UIIcon = SID(11,7)},
   {.subType = kWaterBarrel, .price = 1, .UIIcon = SID(12,7)},
   {.subType = kChalk, .price = 1, .UIIcon = SID(13,7)},
-  {.subType = kVitamin, .price = 16, .UIIcon = SID(12,8)}
+  {.subType = kVitamin, .price = 16, .UIIcon = SID(12,8)},
+  {.subType = kSunflower, .price = 4, .UIIcon = SID(15,7)},
+  {.subType = kOil, .price = 6, .UIIcon = SID(12,7)},
+  {.subType = kPotato, .price = 4, .UIIcon = SID(14,7)},
+  {.subType = kSalt, .price = 1, .UIIcon = SID(13,8)},
+  {.subType = kCrisps, .price = 10, .UIIcon = SID(0,20)}
 };
 
 const int32_t SIZE_CARGO = TOT_CARGO_OR_BUILDINGS * sizeof(struct Cargo_t);
@@ -42,6 +48,11 @@ const char* toStringCargoByType(enum kCargoType _type) {
     case kWaterBarrel: return "Water Barrel";
     case kChalk: return "Chalk";
     case kVitamin: return "Vitamins";
+    case kSunflower: return "Sunflower";
+    case kOil: return "Oil";
+    case kPotato: return "Potato";
+    case kSalt: return "Salt";
+    case kCrisps: return "Chips";
     default: return "Cargo???";
   }
 }
@@ -53,6 +64,10 @@ const char* toStringCargo(struct Cargo_t* _cargo) {
 
 uint16_t getNCargo() {
   return m_nCargo;
+}
+
+bool canBePlacedCargo(struct Location_t* loc) {
+  return (loc->m_cargo == NULL);
 }
 
 struct Cargo_t* cargoManagerNewCargo(enum kCargoType _type) {

@@ -8,6 +8,6 @@ void assignNeighborsUtility(struct Building_t* _building);
 
 void buildingSetupUtility(struct Building_t* _building);
 
-bool canBePlacedUtility(struct Location_t* _loc, enum kDir _dir, union kSubType _subType);
+bool canBePlacedUtility(struct Location_t* _loc);
 
 void drawUIInspectUtility(struct Building_t* _building);

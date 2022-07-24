@@ -94,6 +94,8 @@ const char* getNewText() {
     }
     case kUICatPlant: switch (m_nextSubType.plant) {
       case kCarrotPlant: return "Plant to grow Carrots";
+      case kSunflowerPlant: return "Plant to harvest Sunflowers";
+      case kPotatoPlant: return "Plant to grow Potatoes";
       case kAppleTree: return  "Plant to grow Apples";
       case kWheatPlant: return "Plant to grow Wheat";
       case kP4:; case kP5:; case kP6:; case kP7:; case kP8:; case kP9:; case kP10:; case kP11:; case kP12:; return "Placeholder";
@@ -110,12 +112,15 @@ const char* getNewText() {
       case kCropHarvesterSmall: return "Collects Cargo, can hold three different types";
       case kPump: return "Must be built on water. Produced Water Barrels";
       case kChalkQuarry: return "Must be built on Chalky Soil. Produces Chalk";
+      case kSaltMine: return "Must be built on Peaty Soil. Produces Salt";
       case kCropHarvesterLarge: return "Collects Cargo, can hold three different types";
       case kNExtractorSubTypes: return "";
     }
     case kUICatFactory: switch (m_nextSubType.factory) {
       case kVitiminFac: return "Manufactures low-grade Vitamin Pills";
-      case kF2: case kF3: case kF4: case kF5: case kF6: case kF7: case kF8: case kF9: case kF10: case kF11: return "FPlaceholder"; 
+      case kVegOilFac: return "Crush Vegetable Oil from Sunflowers";
+      case kCrispsFac: return "Manufactures Potato Chips. A fried favorite.";
+      case kF4: case kF5: case kF6: case kF7: case kF8: case kF9: case kF10: case kF11: return "FPlaceholder"; 
       case kNFactorySubTypes: return "";
     }
     default: break;

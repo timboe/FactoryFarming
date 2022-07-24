@@ -17,6 +17,8 @@ LCDBitmap* m_bitmap48_zoom[ZOOM_LEVELS][SHEET48_SIZE];
 
 LCDBitmap* m_stickySelected;
 
+LCDBitmap* m_titleSelected;
+
 LCDBitmap* m_new;
 
 LCDBitmap* m_splash;
@@ -144,6 +146,11 @@ LCDBitmap* getStickySelectedBitmap() {
   return m_stickySelected;
 }
 
+LCDBitmap* getTitleSelectedBitmap() {
+  return m_titleSelected;
+}
+
+
 void setCooperHewitt12() {
   pd->graphics->setFont(m_fontCooperHewitt12);
 }
@@ -201,6 +208,7 @@ void initSprite() {
   m_sheet18 = loadImageTableAtPath("images/sheet18");
   m_sheet48 = loadImageTableAtPath("images/sheet48");
   m_stickySelected = loadImageAtPath("images/selected");
+  m_titleSelected = loadImageAtPath("images/titleSelected");
   m_new = loadImageAtPath("images/new");
   m_splash = loadImageAtPath("images/splash");
 

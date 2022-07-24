@@ -60,6 +60,10 @@ uint16_t getNSubTypes(enum kUICat _c);
 
 uint16_t getUIIcon(enum kUICat _c, uint16_t _i);
 
+void modTitleCursor(bool _increment);
+
+uint16_t getTitleCursorSelected(void);
+
 enum kBuildingType getCatBuildingSubType(enum kUICat _c);
 
 LCDSprite* getCannotAffordSprite(void);

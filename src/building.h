@@ -19,7 +19,7 @@ struct ConveyorDescriptor_t {
 };
 extern const struct ConveyorDescriptor_t CDesc[];
 
-enum kPlantSubType{kCarrotPlant, kAppleTree, kWheatPlant, kP4, kP5, kP6, kP7, kP8, kP9, kP10, kP11, kP12, kNPlantSubTypes};
+enum kPlantSubType{kCarrotPlant, kPotatoPlant, kSunflowerPlant, kAppleTree, kWheatPlant, kP4, kP5, kP6, kP7, kP8, kP9, kP10, kP11, kP12, kNPlantSubTypes};
 struct PlantDescriptor_t {
   enum kPlantSubType subType;
   uint32_t unlock;
@@ -41,7 +41,7 @@ struct UtilityDescriptor_t {
 };
 extern const struct UtilityDescriptor_t UDesc[];
 
-enum kExtractorSubType{kCropHarvesterSmall, kPump, kChalkQuarry, kCropHarvesterLarge, kNExtractorSubTypes};
+enum kExtractorSubType{kCropHarvesterSmall, kChalkQuarry, kSaltMine, kPump, kCropHarvesterLarge, kNExtractorSubTypes};
 struct ExtractorDescriptor_t {
   enum kExtractorSubType subType;
   uint32_t unlock;
@@ -52,7 +52,7 @@ struct ExtractorDescriptor_t {
 };
 extern const struct ExtractorDescriptor_t EDesc[];
 
-enum kFactorySubType{kVitiminFac, kF2, kF3, kF4, kF5, kF6, kF7, kF8, kF9, kF10, kF11, kNFactorySubTypes};
+enum kFactorySubType{kVitiminFac, kVegOilFac, kCrispsFac, kF4, kF5, kF6, kF7, kF8, kF9, kF10, kF11, kNFactorySubTypes};
 struct FactoryDescriptor_t {
   enum kFactorySubType subType;
   uint16_t price;

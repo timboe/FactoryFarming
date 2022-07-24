@@ -41,7 +41,9 @@ LCDBitmap* m_UIBitmapLoad;
 LCDBitmap* m_UIBitmapGen;
 
 LCDSprite* m_UISpriteSplash;
+LCDSprite* m_UISpriteTitleSelected;
 int16_t m_UITitleOffset = 0;
+int16_t m_UITitleSelected = 0;
 LCDSprite* m_UISpriteTitleNew[3];
 LCDSprite* m_UISpriteTitleCont[3];
 LCDBitmap* m_UIBitmapTitleNew[3];
@@ -112,7 +114,7 @@ LCDBitmap* m_UIBitmapItems[kNUICats][MAX_PER_CAT][4];
 
 LCDSprite* m_UISpriteStickySelected[4];
 
-uint16_t m_selCol[kNGameModes] = {0}, m_selRow[kNGameModes] = {1}, m_selRotation[kNGameModes] = {0};
+uint16_t m_selCol[kNGameModes] = {0}, m_selRow[kNGameModes] = {1}, m_selRotation = 0;
 uint16_t m_selRowOffset[kNGameModes] = {0}, m_cursorRowAbs[kNGameModes] = {1};
 
 LCDSprite* m_contentSprite[MAX_ROWS][ROW_WDTH] = {NULL};
@@ -171,9 +173,7 @@ LCDSprite* getLoadSprite() { return m_UISpriteLoad; }
 LCDSprite* getGenSprite() { return m_UISpriteGen; }
 
 uint16_t getCursorRotation() {
-  enum kUICat c = m_mode;
-  if (m_mode == kPlaceMode || m_mode == kPlantMode || m_mode == kBuildMode) c = kMenuPlayer;
-  return m_selRotation[c];
+  return m_selRotation;
 }
 
 enum kUICat getUIContentCategory() {
@@ -198,18 +198,34 @@ uint16_t getUIContentID() {
 
 void rotateCursor(bool _increment) {
   if (_increment) {
-    m_selRotation[m_mode] = (m_selRotation[m_mode] == kDirN-1 ? 0 : m_selRotation[m_mode] + 1);
+    m_selRotation = (m_selRotation == kDirN-1 ? 0 : m_selRotation + 1);
   } else {
-    m_selRotation[m_mode] = (m_selRotation[m_mode] == 0 ? kDirN-1 : m_selRotation[m_mode] - 1);
+    m_selRotation = (m_selRotation == 0 ? kDirN-1 : m_selRotation - 1);
   }
   if (m_mode >= kMenuPlayer) UIDirtyMain();
   UIDirtyRight();
   updateBlueprint();
 }
 
-void updateUI(int _fc) {
+void modTitleCursor(bool _increment) {
+  if (_increment) {
+    m_UITitleSelected = (m_UITitleSelected == N_SAVES-1 ? 0 : m_UITitleSelected + 1);
+  } else {
+    m_UITitleSelected = (m_UITitleSelected == 0 ? N_SAVES-1 : m_UITitleSelected - 1);
+  }  
+}
 
+uint16_t getTitleCursorSelected() {
+  return m_UITitleSelected;
+}
+
+void updateUI(int _fc) {
+  
   if (m_mode == kTitles) {
+    pd->sprite->setVisible(m_UISpriteTitleSelected, _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
+    pd->sprite->moveTo(m_UISpriteTitleSelected, 
+      m_UITitleSelected*TILE_PIX*7 + (7*TILE_PIX)/2 + (m_UITitleSelected+1)*TILE_PIX, 
+      DEVICE_PIX_Y + TILE_PIX/2 - (UI_TITLE_OFFSET - m_UITitleOffset)*2);
     if (m_UITitleOffset) {
       --m_UITitleOffset;
       pd->sprite->moveTo(m_UISpriteSplash,
@@ -227,11 +243,13 @@ void updateUI(int _fc) {
     return;
   }
   
-  if ((m_mode >= kMenuBuy) && _fc % (TICK_FREQUENCY/4) == 0) {
+  const bool flash = _fc % (TICK_FREQUENCY/4) == 0;
+  if ((m_mode >= kMenuBuy) && flash) {
     // Flashing cursor
     UIDirtyMain();
-  } else if ((m_mode == kPlaceMode || m_mode == kBuildMode || m_mode == kPlantMode) && _fc % (TICK_FREQUENCY/4) == 0) {
+  } else if ((m_mode == kPlaceMode || m_mode == kBuildMode || m_mode == kPlantMode) && flash) {
     // Flashing blueprint 
+    updateBlueprint();
     pd->sprite->setVisible(getPlayer()->m_blueprint[getZoom()], _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
   }
   if (_fc % FAR_TICK_FREQUENCY == 0) {
@@ -298,6 +316,8 @@ void updateBlueprint() {
 
   const enum kUICat selectedCat = getUIContentCategory();
   const uint16_t selectedID =  getUIContentID();
+  const uint16_t selectedRot = getCursorRotation();
+  struct Location_t* pl = getPlayerLocation();
 
   pd->sprite->setDrawMode(bp, kDrawModeCopy);
 
@@ -318,16 +338,25 @@ void updateBlueprint() {
     } else {
       pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
     }
+    bool canPlace = true;
     switch (selectedCat) {
-      case kUICatConv:;    pd->sprite->setImage(bp, getSprite16_byidx( CDesc[selectedID].UIIcon + m_selRotation[m_mode], zoom), kBitmapUnflipped); break;
-      case kUICatUtility:; pd->sprite->setImage(bp, getSprite16_byidx( UDesc[selectedID].UIIcon + m_selRotation[m_mode], zoom), kBitmapUnflipped); break;
-      case kUICatCargo:;   pd->sprite->setImage(bp, getSprite16_byidx( CargoDesc[selectedID].UIIcon, zoom), kBitmapUnflipped); break;
-      case kUICatTool:; case kUICatPlant:; case kUICatExtractor:; case kUICatFactory:; case kUICatWarp:; break;
-      case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; case kNUICats:; break;
+      case kUICatConv:; canPlace = canBePlacedConveyor(pl, selectedRot, (union kSubType) {.conveyor = selectedID});
+                        pd->sprite->setImage(bp, getSprite16_byidx( CDesc[selectedID].UIIcon + selectedRot, zoom), kBitmapUnflipped); break;
+      case kUICatUtility:; canPlace = canBePlacedUtility(pl);
+                           pd->sprite->setImage(bp, getSprite16_byidx( UDesc[selectedID].UIIcon + selectedRot, zoom), kBitmapUnflipped); break;
+      case kUICatCargo:; canPlace = canBePlacedCargo(pl);
+                         pd->sprite->setImage(bp, getSprite16_byidx( CargoDesc[selectedID].UIIcon, zoom), kBitmapUnflipped); break;
+      default: break;
     }
+    if (!canPlace) pd->sprite->setImage(bp, getSprite16(1, 16, zoom), kBitmapUnflipped);
   } else if (gm == kPlantMode) { // Of crops
-    pd->sprite->setImage(bp, getSprite16_byidx( CargoDesc[ PDesc[selectedID].out ].UIIcon, zoom), kBitmapUnflipped); 
+    bool canPlace;
     pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
+    if (canBePlacedPlant(pl)) {
+      pd->sprite->setImage(bp, getSprite16_byidx( CargoDesc[ PDesc[selectedID].out ].UIIcon, zoom), kBitmapUnflipped);
+    } else {
+      pd->sprite->setImage(bp, getSprite16(1, 16, zoom), kBitmapUnflipped);
+    }
   } else if (gm == kBuildMode) { // Of factories and harvesters
     if (selectedCat == kUICatExtractor) {
       switch (selectedID) {
@@ -339,12 +368,15 @@ void updateBlueprint() {
     } else {
       pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped); 
     }
+    bool canPlace = true;
     switch (selectedCat) {
-      case kUICatExtractor:; pd->sprite->setImage(bp, getSprite48_byidx( EDesc[selectedID].sprite + m_selRotation[m_mode], zoom), kBitmapUnflipped); break;
-      case kUICatFactory:;   pd->sprite->setImage(bp, getSprite48_byidx( FDesc[selectedID].sprite + m_selRotation[m_mode], zoom), kBitmapUnflipped); break;
-      case kUICatTool:; case kUICatPlant:; case kUICatConv:; case kUICatUtility:; case kUICatCargo:; case kUICatWarp:; break;
-      case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; case kNUICats:; break;
+      case kUICatExtractor:; canPlace = canBePlacedExtractor(pl, (union kSubType) {.extractor = selectedID});
+                             pd->sprite->setImage(bp, getSprite48_byidx( EDesc[selectedID].sprite + selectedRot, zoom), kBitmapUnflipped); break;
+      case kUICatFactory:; canPlace = canBePlacedFactory(pl);
+                           pd->sprite->setImage(bp, getSprite48_byidx( FDesc[selectedID].sprite + selectedRot, zoom), kBitmapUnflipped); break;
+      default: break;
     }
+    if (!canPlace) pd->sprite->setImage(bp, getSprite48(1, 2, zoom), kBitmapUnflipped);
   } else { // Clear blueprint
     pd->sprite->setImage(bp, getSprite16_byidx(0, zoom), kBitmapUnflipped);
     pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped); 
@@ -356,16 +388,16 @@ void addUIToSpriteList() {
 
   if (m_mode == kTitles) {
     pd->sprite->addSprite(m_UISpriteSplash);
+    pd->sprite->addSprite(m_UISpriteTitleSelected);
     for (int32_t i = 0; i < 3; ++i) {
-      pd->sprite->addSprite(m_UISpriteTitleNew[i]);
-      pd->sprite->addSprite(m_UISpriteTitleCont[i]); // TODO should be either or
+      if (hasSaveData(i)) pd->sprite->addSprite(m_UISpriteTitleCont[i]);
+      else  pd->sprite->addSprite(m_UISpriteTitleNew[i]);
     }
     return;
   }
 
   pd->sprite->addSprite(m_UISpriteBottom);
   pd->sprite->addSprite(m_UISpriteTop);
-    pd->system->logToConsole("ADD RIGHT"); 
 
   pd->sprite->addSprite(m_UISpriteRight);
   if (p->m_enableDebug) {
@@ -614,7 +646,7 @@ void drawUIRight() {
   pd->graphics->drawBitmap(getSprite16(2, 16, 1), TILE_PIX/2, 0, kBitmapUnflipped); // Coin
   enum kGameMode gm = getGameMode();
   if (gm == kPlaceMode || gm == kPlantMode || gm == kBuildMode) {
-    int16_t rotMod = (m_selRotation[kMenuPlayer] == 0 ? 3 : m_selRotation[kMenuPlayer] - 1); // We are drawing this sideways, so need to rotate it by pi/2
+    int16_t rotMod = (m_selRotation == 0 ? 3 : m_selRotation - 1); // We are drawing this sideways, so need to rotate it by pi/2
     const enum kUICat selectedCat = getUIContentCategory();
     const uint16_t selectedID =  getUIContentID();
     snprintf(text, 32, "%u", (unsigned) getOwned(selectedCat, selectedID));
@@ -1028,7 +1060,7 @@ void setGameMode(enum kGameMode _mode) {
   } else if (_mode == kPickMode) {
     drawUITop("Pick Mode");
   } else if (_mode == kMenuPlayer) {
-    drawUITop("Main Menu");
+    drawUITop("Inventory");
   } else if (_mode == kInspectMode) {
     drawUITop("Inspect");
   } else if (_mode >= kMenuBuy) {
@@ -1045,13 +1077,14 @@ void resetUI() {
   for (int32_t i = 0; i < kNGameModes; ++i) {
     m_selCol[i] = 0;
     m_selRow[i] = 1;
-    m_selRotation[i] = 0;
     m_selRowOffset[i] = 0;
     m_cursorRowAbs[i] = 1;
   }
+  m_selRotation = 0;
   updateBlueprint();
   m_UITitleOffset = UI_TITLE_OFFSET;
   m_UITopOffset = 0;
+  m_UITitleSelected = 0;
 }
 
 void roundedRect(uint16_t _o, uint16_t _w, uint16_t _h, uint16_t _r, LCDColor _c) {
@@ -1080,10 +1113,10 @@ const char* newBannerText(enum kUICat _c) {
 
 const char* getWorldLetter(int8_t _i) {
   switch(_i) {
-    case 0: return "A";
-    case 1: return "B";
+    case 0: return "a";
+    case 1: return "b";
   }
-  return "C";
+  return "c";
 }
 
 void initiUI() {
@@ -1211,6 +1244,13 @@ void initiUI() {
   pd->sprite->setZIndex(m_UISpriteSplash, Z_INDEX_UI_M);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteSplash, 1);  
   pd->sprite->moveTo(m_UISpriteSplash, DEVICE_PIX_X/2, DEVICE_PIX_Y/2);
+
+  m_UISpriteTitleSelected = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteTitleSelected, buttonBound);
+  pd->sprite->setImage(m_UISpriteTitleSelected, getTitleSelectedBitmap(), kBitmapUnflipped);
+  pd->sprite->setZIndex(m_UISpriteTitleSelected, Z_INDEX_UI_M);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteTitleSelected, 1);  
+  pd->sprite->moveTo(m_UISpriteTitleSelected, (7*TILE_PIX)/2 + TILE_PIX, DEVICE_PIX_Y + TILE_PIX/2);
 
   setRoobert10();
   for (int32_t i = 0; i < 3; ++i) {
@@ -1516,14 +1556,14 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
       switch (_n) {
         case 0: return "-- The First Sale --";
         case 1: return "Nice, you know what we can do with Cargo like those";
-        case 2: return "fresh Carrots? Sell them for a profit! Visit the Sales Box";
+        case 2: return "fresh Carrots? Sell them for a profit! Visit Sales";
         case 3: return "(next to The Shop) and press Ⓐ to access the";
         case 4: return "sales menu. Sell 10 carrots to continue.";
           
-        case 5: return "Go to the Sales Box (next to The Shop). ";
+        case 5: return "Go to Sales (next to The Shop). ";
         case 6: return "Press Ⓐ, choose the harvested Carrots";
         case 7: return "Press or hold Ⓐ to sell at least 10 Carrots.";
-        case 8: return "Press Ⓑ to close the Sales Box window.";
+        case 8: return "Press Ⓑ to close the Sales window.";
       }
     case kTutBuildHarvester:;
       switch (_n) {
@@ -1542,14 +1582,14 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
       switch (_n) {
         case 0: return "-- The First Cargo Line --";
         case 1: return "Good, We're harvesting Carrots. But we need to get them";
-        case 2: return "to the Sales Box. We need Conveyor Belts! Buy around";
+        case 2: return "to Sales. We need Conveyor Belts! Buy around";
         case 3: return "50 from The Shop and lay the path to move & sell";
         case 4: return "the carrots. Rotate belt pieces with The Crank.";
           
         case 5: return "Go to the The Shop, buy around 50 an Conveyor Belts.";
         case 6: return "Press Ⓐ and choose these from your inventory.";
         case 7: return "Make a chain of belts from the Automatic Harvester to";
-        case 8: return "the Sell Box. Rotate the Belts with The Crank.";
+        case 8: return "Sales. Rotate the Belts with The Crank.";
       }
     case kTutBuildQuarry:
       switch (_n) {
@@ -1570,12 +1610,12 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 1: return "Nice. We can finally set up a full production line!";
         case 2: return "Buy a Vitamin Factory from The Shop, supply it with";
         case 3: return "both Chalk and Carrots, and transport the Vitamins";
-        case 4: return "to the Sales Box for a much bigger profit!";
+        case 4: return "to Sales for a much bigger profit!";
           
         case 5: return "Go to the The Shop, buy a Vitamin Factory.";
         case 6: return "Place it in a good spot. Use Conveyor Belts to";
         case 7: return "supply it with Carrots and Chalk. Use a more Belts";
-        case 8: return "to transport the Vitamins to the Sell Box.";
+        case 8: return "to transport the Vitamins to Sales.";
       }
     case kTutFinishedOne:
       switch (_n) {

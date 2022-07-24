@@ -818,12 +818,13 @@ void generate(uint32_t _actionProgress) {
 
     #define STARTX (TILES_PER_CHUNK_X/2)
 
-    // By setting EW, we camouflage these buildings in the early game
+    // By setting EW, we camouflage these buildings in the early game in slot 0
+    const enum kDir camo = (slot == 0 ? EW : SN);
     newBuilding(getLocation_noCheck(STARTX + 0, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kShop} );
     newBuilding(getLocation_noCheck(STARTX + 9, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kSellBox} );
-    newBuilding(getLocation_noCheck(STARTX + 18, TILES_PER_CHUNK_Y), EW, kSpecial, (union kSubType) {.special = kWarp} );
-    newBuilding(getLocation_noCheck(STARTX + 27, TILES_PER_CHUNK_Y), EW, kSpecial, (union kSubType) {.special = kExportBox} );
-    newBuilding(getLocation_noCheck(STARTX + 36, TILES_PER_CHUNK_Y), EW, kSpecial, (union kSubType) {.special = kImportBox} );
+    newBuilding(getLocation_noCheck(STARTX + 18, TILES_PER_CHUNK_Y), camo, kSpecial, (union kSubType) {.special = kWarp} );
+    newBuilding(getLocation_noCheck(STARTX + 27, TILES_PER_CHUNK_Y), camo, kSpecial, (union kSubType) {.special = kExportBox} );
+    newBuilding(getLocation_noCheck(STARTX + 36, TILES_PER_CHUNK_Y), camo, kSpecial, (union kSubType) {.special = kImportBox} );
 
   } else if (_actionProgress == 8) {
 
