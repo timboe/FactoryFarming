@@ -3,6 +3,7 @@
 #include "cargo.h"
 #include "render.h"
 #include "building.h"
+#include "input.h"
 #include "location.h"
 #include "generate.h"
 #include "player.h"
@@ -42,6 +43,8 @@ bool doNewWorld(void);
 
 bool doReset(void);
 
+bool doTitle(void);
+
 void decodeError(json_decoder* jd, const char* _error, int _linenum);
 
 void willDecodeSublist(json_decoder* jd, const char* _name, json_value_type _type);
@@ -71,6 +74,11 @@ void doIO(enum kSaveLoadRequest _first, enum kSaveLoadRequest _andThen) {
   m_andThen = _andThen;
   m_secondStage = false;
   m_actionProgress = 0;
+  pd->system->logToConsole("IO: Requested");
+}
+
+bool IOOperationInProgress() {
+  return m_doFirst != kDoNothing;
 }
 
 enum kSaveLoadRequest currentIOAction() {
@@ -85,15 +93,18 @@ void enactIO() {
     case kDoSave: finished = doSave(/*synchronous = */ false); break;
     case kDoLoad: finished = doLoad(); break;
     case kDoNewWorld: finished = doNewWorld(); break;
+    case kDoTitle: finished = doTitle(); break;
     case kDoReset: finished = doReset(); break;
   }
 
   if (finished) {
     if (!m_secondStage) {
+      pd->system->logToConsole("IO: Stage 1 Finished");
       m_secondStage = true;
       m_actionProgress = 0;
     } else {
       // Specials...
+      pd->system->logToConsole("IO: Stage 2 Finished");
       m_secondStage = false;
       m_actionProgress = 0;
       m_doFirst = kDoNothing;
@@ -131,6 +142,19 @@ void setForceSlot(int8_t _slot) {
 
 ///
 
+bool doTitle() {
+
+  reset(true);
+  generateTitle();
+  setChunkBackgrounds(/*for title = */ true);
+  setGameMode(kTitles);
+  unZoom();
+  setPlayerPosition((3*DEVICE_PIX_X)/4, (3*DEVICE_PIX_Y)/4, /*update current location = */ true);
+  return true;
+}
+
+///
+
 bool doNewWorld() {
   pd->system->logToConsole("NEW WORLD: Progress %i", m_actionProgress);
   pd->sprite->addSprite(getGenSprite());
@@ -152,7 +176,7 @@ bool doNewWorld() {
 
   } else if (m_actionProgress == 10) {
 
-    setChunkBackgrounds();
+    setChunkBackgrounds(/*for title = */ false);
     // Finished
     // Need to save now, so issue another doIO command from here
     doIO(kDoSave, kDoNothing);
@@ -192,7 +216,7 @@ bool doReset() {
 
   } else if (m_actionProgress == 10) {
 
-    setChunkBackgrounds();
+    setChunkBackgrounds(/*for title = */ false);
 
     // Finished
     return true;
@@ -393,8 +417,8 @@ bool doLoad() {
 
     // Things which need to run post-load
     addObstacles();
-    doWetness();
-    setChunkBackgrounds();
+    doWetness(/*for titles = */ false);
+    setChunkBackgrounds(/*for title = */ false);
     showTutorialMsg(getTutorialStage());
 
     // Finished

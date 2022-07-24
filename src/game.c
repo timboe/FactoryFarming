@@ -59,10 +59,13 @@ void tickNear() {
   if (m_frameCount % NEAR_TICK_FREQUENCY) {
     return;
   }
+
   m_nearTickCount = 0;
 
   uint8_t zoom = getZoom();
   struct Chunk_t* currentChunk = getCurrentChunk();
+
+  if (zoom > 1) animateConveyor();
 
   m_nearTickCount += chunkTickChunk(currentChunk, NEAR_TICK_AMOUNT, zoom);
 
@@ -97,14 +100,17 @@ void tickNear() {
 }
 
 void tickFar() {
+  if((m_frameCount + 3) % FAR_TICK_FREQUENCY == 0) { // +3 to put this out-of-sync with tickNear() and tickFar()
+    updateRenderList();
+  }
+
   if((m_frameCount + 1) % FAR_TICK_FREQUENCY) { // +1 to put this out-of-sync with tickNear()
     return;
   }
+
   m_farTickCount = 0;
 
-  updateRenderList();
-
-  static uint32_t tickTock = 0;
+  //static uint32_t tickTock = 0;
   uint8_t zoom = getZoom();
   struct Chunk_t* currentChunk = getCurrentChunk();
 
@@ -128,7 +134,7 @@ void tickFar() {
 
     for (uint32_t i = start; i < stop; ++i) { 
       //pd->system->logToConsole("B %u = %i", i, (int) currentChunk->m_nonNeighborsALL[i]);
-      m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsALL[i], amount, zoom); // * 2 due to only calling each chunk 50% of the time 
+      m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsALL[i], amount, zoom); // [not currently active] * 2 due to only calling each chunk 50% of the time 
     }
   } else {
     
@@ -179,20 +185,18 @@ int gameLoop(void* _data) {
   ++m_frameCount;
   pd->graphics->setBackgroundColor(kColorBlack);
 
-  if (currentIOAction() != kDoNothing) { 
+  if (IOOperationInProgress()) { 
     pd->sprite->removeAllSprites();
     enactIO();
     pd->sprite->drawSprites();
     return 1;
   }
 
+  const enum kGameMode gm = getGameMode();
+
   clickHandlerReplacement();
 
-  if (getZoom() > 1 && m_frameCount % NEAR_TICK_FREQUENCY == 0) {
-    animateConveyor();
-  }
-  
-  if (getGameMode() < kMenuBuy) {
+  if (gm < kMenuBuy) {
     movePlayer();
   }
 
@@ -206,7 +210,7 @@ int gameLoop(void* _data) {
   struct Player_t* p = getPlayer(); 
   ++p->m_playTime;
 
-  if (p->m_enableAutosave) {
+  if (gm != kTitles && p->m_enableAutosave) {
     if (++m_autoSaveTimer > 600*TICK_FREQUENCY) {
       m_autoSaveTimer = 0;
       doIO(kDoSave, /*and then*/ kDoNothing);

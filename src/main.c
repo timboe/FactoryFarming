@@ -32,13 +32,14 @@ static void init(void) {
 
   scanSlots();
 
-  if (hasSaveData()) {
-    pd->system->logToConsole("Main: Requesting load");
-    menuOptionsCallbackLoad(NULL);
-  } else {
-    pd->system->logToConsole("Main: Requesting generate");
-    menuOptionsCallbackRestart(NULL);
-  }
+  doIO(kDoTitle, /*and then*/ kDoNothing);
+  //if (hasSaveData()) {
+  //  pd->system->logToConsole("Main: Requesting load");
+  //  menuOptionsCallbackLoad(NULL);
+  //} else {
+  //  pd->system->logToConsole("Main: Requesting generate");
+  //  menuOptionsCallbackRestart(NULL);
+  //}
 }
 
 static void deinit(void) {
@@ -59,7 +60,7 @@ int eventHandler(PlaydateAPI* playdate, PDSystemEvent event, uint32_t arg) {
       #ifdef DEV
       playdate->system->logToConsole("EH: terminate/lock/low-p, %i", event);
       #endif
-      synchronousSave();
+      if (getGameMode() != kTitles) synchronousSave();
       if (event == kEventTerminate) deinit();
       break;
     case kEventUnlock:;

@@ -29,8 +29,6 @@ bool m_top = true;
 bool m_left = true;
 bool m_forceTorus = true;
 
-void setPlayerPosition(uint16_t _x, uint16_t _y);
-
 void movePlayerPosition(float _goalX, float _goalY);
 
 void updatePlayerPosition(void);
@@ -136,11 +134,15 @@ struct Location_t* getPlayerLocation() {
   return m_currentLocation;
 }
 
-void setPlayerPosition(uint16_t _x, uint16_t _y) {
+void setPlayerPosition(uint16_t _x, uint16_t _y, bool _updateCurrentLocation) {
   uint8_t zoom = getZoom(); 
   pd->sprite->moveTo(m_player.m_sprite[zoom], _x * zoom, _y * zoom);
   updatePlayerPosition();
   pd->sprite->setZIndex(m_player.m_sprite[zoom], (int16_t)m_player.m_pix_y * zoom);
+  if (_updateCurrentLocation) {
+    m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
+    m_currentChunk = getChunk(m_player.m_pix_x / CHUNK_PIX_X, m_player.m_pix_y / CHUNK_PIX_Y);
+  }
 }
 
 void movePlayerPosition(float _goalX, float _goalY) {
@@ -228,18 +230,18 @@ bool movePlayer() {
   //else if ((m_offY + m_player.m_y) < ((SCREEN_PIX_Y / m_zoom) * (1.0f - SCROLL_EDGE))) m_offY = ((SCREEN_PIX_Y / m_zoom) * (1.0f - SCROLL_EDGE)) - m_player.m_y;
 
   if (m_player.m_pix_x > TOT_WORLD_PIX_X) {
-    setPlayerPosition(m_player.m_pix_x - TOT_WORLD_PIX_X, m_player.m_pix_y);
+    setPlayerPosition(m_player.m_pix_x - TOT_WORLD_PIX_X, m_player.m_pix_y, /*update current location = */ false);
     m_offX += TOT_WORLD_PIX_X;
   } else if (m_player.m_pix_x < 0) {
-    setPlayerPosition(m_player.m_pix_x + TOT_WORLD_PIX_X, m_player.m_pix_y);
+    setPlayerPosition(m_player.m_pix_x + TOT_WORLD_PIX_X, m_player.m_pix_y, /*update current location = */ false);
     m_offX -= TOT_WORLD_PIX_X;
   }
 
   if (m_player.m_pix_y > TOT_WORLD_PIX_Y) {
-    setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y - TOT_WORLD_PIX_Y);
+    setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y - TOT_WORLD_PIX_Y, /*update current location = */ false);
     m_offY += TOT_WORLD_PIX_Y;
   } else if (m_player.m_pix_y < 0) {
-    setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y + TOT_WORLD_PIX_Y);
+    setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y + TOT_WORLD_PIX_Y, /*update current location = */ false);
     m_offY -= TOT_WORLD_PIX_Y;
   }
 
@@ -432,7 +434,7 @@ void resetPlayer() {
   for (int32_t i = 0; i < kNExtractorSubTypes; ++i) m_player.m_carryExtractor[i] = 0;
   for (int32_t i = 0; i < kNFactorySubTypes; ++i) m_player.m_carryFactory[i] = 0;
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_importConsumers[i] = 0;
-  setPlayerPosition(SCREEN_PIX_X/4, (3*SCREEN_PIX_Y)/4);
+  setPlayerPosition(SCREEN_PIX_X/4, (3*SCREEN_PIX_Y)/4, /*update current location = */ true);
   m_currentChunk = getChunk_noCheck(0,0);
   //modMoney(100000); // TEMP
 }
@@ -662,8 +664,7 @@ void deserialiseArrayValuePlayer(json_decoder* jd, int _pos, json_value _value) 
 }
 
 void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_value_type _type) {
-  setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y);
-  m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
+  setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y, /*update current location = */ true);
 
   pd->system->logToConsole("-- Player decoded to (%i, %i), current location (%i, %i), money:%i", 
     (int32_t)m_player.m_pix_x, (int32_t)m_player.m_pix_y, m_currentLocation->m_x, m_currentLocation->m_y, m_player.m_money);

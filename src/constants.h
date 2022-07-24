@@ -137,3 +137,5 @@
 
 // Out of 1000
 #define CLUTTER_CHANCE 2
+
+#define UI_TITLE_OFFSET (TILE_PIX*1)

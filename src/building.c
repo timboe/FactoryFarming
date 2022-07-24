@@ -336,7 +336,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
     building->m_mode.mode16 = t->m_tile;
     t->m_tile = SPRITE16_ID(4,14);
-    doWetness();
+    doWetness(/*for titles = */ false);
     wideRedraw = true;
   }
 

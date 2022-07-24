@@ -1,7 +1,7 @@
 #pragma once
 #include "game.h"
 
-enum kSaveLoadRequest {kDoNothing, kDoSave, kDoLoad, kDoNewWorld, kDoReset};
+enum kSaveLoadRequest {kDoNothing, kDoSave, kDoLoad, kDoNewWorld, kDoReset, kDoTitle};
 
 void synchronousSave(void);
 
@@ -22,5 +22,7 @@ void hardReset(void);
 void doIO(enum kSaveLoadRequest _first, enum kSaveLoadRequest _andThen);
 
 enum kSaveLoadRequest currentIOAction(void);
+
+bool IOOperationInProgress(void);
 
 void enactIO(void);

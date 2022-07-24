@@ -79,11 +79,8 @@ void updateRenderList() {
   pd->sprite->addSprite(player->m_sprite[zoom]);
   pd->sprite->addSprite(player->m_blueprint[zoom]);
   pd->sprite->addSprite(player->m_blueprintRadius[zoom]);
-
   addUIToSpriteList();
-
   chunkAddToRender(currentChunk, zoom);
-
   if (getZoom() == 1 && !PRETEND_ZOOMED_IN) {
     for (uint32_t i = 0; i < CHUNK_NEIGHBORS_ALL; ++i) {
       chunkAddToRender(currentChunk->m_neighborsALL[i], zoom);

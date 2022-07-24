@@ -83,6 +83,8 @@ enum kChunkQuad getCurrentQuadrant(void);
 
 struct Location_t* getPlayerLocation(void);
 
+void setPlayerPosition(uint16_t _x, uint16_t _y, bool _updateCurrentLocation);
+
 bool tutorialEnabled(void);
 
 enum kUITutorialStage getTutorialStage(void);

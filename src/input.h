@@ -12,3 +12,5 @@ uint8_t getZoom(void);
 uint8_t getRadius(void);
 
 bool bPressed(void);
+
+void unZoom(void);

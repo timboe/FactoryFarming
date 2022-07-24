@@ -131,7 +131,7 @@ void assignNeighborsSpecial(struct Building_t* _building) {
 }
 
 bool isCamouflaged() {
-  return m_warp->m_dir != SN;
+  return m_warp && m_warp->m_dir != SN;
 }
 
 void buildingSetupSpecial(struct Building_t* _building) {

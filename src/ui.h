@@ -4,7 +4,7 @@
 
 // All Main Menu items should come after kMenuBuy
 enum kGameMode {kWanderMode, kPlaceMode, kBuildMode, kPlantMode, kPickMode, kInspectMode, kDestroyMode, 
-	            kMenuBuy, kMenuNew, kMenuSell, kMenuPlayer, kMenuWarp, kMenuExport, kMenuImport, kNGameModes};
+	            kMenuBuy, kMenuNew, kMenuSell, kMenuPlayer, kMenuWarp, kMenuExport, kMenuImport, kTitles, kNGameModes};
 
 enum kUICat {kUICatTool, kUICatPlant, kUICatConv, kUICatExtractor, kUICatFactory, kUICatUtility, 
 	         kUICatCargo, kUICatWarp, kUICatImportN, kUICatImportE, kUICatImportS, kUICatImportW, kNUICats}; 

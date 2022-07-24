@@ -19,6 +19,8 @@ LCDBitmap* m_stickySelected;
 
 LCDBitmap* m_new;
 
+LCDBitmap* m_splash;
+
 LCDFont* m_fontRoobert24;
 
 LCDFont* m_fontRoobert10;
@@ -63,6 +65,8 @@ LCDFont* loadFontAtPath(const char* _path) {
 }
 
 LCDBitmap* getSpriteNew() { return m_new; }
+
+LCDBitmap* getSpriteSplash() { return m_splash; }
 
 LCDBitmap* getSprite16(uint32_t _x, uint32_t _y, uint8_t _zoom) {
   return getSprite16_byidx(SPRITE16_ID(_x, _y), _zoom);
@@ -198,6 +202,7 @@ void initSprite() {
   m_sheet48 = loadImageTableAtPath("images/sheet48");
   m_stickySelected = loadImageAtPath("images/selected");
   m_new = loadImageAtPath("images/new");
+  m_splash = loadImageAtPath("images/splash");
 
   populateResizedSprites();
 

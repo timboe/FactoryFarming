@@ -48,6 +48,8 @@ void clickHandleInspect(uint32_t _buttonPressed);
 
 void clickHandleDestroy(uint32_t _buttonPressed);
 
+void clickHandleTitles(uint32_t _buttonPressed);
+
 void rotateHandleWander(float _rotation);
 
 void rotateHandlePlacement(float _rotation);
@@ -90,6 +92,10 @@ bool bPressed() {
   return m_b;
 }
 
+void unZoom() {
+  m_zoom = 1;
+}
+
 void toggleZoom() {
   if (++m_zoom == ZOOM_LEVELS) {
     m_zoom = 1;
@@ -121,6 +127,7 @@ void gameClickConfigHandler(uint32_t _buttonPressed) {
     case kPickMode:; return clickHandlePick(_buttonPressed);
     case kInspectMode:; return clickHandleInspect(_buttonPressed);
     case kDestroyMode:; return clickHandleDestroy(_buttonPressed);
+    case kTitles:; return clickHandleTitles(_buttonPressed);
     case kNGameModes:; break;
   }
 }
@@ -143,6 +150,10 @@ void clickHandleWander(uint32_t _buttonPressed) {
 
   //else if (kButtonB == _buttonPressed) toggleZoom(); // Press B to change zoom?
   // Hold down B to go faster?
+}
+
+void clickHandleTitles(uint32_t _buttonPressed) {
+
 }
 
 void clickHandleMenuBuy(uint32_t _buttonPressed) {
@@ -342,7 +353,7 @@ void clickHandlerReplacement() {
     case kPickMode:; // fall through
     case kDestroyMode:; rotateHandlePick(pd->system->getCrankChange()); break;
     case kMenuBuy:; case kMenuSell:; case kMenuWarp:; case kMenuExport:; case kMenuImport:; break;
-    case kPlantMode:; case kInspectMode:; case kNGameModes:; break;
+    case kPlantMode:; case kInspectMode:; case kTitles:; case kNGameModes:; break;
   }
 
 }

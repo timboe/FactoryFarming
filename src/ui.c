@@ -40,6 +40,13 @@ LCDBitmap* m_UIBitmapSave;
 LCDBitmap* m_UIBitmapLoad;
 LCDBitmap* m_UIBitmapGen;
 
+LCDSprite* m_UISpriteSplash;
+int16_t m_UITitleOffset = 0;
+LCDSprite* m_UISpriteTitleNew[3];
+LCDSprite* m_UISpriteTitleCont[3];
+LCDBitmap* m_UIBitmapTitleNew[3];
+LCDBitmap* m_UIBitmapTitleCont[3];
+
 LCDSprite* m_UISpriteTop;
 LCDBitmap* m_UIBitmapTop;
 int16_t m_UITopOffset = 0;
@@ -201,6 +208,24 @@ void rotateCursor(bool _increment) {
 }
 
 void updateUI(int _fc) {
+
+  if (m_mode == kTitles) {
+    if (m_UITitleOffset) {
+      --m_UITitleOffset;
+      pd->sprite->moveTo(m_UISpriteSplash,
+        DEVICE_PIX_X/2,
+        DEVICE_PIX_Y/2 - (UI_TITLE_OFFSET - m_UITitleOffset) );
+      for (int32_t i = 0; i < 3; ++i) {
+        pd->sprite->moveTo(m_UISpriteTitleNew[i], 
+          i*TILE_PIX*7 + (7*TILE_PIX)/2 + (i+1)*TILE_PIX, 
+          DEVICE_PIX_Y + TILE_PIX/2 - (UI_TITLE_OFFSET - m_UITitleOffset)*2);
+        pd->sprite->moveTo(m_UISpriteTitleCont[i], 
+          i*TILE_PIX*7 + (7*TILE_PIX)/2 + (i+1)*TILE_PIX, 
+          DEVICE_PIX_Y + TILE_PIX/2 - (UI_TITLE_OFFSET - m_UITitleOffset)*2);
+      }
+    }
+    return;
+  }
   
   if ((m_mode >= kMenuBuy) && _fc % (TICK_FREQUENCY/4) == 0) {
     // Flashing cursor
@@ -328,8 +353,20 @@ void updateBlueprint() {
 
 void addUIToSpriteList() {
   struct Player_t* p = getPlayer();
+
+  if (m_mode == kTitles) {
+    pd->sprite->addSprite(m_UISpriteSplash);
+    for (int32_t i = 0; i < 3; ++i) {
+      pd->sprite->addSprite(m_UISpriteTitleNew[i]);
+      pd->sprite->addSprite(m_UISpriteTitleCont[i]); // TODO should be either or
+    }
+    return;
+  }
+
   pd->sprite->addSprite(m_UISpriteBottom);
   pd->sprite->addSprite(m_UISpriteTop);
+    pd->system->logToConsole("ADD RIGHT"); 
+
   pd->sprite->addSprite(m_UISpriteRight);
   if (p->m_enableDebug) {
     pd->sprite->addSprite(m_UISpriteDev);
@@ -980,6 +1017,7 @@ void renderNewUI() {
 
 void setGameMode(enum kGameMode _mode) {
   m_mode = _mode;
+  if (m_mode == kTitles) return;
 
   if (_mode == kPlaceMode) {
     drawUITop("Place Mode");
@@ -1011,8 +1049,9 @@ void resetUI() {
     m_selRowOffset[i] = 0;
     m_cursorRowAbs[i] = 1;
   }
-  setGameMode(kWanderMode);
   updateBlueprint();
+  m_UITitleOffset = UI_TITLE_OFFSET;
+  m_UITopOffset = 0;
 }
 
 void roundedRect(uint16_t _o, uint16_t _w, uint16_t _h, uint16_t _r, LCDColor _c) {
@@ -1037,6 +1076,14 @@ const char* newBannerText(enum kUICat _c) {
     default: break;
   }
   return "?";
+}
+
+const char* getWorldLetter(int8_t _i) {
+  switch(_i) {
+    case 0: return "A";
+    case 1: return "B";
+  }
+  return "C";
 }
 
 void initiUI() {
@@ -1149,13 +1196,65 @@ void initiUI() {
   PDRect infoBound = {.x = 0, .y = 0, .width = TILE_PIX*18, .height = TILE_PIX*2};
   PDRect bannerBound = {.x = 0, .y = 0, .width = TILE_PIX*20, .height = TILE_PIX*2};
   PDRect splashBound = {.x = 0, .y = 0, .width = TILE_PIX*8, .height = TILE_PIX*8};
+  PDRect deviceBound = {.x = 0, .y = 0, .width = DEVICE_PIX_X, .height = DEVICE_PIX_Y};
+  PDRect buttonBound = {.x = 0, .y = 0, .width = TILE_PIX*7, .height = TILE_PIX};
   PDRect itemBound = {.x = 0, .y = 0, .width = TILE_PIX*4, .height = TILE_PIX*4};
   PDRect ingBound = {.x = 0, .y = 0, .width = INGREDIENTS_WIDTH, .height = INGREDIENTS_HEIGHT};
   PDRect tutBound = {.x = 0, .y = 0, .width = TUTORIAL_WIDTH, .height = TUTORIAL_HEIGHT};
   PDRect stickyBound = {.x = 0, .y = 0, .width = 38, .height = 38};
 
+  // Titles
+
+  m_UISpriteSplash = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteSplash, deviceBound);
+  pd->sprite->setImage(m_UISpriteSplash, getSpriteSplash(), kBitmapUnflipped);
+  pd->sprite->setZIndex(m_UISpriteSplash, Z_INDEX_UI_M);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteSplash, 1);  
+  pd->sprite->moveTo(m_UISpriteSplash, DEVICE_PIX_X/2, DEVICE_PIX_Y/2);
+
+  setRoobert10();
+  for (int32_t i = 0; i < 3; ++i) {
+    m_UIBitmapTitleNew[i] = pd->graphics->newBitmap(TILE_PIX*7, TILE_PIX*1, kColorClear);
+    m_UISpriteTitleNew[i] = pd->sprite->newSprite();
+    pd->sprite->setBounds(m_UISpriteTitleNew[i], buttonBound);
+    pd->sprite->setImage(m_UISpriteTitleNew[i], m_UIBitmapTitleNew[i], kBitmapUnflipped);
+    pd->sprite->setZIndex(m_UISpriteTitleNew[i], Z_INDEX_UI_M);
+    pd->sprite->setIgnoresDrawOffset(m_UISpriteTitleNew[i], 1);  
+    pd->sprite->moveTo(m_UISpriteTitleNew[i], i*TILE_PIX*7 + (7*TILE_PIX)/2 + (i+1)*TILE_PIX, DEVICE_PIX_Y + TILE_PIX/2);
+    
+    m_UIBitmapTitleCont[i] = pd->graphics->newBitmap(TILE_PIX*7, TILE_PIX*1, kColorClear);
+    m_UISpriteTitleCont[i] = pd->sprite->newSprite();
+    pd->sprite->setBounds(m_UISpriteTitleCont[i], buttonBound);
+    pd->sprite->setImage(m_UISpriteTitleCont[i], m_UIBitmapTitleCont[i], kBitmapUnflipped);
+    pd->sprite->setZIndex(m_UISpriteTitleCont[i], Z_INDEX_UI_M);
+    pd->sprite->setIgnoresDrawOffset(m_UISpriteTitleCont[i], 1);  
+    pd->sprite->moveTo(m_UISpriteTitleCont[i], i*TILE_PIX*7 + (7*TILE_PIX)/2 + (i+1)*TILE_PIX, DEVICE_PIX_Y - TILE_PIX/2);
+
+    pd->graphics->pushContext(m_UIBitmapTitleNew[i]);
+    roundedRect(0, TILE_PIX*7, TILE_PIX*1, TILE_PIX/2, kColorBlack);
+    pd->graphics->setDrawMode(kDrawModeFillWhite);
+    char text[32];
+    snprintf(text, 32, "%s: New Game", getWorldLetter(i));
+    int16_t len = strlen(text);
+    int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, len, kASCIIEncoding, 0);
+    pd->graphics->drawText(text, len, kASCIIEncoding, (7*TILE_PIX)/2 - width/2, 0);
+    pd->graphics->setDrawMode(kDrawModeCopy);
+    pd->graphics->popContext();
+
+    pd->graphics->pushContext(m_UIBitmapTitleCont[i]);
+    roundedRect(0, TILE_PIX*7, TILE_PIX*1, TILE_PIX/2, kColorBlack);
+    pd->graphics->setDrawMode(kDrawModeFillWhite);
+    snprintf(text, 32, "%s: Continue", getWorldLetter(i));
+    len = strlen(text);
+    width = pd->graphics->getTextWidth(getRoobert10(), text, len, kASCIIEncoding, 0);
+    pd->graphics->drawText(text, len, kASCIIEncoding, (7*TILE_PIX)/2 - width/2, 0);
+    pd->graphics->setDrawMode(kDrawModeCopy);
+    pd->graphics->popContext();
+  }
+
   // New stuff
 
+  setRoobert24();
   for (int32_t i = 0; i < kNUICats; ++i) {
     if (i == kUICatTool || i > kUICatUtility) continue;
     m_UIBitmapNewBanner[i] = pd->graphics->newBitmap(TILE_PIX*20, TILE_PIX*2, kColorClear);

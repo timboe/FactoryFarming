@@ -305,9 +305,11 @@ uint8_t distanceFromWater(int32_t _x, int32_t _y) {
   return 255;
 }
 
-void doWetness(void) {
-  for (int32_t x = 0; x < TOT_TILES_X; ++x) {
-    for (int32_t y = 0; y < TOT_TILES_Y; ++y) {
+void doWetness(bool _forTitles) {
+  const uint16_t maxY = (_forTitles ? TILES_PER_CHUNK_Y * 3 : TOT_TILES_Y);
+  const uint16_t maxX = (_forTitles ? TILES_PER_CHUNK_X * 3 : TOT_TILES_X);
+  for (int32_t x = 0; x < maxX; ++x) {
+    for (int32_t y = 0; y < maxY; ++y) {
       getTile(x, y)->m_wetness = distanceFromWater(x,y);
     }
   }
@@ -673,8 +675,6 @@ void doLakesAndRivers(uint8_t _slot) {
   
 }
 
-
-
 void generateSpriteSetup(struct Chunk_t* _chunk) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     if (_chunk->m_bkgImage[zoom] == NULL) _chunk->m_bkgImage[zoom] = pd->graphics->newBitmap(CHUNK_PIX_X*zoom, CHUNK_PIX_Y*zoom, kColorClear);
@@ -690,9 +690,11 @@ void generateSpriteSetup(struct Chunk_t* _chunk) {
   }
 }
 
-void setChunkBackgrounds() {
-  for (uint16_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
-    for (uint16_t x = 0; x < WORLD_CHUNKS_X; ++x) {
+void setChunkBackgrounds(bool _forTitles) {
+  const uint16_t maxY = (_forTitles ? 3 : WORLD_CHUNKS_Y);
+  const uint16_t maxX = (_forTitles ? 3 : WORLD_CHUNKS_X);
+  for (uint16_t y = 0; y < maxY; ++y) {
+    for (uint16_t x = 0; x < maxX; ++x) {
       struct Chunk_t* chunk = getChunk_noCheck(x, y);
       generateSpriteSetup(chunk);
       renderChunkBackgroundImage(chunk);
@@ -825,11 +827,28 @@ void generate(uint32_t _actionProgress) {
 
   } else if (_actionProgress == 8) {
 
-    doWetness();
+    doWetness(/*for titles = */ false);
 
     // Finished
     float f; for (int32_t i = 0; i < 10000; ++i) for (int32_t j = 0; j < 100000; ++j) { f*=i*j; }
     pd->system->logToConsole("Generated %s",  getWorldName(slot, /*mask*/ false));
 
   }
+}
+
+void generateTitle() {
+
+  const uint8_t slot = getSlot();
+  uint8_t floorMain = getWorldGround(slot, 0);
+
+  srand(0);
+
+  for (uint16_t x = 0; x < TILES_PER_CHUNK_X*3; ++x) {
+    for (uint16_t y = 0; y < TILES_PER_CHUNK_Y*3; ++y) {
+      getTile(x,y)->m_tile = rand() % FLOOR_VARIETIES;
+    } 
+  }
+
+  doWetness(/*for titles = */ true);
+
 }

@@ -21,6 +21,8 @@ enum kGroundWetness{kWater, kWet, kMoist, kDry, kNGroundWetnesses};
 
 void generate(uint32_t _actionProgress);
 
+void generateTitle(void);
+
 struct Tile_t* getTile(int32_t _x, int32_t _y);
 
 struct Tile_t* getTile_fromLocation(struct Location_t* _loc);
@@ -29,7 +31,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk);
 
 void renderChunkBackgroundImageAround(struct Chunk_t* _chunk);
 
-void setChunkBackgrounds(void);
+void setChunkBackgrounds(bool _forTitles);
 
 bool tileIsObstacle(struct Tile_t* _tile);
 
@@ -41,7 +43,7 @@ bool isGroundTypeTile(int32_t _x, int32_t _y, enum kGroundType);
 
 void addObstacles(void);
 
-void doWetness(void);
+void doWetness(bool _forTitles);
 
 enum kGroundWetness getWetness(uint8_t _value);
 
