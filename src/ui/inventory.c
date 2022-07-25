@@ -1,4 +1,4 @@
-#include "mainmenu.h"
+#include "inventory.h"
 #include "../player.h"
 #include "../location.h"
 #include "../render.h"
@@ -15,7 +15,7 @@ bool doPickAtLocation(struct Location_t* _loc);
 
 /// ///
 
-void doMainMenuClick() {
+void doInventoryClick() {
   const enum kUICat selectedCat = getUIContentCategory();
   const uint16_t selectedID =  getUIContentID();
   switch (selectedCat) {
@@ -218,7 +218,7 @@ void doDestroy() {
   }
 }
 
-void populateContentMainmenu(void) {
+void populateContentInventory(void) {
   struct Player_t* p = getPlayer();
   int16_t column = 0, row = 0;
   for (enum kUICat c = 0; c <= kUICatCargo; ++c) {
@@ -251,7 +251,7 @@ void populateContentMainmenu(void) {
   }
 }
 
-void populateInfoMainmenu() {
+void populateInfoInventory() {
   const enum kUICat selectedCat = getUIContentCategory();
   const enum kBuildingType selectedCatType = getCatBuildingSubType(selectedCat);
   const uint16_t selectedID =  getUIContentID();

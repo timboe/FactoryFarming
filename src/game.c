@@ -203,7 +203,8 @@ int gameLoop(void* _data) {
   tickNear();
   tickFar();
 
-  updateUI(m_frameCount);
+  if (gm == kTitles) updateUITitles(m_frameCount);
+  else updateUI(m_frameCount);
 
   render();
 
@@ -238,6 +239,12 @@ void menuOptionsCallbackSave(void* blank) {
   doIO(kDoSave, /*and then*/ kDoNothing);
 }
 
+void menuOptionsCallbackMenu(void* blank) {
+  pd->system->logToConsole("menuOptionsCallbackMenu");
+  drawUITop("Main Menu");
+  setGameMode(kMenuMain);
+}
+
 // Call prior to loading anything
 void reset(bool _resetThePlayer) {
   resetCargo();
@@ -249,6 +256,20 @@ void reset(bool _resetThePlayer) {
   if (_resetThePlayer) resetPlayer();
   forceTorus();
   resetUI();
+}
+
+void populateMenuTitle() {
+  pd->system->removeAllMenuItems();
+  pd->system->addMenuItem("delete save a", menuOptionsCallbackDelete, (void*)0);
+  pd->system->addMenuItem("delete save b", menuOptionsCallbackDelete, (void*)1);
+  pd->system->addMenuItem("delete save c", menuOptionsCallbackDelete, (void*)2);
+}
+
+void populateMenuGame() {
+  pd->system->removeAllMenuItems();
+  pd->system->addMenuItem("menu", menuOptionsCallbackMenu, NULL);
+  pd->system->addMenuItem("load", menuOptionsCallbackLoad, NULL);
+  pd->system->addMenuItem("save", menuOptionsCallbackSave, NULL);
 }
 
 void initGame() {
@@ -272,11 +293,5 @@ void initGame() {
   for (int32_t i = 0; i < kNCargoType; ++i) {
     if (i != CargoDesc[i].subType) pd->system->error("CARGO DESCRIPTOR ORDERING IS WRONG!");
   }
-
-  //pd->system->addMenuItem("restart", menuOptionsCallbackRestart, NULL);
-
-  pd->system->addMenuItem("load", menuOptionsCallbackLoad, NULL);
-
-  pd->system->addMenuItem("save", menuOptionsCallbackSave, NULL);
 
 }

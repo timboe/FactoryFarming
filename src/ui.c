@@ -1,5 +1,6 @@
 #include "ui.h"
-#include "ui/mainmenu.h"
+#include "ui/inventory.h"
+#include "ui/settings.h"
 #include "ui/sell.h"
 #include "ui/shop.h"
 #include "ui/warp.h"
@@ -40,6 +41,7 @@ LCDBitmap* m_UIBitmapSave;
 LCDBitmap* m_UIBitmapLoad;
 LCDBitmap* m_UIBitmapGen;
 
+// Title Screen
 LCDSprite* m_UISpriteSplash;
 LCDSprite* m_UISpriteTitleSelected;
 int16_t m_UITitleOffset = 0;
@@ -65,6 +67,7 @@ bool m_UIDirtyMain = false;
 
 // Menu screens
 
+// "New"
 LCDSprite* m_UISpriteNewBanner;
 LCDBitmap* m_UIBitmapNewBanner[kNUICats] = {NULL};
 
@@ -77,7 +80,14 @@ LCDBitmap* m_UIBitmapNewItem;
 LCDSprite* m_UISpriteNewText;
 LCDBitmap* m_UIBitmapNewText;
 
-// ^ special new
+// Main Menu
+
+LCDSprite* m_UISpriteMainMenuItem[MAX_ROWS];
+LCDBitmap* m_UIBitmapMainMenuItem[MAX_ROWS];
+
+LCDSprite* m_UISpriteMainMenuCursor;
+
+// Other Menus
 
 LCDSprite* m_UISpriteCursor;
 
@@ -219,29 +229,28 @@ uint16_t getTitleCursorSelected() {
   return m_UITitleSelected;
 }
 
-void updateUI(int _fc) {
-  
-  if (m_mode == kTitles) {
-    pd->sprite->setVisible(m_UISpriteTitleSelected, _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
-    pd->sprite->moveTo(m_UISpriteTitleSelected, 
-      m_UITitleSelected*TILE_PIX*7 + (7*TILE_PIX)/2 + (m_UITitleSelected+1)*TILE_PIX, 
-      DEVICE_PIX_Y + TILE_PIX/2 - (UI_TITLE_OFFSET - m_UITitleOffset)*2);
-    if (m_UITitleOffset) {
-      --m_UITitleOffset;
-      pd->sprite->moveTo(m_UISpriteSplash,
-        DEVICE_PIX_X/2,
-        DEVICE_PIX_Y/2 - (UI_TITLE_OFFSET - m_UITitleOffset) );
-      for (int32_t i = 0; i < 3; ++i) {
-        pd->sprite->moveTo(m_UISpriteTitleNew[i], 
-          i*TILE_PIX*7 + (7*TILE_PIX)/2 + (i+1)*TILE_PIX, 
-          DEVICE_PIX_Y + TILE_PIX/2 - (UI_TITLE_OFFSET - m_UITitleOffset)*2);
-        pd->sprite->moveTo(m_UISpriteTitleCont[i], 
-          i*TILE_PIX*7 + (7*TILE_PIX)/2 + (i+1)*TILE_PIX, 
-          DEVICE_PIX_Y + TILE_PIX/2 - (UI_TITLE_OFFSET - m_UITitleOffset)*2);
-      }
+void updateUITitles(int _fc) {
+  pd->sprite->setVisible(m_UISpriteTitleSelected, _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
+  pd->sprite->moveTo(m_UISpriteTitleSelected, 
+    m_UITitleSelected*TILE_PIX*7 + (7*TILE_PIX)/2 + (m_UITitleSelected+1)*TILE_PIX, 
+    DEVICE_PIX_Y + TILE_PIX/2 - (UI_TITLE_OFFSET - m_UITitleOffset)*2);
+  if (m_UITitleOffset) {
+    --m_UITitleOffset;
+    pd->sprite->moveTo(m_UISpriteSplash,
+      DEVICE_PIX_X/2,
+      DEVICE_PIX_Y/2 - (UI_TITLE_OFFSET - m_UITitleOffset) );
+    for (int32_t i = 0; i < 3; ++i) {
+      pd->sprite->moveTo(m_UISpriteTitleNew[i], 
+        i*TILE_PIX*7 + (7*TILE_PIX)/2 + (i+1)*TILE_PIX, 
+        DEVICE_PIX_Y + TILE_PIX/2 - (UI_TITLE_OFFSET - m_UITitleOffset)*2);
+      pd->sprite->moveTo(m_UISpriteTitleCont[i], 
+        i*TILE_PIX*7 + (7*TILE_PIX)/2 + (i+1)*TILE_PIX, 
+        DEVICE_PIX_Y + TILE_PIX/2 - (UI_TITLE_OFFSET - m_UITitleOffset)*2);
     }
-    return;
   }
+}
+
+void updateUI(int _fc) {
   
   const bool flash = _fc % (TICK_FREQUENCY/4) == 0;
   if ((m_mode >= kMenuBuy) && flash) {
@@ -416,6 +425,11 @@ void addUIToSpriteList() {
       pd->sprite->addSprite(m_UISpriteNewSplash);
       pd->sprite->addSprite(m_UISpriteNewItem);
       pd->sprite->addSprite(m_UISpriteNewText);
+    } else if (m_mode == kMenuMain) {
+      for (int32_t i = 0; i < MAX_ROWS; ++i) {
+        pd->sprite->addSprite(m_UISpriteMainMenuItem[i]);
+      }
+      pd->sprite->addSprite(m_UISpriteMainMenuCursor);
     } else {    
       pd->sprite->addSprite(m_UISpriteCursor);
       pd->sprite->addSprite(m_UISpriteSelected);
@@ -796,6 +810,7 @@ uint16_t getUIIcon(enum kUICat _c, uint16_t _i) {
 }
 
 void moveRow(bool _down) {
+  const uint8_t maxRowsVisible = (m_mode == kMenuMain ? MAX_ROWS_VISIBLE*2 : MAX_ROWS_VISIBLE);
   if (_down) {
     ++m_selRow[m_mode];
     if (m_cursorRowAbs[m_mode] == MAX_ROWS_VISIBLE-1) ++m_selRowOffset[m_mode];
@@ -836,6 +851,7 @@ void checkSel() {
 }
 
 void moveCursor(uint32_t _button) {
+  const uint8_t rowWidth = m_mode == kMenuMain ? 1 : ROW_WDTH;
   if (kButtonUp    == _button) {
     if (m_selRow[m_mode] == 1) {
       // noop
@@ -849,12 +865,12 @@ void moveCursor(uint32_t _button) {
       // noop
     } else if (m_selCol[m_mode] == 0) {
       moveRow(/*down=*/false);
-      m_selCol[m_mode] = ROW_WDTH-1;
+      m_selCol[m_mode] = rowWidth-1;
     } else {
       --m_selCol[m_mode];
     }
   } else if (kButtonRight == _button) {
-    if (m_selCol[m_mode] == ROW_WDTH-1 || m_contentSprite[ m_selRow[m_mode] ][ m_selCol[m_mode] + 1] == NULL) {
+    if (m_selCol[m_mode] == rowWidth-1 || m_contentSprite[ m_selRow[m_mode] ][ m_selCol[m_mode] + 1] == NULL) {
       moveRow(/*down=*/true);
       m_selCol[m_mode] = 0;
     } else {
@@ -865,6 +881,10 @@ void moveCursor(uint32_t _button) {
   UIDirtyMain();
 }
 
+void setUIContentMainMenu(int32_t _row, bool _isHeader) {
+  m_contentSprite[_row][0] = m_UISpriteMainMenuItem[_row];
+  m_rowIsTitle[_row] = _isHeader;
+}
 
 void setUIContentHeader(int32_t _row, enum kUICat _c) {
   m_contentSprite[_row][0] = m_UISpriteHeaders[_c];
@@ -901,8 +921,9 @@ void drawUIMain() {
   bool empty = false;
   switch (gm) {
     case kMenuBuy:; populateContentBuy(); break;
+    case kMenuMain:; populateContentMainmenu(); break;
     case kMenuNew:; empty = true; break;
-    case kMenuPlayer:; populateContentMainmenu(); break;
+    case kMenuPlayer:; populateContentInventory(); break;
     case kMenuSell:; empty = populateContentSell(); break;
     case kMenuWarp:; populateContentWarp(); break;
     case kMenuExport:; empty = populateContentExport(); break;
@@ -991,7 +1012,7 @@ void drawUIMain() {
   // CUSTOM TOP AREA
   switch (gm) {
     case kMenuBuy:; populateInfoBuy(visible); break;
-    case kMenuPlayer:; populateInfoMainmenu(); break;
+    case kMenuPlayer:; populateInfoInventory(); break;
     case kMenuSell:; populateInfoSell(); break;
     case kMenuWarp:; populateInfoWarp(visible); break;
     case kMenuExport:; populateInfoExport(); break;
@@ -1213,7 +1234,7 @@ void initiUI() {
   pd->sprite->setZIndex(m_UISpriteRight, Z_INDEX_UI_RIGHT);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteRight, 1);
 
-  // Setup main menu screen
+  // Setup menu screens
 
   m_UIBitmapFull = pd->graphics->newBitmap(TILE_PIX*22, TILE_PIX*12, kColorClear);
   pd->graphics->pushContext(m_UIBitmapFull);
@@ -1235,6 +1256,7 @@ void initiUI() {
   PDRect ingBound = {.x = 0, .y = 0, .width = INGREDIENTS_WIDTH, .height = INGREDIENTS_HEIGHT};
   PDRect tutBound = {.x = 0, .y = 0, .width = TUTORIAL_WIDTH, .height = TUTORIAL_HEIGHT};
   PDRect stickyBound = {.x = 0, .y = 0, .width = 38, .height = 38};
+  PDRect mainMenuBound = {.x = 0, .y = 0, .width = TILE_PIX*13, .height = TILE_PIX};
 
   // Titles
 
@@ -1291,6 +1313,25 @@ void initiUI() {
     pd->graphics->setDrawMode(kDrawModeCopy);
     pd->graphics->popContext();
   }
+
+  // Main Menu
+
+  for (int32_t i = 0; i < MAX_ROWS; ++i) {
+    m_UIBitmapMainMenuItem[i] = pd->graphics->newBitmap(TILE_PIX*13, TILE_PIX*1, kColorClear);
+    if (i%2) pd->graphics->clearBitmap(m_UIBitmapMainMenuItem[i], kColorBlack);
+
+    m_UISpriteMainMenuItem[i] = pd->sprite->newSprite();
+    pd->sprite->setBounds(m_UISpriteMainMenuItem[i], mainMenuBound);
+    pd->sprite->setImage(m_UISpriteMainMenuItem[i], m_UIBitmapMainMenuItem[i], kBitmapUnflipped);
+    pd->sprite->setZIndex(m_UISpriteMainMenuItem[i], Z_INDEX_UI_M);
+    pd->sprite->setIgnoresDrawOffset(m_UISpriteMainMenuItem[i], 1);
+  }
+
+    m_UISpriteMainMenuCursor = pd->sprite->newSprite();
+    pd->sprite->setBounds(m_UISpriteMainMenuCursor, mainMenuBound);
+    //pd->sprite->setImage(m_UISpriteMainMenuCursor, m_UIBitmapMainMenuItem[i], kBitmapUnflipped);
+    pd->sprite->setZIndex(m_UISpriteMainMenuCursor, Z_INDEX_UI_T);
+    pd->sprite->setIgnoresDrawOffset(m_UISpriteMainMenuCursor, 1);
 
   // New stuff
 

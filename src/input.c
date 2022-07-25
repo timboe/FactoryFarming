@@ -7,7 +7,7 @@
 #include "ui.h"
 #include "io.h"
 #include "buildings/special.h"
-#include "ui/mainmenu.h"
+#include "ui/inventory.h"
 #include "ui/sell.h"
 #include "ui/shop.h"
 #include "ui/warp.h"
@@ -24,6 +24,8 @@ uint8_t m_pickRadius = 3;
 bool characterMoveInput(uint32_t _buttonPressed);
 
 void clickHandleWander(uint32_t _buttonPressed);
+
+void clickHandleMenuMain(uint32_t _buttonPressed);
 
 void clickHandleMenuBuy(uint32_t _buttonPressed);
 
@@ -117,6 +119,7 @@ bool characterMoveInput(uint32_t _buttonPressed) {
 void gameClickConfigHandler(uint32_t _buttonPressed) {
   switch (getGameMode()) {
     case kWanderMode:; return clickHandleWander(_buttonPressed);
+    case kMenuMain:; return clickHandleMenuMain(_buttonPressed);
     case kMenuBuy:; return clickHandleMenuBuy(_buttonPressed);
     case kMenuNew:; return clickHandleMenuNew(_buttonPressed);
     case kMenuSell:; return clickHandleMenuSell(_buttonPressed);
@@ -170,6 +173,16 @@ void clickHandleTitles(uint32_t _buttonPressed) {
   }
 }
 
+void clickHandleMenuMain(uint32_t _buttonPressed) {
+  if (kButtonA == _buttonPressed) {
+    //
+  } else if (kButtonB == _buttonPressed) {
+    setGameMode(kWanderMode);
+  } else {
+    moveCursor(_buttonPressed);
+  }
+}
+
 void clickHandleMenuBuy(uint32_t _buttonPressed) {
   if (kButtonA == _buttonPressed) {
     doPurchace();
@@ -207,7 +220,7 @@ void clickHandleMenuSell(uint32_t _buttonPressed) {
 }
 
 void clickHandleMenuPlayer(uint32_t _buttonPressed) {
-  if (kButtonA     == _buttonPressed) doMainMenuClick();
+  if (kButtonA     == _buttonPressed) doInventoryClick();
   else if (kButtonB   == _buttonPressed) setGameMode(kWanderMode);
   else moveCursor(_buttonPressed);
 }
@@ -367,7 +380,7 @@ void clickHandlerReplacement() {
     case kPickMode:; // fall through
     case kDestroyMode:; rotateHandlePick(pd->system->getCrankChange()); break;
     case kMenuBuy:; case kMenuSell:; case kMenuWarp:; case kMenuExport:; case kMenuImport:; break;
-    case kPlantMode:; case kInspectMode:; case kTitles:; case kNGameModes:; break;
+    case kPlantMode:; case kInspectMode:; case kTitles:; case kMenuMain:; case kNGameModes:; break;
   }
 
 }

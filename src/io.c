@@ -156,10 +156,7 @@ bool doTitle() {
   unZoom();
   setPlayerPosition((3*DEVICE_PIX_X)/4, (3*DEVICE_PIX_Y)/4, /*update current location = */ true);
 
-  pd->system->removeAllMenuItems();
-  pd->system->addMenuItem("delete save a", menuOptionsCallbackDelete, (void*)0);
-  pd->system->addMenuItem("delete save b", menuOptionsCallbackDelete, (void*)1);
-  pd->system->addMenuItem("delete save c", menuOptionsCallbackDelete, (void*)2);
+  populateMenuTitle();
 
   return true;
 }
@@ -191,8 +188,10 @@ bool doNewWorld() {
 
     setGameMode(kWanderMode);
 
+    populateMenuGame();
+
     // Finished
-    // Need to save now, so issue another doIO command from here
+    // Need to save now, so issue another doIO command from here (TODO, make the IO procedure allow up to three things to be chained instead?)
     doIO(kDoSave, kDoNothing);
     return false; // Hence then have to return false otherwise we'd complete the current doIO...
   }
@@ -359,7 +358,7 @@ bool doSave(bool _synchronous) {
     scanSlots();
 
     // Finished
-    float f; for (int32_t i = 0; i < 10000; ++i) for (int32_t j = 0; j < 100000; ++j) { f*=i*j; }
+    float f; for (int32_t i = 0; i < 10000; ++i) for (int32_t j = 0; j < 10000; ++j) { f*=i*j; }
     return true;
   }
 
@@ -415,9 +414,10 @@ bool doLoad() {
     showTutorialMsg(getTutorialStage());
 
     setGameMode(kWanderMode);
+    populateMenuGame();
 
     // Finished
-    float f; for (int32_t i = 0; i < 10000; ++i) for (int32_t j = 0; j < 100000; ++j) { f*=i*j; }
+    float f; for (int32_t i = 0; i < 10000; ++i) for (int32_t j = 0; j < 10000; ++j) { f*=i*j; }
     return true;
   }
 

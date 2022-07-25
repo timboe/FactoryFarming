@@ -30,21 +30,12 @@ static void init(void) {
   initSound();
   initGame();
 
-  setSave(0);
-  scanSlots();
-  setSave(1);
-  scanSlots();
-  setSave(2);
-  scanSlots();
+  for (int32_t s = 0; s < N_SAVES; ++s) {
+    setSave(s);
+    scanSlots();
+  }
 
   doIO(kDoTitle, /*and then*/ kDoNothing);
-  //if (hasSaveData()) {
-  //  pd->system->logToConsole("Main: Requesting load");
-  //  menuOptionsCallbackLoad(NULL);
-  //} else {
-  //  pd->system->logToConsole("Main: Requesting generate");
-  //  menuOptionsCallbackRestart(NULL);
-  //}
 }
 
 static void deinit(void) {

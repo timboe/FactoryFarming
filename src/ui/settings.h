@@ -2,13 +2,7 @@
 #include "../game.h"
 #include "../ui.h"
 
-void doMainMenuClick(void);
-
-void doPlace(void);
-
-void doPick(void);
-
-void doDestroy(void);
+void doMainmenuClick(void);
 
 void populateContentMainmenu(void);
 

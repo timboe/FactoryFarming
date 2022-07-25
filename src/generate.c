@@ -382,7 +382,7 @@ const char* toStringSoil(enum kGroundType _type) {
 const char* getWorldName(enum kWorldType _type, bool _mask) {
   switch (_type) {
     case kSiltWorld: return _mask ? "??? ?????????" : "The Grasslands"; // Main: Silt
-    case kChalkWorld: return _mask ? "??? ????? ??????" : "The Stony Plateu"; // Main: Chalk
+    case kChalkWorld: return _mask ? "??? ????? ???????" : "The Stony Plateau"; // Main: Chalk
     case kPeatWorld: return _mask ? "??? ????? ??????" : "The Boggy Hollow"; // Main: Peat
     case kSandWorld: return _mask ? "??? ??????" : "The Desert"; // Main: Sand
     case kClayWorld: return _mask ? "??? ???????" :"The Estuary"; // Main: Clay
@@ -831,7 +831,7 @@ void generate(uint32_t _actionProgress) {
     doWetness(/*for titles = */ false);
 
     // Finished
-    float f; for (int32_t i = 0; i < 10000; ++i) for (int32_t j = 0; j < 100000; ++j) { f*=i*j; }
+    float f; for (int32_t i = 0; i < 10000; ++i) for (int32_t j = 0; j < 10000; ++j) { f*=i*j; }
     pd->system->logToConsole("Generated %s",  getWorldName(slot, /*mask*/ false));
 
   }

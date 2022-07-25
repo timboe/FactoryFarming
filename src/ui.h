@@ -4,7 +4,7 @@
 
 // All Main Menu items should come after kMenuBuy
 enum kGameMode {kWanderMode, kPlaceMode, kBuildMode, kPlantMode, kPickMode, kInspectMode, kDestroyMode, 
-	            kMenuBuy, kMenuNew, kMenuSell, kMenuPlayer, kMenuWarp, kMenuExport, kMenuImport, kTitles, kNGameModes};
+	            kMenuBuy, kMenuNew, kMenuSell, kMenuPlayer, kMenuWarp, kMenuExport, kMenuImport, kMenuMain, kTitles, kNGameModes};
 
 enum kUICat {kUICatTool, kUICatPlant, kUICatConv, kUICatExtractor, kUICatFactory, kUICatUtility, 
 	         kUICatCargo, kUICatWarp, kUICatImportN, kUICatImportE, kUICatImportS, kUICatImportW, kNUICats}; 
@@ -43,6 +43,8 @@ void UIDirtyRight(void);
 void UIDirtyMain(void);
 
 void updateUI(int _fc);
+
+void updateUITitles(int _fc);
 
 void updateBlueprint(void);
 
@@ -83,6 +85,8 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n);
 bool checkReturnDismissTutorialMsg(void);
 
 void showTutorialMsg(enum kUITutorialStage _stage);
+
+void setUIContentMainMenu(int32_t _row, bool _isHeader);
 
 void setUIContentHeader(int32_t _row, enum kUICat _c);
 

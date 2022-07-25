@@ -29,11 +29,17 @@ uint16_t locToPix(uint16_t _loc);
 
 uint16_t pixToLoc(uint16_t _pix);
 
+void menuOptionsCallbackMenu(void*);
+
 void menuOptionsCallbackDelete(void* _save);
 
 void menuOptionsCallbackLoad(void*);
 
 void menuOptionsCallbackSave(void*);
+
+void populateMenuTitle(void);
+
+void populateMenuGame(void);
 
 void initGame(void);
 
