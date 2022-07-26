@@ -22,6 +22,8 @@ enum kUICat {kUICatTool, kUICatPlant, kUICatConv, kUICatExtractor, kUICatFactory
 
 #define MAX_ROWS_VISIBLE 4
 
+#define MAX_ROWS_VISIBLE_MAINMENU 9
+
 #define TOP_TITLE_OFFSET 34
 
 void addUIToSpriteList(void);

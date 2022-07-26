@@ -96,6 +96,12 @@ LCDSprite* m_UISpriteCannotAfford;
 LCDSprite* m_UISpriteInfo;
 LCDBitmap* m_UIBitmapInfo;
 
+LCDSprite* m_UISpriteScrollBarShortOuter;
+LCDBitmap* m_UIBitmapScrollBarShortOuter;
+
+LCDSprite* m_UISpriteScrollBarLongOuter;
+LCDBitmap* m_UIBitmapScrollBarLongOuter;
+
 LCDSprite* m_UISpriteFull; // Main window backing
 LCDBitmap* m_UIBitmapFull;
 
@@ -430,12 +436,14 @@ void addUIToSpriteList() {
         pd->sprite->addSprite(m_UISpriteMainMenuItem[i]);
       }
       pd->sprite->addSprite(m_UISpriteMainMenuCursor);
+      pd->sprite->addSprite(m_UISpriteScrollBarLongOuter);
     } else {    
       pd->sprite->addSprite(m_UISpriteCursor);
       pd->sprite->addSprite(m_UISpriteSelected);
       pd->sprite->addSprite(m_UISpriteCannotAfford);
       pd->sprite->addSprite(m_UISpriteInfo);
       pd->sprite->addSprite(m_UISpriteIngredients);
+      pd->sprite->addSprite(m_UISpriteScrollBarShortOuter);
       for (int32_t i = 0; i < 4; ++i) {
         pd->sprite->addSprite(m_UISpriteStickySelected[i]);
       }
@@ -810,15 +818,15 @@ uint16_t getUIIcon(enum kUICat _c, uint16_t _i) {
 }
 
 void moveRow(bool _down) {
-  const uint8_t maxRowsVisible = (m_mode == kMenuMain ? MAX_ROWS_VISIBLE*2 : MAX_ROWS_VISIBLE);
+  const uint8_t maxRowsVisible = (m_mode == kMenuMain ? MAX_ROWS_VISIBLE_MAINMENU : MAX_ROWS_VISIBLE);
   if (_down) {
     ++m_selRow[m_mode];
-    if (m_cursorRowAbs[m_mode] == MAX_ROWS_VISIBLE-1) ++m_selRowOffset[m_mode];
+    if (m_cursorRowAbs[m_mode] == maxRowsVisible-1) ++m_selRowOffset[m_mode];
     else ++m_cursorRowAbs[m_mode];
     //
     if (m_rowIsTitle[ m_selRow[m_mode] ]) {
       ++m_selRow[m_mode];
-      if (m_cursorRowAbs[m_mode] == MAX_ROWS_VISIBLE-1) ++m_selRowOffset[m_mode];
+      if (m_cursorRowAbs[m_mode] == maxRowsVisible-1) ++m_selRowOffset[m_mode];
       else ++m_cursorRowAbs[m_mode];
     }
   } else { // Up
@@ -949,6 +957,7 @@ void drawUIMain() {
     pd->sprite->setVisible(m_UISpriteStickySelected[i], 0);
   }
 
+  #define MAINMENUSTARTY (TILE_PIX*3)
   #define UISTARTX (TILE_PIX*3)
   #define UISTARTY (TILE_PIX*5)
 
@@ -969,11 +978,16 @@ void drawUIMain() {
   pd->sprite->setVisible(m_UISpriteInfo, 1);
 
   // Render
-  for (int32_t r = 0; r < 4; ++r) {
+  const uint8_t ROWS_TO_RENDER = (m_mode == kMenuMain ? MAX_ROWS_VISIBLE_MAINMENU : MAX_ROWS_VISIBLE);
+
+  for (int32_t r = 0; r < ROWS_TO_RENDER; ++r) {
     int32_t rID = r + m_selRowOffset[m_mode];
     if (rID >= MAX_ROWS) break;
     if (m_contentSprite[rID][0] == NULL) break; // Not populated
-    if (m_rowIsTitle[rID]) {
+    if (m_mode == kMenuMain) {
+      pd->sprite->setVisible(m_contentSprite[rID][0], 1);
+      pd->sprite->moveTo(m_contentSprite[rID][0], SCREEN_PIX_X/2 - TILE_PIX, MAINMENUSTARTY + r*TILE_PIX);
+    } else if (m_rowIsTitle[rID]) {
       pd->sprite->setVisible(m_contentSprite[rID][0], 1);
       pd->sprite->moveTo(m_contentSprite[rID][0], SCREEN_PIX_X/2 - TILE_PIX, UISTARTY + r*2*TILE_PIX);
     } else {
@@ -991,8 +1005,13 @@ void drawUIMain() {
 
   // CURSOR
   const bool visible = (getFrameCount() % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
-  pd->sprite->setVisible(m_UISpriteCursor, visible);
-  pd->sprite->moveTo(m_UISpriteCursor, UISTARTX + m_selCol[m_mode]*2*TILE_PIX, UISTARTY + m_cursorRowAbs[m_mode]*2*TILE_PIX);
+  if (m_mode == kMenuMain) {
+    pd->sprite->setVisible(m_UISpriteMainMenuCursor, visible);
+    pd->sprite->moveTo(m_UISpriteMainMenuCursor, UISTARTX + TILE_PIX*8, MAINMENUSTARTY + m_cursorRowAbs[m_mode]*TILE_PIX);
+  } else {
+    pd->sprite->setVisible(m_UISpriteCursor, visible);
+    pd->sprite->moveTo(m_UISpriteCursor, UISTARTX + m_selCol[m_mode]*2*TILE_PIX, UISTARTY + m_cursorRowAbs[m_mode]*2*TILE_PIX);
+  }
 
   // SELECTED
   LCDSprite* selectedSprite = m_contentSprite[ m_selRow[m_mode] ][ m_selCol[m_mode] ];
@@ -1256,7 +1275,9 @@ void initiUI() {
   PDRect ingBound = {.x = 0, .y = 0, .width = INGREDIENTS_WIDTH, .height = INGREDIENTS_HEIGHT};
   PDRect tutBound = {.x = 0, .y = 0, .width = TUTORIAL_WIDTH, .height = TUTORIAL_HEIGHT};
   PDRect stickyBound = {.x = 0, .y = 0, .width = 38, .height = 38};
-  PDRect mainMenuBound = {.x = 0, .y = 0, .width = TILE_PIX*13, .height = TILE_PIX};
+  PDRect mainMenuBound = {.x = 0, .y = 0, .width = TILE_PIX*18, .height = TILE_PIX};
+  PDRect scrollShortBound = {.x = 0, .y = 0, .width = TILE_PIX*2, .height = TILE_PIX*8};
+  PDRect scrollLongBound = {.x = 0, .y = 0, .width = TILE_PIX*2, .height = TILE_PIX*10};
 
   // Titles
 
@@ -1317,21 +1338,20 @@ void initiUI() {
   // Main Menu
 
   for (int32_t i = 0; i < MAX_ROWS; ++i) {
-    m_UIBitmapMainMenuItem[i] = pd->graphics->newBitmap(TILE_PIX*13, TILE_PIX*1, kColorClear);
-    if (i%2) pd->graphics->clearBitmap(m_UIBitmapMainMenuItem[i], kColorBlack);
-
+    m_UIBitmapMainMenuItem[i] = pd->graphics->newBitmap(TILE_PIX*18, TILE_PIX*1, kColorClear);
     m_UISpriteMainMenuItem[i] = pd->sprite->newSprite();
     pd->sprite->setBounds(m_UISpriteMainMenuItem[i], mainMenuBound);
     pd->sprite->setImage(m_UISpriteMainMenuItem[i], m_UIBitmapMainMenuItem[i], kBitmapUnflipped);
     pd->sprite->setZIndex(m_UISpriteMainMenuItem[i], Z_INDEX_UI_M);
     pd->sprite->setIgnoresDrawOffset(m_UISpriteMainMenuItem[i], 1);
+    redrawMainmenuLine(m_UIBitmapMainMenuItem[i], i);
   }
 
-    m_UISpriteMainMenuCursor = pd->sprite->newSprite();
-    pd->sprite->setBounds(m_UISpriteMainMenuCursor, mainMenuBound);
-    //pd->sprite->setImage(m_UISpriteMainMenuCursor, m_UIBitmapMainMenuItem[i], kBitmapUnflipped);
-    pd->sprite->setZIndex(m_UISpriteMainMenuCursor, Z_INDEX_UI_T);
-    pd->sprite->setIgnoresDrawOffset(m_UISpriteMainMenuCursor, 1);
+  m_UISpriteMainMenuCursor = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteMainMenuCursor, mainMenuBound);
+  pd->sprite->setImage(m_UISpriteMainMenuCursor, getMainmenuSelectedBitmap(), kBitmapUnflipped);
+  pd->sprite->setZIndex(m_UISpriteMainMenuCursor, Z_INDEX_UI_T);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteMainMenuCursor, 1);
 
   // New stuff
 
@@ -1380,6 +1400,24 @@ void initiUI() {
   pd->sprite->moveTo(m_UISpriteNewText, SCREEN_PIX_X/2, TILE_PIX*11);
 
   // Menu stuff
+
+
+
+  m_UIBitmapScrollBarShortOuter = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*8, kColorBlack);
+  m_UISpriteScrollBarShortOuter = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteScrollBarShortOuter, scrollShortBound);
+  pd->sprite->setImage(m_UISpriteScrollBarShortOuter, m_UIBitmapScrollBarShortOuter, kBitmapUnflipped);
+  pd->sprite->setZIndex(m_UISpriteScrollBarShortOuter, Z_INDEX_UI_M);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteScrollBarShortOuter, 1);  
+  pd->sprite->moveTo(m_UISpriteScrollBarShortOuter, TILE_PIX*21, TILE_PIX*8);
+
+  m_UIBitmapScrollBarLongOuter = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*10, kColorBlack);
+  m_UISpriteScrollBarLongOuter = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteScrollBarLongOuter, scrollLongBound);
+  pd->sprite->setImage(m_UISpriteScrollBarLongOuter, m_UIBitmapScrollBarLongOuter, kBitmapUnflipped);
+  pd->sprite->setZIndex(m_UISpriteScrollBarLongOuter, Z_INDEX_UI_M);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteScrollBarLongOuter, 1);  
+  pd->sprite->moveTo(m_UISpriteScrollBarLongOuter, TILE_PIX*21, TILE_PIX*7);
 
   m_UISpriteFull = pd->sprite->newSprite();
   pd->sprite->setBounds(m_UISpriteFull, fBound);

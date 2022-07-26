@@ -241,6 +241,7 @@ void menuOptionsCallbackSave(void* blank) {
 
 void menuOptionsCallbackMenu(void* blank) {
   pd->system->logToConsole("menuOptionsCallbackMenu");
+  checkReturnDismissTutorialMsg();
   drawUITop("Main Menu");
   setGameMode(kMenuMain);
 }
@@ -267,9 +268,9 @@ void populateMenuTitle() {
 
 void populateMenuGame() {
   pd->system->removeAllMenuItems();
-  pd->system->addMenuItem("menu", menuOptionsCallbackMenu, NULL);
   pd->system->addMenuItem("load", menuOptionsCallbackLoad, NULL);
   pd->system->addMenuItem("save", menuOptionsCallbackSave, NULL);
+  pd->system->addMenuItem("menu", menuOptionsCallbackMenu, NULL);
 }
 
 void initGame() {
