@@ -13,6 +13,7 @@
 #include "ui.h"
 #include "building.h"
 #include "io.h"
+#include "ui/settings.h"
 
 #ifdef _WINDLL
 __declspec(dllexport)
@@ -72,6 +73,7 @@ int eventHandler(PlaydateAPI* playdate, PDSystemEvent event, uint32_t arg) {
       #ifdef DEV
       playdate->system->logToConsole("EH: pause");
       #endif
+      playdate->system->setMenuImage(getPauseImage(), 0);
       break;
     case kEventResume:;
       #ifdef DEV

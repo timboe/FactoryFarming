@@ -3,6 +3,8 @@
 #include "../ui.h"
 #include "../io.h"
 
+LCDBitmap* m_pause = NULL;
+
 bool isTitle(int32_t _line);
 
 const char* getLine(int32_t _line);
@@ -14,6 +16,20 @@ void unchecked(void);
 void autosave(uint32_t _time);
 
 /// ///
+
+LCDBitmap* getPauseImage() {
+  if (m_pause == NULL) m_pause = pd->graphics->newBitmap(DEVICE_PIX_X, DEVICE_PIX_Y, kColorClear);
+
+  pd->graphics->clearBitmap(m_pause, kColorClear);
+
+  if (getGameMode() == kTitles) return m_pause;
+
+  pd->graphics->pushContext(m_pause);
+  roundedRect(TILE_PIX,   DEVICE_PIX_X/2, DEVICE_PIX_Y, TILE_PIX, kColorBlack);
+  roundedRect(TILE_PIX+ 5, DEVICE_PIX_X/2, DEVICE_PIX_Y, TILE_PIX, kColorWhite);
+  pd->graphics->popContext();
+  return m_pause;
+}
 
 void checked() {
   pd->graphics->setDrawMode(kDrawModeCopy);
