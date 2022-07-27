@@ -192,6 +192,10 @@ uint16_t getCursorRotation() {
   return m_selRotation;
 }
 
+LCDBitmap* getMainmenuUIBitmap(uint32_t _i) {
+  return m_UIBitmapMainMenuItem[_i];
+}
+
 enum kUICat getUIContentCategory() {
   enum kUICat c = m_mode;
   if (m_mode == kPlaceMode || m_mode == kPlantMode || m_mode == kBuildMode) c = kMenuPlayer;
@@ -891,6 +895,7 @@ void moveCursor(uint32_t _button) {
 
 void setUIContentMainMenu(int32_t _row, bool _isHeader) {
   m_contentSprite[_row][0] = m_UISpriteMainMenuItem[_row];
+  m_contentID[_row][0] = _row;
   m_rowIsTitle[_row] = _isHeader;
 }
 
@@ -943,19 +948,26 @@ void drawUIMain() {
 
   // DRAW
   // Mark invisible
-  for (enum kUICat c = 0; c < kNUICats; ++c) {
-    pd->sprite->setVisible(m_UISpriteHeaders[c], 0);
-    for (int32_t i = 0; i < MAX_PER_CAT; ++i) {
-      for (int32_t r = 0; r < 4; ++r) {
-        if (m_UISpriteItems[c][i][r] != NULL) {
-          pd->sprite->setVisible(m_UISpriteItems[c][i][r], 0);
+  if (gm == kMenuMain) {
+    for (int32_t i = 0; i < MAX_ROWS; ++i) {
+      pd->sprite->setVisible(m_UISpriteMainMenuItem[i], 0);
+    }
+  } else {
+    for (enum kUICat c = 0; c < kNUICats; ++c) {
+      pd->sprite->setVisible(m_UISpriteHeaders[c], 0);
+      for (int32_t i = 0; i < MAX_PER_CAT; ++i) {
+        for (int32_t r = 0; r < 4; ++r) {
+          if (m_UISpriteItems[c][i][r] != NULL) {
+            pd->sprite->setVisible(m_UISpriteItems[c][i][r], 0);
+          }
         }
       }
     }
+    for (int32_t i = 0; i < 4; ++i) {
+      pd->sprite->setVisible(m_UISpriteStickySelected[i], 0);
+    }
   }
-  for (int32_t i = 0; i < 4; ++i) {
-    pd->sprite->setVisible(m_UISpriteStickySelected[i], 0);
-  }
+
 
   #define MAINMENUSTARTY (TILE_PIX*3)
   #define UISTARTX (TILE_PIX*3)
@@ -979,6 +991,8 @@ void drawUIMain() {
 
   // Render
   const uint8_t ROWS_TO_RENDER = (m_mode == kMenuMain ? MAX_ROWS_VISIBLE_MAINMENU : MAX_ROWS_VISIBLE);
+
+  pd->system->logToConsole("SelRow:%i  SelCol:%i SelRowOffset:%i CursorRowAbs:%i", m_selRow[m_mode], m_selCol[m_mode], m_selRowOffset[m_mode], m_cursorRowAbs[m_mode]);
 
   for (int32_t r = 0; r < ROWS_TO_RENDER; ++r) {
     int32_t rID = r + m_selRowOffset[m_mode];
@@ -1014,9 +1028,11 @@ void drawUIMain() {
   }
 
   // SELECTED
-  LCDSprite* selectedSprite = m_contentSprite[ m_selRow[m_mode] ][ m_selCol[m_mode] ];
-  pd->sprite->setVisible(m_UISpriteSelected, 1);
-  pd->sprite->setImage(m_UISpriteSelected, pd->sprite->getImage(selectedSprite), kBitmapUnflipped);
+  if (m_mode != kMenuMain) {
+    LCDSprite* selectedSprite = m_contentSprite[ m_selRow[m_mode] ][ m_selCol[m_mode] ];
+    pd->sprite->setVisible(m_UISpriteSelected, 1);
+    pd->sprite->setImage(m_UISpriteSelected, pd->sprite->getImage(selectedSprite), kBitmapUnflipped);
+  }
 
   // INGREDIENTS
   if (m_contentCat[ m_selRow[m_mode] ][ m_selCol[m_mode] ] == kUICatFactory) {

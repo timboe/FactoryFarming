@@ -137,7 +137,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
     }
   }
 
-  if (false && getPlayer()->m_enableDebug) {
+  if (getPlayer()->m_enableDebug) {
     setRoobert24();
     pd->graphics->drawRect(0, 0, CHUNK_PIX_X, CHUNK_PIX_Y, kColorBlack);
     static char text[16];

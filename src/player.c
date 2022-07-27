@@ -48,9 +48,9 @@ const char* toStringTool(enum kToolType _type) {
 
 const char* toStringToolInfo(enum kToolType _type) {
   switch(_type) {
-    case kToolPickup: return "Get nearby cargo, empties buildings";
+    case kToolPickup: return "Grabs nearby cargo, empties buildings";
     case kToolInspect: return "See details about the current tile";
-    case kToolDestroy: return "Destroys buildings, belts and cargo";
+    case kToolDestroy: return "Destroys everything in the area";
     default: return "Tool???";
   }
 }
@@ -425,6 +425,8 @@ void resetPlayer() {
   m_player.m_saveTime = pd->system->getSecondsSinceEpoch(NULL);
   m_player.m_playTime = 0;
   m_player.m_tutorialProgress = 0;
+  m_offX = 0;
+  m_offY = 0;
   memset(m_player.m_exportPerWorld, 0, sizeof(float)*WORLD_SAVE_SLOTS*kNCargoType);
   if (m_player.m_enableTutorial != TUTORIAL_DISABLED) m_player.m_enableTutorial = 0;
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_carryCargo[i] = 0;
@@ -436,6 +438,14 @@ void resetPlayer() {
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_importConsumers[i] = 0;
   setPlayerPosition(SCREEN_PIX_X/4, (3*SCREEN_PIX_Y)/4, /*update current location = */ true);
   m_currentChunk = getChunk_noCheck(0,0);
+  m_facing = 0;
+  m_wasFacing = 0;
+  m_stepCounter = 0;
+  m_animFrame = 0;
+  m_deserialiseXPlayer = 0;
+  m_deserialiseYPlayer = 0;
+  m_deserialiseArrayID = -1;
+  m_forceTorus = true;
   modMoney(100000); // TEMP
 }
 

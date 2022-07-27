@@ -149,7 +149,7 @@ void setForceSlot(int8_t _slot) { m_forceSlot = _slot; }
 
 bool doTitle() {
 
-  reset(true);
+  reset(true); // including player
   generateTitle();
   setChunkBackgrounds(/*for title = */ true);
   setGameMode(kTitles);

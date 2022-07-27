@@ -11,6 +11,7 @@
 #include "ui/sell.h"
 #include "ui/shop.h"
 #include "ui/warp.h"
+#include "ui/settings.h"
 #include "ui/import.h"
 #include "ui/export.h"
 #include "ui/new.h"
@@ -175,7 +176,7 @@ void clickHandleTitles(uint32_t _buttonPressed) {
 
 void clickHandleMenuMain(uint32_t _buttonPressed) {
   if (kButtonA == _buttonPressed) {
-    //
+    doSettings();
   } else if (kButtonB == _buttonPressed) {
     setGameMode(kWanderMode);
   } else {

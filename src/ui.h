@@ -80,6 +80,8 @@ LCDSprite* getGenSprite(void);
 
 LCDBitmap* getInfoBitmap(void);
 
+LCDBitmap* getMainmenuUIBitmap(uint32_t _i);
+
 const char* getRotationAsString(enum kUICat _cat, int16_t _selectedID, uint16_t _rotation);
 
 const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n);
