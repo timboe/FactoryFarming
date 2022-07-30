@@ -27,3 +27,5 @@ struct Building_t* getImportBox(void);
 void drawUIInspectSpecial(struct Building_t* _building);
 
 bool isCamouflaged(void); 
+
+void unlockOtherWorlds(void);

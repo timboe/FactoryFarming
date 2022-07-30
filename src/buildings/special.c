@@ -130,6 +130,24 @@ bool isCamouflaged() {
   return m_warp && m_warp->m_dir != SN;
 }
 
+void unlockOtherWorlds() {
+  m_warp->m_dir = SN;
+  m_exportBox->m_dir = SN;
+  m_importBox->m_dir = SN;
+
+  for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+    m_warp->m_image[zoom] = getSprite48(0, 2, zoom);
+    m_exportBox->m_image[zoom] = getSprite48(2, 1, zoom);
+    m_importBox->m_image[zoom] = getSprite48(3, 1, zoom);
+  }
+
+  renderChunkBackgroundImageAround(m_warp->m_location->m_chunk);
+  renderChunkBackgroundImageAround(m_exportBox->m_location->m_chunk);
+  renderChunkBackgroundImageAround(m_importBox->m_location->m_chunk);
+
+  startPlotsTutorial();
+}
+
 void buildingSetupSpecial(struct Building_t* _building) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     switch (_building->m_subType.special) {

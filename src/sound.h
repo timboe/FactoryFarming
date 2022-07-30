@@ -3,5 +3,6 @@
 
 void initSound(void);
 
-void music(bool _onoff);
-void sfx(bool _onoff);
+void updateMusic(bool _isTitle);
+
+void updateSfx(void);

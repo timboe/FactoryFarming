@@ -2,6 +2,7 @@
 #include "../sprite.h"
 #include "../ui.h"
 #include "../io.h"
+#include "../sound.h"
 
 LCDBitmap* m_pause = NULL;
 
@@ -56,8 +57,8 @@ void doSettings() {
   struct Player_t* p = getPlayer();
   const uint16_t selectedID =  getUIContentID();
   switch (selectedID) {
-    case 1: p->m_soundSettings = p->m_soundSettings ^ 1; break;
-    case 2: p->m_soundSettings = p->m_soundSettings ^ 2; break;
+    case 1: p->m_soundSettings = p->m_soundSettings ^ 1; updateMusic(/*isTitle=*/false); break;
+    case 2: p->m_soundSettings = p->m_soundSettings ^ 2; updateSfx(); break;
     case 4: p->m_enableScreenShake = !p->m_enableScreenShake; break;
     case 5: if (p->m_enableTutorial == 255) p->m_enableTutorial = 0; else p->m_enableTutorial = 255; break;
     case 6: p->m_enableConveyorAnimation = !p->m_enableConveyorAnimation; break;
@@ -128,7 +129,7 @@ void populateInfoMainmenu() {
 
 bool isTitle(int32_t _line) {
   switch (_line) {
-    case 0: case 3: case 11: case 14: case 21: return true;
+    case 0: case 3: case 11: case 14: case 21: case 23: case 29: case 37: return true;
   }
   return false;
 }
@@ -138,6 +139,7 @@ const char* getLine(int32_t _line) {
     case 0: return "--- Sound Settings ---";
     case 1: return "Music";
     case 2: return "Sound Effects";
+    //
     case 3: return "--- Game Settings ---";
     case 4: return "Screen Shake";
     case 5: return "Tutorial Enabled";
@@ -146,9 +148,11 @@ const char* getLine(int32_t _line) {
     case 8: return "Auto Pickup on Destroy";
     case 9: return "Auto Apply Conveyor Grease";
     case 10: return "Show Debug Information";
+    //
     case 11: return "--- Exit Game ---";
     case 12: return "Save & Exit to Title";
     case 13: return "Exit to Title WITHOUT Saving";
+    //
     case 14: return "--- Controls ---";
     case 15: return "Inventory/Select/Interact: Ⓐ";
     case 16: return "Back/Cancel: Ⓑ";
@@ -156,9 +160,35 @@ const char* getLine(int32_t _line) {
     case 18: return "Run: Hold Ⓑ + ✛";
     case 19: return "Zoom in/out: 🎣";
     case 20: return "Rotate: 🎣 or Hold Ⓑ + ⬆️/➡️/⬇️/⬅️";
+    //
     case 21: return "--- Credits ---";
     case 22: return "Factory Farming by Tim Martin";
-    // can currently go to 36
+    //
+    case 23: return "-- Music --";
+    case 24: return "♬ Dr Tikov: 1985";
+    case 25: return "♬ BoxCat Games: B-3";
+    case 26: return "♬ Eric Skiff: We're the Resistors";
+    case 27: return "♬ RoccoW: Sweet Self Satisfaction";
+    case 28: return "♬ RoccoW: Pumped";
+    //
+    case 29: return "-- Art --";
+    case 30: return "Kenney: 1-Bit Pack";
+    case 31: return "VectorPixelStar: 1-Bit Patterns";
+    case 32: return "Josehzz: Farming Crops";
+    case 33: return "ScratchIO: Farming Set";
+    case 34: return "Varkalandar: Isometric Rocks";
+    case 35: return "Withthelove: Character Sprites";
+    case 36: return "DinosoftLab: New (NounProject)";
+    //
+    case 37: return "-- Fonts --";
+    case 38: return "Chester Jenkins: Cooper Hewitt";
+    case 39: return "Martin Vacha: Roobert";
+    case 40: return "Mediengestaltung: Messing Lettern";
+    case 41: return "Nick's Fonts: Coventry Garden";
+    //
+    case 42: return "-- Sound Effects --";
+
+    // can currently go to 42
   }
   return "???";
 }

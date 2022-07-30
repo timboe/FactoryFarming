@@ -49,7 +49,7 @@ void populateInfoWarp(bool _visible) {
         toStringSoil(getWorldGround(selectedID, 1)),
         toStringSoil(getWorldGround(selectedID, 2)));
     } else if (selectedID == kWaterWorld) {
-      snprintf(textB, 128, "Soils: Water, %s", toStringSoil(getWorldGround(kPeatWorld, 0)));
+      snprintf(textB, 128, "Soils: Water, %s", toStringSoil(getWorldGround(kClayWorld, 0)));
     } else if (selectedID == kEmptyWorld) {
       snprintf(textB, 128, "Soils: %s", toStringSoil(getWorldGround(kSiltWorld, 0)));
     }

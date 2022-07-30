@@ -87,13 +87,18 @@ uint8_t getTutorialProgress() {
   return m_player.m_tutorialProgress;
 }
 
+void startPlotsTutorial() {
+  if (!tutorialEnabled()) return;
+  m_player.m_tutorialProgress = 0;
+  m_player.m_enableTutorial = kTutBreakOne+1;
+  showTutorialMsg(m_player.m_enableTutorial);
+}
+
 void nextTutorialStage() {
   m_player.m_tutorialProgress = 0;
   ++m_player.m_enableTutorial;
   if (m_player.m_enableTutorial == kTutBreakOne || m_player.m_enableTutorial == kTutBreakTwo) {
     m_player.m_enableTutorial = TUTORIAL_FINISHED;
-    // TEMP - end of tutorial cash
-    modMoney(100000);
     return;
   } else if (m_player.m_enableTutorial == kTutGetCarrots) {
     growAtAll(); // Force all plants to grow
@@ -446,9 +451,19 @@ void resetPlayer() {
   m_deserialiseYPlayer = 0;
   m_deserialiseArrayID = -1;
   m_forceTorus = true;
-  modMoney(100000); // TEMP
 }
 
+void setDefaultPlayerSettings() {
+  modMoney(100000); // TEMP
+  m_player.m_soundSettings = 3;
+  m_player.m_autoUseConveyorBooster = 1;
+  m_player.m_enableConveyorAnimation = 1;
+  m_player.m_enableTutorial = 0;
+  m_player.m_enableDebug = 0;
+  m_player.m_enableAutosave = 15;
+  m_player.m_enablePickupOnDestroy = 1;
+  m_player.m_enableScreenShake = 1;
+}
 
 void initPlayer() {
   playerSpriteSetup();

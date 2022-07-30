@@ -18,7 +18,8 @@ enum kUICat {kUICatTool, kUICatPlant, kUICatConv, kUICatExtractor, kUICatFactory
 // We need an extra buffer of kNUICats on the end,
 // however no one screen ever uses every cat all at once.
 // so this is obtained automatically
-#define MAX_ROWS (MAX_ROW_PER_CAT*kNUICats)
+// But we might need more for the Setings UI 
+#define MAX_ROWS (MAX_ROW_PER_CAT*(kNUICats+2))
 
 #define MAX_ROWS_VISIBLE 4
 
@@ -31,6 +32,8 @@ void addUIToSpriteList(void);
 void rotateCursor(bool _increment);
 
 void moveCursor(uint32_t _button);
+
+void setPlotCursorToWorld(enum kWorldType _wt);
 
 uint16_t getCursorRotation(void);
 

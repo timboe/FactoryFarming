@@ -7,6 +7,7 @@
 #include "location.h"
 #include "generate.h"
 #include "player.h"
+#include "sound.h"
 #include "buildings/special.h"
 
 uint8_t m_save = 0;
@@ -157,6 +158,7 @@ bool doTitle() {
   setPlayerPosition((3*DEVICE_PIX_X)/4, (3*DEVICE_PIX_Y)/4, /*update current location = */ true);
 
   populateMenuTitle();
+  updateMusic(/*isTitle=*/true);
 
   return true;
 }
@@ -188,7 +190,16 @@ bool doNewWorld() {
 
     setGameMode(kWanderMode);
 
-    populateMenuGame();
+    populateMenuGame(); // Save, Load, Menu
+
+    if (getSlot() == 0) {
+      // Starting a new game, set the default settings
+      setDefaultPlayerSettings();
+      // TEMP
+      unlockOtherWorlds();
+    }
+
+    setPlotCursorToWorld(getSlot());
 
     // Finished
     // Need to save now, so issue another doIO command from here (TODO, make the IO procedure allow up to three things to be chained instead?)
@@ -412,6 +423,10 @@ bool doLoad() {
     doWetness(/*for titles = */ false);
     setChunkBackgrounds(/*for title = */ false);
     showTutorialMsg(getTutorialStage());
+
+    // Update audio settings
+    updateSfx();
+    updateMusic(/*isTitle=*/ false);
 
     setGameMode(kWanderMode);
     populateMenuGame();

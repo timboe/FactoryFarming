@@ -478,7 +478,12 @@ void showTutorialMsg(enum kUITutorialStage _stage) {
   renderTutorialInspectRect(true);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   setRoobert10();
-  snprintf(text, 128, "--- Tutorial Stage %u/%u ---", (unsigned) _stage+1, (unsigned) kTutBreakOne);
+  int tutN = _stage+1, ofN = kTutBreakOne;
+  if (_stage > kTutBreakOne) {
+    tutN = _stage;
+    ofN = kTutFinishedTwo;
+  }
+  snprintf(text, 128, "--- Tutorial Stage %i/%i ---", tutN, ofN);
   int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, 128, kASCIIEncoding, 0);
   pd->graphics->drawText(text, 128, kASCIIEncoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   for (int32_t l = 0; l < 5; ++l) {
@@ -860,6 +865,10 @@ void checkSel() {
     --m_selRowOffset[m_mode];
     ++m_cursorRowAbs[m_mode];
   }
+}
+
+void setPlotCursorToWorld(enum kWorldType _wt) {
+  m_selCol[kMenuWarp] = _wt;
 }
 
 void moveCursor(uint32_t _button) {
@@ -1616,7 +1625,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 3: return "vising The Shop with Ⓐ and buying some Carrot";
         case 4: return "Seeds. Use Ⓑ to exit any mode or menu.";
 
-        case 5: return "Move with the D-Pad. Zoom in & out with the Crank.";
+        case 5: return "Move with the D-Pad, ✛. Zoom in & out with 🎣.";
         case 6: return "Go to The Shop and press Ⓐ.";
         case 7: return "Buy 10 Carrot Seeds from The Shop with Ⓐ.";
         case 8: return "Press Ⓑ to exit The Shop.";
@@ -1679,12 +1688,12 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 1: return "Good, We're harvesting Carrots. But we need to get them";
         case 2: return "to Sales. We need Conveyor Belts! Buy around";
         case 3: return "50 from The Shop and lay the path to move & sell";
-        case 4: return "the carrots. Rotate belt pieces with The Crank.";
+        case 4: return "the carrots. Rotate belt pieces with 🎣.";
           
         case 5: return "Go to the The Shop, buy around 50 an Conveyor Belts.";
         case 6: return "Press Ⓐ and choose these from your inventory.";
         case 7: return "Make a chain of belts from the Automatic Harvester to";
-        case 8: return "Sales. Rotate the Belts with The Crank.";
+        case 8: return "Sales. Rotate the Belts with 🎣.";
       }
     case kTutBuildQuarry:
       switch (_n) {
@@ -1715,13 +1724,70 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
     case kTutFinishedOne:
       switch (_n) {
         case 0: return "-- Go Forth And Consume --";
+        #ifdef DEMO
         case 1: return "Excellent! You now know all the basics of exploiting";
-        //case 2: return "the world for profit. As your bank account swells,";
-        //case 3: return "more Crops, Factories, and other items will unlock.";
-        //case 4: return "Use them well to maximise profit.";
-        case 2: return "the world for profit. This ends the tutorial,";
-        case 3: return "the remaining items available in this Alpha build";
-        case 4: return "have all been unlocked and you have been given 100k.";
+        case 2: return "the world for profit. The demo ends here with the";
+        case 3: return "Vitamin Factory. If you buy the whole game you can";
+        case 4: return "copy your save file over to continue from here!";
+        #else
+        case 1: return "Excellent! You now know all the basics of exploiting";
+        case 2: return "the world for profit. As your bank account swells,";
+        case 3: return "more Crops, Factories, and other items will unlock.";
+        case 4: return "Use them well to maximize profit.";
+        #endif
+          
+        case 5: return " ";
+        case 6: return " ";
+        case 7: return " ";
+        case 8: return " ";
+      }
+      ///
+    case kTutNewPlots:
+      switch (_n) {
+        case 0: return "-- But I Don't Have The Soil For That! --";
+        case 1: return "Problem, the XXXXXXX Plant you just unlocked wants";
+        case 2: return "Sandy Soil, but there isn't any here. Expansion time!";
+        case 3: return "Visit the Plots Manager (next to Sales) and buy a new";
+        case 4: return "plot of land to develop.";
+          
+        case 5: return " ";
+        case 6: return " ";
+        case 7: return "Visit the newly unlocked Plots Manager to the right";
+        case 8: return "of Sales. Buy a new plot of land to expand the factory.";
+      }
+    case kTutExports:
+      switch (_n) {
+        case 0: return "-- A New Horizon --";
+        case 1: return "Welcome to you new plot of land! More room for your";
+        case 2: return "manufacturing empire to grow. Instead of selling Cargo,";
+        case 3: return "you can also move it between Plots. Use Conveyor Belts to";
+        case 4: return "feed Cargo in to the Exports Manager in any of your Plots.";
+          
+        case 5: return "Export some Cargo by moving it via Conveyors into the";
+        case 6: return "Exports Manager (to the right of the Plot Manager) on any";
+        case 7: return "Plot. The export rate of each Cargo type is averaged over";
+        case 8: return "the previous two minutes.";
+      }
+    case kTutImports:
+      switch (_n) {
+        case 0: return "-- Accessing The Goods --";
+        case 1: return "Now that you're exporting Cargo, let's look at imports too.";
+        case 2: return "Go to a different Plot and visit the Imports Manager,";
+        case 3: return "you can import up to four Cargo per Plot. Try setting";
+        case 4: return "up an Import now.";
+          
+        case 5: return "Import some Cargo in a different Plot via the Imports";
+        case 6: return "Manager (to the right of the Exports Manager). N, S, E, W";
+        case 7: return "imports can be individually chosen. You cannot export a";
+        case 8: return "Cargo type which is being imported to the same Plot.";
+      }
+    case kTutFinishedTwo:
+      switch (_n) {
+        case 0: return "-- Imports & Exports & Plots --";
+        case 1: return "Wonderful! Continue to buy more Plots in order to";
+        case 2: return "access new soil types and to expand the factory.";
+        case 3: return "Use the Export and Import Manager to move Cargo";
+        case 4: return "between plots, and continue to maximize efficiency!";
           
         case 5: return " ";
         case 6: return " ";

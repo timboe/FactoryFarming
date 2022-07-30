@@ -141,3 +141,5 @@
 #define UI_TITLE_OFFSET (TILE_PIX*1)
 
 #define N_SAVES 3
+
+#define N_MUSIC_TRACKS 5

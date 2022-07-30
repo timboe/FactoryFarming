@@ -3,7 +3,8 @@
 #include "building.h"
 #include "cargo.h"
 
-enum kUITutorialStage{kTutWelcomeBuySeeds, kTutPlantCarrots, kTutGetCarrots, kTutSellCarrots, kTutBuildHarvester, kTutBuildConveyor, kTutBuildQuarry, kTutBuildVitamin, kTutFinishedOne, kTutBreakOne, kTut2A, kTut2B, kTut2C, kTut2D, kTutFinishedTwo, kTutBreakTwo, kNTutorialStages};
+enum kUITutorialStage{kTutWelcomeBuySeeds, kTutPlantCarrots, kTutGetCarrots, kTutSellCarrots, kTutBuildHarvester, kTutBuildConveyor, kTutBuildQuarry, kTutBuildVitamin, 
+  kTutFinishedOne, kTutBreakOne, kTutNewPlots, kTutExports, kTutImports, kTutFinishedTwo, kTutBreakTwo, kNTutorialStages};
 
 enum kToolType{kToolPickup, kToolInspect, kToolDestroy, kNToolTypes};
 extern const uint16_t kToolUIIcon[];
@@ -95,11 +96,15 @@ uint8_t getTutorialProgress(void);
 
 void nextTutorialStage(void);
 
+void startPlotsTutorial(void);
+
 bool movePlayer(void);
 
 void initPlayer(void);
 
 void resetPlayer(void);
+
+void setDefaultPlayerSettings(void);
 
 void serialisePlayer(struct json_encoder* je); 
 

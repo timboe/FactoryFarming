@@ -36,11 +36,14 @@ void doClutterObstacles(void);
 
 float pointDist(int32_t _x, int32_t _y, int32_t _x1, int32_t _y1, int32_t _x2, int32_t _y2);
 
+void doSea(void);
+
 
 /// ///
 
 enum kGroundType getWorldGround(uint8_t _slotNumber, uint8_t _groundCounter) {
   if (_slotNumber == kEmptyWorld) return kSiltyGround;
+  else if (_slotNumber == kWaterWorld) return kClayGround;
   return (_slotNumber + _groundCounter) % kPavedGround; 
 }
 
@@ -621,11 +624,29 @@ bool addLake(int32_t _startX, int32_t _startY, int32_t _riverProb) {
   bool toAddRiver = rand() < _riverProb;
   bool riverWE = rand() % 2;
   if (toAddRiver) {
-    if (riverWE) return addRiver(_startX + w, _startY + h/2, WE, _riverProb/2, false);
-    else return addRiver(_startX + w/2, _startY + h, NS, _riverProb/2, false);
+    if (riverWE) return addRiver(_startX + w, _startY + h/2, WE, /*lake prob=*/ _riverProb/2, /*isolated=*/ false);
+    else return addRiver(_startX + w/2, _startY + h, NS, /*lake prob=*/ _riverProb/2, /*isolated=*/ false);
   }
 
   return false;
+}
+
+#define SEASTART (TILES_PER_CHUNK_Y*2)
+#define SEAEND (TILES_PER_CHUNK_Y*5)
+void doSea() {
+  struct Tile_t* t = NULL;
+  for (int32_t x = 0; x < TOT_TILES_X; ++x) {
+    getTile(x, SEASTART-1)->m_tile = SPRITE16_ID(4, 5);
+    if (rand() % TILES_PER_CHUNK_X/2 == 0) {
+      addRiver(x, SEAEND, NS, /*lake prob=*/0, /*isolated=*/ true);
+      getTile(x, SEAEND)->m_tile = SPRITE16_ID(6, 11);
+    } else {
+      getTile(x, SEAEND)->m_tile = SPRITE16_ID(6, 5);
+    }
+    for (int32_t y = SEASTART; y < SEAEND; ++y) {
+      getTile(x, y)->m_tile = SPRITE16_ID(4 + rand() % 4, 6);
+    }
+  }
 }
 
 void doLakesAndRivers(uint8_t _slot) {
@@ -637,9 +658,7 @@ void doLakesAndRivers(uint8_t _slot) {
   uint8_t lakesToTry = 5;
   if (_slot == kPeatWorld) {
     lakesToTry = 32;
-  } else if (_slot == kSandWorld) {
-    lakesToTry = 0;
-  }
+  } 
 
   for (uint8_t i = 0; i < lakesToTry; ++i) {
     //if (!addToRegion[i]) continue;
@@ -804,7 +823,10 @@ void generate(uint32_t _actionProgress) {
 
   } else if (_actionProgress == 5) {
 
-    if (slot != kEmptyWorld) {
+    if (slot == kWaterWorld) {
+      doSea();
+    }
+    if (slot != kEmptyWorld && slot != kSandWorld) {
       doLakesAndRivers(slot);
     }
 
