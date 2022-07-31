@@ -143,3 +143,5 @@
 #define N_SAVES 3
 
 #define N_MUSIC_TRACKS 5
+
+#define BUTTON_PRESSED_FRAMES 16

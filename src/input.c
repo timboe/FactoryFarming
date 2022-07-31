@@ -22,6 +22,8 @@ uint8_t m_zoom = 1;
 
 uint8_t m_pickRadius = 3;
 
+int8_t  m_followConveyor = 0;
+
 bool characterMoveInput(uint32_t _buttonPressed);
 
 void clickHandleWander(uint32_t _buttonPressed);
@@ -60,11 +62,13 @@ void rotateHandlePlacement(float _rotation);
 
 void rotateHandlePick(float _rotation);
 
+bool holdBRotateInput(uint32_t _buttonPressed);
+
 void toggleZoom(void);
 
 void modRadius(bool _inc);
 
-bool m_b;
+uint8_t m_b;
 
 /// ///
 
@@ -113,6 +117,15 @@ bool characterMoveInput(uint32_t _buttonPressed) {
   else if (kButtonRight == _buttonPressed) m_pressed[1] = 1;
   else if (kButtonUp == _buttonPressed) m_pressed[2] = 1;
   else if (kButtonDown == _buttonPressed) m_pressed[3] = 1;
+  else return false;
+  return true;
+}
+
+bool holdBRotateInput(uint32_t _buttonPressed) {
+  if (kButtonLeft == _buttonPressed) setCursorRotation(3);
+  else if (kButtonRight == _buttonPressed) setCursorRotation(1);
+  else if (kButtonUp == _buttonPressed) setCursorRotation(0);
+  else if (kButtonDown == _buttonPressed) setCursorRotation(2);
   else return false;
   return true;
 }
@@ -187,6 +200,8 @@ void clickHandleMenuMain(uint32_t _buttonPressed) {
 void clickHandleMenuBuy(uint32_t _buttonPressed) {
   if (kButtonA == _buttonPressed) {
     doPurchace();
+  } else if (bPressed() && holdBRotateInput(_buttonPressed)) {
+    // noop
   } else if (kButtonB == _buttonPressed) {
     setGameMode(kWanderMode);
     // Tutorial
@@ -221,8 +236,9 @@ void clickHandleMenuSell(uint32_t _buttonPressed) {
 }
 
 void clickHandleMenuPlayer(uint32_t _buttonPressed) {
-  if (kButtonA     == _buttonPressed) doInventoryClick();
-  else if (kButtonB   == _buttonPressed) setGameMode(kWanderMode);
+  if (kButtonA == _buttonPressed) doInventoryClick();
+  else if (bPressed() && holdBRotateInput(_buttonPressed)) { /* noop */ }
+  else if (kButtonB == _buttonPressed) setGameMode(kWanderMode);
   else moveCursor(_buttonPressed);
 }
 
@@ -245,7 +261,9 @@ void clickHandleMenuImport(uint32_t _buttonPressed) {
 }
 
 void clickHandlePlacement(uint32_t _buttonPressed) {
-  if (characterMoveInput(_buttonPressed)) {
+  if (bPressed() && holdBRotateInput(_buttonPressed)) {
+    // noop
+  } else if (characterMoveInput(_buttonPressed)) {
     // noop
   } else if (kButtonA    == _buttonPressed) {
     doPlace();
@@ -295,6 +313,17 @@ void clickHandleDestroy(uint32_t _buttonPressed) {
 }
 
 void rotateHandleWander(float _rotation) {
+  // Follow conveyor
+  if (_rotation) {
+    struct Location_t* loc = getPlayerLocation();
+    if (loc && loc->m_building && loc->m_building->m_type == kConveyor) {
+      if (_rotation > 0) m_followConveyor = 16;
+      else               m_followConveyor = -16;
+      return;
+    }
+  }
+
+  // Zoom control
   static float rot = 0.0f;
   rot += _rotation;
   if (rot > UI_ROTATE_ACTION) {
@@ -336,6 +365,15 @@ void rotateHandlePick(float _rotation) {
   }
 }
 
+int8_t getAndReduceFollowConveyor() {
+  if (m_followConveyor > 0) {
+    return m_followConveyor--;
+  } else if (m_followConveyor < 0) {
+    return m_followConveyor++;
+  }
+  return false;
+}
+
 // Temporary until the playdate eventHandler is functional for inputs
 void clickHandlerReplacement() {
   static uint8_t multiClickCount = 16, multiClickNext = 16;
@@ -346,10 +384,10 @@ void clickHandlerReplacement() {
   if (pushed & kButtonRight) gameClickConfigHandler(kButtonRight);
   if (pushed & kButtonDown) gameClickConfigHandler(kButtonDown);
   if (pushed & kButtonLeft) gameClickConfigHandler(kButtonLeft);
-  if (pushed & kButtonB) m_b = true;
+  if (current & kButtonB) ++m_b;
   if (released & kButtonB) {
-    gameClickConfigHandler(kButtonB);
-    m_b = false;
+    if (m_b < BUTTON_PRESSED_FRAMES) gameClickConfigHandler(kButtonB);
+    m_b = 0;
   }
   if (released & kButtonA) {
     gameClickConfigHandler(kButtonA);

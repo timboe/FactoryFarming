@@ -216,6 +216,12 @@ uint16_t getUIContentID() {
 //  return m_UISpriteItems[_c][_i][_r];
 //}
 
+void setCursorRotation(int8_t _value) {
+  m_selRotation = _value;
+  UIDirtyRight();
+  updateBlueprint();
+}
+
 void rotateCursor(bool _increment) {
   if (_increment) {
     m_selRotation = (m_selRotation == kDirN-1 ? 0 : m_selRotation + 1);
@@ -1220,8 +1226,8 @@ void initiUI() {
   pd->graphics->drawLine(TILE_PIX, TILE_PIX, DEVICE_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorWhite);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   setRoobert24();
-  int32_t tlen = pd->graphics->getTextWidth(getRoobert24(), "SAVING", 6, kASCIIEncoding, 0);
-  pd->graphics->drawText("SAVING", 6, kASCIIEncoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
+  int32_t tlen = pd->graphics->getTextWidth(getRoobert24(), "SAVING", 16, kASCIIEncoding, 0);
+  pd->graphics->drawText("SAVING", 16, kASCIIEncoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
   pd->graphics->popContext();
 
   pd->sprite->setBounds(m_UISpriteGen, boundTop);
@@ -1236,8 +1242,8 @@ void initiUI() {
   pd->graphics->drawLine(TILE_PIX, TILE_PIX, DEVICE_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorWhite);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   setRoobert24();
-  tlen = pd->graphics->getTextWidth(getRoobert24(), "GENERATING", 10, kASCIIEncoding, 0);
-  pd->graphics->drawText("GENERATING", 10, kASCIIEncoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
+  tlen = pd->graphics->getTextWidth(getRoobert24(), "GENERATING", 16, kASCIIEncoding, 0);
+  pd->graphics->drawText("GENERATING", 16, kASCIIEncoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
   pd->graphics->popContext();
 
   pd->sprite->setBounds(m_UISpriteLoad, boundTop);
@@ -1252,8 +1258,8 @@ void initiUI() {
   pd->graphics->drawLine(TILE_PIX, TILE_PIX, DEVICE_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorWhite);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   setRoobert24();
-  tlen = pd->graphics->getTextWidth(getRoobert24(), "LOADING", 7, kASCIIEncoding, 0);
-  pd->graphics->drawText("LOADING", 7, kASCIIEncoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
+  tlen = pd->graphics->getTextWidth(getRoobert24(), "LOADING", 16, kASCIIEncoding, 0);
+  pd->graphics->drawText("LOADING", 16, kASCIIEncoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
   pd->graphics->popContext();
   pd->graphics->setDrawMode(kDrawModeCopy);
 

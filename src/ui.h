@@ -31,6 +31,8 @@ void addUIToSpriteList(void);
 
 void rotateCursor(bool _increment);
 
+void setCursorRotation(int8_t _value);
+
 void moveCursor(uint32_t _button);
 
 void setPlotCursorToWorld(enum kWorldType _wt);

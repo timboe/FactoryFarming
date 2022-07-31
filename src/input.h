@@ -14,3 +14,5 @@ uint8_t getRadius(void);
 bool bPressed(void);
 
 void unZoom(void);
+
+int8_t getAndReduceFollowConveyor(void);

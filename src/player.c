@@ -171,6 +171,31 @@ void updatePlayerPosition() {
 bool movePlayer() {
 
   uint8_t zoom = getZoom();
+
+  // Do conveyor movement
+  int8_t convMotion = getAndReduceFollowConveyor();
+  if (convMotion) {
+    if (m_currentLocation && m_currentLocation->m_building && m_currentLocation->m_building->m_type == kConveyor) {
+      enum kDir direction;
+      if (m_currentLocation->m_building->m_subType.conveyor >= kFilterL) {
+        direction = m_currentLocation->m_building->m_nextDir[0];  
+      } else {
+        direction = m_currentLocation->m_building->m_nextDir[m_currentLocation->m_building->m_mode.mode16];
+      }
+      int8_t dist = -NEAR_TICK_AMOUNT * m_currentLocation->m_building->m_stored[0]; // Holds speed multiplier
+      if (convMotion > 0) dist *= -2; // Speed boost when going forwards (also negates the above invesion)
+      switch (direction) {
+        case SN: setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y - dist, /*update current location = */ false); m_facing = 2; break;
+        case NS: setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y + dist, /*update current location = */ false); m_facing = 3; break;
+        case EW: setPlayerPosition(m_player.m_pix_x - dist, m_player.m_pix_y, /*update current location = */ false); m_facing = 0; break;
+        case WE: setPlayerPosition(m_player.m_pix_x + dist, m_player.m_pix_y, /*update current location = */ false); m_facing = 1; break;
+        case kDirN: break;
+      }
+      pd->sprite->setImage(m_player.m_sprite[zoom], getSprite18(0, m_facing, zoom), kBitmapUnflipped);
+    }
+  }
+
+
   //updatePlayerPosition();
   float goalX = m_player.m_pix_x;
   float goalY = m_player.m_pix_y;
