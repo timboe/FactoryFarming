@@ -11,9 +11,31 @@ struct Tile_t {
 };
 
 // Paved must come after the plantable ground types
-enum kGroundType{kSiltyGround, kChalkyGround, kPeatyGround, kSandyGround, kClayGround, kLoamyGround, kPavedGround, kObstructedGround, kLake, kRiver, kNGroundTypes};
+enum kGroundType{
+  kSiltyGround, 
+  kChalkyGround, 
+  kPeatyGround, 
+  kSandyGround, 
+  kClayGround, 
+  kLoamyGround, 
+  kPavedGround, 
+  kObstructedGround, 
+  kLake, 
+  kRiver, 
+  kNGroundTypes
+};
 
-enum kWorldType{kSiltWorld, kChalkWorld, kPeatWorld, kSandWorld, kClayWorld, kLoamWoarld, kWaterWorld, kEmptyWorld};
+enum kWorldType{
+  kSiltWorld, 
+  kChalkWorld, 
+  kPeatWorld, 
+  kSandWorld, 
+  kClayWorld, 
+  kLoamWoarld, 
+  kWaterWorld, 
+  kEmptyWorld
+};
+
 extern const uint16_t kWarpUIIcon[];
 extern const uint16_t kWarpPrice[];
 

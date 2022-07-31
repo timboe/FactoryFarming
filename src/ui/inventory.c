@@ -6,6 +6,7 @@
 #include "../input.h"
 #include "../generate.h"
 #include "../buildings/conveyor.h"
+#include "../buildings/utility.h"
 
 bool doConveyorUpgrade(struct Location_t* _loc);
 
@@ -82,6 +83,7 @@ void doPlace() {
     case kUICatFactory: placed = newBuilding(placeLocation, getCursorRotation(), kFactory, (union kSubType) {.factory = selectedID} ); break;
     case kUICatUtility: 
       if (selectedID == kConveyorGrease) placed = doConveyorUpgrade(placeLocation);
+      else if (selectedID == kLandfill) placed = doPlaceLandfill(placeLocation);
       else placed = newBuilding(placeLocation, getCursorRotation(), kUtility, (union kSubType) {.utility = selectedID} );
       break;
     case kUICatCargo: placed = newCargo(placeLocation, selectedID, /*add to display*/ true); break;
@@ -240,7 +242,7 @@ void populateContentInventory(void) {
         continue;
       }
       int16_t rot = 0;
-      if (c >= kUICatConv && c <= kUICatUtility) rot = getCursorRotation();
+      if ((c >= kUICatConv && c < kUICatUtility) || (c == kUICatUtility && i == kStorageBox)) rot = getCursorRotation();
       setUIContentItem(row, column, c, i, rot);
       if (++column == ROW_WDTH) {
         ++row;
@@ -309,7 +311,9 @@ void populateInfoInventory() {
     if (selectedID == kChalkQuarry) snprintf(textC, 128, "Build on %s", toStringSoil(kChalkyGround));
     else if (selectedID == kPump) snprintf(textC, 128, "Build on Water");
     else if (selectedID == kSaltMine) snprintf(textC, 128, "Build on %s", toStringSoil(kPeatyGround));
-  } 
+  } else if (selectedCat == kUICatUtility) {
+    if (selectedID == kLandfill) snprintf(textC, 128, "Cannot be removed");
+  }
   pd->graphics->drawText(textA, 128, kASCIIEncoding, 1*TILE_PIX, +2);
   pd->graphics->drawText(textB, 128, kASCIIEncoding, 1*TILE_PIX, TILE_PIX - 2);
   pd->graphics->drawText(textC, 128, kASCIIEncoding, 9*TILE_PIX, TILE_PIX - 2);

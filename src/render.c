@@ -17,6 +17,7 @@ void chunkAddToRender(struct Chunk_t* _chunk, uint8_t _zoom);
 
 void addTrauma(float _amount) {
   m_trauma += _amount;
+  m_trauma *= -1;
   m_decay = _amount;
 }
 

@@ -38,11 +38,10 @@ float pointDist(int32_t _x, int32_t _y, int32_t _x1, int32_t _y1, int32_t _x2, i
 
 void doSea(void);
 
-
 /// ///
 
 enum kGroundType getWorldGround(uint8_t _slotNumber, uint8_t _groundCounter) {
-  if (_slotNumber == kEmptyWorld) return kSiltyGround;
+  if (_slotNumber == kEmptyWorld) return kLoamyGround;
   else if (_slotNumber == kWaterWorld) return kClayGround;
   return (_slotNumber + _groundCounter) % kPavedGround; 
 }
@@ -200,8 +199,9 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
       } else {
         // Fast conveyors get drawn inverted. Stored[0] is used to hold the speed
         const bool invert = (building->m_type == kConveyor && building->m_stored[0] >= 2);
+        const bool flip = (building->m_type == kPlant && (building->m_location->m_x + building->m_location->m_y) % 2);
         pd->graphics->setDrawMode(invert ? kDrawModeInverted : kDrawModeCopy);
-        pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
+        pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - off16_x, building->m_pix_y - off16_y, flip ? kBitmapFlippedX : kBitmapUnflipped);
         pd->graphics->setDrawMode(kDrawModeCopy);
       }
     }
@@ -245,7 +245,7 @@ void addSpawn() {
   for (int32_t x = 0; x < SPAWN_END_X+SPAWN_RADIUS; ++x) {
     for (int32_t y = 0; y < SPAWN_Y+SPAWN_RADIUS; ++y) {
       if (pointDist(x, y, SPAWN_START_X, SPAWN_Y, SPAWN_END_X, SPAWN_Y) < SPAWN_RADIUS) {
-        getTile(x, y)->m_tile = SPRITE16_ID(0, 3) + rand() % 4;
+        getTile(x, y)->m_tile = SPRITE16_ID(1, 3) + rand() % 3;
       }
     }
   }
@@ -273,7 +273,7 @@ void addBiome(int32_t _offX, int32_t _offY, uint16_t _imgStart) {
 }
 
 bool isGroundTile(struct Tile_t* _tile) {
-  return _tile->m_tile < TOT_FLOOR_TILES;
+  return _tile->m_tile < TOT_FLOOR_TILES_INC_PAVED;
 }
 
 bool isGroundTypeTile(int32_t _x, int32_t _y, enum kGroundType _ground) {
@@ -283,7 +283,7 @@ bool isGroundTypeTile(int32_t _x, int32_t _y, enum kGroundType _ground) {
 
 bool isWaterTile(int32_t _x, int32_t _y) {
   const uint16_t t = getTile(_x, _y)->m_tile;
-  if (t < TOT_FLOOR_TILES) return false;
+  if (t < TOT_FLOOR_TILES_INC_PAVED) return false;
   if (t >= SPRITE16_ID(0, 5)  && t < SPRITE16_ID(0, 7)) return true;
   if (t >= SPRITE16_ID(4, 11) && t < SPRITE16_ID(8, 11)) return true;
   if (t >= SPRITE16_ID(4, 12) && t < SPRITE16_ID(6, 12)) return true;
@@ -345,7 +345,7 @@ enum kGroundType getGroundType(uint8_t _tile) {
     return kLoamyGround;
   } else if (_tile < FLOOR_VARIETIES*7) {
     return kPavedGround;
-  } else if (_tile >= SID(12,13) && _tile <= SID(15,13)) {
+  } else if (_tile < FLOOR_VARIETIES*10) {
     return kObstructedGround;
   } else if (_tile < 192) {
     return kLake;
@@ -406,11 +406,7 @@ void doClutterObstacles() {
       if (t->m_tile >= TOT_FLOOR_TILES) {
         continue;
       }
-      if (getGroundType(t->m_tile) == kSandyGround) {
-        t->m_tile = rand() % 2 ? SPRITE16_ID(14, 13) : SPRITE16_ID(15, 13);
-      } else {
-        t->m_tile = rand() % 2 ? SPRITE16_ID(12, 13) : SPRITE16_ID(13, 13);
-      }
+      t->m_tile = rand() % 2 + SPRITE16_ID(0, 4) + getGroundType(t->m_tile)*2;
     }
   }
 }
@@ -761,11 +757,7 @@ void* deserialiseStructDoneWorld(json_decoder* jd, const char* _name, json_value
 
 
 bool tileIsObstacle(struct Tile_t* _tile) {
-  // With water as impassible
-  //if (_tile->m_tile >= SPRITE16_ID(4,6) && _tile->m_tile <= SPRITE16_ID(7,6)) return false; // Water (only the border is obstacle)
-  //if (_tile->m_tile >= SPRITE16_ID(8,16) && _tile->m_tile <= SPRITE16_ID(16,16)) return false; // Entry area tiles 
-  //return _tile->m_tile > TOT_FLOOR_TILES;
-  return _tile->m_tile >= SPRITE16_ID(12, 13) &&  _tile->m_tile <= SPRITE16_ID(15, 13);
+  return _tile->m_tile >= SPRITE16_ID(0, 4) &&  _tile->m_tile <= SPRITE16_ID(15, 4);
 }
 
 void addObstacles() {

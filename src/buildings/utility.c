@@ -42,9 +42,33 @@ void utilityUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom)
   }
 }
 
-bool canBePlacedUtility(struct Location_t* _loc) {
+bool doPlaceLandfill(struct Location_t* _loc) {
+  if (!canBePlacedUtility(_loc, (union kSubType) {.utility = kLandfill})) {
+    return false;
+  }
+  // Update the tile, re-do wetness (like for a well, but this is irreversible)
   struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
-  if (t->m_tile > TOT_FLOOR_TILES) return false;
+  t->m_tile = UDesc[kLandfill].sprite;
+  doWetness(/*for titles = */ false);
+  renderChunkBackgroundImageAround(_loc->m_chunk);
+  return true;
+}
+
+bool canBePlacedUtility(struct Location_t* _loc, union kSubType _subType) {
+  if (_subType.utility == kConveyorGrease) return true; // A different system is used to apply this
+
+  struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
+
+  if (_subType.utility == kLandfill) {
+    if (isWaterTile(_loc->m_x, _loc->m_y)) {
+      //noop
+    } else if (t->m_tile >= TOT_FLOOR_TILES) { // Excluding landfill here
+      return false;
+    }
+  } else {
+    if (t->m_tile >= TOT_FLOOR_TILES_INC_LANDFILL) return false;
+  }
+  
   if (_loc->m_building != NULL) return false;
   return true;
 }
@@ -68,10 +92,8 @@ void assignNeighborsUtility(struct Building_t* _building) {
 void buildingSetupUtility(struct Building_t* _building) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     switch (_building->m_subType.utility) {
-      case kBin:; _building->m_image[zoom] = getSprite16(14, 14, zoom); break;
-      case kWell:; _building->m_image[zoom] = getSprite16(12, 14, zoom); break;
-      case kStorageBox:; _building->m_image[zoom] = getSprite16(4 + _building->m_dir, 15, zoom); break;
-      case kConveyorGrease:; case kNUtilitySubTypes:; break;
+      case kStorageBox:; _building->m_image[zoom] = getSprite16_byidx( UDesc[kStorageBox].sprite + _building->m_dir, zoom); break;
+      default: _building->m_image[zoom] = getSprite16_byidx( UDesc[_building->m_subType.utility].sprite, zoom); break;
     }
   }
 }

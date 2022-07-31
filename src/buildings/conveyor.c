@@ -96,7 +96,7 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
     switch (_building->m_subType.conveyor) {
       case kSplitI:; case kSplitL:; next = (_building->m_mode.mode16 + 1) % 2; break;
       case kSplitT:; next = (_building->m_mode.mode16 + 1) % 3; break;
-      case kBelt:; case kFilterI:; case kFilterL:; case kTunnelIn:; case kTunnelOut:; case kNConvSubTypes:; break;
+      default: break;
     }
     if (_building->m_next[ next ]->m_cargo == NULL) _building->m_mode.mode16 = next;
   }
@@ -105,13 +105,12 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
 bool canBePlacedConveyor(struct Location_t* _loc, enum kDir _dir, union kSubType _subType) {
   bool floor = false;
   struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
-  // + FLOOR_VARIETIES for PAVED ground, can make conveyors here
-  if (t->m_tile < TOT_FLOOR_TILES + FLOOR_VARIETIES) floor = true;
+  if (t->m_tile < TOT_FLOOR_TILES_INC_PAVED) floor = true;
   else if (t->m_tile >= SPRITE16_ID(8, 16) && t->m_tile < SPRITE16_ID(8+4, 16)) floor = true;
 
   if (_subType.conveyor == kTunnelIn) {
     t = getTunnelOutTile(_loc, _dir);
-    if (t->m_tile < TOT_FLOOR_TILES + FLOOR_VARIETIES) floor &= true;
+    if (t->m_tile < TOT_FLOOR_TILES_INC_PAVED) floor &= true;
     else if (t->m_tile >= SPRITE16_ID(8, 16) && t->m_tile < SPRITE16_ID(8+4, 16)) floor &= true;
   }
 

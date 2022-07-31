@@ -8,7 +8,8 @@ enum kBuildingType {kNoBuilding, kConveyor, kPlant, kUtility, kExtractor, kFacto
 
 ///
 
-enum kConvSubType{kBelt, kSplitL, kSplitI, kSplitT, kTunnelIn, kTunnelOut, kFilterL, kFilterI, kNConvSubTypes};
+#include "blists.h"
+
 struct ConveyorDescriptor_t {
   enum kConvSubType subType;
   uint32_t unlock;
@@ -19,7 +20,6 @@ struct ConveyorDescriptor_t {
 };
 extern const struct ConveyorDescriptor_t CDesc[];
 
-enum kPlantSubType{kCarrotPlant, kPotatoPlant, kSunflowerPlant, kAppleTree, kWheatPlant, kP4, kP5, kP6, kP7, kP8, kP9, kP10, kP11, kP12, kNPlantSubTypes};
 struct PlantDescriptor_t {
   enum kPlantSubType subType;
   uint32_t unlock;
@@ -32,16 +32,15 @@ struct PlantDescriptor_t {
 };
 extern const struct PlantDescriptor_t PDesc[];
 
-enum kUtilitySubType{kBin, kWell, kStorageBox, kConveyorGrease, kNUtilitySubTypes};
 struct UtilityDescriptor_t {
   enum kUtilitySubType subType;
   uint32_t unlock;
   uint16_t price;
   uint16_t UIIcon;
+  uint16_t sprite;
 };
 extern const struct UtilityDescriptor_t UDesc[];
 
-enum kExtractorSubType{kCropHarvesterSmall, kChalkQuarry, kSaltMine, kPump, kCropHarvesterLarge, kNExtractorSubTypes};
 struct ExtractorDescriptor_t {
   enum kExtractorSubType subType;
   uint32_t unlock;
@@ -52,7 +51,6 @@ struct ExtractorDescriptor_t {
 };
 extern const struct ExtractorDescriptor_t EDesc[];
 
-enum kFactorySubType{kVitiminFac, kVegOilFac, kCrispsFac, kF4, kF5, kF6, kF7, kF8, kF9, kF10, kF11, kNFactorySubTypes};
 struct FactoryDescriptor_t {
   enum kFactorySubType subType;
   uint16_t price;
@@ -68,7 +66,6 @@ struct FactoryDescriptor_t {
 };
 extern const struct FactoryDescriptor_t FDesc[];
 
-enum kSpecialSubType{kShop, kSellBox, kExportBox, kImportBox, kWarp, kNSpecialSubTypes};
 
 ///
 

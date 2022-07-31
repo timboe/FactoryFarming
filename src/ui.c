@@ -341,7 +341,7 @@ void updateBlueprint() {
 
   const enum kUICat selectedCat = getUIContentCategory();
   const uint16_t selectedID =  getUIContentID();
-  const uint16_t selectedRot = getCursorRotation();
+  uint16_t selectedRot = getCursorRotation();
   struct Location_t* pl = getPlayerLocation();
 
   pd->sprite->setDrawMode(bp, kDrawModeCopy);
@@ -364,10 +364,11 @@ void updateBlueprint() {
       pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
     }
     bool canPlace = true;
+    if (selectedCat == kUICatUtility && selectedID != kStorageBox) selectedRot = 0; // Only storage boxes have rotation in this cat
     switch (selectedCat) {
       case kUICatConv:; canPlace = canBePlacedConveyor(pl, selectedRot, (union kSubType) {.conveyor = selectedID});
                         pd->sprite->setImage(bp, getSprite16_byidx( CDesc[selectedID].UIIcon + selectedRot, zoom), kBitmapUnflipped); break;
-      case kUICatUtility:; canPlace = canBePlacedUtility(pl);
+      case kUICatUtility:; canPlace = canBePlacedUtility(pl, (union kSubType) {.utility = selectedID});
                            pd->sprite->setImage(bp, getSprite16_byidx( UDesc[selectedID].UIIcon + selectedRot, zoom), kBitmapUnflipped); break;
       case kUICatCargo:; canPlace = canBePlacedCargo(pl);
                          pd->sprite->setImage(bp, getSprite16_byidx( CargoDesc[selectedID].UIIcon, zoom), kBitmapUnflipped); break;
@@ -378,7 +379,10 @@ void updateBlueprint() {
     bool canPlace;
     pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
     if (canBePlacedPlant(pl)) {
-      pd->sprite->setImage(bp, getSprite16_byidx( CargoDesc[ PDesc[selectedID].out ].UIIcon, zoom), kBitmapUnflipped);
+      const struct Tile_t* t = getTile_fromLocation( pl );
+      const int8_t gb = getGroundBonus( PDesc[selectedID].soil, getGroundType( t->m_tile ) );
+      const int8_t wb = getWaterBonus( PDesc[selectedID].wetness, getWetness( t->m_wetness ) );
+      pd->sprite->setImage(bp, getSprite16_byidx( getPlantSmilieSprite(gb+wb), zoom), kBitmapUnflipped);
     } else {
       pd->sprite->setImage(bp, getSprite16(1, 16, zoom), kBitmapUnflipped);
     }
@@ -688,7 +692,9 @@ void drawUIRight() {
     const uint16_t selectedID =  getUIContentID();
     snprintf(text, 32, "%u", (unsigned) getOwned(selectedCat, selectedID));
     uint16_t spriteID = getUIIcon(selectedCat, selectedID);
-    if (selectedCat != kUICatFactory && selectedCat >= kUICatConv && selectedCat <= kUICatUtility) spriteID += rotMod;
+    if ((selectedCat >= kUICatConv && selectedCat < kUICatUtility) || (selectedCat == kUICatUtility && selectedID == kStorageBox)) {
+      spriteID += rotMod;
+    }
     pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), DEVICE_PIX_Y/2, 0, kBitmapUnflipped);
     pd->graphics->setDrawMode(kDrawModeFillWhite);
     pd->graphics->drawText(text, 32, kASCIIEncoding, DEVICE_PIX_Y/2 + 2*TILE_PIX, 0);
@@ -1554,7 +1560,7 @@ void initiUI() {
           pd->graphics->drawBitmap(getSprite16(12 + r, 10, 2), 0, 0, kBitmapUnflipped);
           pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), TILE_PIX/2, TILE_PIX/2, kBitmapUnflipped);
         } else {
-          if (c != kUICatConv && c != kUICatExtractor && c != kUICatWarp) {
+          if (c != kUICatConv && c != kUICatExtractor && c != kUICatWarp && c != kUICatUtility) {
             roundedRect(1, TILE_PIX*2, TILE_PIX*2, TILE_PIX/2, kColorBlack);
             roundedRect(3, TILE_PIX*2, TILE_PIX*2, TILE_PIX/2, kColorWhite);
             pd->graphics->setDrawMode(kDrawModeNXOR);
@@ -1570,7 +1576,8 @@ void initiUI() {
         pd->sprite->setZIndex(m_UISpriteItems[c][i][r], Z_INDEX_UI_M);
         pd->sprite->setIgnoresDrawOffset(m_UISpriteItems[c][i][r], 1);
 
-        if (c == kUICatTool || c == kUICatPlant || c >= kUICatCargo) { // Tools, Crops, Cargo, Warp, Import don't have any rotation 
+        // Tools, Crops, Cargo, Warp, Import don't have any rotation 
+        if (c == kUICatTool || c == kUICatPlant || c >= kUICatCargo || (c == kUICatUtility && i != kStorageBox)) { 
           break;
         }
       }
@@ -1751,15 +1758,15 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
     case kTutNewPlots:
       switch (_n) {
         case 0: return "-- But I Don't Have The Soil For That! --";
-        case 1: return "Problem, the XXXXXXX Plant you just unlocked wants";
+        case 1: return "Problem, the Cactus Plant you just unlocked wants";
         case 2: return "Sandy Soil, but there isn't any here. Expansion time!";
         case 3: return "Visit the Plots Manager (next to Sales) and buy a new";
         case 4: return "plot of land to develop.";
           
-        case 5: return " ";
-        case 6: return " ";
-        case 7: return "Visit the newly unlocked Plots Manager to the right";
-        case 8: return "of Sales. Buy a new plot of land to expand the factory.";
+        case 5: return "The Plots Manager, Exports Manager and Imports Manager";
+        case 6: return "are all now unlocked.";
+        case 7: return "Visit the Plots Manager to the right of Sales.";
+        case 8: return "Buy a new plot of land to expand the factory.";
       }
     case kTutExports:
       switch (_n) {

@@ -77,7 +77,7 @@ void plantUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
 
 bool canBePlacedPlant(struct Location_t* _loc) {
   struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
-  if (t->m_tile > TOT_FLOOR_TILES) return false;
+  if (t->m_tile >= TOT_FLOOR_TILES) return false;
   if (_loc->m_building != NULL) return false;
   return true;
 }
@@ -152,9 +152,9 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
       switch (_has) {
         case kSiltyGround: return +1;
         case kChalkyGround: return 0;
-        case kPeatyGround: return 0;
+        case kPeatyGround: return -1;
         case kSandyGround: return 0;
-        case kClayGround: return 0;
+        case kClayGround: return -1;
         case kLoamyGround: return 0;
         case kPavedGround: return -3;
         case kObstructedGround: return -3;
@@ -166,9 +166,9 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
       switch (_has) {
         case kSiltyGround: return 0;
         case kChalkyGround: return +1;
-        case kPeatyGround: return 0;
+        case kPeatyGround: return -1;
         case kSandyGround: return 0;
-        case kClayGround: return 0;
+        case kClayGround: return -1;
         case kLoamyGround: return 0;
         case kPavedGround: return -3;
         case kObstructedGround: return -3;
@@ -179,9 +179,9 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
     case kPeatyGround:
       switch (_has) {
         case kSiltyGround: return 0;
-        case kChalkyGround: return 0;
+        case kChalkyGround: return -1;
         case kPeatyGround: return +1;
-        case kSandyGround: return 0;
+        case kSandyGround: return -1;
         case kClayGround: return 0;
         case kLoamyGround: return 0;
         case kPavedGround: return 0;
@@ -192,11 +192,11 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
       }
     case kSandyGround:
       switch (_has) {
-        case kSiltyGround: return 0;
-        case kChalkyGround: return 0;
-        case kPeatyGround: return 0;
+        case kSiltyGround: return -3;
+        case kChalkyGround: return -3;
+        case kPeatyGround: return -3;
         case kSandyGround: return +1;
-        case kClayGround: return 0;
+        case kClayGround: return -1;
         case kLoamyGround: return 0;
         case kPavedGround: return -3;
         case kObstructedGround: return -3;
@@ -206,10 +206,10 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
       }
     case kClayGround:
       switch (_has) {
-        case kSiltyGround: return 0;
-        case kChalkyGround: return 0;
-        case kPeatyGround: return 0;
-        case kSandyGround: return 0;
+        case kSiltyGround: return -3;
+        case kChalkyGround: return -3;
+        case kPeatyGround: return -3;
+        case kSandyGround: return -3;
         case kClayGround: return +1;
         case kLoamyGround: return 0;
         case kPavedGround: return -3;
@@ -220,11 +220,11 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
       }
     case kLoamyGround:
       switch (_has) {
-        case kSiltyGround: return 0;
-        case kChalkyGround: return 0;
-        case kPeatyGround: return 0;
-        case kSandyGround: return 0;
-        case kClayGround: return 0;
+        case kSiltyGround: return -3;
+        case kChalkyGround: return -3;
+        case kPeatyGround: return -3;
+        case kSandyGround: return -3;
+        case kClayGround: return -3;
         case kLoamyGround: return +1;
         case kPavedGround: return -3;
         case kObstructedGround: return -3;
@@ -321,20 +321,16 @@ void drawUIInspectPlant(struct Building_t* _building) {
   }
 
   pd->graphics->setDrawMode(kDrawModeCopy);
-  int16_t sprite = 0;
-  if (gb < 0)   sprite = SPRITE16_ID(1, 19);
-  else if (!gb) sprite = SPRITE16_ID(2, 19);
-  else          sprite = SPRITE16_ID(0, 19);
-  pd->graphics->drawBitmap(getSprite16_byidx(sprite, 1), TILE_PIX*21 + TILE_PIX/2, TUT_Y_SPACING*3 - TUT_Y_SHFT - 1, kBitmapUnflipped);
+  pd->graphics->drawBitmap(getSprite16_byidx(getPlantSmilieSprite(gb), 1), TILE_PIX*21 + TILE_PIX/2, TUT_Y_SPACING*3 - TUT_Y_SHFT - 1, kBitmapUnflipped);
+  pd->graphics->drawBitmap(getSprite16_byidx(getPlantSmilieSprite(wb), 1), TILE_PIX*21 + TILE_PIX/2, TUT_Y_SPACING*4 - TUT_Y_SHFT - 1, kBitmapUnflipped);
+  pd->graphics->drawBitmap(getSprite16_byidx(getPlantSmilieSprite(gb+wb), 1), TILE_PIX*21 + TILE_PIX/2, TUT_Y_SPACING*5 - TUT_Y_SHFT - 1, kBitmapUnflipped);
 
-  if (wb < 0)   sprite = SPRITE16_ID(1, 19);
-  else if (!wb) sprite = SPRITE16_ID(2, 19);
-  else          sprite = SPRITE16_ID(0, 19);
-  pd->graphics->drawBitmap(getSprite16_byidx(sprite, 1), TILE_PIX*21 + TILE_PIX/2, TUT_Y_SPACING*4 - TUT_Y_SHFT - 1, kBitmapUnflipped);
+}
 
-  if (gb+wb < 0)       sprite = SPRITE16_ID(1, 19);
-  else if (gb+wb == 0) sprite = SPRITE16_ID(2, 19);
-  else                 sprite = SPRITE16_ID(0, 19);
-  pd->graphics->drawBitmap(getSprite16_byidx(sprite, 1), TILE_PIX*21 + TILE_PIX/2, TUT_Y_SPACING*5 - TUT_Y_SHFT - 1, kBitmapUnflipped);
-
+uint16_t getPlantSmilieSprite(int8_t _value) {
+  if (_value < -1)       return SPRITE16_ID(4, 19);
+  else if (_value == -1) return SPRITE16_ID(1, 19);
+  else if (!_value)      return SPRITE16_ID(2, 19);
+  else if (_value == 1)  return SPRITE16_ID(0, 19);
+  else                   return SPRITE16_ID(3, 19);
 }

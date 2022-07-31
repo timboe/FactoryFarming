@@ -85,8 +85,8 @@ void mineUpdateFn(struct Building_t* _building, uint8_t _tick) {
 void extractorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   switch (_building->m_subType.extractor) {
     case kCropHarvesterSmall:; case kCropHarvesterLarge:; return cropHarveserUpdateFn(_building, _tick);
-    case kChalkQuarry:; case kPump:; case kSaltMine:; return mineUpdateFn(_building, _tick);
-    case kNExtractorSubTypes:; break;
+    case kChalkQuarry:; case kPump:; case kSaltMine:; case kCO2Extractor:; return mineUpdateFn(_building, _tick);
+    default: break;
   }
 }
 
@@ -103,7 +103,7 @@ bool canBePlacedExtractor(struct Location_t* _loc, union kSubType _subType) {
       if (isWater) hasWater = true;
       if (isChalk) hasChalk = true;
       if (isPeat) hasPeat = true;
-      if (t->m_tile > TOT_FLOOR_TILES && !isWater) return false;
+      if (t->m_tile >= TOT_FLOOR_TILES_INC_LANDFILL && !isWater) return false;
       if (getLocation(_loc->m_x + x, _loc->m_y + y)->m_building != NULL) return false;
     }
   }

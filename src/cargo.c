@@ -9,18 +9,52 @@
 // kSunflowe, kOil, kPotato, kSalt, kNCargoType};
 const struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kNoCargo, .price = 0, .UIIcon = SID(0,0)},
-  {.subType = kApple, .price = 2, .UIIcon = SID(8,7)},
-  {.subType = kCheese, .price = 8, .UIIcon = SID(9,7)},
   {.subType = kCarrot, .price = 1, .UIIcon = SID(10,7)},
-  {.subType = kWheat, .price = 4, .UIIcon = SID(11,7)},
-  {.subType = kWaterBarrel, .price = 1, .UIIcon = SID(12,7)},
   {.subType = kChalk, .price = 1, .UIIcon = SID(13,7)},
   {.subType = kVitamin, .price = 16, .UIIcon = SID(12,8)},
+  {.subType = kPotato, .price = 4, .UIIcon = SID(14,7)},
   {.subType = kSunflower, .price = 4, .UIIcon = SID(15,7)},
   {.subType = kOil, .price = 6, .UIIcon = SID(12,7)},
-  {.subType = kPotato, .price = 4, .UIIcon = SID(14,7)},
   {.subType = kSalt, .price = 1, .UIIcon = SID(13,8)},
-  {.subType = kCrisps, .price = 10, .UIIcon = SID(0,20)}
+  {.subType = kCrisps, .price = 10, .UIIcon = SID(0,21)},
+  {.subType = kApple, .price = 2, .UIIcon = SID(8,7)},
+  {.subType = kWaterBarrel, .price = 1, .UIIcon = SID(12,7)},
+  {.subType = kEthanol, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kCorn, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kSeaweed, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kMeat, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kHydrogen, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kHOil, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kCornDog, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kWheat, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kBeer, .price = 1, .UIIcon = SID(11,7)},
+  {.subType = kCactus, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kTequila, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kLime, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kMexBeer, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kEmulsifiers, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kHFCS, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kStrawberry, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kIceCream, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kEggs, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kHemp, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kProtein, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kGelatin, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kMeatPie, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kMSG, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kReadyMeal, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kJelly, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kCoffeeBean, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kCO2, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kCaffeine, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kEnergyDrink, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kRaveJuice, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kPerkPills, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kSoftCake, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kDessert, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kPackaging, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kCateringKit, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kDrinksKit, .price = 1, .UIIcon = SID(2,4)},
 };
 
 const int32_t SIZE_CARGO = TOT_CARGO_OR_BUILDINGS * sizeof(struct Cargo_t);
@@ -40,21 +74,58 @@ void cargoSpriteSetup(struct Cargo_t* _cargo, uint16_t _x, uint16_t _y, uint16_t
 
 const char* toStringCargoByType(enum kCargoType _type) {
   switch(_type) {
-    case kNoCargo: return "NoCargo";
-    case kApple: return "Apple";
-    case kCheese: return "Cheese";
-    case kWheat: return "Wheat";
+    case kNoCargo: return "NOCARGO!";
     case kCarrot: return "Carrot";
-    case kWaterBarrel: return "Water Barrel";
     case kChalk: return "Chalk";
     case kVitamin: return "Vitamins";
+    case kPotato: return "Potato";
     case kSunflower: return "Sunflower";
     case kOil: return "Oil";
-    case kPotato: return "Potato";
     case kSalt: return "Salt";
     case kCrisps: return "Chips";
-    default: return "Cargo???";
+    case kApple: return "Apple";
+    case kWaterBarrel: return "Water Bucket";
+    case kEthanol: return "Ethanol";
+    case kCorn: return "Corn";
+    case kSeaweed: return "Seaweed";
+    case kMeat: return "Meat";
+    case kHydrogen: return "Hydrogen";
+    case kHOil: return "Hydrogenated Oil";
+    case kCornDog: return "Corn Dog";
+    case kWheat: return "Wheat";
+    case kBeer: return "Beer";
+    case kCactus: return "Cactus";
+    case kTequila: return "Tequila";
+    case kLime: return "Lime";
+    case kMexBeer: return "Mexican Beer";
+    case kEmulsifiers: return "Emulsifiers";
+    case kHFCS: return "H.F.C.S.";
+    case kStrawberry: return "Strawberry";
+    case kIceCream: return "Ice Cream";
+    case kEggs: return "Eggs";
+    case kHemp: return "Hemp";
+    case kProtein: return "Protein Powder";
+    case kGelatin: return "Gelatin";
+    case kMeatPie: return "Meat Pie";
+    case kMSG: return "M.S.G.";
+    case kReadyMeal: return "Ready Meal";
+    case kJelly: return "Jelly";
+    case kCoffeeBean: return "Coffee Bean";
+    case kCO2: return "CO2";
+    case kCaffeine: return "Caffeine";
+    case kEnergyDrink: return "Energy Drink";
+    case kRaveJuice: return "Rave Juice";
+    case kPerkPills: return "Perk Pills";
+    case kSoftCake: return "Soft Cake";
+    case kDessert: return "Dessert";
+    case kPackaging: return "Packaging";
+    case kCateringKit: return "Catering Kit";
+    case kDrinksKit: return "Drinks Kit";
+    case kCa0: case kCa1: case kCa2: case kCa3: case kCa4: case kCa5: case kCa6: case kCa7: 
+    case kCa8: case kCa9: case kCa10: case kCa11: case kCa12: case kCa13: case kCa14: case kCa15: 
+    case kNCargoType: return "CARGO???";
   }
+  return "CARGO????";
 }
 
 const char* toStringCargo(struct Cargo_t* _cargo) {

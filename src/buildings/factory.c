@@ -63,7 +63,7 @@ bool canBePlacedFactory(struct Location_t* _loc) {
   for (int32_t x = -1; x < 2; ++x) {
     for (int32_t y = -1; y < 2; ++y) {
       struct Tile_t* t = getTile(_loc->m_x + x, _loc->m_y + y);
-      if (t->m_tile > TOT_FLOOR_TILES) return false;
+      if (t->m_tile >= TOT_FLOOR_TILES_INC_LANDFILL) return false;
       if (getLocation(_loc->m_x + x, _loc->m_y + y)->m_building != NULL) return false;
     }
   }

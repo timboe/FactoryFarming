@@ -116,7 +116,6 @@ void enactIO() {
       m_andThen = kDoNothing;
       m_forceSlot = -1;
       updateRenderList();
-      showTutorialMsg(getTutorialStage());
     }
   }
 }
@@ -366,6 +365,7 @@ bool doSave(bool _synchronous) {
     pd->file->rename(m_filePath, filePathFinal);
 
   } else if (m_actionProgress == 8) {
+    
     scanSlots();
 
     // Finished

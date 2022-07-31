@@ -46,7 +46,9 @@ void clickHandleMenuExport(uint32_t _buttonPressed);
 
 void clickHandleMenuPlayer(uint32_t _buttonPressed);
 
-void clickHandlePlacement(uint32_t _buttonPressed);
+void clickHandleBuilding(uint32_t _buttonPressed);
+
+void clickHandlePlanting(uint32_t _buttonPressed);
 
 void clickHandlePick(uint32_t _buttonPressed);
 
@@ -141,7 +143,8 @@ void gameClickConfigHandler(uint32_t _buttonPressed) {
     case kMenuWarp:; return clickHandleMenuWarp(_buttonPressed);
     case kMenuExport:; return clickHandleMenuExport(_buttonPressed);
     case kMenuImport:; return clickHandleMenuImport(_buttonPressed);
-    case kPlaceMode:; case kBuildMode:; case kPlantMode:; return clickHandlePlacement(_buttonPressed);
+    case kPlaceMode:; case kBuildMode:; return clickHandleBuilding(_buttonPressed);
+    case kPlantMode:; return clickHandlePlanting(_buttonPressed);
     case kPickMode:; return clickHandlePick(_buttonPressed);
     case kInspectMode:; return clickHandleInspect(_buttonPressed);
     case kDestroyMode:; return clickHandleDestroy(_buttonPressed);
@@ -260,7 +263,7 @@ void clickHandleMenuImport(uint32_t _buttonPressed) {
   else moveCursor(_buttonPressed);
 }
 
-void clickHandlePlacement(uint32_t _buttonPressed) {
+void clickHandleBuilding(uint32_t _buttonPressed) {
   if (bPressed() && holdBRotateInput(_buttonPressed)) {
     // noop
   } else if (characterMoveInput(_buttonPressed)) {
@@ -280,6 +283,21 @@ void clickHandlePlacement(uint32_t _buttonPressed) {
     }
     // Tutorial 
     if (getTutorialStage() == kTutBuildQuarry && getTutorialProgress()) {
+      nextTutorialStage();
+    }
+  }
+}
+
+void clickHandlePlanting(uint32_t _buttonPressed) {
+if (characterMoveInput(_buttonPressed)) {
+    // noop
+  } else if (kButtonA    == _buttonPressed) {
+    doPlace();
+  } else if (kButtonB    == _buttonPressed) {
+    setGameMode(kWanderMode);
+    updateBlueprint();
+    // Tutorial
+    if (getTutorialStage() == kTutPlantCarrots && getTutorialProgress() >= 10) {
       nextTutorialStage();
     }
   }

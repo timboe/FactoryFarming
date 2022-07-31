@@ -106,6 +106,7 @@ const char* getNewText() {
       case kWell: return "Place to dampen the surrounding soil";
       case kStorageBox: return "Stores up to 3 different types of Cargo";
       case kConveyorGrease: return "Upgrades Conveyor speed from x1 to x2";
+      case kLandfill: return "Fills in water. Can built on, but not planted on.";
       case kNUtilitySubTypes: return "";
     }
     case kUICatExtractor: switch (m_nextSubType.extractor) {
