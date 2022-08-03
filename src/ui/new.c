@@ -98,7 +98,7 @@ const char* getNewText() {
       case kPotatoPlant: return "Plant to grow Potatoes";
       case kAppleTree: return  "Plant to grow Apples";
       case kWheatPlant: return "Plant to grow Wheat";
-      case kP4:; case kP5:; case kP6:; case kP7:; case kP8:; case kP9:; case kP10:; case kP11:; case kP12:; return "Placeholder";
+      //case kP4:; case kP5:; case kP6:; case kP7:; case kP8:; case kP9:; case kP10:; case kP11:; case kP12:; return "Placeholder";
       case kNPlantSubTypes: return "";
     }
     case kUICatUtility: switch (m_nextSubType.utility) {
@@ -121,7 +121,7 @@ const char* getNewText() {
       case kVitiminFac: return "Manufactures low-grade Vitamin Pills";
       case kVegOilFac: return "Crush Vegetable Oil from Sunflowers";
       case kCrispsFac: return "Manufactures Potato Chips. A fried favorite.";
-      case kF4: case kF5: case kF6: case kF7: case kF8: case kF9: case kF10: case kF11: return "FPlaceholder"; 
+      //case kF4: case kF5: case kF6: case kF7: case kF8: case kF9: case kF10: case kF11: return "FPlaceholder"; 
       case kNFactorySubTypes: return "";
     }
     default: break;

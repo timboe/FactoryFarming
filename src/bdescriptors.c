@@ -38,8 +38,6 @@ const struct UtilityDescriptor_t UDesc[] = {
   {.subType = kLandfill, .unlock = 665, .price = 100, .UIIcon = SID(3,15), .sprite = SID(0,3)},
 };
 
-
-
 const struct ExtractorDescriptor_t EDesc[] = {
   {.subType = kCropHarvesterSmall, .unlock = 42, .price = 50, .UIIcon = SID(4,16), .sprite = BID(0,0), .out = kNoCargo},
   {.subType = kChalkQuarry, .unlock = 44, .price = 75, .UIIcon = SID(12,12), .sprite = BID(0,6), .out = kChalk},

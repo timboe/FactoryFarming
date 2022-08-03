@@ -121,8 +121,8 @@ const char* toStringCargoByType(enum kCargoType _type) {
     case kPackaging: return "Packaging";
     case kCateringKit: return "Catering Kit";
     case kDrinksKit: return "Drinks Kit";
-    case kCa0: case kCa1: case kCa2: case kCa3: case kCa4: case kCa5: case kCa6: case kCa7: 
-    case kCa8: case kCa9: case kCa10: case kCa11: case kCa12: case kCa13: case kCa14: case kCa15: 
+    //case kCa0: case kCa1: case kCa2: case kCa3: case kCa4: case kCa5: case kCa6: case kCa7: 
+    //case kCa8: case kCa9: case kCa10: case kCa11: case kCa12: case kCa13: case kCa14: case kCa15: 
     case kNCargoType: return "CARGO???";
   }
   return "CARGO????";

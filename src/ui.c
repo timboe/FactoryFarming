@@ -1013,7 +1013,7 @@ void drawUIMain() {
   // Render
   const uint8_t ROWS_TO_RENDER = (m_mode == kMenuMain ? MAX_ROWS_VISIBLE_MAINMENU : MAX_ROWS_VISIBLE);
 
-  pd->system->logToConsole("SelRow:%i  SelCol:%i SelRowOffset:%i CursorRowAbs:%i", m_selRow[m_mode], m_selCol[m_mode], m_selRowOffset[m_mode], m_cursorRowAbs[m_mode]);
+  //pd->system->logToConsole("SelRow:%i  SelCol:%i SelRowOffset:%i CursorRowAbs:%i", m_selRow[m_mode], m_selCol[m_mode], m_selRowOffset[m_mode], m_cursorRowAbs[m_mode]);
 
   for (int32_t r = 0; r < ROWS_TO_RENDER; ++r) {
     int32_t rID = r + m_selRowOffset[m_mode];
@@ -1565,6 +1565,7 @@ void initiUI() {
             roundedRect(3, TILE_PIX*2, TILE_PIX*2, TILE_PIX/2, kColorWhite);
             pd->graphics->setDrawMode(kDrawModeNXOR);
           }
+          
           pd->graphics->drawBitmap(getSprite16_byidx(spriteID + r, 2), 0, 0, kBitmapUnflipped);
           pd->graphics->setDrawMode(kDrawModeCopy);
         }

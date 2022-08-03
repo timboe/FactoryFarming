@@ -46,8 +46,8 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kFilterI: return _inworld ? "'I' Filter" : "Conveyor Belt 'I' Filter";
       case kFilterL: return _inworld ? "'L' Filter" : "Conveyor Belt 'L' Filter";
       case kTunnelIn: case kTunnelOut: return _inworld ? "Tunnel" : "Conveyor Belt Tunnel";
-      case kC0: case kC1: case kC2: case kC3: case kC4: case kC5: case kC6:
-      case kC7: case kC8: case kC9: case kC10: case kC11: case kC12: case kC13: case kC14: case kC15: 
+      //case kC0: case kC1: case kC2: case kC3: case kC4: case kC5: case kC6:
+      //case kC7: case kC8: case kC9: case kC10: case kC11: case kC12: case kC13: case kC14: case kC15: 
       case kNConvSubTypes: return "C_PLACEHOLDER";
     }
     case kPlant: switch (_subType.plant) {
@@ -63,8 +63,8 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kStrawberryPlant: return _inworld ? "Strawberry Plant" : "Strawberry Seeds";
       case kHempPlant: return _inworld ? "Help Plant" : "Hemp Seeds";
       case kCoffeePlant: return _inworld ? "Coffee Plant" : "Coffee Seeds";
-      case kP0: case kP1: case kP2: case kP3: case kP4: case kP5: case kP6:
-      case kP7: case kP8: case kP9: case kP10: case kP11: case kP12: case kP13: case kP14: case kP15:  
+      //case kP0: case kP1: case kP2: case kP3: case kP4: case kP5: case kP6:
+      //case kP7: case kP8: case kP9: case kP10: case kP11: case kP12: case kP13: case kP14: case kP15:  
       case kNPlantSubTypes: return "P_PLACEHOLDER";
     }
     case kUtility: switch (_subType.utility) {
@@ -73,8 +73,8 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kStorageBox: return "Storage Box";
       case kConveyorGrease: return "Conveyor Grease";
       case kLandfill: return "Landfill";
-      case kU0: case kU1: case kU2: case kU3: case kU4: case kU5: case kU6:
-      case kU7: case kU8: case kU9: case kU10: case kU11: case kU12: case kU13: case kU14: case kU15: 
+      //case kU0: case kU1: case kU2: case kU3: case kU4: case kU5: case kU6:
+      //case kU7: case kU8: case kU9: case kU10: case kU11: case kU12: case kU13: case kU14: case kU15: 
       case kNUtilitySubTypes: return "U_PLACEHOLDER";
     }
     case kExtractor: switch (_subType.extractor) {
@@ -84,8 +84,8 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kSaltMine: return "Salt Mine";
       case kCropHarvesterLarge: return _inworld ? "Harvester 9x9 " : "Automatic Harvester (9x9)";
       case kCO2Extractor: return "CO2 Extractor";
-      case kE0: case kE1: case kE2: case kE3: case kE4: case kE5: case kE6:
-      case kE7: case kE8: case kE9: case kE10: case kE11: case kE12: case kE13: case kE14: case kE15: 
+      //case kE0: case kE1: case kE2: case kE3: case kE4: case kE5: case kE6:
+      //case kE7: case kE8: case kE9: case kE10: case kE11: case kE12: case kE13: case kE14: case kE15: 
       case kNExtractorSubTypes: return "E_PLACEHOLDER";
     }
     case kFactory: switch (_subType.factory) {
@@ -120,8 +120,8 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kPackagingFac: return "Packaging Manufacturer";
       case kCateringKitFac: return "Catering Pack Factory";
       case kDrinksKitFac: return "Drinks Pack Factory";
-      case kF0: case kF1: case kF2: case kF3: case kF4: case kF5: case kF6:
-      case kF7: case kF8: case kF9: case kF10: case kF11: case kF12: case kF13: case kF14: case kF15: 
+      //case kF0: case kF1: case kF2: case kF3: case kF4: case kF5: case kF6:
+      //case kF7: case kF8: case kF9: case kF10: case kF11: case kF12: case kF13: case kF14: case kF15: 
       case kNFactorySubTypes: return "F_PLACEHOLDER";
     }
     case kSpecial: switch (_subType.special) {

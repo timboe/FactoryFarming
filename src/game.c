@@ -277,27 +277,27 @@ void initGame() {
 
   // Perform runtime sanity check. Ignore placeholders
   for (int32_t i = 0; i < kNFactorySubTypes; ++i) {
-    if (i == kF0) break;
+    //if (i == kF0) break;
     if (i != FDesc[i].subType) pd->system->error("FACTORY DESCRIPTOR ORDERING IS WRONG!");
   }
   for (int32_t i = 0; i < kNUtilitySubTypes; ++i) {
-    if (i == kU0) break;
+    //if (i == kU0) break;
     if (i != UDesc[i].subType) pd->system->error("UTILITY DESCRIPTOR ORDERING IS WRONG!");
   }
   for (int32_t i = 0; i < kNConvSubTypes; ++i) {
-    if (i == kC0) break;
+    //if (i == kC0) break;
     if (i != CDesc[i].subType) pd->system->error("CONVEYOR DESCRIPTOR ORDERING IS WRONG!");
   }
   for (int32_t i = 0; i < kNPlantSubTypes; ++i) {
-    if (i == kP0) break;
+    //if (i == kP0) break;
     if (i != PDesc[i].subType) pd->system->error("PLANT DESCRIPTOR ORDERING IS WRONG!");
   }
   for (int32_t i = 0; i < kNExtractorSubTypes; ++i) {
-    if (i == kE0) break;
+    //if (i == kE0) break;
     if (i != EDesc[i].subType) pd->system->error("EXTRACTOR DESCRIPTOR ORDERING IS WRONG!");
   }
   for (int32_t i = 0; i < kNCargoType; ++i) {
-    if (i == kCa0) break;
+    //if (i == kCa0) break;
     if (i != CargoDesc[i].subType) pd->system->error("CARGO DESCRIPTOR ORDERING IS WRONG!");
   }
 

@@ -11,7 +11,7 @@ enum kUICat {kUICatTool, kUICatPlant, kUICatConv, kUICatExtractor, kUICatFactory
 
 #define ROW_WDTH 9
 
-#define MAX_ROW_PER_CAT 3
+#define MAX_ROW_PER_CAT 5
 
 #define MAX_PER_CAT (ROW_WDTH * MAX_ROW_PER_CAT)
 
