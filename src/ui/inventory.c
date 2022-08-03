@@ -156,7 +156,7 @@ bool doPickAtLocation(struct Location_t* _loc) {
       if (building->m_subType.extractor == kCropHarvesterLarge) doBoxHarvest = true;
     }
     if (building->m_type == kUtility) {
-      if (building->m_subType.utility == kStorageBox) doBoxHarvest = true;
+      if (building->m_subType.utility == kBuffferBox || building->m_subType.utility == kStorageBox) doBoxHarvest = true;
     }
     if (doBoxHarvest) {
       for (int32_t compartment = 0; compartment < 3; ++compartment) {
@@ -242,7 +242,7 @@ void populateContentInventory(void) {
         continue;
       }
       int16_t rot = 0;
-      if ((c >= kUICatConv && c < kUICatUtility) || (c == kUICatUtility && i == kStorageBox)) rot = getCursorRotation();
+      if ((c >= kUICatConv && c < kUICatUtility) || (c == kUICatUtility && i == kBuffferBox)) rot = getCursorRotation();
       setUIContentItem(row, column, c, i, rot);
       if (++column == ROW_WDTH) {
         ++row;
@@ -292,7 +292,7 @@ void populateInfoInventory() {
       toStringBuilding(selectedCatType, (union kSubType) {.factory = selectedID}, false), 
       getRotationAsString(getUIContentCategory(), getUIContentID(), getCursorRotation())); break;
     case kUICatUtility:;
-      if (selectedID == kStorageBox) snprintf(textA, 128, "Place %s (%s)", 
+      if (selectedID == kBuffferBox) snprintf(textA, 128, "Place %s (%s)", 
         toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false), 
         getRotationAsString(getUIContentCategory(), getUIContentID(), getCursorRotation()));
       else snprintf(textA, 128, "Place %s", 

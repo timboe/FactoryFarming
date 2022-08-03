@@ -36,6 +36,8 @@ void doClutterObstacles(void);
 
 float pointDist(int32_t _x, int32_t _y, int32_t _x1, int32_t _y1, int32_t _x2, int32_t _y2);
 
+void getPathSprite(struct Location_t* loc, uint16_t* _outSprite, LCDBitmapFlip* _outFlip);
+
 void doSea(void);
 
 /// ///
@@ -116,6 +118,42 @@ uint8_t getNearbyBackground(struct Chunk_t* _chunk, uint16_t _u, uint16_t _v) {
   return 0;
 }
 
+void getPathSprite(struct Location_t* loc, uint16_t* _outSprite, LCDBitmapFlip* _outFlip) {
+  struct Location_t* above;
+  struct Location_t* below;
+  struct Location_t* left;
+  struct Location_t* right;
+  getBuildingNeighbors(loc->m_building, 1, &above, &below, &left, &right);
+  const uint8_t N = (above->m_building && above->m_building->m_type == kUtility && above->m_building->m_subType.utility == kPath);
+  const uint8_t E = (right->m_building && right->m_building->m_type == kUtility && right->m_building->m_subType.utility == kPath);
+  const uint8_t S = (below->m_building && below->m_building->m_type == kUtility && below->m_building->m_subType.utility == kPath);
+  const uint8_t W = (left->m_building  && left->m_building->m_type  == kUtility && left->m_building->m_subType.utility  == kPath);
+  if (N + E + S + W == 4) {
+    *_outSprite = SPRITE16_ID(13 , 19);
+    *_outFlip = kBitmapUnflipped;
+  } else if (N + E + S + W == 0) {
+    *_outSprite = SPRITE16_ID(9 , 19);
+    *_outFlip = kBitmapUnflipped;
+  } else if (N + E + S + W == 1) {
+    if      (N) { *_outFlip = kBitmapFlippedY;  *_outSprite = SPRITE16_ID(10 , 19); }
+    else if (S) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(10 , 19); }
+    else if (W) { *_outFlip = kBitmapFlippedX;  *_outSprite = SPRITE16_ID(10 , 18); }
+    else if (E) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(10 , 18); }
+  } else if (N + E + S + W == 2) {
+    if      (N && S) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(11 , 19); }
+    else if (E && W) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(11 , 18); }
+    else if (E && S) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(12 , 18); }
+    else if (S && W) { *_outFlip = kBitmapFlippedX;  *_outSprite = SPRITE16_ID(12 , 18); }
+    else if (W && N) { *_outFlip = kBitmapFlippedXY; *_outSprite = SPRITE16_ID(12 , 18); }
+    else if (N && E) { *_outFlip = kBitmapFlippedY;  *_outSprite = SPRITE16_ID(12 , 18); }
+  } else if (N + E + S + W == 3) {
+    if      (!W) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(14 , 19); }
+    else if (!E) { *_outFlip = kBitmapFlippedX;  *_outSprite = SPRITE16_ID(14 , 19); }
+    else if (!N) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(15 , 18); }
+    else if (!S) { *_outFlip = kBitmapFlippedY;  *_outSprite = SPRITE16_ID(15 , 18); }
+  }
+}
+
 void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   pd->graphics->pushContext(_chunk->m_bkgImage[1]);
   pd->graphics->setDrawMode(kDrawModeCopy);
@@ -155,8 +193,8 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   const int16_t off48_y = (_chunk->m_y * CHUNK_PIX_Y) + 3*TILE_PIX/2;
 
   // Render farmland
-  for (uint32_t i = 0; i < _chunk->m_nBuildings; ++i) {
-    struct Building_t* building = _chunk->m_buildings[i];
+  for (uint32_t i = 0; i < _chunk->m_nBuildingsRender; ++i) {
+    struct Building_t* building = _chunk->m_buildingsRender[i];
     if (building->m_type == kPlant) {
       if (building->m_mode.mode16 >= 2 * N_CROPS_BEFORE_FARMLAND) { // Draw farm land
         pd->graphics->drawBitmap(getSprite16(7,12,1), building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
@@ -179,8 +217,8 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   }
 
   // Render locations 
-  for (uint32_t i = 0; i < _chunk->m_nBuildings; ++i) {
-    struct Building_t* building = _chunk->m_buildings[i];
+  for (uint32_t i = 0; i < _chunk->m_nBuildingsRender; ++i) {
+    struct Building_t* building = _chunk->m_buildingsRender[i];
     if (building->m_type != kNoBuilding && building->m_image[1]) {
       if (building->m_type >= kExtractor) {
         const bool invert = (building->m_type == kExtractor && building->m_subType.extractor == kCropHarvesterLarge);
@@ -196,6 +234,11 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
           pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ EDesc[building->m_subType.extractor].out ].UIIcon, 1), 
             building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
         }
+      } else if (building->m_type == kUtility && building->m_subType.utility == kPath) {
+        LCDBitmapFlip flip = kBitmapUnflipped;
+        uint16_t sprite = 0;
+        getPathSprite(building->m_location, &sprite, &flip);
+        pd->graphics->drawBitmap(getSprite16_byidx(sprite, 1), building->m_pix_x - off16_x, building->m_pix_y - off16_y, flip);
       } else {
         // Fast conveyors get drawn inverted. Stored[0] is used to hold the speed
         const bool invert = (building->m_type == kConveyor && building->m_stored[0] >= 2);
@@ -215,8 +258,8 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
       int32_t chunkOffX = (otherChunk->m_x * CHUNK_PIX_X) + (3*TILE_PIX/2) - (CHUNK_PIX_X * x);
       int32_t chunkOffY = (otherChunk->m_y * CHUNK_PIX_Y) + (3*TILE_PIX/2) - (CHUNK_PIX_Y * y);
 
-      for (uint32_t i = 0; i < otherChunk->m_nBuildings; ++i) {
-        struct Building_t* building = otherChunk->m_buildings[i];
+      for (uint32_t i = 0; i < otherChunk->m_nBuildingsRender; ++i) {
+        struct Building_t* building = otherChunk->m_buildingsRender[i];
         if (building->m_type >= kExtractor && building->m_image[1]) {
           const bool invert = (building->m_type == kExtractor && building->m_subType.extractor == kCropHarvesterLarge);
           pd->graphics->setDrawMode(invert ? kDrawModeInverted : kDrawModeCopy);

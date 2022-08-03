@@ -30,9 +30,12 @@ enum kPlantSubType{
   kNPlantSubTypes
 };
 
-enum kUtilitySubType{kBin, 
+enum kUtilitySubType{
+  kPath,
+  kBin, 
   kWell, 
-  kStorageBox, 
+  kStorageBox,
+  kBuffferBox, 
   kConveyorGrease, 
   kLandfill, 
   //kU0, kU1, kU2, kU3, kU4, kU5, kU6, kU7, kU8, kU9, kU10, kU11, kU12, kU13, kU14, kU15,

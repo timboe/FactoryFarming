@@ -364,7 +364,7 @@ void updateBlueprint() {
       pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
     }
     bool canPlace = true;
-    if (selectedCat == kUICatUtility && selectedID != kStorageBox) selectedRot = 0; // Only storage boxes have rotation in this cat
+    if (selectedCat == kUICatUtility && selectedID != kBuffferBox) selectedRot = 0; // Only buffer boxes have rotation in this cat
     switch (selectedCat) {
       case kUICatConv:; canPlace = canBePlacedConveyor(pl, selectedRot, (union kSubType) {.conveyor = selectedID});
                         pd->sprite->setImage(bp, getSprite16_byidx( CDesc[selectedID].UIIcon + selectedRot, zoom), kBitmapUnflipped); break;
@@ -692,7 +692,7 @@ void drawUIRight() {
     const uint16_t selectedID =  getUIContentID();
     snprintf(text, 32, "%u", (unsigned) getOwned(selectedCat, selectedID));
     uint16_t spriteID = getUIIcon(selectedCat, selectedID);
-    if ((selectedCat >= kUICatConv && selectedCat < kUICatUtility) || (selectedCat == kUICatUtility && selectedID == kStorageBox)) {
+    if ((selectedCat >= kUICatConv && selectedCat < kUICatUtility) || (selectedCat == kUICatUtility && selectedID == kBuffferBox)) {
       spriteID += rotMod;
     }
     pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), DEVICE_PIX_Y/2, 0, kBitmapUnflipped);
@@ -1578,7 +1578,7 @@ void initiUI() {
         pd->sprite->setIgnoresDrawOffset(m_UISpriteItems[c][i][r], 1);
 
         // Tools, Crops, Cargo, Warp, Import don't have any rotation 
-        if (c == kUICatTool || c == kUICatPlant || c >= kUICatCargo || (c == kUICatUtility && i != kStorageBox)) { 
+        if (c == kUICatTool || c == kUICatPlant || c >= kUICatCargo || (c == kUICatUtility && i != kBuffferBox)) { 
           break;
         }
       }

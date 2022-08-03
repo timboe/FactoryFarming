@@ -13,8 +13,6 @@ void setForceSlot(int8_t _slot);
 
 uint8_t getSlot(void);
 
-uint8_t getSave(void);
-
 void scanSlots(void);
 
 bool hasSaveData(uint8_t _save);

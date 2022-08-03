@@ -102,9 +102,11 @@ const char* getNewText() {
       case kNPlantSubTypes: return "";
     }
     case kUICatUtility: switch (m_nextSubType.utility) {
+      case kPath: return "Movement speed is enhanced while on a path";
       case kBin: return "Cargo placed here will get destroyed";
       case kWell: return "Place to dampen the surrounding soil";
       case kStorageBox: return "Stores up to 3 different types of Cargo";
+      case kBuffferBox: return "Like the Storage Box, but also self-empties";
       case kConveyorGrease: return "Upgrades Conveyor speed from x1 to x2";
       case kLandfill: return "Fills in water. Can built on, but not planted on.";
       case kNUtilitySubTypes: return "";

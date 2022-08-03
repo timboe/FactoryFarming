@@ -30,8 +30,11 @@ struct Chunk_t{
   struct Chunk_t* m_nonNeighborsNW[CHUNK_NONNEIGHBORS_CORNER];
   struct Chunk_t* m_nonNeighborsALL[CHUNK_NONNEIGHBORS_ALL];
 
-  uint16_t m_nBuildings;
-  struct Building_t* m_buildings[TILES_PER_CHUNK];
+  uint16_t m_nBuildingsRender;
+  struct Building_t* m_buildingsRender[TILES_PER_CHUNK];
+
+  uint16_t m_nBuildingsUpdate;
+  struct Building_t* m_buildingsUpdate[TILES_PER_CHUNK];
 
   uint16_t m_nCargos;
   struct Cargo_t* m_cargos[TILES_PER_CHUNK];
@@ -44,9 +47,13 @@ struct Chunk_t* getChunk(int32_t _x, int32_t _y);
 
 struct Chunk_t* getChunk_noCheck(const int32_t _x, const int32_t _y);
 
-void chunkAddBuilding(struct Chunk_t* _chunk, struct Building_t* _building);
+void chunkAddBuildingRender(struct Chunk_t* _chunk, struct Building_t* _building);
 
-void chunkRemoveBuilding(struct Chunk_t* _chunk, struct Building_t* _building);
+void chunkAddBuildingUpdate(struct Chunk_t* _chunk, struct Building_t* _building);
+
+void chunkRemoveBuildingRender(struct Chunk_t* _chunk, struct Building_t* _building);
+
+void chunkRemoveBuildingUpdate(struct Chunk_t* _chunk, struct Building_t* _building);
 
 void chunkAddCargo(struct Chunk_t* _chunk, struct Cargo_t* _cargo);
 

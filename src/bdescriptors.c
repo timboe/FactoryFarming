@@ -31,9 +31,11 @@ const struct PlantDescriptor_t PDesc[] = {
 };
 
 const struct UtilityDescriptor_t UDesc[] = {
+  {.subType = kPath, .unlock = 38, .price = 100, .UIIcon = SID(2,15), .sprite = SID(0,0)},
   {.subType = kBin, .unlock = 38, .price = 100, .UIIcon = SID(2,15), .sprite = SID(14,14)},
   {.subType = kWell, .unlock = 39, .price = 1000, .UIIcon = SID(0,15), .sprite = SID(12,14)},
-  {.subType = kStorageBox, .unlock = 40, .price = 1, .UIIcon = SID(4,15), .sprite = SID(4,15)},
+  {.subType = kStorageBox, .unlock = 40, .price = 1, .UIIcon = SID(8,15), .sprite = SID(8,15)},
+  {.subType = kBuffferBox, .unlock = 40, .price = 1, .UIIcon = SID(4,15), .sprite = SID(4,15)},
   {.subType = kConveyorGrease, .unlock = 41, .price = 100, .UIIcon = SID(1,15), .sprite = SID(1,15)},
   {.subType = kLandfill, .unlock = 665, .price = 100, .UIIcon = SID(3,15), .sprite = SID(0,3)},
 };

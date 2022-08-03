@@ -133,6 +133,8 @@ struct Building_t* buildingManagerNewBuilding(enum kBuildingType _asType);
 
 struct Building_t* buildingManagerGetByIndex(uint16_t _index);
 
+bool buildingHasUpdateFunction(enum kBuildingType _type, union kSubType _subType);
+
 void growAtAll(void);
 
 void buildingManagerFreeBuilding(struct Building_t* _buildings);

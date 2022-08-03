@@ -1,6 +1,7 @@
 #include "location.h"
 #include "generate.h"
 #include "chunk.h"
+#include "building.h"
 #include "sprite.h"
 #include "render.h"
 #include "buildings/special.h"
@@ -67,7 +68,8 @@ void clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
       }
     }
 
-    chunkRemoveBuilding(_loc->m_chunk, _loc->m_building);
+    chunkRemoveBuildingRender(_loc->m_chunk, _loc->m_building);
+    chunkRemoveBuildingUpdate(_loc->m_chunk, _loc->m_building);
     buildingManagerFreeBuilding(_loc->m_building);
 
     if (isMultiBlock || wideRedraw) {
@@ -163,7 +165,10 @@ void* deserialiseStructDoneLocation(json_decoder* jd, const char* _name, json_va
     loc->m_building = buildingManagerGetByIndex(m_deserialiseIDBuilding);
     loc->m_notOwned = m_deserialiseNotOwned;
     if (!loc->m_notOwned) { // If owned
-      chunkAddBuilding(loc->m_chunk, loc->m_building);
+      chunkAddBuildingRender(loc->m_chunk, loc->m_building);
+      if (buildingHasUpdateFunction(loc->m_building->m_type, loc->m_building->m_subType)) {
+        chunkAddBuildingUpdate(loc->m_chunk, loc->m_building);
+      }
     }
   }
   if (m_deserialiseIDCargo >= 0) {

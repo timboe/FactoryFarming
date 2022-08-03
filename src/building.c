@@ -33,6 +33,7 @@ void assignUpdate(struct Building_t* _building);
 
 void setBuildingSubType(struct Building_t* _building, union kSubType _subType);
 
+
 /// ///
 
 const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, bool _inworld) {
@@ -68,9 +69,11 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kNPlantSubTypes: return "P_PLACEHOLDER";
     }
     case kUtility: switch (_subType.utility) {
+      case kPath: return "Path";
       case kBin: return "Trash Bin";
       case kWell: return "Well";
       case kStorageBox: return "Storage Box";
+      case kBuffferBox: return "Buffer Box";
       case kConveyorGrease: return "Conveyor Grease";
       case kLandfill: return "Landfill";
       //case kU0: case kU1: case kU2: case kU3: case kU4: case kU5: case kU6:
@@ -236,6 +239,12 @@ void assignUpdate(struct Building_t* _building) {
   }
 }
 
+bool buildingHasUpdateFunction(enum kBuildingType _type, union kSubType _subType) {
+  if (_type == kUtility && _subType.utility == kWell) return false;
+  if (_type == kUtility && _subType.utility == kPath) return false;
+  return true;
+}
+
 void setBuildingSubType(struct Building_t* _building, union kSubType _subType) {
   switch (_building->m_type) {
     case kConveyor:; _building->m_subType.conveyor = _subType.conveyor; break;
@@ -312,7 +321,8 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
 
   // Add to the active/render list
   if (newToChunk) {
-    chunkAddBuilding(_loc->m_chunk, building); // Careful, no de-duplication in here, for speed
+    chunkAddBuildingRender(_loc->m_chunk, building); // Careful, no de-duplication in here, for speed
+    if (buildingHasUpdateFunction(_type, _subType)) chunkAddBuildingUpdate(_loc->m_chunk, building);
   }
 
   // Special - test auto upgrade of conveyor belts

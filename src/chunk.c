@@ -98,7 +98,7 @@ void chunkShiftTorus(bool _top, bool _left) {
     }
   }
 
-  // Handle the corders
+  // Handle the corners
   struct Chunk_t* TL = getChunk_noCheck(0, 0);
   struct Chunk_t* TR = getChunk_noCheck(WORLD_CHUNKS_X-1, 0);
   struct Chunk_t* BL = getChunk_noCheck(0, WORLD_CHUNKS_Y-1);
@@ -127,27 +127,51 @@ void chunkShiftTorus(bool _top, bool _left) {
   }
 }
 
-void chunkAddBuilding(struct Chunk_t* _chunk, struct Building_t* _building) {
-  _chunk->m_buildings[ _chunk->m_nBuildings ] = _building;
-  ++(_chunk->m_nBuildings);
+void chunkAddBuildingRender(struct Chunk_t* _chunk, struct Building_t* _building) {
+  _chunk->m_buildingsRender[ _chunk->m_nBuildingsRender ] = _building;
+  ++(_chunk->m_nBuildingsRender);
 }
 
-void chunkRemoveBuilding(struct Chunk_t* _chunk, struct Building_t* _building) {
+void chunkAddBuildingUpdate(struct Chunk_t* _chunk, struct Building_t* _building) {
+  _chunk->m_buildingsUpdate[ _chunk->m_nBuildingsUpdate ] = _building;
+  ++(_chunk->m_nBuildingsUpdate);
+}
+
+void chunkRemoveBuildingRender(struct Chunk_t* _chunk, struct Building_t* _building) {
   int32_t idx = -1;
   for (uint32_t i = 0; i < TILES_PER_CHUNK; ++i) {
-    if (_chunk->m_buildings[i] == _building) {
+    if (_chunk->m_buildingsRender[i] == _building) {
       idx = i;
       break;
     }
   }
   #ifdef DEV
-  if (idx == -1) pd->system->error("-1 in chunkRemoveBuilding!");
+  if (idx == -1) pd->system->error("-1 in chunkRemoveBuildingRender!");
   #endif
   for(uint32_t i = idx; i < TILES_PER_CHUNK - 1; i++) {
-    _chunk->m_buildings[i] = _chunk->m_buildings[i + 1];
-    if (_chunk->m_buildings[i] == NULL) break;
+    _chunk->m_buildingsRender[i] = _chunk->m_buildingsRender[i + 1];
+    if (_chunk->m_buildingsRender[i] == NULL) break;
   }
-  --(_chunk->m_nBuildings);
+  --(_chunk->m_nBuildingsRender);
+}
+
+void chunkRemoveBuildingUpdate(struct Chunk_t* _chunk, struct Building_t* _building) {
+  int32_t idx = -1;
+  for (uint32_t i = 0; i < TILES_PER_CHUNK; ++i) {
+    if (_chunk->m_buildingsUpdate[i] == _building) {
+      idx = i;
+      break;
+    }
+  }
+  if (idx == -1) {
+    // All buildings are Render, but not all buildinds are Update. Return if not found
+    return;
+  }
+  for(uint32_t i = idx; i < TILES_PER_CHUNK - 1; i++) {
+    _chunk->m_buildingsUpdate[i] = _chunk->m_buildingsUpdate[i + 1];
+    if (_chunk->m_buildingsUpdate[i] == NULL) break;
+  }
+  --(_chunk->m_nBuildingsUpdate);
 }
 
 void chunkAddCargo(struct Chunk_t* _chunk, struct Cargo_t* _cargo) {
@@ -203,10 +227,10 @@ void chunkRemoveObstacle(struct Chunk_t* _chunk, LCDSprite* _obstacleZ1) {
 
 uint16_t chunkTickChunk(struct Chunk_t* _chunk, uint8_t _tick, uint8_t _zoom) {
   //pd->system->logToConsole("Asked to tick %i for %i", _tick, _chunk);
-  for (uint32_t i = 0; i < _chunk->m_nBuildings; ++i) {
-    (*_chunk->m_buildings[i]->m_updateFn)(_chunk->m_buildings[i], _tick, _zoom);
+  for (uint32_t i = 0; i < _chunk->m_nBuildingsUpdate; ++i) {
+    (*_chunk->m_buildingsUpdate[i]->m_updateFn)(_chunk->m_buildingsUpdate[i], _tick, _zoom);
   }
-  return _chunk->m_nBuildings;
+  return _chunk->m_nBuildingsUpdate;
 }
 
 void doNonNeighborAssociation(struct Chunk_t* _chunk, struct Chunk_t** _theNeighborList, struct Chunk_t** _theNonNeighborList, uint32_t _theListSize) {
