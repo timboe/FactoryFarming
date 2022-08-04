@@ -70,6 +70,7 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
     }
     case kUtility: switch (_subType.utility) {
       case kPath: return "Path";
+      case kSign: return "Sign";
       case kBin: return "Trash Bin";
       case kWell: return "Well";
       case kStorageBox: return "Storage Box";
@@ -242,6 +243,9 @@ void assignUpdate(struct Building_t* _building) {
 bool buildingHasUpdateFunction(enum kBuildingType _type, union kSubType _subType) {
   if (_type == kUtility && _subType.utility == kWell) return false;
   if (_type == kUtility && _subType.utility == kPath) return false;
+  if (_type == kUtility && _subType.utility == kSign) return false;
+  if (_type == kSpecial && _subType.special == kWarp) return false;
+  if (_type == kSpecial && _subType.special == kShop) return false;
   return true;
 }
 

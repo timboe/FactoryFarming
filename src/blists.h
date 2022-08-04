@@ -25,13 +25,14 @@ enum kPlantSubType{
   kLimeTree, // Desert
   kStrawberryPlant, // Clay - Need to do more with this
   kHempPlant, // Clay 
-  kCoffeePlant, // Loomy. Need another loomy... - Need to do more with this
+  kCoffeePlant, // Loamy. Need another loamy... - Need to do more with this
   //kP0, kP1, kP2, kP3, kP4, kP5, kP6, kP7, kP8, kP9, kP10, kP11, kP12, kP13, kP14, kP15, 
   kNPlantSubTypes
 };
 
 enum kUtilitySubType{
   kPath,
+  kSign,
   kBin, 
   kWell, 
   kStorageBox,

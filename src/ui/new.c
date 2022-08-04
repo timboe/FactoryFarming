@@ -103,6 +103,7 @@ const char* getNewText() {
     }
     case kUICatUtility: switch (m_nextSubType.utility) {
       case kPath: return "Movement speed is enhanced while on a path";
+      case kSign: return "Displays a Cargo of your choosing";
       case kBin: return "Cargo placed here will get destroyed";
       case kWell: return "Place to dampen the surrounding soil";
       case kStorageBox: return "Stores up to 3 different types of Cargo";

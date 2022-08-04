@@ -32,6 +32,7 @@ const struct PlantDescriptor_t PDesc[] = {
 
 const struct UtilityDescriptor_t UDesc[] = {
   {.subType = kPath, .unlock = 38, .price = 100, .UIIcon = SID(13,19), .sprite = SID(0,0)},
+  {.subType = kSign, .unlock = 38, .price = 100, .UIIcon = SID(9,15), .sprite = SID(7,19)},
   {.subType = kBin, .unlock = 38, .price = 100, .UIIcon = SID(2,15), .sprite = SID(14,14)},
   {.subType = kWell, .unlock = 39, .price = 1000, .UIIcon = SID(0,15), .sprite = SID(12,14)},
   {.subType = kStorageBox, .unlock = 40, .price = 1, .UIIcon = SID(8,15), .sprite = SID(8,15)},

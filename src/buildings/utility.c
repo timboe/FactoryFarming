@@ -131,6 +131,16 @@ void drawUIInspectUtility(struct Building_t* _building) {
     snprintf(text, 128, "Movement speed is enhanced on the path.");
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
+   } else if (ust == kSign) {
+
+    snprintf(text, 128, "Place a Cargo here to display it on the Sign.");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
+    if (_building->m_mode.mode16) {
+      snprintf(text, 128, "Sign for: %s", toStringCargoByType( _building->m_mode.mode16 ) );
+      pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    }
+
   } else if (ust == kBin) {
 
     snprintf(text, 128, "Permanently erases unwanted Cargo.");

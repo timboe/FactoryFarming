@@ -86,7 +86,14 @@ void doPlace() {
       else if (selectedID == kLandfill) placed = doPlaceLandfill(placeLocation);
       else placed = newBuilding(placeLocation, getCursorRotation(), kUtility, (union kSubType) {.utility = selectedID} );
       break;
-    case kUICatCargo: placed = newCargo(placeLocation, selectedID, /*add to display*/ true); break;
+    case kUICatCargo: 
+      if (placeLocation->m_building && placeLocation->m_building->m_type == kUtility && placeLocation->m_building->m_subType.utility == kSign) {
+        placeLocation->m_building->m_mode.mode16 = selectedID;
+        renderChunkBackgroundImage(placeLocation->m_chunk);
+      } else {
+        placed = newCargo(placeLocation, selectedID, /*add to display*/ true); 
+      }
+      break;
     case kUICatWarp: break;
     case kUICatImportN: case kUICatImportE: case kUICatImportS: case kUICatImportW: break; 
     case kNUICats: break;

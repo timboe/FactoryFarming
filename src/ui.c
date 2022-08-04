@@ -1031,8 +1031,12 @@ void drawUIMain() {
         pd->sprite->setVisible(m_contentSprite[rID][c], 1);
         pd->sprite->moveTo(m_contentSprite[rID][c], UISTARTX + c*2*TILE_PIX, UISTARTY + r*2*TILE_PIX);
         if (m_contentStickySelected[rID][c] != NULL) {
-          pd->sprite->setVisible(m_contentStickySelected[rID][c], 1);
-          pd->sprite->moveTo(m_contentStickySelected[rID][c], UISTARTX + c*2*TILE_PIX, UISTARTY + r*2*TILE_PIX);
+
+  pd->system->logToConsole("rid %i c %i sprite %i", rID, c, (int)m_contentStickySelected[rID][c]);
+
+          // TODO this started to crash?
+          //pd->sprite->setVisible(m_contentStickySelected[rID][c], 1);
+          //pd->sprite->moveTo(m_contentStickySelected[rID][c], UISTARTX + c*2*TILE_PIX, UISTARTY + r*2*TILE_PIX);
         }
       }
     }

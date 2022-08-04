@@ -118,8 +118,7 @@ void specialUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom)
     case kSellBox:; return sellBoxUpdateFn(_building);
     case kExportBox:; return exportUpdateFn(_building, _tick);
     case kImportBox:; return importUpdateFn(_building, _tick);
-    case kShop:; case kWarp:; return;
-    case kNSpecialSubTypes:; return;
+    default: return;
   }
 }
 

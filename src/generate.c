@@ -152,8 +152,6 @@ void getPathSprite(struct Location_t* loc, uint16_t* _outSprite, LCDBitmapFlip* 
     else if (!N) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(15 , 19); }
     else if (!S) { *_outFlip = kBitmapFlippedY;  *_outSprite = SPRITE16_ID(15 , 19); }
   }
-
-  //pd->system->logToConsole("result %i %i %i %i, %i, %i", N, E, S, W, *_outSprite, *_outFlip);
 }
 
 void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
@@ -249,6 +247,14 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
         pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - off16_x, building->m_pix_y - off16_y, flip ? kBitmapFlippedX : kBitmapUnflipped);
         pd->graphics->setDrawMode(kDrawModeCopy);
       }
+      //
+      if (building->m_type == kUtility && building->m_subType.utility == kSign) {
+        pd->graphics->drawBitmap(getSprite16(8, 19, 1), building->m_pix_x - off16_x, building->m_pix_y - off16_y - TILE_PIX, kBitmapUnflipped);
+        if (building->m_mode.mode16) {
+          pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[building->m_mode.mode16].UIIcon, 1 ), building->m_pix_x - off16_x, building->m_pix_y - off16_y - TILE_PIX/4, kBitmapUnflipped);
+        }
+      }
+
     }
   }
 
