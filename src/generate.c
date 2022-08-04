@@ -142,16 +142,18 @@ void getPathSprite(struct Location_t* loc, uint16_t* _outSprite, LCDBitmapFlip* 
   } else if (N + E + S + W == 2) {
     if      (N && S) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(11 , 19); }
     else if (E && W) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(11 , 18); }
-    else if (E && S) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(12 , 18); }
-    else if (S && W) { *_outFlip = kBitmapFlippedX;  *_outSprite = SPRITE16_ID(12 , 18); }
-    else if (W && N) { *_outFlip = kBitmapFlippedXY; *_outSprite = SPRITE16_ID(12 , 18); }
-    else if (N && E) { *_outFlip = kBitmapFlippedY;  *_outSprite = SPRITE16_ID(12 , 18); }
+    else if (E && S) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(12 , 19); }
+    else if (S && W) { *_outFlip = kBitmapFlippedX;  *_outSprite = SPRITE16_ID(12 , 19); }
+    else if (W && N) { *_outFlip = kBitmapFlippedXY; *_outSprite = SPRITE16_ID(12 , 19); }
+    else if (N && E) { *_outFlip = kBitmapFlippedY;  *_outSprite = SPRITE16_ID(12 , 19); }
   } else if (N + E + S + W == 3) {
     if      (!W) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(14 , 19); }
     else if (!E) { *_outFlip = kBitmapFlippedX;  *_outSprite = SPRITE16_ID(14 , 19); }
-    else if (!N) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(15 , 18); }
-    else if (!S) { *_outFlip = kBitmapFlippedY;  *_outSprite = SPRITE16_ID(15 , 18); }
+    else if (!N) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(15 , 19); }
+    else if (!S) { *_outFlip = kBitmapFlippedY;  *_outSprite = SPRITE16_ID(15 , 19); }
   }
+
+  //pd->system->logToConsole("result %i %i %i %i, %i, %i", N, E, S, W, *_outSprite, *_outFlip);
 }
 
 void renderChunkBackgroundImage(struct Chunk_t* _chunk) {

@@ -340,6 +340,11 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     wideRedraw = true;
   }
 
+    if (_type == kUtility && _subType.utility == kPath) {
+      wideRedraw = true;
+    }
+
+
   // The Special objects get added during gen - don't redraw for these
   if (_type != kSpecial) {
 
