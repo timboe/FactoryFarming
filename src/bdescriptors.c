@@ -21,17 +21,19 @@ const struct PlantDescriptor_t PDesc[] = {
   {.subType = kSunflowerPlant, .unlock = 3, .price = 0, .sprite = SID(15, 8), .time = 50, .wetness = kDry, .soil = kChalkyGround, .out = kSunflower},
   {.subType = kAppleTree, .unlock = 36, .price = 100, .sprite = SID(8, 8), .time = 50, .wetness = kMoist, .soil = kPeatyGround, .out = kApple},
   {.subType = kCornPlant, .unlock = 72, .price = 1, .sprite = SID(2, 4), .time = 50, .wetness = kMoist, .soil = kChalkyGround, .out = kCorn},
-  {.subType = kSeaweedPlant, .unlock = 72, .price = 1, .sprite = SID(2, 4), .time = 50, .wetness = kMoist, .soil = kLake, .out = kSeaweed},
+  {.subType = kSeaweedPlant, .unlock = 72, .price = 1, .sprite = SID(2, 4), .time = 50, .wetness = kWet, .soil = kLake, .out = kSeaweed},
   {.subType = kWheatPlant, .unlock = 37, .price = 100, .sprite = SID(11, 8), .time = 50, .wetness = kDry, .soil = kSiltyGround, .out = kWheat},
   {.subType = kCactusPlant, .unlock = 37, .price = 1, .sprite = SID(2, 4), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kLime},
   {.subType = kLimeTree, .unlock = 37, .price = 1, .sprite = SID(2, 4), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kLime},
   {.subType = kStrawberryPlant, .unlock = 34, .price = 1, .sprite = SID(2, 4), .time = 50, .wetness = kMoist, .soil = kClayGround, .out = kStrawberry},
   {.subType = kHempPlant, .unlock = 37, .price = 1, .sprite = SID(2, 4), .time = 50, .wetness = kMoist, .soil = kClayGround, .out = kHemp},
   {.subType = kCoffeePlant, .unlock = 37, .price = 1, .sprite = SID(2, 4), .time = 50, .wetness = kMoist, .soil = kLoamyGround, .out = kCoffeeBean},
+  {.subType = kCocoPlant, .unlock = 37, .price = 1, .sprite = SID(2, 4), .time = 50, .wetness = kMoist, .soil = kLoamyGround, .out = kCocoBean},
+  {.subType = kSeaCucumberPlant, .unlock = 37, .price = 1, .sprite = SID(2, 4), .time = 50, .wetness = kWet, .soil = kOcean, .out = kSeaCucumber},
 };
 
 const struct UtilityDescriptor_t UDesc[] = {
-  {.subType = kPath, .unlock = 38, .price = 100, .UIIcon = SID(13,19), .sprite = SID(0,0)},
+  {.subType = kPath, .unlock = 38, .price = 100, .UIIcon = SID(9,19), .sprite = SID(0,0)},
   {.subType = kSign, .unlock = 38, .price = 100, .UIIcon = SID(9,15), .sprite = SID(7,19)},
   {.subType = kBin, .unlock = 38, .price = 100, .UIIcon = SID(2,15), .sprite = SID(14,14)},
   {.subType = kWell, .unlock = 39, .price = 1000, .UIIcon = SID(0,15), .sprite = SID(12,14)},
@@ -39,6 +41,8 @@ const struct UtilityDescriptor_t UDesc[] = {
   {.subType = kBuffferBox, .unlock = 40, .price = 1, .UIIcon = SID(4,15), .sprite = SID(4,15)},
   {.subType = kConveyorGrease, .unlock = 41, .price = 100, .UIIcon = SID(1,15), .sprite = SID(1,15)},
   {.subType = kLandfill, .unlock = 665, .price = 100, .UIIcon = SID(3,15), .sprite = SID(0,3)},
+  {.subType = kRetirement, .unlock = 665, .price = 100, .UIIcon = SID(10,15), .sprite = BID(4,1)},
+  {.subType = kFence, .unlock = 665, .price = 100, .UIIcon = SID(9,22), .sprite = BID(0,0)},
 };
 
 const struct ExtractorDescriptor_t EDesc[] = {

@@ -96,8 +96,17 @@ const char* getNewText() {
       case kCarrotPlant: return "Plant to grow Carrots";
       case kSunflowerPlant: return "Plant to harvest Sunflowers";
       case kPotatoPlant: return "Plant to grow Potatoes";
-      case kAppleTree: return  "Plant to grow Apples";
+      case kAppleTree: return "Plant to grow Apples";
+      case kCornPlant: return "Plant to grow Corn";
+      case kSeaweedPlant: return  "Seaweed grows in Lakes";
       case kWheatPlant: return "Plant to grow Wheat";
+      case kCactusPlant: return "Plant to grow Cactus";
+      case kLimeTree: return "Plant to grow Limes";
+      case kStrawberryPlant:  return "Plant to grow Strawberries";  
+      case kHempPlant: return "Plant to grow Hemp Fibers";
+      case kCoffeePlant: return "Plant to grow Coffee Beans";
+      case kCocoPlant: return "Plant to grow Coco Beans";
+      case kSeaCucumberPlant: return "Plant in the Ocean to grow Sea Cucumbers";
       //case kP4:; case kP5:; case kP6:; case kP7:; case kP8:; case kP9:; case kP10:; case kP11:; case kP12:; return "Placeholder";
       case kNPlantSubTypes: return "";
     }
@@ -110,6 +119,9 @@ const char* getNewText() {
       case kBuffferBox: return "Like the Storage Box, but also self-empties";
       case kConveyorGrease: return "Upgrades Conveyor speed from x1 to x2";
       case kLandfill: return "Fills in water. Can built on, but not planted on.";
+      case kRetirement: return "A relaxing space to enjoy your amassed wealth.";
+      case kFence: return "A charming wooden fence.";
+
       case kNUtilitySubTypes: return "";
     }
     case kUICatExtractor: switch (m_nextSubType.extractor) {
@@ -118,6 +130,7 @@ const char* getNewText() {
       case kChalkQuarry: return "Must be built on Chalky Soil. Produces Chalk";
       case kSaltMine: return "Must be built on Peaty Soil. Produces Salt";
       case kCropHarvesterLarge: return "Collects Cargo, can hold three different types";
+      case kCO2Extractor: return "Liquefies Carbon Dioxide out of the air.";
       case kNExtractorSubTypes: return "";
     }
     case kUICatFactory: switch (m_nextSubType.factory) {

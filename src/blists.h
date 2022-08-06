@@ -19,13 +19,15 @@ enum kPlantSubType{
   kSunflowerPlant, // Chalky
   kAppleTree, // Peaty
   kCornPlant, // Chalky
-  kSeaweedPlant, // Water
+  kSeaweedPlant, // Lake
   kWheatPlant, // Silty
   kCactusPlant, // Desert
   kLimeTree, // Desert
   kStrawberryPlant, // Clay - Need to do more with this
   kHempPlant, // Clay 
   kCoffeePlant, // Loamy. Need another loamy... - Need to do more with this
+  kCocoPlant, // Loamy
+  kSeaCucumberPlant, // Ocean
   //kP0, kP1, kP2, kP3, kP4, kP5, kP6, kP7, kP8, kP9, kP10, kP11, kP12, kP13, kP14, kP15, 
   kNPlantSubTypes
 };
@@ -39,6 +41,8 @@ enum kUtilitySubType{
   kBuffferBox, 
   kConveyorGrease, 
   kLandfill, 
+  kRetirement,
+  kFence,
   //kU0, kU1, kU2, kU3, kU4, kU5, kU6, kU7, kU8, kU9, kU10, kU11, kU12, kU13, kU14, kU15,
   kNUtilitySubTypes
 };

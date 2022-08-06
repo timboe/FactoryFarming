@@ -38,12 +38,14 @@ float pointDist(int32_t _x, int32_t _y, int32_t _x1, int32_t _y1, int32_t _x2, i
 
 void getPathSprite(struct Location_t* loc, uint16_t* _outSprite, LCDBitmapFlip* _outFlip);
 
+void getFenceSprite(struct Location_t* loc, uint16_t* _outSprite, LCDBitmapFlip* _outFlip);
+
 void doSea(void);
 
 /// ///
 
 enum kGroundType getWorldGround(uint8_t _slotNumber, uint8_t _groundCounter) {
-  if (_slotNumber == kEmptyWorld) return kLoamyGround;
+  if (_slotNumber == kTranquilWorld) return kLoamyGround;
   else if (_slotNumber == kWaterWorld) return kClayGround;
   return (_slotNumber + _groundCounter) % kPavedGround; 
 }
@@ -154,6 +156,43 @@ void getPathSprite(struct Location_t* loc, uint16_t* _outSprite, LCDBitmapFlip* 
   }
 }
 
+void getFenceSprite(struct Location_t* loc, uint16_t* _outSprite, LCDBitmapFlip* _outFlip) {
+  struct Location_t* above;
+  struct Location_t* below;
+  struct Location_t* left;
+  struct Location_t* right;
+  getBuildingNeighbors(loc->m_building, 1, &above, &below, &left, &right);
+  const uint8_t N = (above->m_building && above->m_building->m_type == kUtility && above->m_building->m_subType.utility == kFence);
+  const uint8_t E = (right->m_building && right->m_building->m_type == kUtility && right->m_building->m_subType.utility == kFence);
+  const uint8_t S = (below->m_building && below->m_building->m_type == kUtility && below->m_building->m_subType.utility == kFence);
+  const uint8_t W = (left->m_building  && left->m_building->m_type  == kUtility && left->m_building->m_subType.utility  == kFence);
+  if (N + E + S + W == 4) {
+    *_outSprite = SPRITE16_ID(13 , 19);
+    *_outFlip = kBitmapUnflipped;
+  } else if (N + E + S + W == 0) {
+    *_outSprite = SPRITE16_ID(9 , 19);
+    *_outFlip = kBitmapUnflipped;
+  } else if (N + E + S + W == 1) {
+    if      (N) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(9 ,  18); }
+    else if (S) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(10 , 19); }
+    else if (W) { *_outFlip = kBitmapFlippedX;  *_outSprite = SPRITE16_ID(10 , 18); }
+    else if (E) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(10 , 18); }
+  } else if (N + E + S + W == 2) {
+    if      (N && S) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(11 , 19); }
+    else if (E && W) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(11 , 18); }
+    else if (E && S) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(12 , 19); }
+    else if (S && W) { *_outFlip = kBitmapFlippedX;  *_outSprite = SPRITE16_ID(12 , 19); }
+    else if (W && N) { *_outFlip = kBitmapFlippedX;  *_outSprite = SPRITE16_ID(12 , 18); }
+    else if (N && E) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(12 , 18); }
+  } else if (N + E + S + W == 3) {
+    if      (!W) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(14 , 19); }
+    else if (!E) { *_outFlip = kBitmapFlippedX;  *_outSprite = SPRITE16_ID(14 , 19); }
+    else if (!N) { *_outFlip = kBitmapUnflipped; *_outSprite = SPRITE16_ID(15 , 19); }
+    else if (!S) { *_outFlip = kBitmapUnflipped;  *_outSprite = SPRITE16_ID(15 , 18); }
+  }
+  *_outSprite += SHEET16_SIZE_X * 3;
+}
+
 void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   pd->graphics->pushContext(_chunk->m_bkgImage[1]);
   pd->graphics->setDrawMode(kDrawModeCopy);
@@ -220,7 +259,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   for (uint32_t i = 0; i < _chunk->m_nBuildingsRender; ++i) {
     struct Building_t* building = _chunk->m_buildingsRender[i];
     if (building->m_type != kNoBuilding && building->m_image[1]) {
-      if (building->m_type >= kExtractor) {
+      if (isLargeBuilding(building->m_type, building->m_subType)) {
         const bool invert = (building->m_type == kExtractor && building->m_subType.extractor == kCropHarvesterLarge);
         const bool flip = (building->m_type == kSpecial && building->m_subType.special == kImportBox && building->m_dir != SN);
         pd->graphics->setDrawMode(invert ? kDrawModeInverted : kDrawModeCopy);
@@ -234,10 +273,11 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
           pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ EDesc[building->m_subType.extractor].out ].UIIcon, 1), 
             building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
         }
-      } else if (building->m_type == kUtility && building->m_subType.utility == kPath) {
+      } else if (building->m_type == kUtility && (building->m_subType.utility == kPath || building->m_subType.utility == kFence)) {
         LCDBitmapFlip flip = kBitmapUnflipped;
         uint16_t sprite = 0;
-        getPathSprite(building->m_location, &sprite, &flip);
+        if (building->m_subType.utility == kPath) getPathSprite(building->m_location, &sprite, &flip);
+        else                                      getFenceSprite(building->m_location, &sprite, &flip);
         pd->graphics->drawBitmap(getSprite16_byidx(sprite, 1), building->m_pix_x - off16_x, building->m_pix_y - off16_y, flip);
       } else {
         // Fast conveyors get drawn inverted. Stored[0] is used to hold the speed
@@ -268,7 +308,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
 
       for (uint32_t i = 0; i < otherChunk->m_nBuildingsRender; ++i) {
         struct Building_t* building = otherChunk->m_buildingsRender[i];
-        if (building->m_type >= kExtractor && building->m_image[1]) {
+        if (isLargeBuilding(building->m_type, building->m_subType) && building->m_image[1]) {
           const bool invert = (building->m_type == kExtractor && building->m_subType.extractor == kCropHarvesterLarge);
           pd->graphics->setDrawMode(invert ? kDrawModeInverted : kDrawModeCopy);
           pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - chunkOffX, building->m_pix_y - chunkOffY, kBitmapUnflipped);
@@ -428,6 +468,7 @@ const char* toStringSoil(enum kGroundType _type) {
     case kObstructedGround: return "Obstructed Ground";
     case kLake: return "Lake";
     case kRiver: return "River";
+    case kOcean: return "Ocean";
     case kNGroundTypes: return "UNKNOWN Soil";
   }
   return "UNKNOWN Soil";
@@ -440,9 +481,10 @@ const char* getWorldName(enum kWorldType _type, bool _mask) {
     case kPeatWorld: return _mask ? "??? ????? ??????" : "The Boggy Hollow"; // Main: Peat
     case kSandWorld: return _mask ? "??? ??????" : "The Desert"; // Main: Sand
     case kClayWorld: return _mask ? "??? ???????" :"The Estuary"; // Main: Clay
-    case kLoamWoarld: return _mask ? "??? ??????? ?????" :"The Fertile Hills"; // Main: Loaamy
-    case kWaterWorld: return _mask ? "??? ??? ?????" :"The Mud Flats"; // Special, Main: Water
-    case kEmptyWorld: return _mask ? "??? ??????" :"The Plains"; // Special, all Silty - Empty
+    case kLoamWoarld: return _mask ? "??? ??????? ?????" :"The Fertile Hills"; // Main: Loamy
+    case kWaterWorld: return _mask ? "??? ????? ??? ?????" :"The Tidal Mud Flats"; // Special, Main: Water
+    case kTranquilWorld: return _mask ? "??? ???????? ??????" :"The Tranquil Plains"; // Special, all Loamy - Empty
+    case kNWorldTypes: return "UNKNOWN World";
   }
   return "UNKNOWN World";
 }
@@ -859,7 +901,7 @@ void generate(uint32_t _actionProgress) {
 
   } else if (_actionProgress == 4) {
 
-    if (slot != kEmptyWorld) {
+    if (slot != kTranquilWorld) {
       addBiome(TOT_TILES_X/2, 0, FLOOR_VARIETIES*getWorldGround(slot, 1));
       addBiome(0, TOT_TILES_Y/2, FLOOR_VARIETIES*getWorldGround(slot, 2));
     }
@@ -869,13 +911,13 @@ void generate(uint32_t _actionProgress) {
     if (slot == kWaterWorld) {
       doSea();
     }
-    if (slot != kEmptyWorld && slot != kSandWorld) {
+    if (slot != kTranquilWorld && slot != kSandWorld) {
       doLakesAndRivers(slot);
     }
 
   } else if (_actionProgress == 6) {
 
-    if (slot != kEmptyWorld) {
+    if (slot != kTranquilWorld) {
       doClutterObstacles();
     }
 
@@ -911,10 +953,110 @@ void generateTitle() {
 
   for (uint16_t x = 0; x < TILES_PER_CHUNK_X*3; ++x) {
     for (uint16_t y = 0; y < TILES_PER_CHUNK_Y*3; ++y) {
-      getTile(x,y)->m_tile = rand() % FLOOR_VARIETIES;
+      if (x > 15 || y < 2) {
+        getTile(x,y)->m_tile = rand() % FLOOR_VARIETIES + (FLOOR_VARIETIES * kPeatyGround);
+      } else if (y > 7) {
+        getTile(x,y)->m_tile = rand() % FLOOR_VARIETIES + (FLOOR_VARIETIES * kChalkyGround);
+      } else {
+        getTile(x,y)->m_tile = rand() % FLOOR_VARIETIES;
+      }
     } 
   }
 
+
+  // crisps
+  newBuilding(getLocation(8,7), NS, kFactory, (union kSubType) {.factory = kCrispsFac} ); // bot left
+  newBuilding(getLocation(12,6), SN, kFactory, (union kSubType) {.factory = kCrispsFac} ); // top right
+
+  // crisp out
+  for (int32_t y = 5; y >=0; --y) newBuilding(getLocation(12,y), SN, kConveyor, (union kSubType) {.conveyor = kBelt} );
+  for (int32_t y = 9; y < TILES_PER_CHUNK_Y*2 + 1; ++y) newBuilding(getLocation(8,y), NS, kConveyor, (union kSubType) {.conveyor = kBelt} );
+
+  // poto in 
+  for (int32_t x = 14; x < 21; ++x) newBuilding(getLocation(x,5), EW, kConveyor, (union kSubType) {.conveyor = kBelt} );
+  for (int32_t x = 10; x < 21; ++x) newBuilding(getLocation(x,8), EW, kConveyor, (union kSubType) {.conveyor = kBelt} );
+
+  for (int32_t y = 3; y < 5; ++y) newBuilding(getLocation(20,y), NS, kConveyor, (union kSubType) {.conveyor = kBelt} );
+  for (int32_t y = 9; y < 10; ++y) newBuilding(getLocation(20,y), SN, kConveyor, (union kSubType) {.conveyor = kBelt} );
+
+  // poto ext
+  newBuilding(getLocation(20,1), NS, kExtractor, (union kSubType) {.factory = kCropHarvesterSmall} ); // top
+  newBuilding(getLocation(20,11), SN, kExtractor, (union kSubType) {.factory = kCropHarvesterSmall} ); // bot
+  getLocation(20,1)->m_building->m_progress = rand() % (TICKS_PER_SEC * 2);
+  getLocation(20,11)->m_building->m_progress = rand() % (TICKS_PER_SEC * 2);
+
+  newBuilding(getLocation(21,7), SN, kUtility, (union kSubType) {.utility = kWell} );
+
+  newBuilding(getLocation(16,11), SN, kUtility, (union kSubType) {.utility = kSign} );
+  getLocation(16,11)->m_building->m_mode.mode16 = kPotato;
+
+  newBuilding(getLocation(24,2), SN, kUtility, (union kSubType) {.utility = kSign} );
+  getLocation(24,2)->m_building->m_mode.mode16 = kPotato;
+
+  // plant poto's
+  for (int32_t x = 17; x < 24; ++x) {
+    for (int32_t y = 9; y < 15; ++y) newBuilding(getLocation(x,y), SN, kPlant, (union kSubType) {.plant = kPotatoPlant} );
+  }
+  for (int32_t x = 17; x < 24; ++x) {
+    for (int32_t y = 0; y < 5; ++y) newBuilding(getLocation(x,y), SN, kPlant, (union kSubType) {.plant = kPotatoPlant} );
+  }
+
+  // paths
+  for (int32_t x = 13; x < 25; ++x) newBuilding(getLocation(x,6), EW, kUtility, (union kSubType) {.utility = kPath} );
+  for (int32_t y = 3; y < 16; ++y) newBuilding(getLocation(24,y), EW, kUtility, (union kSubType) {.utility = kPath} );
+  newBuilding(getLocation(25,3), EW, kUtility, (union kSubType) {.utility = kPath} );
+  for (int32_t y = -1; y < 5; ++y) newBuilding(getLocation(13,y), EW, kUtility, (union kSubType) {.utility = kPath} );
+  newBuilding(getLocation(14,4), EW, kUtility, (union kSubType) {.utility = kPath} );
+
+
+  // sunny ext
+  newBuilding(getLocation(12,11), EW, kExtractor, (union kSubType) {.factory = kCropHarvesterSmall} ); // right
+  newBuilding(getLocation(1,10), SN, kExtractor, (union kSubType) {.factory = kCropHarvesterSmall} ); // left
+  getLocation(12,11)->m_building->m_progress = rand() % (TICKS_PER_SEC * 2);
+  getLocation(1,10)->m_building->m_progress = rand() % (TICKS_PER_SEC * 2);
+
+  // conv 
+  newBuilding(getLocation(10,11), EW, kConveyor, (union kSubType) {.conveyor = kBelt} );
+  newBuilding(getLocation(9,11), EW, kConveyor, (union kSubType) {.conveyor = kTunnelIn} );
+
+  for (int32_t y = 6; y < 10; ++y) newBuilding(getLocation(5,y), SN, kConveyor, (union kSubType) {.conveyor = kBelt} );
+  for (int32_t x = 4; x < 11; ++x) newBuilding(getLocation(x,5), WE, kConveyor, (union kSubType) {.conveyor = kBelt} );
+  newBuilding(getLocation(8,5), WE, kConveyor, (union kSubType) {.conveyor = kSplitL} );
+  for (int32_t y = 7; y < 9; ++y) newBuilding(getLocation(1,y), SN, kConveyor, (union kSubType) {.conveyor = kBelt} );
+
+  // oil fac
+  newBuilding(getLocation(5,11), SN, kFactory, (union kSubType) {.factory = kVegOilFac} ); // bot
+  newBuilding(getLocation(2,5), WE, kFactory, (union kSubType) {.factory = kVegOilFac} ); // top 
+
+  // plant sunny's
+  for (int32_t x = 0; x < 5; ++x) {
+    for (int32_t y = 7; y < 14; ++y) newBuilding(getLocation(x,y), SN, kPlant, (union kSubType) {.plant = kSunflowerPlant} );
+  }
+  // plant sunny's
+  for (int32_t x = 9; x < 16; ++x) {
+    for (int32_t y = 9; y < 15; ++y) newBuilding(getLocation(x,y), SN, kPlant, (union kSubType) {.plant = kSunflowerPlant} );
+  }
+
+  // signs
+  newBuilding(getLocation(0,6), SN, kUtility, (union kSubType) {.utility = kSign} );
+  getLocation(0,6)->m_building->m_mode.mode16 = kSunflower;
+
+  newBuilding(getLocation(16,13), SN, kUtility, (union kSubType) {.utility = kSign} );
+  getLocation(16,13)->m_building->m_mode.mode16 = kSunflower;
+
+  // Salt
+  newBuilding(getLocation(2,1), WE, kExtractor, (union kSubType) {.factory = kSaltMine} );
+
+  for (int32_t x = 4; x < 10; ++x) newBuilding(getLocation(x,1), WE, kConveyor, (union kSubType) {.conveyor = kBelt} );
+  for (int32_t y = 1; y < 4; ++y) newBuilding(getLocation(10,y), NS, kConveyor, (union kSubType) {.conveyor = kBelt} );
+  newBuilding(getLocation(10,4), NS, kConveyor, (union kSubType) {.conveyor = kTunnelIn} );
+  newBuilding(getLocation(10,7), NS, kConveyor, (union kSubType) {.conveyor = kSplitI} );
+
+  newBuilding(getLocation(12,-1), SN, kUtility, (union kSubType) {.utility = kBin} );
+  newBuilding(getLocation(8,15), SN, kUtility, (union kSubType) {.utility = kBin} );
+
+
+  growAtAll();
   doWetness(/*for titles = */ true);
 
 }

@@ -55,6 +55,8 @@ const struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kPackaging, .price = 1, .UIIcon = SID(2,4)},
   {.subType = kCateringKit, .price = 1, .UIIcon = SID(2,4)},
   {.subType = kDrinksKit, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kCocoBean, .price = 1, .UIIcon = SID(2,4)},
+  {.subType = kSeaCucumber, .price = 1, .UIIcon = SID(2,4)},
 };
 
 const int32_t SIZE_CARGO = TOT_CARGO_OR_BUILDINGS * sizeof(struct Cargo_t);
@@ -103,7 +105,7 @@ const char* toStringCargoByType(enum kCargoType _type) {
     case kStrawberry: return "Strawberry";
     case kIceCream: return "Ice Cream";
     case kEggs: return "Eggs";
-    case kHemp: return "Hemp";
+    case kHemp: return "Hemp Fibers";
     case kProtein: return "Protein Powder";
     case kGelatin: return "Gelatin";
     case kMeatPie: return "Meat Pie";
@@ -121,6 +123,8 @@ const char* toStringCargoByType(enum kCargoType _type) {
     case kPackaging: return "Packaging";
     case kCateringKit: return "Catering Kit";
     case kDrinksKit: return "Drinks Kit";
+    case kCocoBean: return "Coco Bean";
+    case kSeaCucumber: return "Sea Cucumber";
     //case kCa0: case kCa1: case kCa2: case kCa3: case kCa4: case kCa5: case kCa6: case kCa7: 
     //case kCa8: case kCa9: case kCa10: case kCa11: case kCa12: case kCa13: case kCa14: case kCa15: 
     case kNCargoType: return "CARGO???";

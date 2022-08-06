@@ -49,6 +49,8 @@ enum kCargoType {
   kPackaging,
   kCateringKit,
   kDrinksKit,
+  kCocoBean,
+  kSeaCucumber,
   //kCa0, kCa1, kCa2, kCa3, kCa4, kCa5, kCa6, kCa7, kCa8, kCa9, kCa10, kCa11, kCa12, kCa13, kCa14, kCa15, 
   kNCargoType
 };

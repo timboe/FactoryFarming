@@ -13,3 +13,5 @@ bool canBePlacedUtility(struct Location_t* _loc, union kSubType _subType);
 void drawUIInspectUtility(struct Building_t* _building);
 
 bool doPlaceLandfill(struct Location_t* _loc);
+
+bool doPlaceRetirement(struct Location_t* _loc);

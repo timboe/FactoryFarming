@@ -84,6 +84,7 @@ void doPlace() {
     case kUICatUtility: 
       if (selectedID == kConveyorGrease) placed = doConveyorUpgrade(placeLocation);
       else if (selectedID == kLandfill) placed = doPlaceLandfill(placeLocation);
+      else if (selectedID == kRetirement) placed = doPlaceRetirement(placeLocation);
       else placed = newBuilding(placeLocation, getCursorRotation(), kUtility, (union kSubType) {.utility = selectedID} );
       break;
     case kUICatCargo: 
@@ -312,6 +313,7 @@ void populateInfoInventory() {
   }
   if (selectedCat != kUICatTool) snprintf(textB, 128, "Inventory: %i", selectedOwned);
   snprintf(textC, 2, " ");
+  int32_t cOff = 0;
   if (selectedCat == kUICatCargo) {
     snprintf(textC, 128, "Value:      %i", (int)selectedPrice);
   } else if (selectedCat == kUICatExtractor) {
@@ -320,10 +322,11 @@ void populateInfoInventory() {
     else if (selectedID == kSaltMine) snprintf(textC, 128, "Build on %s", toStringSoil(kPeatyGround));
   } else if (selectedCat == kUICatUtility) {
     if (selectedID == kLandfill) snprintf(textC, 128, "Cannot be removed");
+    if (selectedID == kRetirement) { snprintf(textC, 128, "Build on Tranquil Plains"); cOff = TILE_PIX; }
   }
   pd->graphics->drawText(textA, 128, kASCIIEncoding, 1*TILE_PIX, +2);
   pd->graphics->drawText(textB, 128, kASCIIEncoding, 1*TILE_PIX, TILE_PIX - 2);
-  pd->graphics->drawText(textC, 128, kASCIIEncoding, 9*TILE_PIX, TILE_PIX - 2);
+  pd->graphics->drawText(textC, 128, kASCIIEncoding, 9*TILE_PIX - cOff, TILE_PIX - 2);
   pd->graphics->setDrawMode(kDrawModeCopy);
   if (selectedCat == kUICatCargo) pd->graphics->drawBitmap(getSprite16(2, 16, 1), 11*TILE_PIX + TILE_PIX/2, TILE_PIX - 2, kBitmapUnflipped);
   pd->graphics->popContext();

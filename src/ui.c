@@ -263,6 +263,9 @@ void updateUITitles(int _fc) {
         i*TILE_PIX*7 + (7*TILE_PIX)/2 + (i+1)*TILE_PIX, 
         DEVICE_PIX_Y + TILE_PIX/2 - (UI_TITLE_OFFSET - m_UITitleOffset)*2);
     }
+  } else {
+    const int32_t offset = round( TILE_PIX/2 * fabs( sin( 0.1f * _fc ) ) );
+    pd->sprite->moveTo(m_UISpriteSplash, DEVICE_PIX_X/2, DEVICE_PIX_Y/2 - offset - (3*TILE_PIX)/4 );
   }
 }
 
@@ -369,13 +372,22 @@ void updateBlueprint() {
       case kUICatConv:; canPlace = canBePlacedConveyor(pl, selectedRot, (union kSubType) {.conveyor = selectedID});
                         pd->sprite->setImage(bp, getSprite16_byidx( CDesc[selectedID].UIIcon + selectedRot, zoom), kBitmapUnflipped); break;
       case kUICatUtility:; canPlace = canBePlacedUtility(pl, (union kSubType) {.utility = selectedID});
-                           pd->sprite->setImage(bp, getSprite16_byidx( UDesc[selectedID].UIIcon + selectedRot, zoom), kBitmapUnflipped); break;
+                           if (selectedID == kRetirement) pd->sprite->setImage(bp, getSprite48_byidx( UDesc[selectedID].sprite, zoom), kBitmapUnflipped);
+                           else pd->sprite->setImage(bp, getSprite16_byidx( UDesc[selectedID].UIIcon + selectedRot, zoom), kBitmapUnflipped);
+                           break;
       case kUICatCargo:; canPlace = canBePlacedCargo(pl);
                          pd->sprite->setImage(bp, getSprite16_byidx( CargoDesc[selectedID].UIIcon, zoom), kBitmapUnflipped); break;
       default: break;
     }
-    if (!canPlace) pd->sprite->setImage(bp, getSprite16(1, 16, zoom), kBitmapUnflipped);
+
+    if (!canPlace && selectedCat == kUICatUtility && selectedID == kRetirement) {
+      pd->sprite->setImage(bp, getRetirementNoBitmap(zoom), kBitmapUnflipped);
+    } else if (!canPlace) {
+      pd->sprite->setImage(bp, getSprite16(1, 16, zoom), kBitmapUnflipped);
+    }
+
   } else if (gm == kPlantMode) { // Of crops
+
     bool canPlace;
     pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
     if (canBePlacedPlant(pl)) {
@@ -386,7 +398,9 @@ void updateBlueprint() {
     } else {
       pd->sprite->setImage(bp, getSprite16(1, 16, zoom), kBitmapUnflipped);
     }
+
   } else if (gm == kBuildMode) { // Of factories and harvesters
+
     if (selectedCat == kUICatExtractor) {
       switch (selectedID) {
         case kCropHarvesterLarge: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap9x9[zoom], kBitmapUnflipped);
@@ -406,9 +420,12 @@ void updateBlueprint() {
       default: break;
     }
     if (!canPlace) pd->sprite->setImage(bp, getSprite48(1, 2, zoom), kBitmapUnflipped);
+
   } else { // Clear blueprint
+
     pd->sprite->setImage(bp, getSprite16_byidx(0, zoom), kBitmapUnflipped);
     pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped); 
+
   }
 }
 
@@ -1032,7 +1049,7 @@ void drawUIMain() {
         pd->sprite->moveTo(m_contentSprite[rID][c], UISTARTX + c*2*TILE_PIX, UISTARTY + r*2*TILE_PIX);
         if (m_contentStickySelected[rID][c] != NULL) {
 
-  pd->system->logToConsole("rid %i c %i sprite %i", rID, c, (int)m_contentStickySelected[rID][c]);
+          //pd->system->logToConsole("rid %i c %i sprite %i", rID, c, (int)m_contentStickySelected[rID][c]);
 
           // TODO this started to crash?
           //pd->sprite->setVisible(m_contentStickySelected[rID][c], 1);
@@ -1194,10 +1211,10 @@ const char* newBannerText(enum kUICat _c) {
 
 const char* getWorldLetter(int8_t _i) {
   switch(_i) {
-    case 0: return "a";
-    case 1: return "b";
+    case 0: return "1";
+    case 1: return "2";
   }
-  return "c";
+  return "3";
 }
 
 void initiUI() {
@@ -1570,6 +1587,8 @@ void initiUI() {
             pd->graphics->setDrawMode(kDrawModeNXOR);
           }
           
+          // yyy
+
           pd->graphics->drawBitmap(getSprite16_byidx(spriteID + r, 2), 0, 0, kBitmapUnflipped);
           pd->graphics->setDrawMode(kDrawModeCopy);
         }

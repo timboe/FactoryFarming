@@ -41,6 +41,8 @@ LCDBitmap* getTitleSelectedBitmap(void);
 
 LCDBitmap* getMainmenuSelectedBitmap(void);
 
+LCDBitmap* getRetirementNoBitmap(uint8_t _zoom);
+
 // Short-form versions too
 #define SID(X, Y) ((SHEET16_SIZE_X * Y) + X)
 #define SPRITE16_ID(X, Y) ((SHEET16_SIZE_X * Y) + X)

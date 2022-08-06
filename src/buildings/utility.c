@@ -5,12 +5,17 @@
 #include "../generate.h"
 #include "../cargo.h"
 #include "../ui.h"
+#include "../io.h"
 
 void binUpdateFn(struct Building_t* _building);
 
 void storageUpdateFn(struct Building_t* _building);
 
 void bufferUpdateFn(struct Building_t* _building, uint8_t _tick);
+
+void buildingSetupUtility(struct Building_t* _building);
+
+void buildingSetupRetirement(struct Building_t* _building);
 
 /// ///
 
@@ -55,6 +60,53 @@ void utilityUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom)
   }
 }
 
+bool doPlaceRetirement(struct Location_t* _loc) {
+  if (!canBePlacedUtility(_loc, (union kSubType) {.utility = kRetirement})) {
+    return false;
+  }
+
+  // Cottage
+  newBuilding(getLocation(_loc->m_x, _loc->m_y - 1), SN, kUtility, (union kSubType) {.utility = kRetirement} );
+
+  // Path
+  for (int32_t y = _loc->m_y; y < _loc->m_y + 5; ++y) {
+    newBuilding(getLocation(_loc->m_x, y), SN, kUtility, (union kSubType) {.utility = kPath} );
+  }
+
+  // Fence
+  for (int32_t y = _loc->m_y - 4; y < _loc->m_y + 5; ++y) {
+    newBuilding(getLocation(_loc->m_x - 4, y), SN, kUtility, (union kSubType) {.utility = kFence} );
+    newBuilding(getLocation(_loc->m_x + 4, y), SN, kUtility, (union kSubType) {.utility = kFence} );
+  }
+
+  for (int32_t x = _loc->m_x - 4; x < _loc->m_x + 5; ++x) {
+    newBuilding(getLocation(x, _loc->m_y + 4), SN, kUtility, (union kSubType) {.utility = kFence} );
+    newBuilding(getLocation(x, _loc->m_y - 4), SN, kUtility, (union kSubType) {.utility = kFence} );
+  }
+
+  // Garden
+  for (int32_t x = _loc->m_x - 3; x < _loc->m_x - 1; ++x) {
+    for (int32_t y = _loc->m_y + 2; y < _loc->m_y + 5; ++y) {
+      newBuilding(getLocation(x, y), SN, kPlant, (union kSubType) {.plant = kSunflowerPlant} );
+    }
+  }
+
+  // Garden
+  for (int32_t x = _loc->m_x + 2; x < _loc->m_x + 5; ++x) {
+    for (int32_t y = _loc->m_y + 2; y < _loc->m_y + 5; ++y) {
+      newBuilding(getLocation(x, y), SN, kPlant, (union kSubType) {.plant = kSunflowerPlant} );
+    }
+  }
+
+  // Garden
+  for (int32_t y = _loc->m_y - 3; y < _loc->m_y + 1; ++y) {
+    newBuilding(getLocation(_loc->m_x - 3, y), SN, kPlant, (union kSubType) {.plant = kPotatoPlant} );
+    newBuilding(getLocation(_loc->m_x + 3, y), SN, kPlant, (union kSubType) {.plant = kPotatoPlant} );
+  }
+
+  return true;
+}
+
 bool doPlaceLandfill(struct Location_t* _loc) {
   if (!canBePlacedUtility(_loc, (union kSubType) {.utility = kLandfill})) {
     return false;
@@ -68,6 +120,19 @@ bool doPlaceLandfill(struct Location_t* _loc) {
 }
 
 bool canBePlacedUtility(struct Location_t* _loc, union kSubType _subType) {
+
+  if (_subType.utility == kRetirement) {
+    if (getSlot() != kTranquilWorld) return false;
+    for (int32_t x = -4; x < 5; ++x) {
+      for (int32_t y = -4; y < 5; ++y) {
+        struct Tile_t* t = getTile(_loc->m_x + x, _loc->m_y + y);
+        if (t->m_tile >= TOT_FLOOR_TILES_INC_LANDFILL) return false;
+        if (getLocation(_loc->m_x + x, _loc->m_y + y)->m_building != NULL) return false;
+      }
+    }
+    return true;
+  }
+
   if (_subType.utility == kConveyorGrease) return true; // A different system is used to apply this
 
   struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
@@ -103,10 +168,41 @@ void assignNeighborsUtility(struct Building_t* _building) {
 }
 
 void buildingSetupUtility(struct Building_t* _building) {
+  if (_building->m_subType.utility == kRetirement) {
+    return buildingSetupRetirement(_building);
+  }
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     switch (_building->m_subType.utility) {
       case kBuffferBox:; _building->m_image[zoom] = getSprite16_byidx( UDesc[kBuffferBox].sprite + _building->m_dir, zoom); break;
       default: _building->m_image[zoom] = getSprite16_byidx( UDesc[_building->m_subType.utility].sprite, zoom); break;
+    }
+
+    if (_building->m_subType.utility == kFence) {
+      PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
+      if (_building->m_sprite[zoom] == NULL) _building->m_sprite[zoom] = pd->sprite->newSprite();
+      pd->sprite->setCollideRect(_building->m_sprite[zoom], bound);
+      pd->sprite->moveTo(_building->m_sprite[zoom], 
+        (_building->m_pix_x - TILE_PIX/2)*zoom, 
+        (_building->m_pix_y - TILE_PIX/2)*zoom);
+    }
+  }
+}
+
+void buildingSetupRetirement(struct Building_t* _building) {
+  for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+    _building->m_image[zoom] = getSprite48_byidx( UDesc[_building->m_subType.extractor].sprite, zoom); 
+
+    PDRect bound = {.x = (COLLISION_OFFSET_BIG/2)*zoom, .y = (COLLISION_OFFSET_BIG/2)*zoom, .width = (EXTRACTOR_PIX - COLLISION_OFFSET_BIG)*zoom, .height = (EXTRACTOR_PIX - COLLISION_OFFSET_BIG)*zoom};
+    if (_building->m_sprite[zoom] == NULL) _building->m_sprite[zoom] = pd->sprite->newSprite();
+    pd->sprite->setCollideRect(_building->m_sprite[zoom], bound);
+    pd->sprite->moveTo(_building->m_sprite[zoom], 
+      (_building->m_pix_x + _building->m_location->m_pix_off_x - EXTRACTOR_PIX/2)*zoom, 
+      (_building->m_pix_y + _building->m_location->m_pix_off_y - EXTRACTOR_PIX/2)*zoom);
+  }
+
+  for (int32_t x = _building->m_location->m_x - 1; x < _building->m_location->m_x + 2; ++x) {
+    for (int32_t y = _building->m_location->m_y - 1; y < _building->m_location->m_y + 2; ++y) {
+      clearLocation(getLocation(x, y), /*cargo*/ true, /*building*/ false);
     }
   }
 }
@@ -131,7 +227,17 @@ void drawUIInspectUtility(struct Building_t* _building) {
     snprintf(text, 128, "Movement speed is enhanced on the path.");
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
-   } else if (ust == kSign) {
+  } else if (ust == kFence) {
+
+    snprintf(text, 128, "A charming fence.");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
+  } else if (ust == kRetirement) {
+
+    snprintf(text, 128, "Your cozy little retirement cottage.");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  
+  } else if (ust == kSign) {
 
     snprintf(text, 128, "Place a Cargo here to display it on the Sign.");
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);

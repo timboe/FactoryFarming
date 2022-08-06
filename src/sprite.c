@@ -15,6 +15,8 @@ LCDBitmap* m_bitmap18_zoom[ZOOM_LEVELS][SHEET16_SIZE];
 
 LCDBitmap* m_bitmap48_zoom[ZOOM_LEVELS][SHEET48_SIZE];
 
+LCDBitmap* m_retirementNo[ZOOM_LEVELS];
+
 LCDBitmap* m_stickySelected;
 
 LCDBitmap* m_titleSelected;
@@ -143,6 +145,9 @@ LCDBitmap* getConveyorMaster(enum kDir _dir, uint8_t _speed) {
   return NULL;
 }
 
+LCDBitmap* getRetirementNoBitmap(uint8_t _zoom) {
+  return m_retirementNo[_zoom];
+}
 
 LCDBitmap* getStickySelectedBitmap() {
   return m_stickySelected;
@@ -183,6 +188,9 @@ LCDFont* getCooperHewitt12(void) {
 
 void populateResizedSprites() {
   for (uint32_t zoom = 2; zoom < ZOOM_LEVELS; ++zoom) {
+    pd->graphics->pushContext(m_retirementNo[zoom]);
+    pd->graphics->drawScaledBitmap(m_retirementNo[1], 0, 0, zoom, zoom);
+    pd->graphics->popContext();
     for (uint32_t i = 0; i < SHEET16_SIZE; ++i) {
       LCDBitmap* original = pd->graphics->getTableBitmap(m_sheet16, i);
       m_bitmap16_zoom[zoom][i] = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*2, kColorClear);
@@ -217,6 +225,7 @@ void initSprite() {
   m_mainMenuSelected = loadImageAtPath("images/mainmenuSelected");
   m_new = loadImageAtPath("images/new");
   m_splash = loadImageAtPath("images/splash");
+  m_retirementNo[1] = loadImageAtPath("images/cross9x9");
 
   populateResizedSprites();
 

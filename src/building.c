@@ -64,6 +64,8 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kStrawberryPlant: return _inworld ? "Strawberry Plant" : "Strawberry Seeds";
       case kHempPlant: return _inworld ? "Help Plant" : "Hemp Seeds";
       case kCoffeePlant: return _inworld ? "Coffee Plant" : "Coffee Seeds";
+      case kCocoPlant: return _inworld ? "Coco Plant" : "Coco Seeds";
+      case kSeaCucumberPlant: return _inworld ? "Sea Cucumber Plant" : "See Cucumber Seeds";
       //case kP0: case kP1: case kP2: case kP3: case kP4: case kP5: case kP6:
       //case kP7: case kP8: case kP9: case kP10: case kP11: case kP12: case kP13: case kP14: case kP15:  
       case kNPlantSubTypes: return "P_PLACEHOLDER";
@@ -77,6 +79,8 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kBuffferBox: return "Buffer Box";
       case kConveyorGrease: return "Conveyor Grease";
       case kLandfill: return "Landfill";
+      case kRetirement: return "Retirement Cottage";
+      case kFence: return "Fence"; 
       //case kU0: case kU1: case kU2: case kU3: case kU4: case kU5: case kU6:
       //case kU7: case kU8: case kU9: case kU10: case kU11: case kU12: case kU13: case kU14: case kU15: 
       case kNUtilitySubTypes: return "U_PLACEHOLDER";
@@ -189,7 +193,7 @@ void buildingManagerFreeBuilding(struct Building_t* _building) {
 
 void growAtAll() {
   for (uint32_t b = 0; b < TOT_CARGO_OR_BUILDINGS; ++b) {
-    if (m_buildings[b].m_type == kPlant) plantTrySpawnCargo(&m_buildings[b], NEAR_TICK_AMOUNT);
+    if (m_buildings[b].m_type == kPlant) m_buildings[b].m_progress = rand() % (TICKS_PER_SEC * 2);
   }
 }
 
@@ -201,6 +205,10 @@ void getBuildingNeighbors(struct Building_t* _building, int8_t _offset, struct L
   (*_below) = getLocation(locX, locY + _offset);
   (*_left)  = getLocation(locX - _offset, locY);
   (*_right) = getLocation(locX + _offset, locY);
+}
+
+bool isLargeBuilding(enum kBuildingType _type, union kSubType _subType) {
+  return _type >= kExtractor || (_type >= kUtility && _subType.utility == kRetirement);
 }
 
 void assignNeighbors(struct Building_t* _building) {
@@ -244,6 +252,8 @@ bool buildingHasUpdateFunction(enum kBuildingType _type, union kSubType _subType
   if (_type == kUtility && _subType.utility == kWell) return false;
   if (_type == kUtility && _subType.utility == kPath) return false;
   if (_type == kUtility && _subType.utility == kSign) return false;
+  if (_type == kUtility && _subType.utility == kRetirement) return false;
+  if (_type == kUtility && _subType.utility == kFence) return false;
   if (_type == kSpecial && _subType.special == kWarp) return false;
   if (_type == kSpecial && _subType.special == kShop) return false;
   return true;
@@ -285,7 +295,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     }
     _loc->m_building = building;
     _loc->m_notOwned = false;
-    if (_type >= kExtractor) { // Add to neighbors too
+    if (isLargeBuilding(_type, _subType)) { // Add to neighbors too
       for (int32_t x = -1; x < 2; ++x) {
         for (int32_t y = -1; y < 2; ++y) {
           if (!x && !y) continue;
@@ -344,7 +354,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     wideRedraw = true;
   }
 
-    if (_type == kUtility && _subType.utility == kPath) {
+    if (_type == kUtility && (_subType.utility == kPath || _subType.utility == kFence)) {
       wideRedraw = true;
     }
 
@@ -353,7 +363,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   if (_type != kSpecial) {
 
     // Bake into the background
-    if (_type >= kExtractor || wideRedraw) {
+    if (isLargeBuilding(_type, _subType) || wideRedraw) {
       renderChunkBackgroundImageAround(_loc->m_chunk);
     } else {
       renderChunkBackgroundImage(_loc->m_chunk);

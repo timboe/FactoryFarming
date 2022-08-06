@@ -21,7 +21,8 @@ enum kGroundType{
   kPavedGround, 
   kObstructedGround, 
   kLake, 
-  kRiver, 
+  kRiver,
+  kOcean, 
   kNGroundTypes
 };
 
@@ -33,7 +34,8 @@ enum kWorldType{
   kClayWorld, 
   kLoamWoarld, 
   kWaterWorld, 
-  kEmptyWorld
+  kTranquilWorld,
+  kNWorldTypes
 };
 
 extern const uint16_t kWarpUIIcon[];

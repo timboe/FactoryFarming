@@ -137,6 +137,8 @@ bool buildingHasUpdateFunction(enum kBuildingType _type, union kSubType _subType
 
 void growAtAll(void);
 
+bool isLargeBuilding(enum kBuildingType _type, union kSubType _subType);
+
 void buildingManagerFreeBuilding(struct Building_t* _buildings);
 
 bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _type, union kSubType _subType);
