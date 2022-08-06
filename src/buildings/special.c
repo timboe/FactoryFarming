@@ -40,6 +40,19 @@ struct Building_t* getImportBox(void) {
   return m_importBox;
 }
 
+float directionToBuy() {
+  //TODO - make this take into account the torus
+  if (!m_buyBox) return 1000;
+  struct Player_t* p = getPlayer();
+  const int16_t dx1 = p->m_pix_x - m_buyBox->m_pix_x;
+  const int16_t dy1 = p->m_pix_y - m_buyBox->m_pix_y;
+  const int16_t dx2 = p->m_pix_x - m_buyBox->m_pix_x - TOT_WORLD_PIX_X;
+  const int16_t dy2 = p->m_pix_y - m_buyBox->m_pix_y - TOT_WORLD_PIX_Y;
+  const int16_t dx = fabs(dx1) < fabs(dx2) ? dx1 : dx2;
+  const int16_t dy = fabs(dy1) < fabs(dy2) ? dy1 : dy2;
+  return atan2(dx, dy);
+}
+
 int16_t distanceFromBuy() {
   if (!m_buyBox) return 1000;
   struct Player_t* p = getPlayer();

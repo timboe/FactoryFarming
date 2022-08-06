@@ -26,8 +26,9 @@ LCDBitmap* getPauseImage() {
   if (getGameMode() == kTitles) return m_pause;
 
   pd->graphics->pushContext(m_pause);
-  roundedRect(TILE_PIX,   DEVICE_PIX_X/2, DEVICE_PIX_Y, TILE_PIX, kColorBlack);
-  roundedRect(TILE_PIX+ 5, DEVICE_PIX_X/2, DEVICE_PIX_Y, TILE_PIX, kColorWhite);
+  pd->graphics->setDrawOffset(TILE_PIX/2, TILE_PIX/2);
+  roundedRect(0, DEVICE_PIX_X/2 - TILE_PIX, DEVICE_PIX_Y - 2*TILE_PIX, TILE_PIX, kColorBlack);
+  roundedRect(5, DEVICE_PIX_X/2 - TILE_PIX, DEVICE_PIX_Y - 2*TILE_PIX, TILE_PIX, kColorWhite);
   pd->graphics->popContext();
   return m_pause;
 }

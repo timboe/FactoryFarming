@@ -283,6 +283,7 @@ void updateUI(int _fc) {
   if (_fc % FAR_TICK_FREQUENCY == 0) {
     // Update bottom ticker
     UIDirtyBottom();
+    UIDirtyRight();
 
     // Tutorial
     if (getTutorialStage() == kTutBuildConveyor && m_mode == kWanderMode && getTutorialProgress()) {
@@ -716,6 +717,22 @@ void drawUIRight() {
     pd->graphics->setDrawMode(kDrawModeFillWhite);
     pd->graphics->drawText(text, 32, kASCIIEncoding, DEVICE_PIX_Y/2 + 2*TILE_PIX, 0);
     pd->graphics->setDrawMode(kDrawModeCopy);
+  } else {
+    #define PI 3.141592654f
+    #define A_OFF (45.0f/2.0f)
+    #define FF_DEG 45.0f
+    struct Player_t* p = getPlayer();
+    float a = (directionToBuy() * 180.0f/PI);
+    uint16_t cSprite = SPRITE16_ID(8, 9);
+    if (fabs(a) > (180.0f - 0*FF_DEG) - A_OFF) { /*noop*/ }
+    else if (a > (180.0f - 1*FF_DEG) - A_OFF) cSprite += 1;
+    else if (a > (180.0f - 2*FF_DEG) - A_OFF) cSprite += 2;
+    else if (a > (180.0f - 3*FF_DEG) - A_OFF) cSprite += 3;
+    else if (a > (180.0f - 4*FF_DEG) - A_OFF) cSprite += 4;
+    else if (a > (180.0f - 5*FF_DEG) - A_OFF) cSprite += 5;
+    else if (a > (180.0f - 6*FF_DEG) - A_OFF) cSprite += 6;
+    else if (a > (180.0f - 7*FF_DEG) - A_OFF) cSprite += 7;
+    pd->graphics->drawBitmap(getSprite16_byidx(cSprite, 1), DEVICE_PIX_Y/2, 0, kBitmapUnflipped);
   }
   pd->graphics->popContext();
 
@@ -723,7 +740,7 @@ void drawUIRight() {
   pd->graphics->drawRotatedBitmap(m_UIBitmapRightRotated, 0, 0, 90.0f, 0.0f, 0.0f, 1.0f, 1.0f);  
   pd->graphics->popContext();
 
-  UIDirtyBottom(); // why?
+  //UIDirtyBottom(); // why?
 }
 
 void drawUITop(const char* _text) {
@@ -1730,7 +1747,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 5: return "Go to the The Shop, buy around 50 an Conveyor Belts.";
         case 6: return "Press Ⓐ and choose these from your inventory.";
         case 7: return "Make a chain of belts from the Automatic Harvester to";
-        case 8: return "Sales. Rotate the Belts with 🎣.";
+        case 8: return "Sales. Rotate belts with 🎣 or hold Ⓑ and press ✛.";
       }
     case kTutBuildQuarry:
       switch (_n) {
@@ -1787,8 +1804,8 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 3: return "Visit the Plots Manager (next to Sales) and buy a new";
         case 4: return "plot of land to develop.";
           
-        case 5: return "The Plots Manager, Exports Manager and Imports Manager";
-        case 6: return "are all now unlocked.";
+        case 5: return "The Plots Manager, Exports Manager and";
+        case 6: return "Imports Manager are all now unlocked.";
         case 7: return "Visit the Plots Manager to the right of Sales.";
         case 8: return "Buy a new plot of land to expand the factory.";
       }

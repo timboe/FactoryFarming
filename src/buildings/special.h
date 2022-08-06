@@ -8,6 +8,8 @@ void assignNeighborsSpecial(struct Building_t* _building);
 
 void buildingSetupSpecial(struct Building_t* _building);
 
+float directionToBuy(void);
+
 int16_t distanceFromBuy(void);
 
 int16_t distanceFromSell(void);
