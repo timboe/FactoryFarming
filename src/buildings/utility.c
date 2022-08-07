@@ -135,6 +135,8 @@ bool canBePlacedUtility(struct Location_t* _loc, union kSubType _subType) {
 
   if (_subType.utility == kConveyorGrease) return true; // A different system is used to apply this
 
+  if (_subType.utility == kObstructionRemover) return true; // A different system is used to apply this
+
   struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
 
   if (_subType.utility == kLandfill) {

@@ -89,7 +89,7 @@ struct UnlockDescriptor_t {
   enum kBuildingType type;
   union kSubType subType;
   uint16_t fromSelling;
-  enum kCargoType of;
+  enum kCargoType ofCargo;
 };
 extern struct UnlockDescriptor_t UnlockDecs[]; 
 

@@ -13,6 +13,7 @@ struct Location_t{
   // Transient
   struct Cargo_t* m_cargo;
   struct Building_t* m_building;
+  LCDSprite* m_obstacle; // Non-owning. Any obstacle sprite (only a reference to zoom level 1 is kept) 
   // Populated at RESET
   struct Chunk_t* m_chunk;
   uint16_t m_x; // In location coords

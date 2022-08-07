@@ -78,6 +78,7 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kStorageBox: return "Storage Box";
       case kBuffferBox: return "Buffer Box";
       case kConveyorGrease: return "Conveyor Grease";
+      case kObstructionRemover: return "Obstruction Remover";
       case kLandfill: return "Landfill";
       case kRetirement: return "Retirement Cottage";
       case kFence: return "Fence"; 

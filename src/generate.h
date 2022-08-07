@@ -69,6 +69,8 @@ void addObstacles(void);
 
 void doWetness(bool _forTitles);
 
+void tryRemoveObstruction(struct Location_t* _loc);
+
 enum kGroundWetness getWetness(uint8_t _value);
 
 enum kGroundType getGroundType(uint8_t _tile);

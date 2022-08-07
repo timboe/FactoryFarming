@@ -366,7 +366,7 @@ void updateBlueprint() {
       case 5: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap5x5[zoom], kBitmapUnflipped); break;
     }
   } else if (gm == kPlaceMode) { // Of conveyors, cargo or utility
-    if (selectedCat == kUICatUtility && selectedID == kConveyorGrease) {
+    if (selectedCat == kUICatUtility && (selectedID == kConveyorGrease || selectedID == kObstructionRemover)) {
       switch (getRadius()) {
         case 1: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap1x1[zoom], kBitmapUnflipped); break;
         case 3: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap3x3[zoom], kBitmapUnflipped); break;
@@ -724,6 +724,8 @@ void drawUIRight() {
     if ((selectedCat >= kUICatConv && selectedCat < kUICatUtility) || (selectedCat == kUICatUtility && selectedID == kBuffferBox)) {
       spriteID += rotMod;
     }
+    // TODO make this work?
+    //pd->graphics->drawRotatedBitmap(getSprite16_byidx(spriteID, 1), DEVICE_PIX_Y/2, -1, 90.0f, TILE_PIX/2, TILE_PIX/2, 0.0f, 0.0f);
     pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), DEVICE_PIX_Y/2, -1, kBitmapUnflipped);
     pd->graphics->setDrawMode(kDrawModeFillWhite);
     pd->graphics->drawText(text, 32, kASCIIEncoding, DEVICE_PIX_Y/2 + 2*TILE_PIX, 0);
@@ -1257,6 +1259,25 @@ const char* newBannerText(enum kUICat _c) {
   return "?";
 }
 
+const char* toStringHeader(enum kUICat _c, bool _plural) {
+  switch (_c) {
+    case kUICatTool: return _plural ? "Tools" : "Tool";
+    case kUICatPlant: return _plural ? "Crops" : "Crop";
+    case kUICatConv: return _plural ? "Conveyors" : "Conveyor";
+    case kUICatExtractor: return _plural ? "Harvesters" : "Harvester";
+    case kUICatFactory: return _plural ? "Factories" : "Factory";
+    case kUICatUtility: return _plural ? "Utilities" : "Utility";
+    case kUICatCargo: return "Cargo";
+    case kUICatWarp: return "Plot Locations";
+    case kUICatImportN: return "Import (North)"; 
+    case kUICatImportE: return "Import (East)";
+    case kUICatImportS: return "Import (South)";
+    case kUICatImportW: return "Import (West)";
+    default: break;
+  }
+  return "?";
+}
+
 const char* getWorldLetter(int8_t _i) {
   switch(_i) {
     case 0: return "1";
@@ -1507,8 +1528,6 @@ void initiUI() {
 
   // Menu stuff
 
-
-
   m_UIBitmapScrollBarShortOuter = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*8, kColorBlack);
   m_UISpriteScrollBarShortOuter = pd->sprite->newSprite();
   pd->sprite->setBounds(m_UISpriteScrollBarShortOuter, scrollShortBound);
@@ -1594,21 +1613,7 @@ void initiUI() {
     pd->graphics->pushContext(m_UIBitmapHeaders[c]);
     roundedRect(1, TILE_PIX*18, TILE_PIX*2, TILE_PIX, kColorBlack);
     pd->graphics->setDrawMode(kDrawModeFillWhite);
-    switch (c) {
-      case kUICatTool: pd->graphics->drawText("Tools", 5, kASCIIEncoding, TILE_PIX, 0); break;
-      case kUICatPlant: pd->graphics->drawText("Crops", 5, kASCIIEncoding, TILE_PIX, 0); break;
-      case kUICatConv: pd->graphics->drawText("Conveyors", 9, kASCIIEncoding, TILE_PIX, 0); break;
-      case kUICatExtractor: pd->graphics->drawText("Harvesters", 10, kASCIIEncoding, TILE_PIX, 0); break;
-      case kUICatFactory: pd->graphics->drawText("Factories", 9, kASCIIEncoding, TILE_PIX, 0); break;
-      case kUICatUtility: pd->graphics->drawText("Utility", 7, kASCIIEncoding, TILE_PIX, 0); break;
-      case kUICatCargo: pd->graphics->drawText("Cargo", 5, kASCIIEncoding, TILE_PIX, 0); break;
-      case kUICatWarp: pd->graphics->drawText("Plot Locations", 14, kASCIIEncoding, TILE_PIX, 0); break;
-      case kUICatImportN:; pd->graphics->drawText("Import (North)", 14, kASCIIEncoding, TILE_PIX, 0); break; 
-      case kUICatImportE:; pd->graphics->drawText("Import (East)", 13, kASCIIEncoding, TILE_PIX, 0); break;
-      case kUICatImportS:; pd->graphics->drawText("Import (South)", 14, kASCIIEncoding, TILE_PIX, 0); break;
-      case kUICatImportW:; pd->graphics->drawText("Import (West)", 13, kASCIIEncoding, TILE_PIX, 0); break;
-      case kNUICats: break;
-    }
+    pd->graphics->drawText(toStringHeader(c, /*plural*/ true), 32, kASCIIEncoding, TILE_PIX, 0);
     pd->graphics->popContext();
 
     m_UISpriteHeaders[c] = pd->sprite->newSprite();

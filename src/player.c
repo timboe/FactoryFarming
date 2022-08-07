@@ -205,7 +205,7 @@ bool movePlayer() {
     if (isWaterTile(m_currentLocation->m_x, m_currentLocation->m_y)) {
       fric *= 0.5f;
     } else if (m_currentLocation->m_building && m_currentLocation->m_building->m_type == kUtility && m_currentLocation->m_building->m_subType.utility == kPath) {
-      fric *= 1.25f;
+      fric *= 1.1f;
     }
   }
   if (bPressed()) acc *= 1.5f;
@@ -472,7 +472,7 @@ void setDefaultPlayerSettings() {
   m_player.m_autoUseConveyorBooster = 1;
   m_player.m_enableConveyorAnimation = 1;
   m_player.m_enableTutorial = 0;
-  m_player.m_enableDebug = 1;
+  m_player.m_enableDebug = 0;
   m_player.m_enableAutosave = 15;
   m_player.m_enablePickupOnDestroy = 1;
   m_player.m_enableScreenShake = 1;

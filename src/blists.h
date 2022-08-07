@@ -40,6 +40,7 @@ enum kUtilitySubType{
   kStorageBox,
   kBuffferBox, 
   kConveyorGrease, 
+  kObstructionRemover,
   kLandfill, 
   kRetirement,
   kFence,

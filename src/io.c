@@ -196,7 +196,7 @@ bool doNewWorld() {
       setDefaultPlayerSettings();
       showTutorialMsg(getTutorialStage());
       // TEMP
-      //unlockOtherWorlds();
+      unlockOtherWorlds();
     }
 
     setPlotCursorToWorld(getSlot());

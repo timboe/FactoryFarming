@@ -10,6 +10,8 @@
 
 bool doConveyorUpgrade(struct Location_t* _loc);
 
+bool doClearObstruction(struct Location_t* _loc);
+
 bool isInRangeOfCarrotPlant(struct Location_t* _placeLocation);
 
 bool doPickAtLocation(struct Location_t* _loc);
@@ -54,6 +56,22 @@ bool doConveyorUpgrade(struct Location_t* _loc) {
   return false; // We have handled the removal of the grease(es) inside upgradeConveyor
 }
 
+bool doClearObstruction(struct Location_t* _loc) {
+  int32_t min = 0, max = 0;
+  switch (getRadius()) {
+    case 1: min = 0; max = 1; break;
+    case 3: min = -1; max = 2; break;
+    case 5: min = -2; max = 3; break;
+  }
+  for (int32_t x = min; x < max; ++x) {
+    for (int32_t y = min; y < max; ++y) {
+      struct Location_t* l = getLocation(_loc->m_x + x, _loc->m_y + y);
+      tryRemoveObstruction(l);
+    }
+  }
+  return false; // We have handled the removal of the obstruction removers inside tryRemoveObstruction
+}
+
 // TODO make this more generic if needed...
 bool isInRangeOfCarrotPlant(struct Location_t* _placeLocation) {
   for (int32_t x = -3; x < 4; ++x) {
@@ -83,6 +101,7 @@ void doPlace() {
     case kUICatFactory: placed = newBuilding(placeLocation, getCursorRotation(), kFactory, (union kSubType) {.factory = selectedID} ); break;
     case kUICatUtility: 
       if (selectedID == kConveyorGrease) placed = doConveyorUpgrade(placeLocation);
+      else if (selectedID == kObstructionRemover) placed = doClearObstruction(placeLocation);
       else if (selectedID == kLandfill) placed = doPlaceLandfill(placeLocation);
       else if (selectedID == kRetirement) placed = doPlaceRetirement(placeLocation);
       else placed = newBuilding(placeLocation, getCursorRotation(), kUtility, (union kSubType) {.utility = selectedID} );

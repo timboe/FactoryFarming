@@ -21,7 +21,7 @@ bool checkHasNewToShow(struct Player_t* _p) {
     // This is always the last unlock - cannot go on from here
     return false;
   }
-  const bool haveUnlocked = (_p->m_soldCargo[ UnlockDecs[ currentLevel+1 ].of ] >= UnlockDecs[ currentLevel+1 ].fromSelling);
+  const bool haveUnlocked = (_p->m_soldCargo[ UnlockDecs[ currentLevel+1 ].ofCargo ] >= UnlockDecs[ currentLevel+1 ].fromSelling);
   // Tutorial
   if (getTutorialStage() < kTutBuildConveyor && UnlockDecs[currentLevel+1].type == kConveyor) {
     return false; // Need to progress the tutorial too to unlock conveyors
@@ -90,6 +90,7 @@ const char* getNewText() {
       case kStorageBox: return "Stores up to 3 different types of Cargo";
       case kBuffferBox: return "Like the Storage Box, but also self-empties";
       case kConveyorGrease: return "Upgrades Conveyor speed from x1 to x2";
+      case kObstructionRemover: return "Clears Obstructed Ground allowing it to be built on";
       case kLandfill: return "Fills in water. Can built on, but not planted on.";
       case kRetirement: return "A relaxing space to enjoy your amassed wealth.";
       case kFence: return "A charming wooden fence.";
@@ -102,13 +103,13 @@ const char* getNewText() {
       case kChalkQuarry: return "Must be built on Chalky Soil. Produces Chalk";
       case kSaltMine: return "Must be built on Peaty Soil. Produces Salt";
       case kCropHarvesterLarge: return "Collects Cargo, can hold three different types";
-      case kCO2Extractor: return "Liquefies Carbon Dioxide out of the air.";
+      case kCO2Extractor: return "Liquefies Carbon Dioxide out of the air";
       case kNExtractorSubTypes: return "";
     }
     case kFactory: switch (m_nextSubType.factory) {
       case kVitiminFac: return "Manufactures low-grade Vitamin Pills";
       case kVegOilFac: return "Crush Vegetable Oil from Sunflowers";
-      case kCrispsFac: return "Manufactures Potato Chips. A fried favorite.";
+      case kCrispsFac: return "Manufactures Potato Chips. A fried favorite";
       //case kF4: case kF5: case kF6: case kF7: case kF8: case kF9: case kF10: case kF11: return "FPlaceholder"; 
       case kNFactorySubTypes: return "";
     }

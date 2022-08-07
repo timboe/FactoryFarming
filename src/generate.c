@@ -4,6 +4,7 @@
 #include "ui.h"
 #include "io.h"
 #include "sprite.h"
+#include "render.h"
 #include "building.h"
 #include "buildings/special.h"
 #include "buildings/extractor.h"
@@ -39,6 +40,10 @@ float pointDist(int32_t _x, int32_t _y, int32_t _x1, int32_t _y1, int32_t _x2, i
 void getPathSprite(struct Location_t* loc, uint16_t* _outSprite, LCDBitmapFlip* _outFlip);
 
 void getFenceSprite(struct Location_t* loc, uint16_t* _outSprite, LCDBitmapFlip* _outFlip);
+
+uint8_t getNearbyBackground_Chunk(struct Chunk_t* _chunk, uint16_t _u, uint16_t _v);
+
+uint8_t getNearbyBackground_Loc(struct Location_t* _loc);
 
 void doSea(void);
 
@@ -108,7 +113,7 @@ void renderChunkBackgroundImageAround(struct Chunk_t* _chunk) {
   }
 }
 
-uint8_t getNearbyBackground(struct Chunk_t* _chunk, uint16_t _u, uint16_t _v) {
+uint8_t getNearbyBackground_Chunk(struct Chunk_t* _chunk, uint16_t _u, uint16_t _v) {
   uint8_t t = getTileInChunk(_chunk, _u - 1, _v)->m_tile;
   if (t < TOT_FLOOR_TILES) return t;
   t = getTileInChunk(_chunk, _u + 1, _v)->m_tile;
@@ -116,6 +121,18 @@ uint8_t getNearbyBackground(struct Chunk_t* _chunk, uint16_t _u, uint16_t _v) {
   t = getTileInChunk(_chunk, _u, _v - 1)->m_tile;
   if (t < TOT_FLOOR_TILES) return t;
   t = getTileInChunk(_chunk, _u, _v + 1)->m_tile;
+  if (t < TOT_FLOOR_TILES) return t;
+  return 0;
+}
+
+uint8_t getNearbyBackground_Loc(struct Location_t* _loc) {
+  uint8_t t = getTile(_loc->m_x - 1, _loc->m_y)->m_tile;
+  if (t < TOT_FLOOR_TILES) return t;
+  t = getTile(_loc->m_x + 1, _loc->m_y)->m_tile;
+  if (t < TOT_FLOOR_TILES) return t;
+  t = getTile(_loc->m_x, _loc->m_y - 1)->m_tile;
+  if (t < TOT_FLOOR_TILES) return t;
+  t = getTile(_loc->m_x, _loc->m_y + 1)->m_tile;
   if (t < TOT_FLOOR_TILES) return t;
   return 0;
 }
@@ -207,7 +224,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
         flip = (u+v) % 2 ? kBitmapUnflipped : kBitmapFlippedX;
       } else {
         // For other tiles, draw them on top of a background tile
-        uint16_t nearby = getNearbyBackground(_chunk, u, v);
+        uint16_t nearby = getNearbyBackground_Chunk(_chunk, u, v);
         pd->graphics->drawBitmap(getSprite16_byidx(nearby, 1), 
           u * TILE_PIX, v * TILE_PIX, kBitmapUnflipped);
       }
@@ -279,6 +296,10 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
         if (building->m_subType.utility == kPath) getPathSprite(building->m_location, &sprite, &flip);
         else                                      getFenceSprite(building->m_location, &sprite, &flip);
         pd->graphics->drawBitmap(getSprite16_byidx(sprite, 1), building->m_pix_x - off16_x, building->m_pix_y - off16_y, flip);
+      } else if (building->m_type == kPlant && !building->m_mode.mode16) {
+        // Plant which has not grown yet
+        const bool flip = (building->m_type == kPlant && (building->m_location->m_x + building->m_location->m_y) % 2);
+        pd->graphics->drawBitmap(getSprite16(11, 12, 1), building->m_pix_x - off16_x, building->m_pix_y - off16_y, flip ? kBitmapFlippedX : kBitmapUnflipped);
       } else {
         // Fast conveyors get drawn inverted. Stored[0] is used to hold the speed
         const bool invert = (building->m_type == kConveyor && building->m_stored[0] >= 2);
@@ -487,6 +508,19 @@ const char* getWorldName(enum kWorldType _type, bool _mask) {
     case kNWorldTypes: return "UNKNOWN World";
   }
   return "UNKNOWN World";
+}
+
+void tryRemoveObstruction(struct Location_t* _loc) {
+  struct Tile_t* t = getTile_fromLocation(_loc);
+  if (getGroundType(t->m_tile) != kObstructedGround) return;
+  if (!getOwned(kUICatUtility, kObstructionRemover)) return;
+
+  modOwned(kUICatUtility, kObstructionRemover, /*add*/ false);
+  t->m_tile = getNearbyBackground_Loc(_loc);
+  chunkRemoveObstacle(_loc->m_chunk, _loc->m_obstacle);
+  _loc->m_obstacle = NULL;
+  addTrauma(2.0f);
+  renderChunkBackgroundImage(_loc->m_chunk);
 }
 
 void doClutterObstacles() {
@@ -866,14 +900,14 @@ void addObstacles() {
       pd->sprite->setCollideRect(obstacle_x1, bound_x1);
       pd->sprite->moveTo(obstacle_x1, x * TILE_PIX, y * TILE_PIX);
 
-
       LCDSprite* obstacle_x2 = pd->sprite->newSprite();
       PDRect bound_x2 = {.x = COLLISION_OFFSET_SMALL, .y = COLLISION_OFFSET_SMALL, .width = (TILE_PIX-COLLISION_OFFSET_SMALL)*2, .height = (TILE_PIX-COLLISION_OFFSET_SMALL)*2};
       pd->sprite->setCollideRect(obstacle_x2, bound_x2);
       pd->sprite->moveTo(obstacle_x2, (x * TILE_PIX)*2, (y * TILE_PIX)*2);
 
-
-      chunkAddObstacle(getLocation_noCheck(x, y)->m_chunk, obstacle_x1, obstacle_x2);
+      struct Location_t* loc = getLocation_noCheck(x, y);
+      loc->m_obstacle = obstacle_x1;
+      chunkAddObstacle(loc->m_chunk, obstacle_x1, obstacle_x2);
     }
   }
 }

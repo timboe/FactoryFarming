@@ -22,13 +22,88 @@ LCDBitmap* getPauseImage() {
   if (m_pause == NULL) m_pause = pd->graphics->newBitmap(DEVICE_PIX_X, DEVICE_PIX_Y, kColorClear);
 
   pd->graphics->clearBitmap(m_pause, kColorClear);
+  int32_t length, width = 0;
+  char text[128];
+
+  #define CENTRE (TILE_PIX*6)
+  #define Y_SPACE (3*TILE_PIX/2)
+
+  #define X_START TILE_PIX
+  #define X_END (11*TILE_PIX - TILE_PIX/2)
 
   if (getGameMode() == kTitles) return m_pause;
 
   pd->graphics->pushContext(m_pause);
   pd->graphics->setDrawOffset(TILE_PIX/2, TILE_PIX/2);
-  roundedRect(0, DEVICE_PIX_X/2 - TILE_PIX, DEVICE_PIX_Y - 2*TILE_PIX, TILE_PIX, kColorBlack);
-  roundedRect(5, DEVICE_PIX_X/2 - TILE_PIX, DEVICE_PIX_Y - 2*TILE_PIX, TILE_PIX, kColorWhite);
+  roundedRect(0, DEVICE_PIX_X/2 - TILE_PIX, 9*TILE_PIX, TILE_PIX, kColorBlack);
+  roundedRect(TILE_PIX/4, DEVICE_PIX_X/2 - TILE_PIX, 9*TILE_PIX, TILE_PIX, kColorWhite);
+  pd->graphics->setDrawOffset(0, 0);
+
+  setRoobert10();
+
+  snprintf(text, 128, "Sell a total of:");
+  length = strlen(text);
+  width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 1*Y_SPACE);
+
+  snprintf(text, 128, "To unlock the next:");
+  length = strlen(text);
+  width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 3*Y_SPACE);
+
+  struct Player_t* p = getPlayer();
+  const uint32_t nextLevel = p->m_buildingsUnlockedTo + 1;
+  const enum kCargoType cargo = UnlockDecs[ nextLevel ].ofCargo;
+  const uint16_t needToSell = UnlockDecs[ nextLevel ].fromSelling;
+  const uint16_t haveSold = p->m_soldCargo[ cargo ];
+
+  pd->system->logToConsole("Showing pause menu for unlock # %i", nextLevel);
+
+
+  snprintf(text, 128, "%i %ss", needToSell, toStringCargoByType(cargo));
+  length = strlen(text);
+  width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 2*Y_SPACE);
+  pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[ cargo ].UIIcon , 1), X_START, 2*Y_SPACE, kBitmapUnflipped);
+  pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[ cargo ].UIIcon , 1), X_END, 2*Y_SPACE, kBitmapFlippedX);
+
+  enum kBuildingType nextBuildingType = UnlockDecs[nextLevel].type;
+  enum kUICat nextBuildingUICat = getBuildingTypeCat(nextBuildingType);
+
+  const char* t = toStringHeader(nextBuildingUICat, /*plural*/ false);
+  length = strlen(t);
+  width = pd->graphics->getTextWidth(getRoobert10(), t, length, kUTF8Encoding, 0);
+  pd->graphics->drawText(t, 128, kASCIIEncoding, CENTRE - width/2, 4*Y_SPACE);
+
+  pd->graphics->drawBitmap(getSprite16(11, 13, 1), X_START, 4*Y_SPACE, kBitmapUnflipped);
+  pd->graphics->drawBitmap(getSprite16(11, 13, 1), X_END, 4*Y_SPACE, kBitmapFlippedX);
+
+  snprintf(text, 128, "Sold so far: %i", haveSold);
+  length = strlen(text);
+  width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 5*Y_SPACE);
+
+  pd->graphics->drawLine(X_START + TILE_PIX, 3*Y_SPACE - TILE_PIX/2, X_END, 3*Y_SPACE - TILE_PIX/2, 2, kColorBlack);
+  pd->graphics->drawLine(X_START + TILE_PIX, 5*Y_SPACE - TILE_PIX/2, X_END, 5*Y_SPACE - TILE_PIX/2, 2, kColorBlack);
+
+
+  pd->graphics->setDrawOffset(TILE_PIX/2, TILE_PIX*9 + TILE_PIX/2);
+  roundedRect(0, DEVICE_PIX_X/2 - TILE_PIX, 4*TILE_PIX, TILE_PIX, kColorBlack);
+  roundedRect(TILE_PIX/4, DEVICE_PIX_X/2 - TILE_PIX, 4*TILE_PIX, TILE_PIX, kColorWhite);
+  pd->graphics->setDrawOffset(0, 0);
+
+  snprintf(text, 128, "Total Play Time:");
+  length = strlen(text);
+  width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 7*Y_SPACE);
+
+  const uint32_t pt = p->m_playTime / TICK_FREQUENCY;
+  snprintf(text, 128, "%ih:%im:%is", (int) pt/3600, (int) (pt%3600)/60, (int) (pt%3600)%60);
+  length = strlen(text);
+  width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 8*Y_SPACE - TILE_PIX/4);
+
+
   pd->graphics->popContext();
   return m_pause;
 }
