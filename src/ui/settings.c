@@ -79,12 +79,19 @@ void doSettings() {
   redrawMainmenuLine(getMainmenuUIBitmap(selectedID), selectedID);
 }
 
+#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE 11
+void redrawAllSettingsMenuLines() {
+  for (int32_t i = 0; i < MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE; ++i) {
+    redrawMainmenuLine(getMainmenuUIBitmap(i), i);
+  }
+}
+
 void redrawMainmenuLine(LCDBitmap* _bitmap, int32_t _line) {
 
   setRoobert10();
   pd->graphics->clearBitmap(_bitmap, kColorWhite);
   pd->graphics->pushContext(_bitmap);
-  pd->graphics->setDrawMode(kDrawModeFillBlack);
+  pd->graphics->setDrawMode(kDrawModeCopy);
   
   int32_t width, length;
   if (isTitle(_line)) {
@@ -125,7 +132,6 @@ void populateContentMainmenu() {
 }
 
 void populateInfoMainmenu() {
-
 }
 
 bool isTitle(int32_t _line) {

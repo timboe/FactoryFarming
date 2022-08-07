@@ -84,8 +84,9 @@
 #define TOT_TILES (TOT_TILES_X*TOT_TILES_Y)
 
 // Player acceleration and friction
-#define PLAYER_A 0.75f
-#define PLAYER_FRIC 0.8f
+#define PLAYER_A 3.5f
+// 1 = np friction
+#define PLAYER_FRIC 0.5f
 
 #define SQRT_HALF 0.70710678118f
 

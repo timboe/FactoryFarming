@@ -174,7 +174,7 @@ bool movePlayer() {
 
   // Do conveyor movement
   int8_t convMotion = getAndReduceFollowConveyor();
-  if (convMotion) {
+  if (convMotion > 0) { // Make this just "if (convMotion)" to allow backwards travel too
     if (m_currentLocation && m_currentLocation->m_building && m_currentLocation->m_building->m_type == kConveyor) {
       enum kDir direction;
       if (m_currentLocation->m_building->m_subType.conveyor >= kFilterL) {
@@ -195,20 +195,28 @@ bool movePlayer() {
     }
   }
 
-
   //updatePlayerPosition();
   float goalX = m_player.m_pix_x;
   float goalY = m_player.m_pix_y;
-  
-  /*
+
+  float acc = PLAYER_A;
+  float fric = PLAYER_FRIC;
+  if (m_currentLocation != NULL) {
+    if (isWaterTile(m_currentLocation->m_x, m_currentLocation->m_y)) {
+      fric *= 0.5f;
+    } else if (m_currentLocation->m_building && m_currentLocation->m_building->m_type == kUtility && m_currentLocation->m_building->m_subType.utility == kPath) {
+      fric *= 1.25f;
+    }
+  }
+  if (bPressed()) acc *= 1.5f;
 
   float diffX = 0;
   float diffY = 0;
 
-  if (m_pressed[0]) diffX -= PLAYER_A;
-  if (m_pressed[1]) diffX += PLAYER_A;
-  if (m_pressed[2]) diffY -= PLAYER_A;
-  if (m_pressed[3]) diffY += PLAYER_A;
+  if (getPressed(0)) diffX -= acc;
+  if (getPressed(1)) diffX += acc;
+  if (getPressed(2)) diffY -= acc;
+  if (getPressed(3)) diffY += acc;
 
   // Note floating point == 0 check, hopefully work in this case
   if (diffX && diffY) {
@@ -216,31 +224,27 @@ bool movePlayer() {
     diffY *= SQRT_HALF;
   }
 
-  m_player.m_vX = (m_player.m_vX + diffX) * PLAYER_FRIC;
-  m_player.m_vY = (m_player.m_vY + diffY) * PLAYER_FRIC;
-
-  goalX += m_player.m_vX;
-  goalY += m_player.m_vY;
-  */
-
-  // TODO proper movement penalty / bonus
-  int16_t speed = 4;
-  if (m_currentLocation != NULL && isWaterTile(m_currentLocation->m_x, m_currentLocation->m_y)) {
-    speed = 2;
-  }
-  if (bPressed()) speed += 2;
+  m_player.m_vX = (m_player.m_vX + diffX) * fric;
+  m_player.m_vY = (m_player.m_vY + diffY) * fric;
 
   bool moving = false;
-  if (getPressed(0)) { goalX -= speed / zoom; m_facing = 0; moving = true; } 
-  if (getPressed(1)) { goalX += speed / zoom; m_facing = 1; moving = true; }
-  if (getPressed(2)) { goalY -= speed / zoom; m_facing = 2; moving = true; }
-  if (getPressed(3)) { goalY += speed / zoom; m_facing = 3; moving = true; }
+  if ((float)(fabs(m_player.m_vX) + fabs(m_player.m_vY)) > 0.1f) {
+    moving = true;
+    if (fabs(m_player.m_vX) > fabs(m_player.m_vY)) {
+      m_facing = (m_player.m_vX > 0 ? 1 : 0);
+    } else {
+      m_facing = (m_player.m_vY > 0 ? 3 : 2);
+    }
+  }
+
+  goalX += m_player.m_vX;
+  goalY += m_player.m_vY; 
 
   #define PLAYER_ANIM_FRAMES 6
   #define PLAYER_ANIM_DELAY 16
 
   if (moving) {
-    if (++m_stepCounter * speed > PLAYER_ANIM_DELAY || m_facing != m_wasFacing) {
+    if (++m_stepCounter * acc > PLAYER_ANIM_DELAY || m_facing != m_wasFacing) {
       m_animFrame = (m_animFrame + 1) % PLAYER_ANIM_FRAMES;
       m_stepCounter = 0;
       pd->sprite->setImage(m_player.m_sprite[zoom], getSprite18(m_animFrame, m_facing, zoom), kBitmapUnflipped);
@@ -248,16 +252,9 @@ bool movePlayer() {
     m_wasFacing = m_facing;
   }
 
-
   //pd->system->logToConsole("GOAL %f %f CURRENT %f %f", goalX, goalY, m_player.m_x, m_player.m_y);
 
   movePlayerPosition(goalX, goalY);
-
-  //if      ((m_offX + m_player.m_x) > ((SCREEN_PIX_X / m_zoom) * SCROLL_EDGE))          m_offX = ((SCREEN_PIX_X / m_zoom) * SCROLL_EDGE) - m_player.m_x;
-  //else if ((m_offX + m_player.m_x) < ((SCREEN_PIX_X / m_zoom) * (1.0f - SCROLL_EDGE))) m_offX = ((SCREEN_PIX_X / m_zoom) * (1.0f - SCROLL_EDGE)) - m_player.m_x;
-
-  //if      ((m_offY + m_player.m_y) > ((SCREEN_PIX_Y / m_zoom) * SCROLL_EDGE))          m_offY = ((SCREEN_PIX_Y / m_zoom) * SCROLL_EDGE) - m_player.m_y;
-  //else if ((m_offY + m_player.m_y) < ((SCREEN_PIX_Y / m_zoom) * (1.0f - SCROLL_EDGE))) m_offY = ((SCREEN_PIX_Y / m_zoom) * (1.0f - SCROLL_EDGE)) - m_player.m_y;
 
   if (m_player.m_pix_x > TOT_WORLD_PIX_X) {
     setPlayerPosition(m_player.m_pix_x - TOT_WORLD_PIX_X, m_player.m_pix_y, /*update current location = */ false);
@@ -275,18 +272,8 @@ bool movePlayer() {
     m_offY -= TOT_WORLD_PIX_Y;
   }
 
-  //pd->system->logToConsole("OFF %f %f", m_offX, m_offY);
-
-  //pd->system->logToConsole("CHX %f / %f = %f", m_player.m_x, (float)CHUNK_PIX_X, ((m_player.m_x)/((float)CHUNK_PIX_X)));
-
-
   m_offX = -(m_player.m_pix_x*zoom - (SCREEN_PIX_X/2));
   m_offY = -(m_player.m_pix_y*zoom - (SCREEN_PIX_Y/2));
-
-
-  //pd->system->logToConsole("P@ %f %f", m_player.m_pix_x , m_player.m_pix_y);
-  //pd->system->logToConsole("OFF %i %i", m_offX, m_offY);
-
 
   // Check chunk change
   uint16_t chunkX = m_player.m_pix_x / (CHUNK_PIX_X);
@@ -485,7 +472,7 @@ void setDefaultPlayerSettings() {
   m_player.m_autoUseConveyorBooster = 1;
   m_player.m_enableConveyorAnimation = 1;
   m_player.m_enableTutorial = 0;
-  m_player.m_enableDebug = 0;
+  m_player.m_enableDebug = 1;
   m_player.m_enableAutosave = 15;
   m_player.m_enablePickupOnDestroy = 1;
   m_player.m_enableScreenShake = 1;

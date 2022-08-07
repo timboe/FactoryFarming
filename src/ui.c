@@ -522,6 +522,7 @@ void showTutorialMsg(enum kUITutorialStage _stage) {
   snprintf(text, 128, "--- Tutorial Stage %i/%i ---", tutN, ofN);
   int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, 128, kASCIIEncoding, 0);
   pd->graphics->drawText(text, 128, kASCIIEncoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  pd->graphics->setDrawMode(kDrawModeCopy);
   for (int32_t l = 0; l < 5; ++l) {
     const char* txt = toStringTutorial(_stage, l);
     width = pd->graphics->getTextWidth(getRoobert10(), txt, strlen(txt), kUTF8Encoding, 0);
@@ -542,7 +543,7 @@ void showTutorialMsg(enum kUITutorialStage _stage) {
     pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - TUT_Y_SHFT + 1);
     pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2 - 1, TUT_Y_SPACING*(y) - TUT_Y_SHFT);
     pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - TUT_Y_SHFT - 1);
-    pd->graphics->setDrawMode(kDrawModeFillBlack);
+    pd->graphics->setDrawMode(kDrawModeCopy);
     pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - TUT_Y_SHFT);
   }
   pd->graphics->popContext();

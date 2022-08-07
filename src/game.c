@@ -12,6 +12,7 @@
 #include "io.h"
 #include "building.h"
 #include "buildings/special.h"
+#include "ui/settings.h"
 
 PlaydateAPI* pd = NULL;
 
@@ -243,6 +244,7 @@ void menuOptionsCallbackMenu(void* blank) {
   pd->system->logToConsole("menuOptionsCallbackMenu");
   checkReturnDismissTutorialMsg();
   drawUITop("Main Menu");
+  redrawAllSettingsMenuLines();
   setGameMode(kMenuMain);
 }
 
