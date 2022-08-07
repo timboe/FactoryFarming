@@ -31,3 +31,7 @@ void drawUIInspectSpecial(struct Building_t* _building);
 bool isCamouflaged(void); 
 
 void unlockOtherWorlds(void);
+
+bool hasExported(void);
+
+bool hasImported(void);

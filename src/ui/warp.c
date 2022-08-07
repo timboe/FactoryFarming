@@ -17,6 +17,10 @@ void doWarp() {
     if (modMoney(-selectedPrice)) {
       setForceSlot(selectedID); // This will be the ID of the world we generate
       doIO(kDoSave, /*and then*/ kDoNewWorld);
+      // Tutorial
+      if (getTutorialStage() == kTutNewPlots) {
+        nextTutorialStage();
+      }
     }
   } else { // Unlocked world, switch
     setForceSlot(selectedID); // This will be the ID of the slot we load from

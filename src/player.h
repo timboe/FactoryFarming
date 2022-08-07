@@ -3,8 +3,24 @@
 #include "building.h"
 #include "cargo.h"
 
-enum kUITutorialStage{kTutWelcomeBuySeeds, kTutPlantCarrots, kTutGetCarrots, kTutSellCarrots, kTutBuildHarvester, kTutBuildConveyor, kTutBuildQuarry, kTutBuildVitamin, 
-  kTutFinishedOne, kTutBreakOne, kTutNewPlots, kTutExports, kTutImports, kTutFinishedTwo, kTutBreakTwo, kNTutorialStages};
+enum kUITutorialStage{
+  kTutWelcomeBuySeeds, 
+  kTutPlantCarrots, 
+  kTutGetCarrots, 
+  kTutSellCarrots, 
+  kTutBuildHarvester, 
+  kTutBuildConveyor, 
+  kTutBuildQuarry, 
+  kTutBuildVitamin, 
+  kTutFinishedOne, 
+  kTutBreakOne, 
+  kTutNewPlots, 
+  kTutExports, 
+  kTutImports, 
+  kTutFinishedTwo, 
+  kTutBreakTwo, 
+  kNTutorialStages
+};
 
 enum kToolType{kToolPickup, kToolInspect, kToolDestroy, kNToolTypes};
 extern const uint16_t kToolUIIcon[];
@@ -20,7 +36,7 @@ struct Player_t{
   uint32_t m_money;
   uint32_t m_moneyCumulative;
   uint32_t m_moneyHighWaterMark;
-  uint32_t m_moneyHighWaterMarkMenu; // Indicates how many unlocks the player has been shown up to
+  uint32_t m_buildingsUnlockedTo; 
   uint32_t m_saveTime;
   uint32_t m_playTime;
   uint8_t m_tutorialProgress; // On each individual stage
@@ -30,6 +46,9 @@ struct Player_t{
   uint16_t m_carryPlant[kNPlantSubTypes];
   uint16_t m_carryExtractor[kNExtractorSubTypes];
   uint16_t m_carryFactory[kNFactorySubTypes];
+
+  uint16_t m_soldCargo[kNCargoType];
+  uint16_t m_importedCargo[kNCargoType];
 
   float m_exportPerWorld[WORLD_SAVE_SLOTS][kNCargoType];
 

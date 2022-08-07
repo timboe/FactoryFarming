@@ -18,7 +18,7 @@ struct ConveyorDescriptor_t {
   uint8_t spriteX;
   uint8_t spriteY;
 };
-extern const struct ConveyorDescriptor_t CDesc[];
+extern struct ConveyorDescriptor_t CDesc[];
 
 struct PlantDescriptor_t {
   enum kPlantSubType subType;
@@ -30,7 +30,7 @@ struct PlantDescriptor_t {
   enum kGroundType soil;
   enum kCargoType out;
 };
-extern const struct PlantDescriptor_t PDesc[];
+extern struct PlantDescriptor_t PDesc[];
 
 struct UtilityDescriptor_t {
   enum kUtilitySubType subType;
@@ -39,7 +39,7 @@ struct UtilityDescriptor_t {
   uint16_t UIIcon;
   uint16_t sprite;
 };
-extern const struct UtilityDescriptor_t UDesc[];
+extern struct UtilityDescriptor_t UDesc[];
 
 struct ExtractorDescriptor_t {
   enum kExtractorSubType subType;
@@ -49,7 +49,7 @@ struct ExtractorDescriptor_t {
   uint16_t sprite;
   enum kCargoType out;
 };
-extern const struct ExtractorDescriptor_t EDesc[];
+extern struct ExtractorDescriptor_t EDesc[];
 
 struct FactoryDescriptor_t {
   enum kFactorySubType subType;
@@ -64,8 +64,7 @@ struct FactoryDescriptor_t {
   enum kCargoType in4;
   enum kCargoType in5;
 };
-extern const struct FactoryDescriptor_t FDesc[];
-
+extern struct FactoryDescriptor_t FDesc[];
 
 ///
 
@@ -83,6 +82,16 @@ union kMode {
   uint16_t mode16;
   uint8_t mode8[2];
 };
+
+///
+
+struct UnlockDescriptor_t {
+  enum kBuildingType type;
+  union kSubType subType;
+  uint16_t fromSelling;
+  enum kCargoType of;
+};
+extern struct UnlockDescriptor_t UnlockDecs[]; 
 
 ///
 

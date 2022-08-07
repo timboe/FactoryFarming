@@ -293,6 +293,14 @@ void updateUI(int _fc) {
     if (getTutorialStage() == kTutBuildVitamin && m_mode == kWanderMode && getTutorialProgress()) {
       nextTutorialStage();
     }
+    // Tutorial
+    if (getTutorialStage() == kTutExports && m_mode == kWanderMode && hasExported()) {
+      nextTutorialStage();
+    }
+    // Tutorial
+    if (getTutorialStage() == kTutImports && m_mode == kWanderMode && hasImported()) {
+      nextTutorialStage();
+    }
   }
 
   if (m_mode == kWanderMode) {
@@ -527,6 +535,8 @@ void showTutorialMsg(enum kUITutorialStage _stage) {
   for (int32_t l = 5; l < 9; ++l) {
     const char* txt = toStringTutorial(_stage, l);
     width = pd->graphics->getTextWidth(getRoobert10(), txt, strlen(txt), kUTF8Encoding, 0);
+    // We have the right hand border here, so offset to the left a little more
+    width += TILE_PIX/2;
     pd->graphics->setDrawMode(kDrawModeFillWhite);
     pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2 + 1, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
     pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - TUT_Y_SHFT + 1);
@@ -713,11 +723,11 @@ void drawUIRight() {
     if ((selectedCat >= kUICatConv && selectedCat < kUICatUtility) || (selectedCat == kUICatUtility && selectedID == kBuffferBox)) {
       spriteID += rotMod;
     }
-    pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), DEVICE_PIX_Y/2, 0, kBitmapUnflipped);
+    pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), DEVICE_PIX_Y/2, -1, kBitmapUnflipped);
     pd->graphics->setDrawMode(kDrawModeFillWhite);
     pd->graphics->drawText(text, 32, kASCIIEncoding, DEVICE_PIX_Y/2 + 2*TILE_PIX, 0);
     pd->graphics->setDrawMode(kDrawModeCopy);
-  } else {
+  } else { // Compass
     #define PI 3.141592654f
     #define A_OFF (45.0f/2.0f)
     #define FF_DEG 45.0f
@@ -733,6 +743,11 @@ void drawUIRight() {
     else if (a > (180.0f - 6*FF_DEG) - A_OFF) cSprite += 6;
     else if (a > (180.0f - 7*FF_DEG) - A_OFF) cSprite += 7;
     pd->graphics->drawBitmap(getSprite16_byidx(cSprite, 1), DEVICE_PIX_Y/2, 0, kBitmapUnflipped);
+
+    // Unlock?
+    if (checkHasNewToShow(p)) {
+      pd->graphics->drawBitmap(getSprite16(11, 11, 1), DEVICE_PIX_Y/2 + 2*TILE_PIX, 0, kBitmapUnflipped);
+    }
   }
   pd->graphics->popContext();
 
@@ -758,7 +773,7 @@ void drawUITop(const char* _text) {
   pd->graphics->popContext();
 }
 
-int32_t getUnlockCost(enum kUICat _c, int32_t _i) {
+int32_t getUnlockLevel(enum kUICat _c, int32_t _i) {
   switch (_c) {
     case kUICatTool: return 0;
     case kUICatPlant: return PDesc[_i].unlock;
@@ -854,6 +869,20 @@ enum kBuildingType getCatBuildingSubType(enum kUICat _c) {
     case kNUICats: return kNoBuilding;
   }
   return kNoBuilding;
+}
+
+enum kUICat getBuildingTypeCat(enum kBuildingType _b) {
+  switch (_b) {
+    case kNoBuilding: return kNUICats;
+    case kPlant: return kUICatPlant;
+    case kConveyor: return kUICatConv;
+    case kExtractor: return kUICatExtractor;
+    case kFactory: return kUICatFactory;
+    case kUtility: return kUICatUtility;
+    case kSpecial: return kNUICats;
+    case kNBuildingTypes: return kNUICats;
+  }
+  return kNUICats;
 }
 
 uint16_t getUIIcon(enum kUICat _c, uint16_t _i) {
@@ -1117,7 +1146,8 @@ void drawUIMain() {
 }
 
 void renderNewUI() {
-  const enum kUICat newCat = getNewCategory();
+  const enum kBuildingType newBuildingType = getNewBuildingType();
+  const enum kUICat newCat = getBuildingTypeCat(newBuildingType);
   const uint32_t newID = getNewID();
   pd->sprite->setImage(m_UISpriteNewBanner, m_UIBitmapNewBanner[newCat], kBitmapUnflipped);
 
@@ -1130,7 +1160,7 @@ void renderNewUI() {
   pd->graphics->pushContext(m_UIBitmapNewText);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
 
-  const char* t0 = toStringBuilding(getCatBuildingSubType(newCat), (union kSubType) {.raw = newID}, false);
+  const char* t0 = toStringBuilding(newBuildingType, (union kSubType) {.raw = newID}, false);
   int16_t len0 = strlen(t0);
   int32_t width0 = pd->graphics->getTextWidth(getRoobert10(), t0, len0, kASCIIEncoding, 0);
 
@@ -1680,7 +1710,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 4: return "Seeds. Use Ⓑ to exit any mode or menu.";
 
         case 5: return "Move with the D-Pad, ✛. Zoom in & out with 🎣.";
-        case 6: return "Go to The Shop and press Ⓐ.";
+        case 6: return "Hold Ⓑ to run.  Go to The Shop and press Ⓐ.";
         case 7: return "Buy 10 Carrot Seeds from The Shop with Ⓐ.";
         case 8: return "Press Ⓑ to exit The Shop.";
       }
@@ -1707,8 +1737,8 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
           
         case 5: return "Go to where you planted your Carrot Seeds. ";
         case 6: return "Press Ⓐ to enter your inventory, select 'Pickup";
-        case 7: return "Mode' and press Ⓐ again. Press or hold Ⓐ when";
-        case 8: return "moving, pickup 10 grown Carrots.";
+        case 7: return "Mode'. Press or hold Ⓐ when moving, pickup 10";
+        case 8: return "grown Carrots. Use the 🎣 to change the pickup area. ";
       }
     case kTutSellCarrots:;
       switch (_n) {
@@ -1744,10 +1774,10 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 3: return "50 from The Shop and lay the path to move & sell";
         case 4: return "the carrots. Rotate belt pieces with 🎣.";
           
-        case 5: return "Go to the The Shop, buy around 50 an Conveyor Belts.";
+        case 5: return "Go to the The Shop, buy around 50 Conveyor Belts.";
         case 6: return "Press Ⓐ and choose these from your inventory.";
         case 7: return "Make a chain of belts from the Automatic Harvester to";
-        case 8: return "Sales. Rotate belts with 🎣 or hold Ⓑ and press ✛.";
+        case 8: return "Sales. Rotate belts with 🎣, or hold Ⓑ and press ✛.";
       }
     case kTutBuildQuarry:
       switch (_n) {
@@ -1814,24 +1844,24 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 0: return "-- A New Horizon --";
         case 1: return "Welcome to you new plot of land! More room for your";
         case 2: return "manufacturing empire to grow. Instead of selling Cargo,";
-        case 3: return "you can also move it between Plots. Use Conveyor Belts to";
-        case 4: return "feed Cargo in to the Exports Manager in any of your Plots.";
+        case 3: return "you can also move it between Plots. Use Belts to feed";
+        case 4: return "Cargo in to the Exports Manager in any of your Plots.";
           
-        case 5: return "Export some Cargo by moving it via Conveyors into the";
-        case 6: return "Exports Manager (to the right of the Plot Manager) on any";
-        case 7: return "Plot. The export rate of each Cargo type is averaged over";
-        case 8: return "the previous two minutes.";
+        case 5: return "Export some Cargo by moving it via Belts into the";
+        case 6: return "Exports Manager (to the right of the Plot Manager) on";
+        case 7: return "any Plot. The export rate of each Cargo type is";
+        case 8: return "averaged over the previous two minutes.";
       }
     case kTutImports:
       switch (_n) {
         case 0: return "-- Accessing The Goods --";
         case 1: return "Now that you're exporting Cargo, let's look at imports too.";
         case 2: return "Go to a different Plot and visit the Imports Manager,";
-        case 3: return "you can import up to four Cargo per Plot. Try setting";
-        case 4: return "up an Import now.";
+        case 3: return "you can import up to four Cargo per Plot.";
+        case 4: return " Try setting up an Import now.";
           
         case 5: return "Import some Cargo in a different Plot via the Imports";
-        case 6: return "Manager (to the right of the Exports Manager). N, S, E, W";
+        case 6: return "Manager (right of the Exports Manager). N, S, E, W";
         case 7: return "imports can be individually chosen. You cannot export a";
         case 8: return "Cargo type which is being imported to the same Plot.";
       }

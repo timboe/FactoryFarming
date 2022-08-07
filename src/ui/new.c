@@ -2,12 +2,12 @@
 #include "../player.h"
 
 uint32_t m_nextPrice;
-enum kUICat m_nextBuilding;
+enum kBuildingType m_nextBuilding;
 union kSubType m_nextSubType;
 
 /// ///
 
-enum kUICat getNewCategory() {
+enum kBuildingType getNewBuildingType() {
   return m_nextBuilding;
 }
 
@@ -15,74 +15,46 @@ uint32_t getNewID() {
   return m_nextSubType.raw;
 }
 
+bool checkHasNewToShow(struct Player_t* _p) {
+  const uint32_t currentLevel = _p->m_buildingsUnlockedTo;
+  if (UnlockDecs[currentLevel].type == kUtility && UnlockDecs[currentLevel].subType.utility == kRetirement) {
+    // This is always the last unlock - cannot go on from here
+    return false;
+  }
+  const bool haveUnlocked = (_p->m_soldCargo[ UnlockDecs[ currentLevel+1 ].of ] >= UnlockDecs[ currentLevel+1 ].fromSelling);
+  // Tutorial
+  if (getTutorialStage() < kTutBuildConveyor && UnlockDecs[currentLevel+1].type == kConveyor) {
+    return false; // Need to progress the tutorial too to unlock conveyors
+  }
+  // Tutorial
+  if (getTutorialStage() < kTutBuildQuarry && UnlockDecs[currentLevel+1].type == kExtractor && UnlockDecs[currentLevel+1].subType.extractor == kChalkQuarry) {
+    return false; // Need to progress the tutorial too to unlock chalk quarry
+  }
+  // Tutorial
+  if (getTutorialStage() < kTutBuildVitamin && UnlockDecs[currentLevel+1].type == kFactory) {
+    return false; // Need to progress the tutorial too to unlock factory
+  }
+  return haveUnlocked;
+}
+
 bool checkShowNew() {
   struct Player_t* p = getPlayer();
 
-  // Look for any upgrade which has not yet been seen
-  const uint32_t seenTo = p->m_moneyHighWaterMarkMenu;
-  const uint32_t ceiling = p->m_moneyHighWaterMark;
-
-  m_nextPrice = UINT32_MAX;
-  m_nextBuilding = 0;
-  m_nextSubType.raw = 0;
-
-  for (int32_t i = 0; i < kNConvSubTypes; ++i) {
-    const uint32_t unlock = CDesc[i].unlock;
-    if (unlock > seenTo && unlock <= ceiling && unlock < m_nextPrice) {
-      m_nextBuilding = kUICatConv;
-      m_nextSubType.conveyor = i;
-      m_nextPrice = unlock;
-    }
-  }
-
-  for (int32_t i = 0; i < kNPlantSubTypes; ++i) {
-    const uint32_t unlock = PDesc[i].unlock;
-    if (unlock > seenTo && unlock <= ceiling && unlock < m_nextPrice) {
-      m_nextBuilding = kUICatPlant;
-      m_nextSubType.plant = i;
-      m_nextPrice = unlock;
-    }
-  }
-
-  for (int32_t i = 0; i < kNExtractorSubTypes; ++i) {
-    const uint32_t unlock = EDesc[i].unlock;
-    if (unlock > seenTo && unlock <= ceiling && unlock < m_nextPrice) {
-      m_nextBuilding = kUICatExtractor;
-      m_nextSubType.extractor = i;
-      m_nextPrice = unlock;
-    }
-  }
-
-  for (int32_t i = 0; i < kNUtilitySubTypes; ++i) {
-    const uint32_t unlock = UDesc[i].unlock;
-    if (unlock > seenTo && unlock <= ceiling && unlock < m_nextPrice) {
-      m_nextBuilding = kUICatUtility;
-      m_nextSubType.utility = i;
-      m_nextPrice = unlock;
-    }
-  }
-
-  for (int32_t i = 0; i < kNFactorySubTypes; ++i) {
-    const uint32_t unlock = FDesc[i].unlock;
-    if (unlock > seenTo && unlock <= ceiling && unlock < m_nextPrice) {
-      m_nextBuilding = kUICatFactory;
-      m_nextSubType.factory = i;
-      m_nextPrice = unlock;
-    }
-  }
-
-  if (m_nextPrice == UINT32_MAX) {
+  if (!checkHasNewToShow(p)) {
     return false;
   }
 
-  p->m_moneyHighWaterMarkMenu = m_nextPrice;
+  const uint32_t testLevel = p->m_buildingsUnlockedTo + 1;
+  m_nextBuilding = UnlockDecs[testLevel].type;
+  m_nextSubType = UnlockDecs[testLevel].subType;
+  p->m_buildingsUnlockedTo += 1;
   setGameMode(kMenuNew);
   return true;
 }
 
 const char* getNewText() {
   switch(m_nextBuilding) {
-    case kUICatConv: switch (m_nextSubType.conveyor) {
+    case kConveyor: switch (m_nextSubType.conveyor) {
       case kBelt: return "Moves Cargo North, South, East or West";
       case kSplitI: return  "Splits incoming cargo 2 ways (180 degrees)";
       case kSplitL: return "Splits incoming cargo 2 ways (90 degrees)";
@@ -92,7 +64,7 @@ const char* getNewText() {
       case kTunnelIn: case kTunnelOut: return "Moves Cargo underground for 1 tile";
       case kNConvSubTypes: return "";
     }
-    case kUICatPlant: switch (m_nextSubType.plant) {
+    case kPlant: switch (m_nextSubType.plant) {
       case kCarrotPlant: return "Plant to grow Carrots";
       case kSunflowerPlant: return "Plant to harvest Sunflowers";
       case kPotatoPlant: return "Plant to grow Potatoes";
@@ -110,7 +82,7 @@ const char* getNewText() {
       //case kP4:; case kP5:; case kP6:; case kP7:; case kP8:; case kP9:; case kP10:; case kP11:; case kP12:; return "Placeholder";
       case kNPlantSubTypes: return "";
     }
-    case kUICatUtility: switch (m_nextSubType.utility) {
+    case kUtility: switch (m_nextSubType.utility) {
       case kPath: return "Movement speed is enhanced while on a path";
       case kSign: return "Displays a Cargo of your choosing";
       case kBin: return "Cargo placed here will get destroyed";
@@ -124,7 +96,7 @@ const char* getNewText() {
 
       case kNUtilitySubTypes: return "";
     }
-    case kUICatExtractor: switch (m_nextSubType.extractor) {
+    case kExtractor: switch (m_nextSubType.extractor) {
       case kCropHarvesterSmall: return "Collects Cargo, can hold three different types";
       case kPump: return "Must be built on water. Produced Water Barrels";
       case kChalkQuarry: return "Must be built on Chalky Soil. Produces Chalk";
@@ -133,7 +105,7 @@ const char* getNewText() {
       case kCO2Extractor: return "Liquefies Carbon Dioxide out of the air.";
       case kNExtractorSubTypes: return "";
     }
-    case kUICatFactory: switch (m_nextSubType.factory) {
+    case kFactory: switch (m_nextSubType.factory) {
       case kVitiminFac: return "Manufactures low-grade Vitamin Pills";
       case kVegOilFac: return "Crush Vegetable Oil from Sunflowers";
       case kCrispsFac: return "Manufactures Potato Chips. A fried favorite.";

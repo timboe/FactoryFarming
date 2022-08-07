@@ -450,8 +450,7 @@ void forceTorus() { m_forceTorus = true; }
 void resetPlayer() {
   m_player.m_money = 0;
   m_player.m_moneyCumulative = 0;
-  m_player.m_moneyHighWaterMark = 1;
-  m_player.m_moneyHighWaterMarkMenu = 0;
+  m_player.m_buildingsUnlockedTo = 0;
   m_player.m_saveTime = pd->system->getSecondsSinceEpoch(NULL);
   m_player.m_playTime = 0;
   m_player.m_tutorialProgress = 0;
@@ -465,6 +464,8 @@ void resetPlayer() {
   for (int32_t i = 0; i < kNPlantSubTypes; ++i) m_player.m_carryPlant[i] = 0;
   for (int32_t i = 0; i < kNExtractorSubTypes; ++i) m_player.m_carryExtractor[i] = 0;
   for (int32_t i = 0; i < kNFactorySubTypes; ++i) m_player.m_carryFactory[i] = 0;
+  for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_soldCargo[i] = 0;
+  for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_importedCargo[i] = 0;
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_importConsumers[i] = 0;
   setPlayerPosition(SCREEN_PIX_X/4, (3*SCREEN_PIX_Y)/4, /*update current location = */ true);
   m_currentChunk = getChunk_noCheck(0,0);
@@ -507,8 +508,8 @@ void serialisePlayer(struct json_encoder* je) {
   je->writeInt(je, m_player.m_money);
   je->addTableMember(je, "mhwm", 4);
   je->writeInt(je, m_player.m_moneyHighWaterMark);
-  je->addTableMember(je, "mhwmm", 5);
-  je->writeInt(je, m_player.m_moneyHighWaterMarkMenu);
+  je->addTableMember(je, "but", 3);
+  je->writeInt(je, m_player.m_buildingsUnlockedTo);
   je->addTableMember(je, "mc", 2);
   je->writeInt(je, m_player.m_moneyCumulative);
   je->addTableMember(je, "st", 2);
@@ -588,6 +589,22 @@ void serialisePlayer(struct json_encoder* je) {
   }
   je->endArray(je);
 
+  je->addTableMember(je, "scargo", 6);
+  je->startArray(je);
+  for (int32_t i = 0; i < kNCargoType; ++i) {
+    je->addArrayMember(je);
+    je->writeInt(je, m_player.m_soldCargo[i]);
+  }
+  je->endArray(je);
+
+  je->addTableMember(je, "icargo", 6);
+  je->startArray(je);
+  for (int32_t i = 0; i < kNCargoType; ++i) {
+    je->addArrayMember(je);
+    je->writeInt(je, m_player.m_importedCargo[i]);
+  }
+  je->endArray(je);
+
   for (int32_t w = 0; w < WORLD_SAVE_SLOTS; ++w) {
     char txt[12] = "";
     snprintf(txt, 12, "expw%02i", (int)w);
@@ -622,8 +639,8 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_player.m_money = json_intValue(_value);
   } else if (strcmp(_key, "mhwm") == 0) {
     m_player.m_moneyHighWaterMark = json_intValue(_value);
-  } else if (strcmp(_key, "mhwmm") == 0) {
-    m_player.m_moneyHighWaterMarkMenu = json_intValue(_value);
+  } else if (strcmp(_key, "but") == 0) {
+    m_player.m_buildingsUnlockedTo = json_intValue(_value);
   } else if (strcmp(_key, "mc") == 0) {
     m_player.m_moneyCumulative = json_intValue(_value);
   } else if (strcmp(_key, "st") == 0) {
@@ -663,22 +680,26 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_deserialiseArrayID = 5;
   } else if (strcmp(_key, "facts") == 0) {
     m_deserialiseArrayID = 6;
-  } else if (strcmp(_key, "expw00") == 0) {
+  } else if (strcmp(_key, "scargo") == 0) {
     m_deserialiseArrayID = 7;
-  } else if (strcmp(_key, "expw01") == 0) {
+  } else if (strcmp(_key, "icargo") == 0) {
     m_deserialiseArrayID = 8;
-  } else if (strcmp(_key, "expw02") == 0) {
+  } else if (strcmp(_key, "expw00") == 0) {
     m_deserialiseArrayID = 9;
-  } else if (strcmp(_key, "expw03") == 0) {
+  } else if (strcmp(_key, "expw01") == 0) {
     m_deserialiseArrayID = 10;
-  } else if (strcmp(_key, "expw04") == 0) {
+  } else if (strcmp(_key, "expw02") == 0) {
     m_deserialiseArrayID = 11;
-  } else if (strcmp(_key, "expw05") == 0) {
+  } else if (strcmp(_key, "expw03") == 0) {
     m_deserialiseArrayID = 12;
-  } else if (strcmp(_key, "expw06") == 0) {
+  } else if (strcmp(_key, "expw04") == 0) {
     m_deserialiseArrayID = 13;
-  } else if (strcmp(_key, "expw07") == 0) {
+  } else if (strcmp(_key, "expw05") == 0) {
     m_deserialiseArrayID = 14;
+  } else if (strcmp(_key, "expw06") == 0) {
+    m_deserialiseArrayID = 15;
+  } else if (strcmp(_key, "expw07") == 0) {
+    m_deserialiseArrayID = 16;
   } else if (strcmp(_key, "impc") == 0) {
     // noop
   } else if (strcmp(_key, "player") == 0) {
@@ -700,16 +721,19 @@ void deserialiseArrayValuePlayer(json_decoder* jd, int _pos, json_value _value) 
     case 4: m_player.m_carryExtractor[i] = v; break;
     case 5: m_player.m_carryFactory[i] = v; break;
 
-    case 6: m_player.m_exportPerWorld[0][i] = f; break;
-    case 7: m_player.m_exportPerWorld[1][i] = f; break;
-    case 8: m_player.m_exportPerWorld[2][i] = f; break;
-    case 9: m_player.m_exportPerWorld[3][i] = f; break;
-    case 10: m_player.m_exportPerWorld[4][i] = f; break;
-    case 11: m_player.m_exportPerWorld[5][i] = f; break;
-    case 12: m_player.m_exportPerWorld[6][i] = f; break;
-    case 13: m_player.m_exportPerWorld[7][i] = f; break;
+    case 6: m_player.m_soldCargo[i] = v; break;
+    case 7: m_player.m_importedCargo[i] = v; break;
 
-    case 14: m_player.m_importConsumers[i] = v; break;
+    case 8: m_player.m_exportPerWorld[0][i] = f; break;
+    case 9: m_player.m_exportPerWorld[1][i] = f; break;
+    case 10: m_player.m_exportPerWorld[2][i] = f; break;
+    case 11: m_player.m_exportPerWorld[3][i] = f; break;
+    case 12: m_player.m_exportPerWorld[4][i] = f; break;
+    case 13: m_player.m_exportPerWorld[5][i] = f; break;
+    case 14: m_player.m_exportPerWorld[6][i] = f; break;
+    case 15: m_player.m_exportPerWorld[7][i] = f; break;
+
+    case 16: m_player.m_importConsumers[i] = v; break;
   }
 }
 

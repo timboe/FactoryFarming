@@ -19,19 +19,20 @@ void doPurchace() {
 
 void populateContentBuy() {
   struct Player_t* p = getPlayer();
-  const uint32_t hwm = p->m_moneyHighWaterMark;
+  const uint32_t unlockLevel = p->m_buildingsUnlockedTo;
   int16_t column = 0, row = 0;
   // Miss the first (Tools). Miss the last (Cargo)
   for (int32_t c = kUICatPlant; c < kUICatCargo; ++c) {
-    int32_t firstEntryCost = getUnlockCost(c, 0);
-    if (hwm < firstEntryCost) { // If can unlock 1st entry
+    int32_t myLevel = getUnlockLevel(c, 0);
+    if (myLevel > unlockLevel) { // Can the first thing be bought? Should always be the 1st thing to be unlocked per cat
       continue;
     }
     setUIContentHeader(row, c);
     ++row;
     column = 0;
     for (int32_t i = 0; i < getNSubTypes(c); ++i) {
-      if (hwm < getUnlockCost(c, i)) {
+      myLevel = getUnlockLevel(c, i);
+      if (myLevel > unlockLevel) {
         continue;
       }
       setUIContentItem(row, column, c, i, 0);

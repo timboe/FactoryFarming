@@ -194,8 +194,9 @@ bool doNewWorld() {
     if (getSlot() == 0) {
       // Starting a new game, set the default settings
       setDefaultPlayerSettings();
+      showTutorialMsg(getTutorialStage());
       // TEMP
-      unlockOtherWorlds();
+      //unlockOtherWorlds();
     }
 
     setPlotCursorToWorld(getSlot());

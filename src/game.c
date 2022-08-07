@@ -261,9 +261,9 @@ void reset(bool _resetThePlayer) {
 
 void populateMenuTitle() {
   pd->system->removeAllMenuItems();
-  pd->system->addMenuItem("delete save a", menuOptionsCallbackDelete, (void*)0);
-  pd->system->addMenuItem("delete save b", menuOptionsCallbackDelete, (void*)1);
-  pd->system->addMenuItem("delete save c", menuOptionsCallbackDelete, (void*)2);
+  pd->system->addMenuItem("delete save 1", menuOptionsCallbackDelete, (void*)0);
+  pd->system->addMenuItem("delete save 2", menuOptionsCallbackDelete, (void*)1);
+  pd->system->addMenuItem("delete save 3", menuOptionsCallbackDelete, (void*)2);
 }
 
 void populateMenuGame() {
@@ -299,6 +299,52 @@ void initGame() {
   for (int32_t i = 0; i < kNCargoType; ++i) {
     //if (i == kCa0) break;
     if (i != CargoDesc[i].subType) pd->system->error("CARGO DESCRIPTOR ORDERING IS WRONG!");
+  }
+
+  // Populate unlock ordering
+  // TODO - this is super fragile! Need to figure out how to get the size of this array 
+  for (int32_t i = 0; i < 11; ++i) {
+    if (UnlockDecs[i].type == kConveyor) {
+      for (int32_t j = 0; j < kNConvSubTypes; ++j) {
+        if (CDesc[j].subType == UnlockDecs[i].subType.conveyor) {
+          CDesc[j].unlock = i;
+          pd->system->logToConsole("%s gets unlock ID %i", toStringBuilding(kConveyor, (union kSubType) {.conveyor = j}, false), i);
+          break;
+        }
+      }
+    } else if (UnlockDecs[i].type == kPlant) {
+      for (int32_t j = 0; j < kNPlantSubTypes; ++j) {
+        if (PDesc[j].subType == UnlockDecs[i].subType.plant) {
+          PDesc[j].unlock = i;
+          pd->system->logToConsole("%s gets unlock ID %i", toStringBuilding(kPlant, (union kSubType) {.plant = j}, false), i);
+          break;
+        }
+      }
+    } else if (UnlockDecs[i].type == kExtractor) {
+      for (int32_t j = 0; j < kNExtractorSubTypes; ++j) {
+        if (EDesc[j].subType == UnlockDecs[i].subType.extractor) {
+          EDesc[j].unlock = i;
+          pd->system->logToConsole("%s gets unlock ID %i", toStringBuilding(kExtractor, (union kSubType) {.extractor = j}, false), i);
+          break;
+        }
+      }
+    } else if (UnlockDecs[i].type == kFactory) {
+      for (int32_t j = 0; j < kNFactorySubTypes; ++j) {
+        if (FDesc[j].subType == UnlockDecs[i].subType.factory) {
+          FDesc[j].unlock = i;
+          pd->system->logToConsole("%s gets unlock ID %i", toStringBuilding(kFactory, (union kSubType) {.factory = j}, false), i);
+          break;
+        }
+      }
+    } else if (UnlockDecs[i].type == kUtility) {
+      for (int32_t j = 0; j < kNUtilitySubTypes; ++j) {
+        if (UDesc[j].subType == UnlockDecs[i].subType.utility) {
+          UDesc[j].unlock = i;
+          pd->system->logToConsole("%s gets unlock ID %i", toStringBuilding(kUtility, (union kSubType) {.utility = j}, false), i);
+          break;
+        }
+      }
+    }
   }
 
 }

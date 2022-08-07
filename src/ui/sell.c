@@ -12,6 +12,7 @@ void doSale() {
   if (modMoney(selectedPrice)) {
     modOwned(kUICatCargo, selectedID, /*add=*/ false);
     UIDirtyMain();
+    getPlayer()->m_soldCargo[ selectedID ]++;
     // Tutorial
     if (getTutorialStage() == kTutSellCarrots && selectedID == kCarrot) {
       makeTutorialProgress();

@@ -21,6 +21,8 @@ bool m_exportParity = false;
 uint16_t m_exportItemCountA[kNCargoType];
 uint16_t m_exportItemCountB[kNCargoType];
 
+bool m_hasExported = false, m_hasImported = false; // tutorial only
+
 #define ONE_MIN (60*TICKS_PER_SEC)
 #define TWO_MIN (120*TICKS_PER_SEC)
 #define IMPORT_SECONDS 10
@@ -110,6 +112,7 @@ void sellBoxUpdateFn(struct Building_t* _building) {
     for (int32_t y = _building->m_location->m_y - 1; y < _building->m_location->m_y + 2; ++y) {
       struct Location_t* loc = getLocation_noCheck(x, y); // Will never straddle the world boundary
       if (loc->m_cargo) {
+        getPlayer()->m_soldCargo[ loc->m_cargo->m_type ]++;
         modMoney( CargoDesc[loc->m_cargo->m_type].price );
         // Tutorial
         const enum kUITutorialStage tut = getTutorialStage(); 
@@ -196,6 +199,10 @@ void buildingSetupSpecial(struct Building_t* _building) {
   }
 }
 
+bool hasExported() {
+  return m_hasExported; // Tutorial
+}
+
 void exportUpdateFn(struct Building_t* _building, uint8_t _tick) {
   if (_building->m_dir != SN) return;
 
@@ -207,7 +214,7 @@ void exportUpdateFn(struct Building_t* _building, uint8_t _tick) {
       struct Location_t* loc = getLocation(_building->m_location->m_x + x, _building->m_location->m_y + y);
       if (loc->m_cargo) {
         // We do not allow export of any imports
-        // Oterwise you can break the game too easily....
+        // Otherwise you can break the game too easily....
         const enum kCargoType ct = loc->m_cargo->m_type;
         if (ct == m_importBox->m_stored[3] || ct == m_importBox->m_stored[4] || ct == m_importBox->m_stored[5] || ct == m_importBox->m_mode.mode8[1]) {
           continue;
@@ -219,6 +226,7 @@ void exportUpdateFn(struct Building_t* _building, uint8_t _tick) {
           else                m_exportItemCountB[loc->m_cargo->m_type]++;
         }
         clearLocation(loc, /*clearCargo*/ true, /*clearBuilding*/ false);
+        m_hasExported = true;
       }
     }
   }
@@ -233,6 +241,9 @@ void exportUpdateFn(struct Building_t* _building, uint8_t _tick) {
   else                memset(m_exportItemCountB, 0, sizeof(uint16_t)*kNCargoType);
 }
 
+bool hasImported() {
+  return m_hasImported; // Tutorial
+}
 
 void importUpdateFn(struct Building_t* _building, uint8_t _tick) {
   if (_building->m_dir != SN) return;
@@ -304,7 +315,10 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tick) {
     fractional[c] += input - (uint32_t)input;
     uint32_t input_int = (int32_t)input;
 
+    getPlayer()->m_importedCargo[ c ]++;
+
     if (input_int) {
+      m_hasImported = true;
       if (input_int + (d == 3 ? _building->m_mode.mode8[0] : _building->m_stored[d]) <= 255) {
         switch (d) {
           case 0: _building->m_stored[0] += input_int; break;

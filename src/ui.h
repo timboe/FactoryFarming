@@ -57,7 +57,7 @@ void updateBlueprint(void);
 
 void drawUITop(const char* _text);
 
-int32_t getUnlockCost(enum kUICat _c, int32_t _i);
+int32_t getUnlockLevel(enum kUICat _c, int32_t _i);
 
 int32_t getPrice(enum kUICat _c, int32_t _i);
 
@@ -74,6 +74,8 @@ void modTitleCursor(bool _increment);
 uint16_t getTitleCursorSelected(void);
 
 enum kBuildingType getCatBuildingSubType(enum kUICat _c);
+
+enum kUICat getBuildingTypeCat(enum kBuildingType _b);
 
 LCDSprite* getCannotAffordSprite(void);
 
