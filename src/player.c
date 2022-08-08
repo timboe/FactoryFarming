@@ -67,6 +67,21 @@ float getThisWorldCargoExport(enum kCargoType _cargo) {
   return m_player.m_exportPerWorld[getSlot()][_cargo];
 }
 
+float getOtherWorldCargoSales() {
+  float ret = 0.0f;
+  int8_t s = getSlot();
+  for (int32_t i = 0; i < WORLD_SAVE_SLOTS; ++i) {
+    if (i == s) continue;
+    ret += m_player.m_sellPerWorld[i];
+  }
+  return ret;
+}
+
+
+float getThisWorldCargoSales() {
+  return m_player.m_sellPerWorld[getSlot()];
+}
+
 uint16_t getCargoImportConsumers(enum kCargoType _cargo) {
   return m_player.m_importConsumers[_cargo];
 }
@@ -296,7 +311,9 @@ bool movePlayer() {
     m_currentChunk = getChunk(chunkX, chunkY); // TODO this can still go out-of-bounds (how?), ideally should be able to use getChunk_noCheck here
     m_quadrant = quadrant;
     if (zoom == 2 || chunkChange) { // When zoomed out, only need to call when actually changing chunks
+      #ifdef DEV
       pd->system->logToConsole("CHUNKCHANGE %u %u (%u %u)", chunkX, chunkY, subChunkX, subChunkY);
+      #endif
       updateRenderList();
     }
   }
@@ -454,6 +471,7 @@ void resetPlayer() {
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_soldCargo[i] = 0;
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_importedCargo[i] = 0;
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_importConsumers[i] = 0;
+  for (int32_t i = 0; i < WORLD_SAVE_SLOTS; ++i) m_player.m_sellPerWorld[i] = 0;
   setPlayerPosition(SCREEN_PIX_X/4, (3*SCREEN_PIX_Y)/4, /*update current location = */ true);
   m_currentChunk = getChunk_noCheck(0,0);
   m_facing = 0;
@@ -467,7 +485,7 @@ void resetPlayer() {
 }
 
 void setDefaultPlayerSettings() {
-  modMoney(100000); // TEMP
+  modMoney(500000); // TEMP
   m_player.m_soundSettings = 3;
   m_player.m_autoUseConveyorBooster = 1;
   m_player.m_enableConveyorAnimation = 1;
@@ -604,6 +622,14 @@ void serialisePlayer(struct json_encoder* je) {
     je->endArray(je);
   }
 
+  je->addTableMember(je, "spw", 3);
+  je->startArray(je);
+  for (int32_t w = 0; w < WORLD_SAVE_SLOTS; ++w) {
+    je->addArrayMember(je);
+    je->writeDouble(je, m_player.m_sellPerWorld[w]);
+  }
+  je->endArray(je);
+
   je->addTableMember(je, "impc", 4);
   je->startArray(je);
   for (int32_t i = 0; i < kNCargoType; ++i) {
@@ -687,6 +713,8 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_deserialiseArrayID = 15;
   } else if (strcmp(_key, "expw07") == 0) {
     m_deserialiseArrayID = 16;
+  } else if (strcmp(_key, "spw") == 0) {
+    m_deserialiseArrayID = 17;
   } else if (strcmp(_key, "impc") == 0) {
     // noop
   } else if (strcmp(_key, "player") == 0) {
@@ -720,15 +748,19 @@ void deserialiseArrayValuePlayer(json_decoder* jd, int _pos, json_value _value) 
     case 14: m_player.m_exportPerWorld[6][i] = f; break;
     case 15: m_player.m_exportPerWorld[7][i] = f; break;
 
-    case 16: m_player.m_importConsumers[i] = v; break;
+    case 16: m_player.m_sellPerWorld[i] = f; break;
+
+    case 17: m_player.m_importConsumers[i] = v; break;
   }
 }
 
 void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_value_type _type) {
   setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y, /*update current location = */ true);
 
+  #ifdef DEV
   pd->system->logToConsole("-- Player decoded to (%i, %i), current location (%i, %i), money:%i", 
     (int32_t)m_player.m_pix_x, (int32_t)m_player.m_pix_y, m_currentLocation->m_x, m_currentLocation->m_y, m_player.m_money);
+  #endif
 
   m_deserialiseArrayID = -1;
 

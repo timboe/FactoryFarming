@@ -197,8 +197,6 @@ bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addToDisplay
   bool addedByPlayer = true;
   if (_loc->m_cargo != NULL) return false;
 
-  //pd->system->logToConsole("Set cargo, current %i", (int)loc->m_cargo);
-
   struct Cargo_t* cargo = cargoManagerNewCargo(_type);
   if (!cargo) { // Run out of slots
     return false;
@@ -245,7 +243,9 @@ void resetCargo() {
 void initCargo() {
   m_cargos = pd->system->realloc(NULL, SIZE_CARGO);
   memset(m_cargos, 0, SIZE_CARGO);
+  #ifdef DEV
   pd->system->logToConsole("malloc: for cargo %i", SIZE_CARGO/1024);
+  #endif
 }
 
 void serialiseCargo(struct json_encoder* je) {

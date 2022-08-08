@@ -1,6 +1,6 @@
 #pragma once
 
-#define DEV
+//#define DEV
 
 //#define DEMO
 
@@ -44,5 +44,7 @@ void populateMenuTitle(void);
 void populateMenuGame(void);
 
 void initGame(void);
+
+uint16_t getCactusUnlock(void);
 
 void reset(bool _resetThePlayer);

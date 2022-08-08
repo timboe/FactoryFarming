@@ -805,10 +805,14 @@ void doLakesAndRivers(uint8_t _slot) {
         reject = addLake(x, y, RAND_MAX/2);
       }
       if (reject) {
+        #ifdef DEV
         pd->system->logToConsole("generate: rejected %i lake system at %i,%i (try %i)", i, x, y, try);
+        #endif
         memcpy(m_tiles, backup, SIZE_GENERATE);
       } else {
+        #ifdef DEV
         pd->system->logToConsole("generate: added %i lake system at %i,%i", i, x, y);
+        #endif
         break;
       }
     }
@@ -851,7 +855,9 @@ void resetWorld() {
 
 void initWorld() {
   m_tiles = pd->system->realloc(NULL, SIZE_GENERATE);
+  #ifdef DEV
   pd->system->logToConsole("malloc: for world %i", SIZE_GENERATE/1024);
+  #endif
 }
 
 void serialiseWorld(struct json_encoder* je) {
@@ -972,9 +978,10 @@ void generate(uint32_t _actionProgress) {
     doWetness(/*for titles = */ false);
 
     // Finished
+    #ifdef DEV
     float f; for (int32_t i = 0; i < 10000; ++i) for (int32_t j = 0; j < 10000; ++j) { f*=i*j; }
     pd->system->logToConsole("Generated %s",  getWorldName(slot, /*mask*/ false));
-
+    #endif
   }
 }
 

@@ -47,10 +47,12 @@ struct Player_t{
   uint16_t m_carryExtractor[kNExtractorSubTypes];
   uint16_t m_carryFactory[kNFactorySubTypes];
 
-  uint16_t m_soldCargo[kNCargoType];
-  uint16_t m_importedCargo[kNCargoType];
+  uint32_t m_soldCargo[kNCargoType];
+  uint32_t m_importedCargo[kNCargoType];
 
   float m_exportPerWorld[WORLD_SAVE_SLOTS][kNCargoType];
+
+  float m_sellPerWorld[WORLD_SAVE_SLOTS];
 
   uint16_t m_importConsumers[kNCargoType];
 
@@ -88,6 +90,10 @@ float getTotalCargoExport(enum kCargoType _cargo);
 float getThisWorldCargoExport(enum kCargoType _cargo);
 
 uint16_t getCargoImportConsumers(enum kCargoType _cargo);
+
+float getThisWorldCargoSales(void);
+
+float getOtherWorldCargoSales(void);
 
 bool modMoney(int32_t _amount);
 

@@ -12,7 +12,7 @@ void mineUpdateFn(struct Building_t* _building, uint8_t _tick);
 
 /// ///
 
-#define COLLECT_TIME (TICKS_PER_SEC*8)
+#define COLLECT_TIME (TICKS_PER_SEC*4)
 
 void tryPickupAnyCargo(struct Location_t* _from, struct Building_t* _building) {
   for (int32_t try = 0; try < (MAX_STORE/2); ++try) {
@@ -63,7 +63,7 @@ void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick) {
   for (int32_t x = min; x < max; ++x) {
     for (int32_t y = min; y < max; ++y) {
       struct Location_t* loc = getLocation(_building->m_location->m_x + x, _building->m_location->m_y + y);
-      if (loc->m_cargo && (loc->m_building == NULL || loc->m_building->m_type == kPlant)) {
+      if (rand() % 2 && loc->m_cargo && (loc->m_building == NULL || loc->m_building->m_type == kPlant)) {
         // Into  our three storage locations
         tryPickupAnyCargo(loc, _building);
       }
@@ -91,6 +91,9 @@ void extractorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoo
 }
 
 bool canBePlacedExtractor(struct Location_t* _loc, union kSubType _subType) {
+  //TODO fix this bug
+  if (_loc->m_x == 0 || _loc->m_y == 0) return false;
+
   bool hasWater = false;
   bool hasChalk = false;
   bool hasPeat = false;

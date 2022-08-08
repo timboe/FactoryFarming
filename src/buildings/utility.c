@@ -122,6 +122,9 @@ bool doPlaceLandfill(struct Location_t* _loc) {
 bool canBePlacedUtility(struct Location_t* _loc, union kSubType _subType) {
 
   if (_subType.utility == kRetirement) {
+    //TODO fix this bug
+    if (_loc->m_x == 0 || _loc->m_y == 0) return false;
+
     if (getSlot() != kTranquilWorld) return false;
     for (int32_t x = -4; x < 5; ++x) {
       for (int32_t y = -4; y < 5; ++y) {

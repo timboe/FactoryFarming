@@ -87,7 +87,9 @@ void clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
 
 void initLocation() {
   m_locations = pd->system->realloc(NULL, SIZE_LOCATION);
+  #ifdef DEV
   pd->system->logToConsole("malloc: for location %i", SIZE_LOCATION/1024);
+  #endif
 }
 
 void resetLocation() {

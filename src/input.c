@@ -347,12 +347,16 @@ void rotateHandleWander(float _rotation) {
   if (rot > UI_ROTATE_ACTION) {
     rot = 0.0f;
     if (++m_zoom == ZOOM_LEVELS) m_zoom = ZOOM_LEVELS-1;
+    #ifdef DEV
     pd->system->logToConsole("ZOOM IN");
+    #endif
     updateRenderList();
     updateBlueprint();
   } else if (rot < -UI_ROTATE_ACTION) {
     rot = 0.0f;
+    #ifdef DEV
     pd->system->logToConsole("ZOOM OUT");
+    #endif
     if (--m_zoom == 0) m_zoom = 1;
     updateRenderList();
     updateBlueprint();

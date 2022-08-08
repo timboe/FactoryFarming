@@ -226,7 +226,6 @@ void chunkRemoveObstacle(struct Chunk_t* _chunk, LCDSprite* _obstacleZ1) {
 }
 
 uint16_t chunkTickChunk(struct Chunk_t* _chunk, uint8_t _tick, uint8_t _zoom) {
-  //pd->system->logToConsole("Asked to tick %i for %i", _tick, _chunk);
   for (uint32_t i = 0; i < _chunk->m_nBuildingsUpdate; ++i) {
     (*_chunk->m_buildingsUpdate[i]->m_updateFn)(_chunk->m_buildingsUpdate[i], _tick, _zoom);
   }
@@ -336,5 +335,7 @@ void resetChunk() {
 void initChunk() {
   m_chunks = pd->system->realloc(NULL, SIZE_CHUNK);
   memset(m_chunks, 0, SIZE_CHUNK);
+  #ifdef DEV
   pd->system->logToConsole("malloc: for chunks %i", SIZE_CHUNK/1024);
+  #endif
 }

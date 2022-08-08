@@ -94,6 +94,7 @@ int eventHandler(PlaydateAPI* playdate, PDSystemEvent event, uint32_t arg) {
       #ifdef DEV
       playdate->system->logToConsole("EH: unknown event %i with arg %i", event, arg);
       #endif
+      break;
   }
   
   return 0;

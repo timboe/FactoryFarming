@@ -77,7 +77,9 @@ void doIO(enum kSaveLoadRequest _first, enum kSaveLoadRequest _andThen) {
   m_andThen = _andThen;
   m_secondStage = false;
   m_actionProgress = 0;
+  #ifdef DEV
   pd->system->logToConsole("IO: Requested");
+  #endif
 }
 
 bool IOOperationInProgress() {
@@ -104,12 +106,16 @@ void enactIO() {
 
   if (finished) {
     if (!m_secondStage) {
+      #ifdef DEV
       pd->system->logToConsole("IO: Stage 1 Finished");
+      #endif
       m_secondStage = true;
       m_actionProgress = 0;
     } else {
       // Specials...
+      #ifdef DEV
       pd->system->logToConsole("IO: Stage 2 Finished");
+      #endif
       m_secondStage = false;
       m_actionProgress = 0;
       m_doFirst = kDoNothing;
@@ -165,7 +171,9 @@ bool doTitle() {
 ///
 
 bool doNewWorld() {
+  #ifdef DEV
   pd->system->logToConsole("NEW WORLD: Progress %i", m_actionProgress);
+  #endif
   pd->sprite->addSprite(getGenSprite());
 
   // Create and go to new world!
@@ -196,7 +204,7 @@ bool doNewWorld() {
       setDefaultPlayerSettings();
       showTutorialMsg(getTutorialStage());
       // TEMP
-      unlockOtherWorlds();
+      //unlockOtherWorlds();
     }
 
     setPlotCursorToWorld(getSlot());
@@ -214,7 +222,9 @@ bool doNewWorld() {
 ///
 
 bool doSaveDelete() {
+  #ifdef DEV
   pd->system->logToConsole("SAVE DELTE Save:%i", m_save);
+  #endif
 
   // Hard file system reset
   for (uint16_t ss = 0; ss < WORLD_SAVE_SLOTS; ++ss) {
@@ -236,7 +246,9 @@ void scanSlots() {
     snprintf(m_filePath, 32, "world_%i_%i.json", m_save, m_scanSlot);
     SDFile* file = pd->file->open(m_filePath, kFileRead|kFileReadData);
     if (!file) {
+      #ifdef DEV
       pd->system->logToConsole("Scan world: Save:%i, Slot:%i, No Save", m_save, m_scanSlot);
+      #endif
       m_worldExists[m_save][m_scanSlot] = false;
       continue;
     }
@@ -250,7 +262,9 @@ void scanSlots() {
     pd->json->decode(&jd, (json_reader){ .read = doRead, .userdata = file }, NULL);
     pd->file->close(file);
 
+    #ifdef DEV
     pd->system->logToConsole("Scan world: Save:%i, Slot:%i, Version:%i", m_save, m_scanSlot, m_worldVersions[m_save][m_scanSlot]);
+    #endif
     m_worldExists[m_save][m_scanSlot] = true;
     m_foundSaveData[m_save] = true;
   }
@@ -259,7 +273,9 @@ void scanSlots() {
   for (uint16_t ss = 0; ss < WORLD_SAVE_SLOTS; ++ss) {
     if (m_worldExists[m_save][ss]) {
       if (m_worldVersions[m_save][ss] == 0) {
+        #ifdef DEV
         pd->system->logToConsole("Scan world: OLD WORLD DETECTED! Version 0. ACTION: Delete everything and start again");
+        #endif
         m_foundSaveData[m_save] = false;
       }
     }
@@ -270,11 +286,15 @@ void scanSlots() {
     SDFile* file = pd->file->open(m_filePath, kFileRead|kFileReadData);
     if (!file) {
       m_foundSaveData[m_save] = false;
+      #ifdef DEV
       pd->system->logToConsole("Scan world: No Player data found!");
+      #endif
     }
   }
 
+  #ifdef DEV
   pd->system->logToConsole("Scan world: overall result for Save:%i - %s", m_save, m_foundSaveData[m_save] ? "CAN-BE-LOADED" : "CANNOT-LOAD");
+  #endif
 }
 
 int scanShouldDecodeTableValueForKey(json_decoder* jd, const char* _key) {
@@ -306,12 +326,15 @@ bool doSave(bool _synchronous) {
   #endif
 
   if (!_synchronous) pd->sprite->addSprite(getSaveSprite());
+  #ifdef DEV
   pd->system->logToConsole("SAVE: Save:%i, Sync:%i, Progress %i", m_save, _synchronous, m_actionProgress);
+  #endif
 
   if (m_actionProgress == 0) {
 
     // Should get the latest export averages, guaranteed to be between 60 and 120s worth of data
     updateExport();
+    updateSales();
 
     snprintf(m_filePath, 32, "TMP_player_%i.json", m_save);
     m_file = pd->file->open(m_filePath, kFileWrite);
@@ -352,7 +375,9 @@ bool doSave(bool _synchronous) {
     int status = pd->file->close(m_file);
     m_file = NULL;
 
+    #ifdef DEV
     pd->system->logToConsole("SAVE: Saved to Save:%i, Slot %u, save status %i", m_save, m_slot, status);
+    #endif
 
     // Finish by moving into location
     char filePathFinal[32];
@@ -370,7 +395,10 @@ bool doSave(bool _synchronous) {
     scanSlots();
 
     // Finished
+    #ifdef DEV
     float f; for (int32_t i = 0; i < 10000; ++i) for (int32_t j = 0; j < 10000; ++j) { f*=i*j; }
+    #endif
+
     return true;
   }
 
@@ -383,7 +411,9 @@ bool doSave(bool _synchronous) {
 bool doLoad() {
 
   pd->sprite->addSprite(getLoadSprite());
+  #ifdef DEV
   pd->system->logToConsole("LOAD: Save:%i, Progress %i", m_save, m_actionProgress);
+  #endif
 
   if (m_actionProgress == 0) {
 
@@ -404,7 +434,9 @@ bool doLoad() {
     // We have now loaded the correct slot number for this player-save.
     // But we might want to be loading into a different world 
     if (m_forceSlot != -1) {
+      #ifdef DEV
       pd->system->logToConsole("LOAD: Save:%i, Slot Override from %i to %i", m_save, m_slot, m_forceSlot);
+      #endif
       setSlot(m_forceSlot);
     }
 
@@ -433,7 +465,10 @@ bool doLoad() {
     populateMenuGame();
 
     // Finished
+    #ifdef DEV
     float f; for (int32_t i = 0; i < 10000; ++i) for (int32_t j = 0; j < 10000; ++j) { f*=i*j; }
+    #endif
+
     return true;
   }
 

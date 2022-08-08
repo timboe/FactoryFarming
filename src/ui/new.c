@@ -1,5 +1,6 @@
 #include "new.h"
 #include "../player.h"
+#include "../buildings/special.h"
 
 uint32_t m_nextPrice;
 enum kBuildingType m_nextBuilding;
@@ -34,6 +35,7 @@ bool checkHasNewToShow(struct Player_t* _p) {
   if (getTutorialStage() < kTutBuildVitamin && UnlockDecs[currentLevel+1].type == kFactory) {
     return false; // Need to progress the tutorial too to unlock factory
   }
+
   return haveUnlocked;
 }
 

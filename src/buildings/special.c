@@ -18,8 +18,12 @@ struct Building_t* m_importBox = NULL;
 
 int32_t m_exportTimer = 0;
 bool m_exportParity = false;
+
 uint16_t m_exportItemCountA[kNCargoType];
 uint16_t m_exportItemCountB[kNCargoType];
+
+uint16_t m_exportItemValueA = 0;
+uint16_t m_exportItemValueB = 0;
 
 bool m_hasExported = false, m_hasImported = false; // tutorial only
 
@@ -28,9 +32,9 @@ bool m_hasExported = false, m_hasImported = false; // tutorial only
 #define IMPORT_SECONDS 10
 #define IMPORT_SEC_IN_TICKS (IMPORT_SECONDS*TICKS_PER_SEC)
 
-void sellBoxUpdateFn(struct Building_t* _building);
+void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tick);
 
-void exportUpdateFn(struct Building_t* _building, uint8_t _tick);
+void exportUpdateFn(struct Building_t* _building);
 
 void importUpdateFn(struct Building_t* _building, uint8_t _tick);
 
@@ -107,13 +111,22 @@ bool nearbyConveyor(struct Building_t* _building) {
   return false;
 }
 
-void sellBoxUpdateFn(struct Building_t* _building) {
+void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tick) {
   for (int32_t x = _building->m_location->m_x - 1; x < _building->m_location->m_x + 2; ++x) {
     for (int32_t y = _building->m_location->m_y - 1; y < _building->m_location->m_y + 2; ++y) {
       struct Location_t* loc = getLocation_noCheck(x, y); // Will never straddle the world boundary
       if (loc->m_cargo) {
         getPlayer()->m_soldCargo[ loc->m_cargo->m_type ]++;
-        modMoney( CargoDesc[loc->m_cargo->m_type].price );
+        const uint16_t price = CargoDesc[loc->m_cargo->m_type].price;
+        modMoney( price );
+
+        if (m_exportTimer < ONE_MIN) {
+          m_exportItemValueA += price;
+        } else {
+          if (m_exportParity) m_exportItemValueA += price;
+          else                m_exportItemValueB += price;
+        }
+
         // Tutorial
         const enum kUITutorialStage tut = getTutorialStage(); 
         if (tut == kTutBuildConveyor && loc->m_cargo->m_type == kCarrot && nearbyConveyor(_building)) {
@@ -127,12 +140,29 @@ void sellBoxUpdateFn(struct Building_t* _building) {
       }
     }
   }
+
+  // Process exporting of sales data (and exports data)
+
+  m_exportTimer += _tick;
+  if (m_exportTimer < TWO_MIN) return;
+
+  updateExport();
+  updateSales();
+  m_exportTimer -= ONE_MIN;
+  m_exportParity = !m_exportParity;
+  if (m_exportParity)  {
+    m_exportItemValueA = 0;
+    memset(m_exportItemCountA, 0, sizeof(uint16_t)*kNCargoType);
+  } else {
+    m_exportItemValueB = 0;
+    memset(m_exportItemCountB, 0, sizeof(uint16_t)*kNCargoType);
+  }
 }
 
 void specialUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   switch (_building->m_subType.special) {
-    case kSellBox:; return sellBoxUpdateFn(_building);
-    case kExportBox:; return exportUpdateFn(_building, _tick);
+    case kSellBox:; return sellBoxUpdateFn(_building, _tick);
+    case kExportBox:; return exportUpdateFn(_building);
     case kImportBox:; return importUpdateFn(_building, _tick);
     default: return;
   }
@@ -203,7 +233,7 @@ bool hasExported() {
   return m_hasExported; // Tutorial
 }
 
-void exportUpdateFn(struct Building_t* _building, uint8_t _tick) {
+void exportUpdateFn(struct Building_t* _building) {
   if (_building->m_dir != SN) return;
 
   // Pickup items 
@@ -230,15 +260,6 @@ void exportUpdateFn(struct Building_t* _building, uint8_t _tick) {
       }
     }
   }
-
-  m_exportTimer += _tick;
-  if (m_exportTimer < TWO_MIN) return;
-
-  updateExport();
-  m_exportTimer -= ONE_MIN;
-  m_exportParity = !m_exportParity;
-  if (m_exportParity) memset(m_exportItemCountA, 0, sizeof(uint16_t)*kNCargoType);
-  else                memset(m_exportItemCountB, 0, sizeof(uint16_t)*kNCargoType);
 }
 
 bool hasImported() {
@@ -350,6 +371,19 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tick) {
 
 }
 
+void updateSales() {
+  struct Player_t* p = getPlayer();
+  const uint8_t slot = getSlot();
+ 
+  float collected = m_exportItemValueA + m_exportItemValueB;
+  float av = collected / (m_exportTimer / TICKS_PER_SEC);
+  p->m_sellPerWorld[slot] = av;
+  #ifdef DEV
+  if (collected) pd->system->logToConsole("Integrated over %i s, the av sold value is %f /s", (m_exportTimer / TICKS_PER_SEC), (double)av);
+  #endif
+
+}
+
 void updateExport() {
   struct Player_t* p = getPlayer();
   const uint8_t slot = getSlot();
@@ -358,17 +392,21 @@ void updateExport() {
     float collected = m_exportItemCountA[c] + m_exportItemCountB[c];
     float av = collected / (m_exportTimer / TICKS_PER_SEC);
     p->m_exportPerWorld[slot][c] = av;
+    #ifdef DEV
     if (collected) pd->system->logToConsole("Integrated over %i s, the av exported %s is %f /s", (m_exportTimer / TICKS_PER_SEC), toStringCargoByType(c), (double)av);
+    #endif
   }
 }
 
-void resetExport() {
+void resetExportAndSales() {
   m_exportTimer = 0;
   m_exportParity = false;
   for (int32_t i = 0; i < kNCargoType; ++i) {
     m_exportItemCountA[i] = 0;
     m_exportItemCountB[i] = 0; 
   }
+  m_exportItemValueA = 0;
+  m_exportItemValueB = 0;
 }
 
 void drawUIInspectSpecial(struct Building_t* _building) {

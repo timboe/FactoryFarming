@@ -22,7 +22,9 @@ int16_t distanceFromIn(void);
 
 void updateExport(void);
 
-void resetExport(void);
+void updateSales(void);
+
+void resetExportAndSales(void);
 
 struct Building_t* getImportBox(void);
 

@@ -38,7 +38,9 @@ void updateMusic(bool _isTitle) {
       if (m_trackPlaying == -1) {
         // music is already off
       } else {
+        #ifdef DEV
         pd->system->logToConsole("Stopping %i", m_trackPlaying);
+        #endif
         int8_t toStop = m_trackPlaying;
         m_trackPlaying = -1; // Caution: there will be a callback
         pd->sound->fileplayer->stop(m_music[toStop]);

@@ -57,9 +57,6 @@ LCDBitmap* getPauseImage() {
   const uint16_t needToSell = UnlockDecs[ nextLevel ].fromSelling;
   const uint16_t haveSold = p->m_soldCargo[ cargo ];
 
-  pd->system->logToConsole("Showing pause menu for unlock # %i", nextLevel);
-
-
   snprintf(text, 128, "%i %ss", needToSell, toStringCargoByType(cargo));
   length = strlen(text);
   width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);

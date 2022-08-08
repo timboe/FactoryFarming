@@ -24,6 +24,8 @@ uint16_t m_farTickCount = 0;
 
 uint16_t m_autoSaveTimer = 0;
 
+uint16_t m_cactusUnlock = 0; // Used to unlock 2nd half of the game
+
 void tickNear(void);
 
 void tickFar(void);
@@ -224,24 +226,32 @@ int gameLoop(void* _data) {
 
 void menuOptionsCallbackDelete(void* _save) {
   int save = (uintptr_t) _save;
+  #ifdef DEV
   pd->system->logToConsole("menuOptionsCallbackDelete %i", save);
+  #endif
   setSave(save);
   doIO(kDoSaveDelete, /*and then*/ kDoScanSlots);
 }
 
 void menuOptionsCallbackLoad(void* blank) {
+  #ifdef DEV
   pd->system->logToConsole("menuOptionsCallbackLoad");
+  #endif
   setForceSlot(-1); // -1 loads from the slot stored in the player's save file
   doIO(kDoLoad, /*and then*/ kDoNothing);
 }
 
 void menuOptionsCallbackSave(void* blank) {
+  #ifdef DEV
   pd->system->logToConsole("menuOptionsCallbackSave");
+  #endif
   doIO(kDoSave, /*and then*/ kDoNothing);
 }
 
 void menuOptionsCallbackMenu(void* blank) {
+  #ifdef DEV
   pd->system->logToConsole("menuOptionsCallbackMenu");
+  #endif
   checkReturnDismissTutorialMsg();
   drawUITop("Main Menu");
   redrawAllSettingsMenuLines();
@@ -252,7 +262,7 @@ void menuOptionsCallbackMenu(void* blank) {
 void reset(bool _resetThePlayer) {
   resetCargo();
   resetBuilding();
-  resetExport(); // Essentially "reset special"
+  resetExportAndSales(); // Essentially "reset special"
   resetLocation();
   resetChunk();
   resetWorld();
@@ -273,6 +283,10 @@ void populateMenuGame() {
   pd->system->addMenuItem("load", menuOptionsCallbackLoad, NULL);
   pd->system->addMenuItem("save", menuOptionsCallbackSave, NULL);
   pd->system->addMenuItem("menu", menuOptionsCallbackMenu, NULL);
+}
+
+uint16_t getCactusUnlock() {
+  return m_cactusUnlock;
 }
 
 void initGame() {
@@ -304,21 +318,27 @@ void initGame() {
   }
 
   // Populate unlock ordering
-  // TODO - this is super fragile! Need to figure out how to get the size of this array 
-  for (int32_t i = 0; i < 11; ++i) {
+  int32_t i = -1;
+  while (true) {
+    ++i;
     if (UnlockDecs[i].type == kConveyor) {
       for (int32_t j = 0; j < kNConvSubTypes; ++j) {
         if (CDesc[j].subType == UnlockDecs[i].subType.conveyor) {
           CDesc[j].unlock = i;
+          #ifdef DEV
           pd->system->logToConsole("%s gets unlock ID %i", toStringBuilding(kConveyor, (union kSubType) {.conveyor = j}, false), i);
+          #endif
           break;
         }
       }
     } else if (UnlockDecs[i].type == kPlant) {
+      if (UnlockDecs[i].subType.plant == kCactusPlant) m_cactusUnlock = i;
       for (int32_t j = 0; j < kNPlantSubTypes; ++j) {
         if (PDesc[j].subType == UnlockDecs[i].subType.plant) {
           PDesc[j].unlock = i;
+          #ifdef DEV
           pd->system->logToConsole("%s gets unlock ID %i", toStringBuilding(kPlant, (union kSubType) {.plant = j}, false), i);
+          #endif
           break;
         }
       }
@@ -326,7 +346,9 @@ void initGame() {
       for (int32_t j = 0; j < kNExtractorSubTypes; ++j) {
         if (EDesc[j].subType == UnlockDecs[i].subType.extractor) {
           EDesc[j].unlock = i;
+          #ifdef DEV
           pd->system->logToConsole("%s gets unlock ID %i", toStringBuilding(kExtractor, (union kSubType) {.extractor = j}, false), i);
+          #endif
           break;
         }
       }
@@ -334,7 +356,9 @@ void initGame() {
       for (int32_t j = 0; j < kNFactorySubTypes; ++j) {
         if (FDesc[j].subType == UnlockDecs[i].subType.factory) {
           FDesc[j].unlock = i;
+          #ifdef DEV
           pd->system->logToConsole("%s gets unlock ID %i", toStringBuilding(kFactory, (union kSubType) {.factory = j}, false), i);
+          #endif
           break;
         }
       }
@@ -342,11 +366,14 @@ void initGame() {
       for (int32_t j = 0; j < kNUtilitySubTypes; ++j) {
         if (UDesc[j].subType == UnlockDecs[i].subType.utility) {
           UDesc[j].unlock = i;
+          #ifdef DEV
           pd->system->logToConsole("%s gets unlock ID %i", toStringBuilding(kUtility, (union kSubType) {.utility = j}, false), i);
+          #endif
           break;
         }
       }
     }
+    if (UnlockDecs[i].type == kUtility && UnlockDecs[i].subType.utility == kRetirement) break;
   }
 
 }

@@ -60,6 +60,9 @@ void factoryUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom)
 }
 
 bool canBePlacedFactory(struct Location_t* _loc) {
+  //TODO fix this bug
+  if (_loc->m_x == 0 || _loc->m_y == 0) return false;
+  
   for (int32_t x = -1; x < 2; ++x) {
     for (int32_t y = -1; y < 2; ++y) {
       struct Tile_t* t = getTile(_loc->m_x + x, _loc->m_y + y);

@@ -6,13 +6,13 @@
 // Note: User can never themselves build a kTunnelOut
 struct ConveyorDescriptor_t CDesc[] = {
   {.subType = kBelt,      .unlock = DIS,       .price = 10,         .UIIcon = SID(0,17), .spriteX = 0,  .spriteY = 7},
-  {.subType = kSplitL,    .unlock = DIS,      .price = 50,         .UIIcon = SID(4,17), .spriteX = 1,  .spriteY = 11},
-  {.subType = kSplitI,    .unlock = DIS,      .price = 50,         .UIIcon = SID(0,20),  .spriteX = 0,  .spriteY = 11},
-  {.subType = kSplitT,    .unlock = DIS,      .price = 50,         .UIIcon = SID(4,20),  .spriteX = 2,  .spriteY = 11},
-  {.subType = kTunnelIn,  .unlock = DIS,      .price = 100,        .UIIcon = SID(8,17), .spriteX = 8,  .spriteY = 11},
+  {.subType = kSplitL,    .unlock = 1,      .price = 50,         .UIIcon = SID(4,17), .spriteX = 1,  .spriteY = 11},
+  {.subType = kSplitI,    .unlock = 1,      .price = 50,         .UIIcon = SID(0,20),  .spriteX = 0,  .spriteY = 11},
+  {.subType = kSplitT,    .unlock = 1,      .price = 50,         .UIIcon = SID(4,20),  .spriteX = 2,  .spriteY = 11},
+  {.subType = kTunnelIn,  .unlock = 1,      .price = 100,        .UIIcon = SID(8,17), .spriteX = 8,  .spriteY = 11},
   {.subType = kTunnelOut, .unlock = UINT32_MAX, .price = UINT16_MAX, .UIIcon = SID(8,16), .spriteX = 9,  .spriteY = 11},
-  {.subType = kFilterL,   .unlock = DIS,      .price = 75,         .UIIcon = SID(8,20),  .spriteX = 3,  .spriteY = 11},
-  {.subType = kFilterI,   .unlock = DIS,      .price = 75,         .UIIcon = SID(12,20), .spriteX = 10, .spriteY = 11},
+  {.subType = kFilterL,   .unlock = 1,      .price = 75,         .UIIcon = SID(8,20),  .spriteX = 3,  .spriteY = 11},
+  {.subType = kFilterI,   .unlock = 1,      .price = 75,         .UIIcon = SID(12,20), .spriteX = 10, .spriteY = 11},
 };
 
 struct PlantDescriptor_t PDesc[] = {
@@ -23,7 +23,7 @@ struct PlantDescriptor_t PDesc[] = {
   {.subType = kCornPlant, .unlock = DIS, .price = 1, .sprite = SID(2, 4), .time = 50, .wetness = kMoist, .soil = kChalkyGround, .out = kCorn},
   {.subType = kSeaweedPlant, .unlock = DIS, .price = 1, .sprite = SID(2, 4), .time = 50, .wetness = kWet, .soil = kLake, .out = kSeaweed},
   {.subType = kWheatPlant, .unlock = DIS, .price = 100, .sprite = SID(11, 8), .time = 50, .wetness = kDry, .soil = kSiltyGround, .out = kWheat},
-  {.subType = kCactusPlant, .unlock = DIS, .price = 1, .sprite = SID(2, 4), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kLime},
+  {.subType = kCactusPlant, .unlock = DIS, .price = 1, .sprite = SID(2, 4), .time = 50, .wetness = kDry, .soil = kSandyGround, .out = kCactus},
   {.subType = kLimeTree, .unlock = DIS, .price = 1, .sprite = SID(2, 4), .time = 50, .wetness = kMoist, .soil = kSandyGround, .out = kLime},
   {.subType = kStrawberryPlant, .unlock = DIS, .price = 1, .sprite = SID(2, 4), .time = 50, .wetness = kMoist, .soil = kClayGround, .out = kStrawberry},
   {.subType = kHempPlant, .unlock = DIS, .price = 1, .sprite = SID(2, 4), .time = 50, .wetness = kMoist, .soil = kClayGround, .out = kHemp},
@@ -33,17 +33,17 @@ struct PlantDescriptor_t PDesc[] = {
 };
 
 struct UtilityDescriptor_t UDesc[] = {
-  {.subType = kPath, .unlock = DIS, .price = 100, .UIIcon = SID(9,19), .sprite = SID(0,0)},
-  {.subType = kSign, .unlock = DIS, .price = 100, .UIIcon = SID(9,15), .sprite = SID(7,19)},
-  {.subType = kBin, .unlock = DIS, .price = 100, .UIIcon = SID(2,15), .sprite = SID(14,14)},
-  {.subType = kWell, .unlock = DIS, .price = 1000, .UIIcon = SID(0,15), .sprite = SID(12,14)},
-  {.subType = kStorageBox, .unlock = DIS, .price = 1, .UIIcon = SID(8,15), .sprite = SID(8,15)},
-  {.subType = kBuffferBox, .unlock = DIS, .price = 1, .UIIcon = SID(4,15), .sprite = SID(4,15)},
-  {.subType = kConveyorGrease, .unlock = 0, .price = 100, .UIIcon = SID(1,15), .sprite = SID(1,15)},
-  {.subType = kObstructionRemover, .unlock = 0, .price = 100, .UIIcon = SID(11,15), .sprite = SID(11,15)},
-  {.subType = kLandfill, .unlock = DIS, .price = 100, .UIIcon = SID(3,15), .sprite = SID(0,3)},
+  {.subType = kPath, .unlock = 1, .price = 100, .UIIcon = SID(9,19), .sprite = SID(0,0)},
+  {.subType = kSign, .unlock = 1, .price = 100, .UIIcon = SID(9,15), .sprite = SID(7,19)},
+  {.subType = kBin, .unlock = 1, .price = 100, .UIIcon = SID(2,15), .sprite = SID(14,14)},
+  {.subType = kWell, .unlock = 1, .price = 1000, .UIIcon = SID(0,15), .sprite = SID(12,14)},
+  {.subType = kStorageBox, .unlock = 1, .price = 1, .UIIcon = SID(8,15), .sprite = SID(8,15)},
+  {.subType = kBuffferBox, .unlock = 1, .price = 1, .UIIcon = SID(4,15), .sprite = SID(4,15)},
+  {.subType = kConveyorGrease, .unlock = 1, .price = 100, .UIIcon = SID(1,15), .sprite = SID(1,15)},
+  {.subType = kObstructionRemover, .unlock = 1, .price = 100, .UIIcon = SID(11,15), .sprite = SID(11,15)},
+  {.subType = kLandfill, .unlock = 1, .price = 100, .UIIcon = SID(3,15), .sprite = SID(0,3)},
   {.subType = kRetirement, .unlock = DIS, .price = 100, .UIIcon = SID(10,15), .sprite = BID(4,1)},
-  {.subType = kFence, .unlock = DIS, .price = 100, .UIIcon = SID(9,22), .sprite = BID(0,0)},
+  {.subType = kFence, .unlock = 1, .price = 100, .UIIcon = SID(9,22), .sprite = BID(0,0)},
 };
 
 struct ExtractorDescriptor_t EDesc[] = {
@@ -98,7 +98,10 @@ struct UnlockDescriptor_t UnlockDecs[] = {
   {.type = kFactory, .subType.factory = kVitiminFac, .fromSelling = 10, .ofCargo = kCarrot},
   {.type = kPlant, .subType.plant = kSunflowerPlant, .fromSelling = 1, .ofCargo = kVitamin},
   {.type = kPlant, .subType.plant = kPotatoPlant, .fromSelling = 20, .ofCargo = kSunflower},
-  {.type = kExtractor, .subType.extractor = kSaltMine, .fromSelling = 30, .ofCargo = kPotato},
-  {.type = kFactory, .subType.factory = kCrispsFac, .fromSelling = 30, .ofCargo = kPotato},
+  {.type = kFactory, .subType.factory = kVegOilFac, .fromSelling = 30, .ofCargo = kPotato},
+  {.type = kExtractor, .subType.extractor = kSaltMine, .fromSelling = 40, .ofCargo = kOil},
+  {.type = kFactory, .subType.factory = kCrispsFac, .fromSelling = 40, .ofCargo = kOil},
+  {.type = kPlant, .subType.plant = kCactusPlant, .fromSelling = 50, .ofCargo = kCrisps},
+  {.type = kExtractor, .subType.factory = kPump, .fromSelling = UINT16_MAX, .ofCargo = kCactus},
   {.type = kUtility, .subType.utility = kRetirement, .fromSelling = 30, .ofCargo = kCrisps}, // Must always be the last entry
 };

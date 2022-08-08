@@ -1,6 +1,7 @@
 #include "sell.h"
 #include "../player.h"
 #include "../sprite.h"
+#include "../buildings/special.h"
 
 /// ///
 
@@ -21,6 +22,7 @@ void doSale() {
 }
 
 void populateInfoSell() {
+  updateSales();
   const uint16_t selectedID =  getUIContentID();
   const int32_t selectedPrice = getPrice(kUICatCargo, selectedID);
   const uint16_t selectedOwned = getOwned(kUICatCargo, selectedID);

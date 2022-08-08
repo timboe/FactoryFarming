@@ -47,7 +47,7 @@ uint16_t getGrowdownTimer(struct Building_t* _building, bool _smear) {
   } else if (bonus == -1) {
     growTime *= 2.0f;
   } else if (bonus <= -2) {
-    growTime = UINT16_MAX;
+    return INT16_MAX;
   }
   uint8_t smear = (_smear ? rand() % (TICKS_PER_SEC * 3) : 0);
   return (uint16_t)growTime - smear;
@@ -333,10 +333,10 @@ void drawUIInspectPlant(struct Building_t* _building) {
   snprintf(text, 128, "Has: %s Soil", toStringWetness( getWetness(t->m_wetness) ) ); 
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
 
-  if (_building->m_progress > UINT16_MAX/2) {
-    snprintf(text, 128, "Grow Time: Cannot Grow Here"); 
+  if (_building->m_progress > INT16_MAX/2) {
+    snprintf(text, 128, "Cannot Grow Here"); 
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "Time Remaining: ---"); 
+    snprintf(text, 128, "Time Remaining: XXX"); 
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   } else {
     snprintf(text, 128, "Grow Time: %is", growTime / TICKS_PER_SEC); 
