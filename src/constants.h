@@ -130,7 +130,7 @@
 #define WORLD_SAVE_SLOTS 8
 
 // Versioning
-#define SAVE_FORMAT 2
+#define SAVE_FORMAT 3
 
 #define ACTIVATE_DISTANCE (TILE_PIX*3)
 

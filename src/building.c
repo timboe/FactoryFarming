@@ -355,10 +355,9 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     wideRedraw = true;
   }
 
-    if (_type == kUtility && (_subType.utility == kPath || _subType.utility == kFence)) {
-      wideRedraw = true;
-    }
-
+  if (_type == kUtility && (_subType.utility == kPath || _subType.utility == kFence)) {
+    wideRedraw = true;
+  }
 
   // The Special objects get added during gen - don't redraw for these
   if (_type != kSpecial) {
@@ -378,7 +377,6 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
 
     // We add these at generate, we don't want to be updating the sprite list here
     updateRenderList();
-
    }
 
   return true;

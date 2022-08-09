@@ -2,5 +2,5 @@ name=Factory Farming
 author=Tim Martin
 description=Automation meets crop planting
 bundleID=uk.co.tim-martin.factoryfarming
-version=0.6
-buildNumber=6
+version=0.7
+buildNumber=7

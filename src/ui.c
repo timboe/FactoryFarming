@@ -301,6 +301,10 @@ void updateUI(int _fc) {
     if (getTutorialStage() == kTutImports && m_mode == kWanderMode && hasImported()) {
       nextTutorialStage();
     }
+    // Unlock new worlds
+    if (m_mode == kWanderMode && getPlayer()->m_buildingsUnlockedTo >= getCactusUnlock()) {
+      unlockOtherWorlds();
+    }
   }
 
   if (m_mode == kWanderMode) {

@@ -141,8 +141,16 @@ void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tick) {
     }
   }
 
-  // Process exporting of sales data (and exports data)
+  // Process external sales
+  _building->m_progress += _tick;
+  if (_building->m_progress >= IMPORT_SEC_IN_TICKS) {
+    _building->m_progress -= IMPORT_SEC_IN_TICKS;
+    const float totInputSales = getOtherWorldCargoSales() * IMPORT_SECONDS;
+    modMoney( totInputSales ); // Rounds down
+  } 
 
+
+  // Process exporting of sales data (and exports data, though m_exportItemCountA/B are only incremented by the Exports update fn)
   m_exportTimer += _tick;
   if (m_exportTimer < TWO_MIN) return;
 
@@ -378,9 +386,9 @@ void updateSales() {
   float collected = m_exportItemValueA + m_exportItemValueB;
   float av = collected / (m_exportTimer / TICKS_PER_SEC);
   p->m_sellPerWorld[slot] = av;
-  #ifdef DEV
+  //#ifdef DEV
   if (collected) pd->system->logToConsole("Integrated over %i s, the av sold value is %f /s", (m_exportTimer / TICKS_PER_SEC), (double)av);
-  #endif
+  //#endif
 
 }
 

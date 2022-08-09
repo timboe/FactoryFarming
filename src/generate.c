@@ -211,6 +211,11 @@ void getFenceSprite(struct Location_t* loc, uint16_t* _outSprite, LCDBitmapFlip*
 }
 
 void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
+  // Possible to call this too early for neighboring chunks with the title screen
+  if (!_chunk->m_bkgImage[1]) {
+    return;
+  }
+
   pd->graphics->pushContext(_chunk->m_bkgImage[1]);
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->fillRect(0, 0, CHUNK_PIX_X, CHUNK_PIX_Y, kColorWhite);
@@ -1004,7 +1009,6 @@ void generateTitle() {
     } 
   }
 
-
   // crisps
   newBuilding(getLocation(8,7), NS, kFactory, (union kSubType) {.factory = kCrispsFac} ); // bot left
   newBuilding(getLocation(12,6), SN, kFactory, (union kSubType) {.factory = kCrispsFac} ); // top right
@@ -1048,7 +1052,6 @@ void generateTitle() {
   newBuilding(getLocation(25,3), EW, kUtility, (union kSubType) {.utility = kPath} );
   for (int32_t y = -1; y < 5; ++y) newBuilding(getLocation(13,y), EW, kUtility, (union kSubType) {.utility = kPath} );
   newBuilding(getLocation(14,4), EW, kUtility, (union kSubType) {.utility = kPath} );
-
 
   // sunny ext
   newBuilding(getLocation(12,11), EW, kExtractor, (union kSubType) {.factory = kCropHarvesterSmall} ); // right

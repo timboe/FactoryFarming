@@ -183,7 +183,8 @@ void buildingSetupUtility(struct Building_t* _building) {
     }
 
     if (_building->m_subType.utility == kFence) {
-      PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
+      //PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
+      PDRect bound = {.x = ((TILE_PIX/4)-2)*zoom, .y = ((TILE_PIX/4)-2)*zoom, .width = ((TILE_PIX/2)+4)*zoom, .height = ((TILE_PIX/2)+4)*zoom};
       if (_building->m_sprite[zoom] == NULL) _building->m_sprite[zoom] = pd->sprite->newSprite();
       pd->sprite->setCollideRect(_building->m_sprite[zoom], bound);
       pd->sprite->moveTo(_building->m_sprite[zoom], 
