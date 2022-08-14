@@ -158,7 +158,10 @@ LCDBitmap* getTitleSelectedBitmap() {
 }
 
 LCDBitmap* getMainmenuSelectedBitmap() {
+
+      pd->system->logToConsole("RETURNNG m_mainMenuSelected is  %i ", (int) m_mainMenuSelected);
   return m_mainMenuSelected;
+
 }
 
 void setCooperHewitt12() {
@@ -222,10 +225,13 @@ void initSprite() {
   m_sheet48 = loadImageTableAtPath("images/sheet48");
   m_stickySelected = loadImageAtPath("images/selected");
   m_titleSelected = loadImageAtPath("images/titleSelected");
-  m_mainMenuSelected = loadImageAtPath("images/mainmenuSelected");
+  m_mainMenuSelected = loadImageAtPath("images/mainmenuSelected"); //mainmenuSelected
   m_new = loadImageAtPath("images/new");
   m_splash = loadImageAtPath("images/splash");
   m_retirementNo[1] = loadImageAtPath("images/cross9x9");
+
+    pd->system->logToConsole("SETTING m_mainMenuSelected is  %i ", (int) m_mainMenuSelected);
+
 
   populateResizedSprites();
 

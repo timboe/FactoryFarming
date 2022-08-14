@@ -10,3 +10,6 @@ https://opengameart.org/content/tiny-16-expanded-character-sprites
 https://opengameart.org/content/assorted-isometric-rocks
 https://www.1001fonts.com/messing-lettern-font.html
 https://www.fontspace.com/coventry-garden-font-f9188
+https://opengameart.org/content/farming-crops-16x16
+https://opengameart.org/content/house-sets
+https://opengameart.org/content/fantastic-fence-16x16

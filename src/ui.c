@@ -1,3 +1,4 @@
+#include <math.h>
 #include "ui.h"
 #include "ui/inventory.h"
 #include "ui/settings.h"
@@ -302,7 +303,7 @@ void updateUI(int _fc) {
       nextTutorialStage();
     }
     // Unlock new worlds
-    if (m_mode == kWanderMode && getPlayer()->m_buildingsUnlockedTo >= getCactusUnlock()) {
+    if (getImportBox()->m_dir != SN && m_mode == kWanderMode && getPlayer()->m_buildingsUnlockedTo >= getCactusUnlock()) {
       unlockOtherWorlds();
     }
   }
@@ -741,7 +742,7 @@ void drawUIRight() {
     struct Player_t* p = getPlayer();
     float a = (directionToBuy() * 180.0f/PI);
     uint16_t cSprite = SPRITE16_ID(8, 9);
-    if (fabs(a) > (180.0f - 0*FF_DEG) - A_OFF) { /*noop*/ }
+    if ((float) fabs(a) > (180.0f - 0*FF_DEG) - A_OFF) { /*noop*/ }
     else if (a > (180.0f - 1*FF_DEG) - A_OFF) cSprite += 1;
     else if (a > (180.0f - 2*FF_DEG) - A_OFF) cSprite += 2;
     else if (a > (180.0f - 3*FF_DEG) - A_OFF) cSprite += 3;
@@ -1115,6 +1116,11 @@ void drawUIMain() {
   // CURSOR
   const bool visible = (getFrameCount() % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
   if (m_mode == kMenuMain) {
+    // XXX MAIN MENU SELECTED
+    pd->system->logToConsole("set m_UISpriteMainMenuCursor  %i visible %i ", (int) pd->sprite->getImage(m_UISpriteMainMenuCursor), visible);
+
+
+
     pd->sprite->setVisible(m_UISpriteMainMenuCursor, visible);
     pd->sprite->moveTo(m_UISpriteMainMenuCursor, UISTARTX + TILE_PIX*8, MAINMENUSTARTY + m_cursorRowAbs[m_mode]*TILE_PIX);
   } else {
@@ -1480,9 +1486,17 @@ void initiUI() {
 
   m_UISpriteMainMenuCursor = pd->sprite->newSprite();
   pd->sprite->setBounds(m_UISpriteMainMenuCursor, mainMenuBound);
+  // XXX MAIN MENU SELECTED
+
+  pd->system->logToConsole("set m_UISpriteMainMenuCursor to %i", (int) getMainmenuSelectedBitmap());
+
+
   pd->sprite->setImage(m_UISpriteMainMenuCursor, getMainmenuSelectedBitmap(), kBitmapUnflipped);
   pd->sprite->setZIndex(m_UISpriteMainMenuCursor, Z_INDEX_UI_T);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteMainMenuCursor, 1);
+
+    pd->system->logToConsole("check set m_UISpriteMainMenuCursor: %i", (int) pd->sprite->getImage(m_UISpriteMainMenuCursor) );
+
 
   // New stuff
 

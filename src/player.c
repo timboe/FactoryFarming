@@ -1,3 +1,4 @@
+#include <math.h>
 #include "player.h"
 #include "sprite.h"
 #include "chunk.h"
@@ -491,7 +492,7 @@ void setDefaultPlayerSettings() {
   m_player.m_enableConveyorAnimation = 1;
   m_player.m_enableTutorial = 0;
   m_player.m_enableDebug = 0;
-  m_player.m_enableAutosave = 15;
+  m_player.m_enableAutosave = 5;
   m_player.m_enablePickupOnDestroy = 1;
   m_player.m_enableScreenShake = 1;
 }

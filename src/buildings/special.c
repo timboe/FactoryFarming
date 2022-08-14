@@ -1,3 +1,4 @@
+#include <math.h>
 #include "special.h"
 #include "../location.h"
 #include "../sprite.h"
