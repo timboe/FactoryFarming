@@ -1,17 +1,47 @@
 #pragma once
 #include "game.h"
 #include "player.h"
+ 
+enum kGameMode {
+  kWanderMode, 
+  kPlaceMode, 
+  kBuildMode, 
+  kPlantMode, 
+  kPickMode, 
+  kInspectMode, 
+  kDestroyMode, // This is a break point, all Main Menu items should come after kMenuBuy
+  kMenuBuy, 
+  kMenuNew, 
+  kMenuSell, 
+  kMenuPlayer, 
+  kMenuWarp, 
+  kMenuExport, 
+  kMenuImport, 
+  kMenuMain, 
+  kTitles, 
+  kNGameModes
+};
 
-// All Main Menu items should come after kMenuBuy
-enum kGameMode {kWanderMode, kPlaceMode, kBuildMode, kPlantMode, kPickMode, kInspectMode, kDestroyMode, 
-	            kMenuBuy, kMenuNew, kMenuSell, kMenuPlayer, kMenuWarp, kMenuExport, kMenuImport, kMenuMain, kTitles, kNGameModes};
-
-enum kUICat {kUICatTool, kUICatPlant, kUICatConv, kUICatExtractor, kUICatFactory, kUICatUtility, 
-	         kUICatCargo, kUICatWarp, kUICatImportN, kUICatImportE, kUICatImportS, kUICatImportW, kNUICats}; 
+enum kUICat {
+  kUICatTool,
+	kUICatPlant, 
+  kUICatConv, 
+  kUICatExtractor, 
+  kUICatFactory, 
+  kUICatUtility, 
+  kUICatCargo, 
+  kUICatWarp, 
+  kUICatImportN, 
+  kUICatImportE, 
+  kUICatImportS, 
+  kUICatImportW, 
+  kNUICats
+}; 
 
 #define ROW_WDTH 9
 
-#define MAX_ROW_PER_CAT 5
+// CAUTION: 9*5 was too small for cargo, bump to 10 and add runtime check
+#define MAX_ROW_PER_CAT 10
 
 #define MAX_PER_CAT (ROW_WDTH * MAX_ROW_PER_CAT)
 
@@ -19,7 +49,7 @@ enum kUICat {kUICatTool, kUICatPlant, kUICatConv, kUICatExtractor, kUICatFactory
 // however no one screen ever uses every cat all at once.
 // so this is obtained automatically
 // But we might need more for the Setings UI 
-#define MAX_ROWS (MAX_ROW_PER_CAT*(kNUICats+2))
+#define MAX_ROWS (MAX_ROW_PER_CAT*kNUICats)
 
 #define MAX_ROWS_VISIBLE 4
 

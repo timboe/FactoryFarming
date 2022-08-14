@@ -1014,6 +1014,7 @@ LCDBitmap* getInfoBitmap() {
   return m_UIBitmapInfo;
 }
 
+
 void drawUIMain() {
 
   memset(m_contentSprite, 0, MAX_ROWS * ROW_WDTH * sizeof(LCDSprite*));
@@ -1116,11 +1117,6 @@ void drawUIMain() {
   // CURSOR
   const bool visible = (getFrameCount() % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
   if (m_mode == kMenuMain) {
-    // XXX MAIN MENU SELECTED
-    pd->system->logToConsole("set m_UISpriteMainMenuCursor  %i visible %i ", (int) pd->sprite->getImage(m_UISpriteMainMenuCursor), visible);
-
-
-
     pd->sprite->setVisible(m_UISpriteMainMenuCursor, visible);
     pd->sprite->moveTo(m_UISpriteMainMenuCursor, UISTARTX + TILE_PIX*8, MAINMENUSTARTY + m_cursorRowAbs[m_mode]*TILE_PIX);
   } else {
@@ -1297,6 +1293,13 @@ const char* getWorldLetter(int8_t _i) {
 }
 
 void initiUI() {
+
+  for (enum kUICat c = 0; c < kNUICats; ++c) {
+    if (getNSubTypes(c) >= MAX_PER_CAT) {
+      pd->system->error("NOT ENOUGH STORAGE FOR UI CAT %i", c);
+    }
+  }
+
   m_UISpriteTop = pd->sprite->newSprite();
   m_UISpriteSave = pd->sprite->newSprite();
   m_UISpriteLoad = pd->sprite->newSprite();
@@ -1486,17 +1489,9 @@ void initiUI() {
 
   m_UISpriteMainMenuCursor = pd->sprite->newSprite();
   pd->sprite->setBounds(m_UISpriteMainMenuCursor, mainMenuBound);
-  // XXX MAIN MENU SELECTED
-
-  pd->system->logToConsole("set m_UISpriteMainMenuCursor to %i", (int) getMainmenuSelectedBitmap());
-
-
   pd->sprite->setImage(m_UISpriteMainMenuCursor, getMainmenuSelectedBitmap(), kBitmapUnflipped);
   pd->sprite->setZIndex(m_UISpriteMainMenuCursor, Z_INDEX_UI_T);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteMainMenuCursor, 1);
-
-    pd->system->logToConsole("check set m_UISpriteMainMenuCursor: %i", (int) pd->sprite->getImage(m_UISpriteMainMenuCursor) );
-
 
   // New stuff
 
@@ -1643,6 +1638,7 @@ void initiUI() {
     for (int32_t i = 0; i < getNSubTypes(c); ++i) {
       uint16_t spriteID = getUIIcon(c, i);
       for (int32_t r = 0; r < 4; ++r) {
+
         m_UIBitmapItems[c][i][r] = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*2, kColorClear);
         pd->graphics->pushContext(m_UIBitmapItems[c][i][r]);
         if (c == kUICatPlant) { // Crops are seeds in a packet
@@ -1657,8 +1653,6 @@ void initiUI() {
             roundedRect(3, TILE_PIX*2, TILE_PIX*2, TILE_PIX/2, kColorWhite);
             pd->graphics->setDrawMode(kDrawModeNXOR);
           }
-          
-          // yyy
 
           pd->graphics->drawBitmap(getSprite16_byidx(spriteID + r, 2), 0, 0, kBitmapUnflipped);
           pd->graphics->setDrawMode(kDrawModeCopy);
@@ -1720,6 +1714,7 @@ void initiUI() {
 
   UIDirtyBottom();
   UIDirtyRight();
+
 }
 
 

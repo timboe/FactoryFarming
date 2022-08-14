@@ -407,7 +407,9 @@ void resetBuilding() {
 void initBuilding() {
   m_buildings = pd->system->realloc(NULL, SIZE_BUILDING);
   memset(m_buildings, 0, SIZE_BUILDING);
+  #ifdef DEV
   pd->system->logToConsole("malloc: for buildings %i", SIZE_BUILDING/1024);
+  #endif
 }
 
 void serialiseBuilding(struct json_encoder* je) {

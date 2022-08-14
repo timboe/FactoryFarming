@@ -45,6 +45,9 @@ uint8_t getNearbyBackground_Chunk(struct Chunk_t* _chunk, uint16_t _u, uint16_t 
 
 uint8_t getNearbyBackground_Loc(struct Location_t* _loc);
 
+void addBiome(uint8_t _size, int32_t _offX, int32_t _offY, uint16_t _imgStart);
+
+
 void doSea(void);
 
 /// ///
@@ -368,21 +371,25 @@ void addSpawn() {
   }
 }
 
-#define BIOME_RADIUS 16
-#define BIOME_POINTS_TOO_CLOSE (TOT_TILES_X/2 - 3*BIOME_RADIUS)
-void addBiome(int32_t _offX, int32_t _offY, uint16_t _imgStart) {
+#define BIOME_RADIUS_L 8
+#define BIOME_POINTS_TOO_CLOSE_L (TOT_TILES_X/2 - 3*BIOME_RADIUS_L)
+#define BIOME_RADIUS_S 4
+#define BIOME_POINTS_TOO_CLOSE_S (TOT_TILES_X/2 - 6*BIOME_RADIUS_S)
+void addBiome(uint8_t _size, int32_t _offX, int32_t _offY, uint16_t _imgStart) {
+  uint16_t r = (_size == 0 ? BIOME_RADIUS_S : BIOME_RADIUS_L);
+  uint16_t tooClose = (_size == 0 ? BIOME_POINTS_TOO_CLOSE_S : BIOME_POINTS_TOO_CLOSE_L);
   bool good = false;
   int32_t x1, y1, x2, y2;
   while (!good) {
-    x1 = BIOME_RADIUS + rand() % (TOT_TILES_X/2 - 2*BIOME_RADIUS);
-    y1 = BIOME_RADIUS + rand() % (TOT_TILES_Y/2 - 2*BIOME_RADIUS);
-    x2 = BIOME_RADIUS + rand() % (TOT_TILES_X/2 - 2*BIOME_RADIUS);
-    y2 = BIOME_RADIUS + rand() % (TOT_TILES_Y/2 - 2*BIOME_RADIUS);
-    if (sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) ) > BIOME_POINTS_TOO_CLOSE) break;
+    x1 = r + rand() % (TOT_TILES_X/2 - 2*r);
+    y1 = r + rand() % (TOT_TILES_Y/2 - 2*r);
+    x2 = r + rand() % (TOT_TILES_X/2 - 2*r);
+    y2 = r + rand() % (TOT_TILES_Y/2 - 2*r);
+    if (sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) ) > tooClose) break;
   }
   for (int32_t x = _offX; x < TOT_TILES_X/2 + _offX; ++x) {
     for (int32_t y = _offY; y < TOT_TILES_Y/2 + _offY; ++y) {
-      if (pointDist(x, y, x1 + _offX, y1 + _offY, x2 + _offX, y2 + _offY) < BIOME_RADIUS) {
+      if (pointDist(x, y, x1 + _offX, y1 + _offY, x2 + _offX, y2 + _offY) < r) {
         getTile(x, y)->m_tile = _imgStart + (rand() % FLOOR_VARIETIES);
       }
     }
@@ -947,8 +954,8 @@ void generate(uint32_t _actionProgress) {
   } else if (_actionProgress == 4) {
 
     if (slot != kTranquilWorld) {
-      addBiome(TOT_TILES_X/2, 0, FLOOR_VARIETIES*getWorldGround(slot, 1));
-      addBiome(0, TOT_TILES_Y/2, FLOOR_VARIETIES*getWorldGround(slot, 2));
+      addBiome(1, TOT_TILES_X/2, 0, FLOOR_VARIETIES*getWorldGround(slot, 1));
+      addBiome(0, 0, TOT_TILES_Y/2, FLOOR_VARIETIES*getWorldGround(slot, 2));
     }
 
   } else if (_actionProgress == 5) {
