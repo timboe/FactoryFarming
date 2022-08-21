@@ -73,7 +73,7 @@ LCDBitmap* getPauseImage() {
   pd->graphics->drawText(t, 128, kASCIIEncoding, CENTRE - width/2, 4*Y_SPACE);
 
   pd->graphics->drawBitmap(getSprite16(11, 13, 1), X_START, 4*Y_SPACE, kBitmapUnflipped);
-  pd->graphics->drawBitmap(getSprite16(11, 13, 1), X_END, 4*Y_SPACE, kBitmapFlippedX);
+  pd->graphics->drawBitmap(getSprite16(11, 13, 1), X_END, 4*Y_SPACE, kBitmapUnflipped);
 
   snprintf(text, 128, "Sold so far: %i", haveSold);
   length = strlen(text);

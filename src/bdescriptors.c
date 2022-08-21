@@ -15,21 +15,26 @@ struct ConveyorDescriptor_t CDesc[] = {
   {.subType = kFilterI,   .unlock = 1,   .price = 250,        .UIIcon = SID(12,20), .spriteX = 10, .spriteY = 11},
 };
 
+#define PVFAST 60
+#define PFAST 70
+#define PMED 80
+#define PSLOW 90
+#define PVSLOW 90
 struct PlantDescriptor_t PDesc[] = {
-  {.subType = kCarrotPlant, .unlock = 1, .price = 0, .sprite = SID(10, 8), .time = 60, .wetness = kMoist, .soil = kSiltyGround, .out = kCarrot},
-  {.subType = kPotatoPlant, .unlock = 1, .price = 10, .sprite = SID(14, 8), .time = 70, .wetness = kWet, .soil = kPeatyGround, .out = kPotato},
-  {.subType = kSunflowerPlant, .unlock = 1, .price = 50, .sprite = SID(15, 8), .time = 50, .wetness = kDry, .soil = kChalkyGround, .out = kSunflower},
-  {.subType = kAppleTree, .unlock = 1, .price = 100, .sprite = SID(8, 8), .time = 80, .wetness = kMoist, .soil = kPeatyGround, .out = kApple},
-  {.subType = kCornPlant, .unlock = 1, .price = 150, .sprite = SID(2, 21), .time = 50, .wetness = kMoist, .soil = kChalkyGround, .out = kCorn},
-  {.subType = kSeaweedPlant, .unlock = 1, .price = 200, .sprite = SID(3, 21), .time = 50, .wetness = kWater, .soil = kLake, .out = kSeaweed},
-  {.subType = kWheatPlant, .unlock = 1, .price = 300, .sprite = SID(11, 8), .time = 50, .wetness = kDry, .soil = kSiltyGround, .out = kWheat},
-  {.subType = kCactusPlant, .unlock = 1, .price = 500, .sprite = SID(0, 21), .time = 70, .wetness = kDry, .soil = kSandyGround, .out = kCactus},
-  {.subType = kLimeTree, .unlock = 1, .price = 1000, .sprite = SID(4, 21), .time = 80, .wetness = kMoist, .soil = kSandyGround, .out = kLime},
-  {.subType = kStrawberryPlant, .unlock = 1, .price = 1200, .sprite = SID(5, 21), .time = 60, .wetness = kMoist, .soil = kClayGround, .out = kStrawberry},
-  {.subType = kCocoaPlant, .unlock = 1, .price = 2500, .sprite = SID(7, 21), .time = 60, .wetness = kWet, .soil = kClayGround, .out = kCocoBean},
-  {.subType = kCoffeePlant, .unlock = 1, .price = 3000, .sprite = SID(6, 21), .time = 70, .wetness = kMoist, .soil = kLoamyGround, .out = kCoffeeBean},
-  {.subType = kBambooPlant, .unlock = 1, .price = 4000, .sprite = SID(5, 23), .time = 40, .wetness = kMoist, .soil = kLoamyGround, .out = kBamboo},
-  {.subType = kSeaCucumberPlant, .unlock = 1, .price = 7500, .sprite = SID(8, 21), .time = 60, .wetness = kWater, .soil = kOcean, .out = kSeaCucumber},
+  {.subType = kCarrotPlant, .unlock = 1, .price = 0, .sprite = SID(10, 8), .time = PMED, .wetness = kMoist, .soil = kSiltyGround, .out = kCarrot},
+  {.subType = kPotatoPlant, .unlock = 1, .price = 10, .sprite = SID(14, 8), .time = PSLOW, .wetness = kWet, .soil = kPeatyGround, .out = kPotato},
+  {.subType = kSunflowerPlant, .unlock = 1, .price = 50, .sprite = SID(15, 8), .time = PFAST, .wetness = kDry, .soil = kChalkyGround, .out = kSunflower},
+  {.subType = kAppleTree, .unlock = 1, .price = 100, .sprite = SID(8, 8), .time = PVSLOW, .wetness = kMoist, .soil = kPeatyGround, .out = kApple},
+  {.subType = kSeaweedPlant, .unlock = 1, .price = 200, .sprite = SID(3, 21), .time = PFAST, .wetness = kWater, .soil = kLake, .out = kSeaweed},
+  {.subType = kCornPlant, .unlock = 1, .price = 150, .sprite = SID(2, 21), .time = PFAST, .wetness = kMoist, .soil = kChalkyGround, .out = kCorn},
+  {.subType = kWheatPlant, .unlock = 1, .price = 300, .sprite = SID(11, 8), .time = PFAST, .wetness = kDry, .soil = kSiltyGround, .out = kWheat},
+  {.subType = kCactusPlant, .unlock = 1, .price = 500, .sprite = SID(0, 21), .time = PSLOW, .wetness = kDry, .soil = kSandyGround, .out = kCactus},
+  {.subType = kLimeTree, .unlock = 1, .price = 1000, .sprite = SID(4, 21), .time = PVSLOW, .wetness = kMoist, .soil = kSandyGround, .out = kLime},
+  {.subType = kStrawberryPlant, .unlock = 1, .price = 1200, .sprite = SID(5, 21), .time = PMED, .wetness = kMoist, .soil = kClayGround, .out = kStrawberry},
+  {.subType = kCocoaPlant, .unlock = 1, .price = 2500, .sprite = SID(7, 21), .time = PMED, .wetness = kWet, .soil = kClayGround, .out = kCocoBean},
+  {.subType = kCoffeePlant, .unlock = 1, .price = 3000, .sprite = SID(6, 21), .time = PSLOW, .wetness = kMoist, .soil = kLoamyGround, .out = kCoffeeBean},
+  {.subType = kBambooPlant, .unlock = 1, .price = 4000, .sprite = SID(5, 23), .time = PVFAST, .wetness = kMoist, .soil = kLoamyGround, .out = kBamboo},
+  {.subType = kSeaCucumberPlant, .unlock = 1, .price = 7500, .sprite = SID(8, 21), .time = PMED, .wetness = kWater, .soil = kOcean, .out = kSeaCucumber},
 };
 
 struct UtilityDescriptor_t UDesc[] = {
@@ -108,18 +113,17 @@ struct UnlockDescriptor_t UnlockDecs[] = {
   {.type = kFactory, .subType.factory = kVegOilFac, .fromSelling = 30, .ofCargo = kPotato},
 
   {.type = kExtractor, .subType.extractor = kSaltMine, .fromSelling = 40, .ofCargo = kOil},
-  {.type = kFactory, .subType.factory = kCrispsFac, .fromSelling = 50, .ofCargo = kOil},
+  {.type = kFactory, .subType.factory = kCrispsFac, .fromSelling = 80, .ofCargo = kOil},
 
   {.type = kUtility, .subType.utility = kPath, .fromSelling = 50, .ofCargo = kCrisps},
   {.type = kExtractor, .subType.extractor = kPump, .fromSelling = 75, .ofCargo = kCrisps},
-  {.type = kFactory, .subType.plant = kEthanolFac, .fromSelling = 100, .ofCargo = kCrisps},
+  {.type = kFactory, .subType.factory = kEthanolFac, .fromSelling = 100, .ofCargo = kCrisps},
 
   {.type = kPlant, .subType.plant = kAppleTree, .fromSelling = 60, .ofCargo = kEthanol},
 
   {.type = kFactory, .subType.factory = kHardCiderFac, .fromSelling = 25, .ofCargo = kApple},
 
-  {.type = kConveyor, .subType.conveyor = kFilterI, .fromSelling = 70, .ofCargo = kHardCider},
-  {.type = kConveyor, .subType.conveyor = kFilterL, .fromSelling = 70, .ofCargo = kHardCider},
+  {.type = kConveyor, .subType.conveyor = kTunnelIn, .fromSelling = 70, .ofCargo = kHardCider},
   {.type = kPlant, .subType.plant = kSeaweedPlant, .fromSelling = 100, .ofCargo = kHardCider},
 
   {.type = kFactory, .subType.factory = kAbattoir, .fromSelling = 100, .ofCargo = kSeaweed},
@@ -134,7 +138,9 @@ struct UnlockDescriptor_t UnlockDecs[] = {
 
   {.type = kFactory, .subType.factory = kBeerFac, .fromSelling = 200, .ofCargo = kWheat},
 
-  {.type = kConveyor, .subType.conveyor = kTunnelIn, .fromSelling = 100, .ofCargo = kBeer},
+  {.type = kUtility, .subType.utility = kBin, .fromSelling = 50, .ofCargo = kBeer},
+  {.type = kConveyor, .subType.conveyor = kFilterL, .fromSelling = 100, .ofCargo = kBeer},
+  {.type = kConveyor, .subType.conveyor = kFilterI, .fromSelling = 100, .ofCargo = kBeer},
   {.type = kPlant, .subType.plant = kCactusPlant, .fromSelling = 200, .ofCargo = kBeer}, // Unlocks tutorial 2
 
   {.type = kFactory, .subType.factory = kTequilaFac, .fromSelling = 10, .ofCargo = kCactus},
@@ -178,12 +184,12 @@ struct UnlockDescriptor_t UnlockDecs[] = {
 
   {.type = kFactory, .subType.factory = kSoftCakeFac, .fromSelling = 500, .ofCargo = kPerkPills},
 
-  {.type = kPlant, .subType.factory = kBambooPlant, .fromSelling = 500, .ofCargo = kSoftCake},
+  {.type = kPlant, .subType.plant = kBambooPlant, .fromSelling = 500, .ofCargo = kSoftCake},
   {.type = kFactory, .subType.factory = kDessertFac, .fromSelling = 1500, .ofCargo = kSoftCake},
   {.type = kFactory, .subType.factory = kPackagingFac, .fromSelling = 2500, .ofCargo = kSoftCake},
   {.type = kFactory, .subType.factory = kCateringKitFac, .fromSelling = 3500, .ofCargo = kSoftCake},
 
-  {.type = kPlant, .subType.factory = kSeaCucumberPlant, .fromSelling = 1000, .ofCargo = kCateringKit},
+  {.type = kPlant, .subType.plant = kSeaCucumberPlant, .fromSelling = 1000, .ofCargo = kCateringKit},
   {.type = kFactory, .subType.factory = kDrinksKitFac, .fromSelling = 2000, .ofCargo = kCateringKit},
 
   {.type = kUtility, .subType.utility = kFence, .fromSelling = 1500, .ofCargo = kDrinksKit},

@@ -114,7 +114,7 @@ const char* getNewText() {
       case kCrispsFac: return "Manufactures Potato Chips. A fried favorite!";
       case kEthanolFac: return "Brew & distill pure alcohol"; 
       case kHardCiderFac: return "Mix up some cheap Hard 'Cider'"; 
-      case kAbattoir: return "Produces 'Meat' to be used elsewhere";
+      case kAbattoir: return "Feed goes in, 'Meat' comes out";
       case kHydrogenFac: return "Splits water and captures the Hydrogen";
       case kHOILFac: return "Hydrogenates oil to prevent spoiling";
       case kCornDogFac: return "Crunchy and Meaty";

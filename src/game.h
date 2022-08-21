@@ -1,6 +1,6 @@
 #pragma once
 
-//#define DEV
+#define DEV
 
 //#define DEMO
 

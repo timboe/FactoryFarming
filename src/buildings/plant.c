@@ -13,10 +13,6 @@ uint16_t getGrowdownTimer(struct Building_t* _building, bool _smear);
 
 /// ///
 
-// Note: with current settings, anything under 72 cannot be kept up with by a single harvester
-//#define GROW_TIME (TICKS_PER_SEC*52)
-//#define GROW_RANDOM (TICKS_PER_SEC*40)
-
 void plantTrySpawnCargo(struct Building_t* _building, uint8_t _tick) {
   struct Location_t* loc = _building->m_location;
   if (loc->m_cargo != NULL) {
@@ -76,10 +72,13 @@ void plantUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
 
 }
 
-bool canBePlacedPlant(struct Location_t* _loc) {
+bool canBePlacedPlant(struct Location_t* _loc, union kSubType _subType) {
+  if (_loc->m_building != NULL) return false;
+  if (_subType.plant == kSeaweedPlant || _subType.plant == kSeaCucumberPlant) {
+    return isWaterTile(_loc->m_x, _loc->m_y);
+  }
   struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
   if (t->m_tile >= TOT_FLOOR_TILES) return false;
-  if (_loc->m_building != NULL) return false;
   return true;
 }
 
@@ -321,16 +320,18 @@ void drawUIInspectPlant(struct Building_t* _building) {
   const int8_t wb = getWaterBonus( PDesc[pst].wetness, getWetness( t->m_wetness ) );
   const uint16_t growTime = getGrowdownTimer(_building, false);
 
+  const bool isWater = isWaterTile(_building->m_location->m_x, _building->m_location->m_y);
+
   snprintf(text, 128, "Likes: %s", toStringSoil( PDesc[pst].soil ) );
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   snprintf(text, 128, "Has: %s", toStringSoil( getGroundType( t->m_tile )) ); 
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
 
-  snprintf(text, 128, "Likes: %s Soil", toStringWetness( PDesc[pst].wetness ) ); 
+  snprintf(text, 128, "Likes: %s %s", toStringWetness( PDesc[pst].wetness ), (isWater ? " " : "Soil") ); 
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
-  snprintf(text, 128, "Has: %s Soil", toStringWetness( getWetness(t->m_wetness) ) ); 
+  snprintf(text, 128, "Has: %s %s", toStringWetness( getWetness(t->m_wetness) ), (isWater ? " " : "Soil") ); 
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
 
   if (_building->m_progress > INT16_MAX/2) {
@@ -341,7 +342,11 @@ void drawUIInspectPlant(struct Building_t* _building) {
   } else {
     snprintf(text, 128, "Grow Time: %is", growTime / TICKS_PER_SEC); 
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "Time Remaining: %is", _building->m_progress / TICKS_PER_SEC); 
+    if (_building->m_location->m_cargo != NULL) {
+      snprintf(text, 128, "Harvest to grow"); 
+    } else {
+      snprintf(text, 128, "Time Remaining: %is", _building->m_progress / TICKS_PER_SEC); 
+    }
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   }
 

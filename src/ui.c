@@ -404,7 +404,7 @@ void updateBlueprint() {
 
     bool canPlace;
     pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
-    if (canBePlacedPlant(pl)) {
+    if (canBePlacedPlant(pl, (union kSubType) {.plant = selectedID})) {
       const struct Tile_t* t = getTile_fromLocation( pl );
       const int8_t gb = getGroundBonus( PDesc[selectedID].soil, getGroundType( t->m_tile ) );
       const int8_t wb = getWaterBonus( PDesc[selectedID].wetness, getWetness( t->m_wetness ) );
@@ -636,13 +636,25 @@ void drawUIInspect() {
 
   struct Location_t* loc = getPlayerLocation();
   struct Tile_t* t = getTile_fromLocation(loc);
-  if (loc->m_cargo) {
-    snprintf(text, 128, "(%i, %i)  %s %s, %s",
-      loc->m_x, loc->m_y, toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringCargoByType(loc->m_cargo->m_type));
+  if (isWaterTile(loc->m_x, loc->m_y)) {
+    if (loc->m_cargo) {
+      snprintf(text, 128, "(%i, %i)  %s, %s",
+        loc->m_x, loc->m_y, toStringSoil(getGroundType(t->m_tile)), toStringCargoByType(loc->m_cargo->m_type));
+    } else {
+      snprintf(text, 128, "(%i, %i)  %s",
+        loc->m_x, loc->m_y, toStringSoil(getGroundType(t->m_tile)));
+    }
   } else {
-    snprintf(text, 128, "(%i, %i)  %s %s",
-      loc->m_x, loc->m_y, toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)));
+    if (loc->m_cargo) {
+      snprintf(text, 128, "(%i, %i)  %s %s, %s",
+        loc->m_x, loc->m_y, toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringCargoByType(loc->m_cargo->m_type));
+    } else {
+      snprintf(text, 128, "(%i, %i)  %s %s",
+        loc->m_x, loc->m_y, toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)));
+    }
   }
+
+
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   setRoobert10();
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);

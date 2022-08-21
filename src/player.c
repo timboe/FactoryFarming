@@ -229,6 +229,7 @@ bool movePlayer() {
     }
   }
   if (bPressed()) acc *= 1.5f;
+  if (zoom == 2) acc *= 0.75f;
 
   float diffX = 0;
   float diffY = 0;
@@ -492,7 +493,7 @@ void resetPlayer() {
 }
 
 void setDefaultPlayerSettings() {
-  modMoney(500000); // TEMP
+  modMoney(50000000); // TEMP
   m_player.m_soundSettings = 3;
   m_player.m_autoUseConveyorBooster = 1;
   m_player.m_enableConveyorAnimation = 1;
@@ -765,8 +766,8 @@ void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_valu
   setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y, /*update current location = */ true);
 
   #ifdef DEV
-  pd->system->logToConsole("-- Player decoded to (%i, %i), current location (%i, %i), money:%i", 
-    (int32_t)m_player.m_pix_x, (int32_t)m_player.m_pix_y, m_currentLocation->m_x, m_currentLocation->m_y, m_player.m_money);
+  pd->system->logToConsole("-- Player decoded to (%i, %i), current location (%i, %i), money:%i, unlock:%i", 
+    (int32_t)m_player.m_pix_x, (int32_t)m_player.m_pix_y, m_currentLocation->m_x, m_currentLocation->m_y, m_player.m_money, m_player.m_buildingsUnlockedTo);
   #endif
 
   m_deserialiseArrayID = -1;

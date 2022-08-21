@@ -589,24 +589,28 @@ bool addRiver(int32_t _startX, int32_t _startY, enum kDir _dir, int32_t _lakePro
       if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
       t->m_tile = SPRITE16_ID(5, 12);
     }
-    if (switchA) getTile(_startX + lenA, _startY)->m_tile = SPRITE16_ID(6 + (switchDir ? 0 : 1), 13);
+    t = getTile(_startX + lenA, _startY);
+    if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+    if (switchA) t->m_tile = SPRITE16_ID(6 + (switchDir ? 0 : 1), 13);
     else if (endInLake) {
       bool lakeGood = addLake(_startX + lenA, _startY - LAKE_MIN/2, _lakeProb);
-      getTile(_startX + lenA , _startY)->m_tile = SPRITE16_ID(7, 11);
+      t->m_tile = SPRITE16_ID(7, 11);
       return lakeGood;
-    } else getTile(_startX + lenA, _startY)->m_tile = SPRITE16_ID(5, 14);
+    } else t->m_tile = SPRITE16_ID(5, 14);
   } else if (_dir == NS) {
     for (int32_t y = _startY + 1; y < _startY + lenA; ++y) {
       t = getTile(_startX, y);
       if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
       t->m_tile = SPRITE16_ID(4, 12);
     }
-    if (switchA) getTile(_startX, _startY + lenA)->m_tile = SPRITE16_ID(4 + (switchDir ? 0 : 3), 13);
+    t = getTile(_startX, _startY + lenA);
+    if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+    if (switchA) t->m_tile = SPRITE16_ID(4 + (switchDir ? 0 : 3), 13);
     else if (endInLake) {
       bool lakeGood = addLake(_startX - LAKE_MIN/2, _startY + lenA, _lakeProb);
-      getTile(_startX, _startY + lenA)->m_tile = SPRITE16_ID(4, 11);
+      t->m_tile = SPRITE16_ID(4, 11);
       return lakeGood;
-    } else getTile(_startX, _startY + lenA)->m_tile = SPRITE16_ID(4, 14);
+    } else t->m_tile = SPRITE16_ID(4, 14);
   }
 
   if (switchA && _dir == WE) {
@@ -616,16 +620,20 @@ bool addRiver(int32_t _startX, int32_t _startY, enum kDir _dir, int32_t _lakePro
         if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
         t->m_tile = SPRITE16_ID(4, 12);
       }
-      if (switchB) getTile(_startX + lenA, _startY + lenB)->m_tile = SPRITE16_ID(4, 13);
-      else getTile(_startX + lenA, _startY + lenB)->m_tile = SPRITE16_ID(4, 14);
+      t = getTile(_startX + lenA, _startY + lenB);
+      if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+      if (switchB) t->m_tile = SPRITE16_ID(4, 13);
+      else t->m_tile = SPRITE16_ID(4, 14);
     } else {
       for (int32_t y = _startY - 1; y > _startY - lenB; --y) {
         t = getTile(_startX + lenA, y);
         if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
         t->m_tile = SPRITE16_ID(4, 12);
-      } 
-      if (switchB) getTile(_startX + lenA, _startY - lenB)->m_tile = SPRITE16_ID(5, 13);
-      else getTile(_startX + lenA, _startY - lenB)->m_tile = SPRITE16_ID(6, 14);
+      }
+      t = getTile(_startX + lenA, _startY - lenB);
+      if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+      if (switchB) t->m_tile = SPRITE16_ID(5, 13);
+      else t->m_tile = SPRITE16_ID(6, 14);
     }
   } else if (switchA && _dir == NS) {
     if (switchDir) {
@@ -634,16 +642,20 @@ bool addRiver(int32_t _startX, int32_t _startY, enum kDir _dir, int32_t _lakePro
         if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
         t->m_tile = SPRITE16_ID(5, 12);
       }
-      if (switchB) getTile(_startX + lenB, _startY + lenA)->m_tile = SPRITE16_ID(6, 13);
-      else getTile(_startX + lenB, _startY + lenA)->m_tile = SPRITE16_ID(5, 14);
+      t = getTile(_startX + lenB, _startY + lenA);
+      if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+      if (switchB) t->m_tile = SPRITE16_ID(6, 13);
+      else t->m_tile = SPRITE16_ID(5, 14);
     } else {
       for (int32_t x = _startX - 1; x > _startX - lenB; --x) {
         t = getTile(x, _startY + lenA);
         if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
         t->m_tile = SPRITE16_ID(5, 12);
       } 
-      if (switchB) getTile(_startX - lenB, _startY + lenA)->m_tile = SPRITE16_ID(5, 13);
-      else getTile(_startX - lenB, _startY + lenA)->m_tile = SPRITE16_ID(7, 14);
+      t = getTile(_startX - lenB, _startY + lenA);
+      if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+      if (switchB) t->m_tile = SPRITE16_ID(5, 13);
+      else t->m_tile = SPRITE16_ID(7, 14);
     }
   }
 
@@ -654,22 +666,26 @@ bool addRiver(int32_t _startX, int32_t _startY, enum kDir _dir, int32_t _lakePro
       if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
       t->m_tile = SPRITE16_ID(5, 12);
     }
+    t = getTile(_startX + lenA + lenC, _startY + signedLenB);
+    if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
     if (endInLake) {
       bool lakeGood = addLake(_startX + lenA + lenC, _startY + signedLenB - LAKE_MIN/2, _lakeProb);
-      getTile(_startX + lenA + lenC, _startY + signedLenB)->m_tile = SPRITE16_ID(7, 11);
+      t->m_tile = SPRITE16_ID(7, 11);
       return lakeGood;
-    } else getTile(_startX + lenA + lenC, _startY + signedLenB)->m_tile = SPRITE16_ID(5, 14);
+    } else t->m_tile = SPRITE16_ID(5, 14);
   } else if (switchB && _dir == NS) {
     for (int32_t y = _startY + lenA + 1; y < _startY + lenA + lenC; ++y) {
       t = getTile(_startX + signedLenB, y);
       if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
       t->m_tile = SPRITE16_ID(4, 12);
     }
+    t = getTile(_startX + signedLenB, _startY + lenA + lenC);
+    if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
     if (endInLake) {
       bool lakeGood = addLake(_startX + signedLenB - LAKE_MIN/2, _startY + lenA + lenC, _lakeProb); 
-      getTile(_startX +  signedLenB, _startY + lenA + lenC)->m_tile = SPRITE16_ID(4, 11);
+      t->m_tile = SPRITE16_ID(4, 11);
       return lakeGood;
-    } else getTile(_startX + signedLenB, _startY + lenA + lenC)->m_tile = SPRITE16_ID(4, 14);
+    } else t->m_tile = SPRITE16_ID(4, 14);
   }
 
   return false;

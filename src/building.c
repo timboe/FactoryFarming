@@ -276,7 +276,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   bool canBePlaced = false;
   switch (_type) {
     case kConveyor:; canBePlaced = canBePlacedConveyor(_loc, _dir, _subType); break;
-    case kPlant:;  canBePlaced = canBePlacedPlant(_loc); break;
+    case kPlant:;  canBePlaced = canBePlacedPlant(_loc, _subType); break;
     case kUtility:; canBePlaced = canBePlacedUtility(_loc, _subType); break;
     case kExtractor:;  canBePlaced = canBePlacedExtractor(_loc, _subType); break;
     case kSpecial:;  canBePlaced = true; break;

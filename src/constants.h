@@ -124,7 +124,7 @@
 #define MAX_STORE 6
 
 // Number of crops before a plot upgrades to farmland
-#define N_CROPS_BEFORE_FARMLAND 8
+#define N_CROPS_BEFORE_FARMLAND 32
 
 //CAUTION: changing this currently requires manual change to de/serialisation
 #define WORLD_SAVE_SLOTS 8

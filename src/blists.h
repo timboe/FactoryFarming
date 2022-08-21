@@ -18,8 +18,8 @@ enum kPlantSubType{
   kPotatoPlant,  // Peaty
   kSunflowerPlant, // Chalky
   kAppleTree, // Peaty
-  kCornPlant, // Chalky
   kSeaweedPlant, // Lake
+  kCornPlant, // Chalky
   kWheatPlant, // Silty
   kCactusPlant, // Desert
   kLimeTree, // Desert
@@ -222,7 +222,7 @@ digraph G {
     IceCream -> Dessert
     Apples [T2] -> Dessert
 
-    Bamboo -> Packaging
+    Bamboo [T6] -> Packaging
     Cactus -> Packaging
     
     
