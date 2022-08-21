@@ -17,6 +17,8 @@ int16_t m_offX, m_offY = 0; // Screen offsets
 
 uint8_t m_facing = 0, m_wasFacing = 0, m_stepCounter = 0, m_animFrame = 0;
 
+bool m_inWater = false, m_wasInWater = false;
+
 uint16_t m_deserialiseXPlayer = 0, m_deserialiseYPlayer = 0;
 int16_t m_deserialiseArrayID = -1;
 
@@ -217,9 +219,11 @@ bool movePlayer() {
 
   float acc = PLAYER_A;
   float fric = PLAYER_FRIC;
+  m_inWater = false;
   if (m_currentLocation != NULL) {
     if (isWaterTile(m_currentLocation->m_x, m_currentLocation->m_y)) {
       fric *= 0.5f;
+      m_inWater = true;
     } else if (m_currentLocation->m_building && m_currentLocation->m_building->m_type == kUtility && m_currentLocation->m_building->m_subType.utility == kPath) {
       fric *= 1.1f;
     }
@@ -260,12 +264,14 @@ bool movePlayer() {
   #define PLAYER_ANIM_DELAY 16
 
   if (moving) {
-    if (++m_stepCounter * acc > PLAYER_ANIM_DELAY || m_facing != m_wasFacing) {
+    if (++m_stepCounter * acc > PLAYER_ANIM_DELAY || m_facing != m_wasFacing || m_inWater != m_wasInWater) {
       m_animFrame = (m_animFrame + 1) % PLAYER_ANIM_FRAMES;
       m_stepCounter = 0;
-      pd->sprite->setImage(m_player.m_sprite[zoom], getSprite18(m_animFrame, m_facing, zoom), kBitmapUnflipped);
+      const uint16_t animY = m_inWater ? m_facing + 4 : m_facing;
+      pd->sprite->setImage(m_player.m_sprite[zoom], getSprite18(m_animFrame, animY, zoom), kBitmapUnflipped);
     }
     m_wasFacing = m_facing;
+    m_wasInWater = m_inWater;
   }
 
   //pd->system->logToConsole("GOAL %f %f CURRENT %f %f", goalX, goalY, m_player.m_x, m_player.m_y);

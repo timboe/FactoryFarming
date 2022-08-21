@@ -690,20 +690,39 @@ void drawUIBottom() {
 
   struct Location_t* loc = getPlayerLocation();
   struct Tile_t* t = getTile_fromLocation(loc);
+  if (isWaterTile(loc->m_x, loc->m_y)) {
 
-  if (loc->m_building && loc->m_cargo) {
-    snprintf(text, 128, "%s %s, %s, %s", 
-      toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo));
-  } else if (loc->m_building) {
-    snprintf(text, 128, "%s %s, %s", 
-      toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
-  } else if (loc->m_cargo) {
-    snprintf(text, 128, "%s %s, %s", 
-      toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringCargo(loc->m_cargo));
+    if (loc->m_building && loc->m_cargo) {
+      snprintf(text, 128, "%s, %s, %s", 
+        toStringSoil(getGroundType(t->m_tile)), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo));
+    } else if (loc->m_building) {
+      snprintf(text, 128, "%s, %s", 
+        toStringSoil(getGroundType(t->m_tile)), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
+    } else if (loc->m_cargo) {
+      snprintf(text, 128, "%s, %s", 
+        toStringSoil(getGroundType(t->m_tile)), toStringCargo(loc->m_cargo));
+    } else {
+      snprintf(text, 128, "%s", 
+        toStringSoil(getGroundType(t->m_tile)));
+    }
+
   } else {
-    snprintf(text, 128, "%s %s", 
-      toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)));
-  }
+
+    if (loc->m_building && loc->m_cargo) {
+      snprintf(text, 128, "%s %s, %s, %s", 
+        toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo));
+    } else if (loc->m_building) {
+      snprintf(text, 128, "%s %s, %s", 
+        toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
+    } else if (loc->m_cargo) {
+      snprintf(text, 128, "%s %s, %s", 
+        toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringCargo(loc->m_cargo));
+    } else {
+      snprintf(text, 128, "%s %s", 
+        toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)));
+    }
+
+  } 
 
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX/2, 0);
   pd->graphics->popContext();
