@@ -24,9 +24,9 @@ enum kPlantSubType{
   kCactusPlant, // Desert
   kLimeTree, // Desert
   kStrawberryPlant, // Clay - Need to do more with this
-  kHempPlant, // Clay 
-  kCoffeePlant, // Loamy. Need another loamy... - Need to do more with this
-  kCocoPlant, // Loamy
+  kCocoaPlant, // Clay 
+  kCoffeePlant, // Loamy
+  kBambooPlant, // Loamy
   kSeaCucumberPlant, // Ocean
   //kP0, kP1, kP2, kP3, kP4, kP5, kP6, kP7, kP8, kP9, kP10, kP11, kP12, kP13, kP14, kP15, 
   kNPlantSubTypes
@@ -87,7 +87,7 @@ enum kFactorySubType{
   kRaveJuiceFac,
   kPerkPillFac,
   kSoftCakeFac,
-  kDesertFac,
+  kDessertFac,
   kPackagingFac,
   kCateringKitFac,
   kDrinksKitFac,
@@ -170,7 +170,7 @@ digraph G {
     Water -> Eggs  
     
     Eggs -> Protein
-    Hemp [T5] -> Protien
+    Hemp [T5] -> Protien # Change to Seaweed
     #Emulsifiers -> Protien
     Chalk -> Protien
     Vitamins -> Protien
@@ -179,15 +179,15 @@ digraph G {
     
     Meat -> Pie
     Gelatin -> Pie
-    Wheat -> Pie
+    Wheat [T3] -> Pie
     Water -> Pie
-    Potatoes -> Pie
+    Potatoes [T2] -> Pie
 
     Wheat [T3] -> MSG
     Salt -> MSG
     
     HFCS -> ReadyMeal
-    Carrots -> ReadyMeal
+    Carrots [T1] -> ReadyMeal
     Meat -> ReadyMeal
     MSG -> ReadyMeal
     Emulsifiers -> ReadyMeal
@@ -199,10 +199,11 @@ digraph G {
     CO2 -> Caffeine
     Coffee [T6] -> Caffeine
     
-    Water -> EnergyDrink
+    Water -> EnergyDrink (remove this?)
     HFCS -> EnergyDrink
     Caffeine -> EnergyDrink
     CO2 -> EnergyDrink
+    Strawberry [T5] -> Energy Drink (late addition)
     
     HardCider -> RaveJuice
     EnergyDrink -> RaveJuice
@@ -217,11 +218,11 @@ digraph G {
     Emulsifiers -> Twinkie
     
 
-    Jelly -> Desert
-    IceCream -> Desert
-    Apples -> Desert
+    Jelly -> Dessert
+    IceCream -> Dessert
+    Apples [T2] -> Dessert
 
-    Hemp -> Packaging
+    Bamboo -> Packaging
     Cactus -> Packaging
     
     

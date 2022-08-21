@@ -305,10 +305,18 @@ void populateInfoInventory() {
     case kUICatTool:  snprintf(textA, 128, "%s", 
       toStringTool(selectedID)); snprintf(textB, 128, "%s", 
       toStringToolInfo(selectedID)); break;
-    case kUICatPlant:; snprintf(textA, 128, "Plant %s (%s %s)",
-      toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
-      toStringWetness(PDesc[selectedID].wetness),
-      toStringSoil(PDesc[selectedID].soil)); break;
+    case kUICatPlant:; 
+      if (selectedID == kSeaweedPlant || selectedID == kSeaCucumberPlant) {
+        snprintf(textA, 128, "Plant %s (%s)",
+          toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
+          toStringSoil(PDesc[selectedID].soil)); 
+      } else {
+        snprintf(textA, 128, "Plant %s (%s %s)",
+          toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
+          toStringWetness(PDesc[selectedID].wetness),
+          toStringSoil(PDesc[selectedID].soil)); 
+      }
+      break;
     case kUICatConv:; snprintf(textA, 128, "Place %s (%s)", 
       toStringBuilding(selectedCatType, (union kSubType) {.conveyor = selectedID}, false), 
       getRotationAsString(getUIContentCategory(), getUIContentID(), getCursorRotation())); break;

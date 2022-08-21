@@ -62,10 +62,10 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kCactusPlant: return _inworld ? "Cactus Plant" : "Cactus Seeds";
       case kLimeTree: return _inworld ? "Lime Tree" : "Lime Sapling";
       case kStrawberryPlant: return _inworld ? "Strawberry Plant" : "Strawberry Seeds";
-      case kHempPlant: return _inworld ? "Help Plant" : "Hemp Seeds";
+      case kBambooPlant: return _inworld ? "Bamboo Plant" : "Bamboo Sapling";
       case kCoffeePlant: return _inworld ? "Coffee Plant" : "Coffee Seeds";
-      case kCocoPlant: return _inworld ? "Coco Plant" : "Coco Seeds";
-      case kSeaCucumberPlant: return _inworld ? "Sea Cucumber Plant" : "See Cucumber Seeds";
+      case kCocoaPlant: return _inworld ? "Cocoa Plant" : "Cocoa Seeds";
+      case kSeaCucumberPlant: return _inworld ? "Sea Cucumber Farm" : "Sea Cucumber Trap";
       //case kP0: case kP1: case kP2: case kP3: case kP4: case kP5: case kP6:
       //case kP7: case kP8: case kP9: case kP10: case kP11: case kP12: case kP13: case kP14: case kP15:  
       case kNPlantSubTypes: return "P_PLACEHOLDER";
@@ -125,7 +125,7 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kRaveJuiceFac: return "Rave Juice Factory";
       case kPerkPillFac: return "Perk Pills Factory";
       case kSoftCakeFac: return "Soft Cake Factory"; 
-      case kDesertFac: return "Dessert Factory";
+      case kDessertFac: return "Dessert Factory";
       case kPackagingFac: return "Packaging Manufacturer";
       case kCateringKitFac: return "Catering Pack Factory";
       case kDrinksKitFac: return "Drinks Pack Factory";

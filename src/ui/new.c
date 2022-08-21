@@ -77,17 +77,17 @@ const char* getNewText() {
       case kCactusPlant: return "Plant to grow Cactus";
       case kLimeTree: return "Plant to grow Limes";
       case kStrawberryPlant:  return "Plant to grow Strawberries";  
-      case kHempPlant: return "Plant to grow Hemp Fibers";
+      case kBambooPlant: return "Plant to grow Bamboo Stalks";
       case kCoffeePlant: return "Plant to grow Coffee Beans";
-      case kCocoPlant: return "Plant to grow Coco Beans";
-      case kSeaCucumberPlant: return "Plant in the Ocean to grow Sea Cucumbers";
+      case kCocoaPlant: return "Plant to grow Cocoa Beans";
+      case kSeaCucumberPlant: return "Place in the Ocean to farm Sea Cucumbers";
       //case kP4:; case kP5:; case kP6:; case kP7:; case kP8:; case kP9:; case kP10:; case kP11:; case kP12:; return "Placeholder";
       case kNPlantSubTypes: return "";
     }
     case kUtility: switch (m_nextSubType.utility) {
       case kPath: return "Movement speed is enhanced while on a path";
       case kSign: return "Displays a Cargo of your choosing";
-      case kBin: return "Cargo placed here will get destroyed";
+      case kBin: return "Cargo placed here will be destroyed";
       case kWell: return "Place to dampen the surrounding soil";
       case kStorageBox: return "Stores up to 3 different types of Cargo";
       case kBuffferBox: return "Like the Storage Box, but also self-empties";
@@ -111,7 +111,35 @@ const char* getNewText() {
     case kFactory: switch (m_nextSubType.factory) {
       case kVitiminFac: return "Manufactures low-grade Vitamin Pills";
       case kVegOilFac: return "Crush Vegetable Oil from Sunflowers";
-      case kCrispsFac: return "Manufactures Potato Chips. A fried favorite";
+      case kCrispsFac: return "Manufactures Potato Chips. A fried favorite!";
+      case kEthanolFac: return "Brew & distill pure alcohol"; 
+      case kHardCiderFac: return "Mix up some cheap Hard 'Cider'"; 
+      case kAbattoir: return "Produces 'Meat' to be used elsewhere";
+      case kHydrogenFac: return "Splits water and captures the Hydrogen";
+      case kHOILFac: return "Hydrogenates oil to prevent spoiling";
+      case kCornDogFac: return "Crunchy and Meaty";
+      case kBeerFac: return "Produces something which resembes beer";
+      case kTequilaFac: return "Not very authentic tequila, mind";
+      case kMexBeerFac: return "An intresting mix of flavours";
+      case kEmulsifierFac: return "Stops things from separating out";
+      case kHFCSFac: return "So very, very, sweet...";
+      case kIceCreamFac: return "It's dairy free!";
+      case kBatteryFarm: return "Corn goes in, Eggs come out";
+      case kProteinFac: return "Maximum bulk, minimum fuss";
+      case kGelatinFac: return "Used to set a vareiety of liquids";
+      case kPieFac: return "What's for dinner? Meat Pie!";
+      case kMSGFac: return "Makes everything taste better";
+      case kReadyMealFac: return "A meal for one";
+      case kJellyFac: return "A wobbley favourite";
+      case kCaffeineFac: return "Extracts the caffiene from coffee beans";
+      case kEnergyDrinkFac: return "caffiene high & sugar rush all-in-one";
+      case kRaveJuiceFac: return "... why not add alcohol too?";
+      case kPerkPillFac: return "Will keep you awake far too long";
+      case kSoftCakeFac: return "Creamy, soft, and an infinite shelf life";
+      case kDessertFac: return "Sweet tooth?";
+      case kPackagingFac: return "Large shipping boxes";
+      case kCateringKitFac: return "Packaged Catering Kits";
+      case kDrinksKitFac: return "Packaged Drinks Kits";
       //case kF4: case kF5: case kF6: case kF7: case kF8: case kF9: case kF10: case kF11: return "FPlaceholder"; 
       case kNFactorySubTypes: return "";
     }

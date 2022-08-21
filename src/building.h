@@ -12,8 +12,8 @@ enum kBuildingType {kNoBuilding, kConveyor, kPlant, kUtility, kExtractor, kFacto
 
 struct ConveyorDescriptor_t {
   enum kConvSubType subType;
-  uint32_t unlock;
-  uint16_t price;
+  uint16_t unlock;
+  uint32_t price;
   uint16_t UIIcon;
   uint8_t spriteX;
   uint8_t spriteY;
@@ -22,8 +22,8 @@ extern struct ConveyorDescriptor_t CDesc[];
 
 struct PlantDescriptor_t {
   enum kPlantSubType subType;
-  uint32_t unlock;
-  uint16_t price;
+  uint16_t unlock;
+  uint32_t price;
   uint16_t sprite;
   uint16_t time;
   enum kGroundWetness wetness;
@@ -34,8 +34,8 @@ extern struct PlantDescriptor_t PDesc[];
 
 struct UtilityDescriptor_t {
   enum kUtilitySubType subType;
-  uint32_t unlock;
-  uint16_t price;
+  uint16_t unlock;
+  uint32_t price;
   uint16_t UIIcon;
   uint16_t sprite;
 };
@@ -43,8 +43,8 @@ extern struct UtilityDescriptor_t UDesc[];
 
 struct ExtractorDescriptor_t {
   enum kExtractorSubType subType;
-  uint32_t unlock;
-  uint16_t price;
+  uint16_t unlock;
+  uint32_t price;
   uint16_t UIIcon;
   uint16_t sprite;
   enum kCargoType out;
@@ -53,8 +53,8 @@ extern struct ExtractorDescriptor_t EDesc[];
 
 struct FactoryDescriptor_t {
   enum kFactorySubType subType;
-  uint16_t price;
-  uint32_t unlock;
+  uint16_t unlock;
+  uint32_t price;
   uint16_t time;
   uint16_t sprite;
   enum kCargoType out;

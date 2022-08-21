@@ -317,6 +317,8 @@ void initGame() {
     if (i != CargoDesc[i].subType) pd->system->error("CARGO DESCRIPTOR ORDERING IS WRONG!");
   }
 
+  //return;
+
   // Populate unlock ordering
   int32_t i = -1;
   while (true) {

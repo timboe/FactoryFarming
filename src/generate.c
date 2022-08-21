@@ -20,6 +20,9 @@ struct Tile_t* m_tiles = NULL;
 uint16_t m_deserialiseIndexWorld = 0;
 
 const int32_t SIZE_GENERATE = TOT_TILES * sizeof(struct Tile_t);
+
+#define SEASTART (TILES_PER_CHUNK_Y*2)
+#define SEAEND (TILES_PER_CHUNK_Y*5)
  
 void generateSpriteSetup(struct Chunk_t* _chunk);
 
@@ -46,7 +49,6 @@ uint8_t getNearbyBackground_Chunk(struct Chunk_t* _chunk, uint16_t _u, uint16_t 
 uint8_t getNearbyBackground_Loc(struct Location_t* _loc);
 
 void addBiome(uint8_t _size, int32_t _offX, int32_t _offY, uint16_t _imgStart);
-
 
 void doSea(void);
 
@@ -260,7 +262,9 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   for (uint32_t i = 0; i < _chunk->m_nBuildingsRender; ++i) {
     struct Building_t* building = _chunk->m_buildingsRender[i];
     if (building->m_type == kPlant) {
-      if (building->m_mode.mode16 >= 2 * N_CROPS_BEFORE_FARMLAND) { // Draw farm land
+      if (building->m_subType.plant == kSeaweedPlant || building->m_subType.plant == kSeaCucumberPlant) {
+        // noop
+      } else if (building->m_mode.mode16 >= 2 * N_CROPS_BEFORE_FARMLAND) { // Draw farm land
         pd->graphics->drawBitmap(getSprite16(7,12,1), building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
       } else if (building->m_mode.mode16 >= N_CROPS_BEFORE_FARMLAND) { // Draw farm land
         pd->graphics->drawBitmap(getSprite16(6,12,1), building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
@@ -304,10 +308,11 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
         if (building->m_subType.utility == kPath) getPathSprite(building->m_location, &sprite, &flip);
         else                                      getFenceSprite(building->m_location, &sprite, &flip);
         pd->graphics->drawBitmap(getSprite16_byidx(sprite, 1), building->m_pix_x - off16_x, building->m_pix_y - off16_y, flip);
-      } else if (building->m_type == kPlant && !building->m_mode.mode16) {
-        // Plant which has not grown yet
-        const bool flip = (building->m_type == kPlant && (building->m_location->m_x + building->m_location->m_y) % 2);
-        pd->graphics->drawBitmap(getSprite16(11, 12, 1), building->m_pix_x - off16_x, building->m_pix_y - off16_y, flip ? kBitmapFlippedX : kBitmapUnflipped);
+      } else if (building->m_type == kPlant && !building->m_mode.mode16 && building->m_subType.plant != kSeaCucumberPlant) {
+        // Plant which has not grown yet and is not sea cucumber farm
+        const bool flip = (building->m_type == kPlant && (building->m_location->m_x + building->m_location->m_y) % 2); // Lake plants have their own growning sprite
+        LCDBitmap* s = (building->m_subType.plant == kSeaweedPlant ? getSprite16(12, 13, 1) : getSprite16(11, 12, 1) );
+        pd->graphics->drawBitmap(s, building->m_pix_x - off16_x, building->m_pix_y - off16_y, flip ? kBitmapFlippedX : kBitmapUnflipped);
       } else {
         // Fast conveyors get drawn inverted. Stored[0] is used to hold the speed
         const bool invert = (building->m_type == kConveyor && building->m_stored[0] >= 2);
@@ -472,6 +477,7 @@ enum kGroundType getGroundType(uint8_t _tile) {
   } else if (_tile < FLOOR_VARIETIES*10) {
     return kObstructedGround;
   } else if (_tile < 192) {
+    if (getSlot() == kWaterWorld) return kOcean;
     return kLake;
   } else if (_tile < 232) {
     return kRiver;
@@ -766,8 +772,7 @@ bool addLake(int32_t _startX, int32_t _startY, int32_t _riverProb) {
   return false;
 }
 
-#define SEASTART (TILES_PER_CHUNK_Y*2)
-#define SEAEND (TILES_PER_CHUNK_Y*5)
+
 void doSea() {
   struct Tile_t* t = NULL;
   for (int32_t x = 0; x < TOT_TILES_X; ++x) {
@@ -962,8 +967,7 @@ void generate(uint32_t _actionProgress) {
 
     if (slot == kWaterWorld) {
       doSea();
-    }
-    if (slot != kTranquilWorld && slot != kSandWorld) {
+    } else if (slot != kTranquilWorld && slot != kSandWorld) {
       doLakesAndRivers(slot);
     }
 

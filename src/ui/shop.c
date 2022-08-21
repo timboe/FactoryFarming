@@ -69,10 +69,18 @@ void populateInfoBuy(bool _visible) {
   roundedRect(3, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorWhite);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   switch (selectedCatType) {
-    case kPlant:; snprintf(textA, 128, "Buy %s (%s %s)",
-      toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
-      toStringWetness( PDesc[selectedID].wetness ),
-      toStringSoil( PDesc[selectedID].soil )); break;
+    case kPlant:; 
+      if (selectedID == kSeaweedPlant || selectedID == kSeaCucumberPlant) {
+        snprintf(textA, 128, "Buy %s (%s)",
+          toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
+          toStringSoil( PDesc[selectedID].soil )); 
+      } else {
+        snprintf(textA, 128, "Buy %s (%s %s)",
+          toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
+          toStringWetness( PDesc[selectedID].wetness ),
+          toStringSoil( PDesc[selectedID].soil )); 
+      }
+      break;
     case kConveyor:; snprintf(textA, 128, "Buy %s", toStringBuilding(selectedCatType, (union kSubType) {.conveyor = selectedID}, false)); break;
     case kExtractor:; snprintf(textA, 128, "Buy %s", toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false)); break;
     case kFactory:; snprintf(textA, 128, "Buy %s", toStringBuilding(selectedCatType, (union kSubType) {.factory = selectedID}, false)); break;
