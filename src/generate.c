@@ -528,10 +528,10 @@ const char* getWorldName(enum kWorldType _type, bool _mask) {
   return "UNKNOWN World";
 }
 
-void tryRemoveObstruction(struct Location_t* _loc) {
+bool tryRemoveObstruction(struct Location_t* _loc) {
   struct Tile_t* t = getTile_fromLocation(_loc);
-  if (getGroundType(t->m_tile) != kObstructedGround) return;
-  if (!getOwned(kUICatUtility, kObstructionRemover)) return;
+  if (getGroundType(t->m_tile) != kObstructedGround) return false;
+  if (!getOwned(kUICatUtility, kObstructionRemover)) return false;
 
   modOwned(kUICatUtility, kObstructionRemover, /*add*/ false);
   t->m_tile = getNearbyBackground_Loc(_loc);
@@ -539,6 +539,7 @@ void tryRemoveObstruction(struct Location_t* _loc) {
   _loc->m_obstacle = NULL;
   addTrauma(2.0f);
   renderChunkBackgroundImage(_loc->m_chunk);
+  return true;
 }
 
 void doClutterObstacles() {
@@ -1010,7 +1011,7 @@ void generate(uint32_t _actionProgress) {
     doWetness(/*for titles = */ false);
 
     // Finished
-    #ifdef DEV
+    #ifdef SLOW_LOAD
     float f; for (int32_t i = 0; i < 10000; ++i) for (int32_t j = 0; j < 10000; ++j) { f*=i*j; }
     pd->system->logToConsole("Generated %s",  getWorldName(slot, /*mask*/ false));
     #endif

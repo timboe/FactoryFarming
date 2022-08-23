@@ -69,7 +69,7 @@ void addObstacles(void);
 
 void doWetness(bool _forTitles);
 
-void tryRemoveObstruction(struct Location_t* _loc);
+bool tryRemoveObstruction(struct Location_t* _loc);
 
 enum kGroundWetness getWetness(uint8_t _value);
 

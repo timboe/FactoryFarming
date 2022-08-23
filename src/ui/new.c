@@ -1,5 +1,6 @@
 #include "new.h"
 #include "../player.h"
+#include "../sound.h"
 #include "../buildings/special.h"
 
 uint32_t m_nextPrice;
@@ -51,6 +52,7 @@ bool checkShowNew() {
   m_nextSubType = UnlockDecs[testLevel].subType;
   p->m_buildingsUnlockedTo += 1;
   setGameMode(kMenuNew);
+  sfxUnlock();
   return true;
 }
 

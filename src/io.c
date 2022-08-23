@@ -77,6 +77,7 @@ void doIO(enum kSaveLoadRequest _first, enum kSaveLoadRequest _andThen) {
   m_andThen = _andThen;
   m_secondStage = false;
   m_actionProgress = 0;
+  pauseMusic();
   #ifdef DEV
   pd->system->logToConsole("IO: Requested");
   #endif
@@ -122,6 +123,7 @@ void enactIO() {
       m_andThen = kDoNothing;
       m_forceSlot = -1;
       updateRenderList();
+      resumeMusic();
     }
   }
 }
@@ -395,7 +397,7 @@ bool doSave(bool _synchronous) {
     scanSlots();
 
     // Finished
-    #ifdef DEV
+    #ifdef SLOW_LOAD
     float f; for (int32_t i = 0; i < 10000; ++i) for (int32_t j = 0; j < 10000; ++j) { f*=i*j; }
     #endif
 
@@ -465,7 +467,7 @@ bool doLoad() {
     populateMenuGame();
 
     // Finished
-    #ifdef DEV
+    #ifdef SLOW_LOAD
     float f; for (int32_t i = 0; i < 10000; ++i) for (int32_t j = 0; j < 10000; ++j) { f*=i*j; }
     #endif
 

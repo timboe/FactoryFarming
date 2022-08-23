@@ -4,6 +4,7 @@
 #include "../render.h"
 #include "../sprite.h"
 #include "../input.h"
+#include "../sound.h"
 #include "../generate.h"
 #include "../buildings/conveyor.h"
 #include "../buildings/utility.h"
@@ -63,12 +64,14 @@ bool doClearObstruction(struct Location_t* _loc) {
     case 3: min = -1; max = 2; break;
     case 5: min = -2; max = 3; break;
   }
+  bool removed = false;
   for (int32_t x = min; x < max; ++x) {
     for (int32_t y = min; y < max; ++y) {
       struct Location_t* l = getLocation(_loc->m_x + x, _loc->m_y + y);
-      tryRemoveObstruction(l);
+      removed |= tryRemoveObstruction(l);
     }
   }
+  if (removed) sfxClearObstruction();
   return false; // We have handled the removal of the obstruction removers inside tryRemoveObstruction
 }
 
@@ -120,7 +123,7 @@ void doPlace() {
   }
   if (placed) {
     switch (selectedCat) {
-      case kUICatPlant:  addTrauma(0.5f); break;
+      case kUICatPlant:  addTrauma(0.5f); sfxPlacePlant(); break;
       case kUICatConv:  addTrauma(0.5f); break;
       case kUICatExtractor: addTrauma(1.0f); break;
       case kUICatFactory: addTrauma(1.0f); break;
@@ -160,7 +163,10 @@ void doPick() {
       update |= doPickAtLocation(loc);
     }
   }
-  if (update) updateRenderList();
+  if (update) {
+    updateRenderList();
+    sfxPickCargo();
+  }
 }
 
 bool doPickAtLocation(struct Location_t* _loc) {
@@ -192,32 +198,39 @@ bool doPickAtLocation(struct Location_t* _loc) {
         p->m_carryCargo[ building->m_stored[(MAX_STORE/2) + compartment] ] += building->m_stored[compartment];
         building->m_stored[compartment] = 0;
         building->m_stored[(MAX_STORE/2) + compartment] = kNoCargo;
+        update = true;
       }
     }
     if (building->m_type == kFactory) {
       if (building->m_stored[0]) {
         p->m_carryCargo[ FDesc[building->m_subType.factory].out ] += building->m_stored[0];
         building->m_stored[0] = 0;
+        update = true;
       }
       if (building->m_stored[1]) {
         p->m_carryCargo[ FDesc[building->m_subType.factory].in1 ] += building->m_stored[1];
         building->m_stored[1] = 0;
+        update = true;
       }
       if (building->m_stored[2]) {
         p->m_carryCargo[ FDesc[building->m_subType.factory].in2 ] += building->m_stored[2];
         building->m_stored[2] = 0;
+        update = true;
       }
       if (building->m_stored[3]) {
         p->m_carryCargo[ FDesc[building->m_subType.factory].in3 ] += building->m_stored[3];
         building->m_stored[3] = 0;
+        update = true;
       }
       if (building->m_stored[4]) {
         p->m_carryCargo[ FDesc[building->m_subType.factory].in4 ] += building->m_stored[4];
         building->m_stored[4] = 0;
+        update = true;
       }
       if (building->m_stored[5]) {
         p->m_carryCargo[ FDesc[building->m_subType.factory].in5 ] += building->m_stored[5];
         building->m_stored[5] = 0;
+        update = true;
       }
     }
   }
@@ -234,6 +247,7 @@ void doDestroy() {
     case 5: min = -2; max = 3; break;
   }
   struct Location_t* ploc = getPlayerLocation();
+  bool cleared = false;
   for (int32_t x = min; x < max; ++x) {
     for (int32_t y = min; y < max; ++y) {
       struct Location_t* loc = getLocation(ploc->m_x + x, ploc->m_y + y);
@@ -242,9 +256,10 @@ void doDestroy() {
       }
       bool doBuilding = true; 
       if (loc->m_building && loc->m_building->m_type == kSpecial) doBuilding = false;
-      clearLocation(loc, /*cargo=*/ true, /*building=*/ doBuilding);
+      cleared |= clearLocation(loc, /*cargo=*/ true, /*building=*/ doBuilding);
     }
   }
+  if (cleared) sfxDestroy();
 }
 
 void populateContentInventory(void) {

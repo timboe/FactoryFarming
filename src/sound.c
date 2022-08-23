@@ -9,11 +9,26 @@ FilePlayer* m_music[N_MUSIC_TRACKS];
 
 SamplePlayer* m_samplePlayer;
 
-AudioSample* m_a;
+AudioSample* m_destroy;
+AudioSample* m_clearObstruction;
+AudioSample* m_pickCargo;
+AudioSample* m_placePlant;
+AudioSample* m_unlock;
+AudioSample* m_sell;
 
 void musicStopped(SoundSource* _c);
 
 /// ///
+
+void pauseMusic() {
+  if (m_trackPlaying == -1) return;
+  pd->sound->fileplayer->pause(m_music[m_trackPlaying]);
+}
+
+void resumeMusic() {
+  if (m_trackPlaying == -1) return;
+  pd->sound->fileplayer->play(m_music[m_trackPlaying], 1);
+}
 
 void updateMusic(bool _isTitle) {
   if (_isTitle) {
@@ -81,11 +96,51 @@ void initSound() {
   }
 
   m_samplePlayer = pd->sound->sampleplayer->newPlayer();
-  //m_a = pd->sound->sample->load("sounds/");
+
+  m_destroy = pd->sound->sample->load("sounds/destroy");
+  m_clearObstruction = pd->sound->sample->load("sounds/clearObstruction");
+  m_pickCargo = pd->sound->sample->load("sounds/pickCargo");
+  m_placePlant = pd->sound->sample->load("sounds/placePlant");
+  m_unlock = pd->sound->sample->load("sounds/unlock");
+  m_sell = pd->sound->sample->load("sounds/sell");
+
 }
 
 
+void sfxDestroy() {
+  if (!m_sfxOn) return;
+  pd->sound->sampleplayer->setSample(m_samplePlayer, m_destroy);
+  pd->sound->sampleplayer->play(m_samplePlayer, 1, 1.0f);
+}
 
+void sfxClearObstruction() {
+  if (!m_sfxOn) return;
+  pd->sound->sampleplayer->setSample(m_samplePlayer, m_clearObstruction);
+  pd->sound->sampleplayer->play(m_samplePlayer, 1, 1.0f);
+}
 
+void sfxPickCargo() {
+  if (!m_sfxOn) return;
+  pd->sound->sampleplayer->setSample(m_samplePlayer, m_pickCargo);
+  pd->sound->sampleplayer->play(m_samplePlayer, 1, 1.0f);
+}
+
+void sfxPlacePlant() {
+  if (!m_sfxOn) return;
+  pd->sound->sampleplayer->setSample(m_samplePlayer, m_placePlant);
+  pd->sound->sampleplayer->play(m_samplePlayer, 1, 1.0f);
+}
+
+void sfxUnlock() {
+  if (!m_sfxOn) return;
+  pd->sound->sampleplayer->setSample(m_samplePlayer, m_unlock);
+  pd->sound->sampleplayer->play(m_samplePlayer, 1, 1.0f);
+}
+
+void sfxSell() {
+  if (!m_sfxOn) return;
+  pd->sound->sampleplayer->setSample(m_samplePlayer, m_sell);
+  pd->sound->sampleplayer->play(m_samplePlayer, 1, 1.0f);
+}
 
 ///////////////

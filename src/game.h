@@ -2,6 +2,8 @@
 
 #define DEV
 
+#define SLOW_LOAD
+
 //#define DEMO
 
 #define PRETEND_ZOOMED_IN false

@@ -60,7 +60,7 @@ struct Player_t{
   uint8_t m_soundSettings;
   uint8_t m_autoUseConveyorBooster;
   uint8_t m_enableConveyorAnimation;
-  uint8_t m_enableTutorial;
+  uint8_t m_enableTutorial; // Also used to hold the tutorial stage
   uint8_t m_enableDebug;
   uint8_t m_enableAutosave;
   uint8_t m_enablePickupOnDestroy;

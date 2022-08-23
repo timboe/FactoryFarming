@@ -10,7 +10,7 @@ struct ConveyorDescriptor_t CDesc[] = {
   {.subType = kSplitI,    .unlock = 1,   .price = 50,         .UIIcon = SID(0,20), .spriteX = 0, .spriteY = 11},
   {.subType = kSplitT,    .unlock = 1,   .price = 50,         .UIIcon = SID(4,20), .spriteX = 2, .spriteY = 11},
   {.subType = kTunnelIn,  .unlock = 1,   .price = 1000,       .UIIcon = SID(8,17), .spriteX = 8, .spriteY = 11},
-  {.subType = kTunnelOut, .unlock = DIS, .price = UINT32_MAX, .UIIcon = SID(8,16), .spriteX = 9, .spriteY = 11},
+  {.subType = kTunnelOut, .unlock = DIS, .price = UINT32_MAX, .UIIcon = SID(9,10), .spriteX = 9, .spriteY = 11},
   {.subType = kFilterL,   .unlock = 1,   .price = 250,        .UIIcon = SID(8,20), .spriteX = 3, .spriteY = 11},
   {.subType = kFilterI,   .unlock = 1,   .price = 250,        .UIIcon = SID(12,20), .spriteX = 10, .spriteY = 11},
 };

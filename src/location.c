@@ -28,15 +28,19 @@ struct Location_t* getLocation(int32_t _x, int32_t _y) {
   return getLocation_noCheck(_x, _y);
 }
 
-void clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuilding) {
+bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuilding) {
+
+  bool cleared = false;
 
   if (_clearCargo && _loc->m_cargo) {
     chunkRemoveCargo(_loc->m_chunk, _loc->m_cargo);
     cargoManagerFreeCargo(_loc->m_cargo);
     _loc->m_cargo = NULL;
+    cleared = true;
   }
 
   if (_clearBuilding && _loc->m_building) {
+    cleared = true;
 
     // Special - well
     bool wideRedraw = false;
@@ -82,6 +86,7 @@ void clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
     _loc->m_notOwned = false;
   }
 
+  return cleared;
 }
 
 

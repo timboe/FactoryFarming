@@ -1,4 +1,5 @@
 #include "settings.h"
+#include "new.h"
 #include "../sprite.h"
 #include "../ui.h"
 #include "../io.h"
@@ -41,44 +42,80 @@ LCDBitmap* getPauseImage() {
 
   setRoobert10();
 
-  snprintf(text, 128, "Sell a total of:");
-  length = strlen(text);
-  width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 1*Y_SPACE);
-
-  snprintf(text, 128, "To unlock the next:");
-  length = strlen(text);
-  width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 3*Y_SPACE);
-
   struct Player_t* p = getPlayer();
-  const uint32_t nextLevel = p->m_buildingsUnlockedTo + 1;
-  const enum kCargoType cargo = UnlockDecs[ nextLevel ].ofCargo;
-  const uint16_t needToSell = UnlockDecs[ nextLevel ].fromSelling;
-  const uint16_t haveSold = p->m_soldCargo[ cargo ];
+  if (checkHasNewToShow(p)) {
 
-  snprintf(text, 128, "%i %ss", needToSell, toStringCargoByType(cargo));
-  length = strlen(text);
-  width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 2*Y_SPACE);
-  pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[ cargo ].UIIcon , 1), X_START, 2*Y_SPACE, kBitmapUnflipped);
-  pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[ cargo ].UIIcon , 1), X_END, 2*Y_SPACE, kBitmapFlippedX);
+    snprintf(text, 128, "Visit:");
+    length = strlen(text);
+    width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
+    pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 1*Y_SPACE);
 
-  enum kBuildingType nextBuildingType = UnlockDecs[nextLevel].type;
-  enum kUICat nextBuildingUICat = getBuildingTypeCat(nextBuildingType);
+    snprintf(text, 128, "To unlock the next:");
+    length = strlen(text);
+    width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
+    pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 3*Y_SPACE);
 
-  const char* t = toStringHeader(nextBuildingUICat, /*plural*/ false);
-  length = strlen(t);
-  width = pd->graphics->getTextWidth(getRoobert10(), t, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(t, 128, kASCIIEncoding, CENTRE - width/2, 4*Y_SPACE);
+    const uint32_t nextLevel = p->m_buildingsUnlockedTo + 1;
 
-  pd->graphics->drawBitmap(getSprite16(11, 13, 1), X_START, 4*Y_SPACE, kBitmapUnflipped);
-  pd->graphics->drawBitmap(getSprite16(11, 13, 1), X_END, 4*Y_SPACE, kBitmapUnflipped);
+    snprintf(text, 128, "The Shop");
+    length = strlen(text);
+    width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
+    pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 2*Y_SPACE);
+    pd->graphics->drawBitmap(getSprite16( 11, 14, 1), X_START, 2*Y_SPACE, kBitmapUnflipped);
+    pd->graphics->drawBitmap(getSprite16( 11, 14, 1), X_END,   2*Y_SPACE, kBitmapUnflipped);
 
-  snprintf(text, 128, "Sold so far: %i", haveSold);
-  length = strlen(text);
-  width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 5*Y_SPACE);
+    enum kBuildingType nextBuildingType = UnlockDecs[nextLevel].type;
+    enum kUICat nextBuildingUICat = getBuildingTypeCat(nextBuildingType);
+
+    const char* t = toStringHeader(nextBuildingUICat, /*plural*/ false);
+    length = strlen(t);
+    width = pd->graphics->getTextWidth(getRoobert10(), t, length, kUTF8Encoding, 0);
+    pd->graphics->drawText(t, 128, kASCIIEncoding, CENTRE - width/2, 4*Y_SPACE);
+
+    pd->graphics->drawBitmap(getSprite16(11, 13, 1), X_START, 4*Y_SPACE, kBitmapUnflipped);
+    pd->graphics->drawBitmap(getSprite16(11, 13, 1), X_END, 4*Y_SPACE, kBitmapUnflipped);
+
+  } else {
+
+    snprintf(text, 128, "Sell a total of:");
+    length = strlen(text);
+    width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
+    pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 1*Y_SPACE);
+
+    snprintf(text, 128, "To unlock the next:");
+    length = strlen(text);
+    width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
+    pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 3*Y_SPACE);
+
+    const uint32_t nextLevel = p->m_buildingsUnlockedTo + 1;
+    const enum kCargoType cargo = UnlockDecs[ nextLevel ].ofCargo;
+    const uint16_t needToSell = UnlockDecs[ nextLevel ].fromSelling;
+    const uint16_t haveSold = p->m_soldCargo[ cargo ];
+
+    snprintf(text, 128, "%i %ss", needToSell, toStringCargoByType(cargo));
+    length = strlen(text);
+    width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
+    pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 2*Y_SPACE);
+    pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[ cargo ].UIIcon , 1), X_START, 2*Y_SPACE, kBitmapUnflipped);
+    pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[ cargo ].UIIcon , 1), X_END, 2*Y_SPACE, kBitmapFlippedX);
+
+    enum kBuildingType nextBuildingType = UnlockDecs[nextLevel].type;
+    enum kUICat nextBuildingUICat = getBuildingTypeCat(nextBuildingType);
+
+    const char* t = toStringHeader(nextBuildingUICat, /*plural*/ false);
+    length = strlen(t);
+    width = pd->graphics->getTextWidth(getRoobert10(), t, length, kUTF8Encoding, 0);
+    pd->graphics->drawText(t, 128, kASCIIEncoding, CENTRE - width/2, 4*Y_SPACE);
+
+    pd->graphics->drawBitmap(getSprite16(11, 13, 1), X_START, 4*Y_SPACE, kBitmapUnflipped);
+    pd->graphics->drawBitmap(getSprite16(11, 13, 1), X_END, 4*Y_SPACE, kBitmapUnflipped);
+
+    snprintf(text, 128, "Sold so far: %i", haveSold);
+    length = strlen(text);
+    width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
+    pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 5*Y_SPACE);
+
+  }
 
   pd->graphics->drawLine(X_START + TILE_PIX, 3*Y_SPACE - TILE_PIX/2, X_END, 3*Y_SPACE - TILE_PIX/2, 2, kColorBlack);
   pd->graphics->drawLine(X_START + TILE_PIX, 5*Y_SPACE - TILE_PIX/2, X_END, 5*Y_SPACE - TILE_PIX/2, 2, kColorBlack);

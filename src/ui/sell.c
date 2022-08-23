@@ -1,6 +1,7 @@
 #include "sell.h"
 #include "../player.h"
 #include "../sprite.h"
+#include "../sound.h"
 #include "../buildings/special.h"
 
 /// ///
@@ -14,6 +15,7 @@ void doSale() {
     modOwned(kUICatCargo, selectedID, /*add=*/ false);
     UIDirtyMain();
     getPlayer()->m_soldCargo[ selectedID ]++;
+    sfxSell();
     // Tutorial
     if (getTutorialStage() == kTutSellCarrots && selectedID == kCarrot) {
       makeTutorialProgress();

@@ -27,7 +27,7 @@ struct Location_t* getLocation(int32_t _x, int32_t _y);
 
 struct Location_t* getLocation_noCheck(int32_t _x, int32_t _y);
 
-void clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuilding);
+bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuilding);
 
 void initLocation(void);
 
