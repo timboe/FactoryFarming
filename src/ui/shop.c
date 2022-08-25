@@ -7,12 +7,16 @@ void doPurchace() {
   const enum kUICat selectedCat = getUIContentCategory();
   const uint16_t selectedID =  getUIContentID();
   const int32_t selectedPrice = getPrice(selectedCat, selectedID);
-  if (modMoney(-selectedPrice)) {
-    modOwned(selectedCat, selectedID, /*add=*/ true);
+  const uint8_t multiplier = getBuySellMultiplier();
+
+  if (modMoney(-selectedPrice * multiplier)) {
     UIDirtyMain();
-    // Tutorial
-    if (getTutorialStage() == kTutWelcomeBuySeeds && selectedCat == kUICatPlant && selectedID == kCarrotPlant) {
-      makeTutorialProgress();
+    for (int32_t dummy = 0; dummy < multiplier; ++dummy) {
+      modOwned(selectedCat, selectedID, /*add=*/ true);
+      // Tutorial
+      if (getTutorialStage() == kTutWelcomeBuySeeds && selectedCat == kUICatPlant && selectedID == kCarrotPlant) {
+        makeTutorialProgress();
+      }
     }
   }
 }

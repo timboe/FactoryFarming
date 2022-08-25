@@ -39,7 +39,8 @@ enum kWorldType{
 };
 
 extern const uint16_t kWarpUIIcon[];
-extern const uint16_t kWarpPrice[];
+extern const uint32_t kWarpPrice[];
+extern const enum kCargoType kWarpUnlockCargo[];
 
 enum kGroundWetness{kWater, kWet, kMoist, kDry, kNGroundWetnesses};
 

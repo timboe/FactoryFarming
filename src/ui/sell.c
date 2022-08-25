@@ -9,13 +9,21 @@
 void doSale() {
   const uint16_t selectedID =  getUIContentID();
   const int32_t selectedPrice = getPrice(kUICatCargo, selectedID);
+  const int32_t owned = getOwned(kUICatCargo, selectedID);
   if (selectedID == kNoCargo) return;
-  if (getOwned(kUICatCargo, selectedID) == 0) return;
-  if (modMoney(selectedPrice)) {
+  if (owned == 0) return;
+
+  int32_t toSell = getBuySellMultiplier();
+  if (toSell > owned) {
+    toSell = owned;
+  } 
+
+  sfx(kSfxSell);
+  UIDirtyMain();
+  for (int32_t dummy = 0; dummy < toSell; ++dummy) {
+    modMoney(selectedPrice);
     modOwned(kUICatCargo, selectedID, /*add=*/ false);
-    UIDirtyMain();
     getPlayer()->m_soldCargo[ selectedID ]++;
-    sfx(kSfxSell);
     // Tutorial
     if (getTutorialStage() == kTutSellCarrots && selectedID == kCarrot) {
       makeTutorialProgress();

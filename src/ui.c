@@ -144,6 +144,8 @@ bool m_rowIsTitle[MAX_ROWS] = {false};
 
 int16_t m_creditsCounter;
 
+uint8_t m_buySellMultiplier = 0;
+
 // Checks that the cursor selection is OK
 void checkSel(void);
 
@@ -254,6 +256,34 @@ void modCredits(bool _increment) {
   } else {
     m_creditsCounter -= 9; // We always add one anyway
   }  
+}
+
+uint8_t getBuySellMultiplier() {
+  return m_buySellMultiplier;
+}
+
+void modMultiplier(bool _increment) {
+  sfx(kSfxRotate);
+  if (_increment) {
+    switch (m_buySellMultiplier) {
+      case 1: m_buySellMultiplier = 2; break;
+      case 2: m_buySellMultiplier = 5; break;
+      case 5: m_buySellMultiplier = 10; break;
+      case 10: m_buySellMultiplier = 50; break;
+      case 50: m_buySellMultiplier = 100; break;
+      case 100: m_buySellMultiplier = 1; break;
+    }
+  } else {
+    switch (m_buySellMultiplier) {
+      case 1: m_buySellMultiplier = 100; break;
+      case 2: m_buySellMultiplier = 1; break;
+      case 5: m_buySellMultiplier = 2; break;
+      case 10: m_buySellMultiplier = 5; break;
+      case 50: m_buySellMultiplier = 10; break;
+      case 100: m_buySellMultiplier = 50; break;
+    }
+  }
+  UIDirtyRight();
 }
 
 uint16_t getTitleCursorSelected() {
@@ -843,6 +873,14 @@ void drawUIRight() {
       pd->graphics->drawBitmap(getSprite16(11, 11, 1), DEVICE_PIX_Y/2 + 2*TILE_PIX, 0, kBitmapUnflipped);
     }
   }
+  // Buy/sell multiplier
+  if (gm == kMenuBuy || gm == kMenuSell) {
+    pd->graphics->setDrawMode(kDrawModeFillWhite);
+    snprintf(text, 32, "x%u", (unsigned) m_buySellMultiplier);
+    pd->graphics->drawText(text, 32, kASCIIEncoding, DEVICE_PIX_Y/2 + 2*TILE_PIX, 0);
+    pd->graphics->setDrawMode(kDrawModeCopy);
+  }
+
   pd->graphics->popContext();
 
   pd->graphics->pushContext(m_UIBitmapRight);
@@ -1332,6 +1370,7 @@ void resetUI() {
   m_UITitleOffset = UI_TITLE_OFFSET;
   m_UITopOffset = 0;
   m_UITitleSelected = 0;
+  m_buySellMultiplier = 1;
 }
 
 void roundedRect(uint16_t _o, uint16_t _w, uint16_t _h, uint16_t _r, LCDColor _c) {

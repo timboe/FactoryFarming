@@ -70,9 +70,13 @@ void rotateHandlePick(float _rotation);
 
 void rotateHandleCredits(float _rotation);
 
+void rotateHandleMultiplier(float _rotation);
+
 bool holdBRotateInput(uint32_t _buttonPressed);
 
 bool holdBRadiusInput(uint32_t _buttonPressed);
+
+bool holdBMultiplierInput(uint32_t _buttonPressed);
 
 void toggleZoom(void);
 
@@ -145,6 +149,13 @@ bool holdBRotateInput(uint32_t _buttonPressed) {
 bool holdBRadiusInput(uint32_t _buttonPressed) {
   if (kButtonUp == _buttonPressed) modRadius(true);
   else if (kButtonDown == _buttonPressed) modRadius(false);
+  else return false;
+  return true;
+}
+
+bool holdBMultiplierInput(uint32_t _buttonPressed) {
+  if (kButtonUp == _buttonPressed) modMultiplier(true);
+  else if (kButtonDown == _buttonPressed) modMultiplier(false);
   else return false;
   return true;
 }
@@ -246,7 +257,7 @@ void clickHandleMenuBuy(uint32_t _buttonPressed) {
   if (kButtonA == _buttonPressed) {
     sfx(kSfxA);
     doPurchace();
-  } else if (bPressed() && holdBRotateInput(_buttonPressed)) {
+  } else if (bPressed() && holdBMultiplierInput(_buttonPressed)) {
     // noop
   } else if (kButtonB == _buttonPressed) {
     sfx(kSfxB);
@@ -274,6 +285,8 @@ void clickHandleMenuSell(uint32_t _buttonPressed) {
   if (kButtonA == _buttonPressed) {
     // Has own sfx
     doSale();
+  } else if (bPressed() && holdBMultiplierInput(_buttonPressed)) {
+    // noop
   } else if (kButtonB == _buttonPressed) {
     sfx(kSfxB);
     setGameMode(kWanderMode);
@@ -450,6 +463,18 @@ void rotateHandlePick(float _rotation) {
   }
 }
 
+void rotateHandleMultiplier(float _rotation) {
+  static float rot = 0.0f;
+  rot += _rotation;
+  if (rot > UI_ROTATE_ACTION) {
+    rot = 0.0f;
+    modMultiplier(true);
+  } else if (rot < -UI_ROTATE_ACTION) {
+    rot = 0.0f;
+    modMultiplier(false);
+  }
+}
+
 void rotateHandleCredits(float _rotation) {
   static float rot = 0.0f;
   rot += _rotation;
@@ -516,7 +541,8 @@ void clickHandlerReplacement() {
     case kPickMode:; // fall through
     case kDestroyMode:; rotateHandlePick(pd->system->getCrankChange()); break;
     case kMenuCredits: rotateHandleCredits(pd->system->getCrankChange()); break;
-    case kMenuBuy:; case kMenuSell:; case kMenuWarp:; case kMenuExport:; case kMenuImport:; break;
+    case kMenuBuy:; case kMenuSell:; rotateHandleMultiplier(pd->system->getCrankChange()); break; 
+    case kMenuWarp:; case kMenuExport:; case kMenuImport:; break;
     case kPlantMode:; case kInspectMode:; case kTitles:; case kMenuMain:; case kNGameModes:; break;
   }
 

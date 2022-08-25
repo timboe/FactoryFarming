@@ -106,7 +106,11 @@ void modTitleCursor(bool _increment);
 
 void modCredits(bool _increment);
 
+void modMultiplier(bool _increment);
+
 uint16_t getTitleCursorSelected(void);
+
+uint8_t getBuySellMultiplier(void);
 
 enum kBuildingType getCatBuildingSubType(enum kUICat _c);
 
