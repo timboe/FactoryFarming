@@ -17,14 +17,15 @@ enum kGameMode {
   kMenuWarp, 
   kMenuExport, 
   kMenuImport, 
-  kMenuMain, 
+  kMenuMain,
+  kMenuCredits, 
   kTitles, 
   kNGameModes
 };
 
 enum kUICat {
   kUICatTool,
-	kUICatPlant, 
+  kUICatPlant, 
   kUICatConv, 
   kUICatExtractor, 
   kUICatFactory, 
@@ -83,6 +84,8 @@ void updateUI(int _fc);
 
 void updateUITitles(int _fc);
 
+void updateUICredits(int _fc);
+
 void updateBlueprint(void);
 
 void drawUITop(const char* _text);
@@ -100,6 +103,8 @@ uint16_t getNSubTypes(enum kUICat _c);
 uint16_t getUIIcon(enum kUICat _c, uint16_t _i);
 
 void modTitleCursor(bool _increment);
+
+void modCredits(bool _increment);
 
 uint16_t getTitleCursorSelected(void);
 

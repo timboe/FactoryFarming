@@ -171,13 +171,13 @@ void drawUIInspectFactory(struct Building_t* _building) {
   snprintf(text, 128, "Time Remaining: %is", FDesc[fst].time - (_building->m_progress) / TICKS_PER_SEC);
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*13, TUT_Y_SPACING*6 - TUT_Y_SHFT);
 
-  snprintf(text, 128, "Out:      %s (%i)", toStringCargoByType( FDesc[fst].out ), _building->m_stored[0]);
+  snprintf(text, 128, "Out:      %s (%i)", toStringCargoByType( FDesc[fst].out, /*plural=*/(_building->m_stored[0] > 1) ), _building->m_stored[0]);
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].out ].UIIcon, 1), TILE_PIX*3 + 12, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
 
-  snprintf(text, 128, "In 1:       %s (%i)", toStringCargoByType( FDesc[fst].in1 ), _building->m_stored[1]);
+  snprintf(text, 128, "In 1:       %s (%i)", toStringCargoByType( FDesc[fst].in1, /*plural=*/(_building->m_stored[1] > 1) ), _building->m_stored[1]);
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in1 ].UIIcon, 1), TILE_PIX*14 + 12, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
@@ -185,7 +185,7 @@ void drawUIInspectFactory(struct Building_t* _building) {
 
   if (FDesc[fst].in2 == kNoCargo) return;
 
-  snprintf(text, 128, "In 2:       %s (%i)", toStringCargoByType( FDesc[fst].in2 ), _building->m_stored[2]);
+  snprintf(text, 128, "In 2:       %s (%i)", toStringCargoByType( FDesc[fst].in2, /*plural=*/(_building->m_stored[2] > 1) ), _building->m_stored[2]);
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in2 ].UIIcon, 1), TILE_PIX*3 + 12, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
@@ -193,7 +193,7 @@ void drawUIInspectFactory(struct Building_t* _building) {
 
   if (FDesc[fst].in3 == kNoCargo) return;
 
-  snprintf(text, 128, "In 3:       %s (%i)", toStringCargoByType( FDesc[fst].in3 ), _building->m_stored[3]);
+  snprintf(text, 128, "In 3:       %s (%i)", toStringCargoByType( FDesc[fst].in3, /*plural=*/(_building->m_stored[3] > 1) ), _building->m_stored[3]);
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in3 ].UIIcon, 1), TILE_PIX*14 + 12, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
@@ -201,7 +201,7 @@ void drawUIInspectFactory(struct Building_t* _building) {
 
   if (FDesc[fst].in4 == kNoCargo) return;
 
-  snprintf(text, 128, "In 4:       %s (%i)", toStringCargoByType( FDesc[fst].in4 ), _building->m_stored[4]);
+  snprintf(text, 128, "In 4:       %s (%i)", toStringCargoByType( FDesc[fst].in4, /*plural=*/(_building->m_stored[4] > 1) ), _building->m_stored[4]);
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in4 ].UIIcon, 1), TILE_PIX*3 + 12, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
@@ -209,7 +209,7 @@ void drawUIInspectFactory(struct Building_t* _building) {
 
   if (FDesc[fst].in5 == kNoCargo) return;
 
-  snprintf(text, 128, "In 5:       %s (%i)", toStringCargoByType( FDesc[fst].in5 ), _building->m_stored[5]);
+  snprintf(text, 128, "In 5:       %s (%i)", toStringCargoByType( FDesc[fst].in5, /*plural=*/(_building->m_stored[5] > 1) ), _building->m_stored[5]);
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in5 ].UIIcon, 1), TILE_PIX*14 + 12, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);

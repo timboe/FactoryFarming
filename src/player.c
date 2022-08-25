@@ -376,6 +376,22 @@ bool modMoney(int32_t _amount) {
   return true;
 }
 
+uint32_t getTotalSoldCargo() {
+  uint32_t t = 0;
+  for (int32_t i = 0; i < kNCargoType; ++i) {
+    t += m_player.m_soldCargo[i];
+  }
+  return t;
+}
+
+uint32_t getTotalImportedCargo() {
+  uint32_t t = 0;
+  for (int32_t i = 0; i < kNCargoType; ++i) {
+    t += m_player.m_importedCargo[i];
+  }
+  return t;
+}
+
 // TODO this is named wrong in the docs
 SpriteCollisionResponseType playerLCDSpriteCollisionFilterProc(LCDSprite* _player, LCDSprite* _other) {
   return kCollisionTypeSlide;

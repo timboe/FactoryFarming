@@ -26,7 +26,7 @@ void populateInfoExport() {
   pd->graphics->pushContext(infoBitmap);
   roundedRect(1, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorBlack);
   roundedRect(3, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorWhite);
-  snprintf(textA, 128, "Exporting: %s", toStringCargoByType(selectedID));
+  snprintf(textA, 128, "Exporting: %s", toStringCargoByType(selectedID, /*plural=*/true));
   snprintf(textB, 128, "This Plot: %.2f/s", (double)getThisWorldCargoExport(selectedID));
   snprintf(textC, 128, "All Plots: %.2f/s", (double)getTotalCargoExport(selectedID));
   pd->graphics->setDrawMode(kDrawModeFillBlack);

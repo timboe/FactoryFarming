@@ -316,7 +316,7 @@ void drawUIInspectConveyor(struct Building_t* _building) {
       snprintf(text, 128, "Filter Not Yet Set");
       pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
     } else {
-      snprintf(text, 128, "Filters On:      %s", toStringCargoByType(_building->m_mode.mode16));
+      snprintf(text, 128, "Filters On:      %s", toStringCargoByType(_building->m_mode.mode16, /*plural=*/true));
       pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
       pd->graphics->setDrawMode(kDrawModeCopy);
       pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[ _building->m_mode.mode16 ].UIIcon, 1), TILE_PIX*6 + 4, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);

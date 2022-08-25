@@ -117,7 +117,7 @@ void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tick) {
     for (int32_t y = _building->m_location->m_y - 1; y < _building->m_location->m_y + 2; ++y) {
       struct Location_t* loc = getLocation_noCheck(x, y); // Will never straddle the world boundary
       if (loc->m_cargo) {
-        getPlayer()->m_soldCargo[ loc->m_cargo->m_type ]++;
+        getPlayer()->m_soldCargo[ loc->m_cargo->m_type ]++; // Statistics
         const uint16_t price = CargoDesc[loc->m_cargo->m_type].price;
         modMoney( price );
 
@@ -331,6 +331,7 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tick) {
 
   static float fractional[kNCargoType] = {0.0f}; // Keep track of partial cargos
 
+  struct Player_t* p = getPlayer();
   for (int32_t d = 0; d < 4; ++d) {
 
     enum kCargoType c = (d == 3 ? _building->m_mode.mode8[1] : _building->m_stored[(MAX_STORE/2) + d]);
@@ -345,7 +346,7 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tick) {
     fractional[c] += input - (uint32_t)input;
     uint32_t input_int = (int32_t)input;
 
-    getPlayer()->m_importedCargo[ c ]++;
+    p->m_importedCargo[ c ]++; // Statistics
 
     if (input_int) {
       m_hasImported = true;
@@ -402,7 +403,7 @@ void updateExport() {
     float av = collected / (m_exportTimer / TICKS_PER_SEC);
     p->m_exportPerWorld[slot][c] = av;
     #ifdef DEV
-    if (collected) pd->system->logToConsole("Integrated over %i s, the av exported %s is %f /s", (m_exportTimer / TICKS_PER_SEC), toStringCargoByType(c), (double)av);
+    if (collected) pd->system->logToConsole("Integrated over %i s, the av exported %s is %f /s", (m_exportTimer / TICKS_PER_SEC), toStringCargoByType(c, /*plural=*/true), (double)av);
     #endif
   }
 }

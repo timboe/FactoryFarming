@@ -71,7 +71,7 @@ bool doClearObstruction(struct Location_t* _loc) {
       removed |= tryRemoveObstruction(l);
     }
   }
-  if (removed) sfxClearObstruction();
+  if (removed) sfx(kSfxClearObstruction);
   return false; // We have handled the removal of the obstruction removers inside tryRemoveObstruction
 }
 
@@ -95,6 +95,16 @@ void doPlace() {
     return;
   }
   struct Location_t* placeLocation = getPlayerLocation();
+  // Fence are placed one tile away, dependent on rotation
+  if (selectedCat == kUICatUtility && selectedID == kFence) {
+    switch (getCursorRotation()) {
+      case SN: placeLocation = getLocation(placeLocation->m_x, placeLocation->m_y - 1); break;
+      case NS: placeLocation = getLocation(placeLocation->m_x, placeLocation->m_y + 1); break;
+      case WE: placeLocation = getLocation(placeLocation->m_x + 1, placeLocation->m_y); break;
+      case EW: placeLocation = getLocation(placeLocation->m_x - 1, placeLocation->m_y); break;
+    }
+  }
+
   bool placed = false;
   switch (selectedCat) {
     case kUICatTool: break; // Impossible
@@ -123,7 +133,7 @@ void doPlace() {
   }
   if (placed) {
     switch (selectedCat) {
-      case kUICatPlant:  addTrauma(0.5f); sfxPlacePlant(); break;
+      case kUICatPlant:  addTrauma(0.5f); sfx(kSfxPlacePlant); break;
       case kUICatConv:  addTrauma(0.5f); break;
       case kUICatExtractor: addTrauma(1.0f); break;
       case kUICatFactory: addTrauma(1.0f); break;
@@ -145,6 +155,8 @@ void doPlace() {
     if (tut == kTutBuildQuarry && selectedCat == kUICatExtractor && selectedID == kChalkQuarry) {
       makeTutorialProgress();
     }
+  } else {
+    sfx(kSfxNo);
   }
 }
 
@@ -165,7 +177,7 @@ void doPick() {
   }
   if (update) {
     updateRenderList();
-    sfxPickCargo();
+    sfx(kSfxPickCargo);
   }
 }
 
@@ -255,11 +267,14 @@ void doDestroy() {
         doPickAtLocation(loc);
       }
       bool doBuilding = true; 
-      if (loc->m_building && loc->m_building->m_type == kSpecial) doBuilding = false;
+      if (loc->m_building) {
+        if (loc->m_building->m_type == kSpecial) doBuilding = false;
+        else if (loc->m_building->m_type == kUtility && loc->m_building->m_subType.utility == kRetirement) doBuilding = false;
+      }
       cleared |= clearLocation(loc, /*cargo=*/ true, /*building=*/ doBuilding);
     }
   }
-  if (cleared) sfxDestroy();
+  if (cleared) sfx(kSfxDestroy);
 }
 
 void populateContentInventory(void) {
@@ -348,7 +363,7 @@ void populateInfoInventory() {
       else snprintf(textA, 128, "Place %s", 
         toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false));
       break;
-    case kUICatCargo:; snprintf(textA, 128, "Place %s", toStringCargoByType(selectedID)); break;
+    case kUICatCargo:; snprintf(textA, 128, "Place %s", toStringCargoByType(selectedID, /*plural=*/false)); break;
     case kUICatWarp:; break;
     case kUICatImportN: case kUICatImportE: case kUICatImportS: case kUICatImportW: break; 
     case kNUICats:; break;

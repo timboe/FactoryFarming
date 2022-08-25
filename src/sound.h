@@ -1,6 +1,23 @@
 #pragma once
 #include "game.h"
 
+enum SfxSample {
+ kSfxDestroy,
+ kSfxClearObstruction,
+ kSfxPickCargo,
+ kSfxPlacePlant,
+ kSfxUnlock,
+ kSfxSell,
+ kSfxA,
+ kSfxB,
+ kSfxD,
+ kSfxMenuOpen,
+ kSfxRotate,
+ kSfxWarp,
+ kSfxNo,
+ kNSFX
+};
+
 void initSound(void);
 
 void updateMusic(bool _isTitle);
@@ -11,14 +28,6 @@ void pauseMusic(void);
 
 void resumeMusic(void);
 
-void sfxDestroy(void);
+void playCredits(void);
 
-void sfxClearObstruction(void);
-
-void sfxPickCargo(void);
-
-void sfxPlacePlant(void);
-
-void sfxUnlock(void);
-
-void sfxSell(void);
+void sfx(enum SfxSample _sample);

@@ -7,13 +7,13 @@
 #include "../ui.h"
 #include "../io.h"
 
+struct Building_t* m_retirement = NULL;
+
 void binUpdateFn(struct Building_t* _building);
 
 void storageUpdateFn(struct Building_t* _building);
 
 void bufferUpdateFn(struct Building_t* _building, uint8_t _tick);
-
-void buildingSetupUtility(struct Building_t* _building);
 
 void buildingSetupRetirement(struct Building_t* _building);
 
@@ -183,8 +183,8 @@ void buildingSetupUtility(struct Building_t* _building) {
     }
 
     if (_building->m_subType.utility == kFence) {
-      //PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
-      PDRect bound = {.x = ((TILE_PIX/4)-2)*zoom, .y = ((TILE_PIX/4)-2)*zoom, .width = ((TILE_PIX/2)+4)*zoom, .height = ((TILE_PIX/2)+4)*zoom};
+      PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
+      //PDRect bound = {.x = ((TILE_PIX/4)-2)*zoom, .y = ((TILE_PIX/4)-2)*zoom, .width = ((TILE_PIX/2)+4)*zoom, .height = ((TILE_PIX/2)+4)*zoom};
       if (_building->m_sprite[zoom] == NULL) _building->m_sprite[zoom] = pd->sprite->newSprite();
       pd->sprite->setCollideRect(_building->m_sprite[zoom], bound);
       pd->sprite->moveTo(_building->m_sprite[zoom], 
@@ -211,6 +211,16 @@ void buildingSetupRetirement(struct Building_t* _building) {
       clearLocation(getLocation(x, y), /*cargo*/ true, /*building*/ false);
     }
   }
+
+  m_retirement = _building;
+}
+
+int16_t distanceFromRetirement() {
+  if (!m_retirement) return 1000;
+  struct Player_t* p = getPlayer();
+  uint16_t dx = abs(p->m_pix_x - m_retirement->m_pix_x);
+  uint16_t dy = abs(p->m_pix_y - m_retirement->m_pix_y);
+  return (dx < dy ? dy : dx);
 }
 
 void drawUIInspectUtility(struct Building_t* _building) {
@@ -249,7 +259,7 @@ void drawUIInspectUtility(struct Building_t* _building) {
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
     if (_building->m_mode.mode16) {
-      snprintf(text, 128, "Sign for: %s", toStringCargoByType( _building->m_mode.mode16 ) );
+      snprintf(text, 128, "Sign for: %s", toStringCargoByType( _building->m_mode.mode16, /*plural=*/true ) );
       pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
     }
 
@@ -272,7 +282,7 @@ void drawUIInspectUtility(struct Building_t* _building) {
 
       snprintf(text, 128, "Compartment %i/3:       %s (%i)", 
         (int)compartment+1, 
-        toStringCargoByType( _building->m_stored[(MAX_STORE/2) + compartment] ), 
+        toStringCargoByType( _building->m_stored[(MAX_STORE/2) + compartment], /*plural=*/(_building->m_stored[compartment] != 1) ), 
         _building->m_stored[compartment]);
       pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
       pd->graphics->setDrawMode(kDrawModeCopy);

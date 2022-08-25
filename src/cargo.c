@@ -75,58 +75,58 @@ void cargoSpriteSetup(struct Cargo_t* _cargo, uint16_t _x, uint16_t _y, uint16_t
 
 /// ///
 
-const char* toStringCargoByType(enum kCargoType _type) {
+const char* toStringCargoByType(enum kCargoType _type, bool _plural) {
   switch(_type) {
     case kNoCargo: return "NOCARGO!";
-    case kCarrot: return "Carrot";
-    case kChalk: return "Chalk";
+    case kCarrot: return  _plural ? "Carrots" : "Carrot";
+    case kChalk: return _plural ? "Chalks" : "Chalk";
     case kVitamin: return "Vitamins";
-    case kPotato: return "Potato";
-    case kSunflower: return "Sunflower";
-    case kOil: return "Oil";
+    case kPotato: return _plural ? "Potatoes" : "Potato";
+    case kSunflower: return _plural ? "Sunflowers" : "Sunflower";
+    case kOil: return _plural ? "Oils" : "Oil";
     case kSalt: return "Salt";
     case kCrisps: return "Chips";
-    case kApple: return "Apple";
-    case kWaterBarrel: return "Water Bucket";
+    case kApple: return _plural ? "Apples" : "Apple";
+    case kWaterBarrel: return "Water";
     case kEthanol: return "Ethanol";
-    case kHardCider: return "Hard Cider";
-    case kCorn: return "Corn";
-    case kSeaweed: return "Seaweed";
+    case kHardCider: return _plural ? "Hard Ciders" : "Hard Cider";
+    case kCorn: return _plural ? "Corns" : "Corn";
+    case kSeaweed: return _plural ? "Seaweeds" : "Seaweed";
     case kMeat: return "Meat";
     case kHydrogen: return "Hydrogen";
-    case kHOil: return "Hydrogenated Oil";
-    case kCornDog: return "Corn Dog";
+    case kHOil: return _plural ? "H. Oils" : "H. Oil";
+    case kCornDog: return _plural ? "Corn Dogs" : "Corn Dog";
     case kWheat: return "Wheat";
-    case kBeer: return "Beer";
-    case kCactus: return "Cactus";
-    case kTequila: return "Tequila";
-    case kLime: return "Lime";
-    case kMexBeer: return "Mexican Beer";
-    case kEmulsifiers: return "Emulsifiers";
+    case kBeer: return _plural ? "Beers" : "Beer";
+    case kCactus: return _plural ? "Cacti" : "Cactus";
+    case kTequila: return _plural ? "Tequilas" : "Tequila";
+    case kLime: return _plural ? "Limes" : "Lime";
+    case kMexBeer: return _plural ? "Mexican Beers" : "Mexican Beer";
+    case kEmulsifiers: return _plural ? "Emulsifiers" : "Emulsifier";
     case kHFCS: return "H.F.C.S.";
-    case kStrawberry: return "Strawberry";
-    case kIceCream: return "Ice Cream";
-    case kEggs: return "Eggs";
-    case kBamboo: return "Bamboo";
-    case kProtein: return "Protein Powder";
+    case kStrawberry: return _plural ? "Strawberries" : "Strawberry";
+    case kIceCream: return _plural ? "Ice Creams" : "Ice Cream";
+    case kEggs: return _plural ? "Eggs" : "Egg";
+    case kBamboo: return _plural ? "Bamboos" : "Bamboo";
+    case kProtein: return _plural ? "Protein Powders" : "Protein Powder";
     case kGelatin: return "Gelatin";
-    case kMeatPie: return "Meat Pie";
+    case kMeatPie: return _plural ? "Meat Pies" : "Meat Pie";
     case kMSG: return "M.S.G.";
-    case kReadyMeal: return "Ready Meal";
-    case kJelly: return "Jelly";
-    case kCoffeeBean: return "Coffee Bean";
+    case kReadyMeal: return _plural ? "Ready Meals" : "Ready Meal";
+    case kJelly: return _plural ? "Jellies" : "Jelly";
+    case kCoffeeBean: return _plural ? "Coffee Beans" : "Coffee Bean";
     case kCO2: return "CO2";
     case kCaffeine: return "Caffeine";
-    case kEnergyDrink: return "Energy Drink";
-    case kRaveJuice: return "Rave Juice";
+    case kEnergyDrink: return _plural ? "Energy Drinks" : "Energy Drink";
+    case kRaveJuice: return _plural ? "Rave Juices" : "Rave Juice";
     case kPerkPills: return "Perk Pills";
-    case kSoftCake: return "Soft Cake";
-    case kDessert: return "Dessert";
+    case kSoftCake: return _plural ? "Soft Cakes" : "Soft Cake";
+    case kDessert: return _plural ? "Desserts" : "Dessert";
     case kPackaging: return "Packaging";
-    case kCateringKit: return "Catering Kit";
-    case kDrinksKit: return "Drinks Kit";
-    case kCocoBean: return "Coco Bean";
-    case kSeaCucumber: return "Sea Cucumber";
+    case kCateringKit: return _plural ? "Catering Kits" : "Catering Kit";
+    case kDrinksKit: return _plural ? "Drinks Kits" : "Drinks Kit";
+    case kCocoBean: return _plural ? "Coco Beans" : "Coco Bean";
+    case kSeaCucumber: return _plural ? "Sea Cucumbers" : "Sea Cucumber";
     //case kCa0: case kCa1: case kCa2: case kCa3: case kCa4: case kCa5: case kCa6: case kCa7: 
     //case kCa8: case kCa9: case kCa10: case kCa11: case kCa12: case kCa13: case kCa14: case kCa15: 
     case kNCargoType: return "CARGO???";
@@ -134,9 +134,9 @@ const char* toStringCargoByType(enum kCargoType _type) {
   return "CARGO????";
 }
 
-const char* toStringCargo(struct Cargo_t* _cargo) {
+const char* toStringCargo(struct Cargo_t* _cargo, bool _plural) {
   if (!_cargo) return "";
-  return toStringCargoByType(_cargo->m_type);
+  return toStringCargoByType(_cargo->m_type, _plural);
 }
 
 uint16_t getNCargo() {

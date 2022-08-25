@@ -4,6 +4,7 @@
 #include "../io.h"
 #include "../generate.h"
 #include "../render.h"
+#include "../sound.h"
 
 /// ///
 
@@ -21,6 +22,8 @@ void doWarp() {
       if (getTutorialStage() == kTutNewPlots) {
         nextTutorialStage();
       }
+    } else {
+      sfx(kSfxNo);
     }
   } else { // Unlocked world, switch
     setForceSlot(selectedID); // This will be the ID of the slot we load from

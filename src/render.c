@@ -72,6 +72,12 @@ void chunkAddToRender(struct Chunk_t* _chunk, uint8_t _zoom) {
 }
 
 void updateRenderList() {
+  if (getGameMode() == kMenuCredits) {
+    pd->sprite->removeAllSprites();
+    addUIToSpriteList();
+    return;
+  }
+
   uint8_t zoom = getZoom();
   struct Chunk_t* currentChunk = getCurrentChunk();
 

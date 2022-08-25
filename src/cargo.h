@@ -81,9 +81,9 @@ struct Location_t;
 
 uint16_t getNCargo(void);
 
-const char* toStringCargo(struct Cargo_t* _cargo);
+const char* toStringCargo(struct Cargo_t* _cargo, bool _plural);
 
-const char* toStringCargoByType(enum kCargoType _type);
+const char* toStringCargoByType(enum kCargoType _type, bool _plural);
 
 struct Cargo_t* cargoManagerNewCargo(enum kCargoType _type);
 

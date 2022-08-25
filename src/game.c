@@ -317,6 +317,10 @@ void initGame() {
     if (i != CargoDesc[i].subType) pd->system->error("CARGO DESCRIPTOR ORDERING IS WRONG!");
   }
 
+  if (CREDITS_TO_ROW > MAX_ROWS) {
+    pd->system->error("INSUFFICIENT ROWS FOR CREDITS!");
+  }
+  
   return;
 
   // Populate unlock ordering

@@ -15,7 +15,7 @@ void doSale() {
     modOwned(kUICatCargo, selectedID, /*add=*/ false);
     UIDirtyMain();
     getPlayer()->m_soldCargo[ selectedID ]++;
-    sfxSell();
+    sfx(kSfxSell);
     // Tutorial
     if (getTutorialStage() == kTutSellCarrots && selectedID == kCarrot) {
       makeTutorialProgress();
@@ -43,7 +43,7 @@ void populateInfoSell() {
   roundedRect(1, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorBlack);
   roundedRect(3, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorWhite);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
-  snprintf(textA, 128, "Sell %s", toStringCargoByType(selectedID));
+  snprintf(textA, 128, "Sell %s", toStringCargoByType(selectedID, /*plural=*/false));
   snprintf(textB, 128, "Inventory: %i", selectedOwned);
   snprintf(textC, 128, "Value:      %i", (int)selectedPrice);
   pd->graphics->drawText(textA, 128, kASCIIEncoding, 1*TILE_PIX, +2);

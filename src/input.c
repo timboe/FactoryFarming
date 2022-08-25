@@ -4,9 +4,11 @@
 #include "sprite.h"
 #include "render.h"
 #include "building.h"
+#include "sound.h"
 #include "ui.h"
 #include "io.h"
 #include "buildings/special.h"
+#include "buildings/utility.h"
 #include "ui/inventory.h"
 #include "ui/sell.h"
 #include "ui/shop.h"
@@ -46,6 +48,8 @@ void clickHandleMenuExport(uint32_t _buttonPressed);
 
 void clickHandleMenuPlayer(uint32_t _buttonPressed);
 
+void clickHandleMenuCredits(uint32_t _buttonPressed);
+
 void clickHandleBuilding(uint32_t _buttonPressed);
 
 void clickHandlePlanting(uint32_t _buttonPressed);
@@ -64,7 +68,11 @@ void rotateHandlePlacement(float _rotation);
 
 void rotateHandlePick(float _rotation);
 
+void rotateHandleCredits(float _rotation);
+
 bool holdBRotateInput(uint32_t _buttonPressed);
+
+bool holdBRadiusInput(uint32_t _buttonPressed);
 
 void toggleZoom(void);
 
@@ -75,6 +83,7 @@ uint8_t m_b;
 /// ///
 
 void modRadius(bool _inc) {
+  sfx(kSfxRotate);
   if (_inc) {
     m_pickRadius += 2;
     if (m_pickRadius == 7) m_pickRadius = 1;
@@ -107,6 +116,7 @@ void unZoom() {
 }
 
 void toggleZoom() {
+  sfx(kSfxRotate); // TODO own sound?
   if (++m_zoom == ZOOM_LEVELS) {
     m_zoom = 1;
   }
@@ -132,6 +142,13 @@ bool holdBRotateInput(uint32_t _buttonPressed) {
   return true;
 }
 
+bool holdBRadiusInput(uint32_t _buttonPressed) {
+  if (kButtonUp == _buttonPressed) modRadius(true);
+  else if (kButtonDown == _buttonPressed) modRadius(false);
+  else return false;
+  return true;
+}
+
 void gameClickConfigHandler(uint32_t _buttonPressed) {
   switch (getGameMode()) {
     case kWanderMode:; return clickHandleWander(_buttonPressed);
@@ -143,6 +160,7 @@ void gameClickConfigHandler(uint32_t _buttonPressed) {
     case kMenuWarp:; return clickHandleMenuWarp(_buttonPressed);
     case kMenuExport:; return clickHandleMenuExport(_buttonPressed);
     case kMenuImport:; return clickHandleMenuImport(_buttonPressed);
+    case kMenuCredits:; return clickHandleMenuCredits(_buttonPressed);
     case kPlaceMode:; case kBuildMode:; return clickHandleBuilding(_buttonPressed);
     case kPlantMode:; return clickHandlePlanting(_buttonPressed);
     case kPickMode:; return clickHandlePick(_buttonPressed);
@@ -159,12 +177,31 @@ void clickHandleWander(uint32_t _buttonPressed) {
     // 254: tutorial finised, 255: tutorial disabled
     const bool ic = isCamouflaged();
     if (getTutorialStage() < TUTORIAL_FINISHED && checkReturnDismissTutorialMsg()) { /*noop*/ } // NOTE: The second function call has side-effects
-    else if (distanceFromBuy() < ACTIVATE_DISTANCE) { if (!checkShowNew()) setGameMode(kMenuBuy); }
-    else if (distanceFromSell() < ACTIVATE_DISTANCE) setGameMode(kMenuSell);
-    else if (!ic && distanceFromWarp() < ACTIVATE_DISTANCE) setGameMode(kMenuWarp);
-    else if (!ic && distanceFromOut() < ACTIVATE_DISTANCE) setGameMode(kMenuExport);
-    else if (!ic && distanceFromIn() < ACTIVATE_DISTANCE) setGameMode(kMenuImport);
-    else setGameMode(kMenuPlayer);
+    else if (distanceFromBuy() < ACTIVATE_DISTANCE) { 
+      if (!checkShowNew()) { // has own sfx
+        setGameMode(kMenuBuy);
+        sfx(kSfxMenuOpen);
+      } 
+    } else if (distanceFromSell() < ACTIVATE_DISTANCE) {
+      setGameMode(kMenuSell);
+      sfx(kSfxMenuOpen);
+    } else if (!ic && distanceFromWarp() < ACTIVATE_DISTANCE) {
+      setGameMode(kMenuWarp);
+      sfx(kSfxMenuOpen);
+    } else if (!ic && distanceFromOut() < ACTIVATE_DISTANCE) {
+      setGameMode(kMenuExport);
+      sfx(kSfxMenuOpen);
+    } else if (!ic && distanceFromIn() < ACTIVATE_DISTANCE) {
+      setGameMode(kMenuImport);
+      sfx(kSfxMenuOpen);
+    } else if (!ic && distanceFromRetirement() < ACTIVATE_DISTANCE) {
+      setGameMode(kMenuCredits);
+      redrawAllSettingsMenuLines();
+      playCredits();
+    } else {
+      setGameMode(kMenuPlayer);
+      sfx(kSfxMenuOpen);
+    }
   } else if (kButtonB == _buttonPressed) {
     if (getTutorialStage() < TUTORIAL_FINISHED) checkReturnDismissTutorialMsg();
   }
@@ -175,6 +212,7 @@ void clickHandleWander(uint32_t _buttonPressed) {
 
 void clickHandleTitles(uint32_t _buttonPressed) {
   if (kButtonA == _buttonPressed) {
+    sfx(kSfxA);
     setSave(getTitleCursorSelected());
     if (hasSaveData(getTitleCursorSelected())) {
       setForceSlot(-1); // -1 loads from the slot stored in the player's save file
@@ -183,6 +221,8 @@ void clickHandleTitles(uint32_t _buttonPressed) {
       setForceSlot(0); // This will be the ID of the world we generate
       doIO(kDoResetPlayer, /*and then*/ kDoNewWorld);
     }
+  } else if (kButtonB == _buttonPressed) {
+    sfx(kSfxNo);
   } else if (kButtonLeft == _buttonPressed) {
     modTitleCursor(false);
   } else if (kButtonRight == _buttonPressed) {
@@ -192,8 +232,10 @@ void clickHandleTitles(uint32_t _buttonPressed) {
 
 void clickHandleMenuMain(uint32_t _buttonPressed) {
   if (kButtonA == _buttonPressed) {
+    sfx(kSfxA);
     doSettings();
   } else if (kButtonB == _buttonPressed) {
+    sfx(kSfxB);
     setGameMode(kWanderMode);
   } else {
     moveCursor(_buttonPressed);
@@ -202,10 +244,12 @@ void clickHandleMenuMain(uint32_t _buttonPressed) {
 
 void clickHandleMenuBuy(uint32_t _buttonPressed) {
   if (kButtonA == _buttonPressed) {
+    sfx(kSfxA);
     doPurchace();
   } else if (bPressed() && holdBRotateInput(_buttonPressed)) {
     // noop
   } else if (kButtonB == _buttonPressed) {
+    sfx(kSfxB);
     setGameMode(kWanderMode);
     // Tutorial
     if (getTutorialStage() == kTutWelcomeBuySeeds && getTutorialProgress() >= 10) {
@@ -218,6 +262,8 @@ void clickHandleMenuBuy(uint32_t _buttonPressed) {
 
 void clickHandleMenuNew(uint32_t _buttonPressed) {
   if (kButtonA == _buttonPressed || kButtonB == _buttonPressed) {
+    if (kButtonA == _buttonPressed) sfx(kSfxA);
+    else sfx(kSfxB);
     if (!checkShowNew()) {
       setGameMode(kMenuBuy);
     }
@@ -226,8 +272,10 @@ void clickHandleMenuNew(uint32_t _buttonPressed) {
 
 void clickHandleMenuSell(uint32_t _buttonPressed) {
   if (kButtonA == _buttonPressed) {
+    // Has own sfx
     doSale();
   } else if (kButtonB == _buttonPressed) {
+    sfx(kSfxB);
     setGameMode(kWanderMode);
     // Tutorial
     if (getTutorialStage() == kTutSellCarrots && getTutorialProgress() >= 10) {
@@ -239,27 +287,27 @@ void clickHandleMenuSell(uint32_t _buttonPressed) {
 }
 
 void clickHandleMenuPlayer(uint32_t _buttonPressed) {
-  if (kButtonA == _buttonPressed) doInventoryClick();
+  if (kButtonA == _buttonPressed) { sfx(kSfxA); doInventoryClick(); }
   else if (bPressed() && holdBRotateInput(_buttonPressed)) { /* noop */ }
-  else if (kButtonB == _buttonPressed) setGameMode(kWanderMode);
+  else if (kButtonB == _buttonPressed) { sfx(kSfxB); setGameMode(kWanderMode); }
   else moveCursor(_buttonPressed);
 }
 
 void clickHandleMenuWarp(uint32_t _buttonPressed) {
-  if (kButtonA == _buttonPressed) doWarp();
-  else if (kButtonB == _buttonPressed) setGameMode(kWanderMode);
+  if (kButtonA == _buttonPressed) doWarp(); // has own sfx
+  else if (kButtonB == _buttonPressed) { sfx(kSfxB); setGameMode(kWanderMode); }
   else moveCursor(_buttonPressed);
 }
 
 void clickHandleMenuExport(uint32_t _buttonPressed) {
-  if (kButtonA == _buttonPressed) doExport();
-  else if (kButtonB == _buttonPressed) setGameMode(kWanderMode);
+  if (kButtonA == _buttonPressed) { sfx(kSfxA); doExport(); }
+  else if (kButtonB == _buttonPressed) { sfx(kSfxB); setGameMode(kWanderMode); }
   else moveCursor(_buttonPressed);
 }
 
 void clickHandleMenuImport(uint32_t _buttonPressed) {
-  if (kButtonA == _buttonPressed) doImport();
-  else if (kButtonB == _buttonPressed) setGameMode(kWanderMode);
+  if (kButtonA == _buttonPressed) { sfx(kSfxA); doImport(); }
+  else if (kButtonB == _buttonPressed) { sfx(kSfxB); setGameMode(kWanderMode); }
   else moveCursor(_buttonPressed);
 }
 
@@ -269,8 +317,9 @@ void clickHandleBuilding(uint32_t _buttonPressed) {
   } else if (characterMoveInput(_buttonPressed)) {
     // noop
   } else if (kButtonA    == _buttonPressed) {
-    doPlace();
+    doPlace(); // Sfx handled internally
   } else if (kButtonB    == _buttonPressed) {
+    sfx(kSfxB);
     setGameMode(kWanderMode);
     updateBlueprint();
     // Tutorial
@@ -292,8 +341,9 @@ void clickHandlePlanting(uint32_t _buttonPressed) {
 if (characterMoveInput(_buttonPressed)) {
     // noop
   } else if (kButtonA    == _buttonPressed) {
-    doPlace();
+    doPlace(); // sfx handled internally
   } else if (kButtonB    == _buttonPressed) {
+    sfx(kSfxB);
     setGameMode(kWanderMode);
     updateBlueprint();
     // Tutorial
@@ -304,11 +354,14 @@ if (characterMoveInput(_buttonPressed)) {
 }
 
 void clickHandlePick(uint32_t _buttonPressed) {
-  if (characterMoveInput(_buttonPressed)) {
+  if (bPressed() && holdBRadiusInput(_buttonPressed)) {
+    /*noop*/
+  } else if (characterMoveInput(_buttonPressed)) {
     // noop
   } else if (kButtonA    == _buttonPressed) {
-    doPick();
+    doPick(); // Sfx handled internally
   } else if (kButtonB    == _buttonPressed) {
+    sfx(kSfxB);
     setGameMode(kWanderMode);
     // Tutorial
     if (getTutorialStage() == kTutGetCarrots && getTutorialProgress() >= 10) {
@@ -320,14 +373,22 @@ void clickHandlePick(uint32_t _buttonPressed) {
 void clickHandleInspect(uint32_t _buttonPressed) {
   if (characterMoveInput(_buttonPressed)) { /*noop*/} 
   // Note: The tutorial and inspect boxes share the samme UI component
-  else if (kButtonA == _buttonPressed) { checkReturnDismissTutorialMsg(); setGameMode(kWanderMode); }
-  else if (kButtonB == _buttonPressed) { checkReturnDismissTutorialMsg(); setGameMode(kWanderMode); }
+  else if (kButtonA == _buttonPressed) { checkReturnDismissTutorialMsg(); setGameMode(kWanderMode); sfx(kSfxA); }
+  else if (kButtonB == _buttonPressed) { checkReturnDismissTutorialMsg(); setGameMode(kWanderMode); sfx(kSfxB); }
 }
 
 void clickHandleDestroy(uint32_t _buttonPressed) {
-  if (characterMoveInput(_buttonPressed)) { /*noop*/ }
-  else if (kButtonA == _buttonPressed) doDestroy();
-  else if (kButtonB == _buttonPressed) setGameMode(kWanderMode);
+  if (bPressed() && holdBRadiusInput(_buttonPressed)) { /*noop*/ }
+  else if (characterMoveInput(_buttonPressed)) { /*noop*/ }
+  else if (kButtonA == _buttonPressed) doDestroy(); // sfx handled internally
+  else if (kButtonB == _buttonPressed) { setGameMode(kWanderMode); sfx(kSfxB); }
+}
+
+void clickHandleMenuCredits(uint32_t _buttonPressed) {
+  if (kButtonB == _buttonPressed) {
+    sfx(kSfxB);
+    setGameMode(kWanderMode);
+  }
 }
 
 void rotateHandleWander(float _rotation) {
@@ -345,6 +406,7 @@ void rotateHandleWander(float _rotation) {
   static float rot = 0.0f;
   rot += _rotation;
   if (rot > UI_ROTATE_ACTION) {
+    sfx(kSfxRotate); // TODO different here?
     rot = 0.0f;
     if (++m_zoom == ZOOM_LEVELS) m_zoom = ZOOM_LEVELS-1;
     #ifdef DEV
@@ -353,6 +415,7 @@ void rotateHandleWander(float _rotation) {
     updateRenderList();
     updateBlueprint();
   } else if (rot < -UI_ROTATE_ACTION) {
+    sfx(kSfxRotate); // TODO different here?
     rot = 0.0f;
     #ifdef DEV
     pd->system->logToConsole("ZOOM OUT");
@@ -384,6 +447,18 @@ void rotateHandlePick(float _rotation) {
   } else if (rot < -UI_ROTATE_ACTION) {
     rot = 0.0f;
     modRadius(false);
+  }
+}
+
+void rotateHandleCredits(float _rotation) {
+  static float rot = 0.0f;
+  rot += _rotation;
+  if (rot > UI_ROTATE_ACTION/8) {
+    rot = 0.0f;
+    modCredits(true);
+  } else if (rot < -UI_ROTATE_ACTION/8) {
+    rot = 0.0f;
+    modCredits(false);
   }
 }
 
@@ -440,6 +515,7 @@ void clickHandlerReplacement() {
     case kPlaceMode:; rotateHandlePlacement(pd->system->getCrankChange()); break;
     case kPickMode:; // fall through
     case kDestroyMode:; rotateHandlePick(pd->system->getCrankChange()); break;
+    case kMenuCredits: rotateHandleCredits(pd->system->getCrankChange()); break;
     case kMenuBuy:; case kMenuSell:; case kMenuWarp:; case kMenuExport:; case kMenuImport:; break;
     case kPlantMode:; case kInspectMode:; case kTitles:; case kMenuMain:; case kNGameModes:; break;
   }

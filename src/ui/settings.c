@@ -17,6 +17,12 @@ void unchecked(void);
 
 void autosave(uint32_t _time);
 
+char* playTime(char* _buf128, uint32_t _playTime);
+
+void addNumber(int32_t _n);
+
+void addText(char* _t);
+
 /// ///
 
 LCDBitmap* getPauseImage() {
@@ -92,7 +98,7 @@ LCDBitmap* getPauseImage() {
     const uint16_t needToSell = UnlockDecs[ nextLevel ].fromSelling;
     const uint16_t haveSold = p->m_soldCargo[ cargo ];
 
-    snprintf(text, 128, "%i %ss", needToSell, toStringCargoByType(cargo));
+    snprintf(text, 128, "%i %ss", needToSell, toStringCargoByType(cargo, /*plural=*/true));
     length = strlen(text);
     width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
     pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 2*Y_SPACE);
@@ -132,7 +138,7 @@ LCDBitmap* getPauseImage() {
   pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 7*Y_SPACE);
 
   const uint32_t pt = p->m_playTime / TICK_FREQUENCY;
-  snprintf(text, 128, "%ih:%im:%is", (int) pt/3600, (int) (pt%3600)/60, (int) (pt%3600)%60);
+  playTime(text, pt);
   length = strlen(text);
   width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
   pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 8*Y_SPACE - TILE_PIX/4);
@@ -140,6 +146,11 @@ LCDBitmap* getPauseImage() {
 
   pd->graphics->popContext();
   return m_pause;
+}
+
+char* playTime(char* _buf128, uint32_t _playTime) {
+  snprintf(_buf128, 128, "%ih:%im:%is", (int) _playTime/3600, (int) (_playTime%3600)/60, (int) (_playTime%3600)%60);
+  return _buf128;
 }
 
 void checked() {
@@ -150,6 +161,24 @@ void checked() {
 void unchecked() {
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16(5, 19, 1), TILE_PIX*16, 0, kBitmapUnflipped);
+}
+
+void addNumber(int32_t _n) {
+  char text[128];
+  snprintf(text, 128, "%i", (int) _n);
+  int32_t length = strlen(text);
+  int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
+  pd->graphics->setDrawMode(kDrawModeCopy);
+  pd->graphics->fillRect(TILE_PIX*16 - width - TILE_PIX/4, 0, TILE_PIX + width + TILE_PIX/4, TILE_PIX, kColorWhite);
+  pd->graphics->drawText(text, length, kUTF8Encoding, TILE_PIX*16 - width, 0);
+}
+
+void addText(char* _t) {
+  int32_t length = strlen(_t);
+  int32_t width = pd->graphics->getTextWidth(getRoobert10(), _t, length, kUTF8Encoding, 0);
+  pd->graphics->setDrawMode(kDrawModeCopy);
+  pd->graphics->fillRect(TILE_PIX*16 - width - TILE_PIX/4, 0, TILE_PIX + width + TILE_PIX/4, TILE_PIX, kColorWhite);
+  pd->graphics->drawText(_t, length, kUTF8Encoding, TILE_PIX*16 - width, 0);
 }
 
 void autosave(uint32_t _time) {
@@ -188,9 +217,16 @@ void doSettings() {
   redrawMainmenuLine(getMainmenuUIBitmap(selectedID), selectedID);
 }
 
-#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE 11
+#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_START 0
+#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_STOP 11
+#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_START 47
+#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_STOP 52
+
 void redrawAllSettingsMenuLines() {
-  for (int32_t i = 0; i < MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE; ++i) {
+  for (int32_t i = MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_START; i < MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_STOP; ++i) {
+    redrawMainmenuLine(getMainmenuUIBitmap(i), i);
+  }
+  for (int32_t i = MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_START; i < MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_STOP; ++i) {
     redrawMainmenuLine(getMainmenuUIBitmap(i), i);
   }
 }
@@ -219,6 +255,7 @@ void redrawMainmenuLine(LCDBitmap* _bitmap, int32_t _line) {
   }
 
   struct Player_t* p = getPlayer();
+  char buf[128];
   switch (_line) {
     case 1: (p->m_soundSettings == 1 || p->m_soundSettings == 3) ? checked() : unchecked(); break;
     case 2: (p->m_soundSettings == 2 || p->m_soundSettings == 3) ? checked() : unchecked(); break;
@@ -229,13 +266,19 @@ void redrawMainmenuLine(LCDBitmap* _bitmap, int32_t _line) {
     case 8: p->m_enablePickupOnDestroy ? checked() : unchecked(); break;
     case 9: p->m_autoUseConveyorBooster ? checked() : unchecked(); break;
     case 10: p->m_enableDebug ? checked() : unchecked(); break;
+    // 
+    case 47: addText(playTime(buf, p->m_playTime / TICK_FREQUENCY)); break;
+    case 48: addNumber(p->m_moneyCumulative); break;
+    case 49: addNumber(p->m_moneyHighWaterMark); break;
+    case 50: addNumber(getTotalSoldCargo()); break;
+    case 51: addNumber(getTotalImportedCargo()); break;
   }
 
   pd->graphics->popContext();
 }
 
 void populateContentMainmenu() {
-  for (int32_t i = 0; i < MAX_ROWS; ++i) {
+  for (int32_t i = 0; i < SETTINGS_TO_ROW; ++i) {
     setUIContentMainMenu(i, isTitle(i));
   }
 }
@@ -245,7 +288,7 @@ void populateInfoMainmenu() {
 
 bool isTitle(int32_t _line) {
   switch (_line) {
-    case 0: case 3: case 11: case 14: case 21: case 23: case 29: case 37: return true;
+    case 0: case 3: case 11: case 14: case 22: case 24: case 31: case 39: case 44: case 46: case 52: case 57: case 61: return true;
   }
   return false;
 }
@@ -276,35 +319,59 @@ const char* getLine(int32_t _line) {
     case 18: return "Run: Hold Ⓑ + ✛";
     case 19: return "Zoom in/out: 🎣";
     case 20: return "Rotate: 🎣 or Hold Ⓑ + ⬆️/➡️/⬇️/⬅️";
+    case 21: return "Resize: 🎣 or Hold Ⓑ + ⬆️/⬇️";
     //
-    case 21: return "--- Credits ---";
-    case 22: return "Factory Farming by Tim Martin";
+    case 22: return "--- Credits ---";
+    case 23: return "Factory Farming by Tim Martin";
     //
-    case 23: return "-- Music --";
-    case 24: return "♬ Dr Tikov: 1985";
-    case 25: return "♬ BoxCat Games: B-3";
-    case 26: return "♬ Eric Skiff: We're the Resistors";
-    case 27: return "♬ RoccoW: Sweet Self Satisfaction";
-    case 28: return "♬ RoccoW: Pumped";
+    case 24: return "-- Music --";
+    case 25: return "♬ Dr Tikov: 1985";
+    case 26: return "♬ BoxCat Games: B-3";
+    case 27: return "♬ Eric Skiff: We're the Resistors";
+    case 28: return "♬ RoccoW: Sweet Self Satisfaction";
+    case 29: return "♬ RoccoW: Pumped";
+    case 30: return "♬ Soft & Furious: Horizon Ending";
     //
-    case 29: return "-- Art --";
-    case 30: return "Kenney: 1-Bit Pack";
-    case 31: return "VectorPixelStar: 1-Bit Patterns";
-    case 32: return "Josehzz: Farming Crops";
-    case 33: return "ScratchIO: Farming Set";
-    case 34: return "Varkalandar: Isometric Rocks";
-    case 35: return "Withthelove: Character Sprites";
-    case 36: return "DinosoftLab: New (NounProject)";
+    case 31: return "-- Art --";
+    case 32: return "Kenney: 1-Bit Pack";
+    case 33: return "VectorPixelStar: 1-Bit Patterns";
+    case 34: return "Josehzz: Farming Crops";
+    case 35: return "ScratchIO: Farming Set";
+    case 36: return "Varkalandar: Isometric Rocks";
+    case 37: return "Withthelove: Character Sprites";
+    case 38: return "DinosoftLab: New (NounProject)";
     //
-    case 37: return "-- Fonts --";
-    case 38: return "Chester Jenkins: Cooper Hewitt";
-    case 39: return "Martin Vacha: Roobert";
-    case 40: return "Mediengestaltung: Messing Lettern";
-    case 41: return "Nick's Fonts: Coventry Garden";
+    case 39: return "-- Fonts --";
+    case 40: return "Chester Jenkins: Cooper Hewitt";
+    case 41: return "Martin Vacha: Roobert";
+    case 42: return "Mediengestaltung: Messing Lettern";
+    case 43: return "Nick's Fonts: Coventry Garden";
     //
-    case 42: return "-- Sound Effects --";
-
-    // can currently go to 42
+    case 44: return "-- Sound Effects --";
+    case 45: return "sfxr.me";
+    //
+    case 46: return "-- Statistics --";
+    case 47: return "Play Time:";
+    case 48: return "Total Money Earned:";
+    case 49: return "Most Money Held:";
+    case 50: return "Total Cargo Sold:";
+    case 51: return "Total Cargo Imported:";
+    //
+    case 52: return " ";
+    case 53: return "© Tim Martin 2022";
+    case 54: return "Factory Farming is an MIT";
+    case 55: return "Licensed Open Source Project";
+    case 56: return "github.com/timboe/FactoryFarming";
+    //
+    case 57: return " ";
+    case 58: return "Thank you for playing!";
+    case 59: return "And for your support of niche";
+    case 60: return "indy game dev projects :)";
+    //
+    case 61: return " ";
+    case 62: return "Keep on Maximizing Profits";
+    case 63: return "Maximizing Efficiency.";
+    // can currently go to 120
   }
   return "???";
 }

@@ -171,7 +171,7 @@ void drawUIInspectExtractor(struct Building_t* _building) {
 
       snprintf(text, 128, "Hopper %i/3:       %s (%i)", 
         (int)hopper+1, 
-        toStringCargoByType( _building->m_stored[(MAX_STORE/2) + hopper] ), 
+        toStringCargoByType( _building->m_stored[(MAX_STORE/2) + hopper], /*plural=*/(_building->m_stored[hopper] > 1) ), 
         _building->m_stored[hopper]);
       pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
       pd->graphics->setDrawMode(kDrawModeCopy);
@@ -181,7 +181,7 @@ void drawUIInspectExtractor(struct Building_t* _building) {
 
   } else {
 
-    snprintf(text, 128, "Out:       %s", toStringCargoByType( EDesc[est].out ));
+    snprintf(text, 128, "Out:       %s", toStringCargoByType( EDesc[est].out, /*plural=*/true ));
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
     pd->graphics->setDrawMode(kDrawModeCopy);
     pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ EDesc[est].out ].UIIcon, 1), TILE_PIX*4, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);

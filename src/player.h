@@ -103,6 +103,10 @@ int16_t getOffY(void);
 
 void forceTorus(void);
 
+uint32_t getTotalSoldCargo(void);
+
+uint32_t getTotalImportedCargo(void);
+
 struct Chunk_t* getCurrentChunk(void);
 
 enum kChunkQuad getCurrentQuadrant(void);

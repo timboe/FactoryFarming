@@ -52,7 +52,7 @@ bool checkShowNew() {
   m_nextSubType = UnlockDecs[testLevel].subType;
   p->m_buildingsUnlockedTo += 1;
   setGameMode(kMenuNew);
-  sfxUnlock();
+  sfx(kSfxUnlock);
   return true;
 }
 

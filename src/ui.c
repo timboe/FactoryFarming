@@ -17,6 +17,7 @@
 #include "generate.h"
 #include "cargo.h"
 #include "render.h"
+#include "sound.h"
 #include "io.h"
 #include "buildings/special.h"
 #include "buildings/factory.h"
@@ -141,6 +142,8 @@ uint16_t m_contentID[MAX_ROWS][ROW_WDTH];
 
 bool m_rowIsTitle[MAX_ROWS] = {false};
 
+int16_t m_creditsCounter;
+
 // Checks that the cursor selection is OK
 void checkSel(void);
 
@@ -219,6 +222,7 @@ uint16_t getUIContentID() {
 
 void setCursorRotation(int8_t _value) {
   m_selRotation = _value;
+  sfx(kSfxRotate);
   UIDirtyRight();
   updateBlueprint();
 }
@@ -230,11 +234,13 @@ void rotateCursor(bool _increment) {
     m_selRotation = (m_selRotation == 0 ? kDirN-1 : m_selRotation - 1);
   }
   if (m_mode >= kMenuPlayer) UIDirtyMain();
+  sfx(kSfxRotate);
   UIDirtyRight();
   updateBlueprint();
 }
 
 void modTitleCursor(bool _increment) {
+  sfx(kSfxD);
   if (_increment) {
     m_UITitleSelected = (m_UITitleSelected == N_SAVES-1 ? 0 : m_UITitleSelected + 1);
   } else {
@@ -242,11 +248,38 @@ void modTitleCursor(bool _increment) {
   }  
 }
 
+void modCredits(bool _increment) {
+  if (_increment) {
+    m_creditsCounter += 8;
+  } else {
+    m_creditsCounter -= 9; // We always add one anyway
+  }  
+}
+
 uint16_t getTitleCursorSelected() {
   return m_UITitleSelected;
 }
 
+void updateUICredits(int _fc) {
+  int16_t y = ++m_creditsCounter;
+  if (y < 0) y = 0;;
+
+  pd->sprite->moveTo(m_UISpriteSplash, DEVICE_PIX_X/2, DEVICE_PIX_Y/2 - y/2);
+  pd->sprite->setDrawMode(m_UISpriteSplash, kDrawModeInverted);
+
+  for (int32_t i = CREDITS_FROM_ROW; i < CREDITS_TO_ROW; ++i) {
+    pd->sprite->setVisible(m_UISpriteMainMenuItem[i], 1);
+    pd->sprite->setDrawMode(m_UISpriteMainMenuItem[i], kDrawModeInverted);
+    pd->sprite->moveTo(m_UISpriteMainMenuItem[i], DEVICE_PIX_X/2, DEVICE_PIX_Y + ((i - CREDITS_FROM_ROW + 1) * TILE_PIX) - y/2);
+  }
+
+  if (m_creditsCounter/2 > (CREDITS_TO_ROW - CREDITS_FROM_ROW)*TILE_PIX + DEVICE_PIX_Y) {
+    setGameMode(kWanderMode);
+  }
+}
+
 void updateUITitles(int _fc) {
+  pd->sprite->setDrawMode(m_UISpriteSplash, kDrawModeCopy);
   pd->sprite->setVisible(m_UISpriteTitleSelected, _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
   pd->sprite->moveTo(m_UISpriteTitleSelected, 
     m_UITitleSelected*TILE_PIX*7 + (7*TILE_PIX)/2 + (m_UITitleSelected+1)*TILE_PIX, 
@@ -271,6 +304,8 @@ void updateUITitles(int _fc) {
 }
 
 void updateUI(int _fc) {
+
+  if (m_mode == kMenuCredits) return updateUICredits(_fc);
   
   const bool flash = _fc % (TICK_FREQUENCY/4) == 0;
   if ((m_mode >= kMenuBuy) && flash) {
@@ -317,13 +352,15 @@ void updateUI(int _fc) {
         else if (!ic && distanceFromWarp() < ACTIVATE_DISTANCE) drawUITop("Plots");
         else if (!ic && distanceFromOut() < ACTIVATE_DISTANCE) drawUITop("Exports");
         else if (!ic && distanceFromIn() < ACTIVATE_DISTANCE) drawUITop("Imports");
+        else if (distanceFromRetirement() < ACTIVATE_DISTANCE) drawUITop("Credits");
       }
     } else {
       if (distanceFromBuy() >= ACTIVATE_DISTANCE && 
           distanceFromSell() >= ACTIVATE_DISTANCE &&
           distanceFromWarp() >= ACTIVATE_DISTANCE &&
           distanceFromOut() >= ACTIVATE_DISTANCE &&
-          distanceFromIn() >= ACTIVATE_DISTANCE) drawUITop(NULL);
+          distanceFromIn() >= ACTIVATE_DISTANCE &&
+          distanceFromRetirement() >= ACTIVATE_DISTANCE) drawUITop(NULL);
     }
   }
 
@@ -360,6 +397,18 @@ void updateBlueprint() {
   const uint16_t selectedID =  getUIContentID();
   uint16_t selectedRot = getCursorRotation();
   struct Location_t* pl = getPlayerLocation();
+
+  // Fence are placed one tile away, dependent on rotation
+  if (selectedCat == kUICatUtility && selectedID == kFence) {
+    switch (selectedRot) {
+      case SN: pl = getLocation(pl->m_x, pl->m_y - 1); break;
+      case NS: pl = getLocation(pl->m_x, pl->m_y + 1); break;
+      case WE: pl = getLocation(pl->m_x + 1, pl->m_y); break;
+      case EW: pl = getLocation(pl->m_x - 1, pl->m_y); break;
+    }
+    int32_t bpX = (TILE_PIX*pl->m_x + TILE_PIX/2.0), bpY = (TILE_PIX*pl->m_y  + TILE_PIX/2.0);
+    pd->sprite->moveTo(bp, bpX*zoom, bpY*zoom);
+  }
 
   pd->sprite->setDrawMode(bp, kDrawModeCopy);
 
@@ -446,7 +495,13 @@ void updateBlueprint() {
 void addUIToSpriteList() {
   struct Player_t* p = getPlayer();
 
-  if (m_mode == kTitles) {
+  if (m_mode == kMenuCredits) {
+    pd->sprite->addSprite(m_UISpriteSplash);
+    for (int32_t i = CREDITS_FROM_ROW; i < CREDITS_TO_ROW; ++i) {
+      pd->sprite->addSprite(m_UISpriteMainMenuItem[i]);
+    }
+    return;
+  } else if (m_mode == kTitles) {
     pd->sprite->addSprite(m_UISpriteSplash);
     pd->sprite->addSprite(m_UISpriteTitleSelected);
     for (int32_t i = 0; i < 3; ++i) {
@@ -639,7 +694,7 @@ void drawUIInspect() {
   if (isWaterTile(loc->m_x, loc->m_y)) {
     if (loc->m_cargo) {
       snprintf(text, 128, "(%i, %i)  %s, %s",
-        loc->m_x, loc->m_y, toStringSoil(getGroundType(t->m_tile)), toStringCargoByType(loc->m_cargo->m_type));
+        loc->m_x, loc->m_y, toStringSoil(getGroundType(t->m_tile)), toStringCargoByType(loc->m_cargo->m_type, /*plural=*/false));
     } else {
       snprintf(text, 128, "(%i, %i)  %s",
         loc->m_x, loc->m_y, toStringSoil(getGroundType(t->m_tile)));
@@ -647,7 +702,7 @@ void drawUIInspect() {
   } else {
     if (loc->m_cargo) {
       snprintf(text, 128, "(%i, %i)  %s %s, %s",
-        loc->m_x, loc->m_y, toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringCargoByType(loc->m_cargo->m_type));
+        loc->m_x, loc->m_y, toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringCargoByType(loc->m_cargo->m_type, /*plural=*/false));
     } else {
       snprintf(text, 128, "(%i, %i)  %s %s",
         loc->m_x, loc->m_y, toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)));
@@ -706,13 +761,13 @@ void drawUIBottom() {
 
     if (loc->m_building && loc->m_cargo) {
       snprintf(text, 128, "%s, %s, %s", 
-        toStringSoil(getGroundType(t->m_tile)), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo));
+        toStringSoil(getGroundType(t->m_tile)), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo, /*plural=*/false));
     } else if (loc->m_building) {
       snprintf(text, 128, "%s, %s", 
         toStringSoil(getGroundType(t->m_tile)), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
     } else if (loc->m_cargo) {
       snprintf(text, 128, "%s, %s", 
-        toStringSoil(getGroundType(t->m_tile)), toStringCargo(loc->m_cargo));
+        toStringSoil(getGroundType(t->m_tile)), toStringCargo(loc->m_cargo, /*plural=*/false));
     } else {
       snprintf(text, 128, "%s", 
         toStringSoil(getGroundType(t->m_tile)));
@@ -722,13 +777,13 @@ void drawUIBottom() {
 
     if (loc->m_building && loc->m_cargo) {
       snprintf(text, 128, "%s %s, %s, %s", 
-        toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo));
+        toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo, /*plural=*/false));
     } else if (loc->m_building) {
       snprintf(text, 128, "%s %s, %s", 
         toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
     } else if (loc->m_cargo) {
       snprintf(text, 128, "%s %s, %s", 
-        toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringCargo(loc->m_cargo));
+        toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringCargo(loc->m_cargo, /*plural=*/false));
     } else {
       snprintf(text, 128, "%s %s", 
         toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)));
@@ -986,6 +1041,7 @@ void setPlotCursorToWorld(enum kWorldType _wt) {
 }
 
 void moveCursor(uint32_t _button) {
+  sfx(kSfxD);
   const uint8_t rowWidth = m_mode == kMenuMain ? 1 : ROW_WDTH;
   if (kButtonUp    == _button) {
     if (m_selRow[m_mode] == 1) {
@@ -1075,6 +1131,7 @@ void drawUIMain() {
   if (gm == kMenuMain) {
     for (int32_t i = 0; i < MAX_ROWS; ++i) {
       pd->sprite->setVisible(m_UISpriteMainMenuItem[i], 0);
+      pd->sprite->setDrawMode(m_UISpriteMainMenuItem[i], kDrawModeCopy);
     }
   } else {
     for (enum kUICat c = 0; c < kNUICats; ++c) {
@@ -1235,6 +1292,11 @@ void renderNewUI() {
 void setGameMode(enum kGameMode _mode) {
   m_mode = _mode;
   if (m_mode == kTitles) return;
+
+  if (m_mode == kMenuCredits) {
+    m_creditsCounter = -CREDITS_DELAY;
+    return;
+  }
 
   if (_mode == kPlaceMode) {
     drawUITop("Place Mode");
