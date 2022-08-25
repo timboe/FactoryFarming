@@ -300,11 +300,11 @@ void populateContentInventory(void) {
       }
       int16_t rot = 0;
       if ((c >= kUICatConv && c < kUICatUtility) || (c == kUICatUtility && i == kBuffferBox)) rot = getCursorRotation();
-      setUIContentItem(row, column, c, i, rot);
-      if (++column == ROW_WDTH) {
+      if (column == ROW_WDTH) { // Only start a new row if we are sure we have something to put in it
         ++row;
         column = 0;
       }
+      setUIContentItem(row, column++, c, i, rot);
     }
     ++row;
   }

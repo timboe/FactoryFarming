@@ -369,8 +369,8 @@ const char* getLine(int32_t _line) {
     case 60: return "indy game dev projects :)";
     //
     case 61: return " ";
-    case 62: return "Keep on Maximizing Profits";
-    case 63: return "Maximizing Efficiency.";
+    case 62: return "Keep on Maximizing Profits,";
+    case 63: return "maximizing Efficiency.";
     // can currently go to 120
   }
   return "???";
