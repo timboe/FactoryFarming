@@ -112,8 +112,7 @@ bool doPlaceLandfill(struct Location_t* _loc) {
     return false;
   }
   // Update the tile, re-do wetness (like for a well, but this is irreversible)
-  struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
-  t->m_tile = UDesc[kLandfill].sprite;
+  setTile( getTile_idx(_loc->m_x, _loc->m_y), UDesc[kLandfill].sprite );
   doWetness(/*for titles = */ false);
   renderChunkBackgroundImageAround(_loc->m_chunk);
   return true;

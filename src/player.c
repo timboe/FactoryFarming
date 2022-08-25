@@ -484,7 +484,6 @@ void resetPlayer() {
   m_player.m_tutorialProgress = 0;
   m_offX = 0;
   m_offY = 0;
-  memset(m_player.m_exportPerWorld, 0, sizeof(float)*WORLD_SAVE_SLOTS*kNCargoType);
   if (m_player.m_enableTutorial != TUTORIAL_DISABLED) m_player.m_enableTutorial = 0;
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_carryCargo[i] = 0;
   for (int32_t i = 0; i < kNConvSubTypes; ++i) m_player.m_carryConveyor[i] = 0;
@@ -495,7 +494,12 @@ void resetPlayer() {
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_soldCargo[i] = 0;
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_importedCargo[i] = 0;
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_importConsumers[i] = 0;
-  for (int32_t i = 0; i < WORLD_SAVE_SLOTS; ++i) m_player.m_sellPerWorld[i] = 0;
+  for (int32_t i = 0; i < WORLD_SAVE_SLOTS; ++i) {
+    m_player.m_sellPerWorld[i] = 0;
+    for (int32_t c = 0; c < kNCargoType; ++c) {
+      m_player.m_exportPerWorld[i][c] = 0;
+    }
+  }
   setPlayerPosition(SCREEN_PIX_X/4, (3*SCREEN_PIX_Y)/4, /*update current location = */ true);
   m_currentChunk = getChunk_noCheck(0,0);
   m_facing = 0;
@@ -554,7 +558,7 @@ void serialisePlayer(struct json_encoder* je) {
   // Settings - not reset new games
   je->addTableMember(je, "sets", 4);
   je->writeInt(je, m_player.m_soundSettings);
-   je->addTableMember(je, "setb", 4);
+  je->addTableMember(je, "setb", 4);
   je->writeInt(je, m_player.m_autoUseConveyorBooster);
   je->addTableMember(je, "setc", 4);
   je->writeInt(je, m_player.m_enableConveyorAnimation); 

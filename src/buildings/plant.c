@@ -32,7 +32,7 @@ void plantTrySpawnCargo(struct Building_t* _building, uint8_t _tick) {
 uint16_t getGrowdownTimer(struct Building_t* _building, bool _smear) {
   const enum kPlantSubType pst = _building->m_subType.plant;
   const struct Tile_t* t = getTile_fromLocation( _building->m_location );
-  const int8_t gb = getGroundBonus( PDesc[pst].soil, getGroundType( t->m_tile ) );
+  const int8_t gb = getGroundBonus( PDesc[pst].soil, (enum kGroundType) t->m_groundType );
   const int8_t wb = getWaterBonus( PDesc[pst].wetness, getWetness( t->m_wetness ) );
   const int8_t bonus = gb + wb;
   float growTime = PDesc[_building->m_subType.plant].time * TICKS_PER_SEC;
@@ -316,7 +316,7 @@ void drawUIInspectPlant(struct Building_t* _building) {
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   const struct Tile_t* t = getTile_fromLocation( _building->m_location );
-  const int8_t gb = getGroundBonus( PDesc[pst].soil, getGroundType( t->m_tile ) );
+  const int8_t gb = getGroundBonus( PDesc[pst].soil, (enum kGroundType) t->m_groundType );
   const int8_t wb = getWaterBonus( PDesc[pst].wetness, getWetness( t->m_wetness ) );
   const uint16_t growTime = getGrowdownTimer(_building, false);
 
@@ -325,7 +325,7 @@ void drawUIInspectPlant(struct Building_t* _building) {
   snprintf(text, 128, "Likes: %s", toStringSoil( PDesc[pst].soil ) );
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
-  snprintf(text, 128, "Has: %s", toStringSoil( getGroundType( t->m_tile )) ); 
+  snprintf(text, 128, "Has: %s", toStringSoil( (enum kGroundType) t->m_groundType) ); 
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
 
   snprintf(text, 128, "Likes: %s %s", toStringWetness( PDesc[pst].wetness ), (isWater ? " " : "Soil") ); 

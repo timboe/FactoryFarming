@@ -20,8 +20,6 @@ const enum kCargoType kWarpUnlockCargo[] = {kNoCargo,   kNoCargo,    kNoCargo,  
 
 struct Tile_t* m_tiles = NULL;
 
-uint16_t m_deserialiseIndexWorld = 0;
-
 const int32_t SIZE_GENERATE = TOT_TILES * sizeof(struct Tile_t);
 
 #define SEASTART (TILES_PER_CHUNK_Y*2)
@@ -55,6 +53,9 @@ void addBiome(uint8_t _size, int32_t _offX, int32_t _offY, uint16_t _imgStart);
 
 void doSea(void);
 
+
+enum kGroundType getGroundType(uint8_t _tile); // Make this private as faster to use the cached version
+
 /// ///
 
 enum kGroundType getWorldGround(uint8_t _slotNumber, uint8_t _groundCounter) {
@@ -67,12 +68,16 @@ struct Tile_t* getTileInChunk(struct Chunk_t* _chunk, int32_t _u, int32_t _v) {
   return &m_tiles[ (WORLD_CHUNKS_X * TILES_PER_CHUNK_X)*((TILES_PER_CHUNK_Y * _chunk->m_y) + _v) + ((TILES_PER_CHUNK_X * _chunk->m_x) + _u) ];
 }
 
-struct Tile_t* getTile(int32_t _x, int32_t _y) {
+int32_t getTile_idx(int32_t _x, int32_t _y) {
   if (_x < 0) _x += TOT_TILES_X;
   else if (_x >= TOT_TILES_X) _x -= TOT_TILES_X;
   if (_y < 0) _y += TOT_TILES_Y;
   else if (_y >= TOT_TILES_Y) _y -= TOT_TILES_Y;
-  return &m_tiles[ TOT_TILES_X*_y + _x ];
+  return TOT_TILES_X*_y + _x;
+}
+
+struct Tile_t* getTile(int32_t _x, int32_t _y) {
+  return &m_tiles[ getTile_idx(_x, _y) ];
 }
 
 struct Tile_t* getTile_fromLocation(struct Location_t* _loc) {
@@ -122,26 +127,26 @@ void renderChunkBackgroundImageAround(struct Chunk_t* _chunk) {
 }
 
 uint8_t getNearbyBackground_Chunk(struct Chunk_t* _chunk, uint16_t _u, uint16_t _v) {
-  uint8_t t = getTileInChunk(_chunk, _u - 1, _v)->m_tile;
-  if (t < TOT_FLOOR_TILES) return t;
-  t = getTileInChunk(_chunk, _u + 1, _v)->m_tile;
-  if (t < TOT_FLOOR_TILES) return t;
-  t = getTileInChunk(_chunk, _u, _v - 1)->m_tile;
-  if (t < TOT_FLOOR_TILES) return t;
-  t = getTileInChunk(_chunk, _u, _v + 1)->m_tile;
-  if (t < TOT_FLOOR_TILES) return t;
+  uint8_t tValue = getTileInChunk(_chunk, _u - 1, _v)->m_tile;
+  if (tValue < TOT_FLOOR_TILES) return tValue;
+  tValue = getTileInChunk(_chunk, _u + 1, _v)->m_tile;
+  if (tValue < TOT_FLOOR_TILES) return tValue;
+  tValue = getTileInChunk(_chunk, _u, _v - 1)->m_tile;
+  if (tValue < TOT_FLOOR_TILES) return tValue;
+  tValue = getTileInChunk(_chunk, _u, _v + 1)->m_tile;
+  if (tValue < TOT_FLOOR_TILES) return tValue;
   return 0;
 }
 
 uint8_t getNearbyBackground_Loc(struct Location_t* _loc) {
-  uint8_t t = getTile(_loc->m_x - 1, _loc->m_y)->m_tile;
-  if (t < TOT_FLOOR_TILES) return t;
-  t = getTile(_loc->m_x + 1, _loc->m_y)->m_tile;
-  if (t < TOT_FLOOR_TILES) return t;
-  t = getTile(_loc->m_x, _loc->m_y - 1)->m_tile;
-  if (t < TOT_FLOOR_TILES) return t;
-  t = getTile(_loc->m_x, _loc->m_y + 1)->m_tile;
-  if (t < TOT_FLOOR_TILES) return t;
+  uint8_t tValue = getTile(_loc->m_x - 1, _loc->m_y)->m_tile;
+  if (tValue < TOT_FLOOR_TILES) return tValue;
+  tValue = getTile(_loc->m_x + 1, _loc->m_y)->m_tile;
+  if (tValue < TOT_FLOOR_TILES) return tValue;
+  tValue = getTile(_loc->m_x, _loc->m_y - 1)->m_tile;
+  if (tValue < TOT_FLOOR_TILES) return tValue;
+  tValue = getTile(_loc->m_x, _loc->m_y + 1)->m_tile;
+  if (tValue < TOT_FLOOR_TILES) return tValue;
   return 0;
 }
 
@@ -233,7 +238,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
     for (uint16_t u = 0; u < TILES_PER_CHUNK_X; ++u) {
       struct Tile_t* t = getTileInChunk(_chunk, u, v);
       LCDBitmapFlip flip = kBitmapUnflipped;
-      if (isGroundTile(t)) {
+      if (isGroundTile(t) || t->m_groundType == kObstructedGround) {
         flip = (u+v) % 2 ? kBitmapUnflipped : kBitmapFlippedX;
       } else {
         // For other tiles, draw them on top of a background tile
@@ -373,7 +378,7 @@ void addSpawn() {
   for (int32_t x = 0; x < SPAWN_END_X+SPAWN_RADIUS; ++x) {
     for (int32_t y = 0; y < SPAWN_Y+SPAWN_RADIUS; ++y) {
       if (pointDist(x, y, SPAWN_START_X, SPAWN_Y, SPAWN_END_X, SPAWN_Y) < SPAWN_RADIUS) {
-        getTile(x, y)->m_tile = SPRITE16_ID(1, 3) + rand() % 3;
+        setTile( getTile_idx(x,y), SPRITE16_ID(1, 3) + rand() % 3);
       }
     }
   }
@@ -398,7 +403,7 @@ void addBiome(uint8_t _size, int32_t _offX, int32_t _offY, uint16_t _imgStart) {
   for (int32_t x = _offX; x < TOT_TILES_X/2 + _offX; ++x) {
     for (int32_t y = _offY; y < TOT_TILES_Y/2 + _offY; ++y) {
       if (pointDist(x, y, x1 + _offX, y1 + _offY, x2 + _offX, y2 + _offY) < r) {
-        getTile(x, y)->m_tile = _imgStart + (rand() % FLOOR_VARIETIES);
+        setTile( getTile_idx(x,y), _imgStart + (rand() % FLOOR_VARIETIES) );
       }
     }
   }
@@ -409,18 +414,18 @@ bool isGroundTile(struct Tile_t* _tile) {
 }
 
 bool isGroundTypeTile(int32_t _x, int32_t _y, enum kGroundType _ground) {
-  const uint16_t t = getTile(_x, _y)->m_tile;
-  return (t >= _ground * FLOOR_VARIETIES && t < (_ground + 1) * FLOOR_VARIETIES);
+  const uint16_t tValue = getTile(_x, _y)->m_tile;
+  return (tValue >= _ground * FLOOR_VARIETIES && tValue < (_ground + 1) * FLOOR_VARIETIES);
 }
 
 bool isWaterTile(int32_t _x, int32_t _y) {
-  const uint16_t t = getTile(_x, _y)->m_tile;
-  if (t < TOT_FLOOR_TILES_INC_PAVED) return false;
-  if (t >= SPRITE16_ID(0, 5)  && t < SPRITE16_ID(0, 7)) return true;
-  if (t >= SPRITE16_ID(4, 11) && t < SPRITE16_ID(8, 11)) return true;
-  if (t >= SPRITE16_ID(4, 12) && t < SPRITE16_ID(6, 12)) return true;
-  if (t >= SPRITE16_ID(4, 13) && t < SPRITE16_ID(8, 13)) return true;
-  if (t >= SPRITE16_ID(4, 14) && t < SPRITE16_ID(8, 14)) return true;
+  const uint16_t tValue = getTile(_x, _y)->m_tile;
+  if (tValue < TOT_FLOOR_TILES_INC_PAVED) return false;
+  if (tValue >= SPRITE16_ID(0, 5)  && tValue < SPRITE16_ID(0, 7)) return true;
+  if (tValue >= SPRITE16_ID(4, 11) && tValue < SPRITE16_ID(8, 11)) return true;
+  if (tValue >= SPRITE16_ID(4, 12) && tValue < SPRITE16_ID(6, 12)) return true;
+  if (tValue >= SPRITE16_ID(4, 13) && tValue < SPRITE16_ID(8, 13)) return true;
+  if (tValue >= SPRITE16_ID(4, 14) && tValue < SPRITE16_ID(8, 14)) return true;
   return false;
 }
 
@@ -533,11 +538,11 @@ const char* getWorldName(enum kWorldType _type, bool _mask) {
 
 bool tryRemoveObstruction(struct Location_t* _loc) {
   struct Tile_t* t = getTile_fromLocation(_loc);
-  if (getGroundType(t->m_tile) != kObstructedGround) return false;
+  if ((enum kGroundType) t->m_groundType != kObstructedGround) return false;
   if (!getOwned(kUICatUtility, kObstructionRemover)) return false;
 
   modOwned(kUICatUtility, kObstructionRemover, /*add*/ false);
-  t->m_tile = getNearbyBackground_Loc(_loc);
+  setTile( getTile_idx(_loc->m_x, _loc->m_y), getNearbyBackground_Loc(_loc));
   chunkRemoveObstacle(_loc->m_chunk, _loc->m_obstacle);
   _loc->m_obstacle = NULL;
   addTrauma(2.0f);
@@ -555,7 +560,7 @@ void doClutterObstacles() {
       if (t->m_tile >= TOT_FLOOR_TILES) {
         continue;
       }
-      t->m_tile = rand() % 2 + SPRITE16_ID(0, 4) + getGroundType(t->m_tile)*2;
+      setTile( getTile_idx(x,y), rand() % 2 + SPRITE16_ID(0, 4) + t->m_groundType*2 ); // Note: relies on ground type not being obstructed when this is called
     }
   }
 }
@@ -571,9 +576,9 @@ bool addRiver(int32_t _startX, int32_t _startY, enum kDir _dir, int32_t _lakePro
   if (getTile(_startX,_startY)->m_tile > TOT_FLOOR_TILES) return true; // Reject 
 
   if (_isolated) {
-    getTile(_startX,_startY)->m_tile = SPRITE16_ID(6+(_dir == NS ? 0 : 1), 14);
+    setTile( getTile_idx(_startX,_startY), SPRITE16_ID(6+(_dir == NS ? 0 : 1), 14));
   } else {
-    getTile(_startX,_startY)->m_tile = SPRITE16_ID(5+(_dir == NS ? 1 : 0), 11);
+    setTile( getTile_idx(_startX,_startY), SPRITE16_ID(5+(_dir == NS ? 1 : 0), 11));
   }
 
   int32_t lenA = RIVER_MIN + rand() % (RIVER_MAX - RIVER_MIN);
@@ -591,30 +596,30 @@ bool addRiver(int32_t _startX, int32_t _startY, enum kDir _dir, int32_t _lakePro
     for (int32_t x = _startX + 1; x < _startX + lenA; ++x) {
       t = getTile(x, _startY);
       if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
-      t->m_tile = SPRITE16_ID(5, 12);
+      setTile( getTile_idx(x, _startY), SPRITE16_ID(5, 12) );
     }
     t = getTile(_startX + lenA, _startY);
     if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
-    if (switchA) t->m_tile = SPRITE16_ID(6 + (switchDir ? 0 : 1), 13);
+    if (switchA) setTile( getTile_idx(_startX + lenA, _startY), SPRITE16_ID(6 + (switchDir ? 0 : 1), 13) );
     else if (endInLake) {
       bool lakeGood = addLake(_startX + lenA, _startY - LAKE_MIN/2, _lakeProb);
-      t->m_tile = SPRITE16_ID(7, 11);
+      setTile( getTile_idx(_startX + lenA, _startY), SPRITE16_ID(7, 11) );
       return lakeGood;
-    } else t->m_tile = SPRITE16_ID(5, 14);
+    } else setTile( getTile_idx(_startX + lenA, _startY), SPRITE16_ID(5, 14) );
   } else if (_dir == NS) {
     for (int32_t y = _startY + 1; y < _startY + lenA; ++y) {
       t = getTile(_startX, y);
       if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
-      t->m_tile = SPRITE16_ID(4, 12);
+      setTile( getTile_idx(_startX, y), SPRITE16_ID(4, 12) );
     }
     t = getTile(_startX, _startY + lenA);
     if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
-    if (switchA) t->m_tile = SPRITE16_ID(4 + (switchDir ? 0 : 3), 13);
+    if (switchA) setTile( getTile_idx(_startX, _startY + lenA), SPRITE16_ID(4 + (switchDir ? 0 : 3), 13) );
     else if (endInLake) {
       bool lakeGood = addLake(_startX - LAKE_MIN/2, _startY + lenA, _lakeProb);
-      t->m_tile = SPRITE16_ID(4, 11);
+      setTile( getTile_idx(_startX, _startY + lenA), SPRITE16_ID(4, 11) );
       return lakeGood;
-    } else t->m_tile = SPRITE16_ID(4, 14);
+    } else setTile( getTile_idx(_startX, _startY + lenA), SPRITE16_ID(4, 14) );
   }
 
   if (switchA && _dir == WE) {
@@ -622,44 +627,44 @@ bool addRiver(int32_t _startX, int32_t _startY, enum kDir _dir, int32_t _lakePro
       for (int32_t y = _startY + 1; y < _startY + lenB; ++y) {
         t = getTile(_startX + lenA, y);
         if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
-        t->m_tile = SPRITE16_ID(4, 12);
+        setTile( getTile_idx(_startX + lenA, y), SPRITE16_ID(4, 12) );
       }
       t = getTile(_startX + lenA, _startY + lenB);
       if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
-      if (switchB) t->m_tile = SPRITE16_ID(4, 13);
-      else t->m_tile = SPRITE16_ID(4, 14);
+      if (switchB) setTile( getTile_idx(_startX + lenA, _startY + lenB), SPRITE16_ID(4, 13) );
+      else setTile( getTile_idx(_startX + lenA, _startY + lenB), SPRITE16_ID(4, 14) );
     } else {
       for (int32_t y = _startY - 1; y > _startY - lenB; --y) {
         t = getTile(_startX + lenA, y);
         if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
-        t->m_tile = SPRITE16_ID(4, 12);
+        setTile( getTile_idx(_startX + lenA, y), SPRITE16_ID(4, 12) );
       }
       t = getTile(_startX + lenA, _startY - lenB);
       if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
-      if (switchB) t->m_tile = SPRITE16_ID(5, 13);
-      else t->m_tile = SPRITE16_ID(6, 14);
+      if (switchB) setTile( getTile_idx(_startX + lenA, _startY - lenB), SPRITE16_ID(5, 13) );
+      else setTile( getTile_idx(_startX + lenA, _startY - lenB), SPRITE16_ID(6, 14) );
     }
   } else if (switchA && _dir == NS) {
     if (switchDir) {
       for (int32_t x = _startX + 1; x < _startX + lenB; ++x) {
         t = getTile(x, _startY + lenA);
         if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
-        t->m_tile = SPRITE16_ID(5, 12);
+        setTile( getTile_idx(x, _startY + lenA), SPRITE16_ID(5, 12) );
       }
       t = getTile(_startX + lenB, _startY + lenA);
       if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
-      if (switchB) t->m_tile = SPRITE16_ID(6, 13);
-      else t->m_tile = SPRITE16_ID(5, 14);
+      if (switchB) setTile( getTile_idx(_startX + lenB, _startY + lenA), SPRITE16_ID(6, 13) );
+      else setTile( getTile_idx(_startX + lenB, _startY + lenA), SPRITE16_ID(5, 14) );
     } else {
       for (int32_t x = _startX - 1; x > _startX - lenB; --x) {
         t = getTile(x, _startY + lenA);
         if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
-        t->m_tile = SPRITE16_ID(5, 12);
+        setTile( getTile_idx(x, _startY + lenA), SPRITE16_ID(5, 12) );
       } 
       t = getTile(_startX - lenB, _startY + lenA);
       if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
-      if (switchB) t->m_tile = SPRITE16_ID(5, 13);
-      else t->m_tile = SPRITE16_ID(7, 14);
+      if (switchB) setTile( getTile_idx(_startX - lenB, _startY + lenA), SPRITE16_ID(5, 13) );
+      else setTile( getTile_idx(_startX - lenB, _startY + lenA), SPRITE16_ID(7, 14) );
     }
   }
 
@@ -668,28 +673,28 @@ bool addRiver(int32_t _startX, int32_t _startY, enum kDir _dir, int32_t _lakePro
     for (int32_t x = _startX + lenA + 1; x < _startX + lenA + lenC; ++x) {
       t = getTile(x, _startY + signedLenB);
       if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
-      t->m_tile = SPRITE16_ID(5, 12);
+      setTile( getTile_idx(x, _startY + signedLenB), SPRITE16_ID(5, 12) );
     }
     t = getTile(_startX + lenA + lenC, _startY + signedLenB);
     if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
     if (endInLake) {
       bool lakeGood = addLake(_startX + lenA + lenC, _startY + signedLenB - LAKE_MIN/2, _lakeProb);
-      t->m_tile = SPRITE16_ID(7, 11);
+      setTile( getTile_idx(_startX + lenA + lenC, _startY + signedLenB), SPRITE16_ID(7, 11) );
       return lakeGood;
-    } else t->m_tile = SPRITE16_ID(5, 14);
+    } else setTile( getTile_idx(_startX + lenA + lenC, _startY + signedLenB), SPRITE16_ID(5, 14) );
   } else if (switchB && _dir == NS) {
     for (int32_t y = _startY + lenA + 1; y < _startY + lenA + lenC; ++y) {
       t = getTile(_startX + signedLenB, y);
       if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
-      t->m_tile = SPRITE16_ID(4, 12);
+      setTile( getTile_idx(_startX + signedLenB, y), SPRITE16_ID(4, 12) );
     }
     t = getTile(_startX + signedLenB, _startY + lenA + lenC);
     if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
     if (endInLake) {
       bool lakeGood = addLake(_startX + signedLenB - LAKE_MIN/2, _startY + lenA + lenC, _lakeProb); 
-      t->m_tile = SPRITE16_ID(4, 11);
+      setTile( getTile_idx(_startX + signedLenB, _startY + lenA + lenC), SPRITE16_ID(4, 11) );
       return lakeGood;
-    } else t->m_tile = SPRITE16_ID(4, 14);
+    } else setTile( getTile_idx(_startX + signedLenB, _startY + lenA + lenC), SPRITE16_ID(4, 14) );
   }
 
   return false;
@@ -730,7 +735,7 @@ bool addLake(int32_t _startX, int32_t _startY, int32_t _riverProb) {
     if      (c_x[0] && (x-_startX) <     c_x[0] + 1) y += c_y[0];
     else if (c_x[1] && (x-_startX) > w - c_x[1] - 1) y += c_y[1];
 
-    getTile(x,y)->m_tile = tex;
+    setTile( getTile_idx(x,y), tex );
 
     y = _startY + h;
     tex = SPRITE16_ID(6,5);
@@ -742,7 +747,7 @@ bool addLake(int32_t _startX, int32_t _startY, int32_t _riverProb) {
     if      (c_x[3] && (x-_startX) <     c_x[3] + 1) y -= c_y[3];
     else if (c_x[2] && (x-_startX) > w - c_x[2] - 1) y -= c_y[2];
 
-    getTile(x,y)->m_tile = tex;
+    setTile( getTile_idx(x,y), tex );
   }
   // TB
   for (int32_t y = _startY; y < _startY + h + 1; ++y) {
@@ -756,7 +761,7 @@ bool addLake(int32_t _startX, int32_t _startY, int32_t _riverProb) {
     if      (c_y[0] && (y-_startY) <     c_y[0] ) x += c_x[0];
     else if (c_y[3] && (y-_startY) > h - c_y[3] ) x += c_x[3];
 
-    getTile(x,y)->m_tile = tex;
+    setTile( getTile_idx(x,y), tex );
 
     x = _startX + w;
     tex = SPRITE16_ID(5,5);
@@ -768,7 +773,7 @@ bool addLake(int32_t _startX, int32_t _startY, int32_t _riverProb) {
     if      (c_y[1] && (y-_startY) <     c_y[1]) x -= c_x[1];
     else if (c_y[2] && (y-_startY) > h - c_y[2]) x -= c_x[2];
 
-    getTile(x,y)->m_tile = tex;
+    setTile( getTile_idx(x,y), tex );
   }
 
   // (Literal) Flood fill
@@ -777,7 +782,7 @@ bool addLake(int32_t _startX, int32_t _startY, int32_t _riverProb) {
     for (int32_t y = _startY; y < _startY + h; ++y) {
       struct Tile_t* t = getTile(x,y);
       if (fill && t->m_tile > TOT_FLOOR_TILES) break;
-      if (fill) t->m_tile = SPRITE16_ID(4 + rand() % 4, 6);
+      if (fill) setTile( getTile_idx(x,y), SPRITE16_ID(4 + rand() % 4, 6) );
       if (!fill && t->m_tile > TOT_FLOOR_TILES && getTile(x,y+1)->m_tile <= TOT_FLOOR_TILES) fill = true;
     }
   }
@@ -796,15 +801,15 @@ bool addLake(int32_t _startX, int32_t _startY, int32_t _riverProb) {
 void doSea() {
   struct Tile_t* t = NULL;
   for (int32_t x = 0; x < TOT_TILES_X; ++x) {
-    getTile(x, SEASTART-1)->m_tile = SPRITE16_ID(4, 5);
+    setTile( getTile_idx(x, SEASTART-1), SPRITE16_ID(4, 5) );
     if (rand() % TILES_PER_CHUNK_X/2 == 0) {
       addRiver(x, SEAEND, NS, /*lake prob=*/0, /*isolated=*/ true);
-      getTile(x, SEAEND)->m_tile = SPRITE16_ID(6, 11);
+      setTile( getTile_idx(x, SEAEND), SPRITE16_ID(6, 11) );
     } else {
-      getTile(x, SEAEND)->m_tile = SPRITE16_ID(6, 5);
+      setTile( getTile_idx(x, SEAEND), SPRITE16_ID(6, 5) );
     }
     for (int32_t y = SEASTART; y < SEAEND; ++y) {
-      getTile(x, y)->m_tile = SPRITE16_ID(4 + rand() % 4, 6);
+      setTile( getTile_idx(x, y), SPRITE16_ID(4 + rand() % 4, 6) );
     }
   }
 }
@@ -887,7 +892,6 @@ void setChunkBackgrounds(bool _forTitles) {
 
 void resetWorld() {
   memset(m_tiles, 0, SIZE_GENERATE);
-  m_deserialiseIndexWorld = 0;
 }
 
 void initWorld() {
@@ -900,41 +904,24 @@ void initWorld() {
 void serialiseWorld(struct json_encoder* je) {
   je->addTableMember(je, "world", 5);
   je->startArray(je);
-
   for (uint32_t i = 0; i < TOT_TILES; ++i) {
     je->addArrayMember(je);
-    je->startTable(je);
-    je->addTableMember(je, "tile", 4);
     je->writeInt(je, m_tiles[i].m_tile);
-    je->endTable(je);
   }
-
   je->endArray(je);
 }
 
-void deserialiseValueWorld(json_decoder* jd, const char* _key, json_value _value) {
-  if (strcmp(_key, "tile") == 0) {
-    m_tiles[m_deserialiseIndexWorld].m_tile = json_intValue(_value);
-  } else {
-    pd->system->error("WORLD DECODE ISSUE, %s", _key);
-  }
+void deserialiseArrayValueWorld(json_decoder* jd, int _pos, json_value _value) {
+  int32_t i = _pos - 1;
+  setTile(i, json_intValue(_value));
 }
 
-void* deserialiseStructDoneWorld(json_decoder* jd, const char* _name, json_value_type _type) {
-  ++m_deserialiseIndexWorld;
-  return NULL;
-}
-
-
-bool tileIsObstacle(struct Tile_t* _tile) {
-  return _tile->m_tile >= SPRITE16_ID(0, 4) &&  _tile->m_tile <= SPRITE16_ID(15, 4);
-}
 
 void addObstacles() {
   for (uint32_t x = 0; x < TOT_TILES_X; ++x) {
     for (uint32_t y = 0; y < TOT_TILES_Y; ++y) {
       struct Tile_t* tile = getTile(x, y);
-      if (!tileIsObstacle(tile)) {
+      if (tile->m_groundType != kObstructedGround) {
         continue;
       }
 
@@ -955,6 +942,11 @@ void addObstacles() {
   }
 }
 
+void setTile(uint16_t _i, uint8_t _tileValue) {
+  m_tiles[_i].m_tile = _tileValue;
+  m_tiles[_i].m_groundType = getGroundType(_tileValue);
+}
+
 void generate(uint32_t _actionProgress) {
 
   const uint8_t slot = getSlot();
@@ -966,10 +958,8 @@ void generate(uint32_t _actionProgress) {
 
   } else if (_actionProgress == 2) {
 
-      
-    // Worldgen is very basic for now
     for (uint16_t i = 0; i < TOT_TILES; ++i) {
-      m_tiles[i].m_tile = (FLOOR_VARIETIES * floorMain) + rand() % FLOOR_VARIETIES;
+      setTile(i, (FLOOR_VARIETIES * floorMain) + rand() % FLOOR_VARIETIES);
     } 
 
   } else if (_actionProgress == 3) {
@@ -1031,11 +1021,11 @@ void generateTitle() {
   for (uint16_t x = 0; x < TILES_PER_CHUNK_X*3; ++x) {
     for (uint16_t y = 0; y < TILES_PER_CHUNK_Y*3; ++y) {
       if (x > 15 || y < 2) {
-        getTile(x,y)->m_tile = rand() % FLOOR_VARIETIES + (FLOOR_VARIETIES * kPeatyGround);
+        setTile( getTile_idx(x,y), rand() % FLOOR_VARIETIES + (FLOOR_VARIETIES * kPeatyGround) );
       } else if (y > 7) {
-        getTile(x,y)->m_tile = rand() % FLOOR_VARIETIES + (FLOOR_VARIETIES * kChalkyGround);
+        setTile( getTile_idx(x,y), rand() % FLOOR_VARIETIES + (FLOOR_VARIETIES * kChalkyGround) );
       } else {
-        getTile(x,y)->m_tile = rand() % FLOOR_VARIETIES;
+        setTile( getTile_idx(x,y), rand() % FLOOR_VARIETIES );
       }
     } 
   }

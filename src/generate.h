@@ -5,9 +5,11 @@
 struct Tile_t {
   // Persistent
   uint8_t m_tile;
-  uint8_t m_wetness;
 
   // Transient
+  uint8_t m_wetness;
+  uint8_t m_groundType; // Note: Not using 'enum kGroundType' to save bytes
+
 };
 
 // Paved must come after the plantable ground types
@@ -48,17 +50,19 @@ void generate(uint32_t _actionProgress);
 
 void generateTitle(void);
 
+int32_t getTile_idx(int32_t _x, int32_t _y);
+
 struct Tile_t* getTile(int32_t _x, int32_t _y);
 
 struct Tile_t* getTile_fromLocation(struct Location_t* _loc);
+
+void setTile(uint16_t _i, uint8_t _tileValue);
 
 void renderChunkBackgroundImage(struct Chunk_t* _chunk);
 
 void renderChunkBackgroundImageAround(struct Chunk_t* _chunk);
 
 void setChunkBackgrounds(bool _forTitles);
-
-bool tileIsObstacle(struct Tile_t* _tile);
 
 bool isGroundTile(struct Tile_t* _tile);
 
@@ -73,8 +77,6 @@ void doWetness(bool _forTitles);
 bool tryRemoveObstruction(struct Location_t* _loc);
 
 enum kGroundWetness getWetness(uint8_t _value);
-
-enum kGroundType getGroundType(uint8_t _tile);
 
 enum kGroundType getWorldGround(uint8_t _slotNumber, uint8_t _groundCounter);
 
@@ -92,8 +94,4 @@ void resetWorld(void);
 
 void serialiseWorld(struct json_encoder* je);
 
-void deserialiseValueWorld(json_decoder* jd, const char* _key, json_value _value);
-
-void* deserialiseStructDoneWorld(json_decoder* jd, const char* _name, json_value_type _type);
-
-void didDecodeWorldName(json_decoder* jd, const char* _key, json_value _value);
+void deserialiseArrayValueWorld(json_decoder* jd, int _pos, json_value _value);

@@ -45,7 +45,7 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
     // Special - well
     bool wideRedraw = false;
     if (_loc->m_building->m_type == kUtility && _loc->m_building->m_subType.utility == kWell) {
-      getTile(_loc->m_x, _loc->m_y)->m_tile = _loc->m_building->m_mode.mode16; // Undo before destroying
+      setTile( getTile_idx(_loc->m_x, _loc->m_y), _loc->m_building->m_mode.mode16 ); // Undo before destroying
       doWetness(/*for titles = */ false);
       wideRedraw = true;
     }

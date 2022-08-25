@@ -274,11 +274,12 @@ void scanSlots() {
   // Filter
   for (uint16_t ss = 0; ss < WORLD_SAVE_SLOTS; ++ss) {
     if (m_worldExists[m_save][ss]) {
-      if (m_worldVersions[m_save][ss] == 0) {
+      if (m_worldVersions[m_save][ss] != SAVE_FORMAT) {
         #ifdef DEV
         pd->system->logToConsole("Scan world: OLD WORLD DETECTED! Version 0. ACTION: Delete everything and start again");
         #endif
         m_foundSaveData[m_save] = false;
+        doSaveDelete();
       }
     }
   }
@@ -495,9 +496,10 @@ void willDecodeSublist(json_decoder* jd, const char* _name, json_value_type _typ
   } else if (strcmp(truncated, "locat") == 0 && _type == kJSONTable) {
     jd->didDecodeTableValue = deserialiseValueLocation;
     jd->didDecodeSublist = deserialiseStructDoneLocation;
-  } else if (strcmp(truncated, "world") == 0 && _type == kJSONTable) {
-    jd->didDecodeTableValue = deserialiseValueWorld;
-    jd->didDecodeSublist = deserialiseStructDoneWorld;
+  } else if (strcmp(truncated, "world") == 0 && _type == kJSONArray) {
+    jd->didDecodeTableValue = NULL;
+    jd->didDecodeSublist = NULL;
+    jd->didDecodeArrayValue = deserialiseArrayValueWorld;
   } else {
     jd->didDecodeTableValue = NULL;
   }

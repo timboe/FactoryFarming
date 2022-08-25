@@ -485,7 +485,7 @@ void updateBlueprint() {
     pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
     if (canBePlacedPlant(pl, (union kSubType) {.plant = selectedID})) {
       const struct Tile_t* t = getTile_fromLocation( pl );
-      const int8_t gb = getGroundBonus( PDesc[selectedID].soil, getGroundType( t->m_tile ) );
+      const int8_t gb = getGroundBonus( PDesc[selectedID].soil, (enum kGroundType) t->m_groundType );
       const int8_t wb = getWaterBonus( PDesc[selectedID].wetness, getWetness( t->m_wetness ) );
       pd->sprite->setImage(bp, getSprite16_byidx( getPlantSmilieSprite(gb+wb), zoom), kBitmapUnflipped);
     } else {
@@ -724,18 +724,18 @@ void drawUIInspect() {
   if (isWaterTile(loc->m_x, loc->m_y)) {
     if (loc->m_cargo) {
       snprintf(text, 128, "(%i, %i)  %s, %s",
-        loc->m_x, loc->m_y, toStringSoil(getGroundType(t->m_tile)), toStringCargoByType(loc->m_cargo->m_type, /*plural=*/false));
+        loc->m_x, loc->m_y, toStringSoil((enum kGroundType) t->m_groundType), toStringCargoByType(loc->m_cargo->m_type, /*plural=*/false));
     } else {
       snprintf(text, 128, "(%i, %i)  %s",
-        loc->m_x, loc->m_y, toStringSoil(getGroundType(t->m_tile)));
+        loc->m_x, loc->m_y, toStringSoil((enum kGroundType) t->m_groundType));
     }
   } else {
     if (loc->m_cargo) {
       snprintf(text, 128, "(%i, %i)  %s %s, %s",
-        loc->m_x, loc->m_y, toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringCargoByType(loc->m_cargo->m_type, /*plural=*/false));
+        loc->m_x, loc->m_y, toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType) t->m_groundType), toStringCargoByType(loc->m_cargo->m_type, /*plural=*/false));
     } else {
       snprintf(text, 128, "(%i, %i)  %s %s",
-        loc->m_x, loc->m_y, toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)));
+        loc->m_x, loc->m_y, toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType)t->m_groundType));
     }
   }
 
@@ -791,32 +791,32 @@ void drawUIBottom() {
 
     if (loc->m_building && loc->m_cargo) {
       snprintf(text, 128, "%s, %s, %s", 
-        toStringSoil(getGroundType(t->m_tile)), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo, /*plural=*/false));
+        toStringSoil((enum kGroundType)t->m_groundType), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo, /*plural=*/false));
     } else if (loc->m_building) {
       snprintf(text, 128, "%s, %s", 
-        toStringSoil(getGroundType(t->m_tile)), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
+        toStringSoil((enum kGroundType)t->m_groundType), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
     } else if (loc->m_cargo) {
       snprintf(text, 128, "%s, %s", 
-        toStringSoil(getGroundType(t->m_tile)), toStringCargo(loc->m_cargo, /*plural=*/false));
+        toStringSoil((enum kGroundType)t->m_groundType), toStringCargo(loc->m_cargo, /*plural=*/false));
     } else {
       snprintf(text, 128, "%s", 
-        toStringSoil(getGroundType(t->m_tile)));
+        toStringSoil((enum kGroundType)t->m_groundType));
     }
 
   } else {
 
     if (loc->m_building && loc->m_cargo) {
       snprintf(text, 128, "%s %s, %s, %s", 
-        toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo, /*plural=*/false));
+        toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType)t->m_groundType), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo, /*plural=*/false));
     } else if (loc->m_building) {
       snprintf(text, 128, "%s %s, %s", 
-        toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
+        toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType)t->m_groundType), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
     } else if (loc->m_cargo) {
       snprintf(text, 128, "%s %s, %s", 
-        toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)), toStringCargo(loc->m_cargo, /*plural=*/false));
+        toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType)t->m_groundType), toStringCargo(loc->m_cargo, /*plural=*/false));
     } else {
       snprintf(text, 128, "%s %s", 
-        toStringWetness(getWetness(t->m_wetness)), toStringSoil(getGroundType(t->m_tile)));
+        toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType)t->m_groundType));
     }
 
   } 
