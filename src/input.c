@@ -70,6 +70,8 @@ void rotateHandlePick(float _rotation);
 
 void rotateHandleCredits(float _rotation);
 
+void rotateHandleSettings(float _rotation);
+
 void rotateHandleMultiplier(float _rotation);
 
 bool holdBRotateInput(uint32_t _buttonPressed);
@@ -487,6 +489,18 @@ void rotateHandleCredits(float _rotation) {
   }
 }
 
+void rotateHandleSettings(float _rotation) {
+  static float rot = 0.0f;
+  rot += _rotation;
+  if (rot > UI_ROTATE_ACTION/8) {
+    rot = 0.0f;
+    moveCursor(kButtonDown);
+  } else if (rot < -UI_ROTATE_ACTION/8) {
+    rot = 0.0f;
+    moveCursor(kButtonUp);
+  }
+}
+
 int8_t getAndReduceFollowConveyor() {
   if (m_followConveyor > 0) {
     return m_followConveyor--;
@@ -542,8 +556,9 @@ void clickHandlerReplacement() {
     case kDestroyMode:; rotateHandlePick(pd->system->getCrankChange()); break;
     case kMenuCredits: rotateHandleCredits(pd->system->getCrankChange()); break;
     case kMenuBuy:; case kMenuSell:; rotateHandleMultiplier(pd->system->getCrankChange()); break; 
+    case kMenuMain:; rotateHandleSettings(pd->system->getCrankChange()); break;
     case kMenuWarp:; case kMenuExport:; case kMenuImport:; break;
-    case kPlantMode:; case kInspectMode:; case kTitles:; case kMenuMain:; case kNGameModes:; break;
+    case kPlantMode:; case kInspectMode:; case kTitles:; case kNGameModes:; break;
   }
 
 }

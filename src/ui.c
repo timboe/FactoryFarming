@@ -98,6 +98,9 @@ LCDSprite* m_UISpriteCannotAfford;
 LCDSprite* m_UISpriteInfo;
 LCDBitmap* m_UIBitmapInfo;
 
+LCDSprite* m_UISpriteScrollBarInner;
+LCDBitmap* m_UIBitmapScrollBarInner;
+
 LCDSprite* m_UISpriteScrollBarShortOuter;
 LCDBitmap* m_UIBitmapScrollBarShortOuter;
 
@@ -139,6 +142,7 @@ LCDSprite* m_contentSprite[MAX_ROWS][ROW_WDTH] = {NULL};
 LCDSprite* m_contentStickySelected[MAX_ROWS][ROW_WDTH] = {NULL};
 enum kUICat m_contentCat[MAX_ROWS][ROW_WDTH];
 uint16_t m_contentID[MAX_ROWS][ROW_WDTH];
+uint16_t m_contentMaxRow;
 
 bool m_rowIsTitle[MAX_ROWS] = {false};
 
@@ -567,6 +571,7 @@ void addUIToSpriteList() {
       }
       pd->sprite->addSprite(m_UISpriteMainMenuCursor);
       pd->sprite->addSprite(m_UISpriteScrollBarLongOuter);
+      pd->sprite->addSprite(m_UISpriteScrollBarInner);
     } else {    
       pd->sprite->addSprite(m_UISpriteCursor);
       pd->sprite->addSprite(m_UISpriteSelected);
@@ -574,6 +579,7 @@ void addUIToSpriteList() {
       pd->sprite->addSprite(m_UISpriteInfo);
       pd->sprite->addSprite(m_UISpriteIngredients);
       pd->sprite->addSprite(m_UISpriteScrollBarShortOuter);
+      pd->sprite->addSprite(m_UISpriteScrollBarInner);
       for (int32_t i = 0; i < 4; ++i) {
         pd->sprite->addSprite(m_UISpriteStickySelected[i]);
       }
@@ -1114,11 +1120,13 @@ void setUIContentMainMenu(int32_t _row, bool _isHeader) {
   m_contentSprite[_row][0] = m_UISpriteMainMenuItem[_row];
   m_contentID[_row][0] = _row;
   m_rowIsTitle[_row] = _isHeader;
+  m_contentMaxRow = (_row > m_contentMaxRow ? _row : m_contentMaxRow);
 }
 
 void setUIContentHeader(int32_t _row, enum kUICat _c) {
   m_contentSprite[_row][0] = m_UISpriteHeaders[_c];
   m_rowIsTitle[_row] = true;
+  m_contentMaxRow = (_row > m_contentMaxRow ? _row : m_contentMaxRow);
 }
 
 void setUIContentStickySelected(int32_t _row, int32_t _col, uint8_t _selID) {
@@ -1129,6 +1137,7 @@ void setUIContentItem(int32_t _row, int32_t _col, enum kUICat _c, uint16_t _i, u
   m_contentSprite[_row][_col] = m_UISpriteItems[_c][_i][_r];
   m_contentCat[_row][_col] = _c;
   m_contentID[_row][_col] = _i;
+  m_contentMaxRow = (_row > m_contentMaxRow ? _row : m_contentMaxRow);
 }
 
 LCDSprite* getCannotAffordSprite() {
@@ -1145,6 +1154,7 @@ void drawUIMain() {
   memset(m_contentSprite, 0, MAX_ROWS * ROW_WDTH * sizeof(LCDSprite*));
   memset(m_contentStickySelected, 0, MAX_ROWS * ROW_WDTH * sizeof(LCDSprite*));
   memset(m_rowIsTitle, 0, MAX_ROWS * sizeof(bool));
+  m_contentMaxRow = 0;
 
   const enum kGameMode gm = getGameMode();
 
@@ -1211,7 +1221,13 @@ void drawUIMain() {
   // Render
   const uint8_t ROWS_TO_RENDER = (m_mode == kMenuMain ? MAX_ROWS_VISIBLE_MAINMENU : MAX_ROWS_VISIBLE);
 
-  //pd->system->logToConsole("SelRow:%i  SelCol:%i SelRowOffset:%i CursorRowAbs:%i", m_selRow[m_mode], m_selCol[m_mode], m_selRowOffset[m_mode], m_cursorRowAbs[m_mode]);
+  // Scroll bar
+  #define SCROLL_TOP_SETTINGS (TILE_PIX*3)
+  #define SCROLL_TOP (TILE_PIX*5)
+  #define SCROLL_BOT (TILE_PIX*11)
+  const int16_t scrollTop = (m_mode == kMenuMain ? SCROLL_TOP_SETTINGS : SCROLL_TOP);
+  float frac = (m_selRow[m_mode] - 1) / (float)(m_contentMaxRow-1); // -1 as cannot select the top row
+  pd->sprite->moveTo(m_UISpriteScrollBarInner, TILE_PIX*21, scrollTop + (SCROLL_BOT-scrollTop)*frac);
 
   for (int32_t r = 0; r < ROWS_TO_RENDER; ++r) {
     int32_t rID = r + m_selRowOffset[m_mode];
@@ -1673,7 +1689,23 @@ void initiUI() {
 
   // Menu stuff
 
-  m_UIBitmapScrollBarShortOuter = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*8, kColorBlack);
+  m_UIBitmapScrollBarInner= pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*2, kColorClear);
+  pd->graphics->pushContext(m_UIBitmapScrollBarInner);
+  roundedRect(4, TILE_PIX*2, TILE_PIX*2, TILE_PIX, kColorBlack);
+  roundedRect(6, TILE_PIX*2, TILE_PIX*2, TILE_PIX, kColorWhite);
+  pd->graphics->popContext();
+  m_UISpriteScrollBarInner = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteScrollBarInner, iBound);
+  pd->sprite->setImage(m_UISpriteScrollBarInner, m_UIBitmapScrollBarInner, kBitmapUnflipped);
+  pd->sprite->setZIndex(m_UISpriteScrollBarInner, Z_INDEX_UI_T);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteScrollBarInner, 1);  
+  pd->sprite->moveTo(m_UISpriteScrollBarInner, TILE_PIX*21, TILE_PIX*5);
+
+  m_UIBitmapScrollBarShortOuter = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*8, kColorClear);
+  pd->graphics->pushContext(m_UIBitmapScrollBarShortOuter);
+  roundedRect(0, TILE_PIX*2, TILE_PIX*8, TILE_PIX, kColorBlack);
+  roundedRect(2, TILE_PIX*2, TILE_PIX*8, TILE_PIX, kColorWhite);
+  pd->graphics->popContext();
   m_UISpriteScrollBarShortOuter = pd->sprite->newSprite();
   pd->sprite->setBounds(m_UISpriteScrollBarShortOuter, scrollShortBound);
   pd->sprite->setImage(m_UISpriteScrollBarShortOuter, m_UIBitmapScrollBarShortOuter, kBitmapUnflipped);
@@ -1681,7 +1713,11 @@ void initiUI() {
   pd->sprite->setIgnoresDrawOffset(m_UISpriteScrollBarShortOuter, 1);  
   pd->sprite->moveTo(m_UISpriteScrollBarShortOuter, TILE_PIX*21, TILE_PIX*8);
 
-  m_UIBitmapScrollBarLongOuter = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*10, kColorBlack);
+  m_UIBitmapScrollBarLongOuter = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*10, kColorClear);
+  pd->graphics->pushContext(m_UIBitmapScrollBarLongOuter);
+  roundedRect(0, TILE_PIX*2, TILE_PIX*10, TILE_PIX, kColorBlack);
+  roundedRect(2, TILE_PIX*2, TILE_PIX*10, TILE_PIX, kColorWhite);
+  pd->graphics->popContext();
   m_UISpriteScrollBarLongOuter = pd->sprite->newSprite();
   pd->sprite->setBounds(m_UISpriteScrollBarLongOuter, scrollLongBound);
   pd->sprite->setImage(m_UISpriteScrollBarLongOuter, m_UIBitmapScrollBarLongOuter, kBitmapUnflipped);
@@ -1809,7 +1845,7 @@ void initiUI() {
 
   m_UISpriteIngredients = pd->sprite->newSprite();
   pd->sprite->setBounds(m_UISpriteIngredients, ingBound);
-  pd->sprite->setZIndex(m_UISpriteIngredients, Z_INDEX_UI_T);
+  pd->sprite->setZIndex(m_UISpriteIngredients, Z_INDEX_UI_TT);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteIngredients, 1);
 
   #define ING_X_START 6
