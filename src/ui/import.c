@@ -126,6 +126,10 @@ bool populateContentImport() {
         continue; // Am not exporting this type of cargo
       }    
  
+      if (column == ROW_WDTH) { // Only start a new row if we are sure we have something to put in it
+        ++row;
+        column = 0;
+      }
       setUIContentItem(row, column, cat, i, 0);
  
       // Chosen?
@@ -141,12 +145,8 @@ bool populateContentImport() {
         setUIContentStickySelected(row, column, dir); // dir just selects the correct identical sticky sprite, 0-4
       }
 
+      ++column;
       empty = false;
-
-      if (++column == ROW_WDTH) {
-        ++row;
-        column = 0;
-      }
     }
   }
   return empty;

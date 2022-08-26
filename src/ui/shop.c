@@ -39,11 +39,11 @@ void populateContentBuy() {
       if (myLevel > unlockLevel) {
         continue;
       }
-      setUIContentItem(row, column, c, i, 0);
-      if (++column == ROW_WDTH) {
+      if (column == ROW_WDTH) { // Only start a new row if we are sure we have something to put in it
         ++row;
         column = 0;
       }
+      setUIContentItem(row, column++, c, i, 0);
     }
     ++row;
   }

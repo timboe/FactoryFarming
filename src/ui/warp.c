@@ -105,6 +105,10 @@ void populateContentWarp() {
   for (int32_t i = 0; i < getNSubTypes(kUICatWarp); ++i) {
     LCDBitmap* b = getUIContentItemBitmap(kUICatWarp, i, 0);
     pd->graphics->pushContext(b);
+    if (column == ROW_WDTH) { // Only start a new row if we are sure we have something to put in it
+      ++row;
+      column = 0;
+    }
     setUIContentItem(row, column, kUICatWarp, i, 0);
     if (getOwned(kUICatWarp, i)) {
       pd->graphics->drawBitmap(getSprite16_byidx(getUIIcon(kUICatWarp, i), 2), 0, 0, kBitmapUnflipped);
@@ -115,9 +119,6 @@ void populateContentWarp() {
     if (column == getSlot()) {
       setUIContentStickySelected(row, column, 0);
     }
-    if (++column == ROW_WDTH) {
-      ++row;
-      column = 0;
-    }
+    ++column;
   }
 }

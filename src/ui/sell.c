@@ -72,12 +72,12 @@ bool populateContentSell(void) {
     if (!getOwned(kUICatCargo, i)) {
       continue;
     }
-    setUIContentItem(row, column, kUICatCargo, i, 0);
-    empty = false;
-    if (++column == ROW_WDTH) {
+    if (column == ROW_WDTH) { // Only start a new row if we are sure we have something to put in it
       ++row;
       column = 0;
     }
+    setUIContentItem(row, column++, kUICatCargo, i, 0);
+    empty = false;
   }
   return empty;
 }

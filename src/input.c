@@ -164,23 +164,23 @@ bool holdBMultiplierInput(uint32_t _buttonPressed) {
 
 void gameClickConfigHandler(uint32_t _buttonPressed) {
   switch (getGameMode()) {
-    case kWanderMode:; return clickHandleWander(_buttonPressed);
-    case kMenuMain:; return clickHandleMenuMain(_buttonPressed);
-    case kMenuBuy:; return clickHandleMenuBuy(_buttonPressed);
-    case kMenuNew:; return clickHandleMenuNew(_buttonPressed);
-    case kMenuSell:; return clickHandleMenuSell(_buttonPressed);
-    case kMenuPlayer:; return clickHandleMenuPlayer(_buttonPressed);
-    case kMenuWarp:; return clickHandleMenuWarp(_buttonPressed);
-    case kMenuExport:; return clickHandleMenuExport(_buttonPressed);
-    case kMenuImport:; return clickHandleMenuImport(_buttonPressed);
-    case kMenuCredits:; return clickHandleMenuCredits(_buttonPressed);
-    case kPlaceMode:; case kBuildMode:; return clickHandleBuilding(_buttonPressed);
-    case kPlantMode:; return clickHandlePlanting(_buttonPressed);
-    case kPickMode:; return clickHandlePick(_buttonPressed);
-    case kInspectMode:; return clickHandleInspect(_buttonPressed);
-    case kDestroyMode:; return clickHandleDestroy(_buttonPressed);
-    case kTitles:; return clickHandleTitles(_buttonPressed);
-    case kNGameModes:; break;
+    case kWanderMode: return clickHandleWander(_buttonPressed);
+    case kMenuMain: return clickHandleMenuMain(_buttonPressed);
+    case kMenuBuy: return clickHandleMenuBuy(_buttonPressed);
+    case kMenuNew: return clickHandleMenuNew(_buttonPressed);
+    case kMenuSell: return clickHandleMenuSell(_buttonPressed);
+    case kMenuPlayer: return clickHandleMenuPlayer(_buttonPressed);
+    case kMenuWarp: return clickHandleMenuWarp(_buttonPressed);
+    case kMenuExport: return clickHandleMenuExport(_buttonPressed);
+    case kMenuImport: return clickHandleMenuImport(_buttonPressed);
+    case kMenuCredits: return clickHandleMenuCredits(_buttonPressed);
+    case kPlaceMode: case kBuildMode: return clickHandleBuilding(_buttonPressed);
+    case kPlantMode: return clickHandlePlanting(_buttonPressed);
+    case kPickMode: return clickHandlePick(_buttonPressed);
+    case kInspectMode: return clickHandleInspect(_buttonPressed);
+    case kDestroyMode: return clickHandleDestroy(_buttonPressed);
+    case kTitles: return clickHandleTitles(_buttonPressed);
+    case kNGameModes: break;
   }
 }
 
@@ -494,10 +494,10 @@ void rotateHandleSettings(float _rotation) {
   rot += _rotation;
   if (rot > UI_ROTATE_ACTION/8) {
     rot = 0.0f;
-    moveCursor(kButtonDown);
+    moveCursor(kButtonRight);
   } else if (rot < -UI_ROTATE_ACTION/8) {
     rot = 0.0f;
-    moveCursor(kButtonUp);
+    moveCursor(kButtonLeft);
   }
 }
 
@@ -547,18 +547,13 @@ void clickHandlerReplacement() {
   if (released & kButtonDown) m_pressed[3] = 0;
 
   switch (gm) {
-    case kWanderMode:; rotateHandleWander(pd->system->getCrankChange()); break;
-    case kMenuPlayer:; // fall through
-    case kMenuNew:;
-    case kBuildMode:;
-    case kPlaceMode:; rotateHandlePlacement(pd->system->getCrankChange()); break;
-    case kPickMode:; // fall through
-    case kDestroyMode:; rotateHandlePick(pd->system->getCrankChange()); break;
+    case kWanderMode: rotateHandleWander(pd->system->getCrankChange()); break;
+    case kBuildMode: case kPlaceMode: rotateHandlePlacement(pd->system->getCrankChange()); break;
+    case kPickMode: case kDestroyMode: rotateHandlePick(pd->system->getCrankChange()); break;
     case kMenuCredits: rotateHandleCredits(pd->system->getCrankChange()); break;
-    case kMenuBuy:; case kMenuSell:; rotateHandleMultiplier(pd->system->getCrankChange()); break; 
-    case kMenuMain:; rotateHandleSettings(pd->system->getCrankChange()); break;
-    case kMenuWarp:; case kMenuExport:; case kMenuImport:; break;
-    case kPlantMode:; case kInspectMode:; case kTitles:; case kNGameModes:; break;
+    case kMenuBuy: case kMenuSell: rotateHandleMultiplier(pd->system->getCrankChange()); break; 
+    case kMenuPlayer: case kMenuMain: case kMenuExport: case kMenuImport: case kMenuWarp: rotateHandleSettings(pd->system->getCrankChange()); break;
+    case kMenuNew: case kPlantMode: case kInspectMode: case kTitles: case kNGameModes: break;
   }
 
 }
