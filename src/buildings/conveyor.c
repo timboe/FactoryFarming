@@ -106,12 +106,12 @@ bool canBePlacedConveyor(struct Location_t* _loc, enum kDir _dir, union kSubType
   bool floor = false;
   struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
   if (t->m_tile < TOT_FLOOR_TILES_INC_PAVED) floor = true;
-  else if (t->m_tile >= SPRITE16_ID(8, 16) && t->m_tile < SPRITE16_ID(8+4, 16)) floor = true;
+  //else if (t->m_tile >= SPRITE16_ID(8, 16) && t->m_tile < SPRITE16_ID(8+4, 16)) floor = true; // what was this for?  Paved?
 
   if (_subType.conveyor == kTunnelIn) {
     t = getTunnelOutTile(_loc, _dir);
-    if (t->m_tile < TOT_FLOOR_TILES_INC_PAVED) floor &= true;
-    else if (t->m_tile >= SPRITE16_ID(8, 16) && t->m_tile < SPRITE16_ID(8+4, 16)) floor &= true;
+    floor &= (t->m_tile < TOT_FLOOR_TILES_INC_PAVED);
+    //else if (t->m_tile >= SPRITE16_ID(8, 16) && t->m_tile < SPRITE16_ID(8+4, 16)) floor &= true; // what was this for? Paved?
   }
 
   if (!floor) return false;
@@ -122,7 +122,7 @@ bool canBePlacedConveyor(struct Location_t* _loc, enum kDir _dir, union kSubType
 
   if (_subType.conveyor == kTunnelIn) {
     struct Location_t* tunnelOut = getTunnelOutLocation(_loc, _dir);
-    if (tunnelOut->m_building == NULL || tunnelOut->m_building->m_type == kConveyor) existingGood &= true;
+    existingGood &= (tunnelOut->m_building == NULL || tunnelOut->m_building->m_type == kConveyor);
   }
 
   if (!existingGood) return false;
@@ -236,13 +236,13 @@ int8_t getConveyorDirection(enum kConvSubType _subType, enum kDir _dir, uint8_t 
 }
 
 
-void upgradeConveyor(struct Building_t* _building) {
+void upgradeConveyor(struct Building_t* _building, bool _forFree) {
   if (!_building) return;
   if (_building->m_type != kConveyor) return;
   if (_building->m_stored[0] == 2) return; // Already upgraded
-  if (!getOwned(kUICatUtility, kConveyorGrease)) return;
+  if (!_forFree && !getOwned(kUICatUtility, kConveyorGrease)) return;
 
-  modOwned(kUICatUtility, kConveyorGrease, /*add*/ false);
+  if (!_forFree) modOwned(kUICatUtility, kConveyorGrease, /*add*/ false);
   _building->m_stored[0] = 2;
   pd->sprite->setImage(_building->m_sprite[2], getConveyorMaster(_building->m_dir, 2), kBitmapUnflipped);
   renderChunkBackgroundImage(_building->m_location->m_chunk);

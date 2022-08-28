@@ -51,7 +51,7 @@ bool doConveyorUpgrade(struct Location_t* _loc) {
   for (int32_t x = min; x < max; ++x) {
     for (int32_t y = min; y < max; ++y) {
       struct Location_t* l = getLocation(_loc->m_x + x, _loc->m_y + y);
-      upgradeConveyor(l->m_building);
+      upgradeConveyor(l->m_building, /*forFree=*/ false);
     }
   }
   return false; // We have handled the removal of the grease(es) inside upgradeConveyor
@@ -109,7 +109,53 @@ void doPlace() {
   switch (selectedCat) {
     case kUICatTool: break; // Impossible
     case kUICatPlant: placed = newBuilding(placeLocation, SN, kPlant, (union kSubType) {.plant = selectedID} ); break;
-    case kUICatConv: placed = newBuilding(placeLocation, getCursorRotation(), kConveyor, (union kSubType) {.conveyor = selectedID} ); break;
+    case kUICatConv:;
+      bool carryForwardConveyorUpgrade = false;
+      // We can place conveyors on top of other conveyors, to do so we first have to delete the existing one
+      if (placeLocation->m_building && placeLocation->m_building->m_type == kConveyor) {
+        // Refund it assuming that it is not a tunnel exit (these get placed "for free" when the entrance is placed)
+        if (placeLocation->m_building->m_subType.conveyor != kTunnelOut) {
+          modOwned(kUICatConv, placeLocation->m_building->m_subType.raw, /*add = */ true);
+        }
+        // Check if it was upgraded
+        carryForwardConveyorUpgrade = (placeLocation->m_building->m_stored[0] == 2);
+        // Demolish to make way for the new building
+        clearLocation(placeLocation, /*cargo=*/ false, /*building=*/ true);
+      }
+      placed = newBuilding(placeLocation, getCursorRotation(), kConveyor, (union kSubType) {.conveyor = selectedID} );
+      if (!placed) {
+        break;
+      }
+      if (carryForwardConveyorUpgrade) { // Carry forward the upgrade without costing another application of grease
+        upgradeConveyor(placeLocation->m_building, /*forFree=*/ true);
+      } else if (getPlayer()->m_autoUseConveyorBooster) { // Test auto upgrade of conveyor belts, will only work with grease
+        upgradeConveyor(placeLocation->m_building, /*forFree=*/ false);
+      }
+      // If we are placing a tunnel then we additionally need to place the exit location too... (could this be handled better?)
+      if (placeLocation->m_building->m_subType.conveyor != kTunnelIn) {
+        break;
+      } 
+      struct Location_t* placeLocationTwo = getTunnelOutLocation(placeLocation, getCursorRotation());
+      carryForwardConveyorUpgrade = false;
+      if (placeLocationTwo->m_building && placeLocationTwo->m_building->m_type == kConveyor) {
+        // Refund it assuming that it is not a tunnel exit (these get placed "for free" when the entrance is placed)
+        if (placeLocationTwo->m_building->m_subType.conveyor != kTunnelOut) {
+          modOwned(kUICatConv, placeLocationTwo->m_building->m_subType.raw, /*add = */ true);
+        }
+        // Check if it was upgraded
+        carryForwardConveyorUpgrade = (placeLocationTwo->m_building->m_stored[0] == 2);
+        // Demolish to make way for the new building
+        clearLocation(placeLocationTwo, /*cargo=*/ false, /*building=*/ true);
+      }
+      placed = newBuilding(placeLocationTwo, getCursorRotation(), kConveyor, (union kSubType) {.conveyor = kTunnelOut} );
+      if (placed) {
+        if (carryForwardConveyorUpgrade) { // Carry forward the upgrade without costing another application of grease
+          upgradeConveyor(placeLocationTwo->m_building, /*forFree=*/ false);
+        } else if (getPlayer()->m_autoUseConveyorBooster) { // Test auto upgrade of conveyor belts, will only work with grease
+          upgradeConveyor(placeLocationTwo->m_building, /*forFree=*/ false);
+        }
+      }
+      break;
     case kUICatExtractor: placed = newBuilding(placeLocation, getCursorRotation(), kExtractor, (union kSubType) {.extractor = selectedID} ); break;
     case kUICatFactory: placed = newBuilding(placeLocation, getCursorRotation(), kFactory, (union kSubType) {.factory = selectedID} ); break;
     case kUICatUtility: 

@@ -291,32 +291,29 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   }
   if (!canBePlaced) return false;
 
-  bool newToChunk = false;
   struct Building_t* building = _loc->m_building;
-  if (!building) {
-    building = buildingManagerNewBuilding(_type);
-    newToChunk = true;
-    if (!building) {
-      // Run out of buildings
-      return false;
-    }
-    _loc->m_building = building;
-    _loc->m_notOwned = false;
-    if (isLargeBuilding(_type, _subType)) { // Add to neighbors too
-      for (int32_t x = -1; x < 2; ++x) {
-        for (int32_t y = -1; y < 2; ++y) {
-          if (!x && !y) continue;
-          struct Location_t* otherLoc = getLocation(_loc->m_x + x, _loc->m_y + y);
-          otherLoc->m_building = building;
-          otherLoc->m_notOwned = true;
-        }
-      }
-    }
+  if (building) {
+    pd->system->error("BUILDING ALREADY AT THIS LOCATION!");
+    return false;
   }
 
-  if (!newToChunk) {
-    // Refund existing.
-    modOwned(kUICatConv, building->m_subType.raw, /*add = */ true);
+  building = buildingManagerNewBuilding(_type);
+  if (!building) {
+    // Run out of buildings
+    pd->system->error("Run out of buildings!");
+    return false;
+  }
+  _loc->m_building = building;
+  _loc->m_notOwned = false;
+  if (isLargeBuilding(_type, _subType)) { // Add to neighbors too
+    for (int32_t x = -1; x < 2; ++x) {
+      for (int32_t y = -1; y < 2; ++y) {
+        if (!x && !y) continue;
+        struct Location_t* otherLoc = getLocation(_loc->m_x + x, _loc->m_y + y);
+        otherLoc->m_building = building;
+        otherLoc->m_notOwned = true;
+      }
+    }
   }
 
   setBuildingSubType(building, _subType);
@@ -324,8 +321,6 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   building->m_progress = 0;
   building->m_mode.mode16 = 0;
   for (int32_t i = 0; i < MAX_STORE; ++i) {
-    // Don't reset this for speedy conveyors, we only apply the auto-speed boost once
-    if (_type == kConveyor && i == 0 && building->m_stored[0] == 2) continue;
     building->m_stored[i] = 0;
   }
   for (int32_t i = 0; i < 4; ++i) {
@@ -340,16 +335,8 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   buildingSetup(building);
   assignUpdate(building);
 
-  // Add to the active/render list
-  if (newToChunk) {
-    chunkAddBuildingRender(_loc->m_chunk, building); // Careful, no de-duplication in here, for speed
-    if (buildingHasUpdateFunction(_type, _subType)) chunkAddBuildingUpdate(_loc->m_chunk, building);
-  }
-
-  // Special - test auto upgrade of conveyor belts
-  if (_type == kConveyor && getPlayer()->m_autoUseConveyorBooster) {
-    upgradeConveyor(building);
-  }
+  chunkAddBuildingRender(_loc->m_chunk, building); // Careful, no de-duplication in here, for speed
+  if (buildingHasUpdateFunction(_type, _subType)) chunkAddBuildingUpdate(_loc->m_chunk, building);
 
   // Special - well
   bool wideRedraw = false;
@@ -374,16 +361,10 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     } else {
       renderChunkBackgroundImage(_loc->m_chunk);
     }
-
-    // Special - If placing an input tunnel, then also place the output tunnel too (canBePlacedConveyor will have checked that this is all OK)
-    if (_type == kConveyor && _subType.conveyor == kTunnelIn) {
-      struct Location_t* tunnelOut = getTunnelOutLocation(_loc, _dir);
-      newBuilding(tunnelOut, _dir, kConveyor, (union kSubType) {.conveyor = kTunnelOut});
-    }
-
-    // We add these at generate, we don't want to be updating the sprite list here
+    
+    // We add special at generate, we don't want to be updating the sprite list here
     updateRenderList();
-   }
+  }
 
   return true;
 }
