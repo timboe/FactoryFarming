@@ -434,13 +434,15 @@ void updateBlueprint() {
 
   // Fence are placed one tile away, dependent on rotation
   if (selectedCat == kUICatUtility && selectedID == kFence) {
+    // We handle the x and y offsets separately due to torus wrapping, blueprints are not transformed by this
+    int32_t bpX = (TILE_PIX*pl->m_x + TILE_PIX/2.0);
+    int32_t bpY = (TILE_PIX*pl->m_y + TILE_PIX/2.0);
     switch (selectedRot) {
-      case SN: pl = getLocation(pl->m_x, pl->m_y - 1); break;
-      case NS: pl = getLocation(pl->m_x, pl->m_y + 1); break;
-      case WE: pl = getLocation(pl->m_x + 1, pl->m_y); break;
-      case EW: pl = getLocation(pl->m_x - 1, pl->m_y); break;
+      case SN: pl = getLocation(pl->m_x, pl->m_y - 1); bpY -= TILE_PIX;  break;
+      case NS: pl = getLocation(pl->m_x, pl->m_y + 1); bpY += TILE_PIX; break;
+      case WE: pl = getLocation(pl->m_x + 1, pl->m_y); bpX += TILE_PIX; break;
+      case EW: pl = getLocation(pl->m_x - 1, pl->m_y); bpX -= TILE_PIX; break;
     }
-    int32_t bpX = (TILE_PIX*pl->m_x + TILE_PIX/2.0), bpY = (TILE_PIX*pl->m_y  + TILE_PIX/2.0);
     pd->sprite->moveTo(bp, bpX*zoom, bpY*zoom);
   }
 
@@ -1693,6 +1695,9 @@ void initiUI() {
   pd->graphics->pushContext(m_UIBitmapScrollBarInner);
   roundedRect(4, TILE_PIX*2, TILE_PIX*2, TILE_PIX, kColorBlack);
   roundedRect(6, TILE_PIX*2, TILE_PIX*2, TILE_PIX, kColorWhite);
+  pd->graphics->drawLine(10, 12, TILE_PIX*2 - 10, 12, 2, kColorBlack);
+  pd->graphics->drawLine(10, 16, TILE_PIX*2 - 10, 16, 2, kColorBlack);
+  pd->graphics->drawLine(10, 20, TILE_PIX*2 - 10, 20, 2, kColorBlack);
   pd->graphics->popContext();
   m_UISpriteScrollBarInner = pd->sprite->newSprite();
   pd->sprite->setBounds(m_UISpriteScrollBarInner, iBound);

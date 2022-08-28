@@ -55,7 +55,7 @@ struct PlantDescriptor_t PDesc[] = {
   {.subType = kSparePlant10, .unlock = DIS, .price = 1, .sprite = SID(0, 0), .time = PMED, .wetness = kMoist, .soil = kSiltyGround, .out = kNoCargo},
   {.subType = kSparePlant11, .unlock = DIS, .price = 1, .sprite = SID(0, 0), .time = PMED, .wetness = kMoist, .soil = kSiltyGround, .out = kNoCargo},  
   {.subType = kSeaCucumberPlant, .unlock = 1, .price = 7500, .sprite = SID(8, 21), .time = PMED, .wetness = kWater, .soil = kOcean, .out = kSeaCucumber},
-  {.subType = kRosePlant, .unlock = 1, .price = 10000, .sprite = SID(8, 21), .time = PMED, .wetness = kDry, .soil = kLoamyGround, .out = kRose},
+  {.subType = kRosePlant, .unlock = 1, .price = 10000, .sprite = SID(1, 25), .time = PMED, .wetness = kDry, .soil = kLoamyGround, .out = kRose},
   {.subType = kSparePlant12, .unlock = DIS, .price = 1, .sprite = SID(0, 0), .time = PMED, .wetness = kMoist, .soil = kSiltyGround, .out = kNoCargo},
   {.subType = kSparePlant13, .unlock = DIS, .price = 1, .sprite = SID(0, 0), .time = PMED, .wetness = kMoist, .soil = kSiltyGround, .out = kNoCargo},
   {.subType = kSparePlant14, .unlock = DIS, .price = 1, .sprite = SID(0, 0), .time = PMED, .wetness = kMoist, .soil = kSiltyGround, .out = kNoCargo},

@@ -58,7 +58,7 @@ const struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kDrinksKit, .price = 350, .UIIcon = SID(13,5)},
   {.subType = kCocoBean, .price = 45, .UIIcon = SID(6,22)},
   {.subType = kSeaCucumber, .price = 70, .UIIcon = SID(8,22)},
-  {.subType = kRose, .price = 100, .UIIcon = SID(0,0)},
+  {.subType = kRose, .price = 100, .UIIcon = SID(0,25)},
   {.subType = kTurkishDelight, .price = 250, .UIIcon = SID(0,0)},
 };
 
