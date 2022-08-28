@@ -5,74 +5,119 @@ enum kConvSubType{
   kSplitL, 
   kSplitI, 
   kSplitT, 
+  kSpareConv0, // SPARE SLOT (Game Expansions)
+  kSpareConv1, // SPARE SLOT (Game Expansions)
   kTunnelIn, 
-  kTunnelOut, 
+  kTunnelOut,
+  kSpareConv2, // SPARE SLOT (Game Expansions)
+  kSpareConv3,  // SPARE SLOT (Game Expansions)
   kFilterL, 
-  kFilterI, 
-  //kC0, kC1, kC2, kC3, kC4, kC5, kC6, kC7, kC8, kC9, kC10, kC11, kC12, kC13, kC14, kC15, 
+  kFilterI,
+  kSpareConv4, // SPARE SLOT (Game Expansions)
+  kSpareConv5, // SPARE SLOT (Game Expansions)
+  kSpareConv6, // SPARE SLOT (Game Expansions)
+  kSpareConv7, // SPARE SLOT (Game Expansions)
   kNConvSubTypes
 };
 
 enum kPlantSubType{
   kCarrotPlant, // Silty
   kPotatoPlant,  // Peaty
+  kSparePlant0, // SPARE SLOT (Game Expansions)
+  kSparePlant1, // SPARE SLOT (Game Expansions)
   kSunflowerPlant, // Chalky
   kAppleTree, // Peaty
   kSeaweedPlant, // Lake
+  kSparePlant2, // SPARE SLOT (Game Expansions)
+  kSparePlant3, // SPARE SLOT (Game Expansions)
   kCornPlant, // Chalky
   kWheatPlant, // Silty
+  kSparePlant4, // SPARE SLOT (Game Expansions)
+  kSparePlant5, // SPARE SLOT (Game Expansions)
   kCactusPlant, // Desert
   kLimeTree, // Desert
+  kSparePlant6, // SPARE SLOT (Game Expansions)
+  kSparePlant7, // SPARE SLOT (Game Expansions)
   kStrawberryPlant, // Clay - Need to do more with this
   kCocoaPlant, // Clay 
+  kSparePlant8, // SPARE SLOT (Game Expansions)
+  kSparePlant9, // SPARE SLOT (Game Expansions)
   kCoffeePlant, // Loamy
   kBambooPlant, // Loamy
+  kSparePlant10, // SPARE SLOT (Game Expansions)
+  kSparePlant11, // SPARE SLOT (Game Expansions)
   kSeaCucumberPlant, // Ocean
-  //kP0, kP1, kP2, kP3, kP4, kP5, kP6, kP7, kP8, kP9, kP10, kP11, kP12, kP13, kP14, kP15, 
+  kRosePlant, // Loamy (end game)
+  kSparePlant12, // SPARE SLOT (Game Expansions)
+  kSparePlant13, // SPARE SLOT (Game Expansions)
+  kSparePlant14, // SPARE SLOT (Game Expansions)
+  kSparePlant15, // SPARE SLOT (Game Expansions)
   kNPlantSubTypes
 };
 
 enum kUtilitySubType{
   kPath,
   kSign,
+  kSpareUtil0, // SPARE SLOT (Game Expansions)
+  kSpareUtil1, // SPARE SLOT (Game Expansions)
   kBin, 
   kWell, 
   kStorageBox,
-  kBuffferBox, 
+  kBuffferBox,
+  kSpareUtil2, // SPARE SLOT (Game Expansions)
+  kSpareUtil3, // SPARE SLOT (Game Expansions)
   kConveyorGrease, 
   kObstructionRemover,
   kLandfill, 
+  kSpareUtil4, // SPARE SLOT (Game Expansions)
+  kSpareUtil5, // SPARE SLOT (Game Expansions)
   kRetirement,
   kFence,
-  //kU0, kU1, kU2, kU3, kU4, kU5, kU6, kU7, kU8, kU9, kU10, kU11, kU12, kU13, kU14, kU15,
+  kSpareUtil6, // SPARE SLOT (Game Expansions)
+  kSpareUtil7, // SPARE SLOT (Game Expansions)
   kNUtilitySubTypes
 };
 
 enum kExtractorSubType{
   kCropHarvesterSmall, 
-  kChalkQuarry, 
+  kSpareExtractor0, // SPARE SLOT (Game Expansions)
+  kChalkQuarry,
+  kSpareExtractor1, // SPARE SLOT (Game Expansions)
   kSaltMine, 
+  kSpareExtractor2, // SPARE SLOT (Game Expansions)
   kPump, 
+  kSpareExtractor3, // SPARE SLOT (Game Expansions)
   kCropHarvesterLarge,
+  kSpareExtractor4, // SPARE SLOT (Game Expansions)
   kCO2Extractor, 
-  //kE0, kE1, kE2, kE3, kE4, kE5, kE6, kE7, kE8, kE9, kE10, kE11, kE12, kE13, kE14, kE15,
+  kSpareExtractor5, // SPARE SLOT (Game Expansions)
+  kSpareExtractor6, // SPARE SLOT (Game Expansions)
+  kSpareExtractor7, // SPARE SLOT (Game Expansions)
   kNExtractorSubTypes
 };
 
 enum kFactorySubType{
   kVitiminFac, 
   kVegOilFac, 
+  kSpareFac0, // SPARE SLOT (Game Expansions)
+  kSpareFac1, // SPARE SLOT (Game Expansions)
   kCrispsFac, 
   kEthanolFac, 
-  kHardCiderFac, 
+  kHardCiderFac,
+  kSpareFac2, // SPARE SLOT (Game Expansions)
+  kSpareFac3, // SPARE SLOT (Game Expansions) 
   kAbattoir,
   kHydrogenFac,
   kHOILFac,
   kCornDogFac,
   kBeerFac,
+  kSpareFac4, // SPARE SLOT (Game Expansions)
+  kSpareFac5, // SPARE SLOT (Game Expansions)
   kTequilaFac,
   kMexBeerFac,
   kEmulsifierFac,
+  kSpareFac6, // SPARE SLOT (Game Expansions)
+  kSpareFac7, // SPARE SLOT (Game Expansions)
   kHFCSFac,
   kIceCreamFac,
   kBatteryFarm,
@@ -82,6 +127,8 @@ enum kFactorySubType{
   kMSGFac,
   kReadyMealFac,
   kJellyFac,
+  kSpareFac8, // SPARE SLOT (Game Expansions)
+  kSpareFac9, // SPARE SLOT (Game Expansions)
   kCaffeineFac,
   kEnergyDrinkFac,
   kRaveJuiceFac,
@@ -91,6 +138,13 @@ enum kFactorySubType{
   kPackagingFac,
   kCateringKitFac,
   kDrinksKitFac,
+  kSpareFac10, // SPARE SLOT (Game Expansions)
+  kSpareFac11, // SPARE SLOT (Game Expansions)
+  kTurkishDelightFac,
+  kSpareFac12, // SPARE SLOT (Game Expansions)
+  kSpareFac13, // SPARE SLOT (Game Expansions)
+  kSpareFac14, // SPARE SLOT (Game Expansions)
+  kSpareFac15, // SPARE SLOT (Game Expansions)
   //kF0, kF1, kF2, kF3, kF4, kF5, kF6, kF7, kF8, kF9, kF10, kF11, kF12, kF13, kF14, kF15,
   kNFactorySubTypes
 };

@@ -12,13 +12,17 @@ enum kUITutorialStage{
   kTutBuildConveyor, 
   kTutBuildQuarry, 
   kTutBuildVitamin, 
+  //
   kTutFinishedOne, 
   kTutBreakOne, 
+  //
   kTutNewPlots, 
   kTutExports, 
   kTutImports, 
+  //
   kTutFinishedTwo, 
-  kTutBreakTwo, 
+  kTutBreakTwo,
+  // 
   kNTutorialStages
 };
 

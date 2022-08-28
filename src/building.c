@@ -47,8 +47,8 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kFilterI: return _inworld ? "'I' Filter" : "Conveyor Belt 'I' Filter";
       case kFilterL: return _inworld ? "'L' Filter" : "Conveyor Belt 'L' Filter";
       case kTunnelIn: case kTunnelOut: return _inworld ? "Tunnel" : "Conveyor Belt Tunnel";
-      //case kC0: case kC1: case kC2: case kC3: case kC4: case kC5: case kC6:
-      //case kC7: case kC8: case kC9: case kC10: case kC11: case kC12: case kC13: case kC14: case kC15: 
+      case kSpareConv0: case kSpareConv1: case kSpareConv2: case kSpareConv3:
+      case kSpareConv4: case kSpareConv5: case kSpareConv6: case kSpareConv7: 
       case kNConvSubTypes: return "C_PLACEHOLDER";
     }
     case kPlant: switch (_subType.plant) {
@@ -66,8 +66,11 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kCoffeePlant: return _inworld ? "Coffee Plant" : "Coffee Seeds";
       case kCocoaPlant: return _inworld ? "Cocoa Plant" : "Cocoa Seeds";
       case kSeaCucumberPlant: return _inworld ? "Sea Cucumber Farm" : "Sea Cucumber Trap";
-      //case kP0: case kP1: case kP2: case kP3: case kP4: case kP5: case kP6:
-      //case kP7: case kP8: case kP9: case kP10: case kP11: case kP12: case kP13: case kP14: case kP15:  
+      case kRosePlant: return _inworld ? "Rose Plant" : "Rose Seeds";
+      case kSparePlant0: case kSparePlant1: case kSparePlant2: case kSparePlant3:
+      case kSparePlant4: case kSparePlant5: case kSparePlant6: case kSparePlant7: 
+      case kSparePlant8: case kSparePlant9: case kSparePlant10: case kSparePlant11:
+      case kSparePlant12: case kSparePlant13: case kSparePlant14: case kSparePlant15: 
       case kNPlantSubTypes: return "P_PLACEHOLDER";
     }
     case kUtility: switch (_subType.utility) {
@@ -82,8 +85,8 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kLandfill: return "Landfill";
       case kRetirement: return "Retirement Cottage";
       case kFence: return "Fence"; 
-      //case kU0: case kU1: case kU2: case kU3: case kU4: case kU5: case kU6:
-      //case kU7: case kU8: case kU9: case kU10: case kU11: case kU12: case kU13: case kU14: case kU15: 
+      case kSpareUtil0: case kSpareUtil1: case kSpareUtil2: case kSpareUtil3:
+      case kSpareUtil4: case kSpareUtil5: case kSpareUtil6: case kSpareUtil7: 
       case kNUtilitySubTypes: return "U_PLACEHOLDER";
     }
     case kExtractor: switch (_subType.extractor) {
@@ -93,8 +96,8 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kSaltMine: return "Salt Mine";
       case kCropHarvesterLarge: return _inworld ? "Harvester 9x9 " : "Automatic Harvester (9x9)";
       case kCO2Extractor: return "CO2 Extractor";
-      //case kE0: case kE1: case kE2: case kE3: case kE4: case kE5: case kE6:
-      //case kE7: case kE8: case kE9: case kE10: case kE11: case kE12: case kE13: case kE14: case kE15: 
+      case kSpareExtractor0: case kSpareExtractor1: case kSpareExtractor2: case kSpareExtractor3:
+      case kSpareExtractor4: case kSpareExtractor5: case kSpareExtractor6: case kSpareExtractor7: 
       case kNExtractorSubTypes: return "E_PLACEHOLDER";
     }
     case kFactory: switch (_subType.factory) {
@@ -129,8 +132,11 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kPackagingFac: return "Packaging Manufacturer";
       case kCateringKitFac: return "Catering Pack Factory";
       case kDrinksKitFac: return "Drinks Pack Factory";
-      //case kF0: case kF1: case kF2: case kF3: case kF4: case kF5: case kF6:
-      //case kF7: case kF8: case kF9: case kF10: case kF11: case kF12: case kF13: case kF14: case kF15: 
+      case kTurkishDelightFac: return "Turkish Delight Factory";
+      case kSpareFac0: case kSpareFac1: case kSpareFac2: case kSpareFac3:
+      case kSpareFac4: case kSpareFac5: case kSpareFac6: case kSpareFac7: 
+      case kSpareFac8: case kSpareFac9: case kSpareFac10: case kSpareFac11:
+      case kSpareFac12: case kSpareFac13: case kSpareFac14: case kSpareFac15: 
       case kNFactorySubTypes: return "F_PLACEHOLDER";
     }
     case kSpecial: switch (_subType.special) {

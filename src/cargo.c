@@ -58,6 +58,8 @@ const struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kDrinksKit, .price = 350, .UIIcon = SID(13,5)},
   {.subType = kCocoBean, .price = 45, .UIIcon = SID(6,22)},
   {.subType = kSeaCucumber, .price = 70, .UIIcon = SID(8,22)},
+  {.subType = kRose, .price = 100, .UIIcon = SID(0,0)},
+  {.subType = kTurkishDelight, .price = 250, .UIIcon = SID(0,0)},
 };
 
 const int32_t SIZE_CARGO = TOT_CARGO_OR_BUILDINGS * sizeof(struct Cargo_t);
@@ -127,6 +129,8 @@ const char* toStringCargoByType(enum kCargoType _type, bool _plural) {
     case kDrinksKit: return _plural ? "Drinks Kits" : "Drinks Kit";
     case kCocoBean: return _plural ? "Coco Beans" : "Coco Bean";
     case kSeaCucumber: return _plural ? "Sea Cucumbers" : "Sea Cucumber";
+    case kRose: return _plural ? "Roses" : "Rose";
+    case kTurkishDelight: "Turkish Delight";
     //case kCa0: case kCa1: case kCa2: case kCa3: case kCa4: case kCa5: case kCa6: case kCa7: 
     //case kCa8: case kCa9: case kCa10: case kCa11: case kCa12: case kCa13: case kCa14: case kCa15: 
     case kNCargoType: return "CARGO???";
