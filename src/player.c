@@ -4,6 +4,7 @@
 #include "chunk.h"
 #include "render.h"
 #include "input.h"
+#include "sound.h"
 #include "io.h"
 #include "ui.h"
 #include "generate.h"
@@ -261,14 +262,12 @@ bool movePlayer() {
   goalX += m_player.m_vX;
   goalY += m_player.m_vY; 
 
-  #define PLAYER_ANIM_FRAMES 6
-  #define PLAYER_ANIM_DELAY 16
-
   if (moving) {
     if (++m_stepCounter * acc > PLAYER_ANIM_DELAY || m_facing != m_wasFacing || m_inWater != m_wasInWater) {
       m_animFrame = (m_animFrame + 1) % PLAYER_ANIM_FRAMES;
       m_stepCounter = 0;
       const uint16_t animY = m_inWater ? m_facing + 4 : m_facing;
+      if (m_animFrame % 3 == 0) sfx(kFootstepDefault + rand() % N_FOOTSTEPS);
       pd->sprite->setImage(m_player.m_sprite[zoom], getSprite18(m_animFrame, animY, zoom), kBitmapUnflipped);
     }
     m_wasFacing = m_facing;

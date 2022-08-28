@@ -118,6 +118,12 @@ void initSound() {
   m_audioSample[kSfxRotate] = pd->sound->sample->load("sounds/rotate");
   m_audioSample[kSfxWarp] = pd->sound->sample->load("sounds/warp");
   m_audioSample[kSfxNo] = pd->sound->sample->load("sounds/no");
+  m_audioSample[kFootstepDefault] = pd->sound->sample->load("sounds/fs0");
+  m_audioSample[kFootstepDefault1] = pd->sound->sample->load("sounds/fs1");
+  m_audioSample[kFootstepDefault2] = pd->sound->sample->load("sounds/fs2");
+  m_audioSample[kFootstepDefault3] = pd->sound->sample->load("sounds/fs3");
+  m_audioSample[kFootstepDefault4] = pd->sound->sample->load("sounds/fs4");
+  m_audioSample[kFootstepDefault5] = pd->sound->sample->load("sounds/fs5");
 
   for (int32_t i = 0; i < kNSFX; ++i) {
     m_samplePlayer[i] = pd->sound->sampleplayer->newPlayer();

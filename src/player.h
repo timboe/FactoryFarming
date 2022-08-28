@@ -29,6 +29,9 @@ enum kUITutorialStage{
 enum kToolType{kToolPickup, kToolInspect, kToolDestroy, kNToolTypes};
 extern const uint16_t kToolUIIcon[];
 
+#define PLAYER_ANIM_FRAMES 6
+#define PLAYER_ANIM_DELAY 16
+
 // Chunk quadrants
 enum kChunkQuad{NE, SE, SW, NW};
 

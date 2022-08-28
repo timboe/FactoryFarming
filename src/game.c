@@ -315,6 +315,10 @@ void initGame() {
     pd->system->error("INSUFFICIENT ROWS FOR CREDITS!");
   }
   
+  if (PLAYER_ANIM_FRAMES != N_FOOTSTEPS) {
+    pd->system->error("PLAYER_ANIM_FRAMES != ");
+  }
+
   return;
 
   // Populate unlock ordering

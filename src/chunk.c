@@ -78,6 +78,10 @@ void setChunkSpriteOffsets(struct Chunk_t* _c, int16_t _x, int16_t _y) {
 
 void chunkShiftTorus(bool _top, bool _left) {
 
+  #ifdef DEV
+  pd->system->logToConsole("Shift Torus TOP:%i LEFT:%i", (int)_top, (int)_left);
+  #endif
+
   for (int32_t x = 1; x < WORLD_CHUNKS_X - 1; ++x) {
     struct Chunk_t* top = getChunk_noCheck(x, 0);
     struct Chunk_t* bottom = getChunk_noCheck(x, WORLD_CHUNKS_Y-1);

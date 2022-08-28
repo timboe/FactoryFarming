@@ -15,8 +15,16 @@ enum SfxSample {
  kSfxRotate,
  kSfxWarp,
  kSfxNo,
+ kFootstepDefault,
+ kFootstepDefault1,
+ kFootstepDefault2,
+ kFootstepDefault3,
+ kFootstepDefault4,
+ kFootstepDefault5,
  kNSFX
 };
+
+#define N_FOOTSTEPS 6
 
 void initSound(void);
 
