@@ -119,19 +119,20 @@ LCDBitmap* getSprite48_byidx(uint32_t _idx, uint8_t _zoom) {
 
 // Note: Only works at zoom level 2
 void animateConveyor() {
-  static int8_t tick = 0;
-  tick = (tick + 1) % 8;
+  static int8_t tickSlow = 0, tickFast = 0;
+  tickSlow = (tickSlow + 1) % 8;
+  tickFast = (tickFast + 2) % 8;
 
   pd->graphics->setDrawMode(kDrawModeCopy);
   for (int32_t i = 0; i < kDirN; ++i) {
     pd->graphics->setDrawMode(kDrawModeInverted);
     pd->graphics->pushContext(m_conveyorMasters[1][i]);
-    pd->graphics->drawBitmap(getSprite16(tick, CONV_START_Y + i, 2), 0, 0, kBitmapUnflipped);
+    pd->graphics->drawBitmap(getSprite16(tickFast, CONV_START_Y + i, 2), 0, 0, kBitmapUnflipped);
     pd->graphics->popContext();
 
     pd->graphics->setDrawMode(kDrawModeCopy);
     pd->graphics->pushContext(m_conveyorMasters[0][i]);
-    pd->graphics->drawBitmap(getSprite16(tick, CONV_START_Y + i, 2), 0, 0, kBitmapUnflipped);
+    pd->graphics->drawBitmap(getSprite16(tickSlow, CONV_START_Y + i, 2), 0, 0, kBitmapUnflipped);
     pd->graphics->popContext();
   }
 }

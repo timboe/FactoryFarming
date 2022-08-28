@@ -8,6 +8,7 @@
 #include "building.h"
 #include "buildings/special.h"
 #include "buildings/extractor.h"
+#include "buildings/conveyor.h"
 
 #include <math.h>
 
@@ -1083,10 +1084,19 @@ void generateTitle() {
   // conv 
   newBuilding(getLocation(10,11), EW, kConveyor, (union kSubType) {.conveyor = kBelt} );
   newBuilding(getLocation(9,11), EW, kConveyor, (union kSubType) {.conveyor = kTunnelIn} );
+  newBuilding(getLocation(7,11), EW, kConveyor, (union kSubType) {.conveyor = kTunnelOut} );
 
   for (int32_t y = 6; y < 10; ++y) newBuilding(getLocation(5,y), SN, kConveyor, (union kSubType) {.conveyor = kBelt} );
-  for (int32_t x = 4; x < 11; ++x) newBuilding(getLocation(x,5), WE, kConveyor, (union kSubType) {.conveyor = kBelt} );
+
+  for (int32_t x = 4; x < 11; ++x) {
+    if (x == 8) continue;
+    newBuilding(getLocation(x,5), WE, kConveyor, (union kSubType) {.conveyor = kBelt} );
+    if (x > 4) upgradeConveyor(getLocation(x,5)->m_building, /*forFree=*/ true);
+  }
+
   newBuilding(getLocation(8,5), WE, kConveyor, (union kSubType) {.conveyor = kSplitL} );
+  upgradeConveyor(getLocation(8,5)->m_building, /*forFree=*/ true);
+
   for (int32_t y = 7; y < 9; ++y) newBuilding(getLocation(1,y), SN, kConveyor, (union kSubType) {.conveyor = kBelt} );
 
   // oil fac
@@ -1115,11 +1125,11 @@ void generateTitle() {
   for (int32_t x = 4; x < 10; ++x) newBuilding(getLocation(x,1), WE, kConveyor, (union kSubType) {.conveyor = kBelt} );
   for (int32_t y = 1; y < 4; ++y) newBuilding(getLocation(10,y), NS, kConveyor, (union kSubType) {.conveyor = kBelt} );
   newBuilding(getLocation(10,4), NS, kConveyor, (union kSubType) {.conveyor = kTunnelIn} );
+  newBuilding(getLocation(10,6), NS, kConveyor, (union kSubType) {.conveyor = kTunnelOut} );
   newBuilding(getLocation(10,7), NS, kConveyor, (union kSubType) {.conveyor = kSplitI} );
 
   newBuilding(getLocation(12,-1), SN, kUtility, (union kSubType) {.utility = kBin} );
   newBuilding(getLocation(8,15), SN, kUtility, (union kSubType) {.utility = kBin} );
-
 
   growAtAll();
   doWetness(/*for titles = */ true);

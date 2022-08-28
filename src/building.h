@@ -4,7 +4,16 @@
 #include "generate.h"
 
 // All 48*48 should come after kExtractor
-enum kBuildingType {kNoBuilding, kConveyor, kPlant, kUtility, kExtractor, kFactory, kSpecial, kNBuildingTypes};
+enum kBuildingType {
+  kNoBuilding, 
+  kConveyor, 
+  kPlant, 
+  kUtility, 
+  kExtractor, 
+  kFactory, 
+  kSpecial, 
+  kNBuildingTypes
+};
 
 ///
 

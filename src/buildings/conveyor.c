@@ -244,7 +244,9 @@ void upgradeConveyor(struct Building_t* _building, bool _forFree) {
 
   if (!_forFree) modOwned(kUICatUtility, kConveyorGrease, /*add*/ false);
   _building->m_stored[0] = 2;
-  pd->sprite->setImage(_building->m_sprite[2], getConveyorMaster(_building->m_dir, 2), kBitmapUnflipped);
+  if (_building->m_subType.conveyor == kBelt) {
+    pd->sprite->setImage(_building->m_sprite[2], getConveyorMaster(_building->m_dir, 2), kBitmapUnflipped);
+  }
   renderChunkBackgroundImage(_building->m_location->m_chunk);
 }
 

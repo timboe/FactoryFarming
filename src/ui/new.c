@@ -19,7 +19,7 @@ uint32_t getNewID() {
 
 bool checkHasNewToShow(struct Player_t* _p) {
   const uint32_t currentLevel = _p->m_buildingsUnlockedTo;
-  if (UnlockDecs[currentLevel].type == kUtility && UnlockDecs[currentLevel].subType.utility == kRetirement) {
+  if (UnlockDecs[currentLevel].type == FINAL_UNLOCK_TYPE && UnlockDecs[currentLevel].subType.raw == FINAL_UNLOCK_SUBTYPE) {
     // This is always the last unlock - cannot go on from here
     return false;
   }
@@ -81,9 +81,9 @@ const char* getNewText() {
       case kCactusPlant: return "Plant to grow Cactus";
       case kLimeTree: return "Plant to grow Limes";
       case kStrawberryPlant:  return "Plant to grow Strawberries";  
-      case kBambooPlant: return "Plant to grow Bamboo Stalks";
+      case kCocoaPlant: return "Plant to grow Coco Beans";
       case kCoffeePlant: return "Plant to grow Coffee Beans";
-      case kCocoaPlant: return "Plant to grow Cocoa Beans";
+      case kBambooPlant: return "Plant to grow Bamboo Stalks";
       case kSeaCucumberPlant: return "Place in the Ocean to farm Sea Cucumbers";
       case kRosePlant: return "Tend to these Roses in your retirement.";
       case kSparePlant0: case kSparePlant1: case kSparePlant2: case kSparePlant3:
@@ -130,27 +130,30 @@ const char* getNewText() {
       case kHOILFac: return "Hydrogenates oil to prevent spoiling";
       case kCornDogFac: return "Crunchy and Meaty";
       case kBeerFac: return "Produces something which resembles beer";
-      case kTequilaFac: return "Not very authentic tequila, mind";
-      case kMexBeerFac: return "An interesting mix of flavors";
-      case kEmulsifierFac: return "Stops things from separating out";
+      case kTequilaFac: return "At least it has some Agave in it";
       case kHFCSFac: return "So very, very, sweet...";
-      case kIceCreamFac: return "It's dairy free!";
+      case kGelatinFac: return "Used to set a variety of liquids";
+      case kJellyFac: return "A wobbly favorite";
+      case kJelloShotFac: return "An interesting mix of flavors";
+      case kEmulsifierFac: return "Stops things from separating out";
+      case kIceCreamFac: return "It's dairy free! Is that a good thing?";
       case kBatteryFarm: return "Corn goes in, Eggs come out";
       case kProteinFac: return "Maximum bulk, minimum fuss";
-      case kGelatinFac: return "Used to set a variety of liquids";
+      case kChocolateFac: return "It's mostly sugar...";
       case kPieFac: return "What's for dinner? Meat Pie!";
       case kMSGFac: return "Makes everything taste better";
-      case kReadyMealFac: return "A meal for one";
-      case kJellyFac: return "A wobbly favorite";
+      case kTVDinnerFac: return "A meal for one, served in a tray";
       case kCaffeineFac: return "Extracts the caffeine from coffee beans";
       case kEnergyDrinkFac: return "Caffeine high & sugar rush all-in-one";
       case kRaveJuiceFac: return "... why not add alcohol too?";
       case kPerkPillFac: return "Will keep you awake far too long";
-      case kSoftCakeFac: return "Creamy, soft, and an infinite shelf life";
+      case kCakeFac: return "Creamy, soft, and an infinite shelf life";
       case kDessertFac: return "Sweet tooth?";
-      case kPackagingFac: return "Large shipping boxes";
+      case kPackagingFac: return "Scaling up with custom packaging";
       case kCateringKitFac: return "Packaged Catering Kits";
-      case kDrinksKitFac: return "Packaged Drinks Kits";
+      case kPartyPackFac: return "Everything a good party needs";
+      case kParfumeFac: return "Fancy";
+      case kMedicalSuplimentFac: return "Complete with dubious medical claims";
       case kTurkishDelightFac: return "A Delectable Delicacy";
       case kSpareFac0: case kSpareFac1: case kSpareFac2: case kSpareFac3:
       case kSpareFac4: case kSpareFac5: case kSpareFac6: case kSpareFac7: 

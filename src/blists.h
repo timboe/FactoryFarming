@@ -114,38 +114,40 @@ enum kFactorySubType{
   kSpareFac4, // SPARE SLOT (Game Expansions)
   kSpareFac5, // SPARE SLOT (Game Expansions)
   kTequilaFac,
-  kMexBeerFac,
-  kEmulsifierFac,
+  kHFCSFac,
+  kGelatinFac,
+  kJellyFac,
+  kJelloShotFac,
   kSpareFac6, // SPARE SLOT (Game Expansions)
   kSpareFac7, // SPARE SLOT (Game Expansions)
-  kHFCSFac,
+  kEmulsifierFac,
   kIceCreamFac,
   kBatteryFarm,
   kProteinFac,
-  kGelatinFac,
+  kChocolateFac,
   kPieFac,
   kMSGFac,
-  kReadyMealFac,
-  kJellyFac,
+  kTVDinnerFac,
+  kCakeFac,
   kSpareFac8, // SPARE SLOT (Game Expansions)
   kSpareFac9, // SPARE SLOT (Game Expansions)
   kCaffeineFac,
   kEnergyDrinkFac,
   kRaveJuiceFac,
   kPerkPillFac,
-  kSoftCakeFac,
-  kDessertFac,
   kPackagingFac,
+  kDessertFac,
   kCateringKitFac,
-  kDrinksKitFac,
+  kPartyPackFac,
   kSpareFac10, // SPARE SLOT (Game Expansions)
   kSpareFac11, // SPARE SLOT (Game Expansions)
+  kParfumeFac,
+  kMedicalSuplimentFac,
   kTurkishDelightFac,
   kSpareFac12, // SPARE SLOT (Game Expansions)
   kSpareFac13, // SPARE SLOT (Game Expansions)
   kSpareFac14, // SPARE SLOT (Game Expansions)
   kSpareFac15, // SPARE SLOT (Game Expansions)
-  //kF0, kF1, kF2, kF3, kF4, kF5, kF6, kF7, kF8, kF9, kF10, kF11, kF12, kF13, kF14, kF15,
   kNFactorySubTypes
 };
 
@@ -158,141 +160,5 @@ enum kSpecialSubType{
   kNSpecialSubTypes
 };
 
-/*
-
-digraph G {
-
-    Carrots[T1] -> Vitamins
-    Chalk -> Vitamins
-    
-    Sunflower[T1] -> Oil
-    
-    Potatoes[T2] -> Crisps
-    Salt -> Crisps
-    Oil -> Crisps
-    
-    Potatoes -> Ethanol
-    Water -> Ethanol
-    
-    Ethanol -> HardCider
-    Apples [T2] -> HardCider
-
-    //Corn -> Biofuel
-    //Sunflower -> Biofuel
-
-    Sunflower -> Meat
-    Seaweed [T W] -> Meat
-    Water -> Meat
-
-    Water -> Hydrogen
-
-    Oil -> HOil
-    Hydrogen -> HOil
-
-    HOil -> CornDog
-    Meat -> CornDog
-    Corn[T3] -> CornDog
-    
-    Ethanol -> Beer
-    Water -> Beer
-    Wheat [T3] -> Beer
-
-
-    // UNLOCK NEW WORLDS
-    Ethanol -> Tequila
-    Cactus [T4] -> Tequila
-    
-    Beer -> MexBeer
-    Tequila -> MexBeer
-    Lime [T4] -> MexBeer
-    
-    //Lime -> Bleach
-    //Water -> Bleach
-    //Chalk -> Bleach
-
-    Seaweed -> Emulsifiers
-
-    Corn [T3] -> HFCS
-    Water -> HFCS
-
-    Strawberry [T5] -> IceCream
-    Emulsifiers -> IceCream
-    HOil -> IceCream
-    HFCS -> IceCream
-
-    Corn -> Eggs
-    Water -> Eggs  
-    
-    Eggs -> Protein
-    Hemp [T5] -> Protien # Change to Seaweed
-    #Emulsifiers -> Protien
-    Chalk -> Protien
-    Vitamins -> Protien
-    
-    Meat -> Gelatin
-    
-    Meat -> Pie
-    Gelatin -> Pie
-    Wheat [T3] -> Pie
-    Water -> Pie
-    Potatoes [T2] -> Pie
-
-    Wheat [T3] -> MSG
-    Salt -> MSG
-    
-    HFCS -> ReadyMeal
-    Carrots [T1] -> ReadyMeal
-    Meat -> ReadyMeal
-    MSG -> ReadyMeal
-    Emulsifiers -> ReadyMeal
-
-    Gelatin -> Jelly
-    Lime -> Jelly
-    HFCS -> Jelly
-    
-    CO2 -> Caffeine
-    Coffee [T6] -> Caffeine
-    
-    Water -> EnergyDrink (remove this?)
-    HFCS -> EnergyDrink
-    Caffeine -> EnergyDrink
-    CO2 -> EnergyDrink
-    Strawberry [T5] -> Energy Drink (late addition)
-    
-    HardCider -> RaveJuice
-    EnergyDrink -> RaveJuice
-    
-    Caffeine -> PerkPills
-    Chalk -> PerkPills
-    
-    HOil -> Twinkie
-    HFCS -> Twinkie
-    Eggs -> Twinkie
-    Wheat -> Twinkie
-    Emulsifiers -> Twinkie
-    
-
-    Jelly -> Dessert
-    IceCream -> Dessert
-    Apples [T2] -> Dessert
-
-    Bamboo [T6] -> Packaging
-    Cactus -> Packaging
-    
-    
-    ReadyMeal -> PackagedDinner
-    Desert -> PackagedDinner
-    EnergyDrink -> PackagedDinner
-    Packaging -> PackagedDinner
-
-    Tequila -> BoozeSet
-    MexBeer -> BoozeSet
-    HardCider -> BoozeSet
-    RaveJuice -> BoozeSet
-    Packaging -> BoozeSet
-    
-    
-
-    
-
-}*/
+#define FINAL_UNLOCK_TYPE kFactory
+#define FINAL_UNLOCK_SUBTYPE kTurkishDelightFac

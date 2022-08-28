@@ -112,26 +112,29 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kCornDogFac: return "Corn Dog Factory";
       case kBeerFac: return "Beer Brewery";
       case kTequilaFac: return "Tequila Factory";
-      case kMexBeerFac: return "Mexican Beer Factory";
-      case kEmulsifierFac: return "Emulsifiers Factory";
       case kHFCSFac: return "High Fructose Corn Syrup Factory";
+      case kGelatinFac: return "Gelatin Factory";
+      case kJellyFac: return "Jelly Factory";
+      case kJelloShotFac: return "Jello-Shots Factory";
+      case kEmulsifierFac: return "Emulsifiers Factory";
       case kIceCreamFac: return "Ice Cream Factory"; 
       case kBatteryFarm: return "Battery Farm";
       case kProteinFac: return "Protein Powder Factory";
-      case kGelatinFac: return "Gelatin Factory";
+      case kChocolateFac: return "Chocolate Factory"; 
       case kPieFac: return "Meat Pie Factory";
       case kMSGFac: return "Mono-sodium Glutamate Factory";
-      case kReadyMealFac: return "Ready Meal Factory";
-      case kJellyFac: return "Jelly Factory";
+      case kTVDinnerFac: return "TV-Dinner Factory";
+      case kCakeFac: return "Chocolate Cake Factory"; 
       case kCaffeineFac: return "Caffeine Powder Factory";
       case kEnergyDrinkFac: return "Energy Drink Factory";
       case kRaveJuiceFac: return "Rave Juice Factory";
       case kPerkPillFac: return "Perk Pills Factory";
-      case kSoftCakeFac: return "Soft Cake Factory"; 
-      case kDessertFac: return "Dessert Factory";
       case kPackagingFac: return "Packaging Manufacturer";
+      case kDessertFac: return "Dessert Factory";
       case kCateringKitFac: return "Catering Pack Factory";
-      case kDrinksKitFac: return "Drinks Pack Factory";
+      case kPartyPackFac: return "Party Pack Factory";
+      case kParfumeFac: return "Parfume Factory";
+      case kMedicalSuplimentFac: return "Medical Supliment Factory";
       case kTurkishDelightFac: return "Turkish Delight Factory";
       case kSpareFac0: case kSpareFac1: case kSpareFac2: case kSpareFac3:
       case kSpareFac4: case kSpareFac5: case kSpareFac6: case kSpareFac7: 
@@ -145,11 +148,11 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kExportBox: return isCamouflaged() ? "A Suspicious Rock" : "Cargo Exporter";
       case kImportBox: return isCamouflaged() ? "A Suspicious Rock" : "Cargo Importer";
       case kWarp: return isCamouflaged() ? "A Suspicious Rock" : "Plot Manager";
-      case kNSpecialSubTypes: return "";
+      case kNSpecialSubTypes: return "S_PLACEHOLDER";
     }
-    case kNBuildingTypes: return "";
+    case kNBuildingTypes:;
   }
-  return "";
+  return "B_CAT_PLACEHOLDER";
 }
 
 uint16_t getNBuildings() {
@@ -361,7 +364,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     } else {
       renderChunkBackgroundImage(_loc->m_chunk);
     }
-    
+
     // We add special at generate, we don't want to be updating the sprite list here
     updateRenderList();
   }

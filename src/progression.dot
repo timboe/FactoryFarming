@@ -1,0 +1,296 @@
+digraph G {
+
+     //nodesep=0.1;
+     //ranksep=2.0;
+     
+     node [style="filled", fontname="Arial", colorscheme=ylgnbu3];
+
+    Vitamins, Oil, Chips, Ethanol, HardCider, HFCS, Eggs, Tequila, Meat, MSG, Beer,
+    Emulsifiers, Hydrogen, IceCream, HOil, Protien, Chocolate, TVDinner, FooYoungReadyMeal, Caffeine, EnergyDrink,
+    RaveJuice, JelloShots, Cake, CateringPack, Packaging, PartyPack, CornDog, Dessert, Jelly, 
+    Gelatin, Pie, PerkPills, Rose, TurkishDelight, Parfume, HealthSupliment
+    [shape=Square, fillcolor=1]
+
+
+    Carrots, Sunflower, Potatoes, Apples, Corn, Cactus, Wheat, Seaweed, Coffee, Bamboo, Lime, Strawberry, Cocoa, SeaCucumber, Rose
+    [shape=ellipse, fillcolor=2]
+
+    Chalk, Salt, Water, CO2 
+    [shape=diamond, fillcolor=3]
+    
+    subgraph t0 {
+        label="Tier 0"
+        rank="same"
+        Carrots, Sunflower,
+        Chalk
+    }
+    subgraph t1 {
+        label="Tier 1"
+        rank="same"
+        Potatoes, Apples,
+        Salt, Water
+    }
+    subgraph t2 {
+        label="Tier 2"
+        rank="same"
+        Seaweed, Corn, Wheat
+    }
+    subgraph t3 {
+        label="Tier3"
+        rank="same"
+        Cactus, Lime
+    }
+    subgraph t4 {
+        label="Tier 4"
+        rank="same"
+        Strawberry, Cocoa
+    }
+    subgraph t5 {
+        rank="same"
+        label="Tier 5"
+        Coffee, Bamboo,
+        CO2
+    }
+   subgraph t6 {
+        rank="same"
+        label="Tier 6"
+        SeaCucumber, Rose
+    }
+    
+    
+    subgraph f0 {
+        rank="same"
+        Vitamins, Oil
+    }
+    subgraph f1_a {
+        rank="same"
+        Chips, Ethanol
+    }
+    subgraph f1_b {
+        rank="same"
+        HardCider
+    }
+    subgraph f2_a {
+        rank="same"
+        Meat, Hydrogen, Beer
+    }
+    subgraph f2_b {
+        rank="same"
+        HOil
+    }
+    subgraph f2_c {
+        rank="same"
+        CornDog
+    }
+    subgraph f3_a {
+        rank="same"
+        Tequila, HFCS, Gelatin
+    }
+    subgraph f3_b {
+        rank="same"
+        Jelly
+    }
+    subgraph f3_c {
+        rank="same"
+        JelloShots
+    }    
+    subgraph f4_a {
+        rank="same"
+        Emulsifiers, Eggs, MSG
+    }
+    subgraph f4_b {
+        rank="same"
+        IceCream, Protien, Chocolate, Pie
+    }
+    subgraph f4_c {
+        rank="same"
+        TVDinner, Cake
+    }
+    subgraph f5_a {
+        rank="same"
+        Caffeine, Packaging, Dessert, FooYoungReadyMeal
+    }
+    subgraph f5_b {
+        rank="same"
+        EnergyDrink, PerkPills
+    }
+    subgraph f5_c {
+        rank="same"
+        RaveJuice, CateringPack
+    }
+    subgraph f5_d {
+        rank="same"
+        PartyPack
+    }
+    subgraph f6_a {
+        rank="same"
+        Parfume, TurkishDelight, HealthSupliment
+    }
+    
+    // Force fanking
+    Carrots -> Potatoes [style=invis]
+    Potatoes -> Seaweed [style=invis]
+    Seaweed -> Cactus [style=invis]
+    Cactus -> Strawberry [style=invis]
+    Strawberry -> Coffee [style=invis]
+    Coffee -> SeaCucumber [style=invis]
+
+    // extra needed for T4
+    Strawberry -> Emulsifiers [style=invis]
+    
+    Vitamins -> Potatoes [style=invis]
+    HardCider -> Seaweed [style=invis]
+    CornDog -> Cactus [style=invis]
+    JelloShots -> Strawberry [style=invis]
+    TVDinner -> Coffee [style=invis]
+    PartyPack -> SeaCucumber [style=invis]
+
+    // t0
+    
+    Carrots -> Vitamins
+    Chalk -> Vitamins
+    
+    // t1
+    
+    Sunflower -> Oil
+    
+    Potatoes -> Chips
+    Salt -> Chips
+    Oil -> Chips
+    
+    Potatoes -> Ethanol
+    Water -> Ethanol
+    
+    Ethanol -> HardCider
+    Apples -> HardCider
+    
+    // t2
+    
+    Sunflower -> Meat
+    Seaweed -> Meat
+    Water -> Meat
+    
+    Water -> Hydrogen
+    
+    Oil -> HOil
+    Hydrogen -> HOil
+    
+    HOil -> CornDog
+    Meat -> CornDog
+    Corn -> CornDog
+    
+    Ethanol -> Beer
+    Water -> Beer
+    Wheat -> Beer 
+    
+    // t3
+    
+    Ethanol -> Tequila
+    Cactus -> Tequila
+    
+    Corn -> HFCS
+    Water -> HFCS
+    
+    Meat -> Gelatin
+    
+    Gelatin -> Jelly
+    Lime -> Jelly
+    HFCS -> Jelly  
+    
+    Tequila -> JelloShots
+    Jelly -> JelloShots
+    
+    // t4
+    
+    Seaweed -> Emulsifiers
+    
+    Strawberry -> IceCream
+    Emulsifiers -> IceCream
+    HOil -> IceCream
+    HFCS -> IceCream
+    
+    Corn -> Eggs
+    Water -> Eggs
+    
+    Eggs -> Protien
+    Seaweed -> Protien
+    Chalk -> Protien
+    Vitamins -> Protien
+    
+    Cocoa -> Chocolate
+    HFCS -> Chocolate
+    HOil -> Chocolate
+
+    Meat -> Pie
+    Gelatin -> Pie
+    Wheat -> Pie
+    Potatoes -> Pie
+    
+    Wheat -> MSG
+    Salt -> MSG
+    
+    Carrots -> TVDinner
+    Pie -> TVDinner
+    MSG -> TVDinner
+    Emulsifiers -> TVDinner
+    
+    HFCS -> Cake
+    Eggs -> Cake
+    Wheat -> Cake
+    Chocolate -> Cake
+    
+    // t5
+    
+    CO2 -> Caffeine
+    Coffee -> Caffeine
+    
+    Lime -> EnergyDrink
+    HFCS -> EnergyDrink
+    Caffeine -> EnergyDrink
+    CO2 -> EnergyDrink
+    
+    HardCider -> RaveJuice
+    EnergyDrink -> RaveJuice
+    
+    Caffeine -> PerkPills
+    Chalk -> PerkPills
+    
+    Bamboo -> Packaging
+    Cactus -> Packaging
+    
+    Jelly -> Dessert
+    IceCream -> Dessert
+    Apples -> Dessert
+    
+    TVDinner -> CateringPack
+    Dessert -> CateringPack
+    EnergyDrink -> CateringPack
+    Packaging -> CateringPack
+    
+    MSG -> FooYoungReadyMeal
+    Eggs -> FooYoungReadyMeal
+    Bamboo -> FooYoungReadyMeal
+    Meat -> FooYoungReadyMeal
+
+    Beer -> PartyPack
+    JelloShots -> PartyPack
+    Cake -> PartyPack
+    RaveJuice -> PartyPack
+    Packaging -> PartyPack
+    
+    // t6
+    
+    SeaCucumber -> Parfume
+    Strawberry -> Parfume
+    Ethanol -> Parfume
+    
+    Protien -> HealthSupliment
+    SeaCucumber -> HealthSupliment
+    Coffee -> HealthSupliment
+    Cocoa -> HealthSupliment
+    
+    Rose -> TurkishDelight
+    HFCS -> TurkishDelight
+    Potatoes -> TurkishDelight
+
+}

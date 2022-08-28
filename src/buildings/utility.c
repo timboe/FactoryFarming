@@ -87,21 +87,21 @@ bool doPlaceRetirement(struct Location_t* _loc) {
   // Garden
   for (int32_t x = _loc->m_x - 3; x < _loc->m_x - 1; ++x) {
     for (int32_t y = _loc->m_y + 2; y < _loc->m_y + 5; ++y) {
-      newBuilding(getLocation(x, y), SN, kPlant, (union kSubType) {.plant = kSunflowerPlant} );
+      newBuilding(getLocation(x, y), SN, kPlant, (union kSubType) {.plant = kRosePlant} );
     }
   }
 
   // Garden
   for (int32_t x = _loc->m_x + 2; x < _loc->m_x + 5; ++x) {
     for (int32_t y = _loc->m_y + 2; y < _loc->m_y + 5; ++y) {
-      newBuilding(getLocation(x, y), SN, kPlant, (union kSubType) {.plant = kSunflowerPlant} );
+      newBuilding(getLocation(x, y), SN, kPlant, (union kSubType) {.plant = kRosePlant} );
     }
   }
 
   // Garden
   for (int32_t y = _loc->m_y - 3; y < _loc->m_y + 1; ++y) {
-    newBuilding(getLocation(_loc->m_x - 3, y), SN, kPlant, (union kSubType) {.plant = kPotatoPlant} );
-    newBuilding(getLocation(_loc->m_x + 3, y), SN, kPlant, (union kSubType) {.plant = kPotatoPlant} );
+    newBuilding(getLocation(_loc->m_x - 3, y), SN, kPlant, (union kSubType) {.plant = kStrawberryPlant} );
+    newBuilding(getLocation(_loc->m_x + 3, y), SN, kPlant, (union kSubType) {.plant = kSunflowerPlant} );
   }
 
   return true;

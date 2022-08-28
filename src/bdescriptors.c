@@ -111,7 +111,6 @@ struct FactoryDescriptor_t FDesc[] = {
   {.subType = kHardCiderFac, .unlock = 1, .price = 1000, .time = 2, .sprite = BID(0,4), .out = kHardCider, .in1 = kEthanol, .in2 = kApple, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kSpareFac2, .unlock = DIS, .price = 0, .time = 1, .sprite = BID(0,0), .out = kNoCargo, .in1 = kNoCargo, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kSpareFac3, .unlock = DIS, .price = 0, .time = 1, .sprite = BID(0,0), .out = kNoCargo, .in1 = kNoCargo, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
-
   {.subType = kAbattoir, .unlock = 1, .price = 2000, .time = 4, .sprite = BID(0,4), .out = kMeat, .in1 = kSunflower, .in2 = kSeaweed, .in3 = kWaterBarrel, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kHydrogenFac, .unlock = 1, .price = 1500, .time = 1, .sprite = BID(0,4), .out = kHydrogen, .in1 = kWaterBarrel, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kHOILFac, .unlock = 1, .price = 1750, .time = 1, .sprite = BID(0,4), .out = kHOil, .in1 = kOil, .in2 = kHydrogen, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
@@ -119,38 +118,37 @@ struct FactoryDescriptor_t FDesc[] = {
   {.subType = kBeerFac, .unlock = 1, .price = 2000, .time = 2, .sprite = BID(0,4), .out = kBeer, .in1 = kEthanol, .in2 = kWaterBarrel, .in3 = kWheat, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kSpareFac4, .unlock = DIS, .price = 0, .time = 1, .sprite = BID(0,0), .out = kNoCargo, .in1 = kNoCargo, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kSpareFac5, .unlock = DIS, .price = 0, .time = 1, .sprite = BID(0,0), .out = kNoCargo, .in1 = kNoCargo, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
-  
   {.subType = kTequilaFac, .unlock = 1, .price = 3000, .time = 2, .sprite = BID(0,4), .out = kTequila, .in1 = kEthanol, .in2 = kCactus, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
-  {.subType = kMexBeerFac, .unlock = 1, .price = 3500, .time = 1, .sprite = BID(0,4), .out = kMexBeer, .in1 = kBeer, .in2 = kTequila, .in3 = kLime, .in4 = kNoCargo, .in5 = kNoCargo},
-  {.subType = kEmulsifierFac, .unlock = 1, .price = 2000, .time = 1, .sprite = BID(0,4), .out = kEmulsifiers, .in1 = kSeaweed, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kHFCSFac, .unlock = 1, .price = 4000, .time = 1, .sprite = BID(0,4), .out = kHFCS, .in1 = kCorn, .in2 = kWaterBarrel, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kGelatinFac, .unlock = 1, .price = 15000, .time = 1, .sprite = BID(0,4), .out = kGelatin, .in1 = kMeat, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kJellyFac, .unlock = 1, .price = 30000, .time = 4, .sprite = BID(0,4), .out = kJelly, .in1 = kGelatin, .in2 = kLime, .in3 = kHFCS, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kJelloShotFac, .unlock = 1, .price = 3500, .time = 1, .sprite = BID(0,4), .out = kJelloShot, .in1 = kJelly, .in2 = kTequila, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kSpareFac6, .unlock = DIS, .price = 0, .time = 1, .sprite = BID(0,0), .out = kNoCargo, .in1 = kNoCargo, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kSpareFac7, .unlock = DIS, .price = 0, .time = 1, .sprite = BID(0,0), .out = kNoCargo, .in1 = kNoCargo, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
-
-  {.subType = kHFCSFac, .unlock = 1, .price = 4000, .time = 1, .sprite = BID(0,4), .out = kHFCS, .in1 = kCorn, .in2 = kWaterBarrel, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kEmulsifierFac, .unlock = 1, .price = 2000, .time = 1, .sprite = BID(0,4), .out = kEmulsifiers, .in1 = kSeaweed, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kIceCreamFac, .unlock = 1, .price = 10000, .time = 3, .sprite = BID(0,4), .out = kIceCream, .in1 = kStrawberry, .in2 = kHFCS, .in3 = kHOil, .in4 = kEmulsifiers, .in5 = kNoCargo},
   {.subType = kBatteryFarm, .unlock = 1, .price = 12000, .time = 4, .sprite = BID(0,4), .out = kEggs, .in1 = kCorn, .in2 = kWaterBarrel, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kProteinFac, .unlock = 1, .price = 20000, .time = 2, .sprite = BID(0,4), .out = kProtein, .in1 = kEggs, .in2 = kSeaweed, .in3 = kChalk, .in4 = kVitamin, .in5 = kNoCargo},
-  {.subType = kGelatinFac, .unlock = 1, .price = 15000, .time = 1, .sprite = BID(0,4), .out = kGelatin, .in1 = kMeat, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
-  {.subType = kPieFac, .unlock = 1, .price = 25000, .time = 5, .sprite = BID(0,4), .out = kMeatPie, .in1 = kMeat, .in2 = kGelatin, .in3 = kWheat, .in4 = kWaterBarrel, .in5 = kPotato},
+  {.subType = kChocolateFac, .unlock = 1, .price = 22000, .time = 2, .sprite = BID(0,4), .out = kChocolate, .in1 = kCocoBean, .in2 = kHFCS, .in3 = kHOil, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kPieFac, .unlock = 1, .price = 25000, .time = 4, .sprite = BID(0,4), .out = kMeatPie, .in1 = kMeat, .in2 = kGelatin, .in3 = kWheat, .in4 = kPotato, .in5 = kNoCargo},
   {.subType = kMSGFac, .unlock = 1, .price = 20000, .time = 1, .sprite = BID(0,4), .out = kMSG, .in1 = kWheat, .in2 = kSalt, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
-  {.subType = kReadyMealFac, .unlock = 1, .price = 40000, .time = 5, .sprite = BID(0,4), .out = kReadyMeal, .in1 = kHFCS, .in2 = kCarrot, .in3 = kMeat, .in4 = kMSG, .in5 = kEmulsifiers},
-  {.subType = kJellyFac, .unlock = 1, .price = 30000, .time = 4, .sprite = BID(0,4), .out = kJelly, .in1 = kGelatin, .in2 = kLime, .in3 = kHFCS, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kTVDinnerFac, .unlock = 1, .price = 40000, .time = 4, .sprite = BID(0,4), .out = kTVDinner, .in1 = kCarrot, .in2 = kMeatPie, .in3 = kMSG, .in4 = kEmulsifiers, .in5 = kNoCargo},
+  {.subType = kCakeFac, .unlock = 1, .price = 30000, .time = 4, .sprite = BID(0,4), .out = kCake, .in1 = kHFCS, .in2 = kEggs, .in3 = kWheat, .in4 = kChocolate, .in5 = kNoCargo},
   {.subType = kSpareFac8, .unlock = DIS, .price = 0, .time = 1, .sprite = BID(0,0), .out = kNoCargo, .in1 = kNoCargo, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kSpareFac9, .unlock = DIS, .price = 0, .time = 1, .sprite = BID(0,0), .out = kNoCargo, .in1 = kNoCargo, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
-
   {.subType = kCaffeineFac, .unlock = 1, .price = 37500, .time = 2, .sprite = BID(0,4), .out = kCaffeine, .in1 = kCoffeeBean, .in2 = kCO2, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
-  {.subType = kEnergyDrinkFac, .unlock = 1, .price = 50000, .time = 2, .sprite = BID(0,4), .out = kEnergyDrink, .in1 = kWaterBarrel, .in2 = kHFCS, .in3 = kCO2, .in4 = kCaffeine, .in5 = kStrawberry},
+  {.subType = kEnergyDrinkFac, .unlock = 1, .price = 50000, .time = 2, .sprite = BID(0,4), .out = kEnergyDrink, .in1 = kLime, .in2 = kHFCS, .in3 = kCO2, .in4 = kCaffeine, .in5 = kStrawberry},
   {.subType = kRaveJuiceFac, .unlock = 1, .price = 70000, .time = 1, .sprite = BID(0,4), .out = kRaveJuice, .in1 = kHardCider, .in2 = kEnergyDrink, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kPerkPillFac, .unlock = 1, .price = 60000, .time = 1, .sprite = BID(0,4), .out = kPerkPills, .in1 = kCaffeine, .in2 = kChalk, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
-  {.subType = kSoftCakeFac, .unlock = 1, .price = 100000, .time = 5, .sprite = BID(0,4), .out = kSoftCake, .in1 = kHOil, .in2 = kHFCS, .in3 = kEggs, .in4 = kWheat, .in5 = kEmulsifiers},
-  {.subType = kDessertFac, .unlock = 1, .price = 125000, .time = 4, .sprite = BID(0,4), .out = kDessert, .in1 = kJelly, .in2 = kIceCream, .in3 = kApple, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kPackagingFac, .unlock = 1, .price = 50000, .time = 1, .sprite = BID(0,4), .out = kPackaging, .in1 = kCactus, .in2 = kBamboo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
-  {.subType = kCateringKitFac, .unlock = 1, .price = 140000, .time = 4, .sprite = BID(0,4), .out = kCateringKit, .in1 = kReadyMeal, .in2 = kDessert, .in3 = kEnergyDrink, .in4 = kPackaging, .in5 = kNoCargo},
-  {.subType = kDrinksKitFac, .unlock = 1, .price = 160000, .time = 4, .sprite = BID(0,4), .out = kDrinksKit, .in1 = kTequila, .in2 = kHardCider, .in3 = kMexBeer, .in4 = kRaveJuice, .in5 = kPackaging},
+  {.subType = kDessertFac, .unlock = 1, .price = 125000, .time = 4, .sprite = BID(0,4), .out = kDessert, .in1 = kJelly, .in2 = kIceCream, .in3 = kApple, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kCateringKitFac, .unlock = 1, .price = 140000, .time = 4, .sprite = BID(0,4), .out = kCateringKit, .in1 = kTVDinner, .in2 = kDessert, .in3 = kEnergyDrink, .in4 = kPackaging, .in5 = kNoCargo},
+  {.subType = kPartyPackFac, .unlock = 1, .price = 160000, .time = 4, .sprite = BID(0,4), .out = kPartyPack, .in1 = kTequila, .in2 = kHardCider, .in3 = kBeer, .in4 = kRaveJuice, .in5 = kPackaging},
   {.subType = kSpareFac10, .unlock = DIS, .price = 0, .time = 1, .sprite = BID(0,0), .out = kNoCargo, .in1 = kNoCargo, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kSpareFac11, .unlock = DIS, .price = 0, .time = 1, .sprite = BID(0,0), .out = kNoCargo, .in1 = kNoCargo, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
-
-  {.subType = kTurkishDelightFac, .unlock = 1, .price = 200000, .time = 4, .sprite = BID(0,4), .out = kTurkishDelight, .in1 = kHFCS, .in2 = kRose, .in3 = kWaterBarrel, .in4 = kPotato, .in5 = kNoCargo},
+  {.subType = kParfumeFac, .unlock = 1, .price = 170000, .time = 1, .sprite = BID(0,4), .out = kParfume, .in1 = kSeaCucumber, .in2 = kStrawberry, .in3 = kEthanol, .in4 = kNoCargo, .in5 = kNoCargo},
+  {.subType = kMedicalSuplimentFac, .unlock = 1, .price = 180000, .time = 1, .sprite = BID(0,4), .out = kMedicalSupliment, .in1 = kSeaCucumber, .in2 = kProtein, .in3 = kCocoBean, .in4 = kCoffeeBean, .in5 = kNoCargo},
+  {.subType = kTurkishDelightFac, .unlock = 1, .price = 200000, .time = 1, .sprite = BID(0,4), .out = kTurkishDelight, .in1 = kHFCS, .in2 = kRose, .in3 = kWaterBarrel, .in4 = kPotato, .in5 = kNoCargo},
   {.subType = kSpareFac12, .unlock = DIS, .price = 0, .time = 1, .sprite = BID(0,0), .out = kNoCargo, .in1 = kNoCargo, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kSpareFac13, .unlock = DIS, .price = 0, .time = 1, .sprite = BID(0,0), .out = kNoCargo, .in1 = kNoCargo, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kSpareFac14, .unlock = DIS, .price = 0, .time = 1, .sprite = BID(0,0), .out = kNoCargo, .in1 = kNoCargo, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
@@ -211,51 +209,65 @@ struct UnlockDescriptor_t UnlockDecs[] = {
 
   {.type = kUtility, .subType.utility = kWell, .fromSelling = 100, .ofCargo = kTequila},
   {.type = kPlant, .subType.plant = kLimeTree, .fromSelling = 200, .ofCargo = kTequila},
+  {.type = kFactory, .subType.factory = kHFCSFac, .fromSelling = 300, .ofCargo = kTequila},
+  {.type = kFactory, .subType.factory = kGelatinFac, .fromSelling = 400, .ofCargo = kTequila},
+  {.type = kFactory, .subType.factory = kJellyFac, .fromSelling = 500, .ofCargo = kTequila},
 
-  {.type = kFactory, .subType.factory = kMexBeerFac, .fromSelling = 150, .ofCargo = kLime},
+  {.type = kFactory, .subType.factory = kJelloShotFac, .fromSelling = 200, .ofCargo = kJelly},
 
-  {.type = kFactory, .subType.factory = kEmulsifierFac, .fromSelling = 200, .ofCargo = kMexBeer},
-  {.type = kFactory, .subType.factory = kHFCSFac, .fromSelling = 300, .ofCargo = kMexBeer},
-  {.type = kExtractor, .subType.extractor = kCropHarvesterLarge, .fromSelling = 400, .ofCargo = kMexBeer},
-  {.type = kPlant, .subType.plant = kStrawberryPlant, .fromSelling = 600, .ofCargo = kMexBeer},
+  {.type = kPlant, .subType.plant = kStrawberryPlant, .fromSelling = 200, .ofCargo = kJelloShot},
+  {.type = kExtractor, .subType.extractor = kCropHarvesterLarge, .fromSelling = 400, .ofCargo = kJelloShot},
 
   {.type = kUtility, .subType.utility = kStorageBox, .fromSelling = 100, .ofCargo = kStrawberry},
   {.type = kUtility, .subType.utility = kBuffferBox, .fromSelling = 100, .ofCargo = kStrawberry},
-  {.type = kFactory, .subType.factory = kIceCreamFac, .fromSelling = 150, .ofCargo = kStrawberry},
+  {.type = kFactory, .subType.factory = kEmulsifierFac, .fromSelling = 200, .ofCargo = kStrawberry},
+  {.type = kFactory, .subType.factory = kIceCreamFac, .fromSelling = 300, .ofCargo = kStrawberry},
 
   {.type = kUtility, .subType.utility = kConveyorGrease, .fromSelling = 250, .ofCargo = kIceCream},
   {.type = kFactory, .subType.factory = kBatteryFarm, .fromSelling = 500, .ofCargo = kIceCream},
   {.type = kFactory, .subType.factory = kProteinFac, .fromSelling = 750, .ofCargo = kIceCream},
 
-  {.type = kPlant, .subType.plant = kCocoaPlant, .fromSelling = 150, .ofCargo = kProtein}, // Need to do something with this...
-  {.type = kFactory, .subType.factory = kGelatinFac, .fromSelling = 200, .ofCargo = kProtein},
-  {.type = kFactory, .subType.factory = kPieFac, .fromSelling = 400, .ofCargo = kProtein},
+  {.type = kPlant, .subType.plant = kCocoaPlant, .fromSelling = 150, .ofCargo = kProtein}, 
+  {.type = kFactory, .subType.factory = kChocolateFac, .fromSelling = 500, .ofCargo = kProtein}, 
+
+  {.type = kFactory, .subType.factory = kPieFac, .fromSelling = 250, .ofCargo = kChocolate},
 
   {.type = kUtility, .subType.utility = kObstructionRemover, .fromSelling = 400, .ofCargo = kMeatPie},
   {.type = kFactory, .subType.factory = kMSGFac, .fromSelling = 800, .ofCargo = kMeatPie},
-  {.type = kFactory, .subType.factory = kReadyMealFac, .fromSelling = 1200, .ofCargo = kMeatPie},
-  {.type = kFactory, .subType.factory = kJellyFac, .fromSelling = 1600, .ofCargo = kMeatPie},
+  {.type = kFactory, .subType.factory = kTVDinnerFac, .fromSelling = 1200, .ofCargo = kMeatPie},
 
-  {.type = kPlant, .subType.plant = kCoffeePlant, .fromSelling = 250, .ofCargo = kJelly},
-  {.type = kExtractor, .subType.extractor = kCO2Extractor, .fromSelling = 1000, .ofCargo = kJelly},
-  {.type = kFactory, .subType.factory = kCaffeineFac, .fromSelling = 1750, .ofCargo = kJelly},
-  {.type = kFactory, .subType.factory = kEnergyDrinkFac, .fromSelling = 2500, .ofCargo = kJelly},
+  {.type = kFactory, .subType.factory = kCakeFac, .fromSelling = 500, .ofCargo = kTVDinner},
+
+  {.type = kPlant, .subType.plant = kCoffeePlant, .fromSelling = 250, .ofCargo = kCake},
+  {.type = kExtractor, .subType.extractor = kCO2Extractor, .fromSelling = 350, .ofCargo = kCake},
+  {.type = kFactory, .subType.factory = kCaffeineFac, .fromSelling = 450, .ofCargo = kCake},
+  {.type = kFactory, .subType.factory = kEnergyDrinkFac, .fromSelling = 550, .ofCargo = kCake},
 
   {.type = kFactory, .subType.factory = kRaveJuiceFac, .fromSelling = 500, .ofCargo = kEnergyDrink},
 
   {.type = kUtility, .subType.utility = kLandfill, .fromSelling = 250, .ofCargo = kRaveJuice},
   {.type = kFactory, .subType.factory = kPerkPillFac, .fromSelling = 500, .ofCargo = kRaveJuice},
 
-  {.type = kFactory, .subType.factory = kSoftCakeFac, .fromSelling = 500, .ofCargo = kPerkPills},
+  {.type = kPlant, .subType.plant = kBambooPlant, .fromSelling = 200, .ofCargo = kPerkPills},
+  {.type = kFactory, .subType.factory = kPackagingFac, .fromSelling = 400, .ofCargo = kPerkPills},
+  {.type = kFactory, .subType.factory = kDessertFac, .fromSelling = 600, .ofCargo = kPerkPills},
+  {.type = kFactory, .subType.factory = kCateringKitFac, .fromSelling = 800, .ofCargo = kPerkPills},
 
-  {.type = kPlant, .subType.plant = kBambooPlant, .fromSelling = 500, .ofCargo = kSoftCake},
-  {.type = kFactory, .subType.factory = kDessertFac, .fromSelling = 1500, .ofCargo = kSoftCake},
-  {.type = kFactory, .subType.factory = kPackagingFac, .fromSelling = 2500, .ofCargo = kSoftCake},
-  {.type = kFactory, .subType.factory = kCateringKitFac, .fromSelling = 3500, .ofCargo = kSoftCake},
+  // Note: Party Packs are used to unlock World 7
+  {.type = kFactory, .subType.factory = kPartyPackFac, .fromSelling = 500, .ofCargo = kCateringKit},
+  {.type = kPlant, .subType.plant = kSeaCucumberPlant, .fromSelling = 600, .ofCargo = kCateringKit},
 
-  {.type = kPlant, .subType.plant = kSeaCucumberPlant, .fromSelling = 1000, .ofCargo = kCateringKit},
-  {.type = kFactory, .subType.factory = kDrinksKitFac, .fromSelling = 2000, .ofCargo = kCateringKit},
+  {.type = kFactory, .subType.factory = kParfumeFac, .fromSelling = 100, .ofCargo = kSeaCucumber},
 
-  {.type = kUtility, .subType.utility = kFence, .fromSelling = 1500, .ofCargo = kDrinksKit},
-  {.type = kUtility, .subType.utility = kRetirement, .fromSelling = 1500, .ofCargo = kDrinksKit}, // kRetirement must always be the last entry
+  {.type = kUtility, .subType.utility = kRetirement, .fromSelling = 500, .ofCargo = kParfume},
+  // Note: Health Supliment are used to unlock World 8
+  {.type = kFactory, .subType.factory = kMedicalSuplimentFac, .fromSelling = 700, .ofCargo = kParfume},
+
+  // Note: The Player gets given some rose bushes by placing the retirement home.
+  // Gates the final two unlocks
+  {.type = kPlant, .subType.plant = kRosePlant, .fromSelling = 5, .ofCargo = kRose},
+  {.type = kUtility, .subType.utility = kFence, .fromSelling = 200, .ofCargo = kRose},
+  {.type = kFactory, .subType.factory = kTurkishDelightFac, .fromSelling = 400, .ofCargo = kRose},
+
+  // Esnure the final entry here is listed as FINAL_UNLOCK_TYPE, FINAL_UNLOCK_SUBTYPE in blists.h
 };

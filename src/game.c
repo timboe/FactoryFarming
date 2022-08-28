@@ -373,7 +373,7 @@ void initGame() {
         }
       }
     }
-    if (UnlockDecs[i].type == kUtility && UnlockDecs[i].subType.utility == kRetirement) break;
+    if (UnlockDecs[i].type == FINAL_UNLOCK_TYPE && UnlockDecs[i].subType.raw == FINAL_UNLOCK_SUBTYPE) break;
   }
 
 }

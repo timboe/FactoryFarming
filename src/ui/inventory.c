@@ -423,6 +423,9 @@ void populateInfoInventory() {
     if (selectedID == kChalkQuarry) snprintf(textC, 128, "Build on %s", toStringSoil(kChalkyGround));
     else if (selectedID == kPump) snprintf(textC, 128, "Build on Water");
     else if (selectedID == kSaltMine) snprintf(textC, 128, "Build on %s", toStringSoil(kPeatyGround));
+  } else if (selectedCat == kUICatPlant) {
+    if (selectedID == kSeaweedPlant) snprintf(textC, 128, "Sow on Water");
+    else if (selectedID == kSeaCucumberPlant) snprintf(textC, 128, "Place in the Ocean");
   } else if (selectedCat == kUICatUtility) {
     if (selectedID == kLandfill) snprintf(textC, 128, "Cannot be removed");
     if (selectedID == kRetirement) { snprintf(textC, 128, "Build on Tranquil Plains"); cOff = TILE_PIX; }

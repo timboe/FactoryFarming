@@ -24,6 +24,10 @@ const struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kCorn, .price = 6, .UIIcon = SID(2,22)},
   {.subType = kSeaweed, .price = 5, .UIIcon = SID(3,22)},
   {.subType = kMeat, .price = 25, .UIIcon = SID(9,8)},
+  {.subType = kSpareCargo0, .price = 0, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo1, .price = 0, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo2, .price = 0, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo3, .price = 0, .UIIcon = SID(0,0)},
   {.subType = kHydrogen, .price = 5, .UIIcon = SID(1,23)},
   {.subType = kHOil, .price = 9, .UIIcon = SID(12,6)},
   {.subType = kCornDog, .price = 50, .UIIcon = SID(4,24)},
@@ -32,34 +36,50 @@ const struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kCactus, .price = 16, .UIIcon = SID(1,22)},
   {.subType = kTequila, .price = 60, .UIIcon = SID(5,24)},
   {.subType = kLime, .price = 22, .UIIcon = SID(4,22)},
-  {.subType = kMexBeer, .price = 70, .UIIcon = SID(7,24)},
-  {.subType = kEmulsifiers, .price = 13, .UIIcon = SID(6,24)},
   {.subType = kHFCS, .price = 27, .UIIcon = SID(1,24)},
-  {.subType = kStrawberry, .price = 32, .UIIcon = SID(5,22)},
-  {.subType = kIceCream, .price = 85, .UIIcon = SID(8,23)},
-  {.subType = kEggs, .price = 10, .UIIcon = SID(2,24)},
-  {.subType = kBamboo, .price = 20, .UIIcon = SID(4,23)},
-  {.subType = kProtein, .price = 100, .UIIcon = SID(3,24)},
   {.subType = kGelatin, .price = 30, .UIIcon = SID(8,24)},
+  {.subType = kJelly, .price = 50, .UIIcon = SID(10,6)},
+  {.subType = kJelloShot, .price = 90, .UIIcon = SID(0,0)},
+  {.subType = kStrawberry, .price = 32, .UIIcon = SID(5,22)},
+  {.subType = kEmulsifiers, .price = 13, .UIIcon = SID(6,24)},
+  {.subType = kIceCream, .price = 100, .UIIcon = SID(8,23)},
+  {.subType = kEggs, .price = 10, .UIIcon = SID(2,24)},
+  {.subType = kSpareCargo4, .price = 0, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo5, .price = 0, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo6, .price = 0, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo7, .price = 0, .UIIcon = SID(0,0)},
+  {.subType = kProtein, .price = 120, .UIIcon = SID(3,24)},
+  {.subType = kCocoBean, .price = 45, .UIIcon = SID(6,22)},
+  {.subType = kChocolate, .price = 90, .UIIcon = SID(0,0)},
   {.subType = kMeatPie, .price = 125, .UIIcon = SID(8,6)},
   {.subType = kMSG, .price = 10, .UIIcon = SID(1,21)},
-  {.subType = kReadyMeal, .price = 150, .UIIcon = SID(9,6)},
-  {.subType = kJelly, .price = 140, .UIIcon = SID(10,6)},
+  {.subType = kTVDinner, .price = 150, .UIIcon = SID(9,6)},
+  {.subType = kCake, .price = 270, .UIIcon = SID(9,5)},
   {.subType = kCoffeeBean, .price = 35, .UIIcon = SID(11,6)},
   {.subType = kCO2, .price = 25, .UIIcon = SID(2,23)},
   {.subType = kCaffeine, .price = 40, .UIIcon = SID(3,23)},
   {.subType = kEnergyDrink, .price = 200, .UIIcon = SID(13,6)},
   {.subType = kRaveJuice, .price = 250, .UIIcon = SID(14,6)},
   {.subType = kPerkPills, .price = 80, .UIIcon = SID(15,6)},
-  {.subType = kSoftCake, .price = 270, .UIIcon = SID(9,5)},
-  {.subType = kDessert, .price = 300, .UIIcon = SID(10,5)},
+  {.subType = kBamboo, .price = 20, .UIIcon = SID(4,23)},
   {.subType = kPackaging, .price = 20, .UIIcon = SID(11,5)},
+  {.subType = kDessert, .price = 300, .UIIcon = SID(10,5)},
   {.subType = kCateringKit, .price = 320, .UIIcon = SID(12,5)},
-  {.subType = kDrinksKit, .price = 350, .UIIcon = SID(13,5)},
-  {.subType = kCocoBean, .price = 45, .UIIcon = SID(6,22)},
+  {.subType = kSpareCargo8, .price = 0, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo9, .price = 0, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo10, .price = 0, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo11, .price = 0, .UIIcon = SID(0,0)},
+  {.subType = kFooYoung, .price = 310, .UIIcon = SID(0,0)},
+  {.subType = kPartyPack, .price = 350, .UIIcon = SID(13,5)},
   {.subType = kSeaCucumber, .price = 70, .UIIcon = SID(8,22)},
+  {.subType = kParfume, .price = 400, .UIIcon = SID(0,0)},
+  {.subType = kMedicalSupliment, .price = 500, .UIIcon = SID(0,0)},
   {.subType = kRose, .price = 100, .UIIcon = SID(0,25)},
-  {.subType = kTurkishDelight, .price = 250, .UIIcon = SID(0,0)},
+  {.subType = kTurkishDelight, .price = 1000, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo12, .price = 0, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo13, .price = 0, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo14, .price = 0, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo15, .price = 0, .UIIcon = SID(0,0)},
 };
 
 const int32_t SIZE_CARGO = TOT_CARGO_OR_BUILDINGS * sizeof(struct Cargo_t);
@@ -103,39 +123,45 @@ const char* toStringCargoByType(enum kCargoType _type, bool _plural) {
     case kCactus: return _plural ? "Cacti" : "Cactus";
     case kTequila: return _plural ? "Tequilas" : "Tequila";
     case kLime: return _plural ? "Limes" : "Lime";
-    case kMexBeer: return _plural ? "Mexican Beers" : "Mexican Beer";
-    case kEmulsifiers: return _plural ? "Emulsifiers" : "Emulsifier";
     case kHFCS: return "H.F.C.S.";
+    case kGelatin: return "Gelatin";
+    case kJelly: return _plural ? "Jellies" : "Jelly";
+    case kJelloShot: return _plural ? "Jello-Shots" : "Jello-Shot";
     case kStrawberry: return _plural ? "Strawberries" : "Strawberry";
+    case kEmulsifiers: return _plural ? "Emulsifiers" : "Emulsifier";
     case kIceCream: return _plural ? "Ice Creams" : "Ice Cream";
     case kEggs: return _plural ? "Eggs" : "Egg";
-    case kBamboo: return _plural ? "Bamboos" : "Bamboo";
     case kProtein: return _plural ? "Protein Powders" : "Protein Powder";
-    case kGelatin: return "Gelatin";
+    case kCocoBean: return _plural ? "Coco Beans" : "Coco Bean";
+    case kChocolate: return "Chocolate";
     case kMeatPie: return _plural ? "Meat Pies" : "Meat Pie";
     case kMSG: return "M.S.G.";
-    case kReadyMeal: return _plural ? "Ready Meals" : "Ready Meal";
-    case kJelly: return _plural ? "Jellies" : "Jelly";
+    case kTVDinner: return _plural ? "TV-Dinners" : "TV-Dinner";
+    case kCake: return _plural ? "Cakes" : "Cake";
     case kCoffeeBean: return _plural ? "Coffee Beans" : "Coffee Bean";
     case kCO2: return "CO2";
     case kCaffeine: return "Caffeine";
     case kEnergyDrink: return _plural ? "Energy Drinks" : "Energy Drink";
     case kRaveJuice: return _plural ? "Rave Juices" : "Rave Juice";
     case kPerkPills: return "Perk Pills";
-    case kSoftCake: return _plural ? "Soft Cakes" : "Soft Cake";
-    case kDessert: return _plural ? "Desserts" : "Dessert";
+    case kBamboo: return _plural ? "Bamboos" : "Bamboo";
     case kPackaging: return "Packaging";
+    case kDessert: return _plural ? "Desserts" : "Dessert";
     case kCateringKit: return _plural ? "Catering Kits" : "Catering Kit";
-    case kDrinksKit: return _plural ? "Drinks Kits" : "Drinks Kit";
-    case kCocoBean: return _plural ? "Coco Beans" : "Coco Bean";
+    case kFooYoung: return _plural ? "Foo Young Meals" : "Foo Young Meal";
+    case kPartyPack: return _plural ? "Party Packs" : "Party Pack";
     case kSeaCucumber: return _plural ? "Sea Cucumbers" : "Sea Cucumber";
+    case kParfume: return "Parfume";
+    case kMedicalSupliment: return "Medicinal Supliment";
     case kRose: return _plural ? "Roses" : "Rose";
     case kTurkishDelight: "Turkish Delight";
-    //case kCa0: case kCa1: case kCa2: case kCa3: case kCa4: case kCa5: case kCa6: case kCa7: 
-    //case kCa8: case kCa9: case kCa10: case kCa11: case kCa12: case kCa13: case kCa14: case kCa15: 
-    case kNCargoType: return "CARGO???";
+    case kSpareCargo0: case kSpareCargo1: case kSpareCargo2: case kSpareCargo3:
+    case kSpareCargo4: case kSpareCargo5: case kSpareCargo6: case kSpareCargo7: 
+    case kSpareCargo8: case kSpareCargo9: case kSpareCargo10: case kSpareCargo11:
+    case kSpareCargo12: case kSpareCargo13: case kSpareCargo14: case kSpareCargo15: 
+    case kNCargoType:;
   }
-  return "CARGO????";
+  return "C_PLACEHOLDER";
 }
 
 const char* toStringCargo(struct Cargo_t* _cargo, bool _plural) {
