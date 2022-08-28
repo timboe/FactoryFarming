@@ -384,8 +384,8 @@ void updateUI(int _fc) {
         if      (distanceFromBuy()  < ACTIVATE_DISTANCE) drawUITop("The Shop");
         else if (distanceFromSell() < ACTIVATE_DISTANCE) drawUITop("Sales");
         else if (!ic && distanceFromWarp() < ACTIVATE_DISTANCE) drawUITop("Plots");
-        else if (!ic && distanceFromOut() < ACTIVATE_DISTANCE) drawUITop("Exports");
-        else if (!ic && distanceFromIn() < ACTIVATE_DISTANCE) drawUITop("Imports");
+        else if (!ic && distanceFromOut() < ACTIVATE_DISTANCE) drawUITop("Exports"); // Or Deliveries TODO
+        else if (!ic && distanceFromIn() < ACTIVATE_DISTANCE) drawUITop("Imports"); // Or Shipping TODO
         else if (distanceFromRetirement() < ACTIVATE_DISTANCE) drawUITop("Credits");
       }
     } else {

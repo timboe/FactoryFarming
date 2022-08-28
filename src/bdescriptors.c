@@ -79,7 +79,7 @@ struct UtilityDescriptor_t UDesc[] = {
   {.subType = kSpareUtil4, .unlock = DIS, .price = 1, .UIIcon = SID(0,0), .sprite = SID(0,0)},
   {.subType = kSpareUtil5, .unlock = DIS, .price = 1, .UIIcon = SID(0,0), .sprite = SID(0,0)},
   {.subType = kRetirement, .unlock = 1, .price = 1000000, .UIIcon = SID(10,15), .sprite = BID(4,1)},
-  {.subType = kFence, .unlock = 1, .price = 5000, .UIIcon = SID(9,22), .sprite = BID(0,0)},
+  {.subType = kFence, .unlock = 1, .price = 5000, .UIIcon = SID(12,15), .sprite = BID(0,0)},
   {.subType = kSpareUtil6, .unlock = DIS, .price = 1, .UIIcon = SID(0,0), .sprite = SID(0,0)},
   {.subType = kSpareUtil7, .unlock = DIS, .price = 1, .UIIcon = SID(0,0), .sprite = SID(0,0)},
 };
