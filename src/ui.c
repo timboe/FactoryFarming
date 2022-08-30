@@ -1854,7 +1854,7 @@ void initiUI() {
   pd->sprite->setIgnoresDrawOffset(m_UISpriteIngredients, 1);
 
   #define ING_X_START 6
-  #define ING_Y_START 20
+  #define ING_Y_START 6
   #define ING_ROW_SIZE 12
   #define ING_ROW_MAX (INGREDIENTS_WIDTH - (ING_X_START*2))
   uint8_t textSize = pd->graphics->getFontHeight(getRoobert10());
@@ -1866,12 +1866,15 @@ void initiUI() {
     pd->graphics->drawRect(4, 4, INGREDIENTS_WIDTH-8, INGREDIENTS_HEIGHT-8, kColorBlack);
     pd->graphics->setDrawMode(kDrawModeFillBlack);
     setRoobert10();
-    pd->graphics->drawText("Ingredients:", 12, kASCIIEncoding, 6, 6);
     int16_t cur_x = ING_X_START;
     int16_t cur_y = ING_Y_START;
-    for (int32_t w = 0; w < getNIngreindientsText(fac); ++w) {
+    uint16_t w = 0;
+    while (true) {
       bool isFlavourText;
-      const char* str = toStringIngredients(fac, w, &isFlavourText);
+      const char* str = toStringIngredients(fac, w++, &isFlavourText);
+      if (strcmp(str, "FIN") == 0) {
+        break;
+      }
       isFlavourText ? setCooperHewitt12() : setRoobert10();
       int16_t len = strlen(str);
       int32_t width = pd->graphics->getTextWidth(isFlavourText ? getCooperHewitt12() : getRoobert10(), str, len, kASCIIEncoding, 0);

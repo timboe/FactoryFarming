@@ -108,52 +108,227 @@ void buildingSetupFactory(struct Building_t* _building) {
 
 }
 
-uint16_t getNIngreindientsText(enum kFactorySubType _type) {
-  switch (_type) {
-    case kVitiminFac: return 11;
-    case kVegOilFac: return 3;
-    case kCrispsFac: return 8;
-    default: return 0;
-  }
-  return 0;
-}
-
 const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _isFlavour) {
   *_isFlavour = true;
   switch (_type) {
     case kVitiminFac:;
       switch (_n) {
-        case 0: return "Gelatin, ";
-        case 1: return "Glycerin, ";
-        case 2: return "Beta-";
-        case 3: return "Carotene ";
-        case 4: *_isFlavour = false; return "(Carrots)";
-        case 5: return ", ";
-        case 6: return "Soy ";
-        case 7: return "Lecithin, ";
-        case 8: return "Calcium ";
-        case 9: return "Carbonate ";
-        case 10: *_isFlavour = false; return "(Chalk)";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: return "Gelatin, ";
+        case 2: return "Glycerin, ";
+        case 3: return "Beta-";
+        case 4: return "Carotene ";
+        case 5: *_isFlavour = false; return "(Carrots)";
+        case 6: return ", ";
+        case 7: return "Soy ";
+        case 8: return "Lecithin, ";
+        case 9: return "Calcium ";
+        case 10: return "Carbonate ";
+        case 11: *_isFlavour = false; return "(Chalk)";
       }
+      break;
     case kVegOilFac:;
       switch (_n) {
-        case 0: *_isFlavour = false; return "Sunflower";
-        case 1: return ", ";
-        case 2: return "Stabalisers";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: *_isFlavour = false; return "Sunflower";
+        case 2: return ", ";
+        case 3: return "Stabalisers";
       }
+      break;
     case kCrispsFac:
       switch (_n) {
-        case 0: *_isFlavour = false; return "Potato";
-        case 1: return ", ";
-        case 2: *_isFlavour = false; return "Vegtable Oil";
-        case 3: return ", ";
-        case 4: *_isFlavour = false; return "Salt";
-        case 5: return ", ";
-        case 6: return "Artificial ";
-        case 7: return "Flavourings";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: *_isFlavour = false; return "Potatoes";
+        case 2: return ", ";
+        case 3: *_isFlavour = false; return "Vegtable Oil";
+        case 4: return ", ";
+        case 5: *_isFlavour = false; return "Salt";
+        case 6: return ", ";
+        case 7: return "Artificial ";
+        case 8: return "Flavourings";
       }
-    default: return "";
+      break;
+    case kEthanolFac:
+      switch (_n) {
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: *_isFlavour = false; return "Water";
+        case 2: return ", ";
+        case 3: return "Distilled ";
+        case 4: return "Vegtable ";
+        case 5: return "Alcohol ";
+        case 6: *_isFlavour = false; return "(Potatoes)";
+      }
+      break;
+    case kHardCiderFac:
+      switch (_n) {
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: return "Apple ";
+        case 2: return "Juice ";
+        case 3: *_isFlavour = false; return "(Apples)";
+        case 4: return ", ";
+        case 5: *_isFlavour = false; return "Ethanol";
+        case 6: return ", ";
+        case 7: return "Artificial ";
+        case 8: return "Coloring";
+        case 9: return ", ";
+        case 10: return "Stabalisers";
+        case 11: return ", ";
+        case 12: return "Preservatives";      }
+    case kAbattoir:
+      switch (_n) {
+      case 0: *_isFlavour = false; return "Feed: ";
+
+      }
+      break;
+    case kHydrogenFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kHOILFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kCornDogFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+    case kBeerFac:
+      switch (_n) {
+        case 0: return " ";
+
+      }
+      break;
+    case kTequilaFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kHFCSFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kGelatinFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kJellyFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kJelloShotFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kEmulsifierFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kIceCreamFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kBatteryFarm:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kProteinFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kChocolateFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kPieFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kMSGFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kTVDinnerFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kCakeFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kCaffeineFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kEnergyDrinkFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kRaveJuiceFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kPerkPillFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kPackagingFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kDessertFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kCateringKitFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kPartyPackFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kParfumeFac:
+      switch (_n) {
+        case 0: return " ";
+      }
+      break;
+    case kMedicalSuplimentFac:
+      switch (_n) {
+        case 0: return " ";
+      } break;
+    case kTurkishDelightFac:
+      switch (_n) {
+        case 0: return " ";
+      } break;
+    case kSpareFac0: case kSpareFac1: case kSpareFac2: case kSpareFac3:
+    case kSpareFac4: case kSpareFac5: case kSpareFac6: case kSpareFac7: 
+    case kSpareFac8: case kSpareFac9: case kSpareFac10: case kSpareFac11:
+    case kSpareFac12: case kSpareFac13: case kSpareFac14: case kSpareFac15: case kNFactorySubTypes:;
   }
+  return "FIN";
 }
 
 void drawUIInspectFactory(struct Building_t* _building) {

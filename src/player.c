@@ -512,7 +512,6 @@ void resetPlayer() {
 }
 
 void setDefaultPlayerSettings() {
-  modMoney(50000000); // TEMP
   m_player.m_soundSettings = 3;
   m_player.m_autoUseConveyorBooster = 1;
   m_player.m_enableConveyorAnimation = 1;

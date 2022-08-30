@@ -49,4 +49,6 @@ void initGame(void);
 
 uint16_t getCactusUnlock(void);
 
+int32_t getNUnlocks(void);
+
 void reset(bool _resetThePlayer);

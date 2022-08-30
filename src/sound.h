@@ -34,8 +34,8 @@ void updateSfx(void);
 
 void pauseMusic(void);
 
-void resumeMusic(void);
+void chooseMusic(int8_t _id);
 
-void playCredits(void);
+void resumeMusic(void);
 
 void sfx(enum SfxSample _sample);

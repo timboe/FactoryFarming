@@ -210,7 +210,7 @@ void clickHandleWander(uint32_t _buttonPressed) {
     } else if (!ic && distanceFromRetirement() < ACTIVATE_DISTANCE) {
       setGameMode(kMenuCredits);
       redrawAllSettingsMenuLines();
-      playCredits();
+      chooseMusic(N_MUSIC_TRACKS);
     } else {
       setGameMode(kMenuPlayer);
       sfx(kSfxMenuOpen);

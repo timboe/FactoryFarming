@@ -23,6 +23,10 @@ void addNumber(int32_t _n);
 
 void addText(char* _t);
 
+void cheatMoney(void);
+
+void cheatUnlock(void);
+
 /// ///
 
 LCDBitmap* getPauseImage() {
@@ -192,6 +196,23 @@ void autosave(uint32_t _time) {
   }
 }
 
+void cheatMoney() {
+  static uint8_t counter = 0;
+  if (++counter == 20) {
+    modMoney(1000000);
+    counter = 0;
+    sfx(kSfxUnlock);
+  }
+}
+
+void cheatUnlock() {
+  static uint8_t counter = 0;
+  if (++counter == 20) {
+    getPlayer()->m_buildingsUnlockedTo = getNUnlocks();
+    sfx(kSfxUnlock);
+  }
+}
+
 void doSettings() {
   struct Player_t* p = getPlayer();
   const uint16_t selectedID =  getUIContentID();
@@ -210,9 +231,21 @@ void doSettings() {
             }; break;
     case 8: p->m_enablePickupOnDestroy = !p->m_enablePickupOnDestroy; break;
     case 9: p->m_autoUseConveyorBooster = !p->m_autoUseConveyorBooster; break;
-    case 10: p->m_enableDebug = !p->m_enableDebug; break;
+    case 10: p->m_enableDebug = !p->m_enableDebug;; break;
     case 12: doIO(kDoSave, /*and then*/ kDoTitle); break;
     case 13: doIO(kDoTitle, /*and then*/ kDoNothing); break;
+    //
+    case 20: cheatMoney(); break;
+    case 21: cheatUnlock(); break;
+    //
+    case 25: chooseMusic(0); break;
+    case 26: chooseMusic(1); break;
+    case 27: chooseMusic(4); break;
+    case 28: chooseMusic(3); break;
+    case 29: chooseMusic(2); break;
+    case 30: chooseMusic(5); break;
+    //
+    case 45: sfx(rand() % kNSFX); break;
   }
   redrawMainmenuLine(getMainmenuUIBitmap(selectedID), selectedID);
 }

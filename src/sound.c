@@ -24,21 +24,6 @@ void resumeMusic() {
   pd->sound->fileplayer->play(m_music[m_trackPlaying], 1);
 }
 
-void playCredits() {
-  if (m_trackPlaying == -1) {
-    // music is off
-    return;
-  } 
-  #ifdef DEV
-  pd->system->logToConsole("Stopping %i", m_trackPlaying);
-  #endif
-  int8_t toStop = m_trackPlaying;
-  m_trackPlaying = -1; // Caution: there will be a callback
-  pd->sound->fileplayer->stop(m_music[toStop]);
-  pd->sound->fileplayer->play(m_music[N_MUSIC_TRACKS], 1); 
-  m_trackPlaying = N_MUSIC_TRACKS;
-}
-
 void updateMusic(bool _isTitle) {
   if (_isTitle) {
     if (m_trackPlaying != -1) {
@@ -71,6 +56,21 @@ void updateMusic(bool _isTitle) {
       }
     }
   }
+}
+
+void chooseMusic(int8_t _id) {
+  if (m_trackPlaying == -1) {
+    // music is off
+    return;
+  } 
+  #ifdef DEV
+  pd->system->logToConsole("Stopping %i", m_trackPlaying);
+  #endif
+  int8_t toStop = m_trackPlaying;
+  m_trackPlaying = -1; // Caution: there will be a callback
+  pd->sound->fileplayer->stop(m_music[toStop]);
+  pd->sound->fileplayer->play(m_music[_id], 1); 
+  m_trackPlaying = _id;
 }
 
 void musicStopped(SoundSource* _c) {

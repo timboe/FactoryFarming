@@ -26,6 +26,8 @@ uint16_t m_autoSaveTimer = 0;
 
 uint16_t m_cactusUnlock = 0; // Used to unlock 2nd half of the game
 
+int32_t m_nUnlocks = 0;
+
 void tickNear(void);
 
 void tickFar(void);
@@ -377,7 +379,14 @@ void initGame() {
         }
       }
     }
-    if (UnlockDecs[i].type == FINAL_UNLOCK_TYPE && UnlockDecs[i].subType.raw == FINAL_UNLOCK_SUBTYPE) break;
+    if (UnlockDecs[i].type == FINAL_UNLOCK_TYPE && UnlockDecs[i].subType.raw == FINAL_UNLOCK_SUBTYPE) {
+      m_nUnlocks = i;
+      break;
+    }
   }
 
+}
+
+int32_t getNUnlocks() {
+  return m_nUnlocks;
 }
