@@ -114,47 +114,51 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
     case kVitiminFac:;
       switch (_n) {
         case 0: *_isFlavour = false; return "Ingredients: ";
-        case 1: return "Gelatin, ";
-        case 2: return "Glycerin, ";
-        case 3: return "Beta-";
-        case 4: return "Carotene ";
-        case 5: *_isFlavour = false; return "(Carrots)";
-        case 6: return ", ";
-        case 7: return "Soy ";
-        case 8: return "Lecithin, ";
-        case 9: return "Calcium ";
-        case 10: return "Carbonate ";
-        case 11: *_isFlavour = false; return "(Chalk)";
+        case 1: return "Glycerin, ";
+        case 2: return "Beta ";
+        case 3: return "Carotene ";
+        case 4: *_isFlavour = false; return "(";
+        case 5: *_isFlavour = false; return toStringCargoByType(kCarrot, /*plural=*/ false);
+        case 6: *_isFlavour = false; return ")";
+        case 7: return ", ";
+        case 8: return "Soy ";
+        case 9: return "Lecithin, ";
+        case 10: return "Calcium ";
+        case 11: return "Carbonate ";
+        case 12: *_isFlavour = false; return "(";
+        case 13: *_isFlavour = false; return toStringCargoByType(kChalk, /*plural=*/ false);
+        case 14: *_isFlavour = false; return ")";
+
       }
       break;
     case kVegOilFac:;
       switch (_n) {
         case 0: *_isFlavour = false; return "Ingredients: ";
-        case 1: *_isFlavour = false; return "Sunflower";
+        case 1: *_isFlavour = false; return toStringCargoByType(kSunflower, /*plural=*/ true);
         case 2: return ", ";
-        case 3: return "Stabalisers";
+        case 3: return "Stabilizers";
       }
       break;
     case kCrispsFac:
       switch (_n) {
         case 0: *_isFlavour = false; return "Ingredients: ";
-        case 1: *_isFlavour = false; return "Potatoes";
+        case 1: *_isFlavour = false; return toStringCargoByType(kPotato, /*plural=*/ true);
         case 2: return ", ";
-        case 3: *_isFlavour = false; return "Vegtable Oil";
+        case 3: *_isFlavour = false; return toStringCargoByType(kOil, /*plural=*/ false);
         case 4: return ", ";
-        case 5: *_isFlavour = false; return "Salt";
+        case 5: *_isFlavour = false; return toStringCargoByType(kSalt, /*plural=*/ false);
         case 6: return ", ";
         case 7: return "Artificial ";
-        case 8: return "Flavourings";
+        case 8: return "Flavorings";
       }
       break;
     case kEthanolFac:
       switch (_n) {
         case 0: *_isFlavour = false; return "Ingredients: ";
-        case 1: *_isFlavour = false; return "Water";
+        case 1: *_isFlavour = false; return toStringCargoByType(kWaterBarrel, /*plural=*/ false);
         case 2: return ", ";
         case 3: return "Distilled ";
-        case 4: return "Vegtable ";
+        case 4: return "Vegetable ";
         case 5: return "Alcohol ";
         case 6: *_isFlavour = false; return "(Potatoes)";
       }
@@ -164,164 +168,386 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 0: *_isFlavour = false; return "Ingredients: ";
         case 1: return "Apple ";
         case 2: return "Juice ";
-        case 3: *_isFlavour = false; return "(Apples)";
-        case 4: return ", ";
-        case 5: *_isFlavour = false; return "Ethanol";
+        case 3: *_isFlavour = false; return "(";
+        case 4: *_isFlavour = false; return toStringCargoByType(kApple, /*plural=*/ true);
+        case 5: *_isFlavour = false; return ")";
         case 6: return ", ";
-        case 7: return "Artificial ";
-        case 8: return "Coloring";
-        case 9: return ", ";
-        case 10: return "Stabalisers";
+        case 7: *_isFlavour = false; return toStringCargoByType(kEthanol, /*plural=*/ false);
+        case 8: return ", ";
+        case 9: return "Artificial ";
+        case 10: return "Coloring";
         case 11: return ", ";
-        case 12: return "Preservatives";      }
+        case 12: return "Stabilizers";
+        case 13: return ", ";
+        case 14: return "Preservatives";      
+      }
     case kAbattoir:
       switch (_n) {
-      case 0: *_isFlavour = false; return "Feed: ";
-
+        case 0: *_isFlavour = false; return "Animal Feed: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kWaterBarrel, /*plural=*/ false);
+        case 2: return ", ";
+        case 3: *_isFlavour = false; return toStringCargoByType(kSunflower, /*plural=*/ false);
+        case 4: return ", ";
+        case 5: *_isFlavour = false; return toStringCargoByType(kSeaweed, /*plural=*/ false);
       }
       break;
     case kHydrogenFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Process: ";
+        case 1: return "Electrolysis ";
+        case 2: return "of ";
+        case 3: *_isFlavour = false; return toStringCargoByType(kWaterBarrel, /*plural=*/ false);
       }
       break;
     case kHOILFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kOil, /*plural=*/ false);
+        case 2: return ", ";
+        case 3: *_isFlavour = false; return toStringCargoByType(kWaterBarrel, /*plural=*/ false);
       }
       break;
     case kCornDogFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kCorn, /*plural=*/ false);
+        case 2: return ", ";
+        case 3: return "Hydrogenated ";
+        case 4: return "Vegetable ";
+        case 5: return "Oil ";
+        case 6: *_isFlavour = false; return "(";
+        case 7: *_isFlavour = false; return toStringCargoByType(kHOil, /*plural=*/ false);
+        case 8: *_isFlavour = false; return ")";
+        case 9: return ", ";
+        case 10: *_isFlavour = false; return toStringCargoByType(kMeat, /*plural=*/ false);
       }
     case kBeerFac:
       switch (_n) {
-        case 0: return " ";
-
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kWheat, /*plural=*/ false);
+        case 2: return ", ";
+        case 3: *_isFlavour = false; return toStringCargoByType(kWaterBarrel, /*plural=*/ false);
+        case 4: return ", ";
+        case 5: *_isFlavour = false; return toStringCargoByType(kEthanol, /*plural=*/ false);
       }
       break;
     case kTequilaFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: return "Agave ";
+        case 2: *_isFlavour = false; return "(";
+        case 3: *_isFlavour = false; return toStringCargoByType(kCactus, /*plural=*/ false);
+        case 4: *_isFlavour = false; return ")";
+        case 5: return ", ";
+        case 6: *_isFlavour = false; return toStringCargoByType(kWaterBarrel, /*plural=*/ false);
+        case 7: return ", ";
+        case 8: *_isFlavour = false; return toStringCargoByType(kEthanol, /*plural=*/ false);
       }
       break;
     case kHFCSFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kCorn, /*plural=*/ false);
+        case 2: return ", ";
+        case 3: *_isFlavour = false; return toStringCargoByType(kWaterBarrel, /*plural=*/ false);
       }
       break;
     case kGelatinFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kMeat, /*plural=*/ false);
       }
       break;
     case kJellyFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: return "High ";
+        case 2: return "Fructose ";
+        case 3: return "Corn ";
+        case 4: return "Syrup ";
+        case 5: *_isFlavour = false; return "(";
+        case 6: *_isFlavour = false; return toStringCargoByType(kHFCS, /*plural=*/ false);
+        case 7: *_isFlavour = false; return ")";
+        case 8: return ", ";
+        case 9: *_isFlavour = false; return toStringCargoByType(kGelatin, /*plural=*/ false);
+        case 10: return ", ";
+        case 11: *_isFlavour = false; return toStringCargoByType(kLime, /*plural=*/ false);
       }
       break;
     case kJelloShotFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kJelly, /*plural=*/ false);
+        case 2: return ", ";
+        case 3: *_isFlavour = false; return toStringCargoByType(kTequila, /*plural=*/ false);
       }
       break;
     case kEmulsifierFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kSeaweed, /*plural=*/ false);
       }
       break;
     case kIceCreamFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: return "High ";
+        case 2: return "Fructose ";
+        case 3: return "Corn ";
+        case 4: return "Syrup ";
+        case 5: *_isFlavour = false; return "(";
+        case 6: *_isFlavour = false; return toStringCargoByType(kHFCS, /*plural=*/ false);
+        case 7: *_isFlavour = false; return ")";
+        case 8: return ", ";
+        case 9: return "Hydrogenated ";
+        case 10: return "Vegetable ";
+        case 11: return "Oil ";
+        case 12: *_isFlavour = false; return "(";
+        case 13: *_isFlavour = false; return toStringCargoByType(kHOil, /*plural=*/ false);
+        case 14: *_isFlavour = false; return ")";
+        case 15: return ", ";
+        case 16: *_isFlavour = false; return toStringCargoByType(kEmulsifiers, /*plural=*/ true);
+        case 17: return ", ";
+        case 18: *_isFlavour = false; return toStringCargoByType(kStrawberry, /*plural=*/ false);
       }
       break;
     case kBatteryFarm:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Animal Feed: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kWaterBarrel, /*plural=*/ false);
+        case 2: return ", ";
+        case 3: *_isFlavour = false; return toStringCargoByType(kCorn, /*plural=*/ false);
+        case 4: return ", ";
+        case 5: return "Antibiotics ";
       }
       break;
     case kProteinFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kEggs, /*plural=*/ true);
+        case 2: return ", ";
+        case 3: *_isFlavour = false; return toStringCargoByType(kSeaweed, /*plural=*/ false);
+        case 4: return ", ";
+        case 5: *_isFlavour = false; return toStringCargoByType(kChalk, /*plural=*/ false);
+        case 6: return ", ";
+        case 7: *_isFlavour = false; return toStringCargoByType(kVitamin, /*plural=*/ true);
       }
       break;
     case kChocolateFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: return "High ";
+        case 2: return "Fructose ";
+        case 3: return "Corn ";
+        case 4: return "Syrup ";
+        case 5: *_isFlavour = false; return "(";
+        case 6: *_isFlavour = false; return toStringCargoByType(kHFCS, /*plural=*/ false);
+        case 7: *_isFlavour = false; return ")";
+        case 8: return ", ";
+        case 9: return "Hydrogenated ";
+        case 10: return "Vegetable ";
+        case 11: return "Oil ";
+        case 12: *_isFlavour = false; return "(";
+        case 13: *_isFlavour = false; return toStringCargoByType(kHOil, /*plural=*/ false);
+        case 14: *_isFlavour = false; return ")";
+        case 15: return ", ";
+        case 16: *_isFlavour = false; return toStringCargoByType(kCocoBean, /*plural=*/ true);
       }
       break;
     case kPieFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kPotato, /*plural=*/ true);
+        case 2: return ", ";
+        case 3: *_isFlavour = false; return toStringCargoByType(kWheat, /*plural=*/ false);
+        case 4: return ", ";
+        case 5: *_isFlavour = false; return toStringCargoByType(kGelatin, /*plural=*/ false);
+        case 6: return ", ";
+        case 7: *_isFlavour = false; return toStringCargoByType(kMeat, /*plural=*/ false);
       }
       break;
     case kMSGFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: return "Gluten ";
+        case 2: *_isFlavour = false; return "(";
+        case 3: *_isFlavour = false; return toStringCargoByType(kWheat, /*plural=*/ false);
+        case 4: *_isFlavour = false; return ")";
+        case 5: return ", ";
+        case 6: return "Sodium ";
+        case 7: *_isFlavour = false; return "(";
+        case 8: *_isFlavour = false; return toStringCargoByType(kSalt, /*plural=*/ false);
+        case 9: *_isFlavour = false; return ")";
       }
       break;
     case kTVDinnerFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kCarrot, /*plural=*/ true);
+        case 2: return ", ";
+        case 3: *_isFlavour = false; return toStringCargoByType(kMeatPie, /*plural=*/ false);
+        case 4: return ", ";
+        case 5: return "Monosodium";
+        case 6: return "Glutamate ";
+        case 7: *_isFlavour = false; return "(";
+        case 8: *_isFlavour = false; return toStringCargoByType(kMSG, /*plural=*/ false);
+        case 9: *_isFlavour = false; return ")";
+        case 10: return ", ";
+        case 11: *_isFlavour = false; return toStringCargoByType(kEmulsifiers, /*plural=*/ true);
       }
       break;
     case kCakeFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kCarrot, /*plural=*/ true);
+        case 2: return ", ";
+        case 3: *_isFlavour = false; return toStringCargoByType(kMeatPie, /*plural=*/ false);
+        case 4: return ", ";
+        case 5: return "Monosodium";
+        case 6: return "Glutamate ";
+        case 7: *_isFlavour = false; return "(";
+        case 8: *_isFlavour = false; return toStringCargoByType(kMSG, /*plural=*/ false);
+        case 9: *_isFlavour = false; return ")";
+        case 10: return ", ";
+        case 11: *_isFlavour = false; return toStringCargoByType(kEmulsifiers, /*plural=*/ true);
       }
       break;
     case kCaffeineFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Process: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kCoffeeBean, /*plural=*/ true);
+        case 2: return " ";
+        case 3: return "Plus ";
+        case 4: return "Solvent ";
+        case 5: *_isFlavour = false; return "(";
+        case 6: *_isFlavour = false; return toStringCargoByType(kCO2, /*plural=*/ false);
+        case 7: *_isFlavour = false; return ")";
       }
       break;
     case kEnergyDrinkFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: return "High ";
+        case 2: return "Fructose ";
+        case 3: return "Corn ";
+        case 4: return "Syrup ";
+        case 5: *_isFlavour = false; return "(";
+        case 6: *_isFlavour = false; return toStringCargoByType(kHFCS, /*plural=*/ false);
+        case 7: *_isFlavour = false; return ")";
+        case 8: return ", ";
+        case 9: *_isFlavour = false; return toStringCargoByType(kCO2, /*plural=*/ false);
+        case 10: return ", ";
+        case 11: *_isFlavour = false; return toStringCargoByType(kCaffeine, /*plural=*/ false);
+        case 12: return ", ";
+        case 13: *_isFlavour = false; return toStringCargoByType(kLime, /*plural=*/ false);
       }
       break;
     case kRaveJuiceFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kHardCider, /*plural=*/ false);
+        case 2: return ", ";
+        case 3: *_isFlavour = false; return toStringCargoByType(kEnergyDrink, /*plural=*/ false);
       }
       break;
     case kPerkPillFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kCaffeine, /*plural=*/ false);
+        case 2: return ", ";
+        case 3: *_isFlavour = false; return toStringCargoByType(kChalk, /*plural=*/ false);
       }
       break;
     case kPackagingFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Plant Fibers: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kBamboo, /*plural=*/ false);
+        case 2: return ", ";
+        case 3: *_isFlavour = false; return toStringCargoByType(kCactus, /*plural=*/ false);
       }
       break;
     case kDessertFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kJelly, /*plural=*/ false);
+        case 2: return ", ";
+        case 3: *_isFlavour = false; return toStringCargoByType(kIceCream, /*plural=*/ false);
+        case 4: return ", ";
+        case 5: return "Fruit ";
+        case 6: return "Syrup ";
+        case 7: *_isFlavour = false; return "(";
+        case 8: *_isFlavour = false; return toStringCargoByType(kApple, /*plural=*/ true);
+        case 9: *_isFlavour = false; return ")";
       }
       break;
     case kCateringKitFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Content: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kTVDinner, /*plural=*/ false);
+        case 2: return ", ";
+        case 3: *_isFlavour = false; return toStringCargoByType(kDessert, /*plural=*/ false);
+        case 4: return ", ";
+        case 5: *_isFlavour = false; return toStringCargoByType(kEnergyDrink, /*plural=*/ false);
+        case 6: return ". Box ";
+        case 7: *_isFlavour = false; return "(";
+        case 8: *_isFlavour = false; return toStringCargoByType(kPackaging, /*plural=*/ false);
+        case 9: *_isFlavour = false; return ")";
       }
       break;
     case kPartyPackFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Content: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kBeer, /*plural=*/ false);
+        case 2: return ", ";
+        case 3: *_isFlavour = false; return toStringCargoByType(kCake, /*plural=*/ false);
+        case 4: return ", ";
+        case 5: *_isFlavour = false; return toStringCargoByType(kEnergyDrink, /*plural=*/ false);
+        case 6: return ", ";
+        case 7: *_isFlavour = false; return toStringCargoByType(kJelloShot, /*plural=*/ true);
+        case 8: return ". Box ";
+        case 9: *_isFlavour = false; return "(";
+        case 10: *_isFlavour = false; return toStringCargoByType(kPackaging, /*plural=*/ false);
+        case 11: *_isFlavour = false; return ")";
       }
       break;
     case kParfumeFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kEthanol, /*plural=*/ false);
+        case 2: return ", ";
+        case 3: *_isFlavour = false; return toStringCargoByType(kSeaCucumber, /*plural=*/ false);
+        case 4: return ", ";
+        case 5: *_isFlavour = false; return toStringCargoByType(kStrawberry, /*plural=*/ true);
       }
       break;
     case kMedicalSuplimentFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: *_isFlavour = false; return toStringCargoByType(kProtein, /*plural=*/ false);
+        case 2: return ", ";
+        case 3: *_isFlavour = false; return toStringCargoByType(kCocoBean, /*plural=*/ false);
+        case 4: return ", ";
+        case 5: *_isFlavour = false; return toStringCargoByType(kCoffeeBean, /*plural=*/ false);
+        case 6: return ", ";
+        case 7: *_isFlavour = false; return toStringCargoByType(kSeaCucumber, /*plural=*/ false);
       } break;
     case kTurkishDelightFac:
       switch (_n) {
-        case 0: return " ";
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: return "High ";
+        case 2: return "Fructose ";
+        case 3: return "Corn ";
+        case 4: return "Syrup ";
+        case 5: *_isFlavour = false; return "(";
+        case 6: *_isFlavour = false; return toStringCargoByType(kHFCS, /*plural=*/ false);
+        case 7: *_isFlavour = false; return ")";
+        case 8: return ", ";
+        case 9: *_isFlavour = false; return toStringCargoByType(kRose, /*plural=*/ false);
+        case 10: return ", ";
+        case 11: return "Starch ";
+        case 12: *_isFlavour = false; return "(";
+        case 13: *_isFlavour = false; return toStringCargoByType(kPotato, /*plural=*/ false);
+        case 14: *_isFlavour = false; return ")"; 
       } break;
     case kSpareFac0: case kSpareFac1: case kSpareFac2: case kSpareFac3:
     case kSpareFac4: case kSpareFac5: case kSpareFac6: case kSpareFac7: 

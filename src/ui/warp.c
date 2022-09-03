@@ -14,7 +14,12 @@ void doWarp() {
   if (selectedID == getSlot()) {
     setGameMode(kWanderMode);
   } else if (getOwned(kUICatWarp, selectedID) == 0) { // Not yet unlocked
+    
+  #ifdef FAST_PROGRESS
+    const int32_t selectedPriceOrAmount = FAST_PROGRESS_SALES;
+  #else
     const int32_t selectedPriceOrAmount = getPrice(kUICatWarp, selectedID);
+  #endif
 
     bool doUnlock = false;
 
@@ -47,7 +52,13 @@ void doWarp() {
 
 void populateInfoWarp(bool _visible) {
   const uint16_t selectedID =  getUIContentID();
+
+#ifdef FAST_PROGRESS
+  const int32_t selectedPriceOrAmount = FAST_PROGRESS_SALES;
+#else
   const int32_t selectedPriceOrAmount = getPrice(kUICatWarp, selectedID);
+#endif
+  
   const uint16_t selectedOwned = getOwned(kUICatWarp, selectedID);
 
   bool canAfford = (getPlayer()->m_money >= selectedPriceOrAmount);

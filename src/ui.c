@@ -1818,7 +1818,7 @@ void initiUI() {
           pd->graphics->drawBitmap(getSprite16(3, 16, 2), 0, 0, kBitmapUnflipped);
           pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), TILE_PIX/2, TILE_PIX/2, kBitmapUnflipped);
         } else if (c == kUICatFactory) {
-          pd->graphics->drawBitmap(getSprite16(12 + r, 10, 2), 0, 0, kBitmapUnflipped);
+          pd->graphics->drawBitmap(getSprite16_byidx(FDesc[i].UIIcon + r, 2), 0, 0, kBitmapUnflipped);
           pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), TILE_PIX/2, TILE_PIX/2, kBitmapUnflipped);
         } else {
           if (c != kUICatConv && c != kUICatExtractor && c != kUICatWarp && c != kUICatUtility) {

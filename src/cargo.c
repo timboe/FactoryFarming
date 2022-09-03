@@ -105,7 +105,7 @@ const char* toStringCargoByType(enum kCargoType _type, bool _plural) {
     case kVitamin: return "Vitamins";
     case kPotato: return _plural ? "Potatoes" : "Potato";
     case kSunflower: return _plural ? "Sunflowers" : "Sunflower";
-    case kOil: return _plural ? "Oils" : "Oil";
+    case kOil: return _plural ? "Vegtable Oils" : "Vegtable Oil";
     case kSalt: return "Salt";
     case kCrisps: return "Chips";
     case kApple: return _plural ? "Apples" : "Apple";

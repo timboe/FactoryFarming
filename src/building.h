@@ -65,6 +65,7 @@ struct FactoryDescriptor_t {
   uint16_t unlock;
   uint32_t price;
   uint16_t time;
+  uint16_t UIIcon;
   uint16_t sprite;
   enum kCargoType out;
   enum kCargoType in1;

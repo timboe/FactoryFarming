@@ -23,7 +23,11 @@ bool checkHasNewToShow(struct Player_t* _p) {
     // This is always the last unlock - cannot go on from here
     return false;
   }
+  #ifdef FAST_PROGRESS
+  const bool haveUnlocked = (_p->m_soldCargo[ UnlockDecs[ currentLevel+1 ].ofCargo ] >= FAST_PROGRESS_SALES);
+  #else
   const bool haveUnlocked = (_p->m_soldCargo[ UnlockDecs[ currentLevel+1 ].ofCargo ] >= UnlockDecs[ currentLevel+1 ].fromSelling);
+  #endif
   // Tutorial
   if (getTutorialStage() < kTutBuildConveyor && UnlockDecs[currentLevel+1].type == kConveyor) {
     return false; // Need to progress the tutorial too to unlock conveyors

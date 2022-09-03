@@ -99,7 +99,11 @@ LCDBitmap* getPauseImage() {
 
     const uint32_t nextLevel = p->m_buildingsUnlockedTo + 1;
     const enum kCargoType cargo = UnlockDecs[ nextLevel ].ofCargo;
+    #ifdef FAST_PROGRESS
+    const uint16_t needToSell = FAST_PROGRESS_SALES;
+    #else
     const uint16_t needToSell = UnlockDecs[ nextLevel ].fromSelling;
+    #endif
     const uint16_t haveSold = p->m_soldCargo[ cargo ];
 
     snprintf(text, 128, "%i %ss", needToSell, toStringCargoByType(cargo, /*plural=*/true));

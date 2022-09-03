@@ -122,7 +122,7 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kProteinFac: return "Protein Powder Factory";
       case kChocolateFac: return "Chocolate Factory"; 
       case kPieFac: return "Meat Pie Factory";
-      case kMSGFac: return "Mono-sodium Glutamate Factory";
+      case kMSGFac: return "Monosodium Glutamate Factory";
       case kTVDinnerFac: return "TV-Dinner Factory";
       case kCakeFac: return "Chocolate Cake Factory"; 
       case kCaffeineFac: return "Caffeine Powder Factory";

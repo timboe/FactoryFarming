@@ -4,6 +4,8 @@
 
 #define SLOW_LOAD
 
+#define FAST_PROGRESS
+
 //#define DEMO
 
 #define PRETEND_ZOOMED_IN false
