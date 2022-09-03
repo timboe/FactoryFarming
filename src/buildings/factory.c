@@ -12,7 +12,8 @@ void factoryUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom)
   
   const enum kFactorySubType fst = _building->m_subType.factory;
   // Production
-  if (_building->m_stored[0] < 255 /*out*/ && _building->m_stored[1]  && 
+  if (_building->m_stored[0] < 255 /*out*/ &&
+    _building->m_stored[1] && 
     (FDesc[fst].in2 == kNoCargo || _building->m_stored[2]) &&
     (FDesc[fst].in3 == kNoCargo || _building->m_stored[3]) &&
     (FDesc[fst].in4 == kNoCargo || _building->m_stored[4]) &&
@@ -32,7 +33,7 @@ void factoryUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom)
       struct Location_t* loc = getLocation(_building->m_location->m_x + x, _building->m_location->m_y + y);
       if (loc->m_cargo) {
         // Is this one of out inputs?
-        if (loc->m_cargo->m_type == FDesc[fst].in1 && _building->m_stored[1] < 255) {
+        if        (loc->m_cargo->m_type == FDesc[fst].in1 && _building->m_stored[1] < 255) {
           ++_building->m_stored[1]; 
           clearLocation(loc, /*clearCargo*/ true, /*clearBuilding*/ false);
         } else if (loc->m_cargo->m_type == FDesc[fst].in2 && _building->m_stored[2] < 255) {

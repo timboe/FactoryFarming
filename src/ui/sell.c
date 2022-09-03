@@ -27,7 +27,6 @@ void doSale() {
     // Tutorial
     if (getTutorialStage() == kTutSellCarrots && selectedID == kCarrot) {
       makeTutorialProgress();
-      modMoney(getPrice(kUICatExtractor, kCropHarvesterSmall));
     }
   }
 }

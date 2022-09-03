@@ -110,6 +110,14 @@ void doPlace() {
     case kUICatTool: break; // Impossible
     case kUICatPlant: placed = newBuilding(placeLocation, SN, kPlant, (union kSubType) {.plant = selectedID} ); break;
     case kUICatConv:;
+      // If we already have a conv here of the same subtype and rotation then there is nothing to do
+      if (placeLocation->m_building
+        && placeLocation->m_building->m_type == kConveyor
+        && placeLocation->m_building->m_subType.conveyor == selectedID
+        && placeLocation->m_building->m_dir == getCursorRotation())
+      {
+        break;
+      } 
       bool carryForwardConveyorUpgrade = false;
       // We can place conveyors on top of other conveyors, to do so we first have to delete the existing one
       if (placeLocation->m_building && placeLocation->m_building->m_type == kConveyor) {
@@ -329,7 +337,10 @@ void doDestroy() {
       cleared |= clearLocation(loc, /*cargo=*/ true, /*building=*/ doBuilding);
     }
   }
-  if (cleared) sfx(kSfxDestroy);
+  if (cleared) {
+    sfx(kSfxDestroy);
+    addTrauma(1.2f);
+  }
 }
 
 void populateContentInventory(void) {

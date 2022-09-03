@@ -2,8 +2,6 @@
 #include "game.h"
 #include "cargo.h"
 
-
-
 struct Location_t{
   // Persistent
   // Chunk index - obtained from chunk
@@ -21,7 +19,6 @@ struct Location_t{
   int16_t m_pix_off_x; // Pixel offset
   int16_t m_pix_off_y; // Pixel offset
 };
-
 
 struct Location_t* getLocation(int32_t _x, int32_t _y);
 

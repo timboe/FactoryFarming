@@ -343,12 +343,10 @@ void clickHandleBuilding(uint32_t _buttonPressed) {
     // Tutorial
     if (getTutorialStage() == kTutBuildHarvester && getTutorialProgress()) {
       nextTutorialStage();
-      modMoney(getPrice(kUICatConv, kBelt) * 50);
     }
     // Tutorial 
     if (getTutorialStage() == kTutBuildQuarry && getTutorialProgress()) {
       nextTutorialStage();
-      modMoney(getPrice(kUICatExtractor, kChalkQuarry));
     }
   }
 }

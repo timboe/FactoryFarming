@@ -115,17 +115,13 @@ LCDBitmap* getPauseImage() {
   
   } else if (nrs == kNewNoNeedsTutorial) {
 
-    snprintf(textA, 128, "Continue:");
+    snprintf(textA, 128, "Continue");
     snprintf(textB, 128, "The Tutorial");
-    snprintf(textC, 128, "To unlock the next:");
+    snprintf(textC, 128, "To unlock the next");
+    snprintf(textD, 128, "Building");
     sA = getSprite16(13, 13, 1);
-
-    const uint32_t nextLevel = p->m_buildingsUnlockedTo + 1;
-    enum kBuildingType nextBuildingType = UnlockDecs[nextLevel].type;
-    enum kUICat nextBuildingUICat = getBuildingTypeCat(nextBuildingType);
-
-    snprintf(textD, 128, "%s", toStringHeader(nextBuildingUICat, /*plural*/ false));
     sB = getSprite16(11, 13, 1);
+
   }
 
   length = strlen(textA);
@@ -355,6 +351,8 @@ void redrawSettingsMenuLine(LCDBitmap* _bitmap, int32_t _line) {
     case 50: addNumber(p->m_moneyHighWaterMark); break;
     case 51: addNumber(getTotalSoldCargo()); break;
     case 52: addNumber(getTotalImportedCargo()); break;
+    case 53: addNumber(getNBuildings()); break;
+    case 54: addNumber(getNCargo()); break;
   }
 
   pd->graphics->popContext();
@@ -371,7 +369,7 @@ void populateInfoSettingsMenu() {
 
 bool isTitle(int32_t _line) {
   switch (_line) {
-    case 0: case 4: case 12: case 15: case 23: case 25: case 32: case 40: case 45: case 47: case 53: case 58: case 612: return true;
+    case 0: case 4: case 12: case 15: case 23: case 25: case 32: case 40: case 45: case 47: case 55: case 60: case 64: return true;
   }
   return false;
 }
@@ -440,21 +438,23 @@ const char* getLine(int32_t _line) {
     case 50: return "Most Money Held:";
     case 51: return "Total Cargo Sold:";
     case 52: return "Total Cargo Imported:";
+    case 53: return "Total Building in this Plot:";
+    case 54: return "Total Cargo in this Plot:";
     //
-    case 53: return " ";
-    case 54: return "© Tim Martin 2022";
-    case 55: return "Factory Farming is an MIT";
-    case 56: return "Licensed Open Source Project";
-    case 57: return "github.com/timboe/FactoryFarming";
+    case 55: return " ";
+    case 56: return "© Tim Martin 2022";
+    case 57: return "Factory Farming is an MIT";
+    case 58: return "Licensed Open Source Project";
+    case 59: return "github.com/timboe/FactoryFarming";
     //
-    case 58: return " ";
-    case 59: return "Thank you for playing!";
-    case 60: return "And for your support of niche";
-    case 61: return "indy game dev projects :)";
+    case 60: return " ";
+    case 61: return "Thank you for playing!";
+    case 62: return "And for your support of niche";
+    case 63: return "indy game dev projects :)";
     //
-    case 62: return " ";
-    case 63: return "Keep on Maximizing Profits,";
-    case 64: return "maximizing Efficiency.";
+    case 64: return " ";
+    case 65: return "Keep on Maximizing Profits,";
+    case 66: return "maximizing Efficiency.";
     // can currently go to 120
   }
   return "???";

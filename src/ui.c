@@ -148,7 +148,7 @@ bool m_rowIsTitle[MAX_ROWS] = {false};
 
 int16_t m_creditsCounter;
 
-uint8_t m_buySellMultiplier = 0;
+uint8_t m_buySellMultiplier[kNGameModes] = {1};
 
 // Checks that the cursor selection is OK
 void checkSel(void);
@@ -263,28 +263,28 @@ void modCredits(bool _increment) {
 }
 
 uint8_t getBuySellMultiplier() {
-  return m_buySellMultiplier;
+  return m_buySellMultiplier[m_mode];
 }
 
 void modMultiplier(bool _increment) {
   sfx(kSfxRotate);
   if (_increment) {
-    switch (m_buySellMultiplier) {
-      case 1: m_buySellMultiplier = 2; break;
-      case 2: m_buySellMultiplier = 5; break;
-      case 5: m_buySellMultiplier = 10; break;
-      case 10: m_buySellMultiplier = 50; break;
-      case 50: m_buySellMultiplier = 100; break;
-      case 100: m_buySellMultiplier = 1; break;
+    switch (m_buySellMultiplier[m_mode]) {
+      case 1: case 0: m_buySellMultiplier[m_mode] = 2; break;
+      case 2: m_buySellMultiplier[m_mode] = 5; break;
+      case 5: m_buySellMultiplier[m_mode] = 10; break;
+      case 10: m_buySellMultiplier[m_mode] = 50; break;
+      case 50: m_buySellMultiplier[m_mode] = 100; break;
+      case 100: m_buySellMultiplier[m_mode] = 1; break;
     }
   } else {
-    switch (m_buySellMultiplier) {
-      case 1: m_buySellMultiplier = 100; break;
-      case 2: m_buySellMultiplier = 1; break;
-      case 5: m_buySellMultiplier = 2; break;
-      case 10: m_buySellMultiplier = 5; break;
-      case 50: m_buySellMultiplier = 10; break;
-      case 100: m_buySellMultiplier = 50; break;
+    switch (m_buySellMultiplier[m_mode]) {
+      case 1: case 0: m_buySellMultiplier[m_mode] = 100; break;
+      case 2: m_buySellMultiplier[m_mode] = 1; break;
+      case 5: m_buySellMultiplier[m_mode] = 2; break;
+      case 10: m_buySellMultiplier[m_mode] = 5; break;
+      case 50: m_buySellMultiplier[m_mode] = 10; break;
+      case 100: m_buySellMultiplier[m_mode] = 50; break;
     }
   }
   UIDirtyRight();
@@ -892,7 +892,7 @@ void drawUIRight() {
   // Buy/sell multiplier
   if (gm == kMenuBuy || gm == kMenuSell) {
     pd->graphics->setDrawMode(kDrawModeFillWhite);
-    snprintf(text, 32, "x%u", (unsigned) m_buySellMultiplier);
+    snprintf(text, 32, "x%u", (unsigned) m_buySellMultiplier[m_mode]);
     pd->graphics->drawText(text, 32, kASCIIEncoding, DEVICE_PIX_Y/2 + 2*TILE_PIX, 0);
     pd->graphics->setDrawMode(kDrawModeCopy);
   }
@@ -1390,13 +1390,14 @@ void resetUI() {
     m_selRow[i] = 1;
     m_selRowOffset[i] = 0;
     m_cursorRowAbs[i] = 1;
+    m_buySellMultiplier[i] = 1;
   }
   m_selRotation = 0;
   updateBlueprint();
   m_UITitleOffset = UI_TITLE_OFFSET;
   m_UITopOffset = 0;
   m_UITitleSelected = 0;
-  m_buySellMultiplier = 1;
+
 }
 
 void roundedRect(uint16_t _o, uint16_t _w, uint16_t _h, uint16_t _r, LCDColor _c) {
@@ -1826,16 +1827,16 @@ void initiUI() {
           pd->graphics->drawBitmap(getSprite16(3, 16, 2), 0, 0, kBitmapUnflipped);
           pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), TILE_PIX/2, TILE_PIX/2, kBitmapUnflipped);
         } else if (c == kUICatFactory) {
-          //pd->graphics->setDrawMode(FDesc[i].invert ? kDrawModeInverted : kDrawModeCopy);
+          pd->graphics->setDrawMode(FDesc[i].invert ? kDrawModeInverted : kDrawModeCopy);
           pd->graphics->drawBitmap(getSprite16_byidx(FDesc[i].UIIcon + r, 2), 0, 0, kBitmapUnflipped);
-          //pd->graphics->setDrawMode(kDrawModeCopy);
+          pd->graphics->setDrawMode(kDrawModeCopy);
           pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), TILE_PIX/2, TILE_PIX/2, kBitmapUnflipped);
-        //} else if (c == kUICatExtractor) {
-        //  pd->graphics->setDrawMode(EDesc[i].invert ? kDrawModeInverted : kDrawModeCopy);
-        //  pd->graphics->drawBitmap(getSprite16_byidx(spriteID + r, 2), 0, 0, kBitmapUnflipped);
-        //  pd->graphics->setDrawMode(kDrawModeCopy);
+        } else if (c == kUICatExtractor) {
+          pd->graphics->setDrawMode(EDesc[i].invert ? kDrawModeInverted : kDrawModeCopy);
+          pd->graphics->drawBitmap(getSprite16_byidx(spriteID + r, 2), 0, 0, kBitmapUnflipped);
+          pd->graphics->setDrawMode(kDrawModeCopy);
         } else {
-          if (c != kUICatConv && c != kUICatExtractor && c != kUICatWarp && c != kUICatUtility) {
+          if (c != kUICatConv && c != kUICatWarp && c != kUICatUtility) {
             roundedRect(1, TILE_PIX*2, TILE_PIX*2, TILE_PIX/2, kColorBlack);
             roundedRect(3, TILE_PIX*2, TILE_PIX*2, TILE_PIX/2, kColorWhite);
             pd->graphics->setDrawMode(kDrawModeNXOR);
@@ -2007,11 +2008,11 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 1: return "OK. But not all exploitable resources are grown.";
         case 2: return "Some are dug up, or pumped out. Let's build a Chalk";
         case 3: return "Quarry next. Buy one from The Shop and build it on";
-        case 4: return "Chalky Soil. There should be some to the West.";
+        case 4: return "Chalky Soil. There should be some to the North.";
           
         case 5: return "Go to the The Shop, buy a Chalk Quarry.";
         case 6: return "Press Ⓐ and choose this from your inventory.";
-        case 7: return "Go West from The Shop and look for Chalky Soil.";
+        case 7: return "Go North from The Shop and look for Chalky Soil.";
         case 8: return "Place the Quarry on at least one Chalky Soil tile.";
       }
     case kTutBuildVitamin:

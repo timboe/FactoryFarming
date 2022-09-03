@@ -116,19 +116,27 @@ void startPlotsTutorial() {
 void nextTutorialStage() {
   m_player.m_tutorialProgress = 0;
   ++m_player.m_enableTutorial;
+  int32_t toGive = 0;
   if (m_player.m_enableTutorial == kTutBreakOne || m_player.m_enableTutorial == kTutBreakTwo) {
     m_player.m_enableTutorial = TUTORIAL_FINISHED;
     return;
   } else if (m_player.m_enableTutorial == kTutGetCarrots) {
     growAtAll(); // Force all plants to grow
   } else if (m_player.m_enableTutorial == kTutBuildHarvester) {
-    modMoney( EDesc[kCropHarvesterSmall].unlock );
+    toGive = EDesc[kCropHarvesterSmall].price;
   } else if (m_player.m_enableTutorial == kTutBuildConveyor) {
-    modMoney( CDesc[kBelt].unlock );
+    toGive = CDesc[kBelt].price * 50;
   } else if (m_player.m_enableTutorial == kTutBuildQuarry) {
-    modMoney( EDesc[kChalkQuarry].unlock );
+    toGive = EDesc[kChalkQuarry].price;
   } else if (m_player.m_enableTutorial == kTutBuildVitamin) {
-    modMoney( FDesc[kVitiminFac].unlock );
+    toGive = FDesc[kVitiminFac].price;
+  }
+
+  if (toGive) {
+    #ifdef DEV
+    pd->system->logToConsole("Tut give player %i", toGive);
+    #endif
+    modMoney( toGive );
   }
 
   showTutorialMsg(m_player.m_enableTutorial);

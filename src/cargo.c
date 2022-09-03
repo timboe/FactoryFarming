@@ -8,74 +8,74 @@
 #define DIS UINT32_MAX
 
 struct CargoDescriptor_t CargoDesc[] = {
-  {.subType = kNoCargo, .price = 0, .multi = 1.3f, .UIIcon = SID(0,0)},
-  {.subType = kCarrot, .price = 1, .multi = 1.3f, .UIIcon = SID(10,7)},
-  {.subType = kChalk, .price = 1, .multi = 1.3f, .UIIcon = SID(13,7)},
-  {.subType = kVitamin, .price = 8, .multi = 1.3f, .UIIcon = SID(12,8)},
-  {.subType = kSunflower, .price = 2, .multi = 1.3f, .UIIcon = SID(15,7)},
-  {.subType = kPotato, .price = 2, .multi = 1.3f, .UIIcon = SID(14,7)},
-  {.subType = kOil, .price = 3, .multi = 1.3f, .UIIcon = SID(12,7)},
-  {.subType = kSalt, .price = 1, .multi = 1.3f, .UIIcon = SID(13,8)},
-  {.subType = kCrisps, .price = 12, .multi = 1.3f, .UIIcon = SID(0,21)},
-  {.subType = kApple, .price = 4, .multi = 1.3f, .UIIcon = SID(8,7)},
-  {.subType = kWaterBarrel, .price = 1, .multi = 1.3f, .UIIcon = SID(0,24)},
-  {.subType = kEthanol, .price = 15, .multi = 1.3f, .UIIcon = SID(6,23)},
-  {.subType = kHardCider, .price = 20, .multi = 1.3f, .UIIcon = SID(14,5)},
-  {.subType = kCorn, .price = 6, .multi = 1.3f, .UIIcon = SID(2,22)},
-  {.subType = kSeaweed, .price = 5, .multi = 1.3f, .UIIcon = SID(3,22)},
-  {.subType = kMeat, .price = 25, .multi = 1.3f, .UIIcon = SID(9,8)},
-  {.subType = kSpareCargo0, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
-  {.subType = kSpareCargo1, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
-  {.subType = kSpareCargo2, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
-  {.subType = kSpareCargo3, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
-  {.subType = kHydrogen, .price = 5, .multi = 1.3f, .UIIcon = SID(1,23)},
-  {.subType = kHOil, .price = 9, .multi = 1.3f, .UIIcon = SID(12,6)},
-  {.subType = kCornDog, .price = 50, .multi = 1.3f, .UIIcon = SID(4,24)},
-  {.subType = kWheat, .price = 12, .multi = 1.3f, .UIIcon = SID(11,7)},
-  {.subType = kBeer, .price = 40, .multi = 1.3f, .UIIcon = SID(7,23)},
-  {.subType = kCactus, .price = 16, .multi = 1.3f, .UIIcon = SID(1,22)},
-  {.subType = kTequila, .price = 60, .multi = 1.3f, .UIIcon = SID(5,24)},
-  {.subType = kLime, .price = 22, .multi = 1.3f, .UIIcon = SID(4,22)},
-  {.subType = kHFCS, .price = 27, .multi = 1.3f, .UIIcon = SID(1,24)},
-  {.subType = kGelatin, .price = 30, .multi = 1.3f, .UIIcon = SID(8,24)},
-  {.subType = kJelly, .price = 50, .multi = 1.3f, .UIIcon = SID(10,6)},
-  {.subType = kJelloShot, .price = 90, .multi = 1.3f, .UIIcon = SID(15,5)},
-  {.subType = kStrawberry, .price = 32, .multi = 1.3f, .UIIcon = SID(5,22)},
-  {.subType = kEmulsifiers, .price = 13, .multi = 1.3f, .UIIcon = SID(6,24)},
-  {.subType = kIceCream, .price = 100, .multi = 1.3f, .UIIcon = SID(8,23)},
-  {.subType = kEggs, .price = 10, .multi = 1.3f, .UIIcon = SID(2,24)},
-  {.subType = kSpareCargo4, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
-  {.subType = kSpareCargo5, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
-  {.subType = kSpareCargo6, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
-  {.subType = kSpareCargo7, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
-  {.subType = kProtein, .price = 120, .multi = 1.3f, .UIIcon = SID(3,24)},
-  {.subType = kCocoBean, .price = 45, .multi = 1.3f, .UIIcon = SID(6,22)},
-  {.subType = kChocolate, .price = 90, .multi = 1.3f, .UIIcon = SID(3,25)},
-  {.subType = kMeatPie, .price = 125, .multi = 1.3f, .UIIcon = SID(8,6)},
-  {.subType = kMSG, .price = 10, .multi = 1.3f, .UIIcon = SID(1,21)},
-  {.subType = kTVDinner, .price = 150, .multi = 1.3f, .UIIcon = SID(9,6)},
-  {.subType = kCake, .price = 270, .multi = 1.3f, .UIIcon = SID(2,25)},
-  {.subType = kCoffeeBean, .price = 35, .multi = 1.3f, .UIIcon = SID(11,6)},
-  {.subType = kCO2, .price = 25, .multi = 1.3f, .UIIcon = SID(2,23)},
-  {.subType = kCaffeine, .price = 40, .multi = 1.3f, .UIIcon = SID(3,23)},
-  {.subType = kEnergyDrink, .price = 200, .multi = 1.3f, .UIIcon = SID(13,6)},
-  {.subType = kRaveJuice, .price = 250, .multi = 1.3f, .UIIcon = SID(14,6)},
-  {.subType = kPerkPills, .price = 80, .multi = 1.3f, .UIIcon = SID(15,6)},
-  {.subType = kBamboo, .price = 20, .multi = 1.3f, .UIIcon = SID(4,23)},
-  {.subType = kPackaging, .price = 20, .multi = 1.3f, .UIIcon = SID(11,5)},
-  {.subType = kDessert, .price = 300, .multi = 1.3f, .UIIcon = SID(10,5)},
-  {.subType = kCateringKit, .price = 320, .multi = 1.3f, .UIIcon = SID(12,5)},
-  {.subType = kSpareCargo8, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
-  {.subType = kSpareCargo9, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
-  {.subType = kSpareCargo10, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
-  {.subType = kSpareCargo11, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
-  {.subType = kFooYoung, .price = 310, .multi = 1.3f, .UIIcon = SID(4,25)},
-  {.subType = kPartyPack, .price = 350, .multi = 1.3f, .UIIcon = SID(13,5)},
-  {.subType = kSeaCucumber, .price = 70, .multi = 1.3f, .UIIcon = SID(8,22)},
-  {.subType = kParfume, .price = 400, .multi = 1.3f, .UIIcon = SID(7,24)},
-  {.subType = kMiricalPowder, .price = 500, .multi = 1.3f, .UIIcon = SID(5,25)},
-  {.subType = kRose, .price = 100, .multi = 1.3f, .UIIcon = SID(0,25)},
-  {.subType = kTurkishDelight, .price = 1000, .multi = 1.3f, .UIIcon = SID(6,25)},
+  {.subType = kNoCargo, .price = 0, .multi = 0.0f, .UIIcon = SID(0,0)},
+  {.subType = kCarrot, .price = 1, .multi = 1.0f, .UIIcon = SID(10,7)}, // Set by hand
+  {.subType = kChalk, .price = 1, .multi = 1.0f, .UIIcon = SID(13,7)}, // Set by hand
+  {.subType = kVitamin, .price = 8, .multi = 4.0f, .UIIcon = SID(12,8)}, // Set by hand
+  {.subType = kSunflower, .price = 0, .multi = 2.0f, .UIIcon = SID(15,7)}, // CROP
+  {.subType = kPotato, .price = 0, .multi = 1.5f, .UIIcon = SID(14,7)}, // CROP
+  {.subType = kOil, .price = 0, .multi = 2.0f, .UIIcon = SID(12,7)},
+  {.subType = kSalt, .price = 1, .multi = 2.0f, .UIIcon = SID(13,8)}, // Set by hand
+  {.subType = kCrisps, .price = 0, .multi = 2.0f, .UIIcon = SID(0,21)},
+  {.subType = kApple, .price = 0, .multi = 2.0f, .UIIcon = SID(8,7)}, // CROP
+  {.subType = kWaterBarrel, .price = 1, .multi = 0.0f, .UIIcon = SID(0,24)}, // Set by hand
+  {.subType = kEthanol, .price = 0, .multi = 2.0f, .UIIcon = SID(6,23)},
+  {.subType = kHardCider, .price = 0, .multi = 2.0f, .UIIcon = SID(14,5)},
+  {.subType = kCorn, .price = 0, .multi = 1.5f, .UIIcon = SID(2,22)}, // CROP
+  {.subType = kSeaweed, .price = 0, .multi = 0.5f, .UIIcon = SID(3,22)}, // CROP
+  {.subType = kMeat, .price = 0, .multi = 2.0f, .UIIcon = SID(9,8)},
+  {.subType = kSpareCargo0, .price = DIS, .multi = 0.0f, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo1, .price = DIS, .multi = 0.0f, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo2, .price = DIS, .multi = 0.0f, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo3, .price = DIS, .multi = 0.0f, .UIIcon = SID(0,0)},
+  {.subType = kHydrogen, .price = 0, .multi = 2.0f, .UIIcon = SID(1,23)},
+  {.subType = kHOil, .price = 0, .multi = 2.0f, .UIIcon = SID(12,6)},
+  {.subType = kCornDog, .price = 0, .multi = 2.0f, .UIIcon = SID(4,24)},
+  {.subType = kWheat, .price = 0, .multi = 4.0f, .UIIcon = SID(11,7)}, // CROP
+  {.subType = kBeer, .price = 0, .multi = 2.0f, .UIIcon = SID(7,23)},
+  {.subType = kCactus, .price = 0, .multi = 1.5f, .UIIcon = SID(1,22)}, // CROP
+  {.subType = kTequila, .price = 0, .multi = 2.0f, .UIIcon = SID(5,24)},
+  {.subType = kLime, .price = 0, .multi = 1.5f, .UIIcon = SID(4,22)}, // CROP
+  {.subType = kHFCS, .price = 0, .multi = 2.0f, .UIIcon = SID(1,24)},
+  {.subType = kGelatin, .price = 0, .multi = 2.0f, .UIIcon = SID(8,24)},
+  {.subType = kJelly, .price = 0, .multi = 2.0f, .UIIcon = SID(10,6)},
+  {.subType = kJelloShot, .price = 0, .multi = 2.0f, .UIIcon = SID(15,5)},
+  {.subType = kStrawberry, .price = 0, .multi = 2.0f, .UIIcon = SID(5,22)}, // CROP
+  {.subType = kEmulsifiers, .price = 0, .multi = 2.0f, .UIIcon = SID(6,24)},
+  {.subType = kIceCream, .price = 0, .multi = 2.0f, .UIIcon = SID(8,23)},
+  {.subType = kEggs, .price = 0, .multi = 2.0f, .UIIcon = SID(2,24)},
+  {.subType = kSpareCargo4, .price = DIS, .multi = 0.0f, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo5, .price = DIS, .multi = 0.0f, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo6, .price = DIS, .multi = 0.0f, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo7, .price = DIS, .multi = 0.0f, .UIIcon = SID(0,0)},
+  {.subType = kProtein, .price = 0, .multi = 2.0f, .UIIcon = SID(3,24)},
+  {.subType = kCocoBean, .price = 0, .multi = 2.5f, .UIIcon = SID(6,22)}, // CROP
+  {.subType = kChocolate, .price = 0, .multi = 2.0f, .UIIcon = SID(3,25)},
+  {.subType = kMeatPie, .price = 0, .multi = 2.0f, .UIIcon = SID(8,6)},
+  {.subType = kMSG, .price = 0, .multi = 2.0f, .UIIcon = SID(1,21)},
+  {.subType = kTVDinner, .price = 0, .multi = 2.0f, .UIIcon = SID(9,6)},
+  {.subType = kCake, .price = 0, .multi = 2.0f, .UIIcon = SID(2,25)},
+  {.subType = kCoffeeBean, .price = 0, .multi = 3.0f, .UIIcon = SID(11,6)}, // CROP
+  {.subType = kCO2, .price = 0, .multi = 2.0f, .UIIcon = SID(2,23)},
+  {.subType = kCaffeine, .price = 0, .multi = 2.0f, .UIIcon = SID(3,23)},
+  {.subType = kEnergyDrink, .price = 0, .multi = 2.0f, .UIIcon = SID(13,6)},
+  {.subType = kRaveJuice, .price = 0, .multi = 2.0f, .UIIcon = SID(14,6)},
+  {.subType = kPerkPills, .price = 0, .multi = 2.0f, .UIIcon = SID(15,6)},
+  {.subType = kBamboo, .price = 0, .multi = 0.1f, .UIIcon = SID(4,23)}, // CROP
+  {.subType = kPackaging, .price = 0, .multi = 2.0f, .UIIcon = SID(11,5)},
+  {.subType = kDessert, .price = 0, .multi = 2.0f, .UIIcon = SID(10,5)},
+  {.subType = kCateringKit, .price = 0, .multi = 2.0f, .UIIcon = SID(12,5)},
+  {.subType = kSpareCargo8, .price = DIS, .multi = 0.0f, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo9, .price = DIS, .multi = 0.0f, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo10, .price = DIS, .multi = 0.0f, .UIIcon = SID(0,0)},
+  {.subType = kSpareCargo11, .price = DIS, .multi = 0.0f, .UIIcon = SID(0,0)},
+  {.subType = kFooYoung, .price = 0, .multi = 2.0f, .UIIcon = SID(4,25)},
+  {.subType = kPartyPack, .price = 0, .multi = 2.0f, .UIIcon = SID(13,5)},
+  {.subType = kSeaCucumber, .price = 0, .multi = 50.0f, .UIIcon = SID(8,22)}, // CROP
+  {.subType = kParfume, .price = 0, .multi = 2.0f, .UIIcon = SID(7,24)},
+  {.subType = kMiricalPowder, .price = 0, .multi = 2.0f, .UIIcon = SID(5,25)},
+  {.subType = kRose, .price = 0, .multi = 2.5f, .UIIcon = SID(0,25)}, // CROP
+  {.subType = kTurkishDelight, .price = 0, .multi = 2.0f, .UIIcon = SID(6,25)},
   {.subType = kSpareCargo12, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
   {.subType = kSpareCargo13, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
   {.subType = kSpareCargo14, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
@@ -154,7 +154,7 @@ const char* toStringCargoByType(enum kCargoType _type, bool _plural) {
     case kParfume: return "Parfume";
     case kMiricalPowder: return "Mirical Powder";
     case kRose: return _plural ? "Roses" : "Rose";
-    case kTurkishDelight: "Turkish Delight";
+    case kTurkishDelight: return "Turkish Delight";
     case kSpareCargo0: case kSpareCargo1: case kSpareCargo2: case kSpareCargo3:
     case kSpareCargo4: case kSpareCargo5: case kSpareCargo6: case kSpareCargo7: 
     case kSpareCargo8: case kSpareCargo9: case kSpareCargo10: case kSpareCargo11:
@@ -240,7 +240,7 @@ bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addToDisplay
     CargoDesc[_type].UIIcon);
 
   _loc->m_cargo = cargo;
-  if (_loc->m_building) {
+  if (_loc->m_building && _loc->m_building->m_type == kConveyor) {
     _loc->m_building->m_progress = 0;
   }
 

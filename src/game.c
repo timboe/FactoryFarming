@@ -322,15 +322,69 @@ void initGame() {
   }
 
   // Set prices
-  for (int32_t i = 1; i < kNFactorySubTypes; ++i) {
-    FDesc[i].price = FDesc[i-1].price * FDesc[i].multi;
-    CargoDesc[ FDesc[i].out ].price = CargoDesc[ FDesc[i-1].out ].price * CargoDesc[ FDesc[i].out ].multi;  
+  #define DIS UINT16_MAX
+
+  // Note: Plants must be done first, as their prices will then help to set factory output prices
+  uint8_t skip = 1;
+  for (int32_t i = 1; i < kNPlantSubTypes; ++i) {
+    // Skip placeholders
+    if (PDesc[i].price == DIS) {
+      ++skip;
+      continue;
+    }
+
+    PDesc[i].price = PDesc[i-skip].price * PDesc[i].multi; 
+    CargoDesc[ PDesc[i].out ].price = CargoDesc[ PDesc[i-skip].out ].price * CargoDesc[ PDesc[i].out ].multi;
+
+    #ifdef DEV
+    pd->system->logToConsole("Plant: %s will cost %i * %.2f = %i, its output %s will cost %i * %.2f = %i",
+      toStringBuilding(kPlant, (union kSubType) {.plant = i}, false),
+      PDesc[i-skip].price,
+      (double) PDesc[i].multi,
+      PDesc[i].price,
+      toStringCargoByType(PDesc[i].out, false),
+      CargoDesc[ PDesc[i-skip].out ].price,
+      (double) CargoDesc[ PDesc[i].out ].multi,
+      CargoDesc[ PDesc[i].out ].price);
+    #endif
+
+    skip = 1;
   }
 
-  for (int32_t i = 1; i < kNPlantSubTypes; ++i) {
-    PDesc[i].price = PDesc[i-1].price * PDesc[i].multi; 
-    CargoDesc[ PDesc[i].out ].price = CargoDesc[ PDesc[i-1].out ].price * CargoDesc[ PDesc[i].out ].multi;  
+  skip = 1;
+  for (int32_t i = 1; i < kNFactorySubTypes; ++i) {
+    // Skip placeholders
+    if (FDesc[i].price == DIS) { 
+      ++skip;
+      continue;
+    }
+
+    FDesc[i].price = FDesc[i-skip].price * FDesc[i].multi;
+    // Get inputs prices
+    uint32_t inputsPrice = CargoDesc[ FDesc[i].in1 ].price;
+    inputsPrice += CargoDesc[ FDesc[i].in2 ].price;
+    inputsPrice += CargoDesc[ FDesc[i].in3 ].price;
+    inputsPrice += CargoDesc[ FDesc[i].in4 ].price;
+    inputsPrice += CargoDesc[ FDesc[i].in5 ].price;
+
+    CargoDesc[ FDesc[i].out ].price = inputsPrice * CargoDesc[ FDesc[i].out ].multi;  
+
+    #ifdef DEV
+    pd->system->logToConsole("Factory: %s will cost %i * %.2f = %i, its output %s will cost %i * %.2f = %i",
+      toStringBuilding(kFactory, (union kSubType) {.factory = i}, false),
+      FDesc[i-skip].price,
+      (double) FDesc[i].multi,
+      FDesc[i].price,
+      toStringCargoByType(FDesc[i].out, false),
+      inputsPrice,
+      (double) CargoDesc[ FDesc[i].out ].multi,
+      CargoDesc[ FDesc[i].out ].price);
+    #endif
+
+    skip = 1;
   }
+
+
 
   // Custom pricings
   PDesc[kCarrotPlant].price = 0;
