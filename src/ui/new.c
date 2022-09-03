@@ -17,11 +17,11 @@ uint32_t getNewID() {
   return m_nextSubType.raw;
 }
 
-bool checkHasNewToShow(struct Player_t* _p) {
+enum kNewReturnStatus checkHasNewToShow(struct Player_t* _p) {
   const uint32_t currentLevel = _p->m_buildingsUnlockedTo;
   if (UnlockDecs[currentLevel].type == FINAL_UNLOCK_TYPE && UnlockDecs[currentLevel].subType.raw == FINAL_UNLOCK_SUBTYPE) {
     // This is always the last unlock - cannot go on from here
-    return false;
+    return kNewNoUnlockedAll;
   }
   #ifdef FAST_PROGRESS
   const bool haveUnlocked = (_p->m_soldCargo[ UnlockDecs[ currentLevel+1 ].ofCargo ] >= FAST_PROGRESS_SALES);
@@ -30,24 +30,24 @@ bool checkHasNewToShow(struct Player_t* _p) {
   #endif
   // Tutorial
   if (getTutorialStage() < kTutBuildConveyor && UnlockDecs[currentLevel+1].type == kConveyor) {
-    return false; // Need to progress the tutorial too to unlock conveyors
+    return kNewNoNeedsTutorial; // Need to progress the tutorial too to unlock conveyors
   }
   // Tutorial
   if (getTutorialStage() < kTutBuildQuarry && UnlockDecs[currentLevel+1].type == kExtractor && UnlockDecs[currentLevel+1].subType.extractor == kChalkQuarry) {
-    return false; // Need to progress the tutorial too to unlock chalk quarry
+    return kNewNoNeedsTutorial; // Need to progress the tutorial too to unlock chalk quarry
   }
   // Tutorial
   if (getTutorialStage() < kTutBuildVitamin && UnlockDecs[currentLevel+1].type == kFactory) {
-    return false; // Need to progress the tutorial too to unlock factory
+    return kNewNoNeedsTutorial; // Need to progress the tutorial too to unlock factory
   }
 
-  return haveUnlocked;
+  return haveUnlocked ? kNewYes : kNewNoNeedsFarming;
 }
 
 bool checkShowNew() {
   struct Player_t* p = getPlayer();
 
-  if (!checkHasNewToShow(p)) {
+  if (checkHasNewToShow(p) != kNewYes) {
     return false;
   }
 
@@ -105,7 +105,7 @@ const char* getNewText() {
       case kBuffferBox: return "Like the Storage Box, but also self-empties";
       case kConveyorGrease: return "Upgrades Conveyor speed from x1 to x2";
       case kObstructionRemover: return "Clears Obstructed Ground allowing it to be built on";
-      case kLandfill: return "Fills in water. Can built on, but not planted on.";
+      case kLandfill: return "Fills in water. Can be built on, but not planted on.";
       case kRetirement: return "A relaxing space to enjoy your amassed wealth.";
       case kFence: return "A charming wooden fence.";
       case kSpareUtil0: case kSpareUtil1: case kSpareUtil2: case kSpareUtil3:
@@ -149,15 +149,15 @@ const char* getNewText() {
       case kTVDinnerFac: return "A meal for one, served in a tray";
       case kCaffeineFac: return "Extracts the caffeine from coffee beans";
       case kEnergyDrinkFac: return "Caffeine high & sugar rush all-in-one";
-      case kRaveJuiceFac: return "... why not add alcohol too?";
+      case kRaveJuiceFac: return "This stuff should probably be illegal...";
       case kPerkPillFac: return "Will keep you awake far too long";
-      case kCakeFac: return "Creamy, soft, and an infinite shelf life";
+      case kCakeFac: return "Chocolatey, soft, and an infinite shelf life";
       case kDessertFac: return "Sweet tooth?";
       case kPackagingFac: return "Scaling up with custom packaging";
       case kCateringKitFac: return "Packaged Catering Kits";
       case kPartyPackFac: return "Everything a good party needs";
-      case kParfumeFac: return "Fancy";
-      case kMedicalSuplimentFac: return "Complete with dubious medical claims";
+      case kParfumeFac: return "Fancy stuff";
+      case kMiricalPowderFac: return "What can't it cure?! (Anything...)";
       case kTurkishDelightFac: return "A Delectable Delicacy";
       case kSpareFac0: case kSpareFac1: case kSpareFac2: case kSpareFac3:
       case kSpareFac4: case kSpareFac5: case kSpareFac6: case kSpareFac7: 

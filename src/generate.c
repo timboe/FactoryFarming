@@ -15,7 +15,7 @@
 //                                         {kSiltWorld, kChalkWorld, kPeatWorld, kSandWorld, kClayWorld, kLoamWoarld, kWaterWorld,  kEmptyWorld};
 const uint16_t kWarpUIIcon[] =             {SID(0,18),  SID(1,18),   SID(2,18),  SID(3,18),  SID(4,18),  SID(5,18),   SID(6,18),    SID(7,18)};
 const uint32_t kWarpPrice[]  =             {0,          15000,       50000,      200000,     400000,     800000,      500,          1000};
-const enum kCargoType kWarpUnlockCargo[] = {kNoCargo,   kNoCargo,    kNoCargo,   kNoCargo,   kNoCargo,   kNoCargo,    kPartyPack,   kMedicalSupliment};
+const enum kCargoType kWarpUnlockCargo[] = {kNoCargo,   kNoCargo,    kNoCargo,   kNoCargo,   kNoCargo,   kNoCargo,    kPartyPack,   kMiricalPowder};
 
 // Note: final two are unlocked with items, not money. The "price here is the number of items needed"
 

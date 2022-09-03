@@ -34,7 +34,10 @@ LCDBitmap* getPauseImage() {
 
   pd->graphics->clearBitmap(m_pause, kColorClear);
   int32_t length, width = 0;
-  char text[128];
+  char textA[128] = {0}, textB[128] = {0}, textC[128] = {0}, textD[128] = {0}, textE[128] = {0};
+  LCDBitmapFlip flip = kBitmapUnflipped;
+  LCDBitmap* sA = NULL;
+  LCDBitmap* sB = NULL;
 
   #define CENTRE (TILE_PIX*6)
   #define Y_SPACE (3*TILE_PIX/2)
@@ -53,49 +56,34 @@ LCDBitmap* getPauseImage() {
   setRoobert10();
 
   struct Player_t* p = getPlayer();
-  if (checkHasNewToShow(p)) {
+  const enum kNewReturnStatus nrs = checkHasNewToShow(p);
+  if (nrs == kNewNoUnlockedAll) {
 
-    snprintf(text, 128, "Visit:");
-    length = strlen(text);
-    width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
-    pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 1*Y_SPACE);
+    snprintf(textA, 128, "Everything is");
+    snprintf(textB, 128, "UNLOCKED!");
+    snprintf(textC, 128, "Thanks for playing");
+    snprintf(textD, 128, "FACTORY FARMING!");
+    sA = getSprite16(3, 19, 1);
+    sB = getSprite16(3, 19, 1);
 
-    snprintf(text, 128, "To unlock the next:");
-    length = strlen(text);
-    width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
-    pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 3*Y_SPACE);
+  } else if (nrs == kNewYes) {
+
+    snprintf(textA, 128, "Visit:");
+    snprintf(textB, 128, "The Shop");
+    snprintf(textC, 128, "To unlock the next:");
+    sA = getSprite16(11, 14, 1);
 
     const uint32_t nextLevel = p->m_buildingsUnlockedTo + 1;
-
-    snprintf(text, 128, "The Shop");
-    length = strlen(text);
-    width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
-    pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 2*Y_SPACE);
-    pd->graphics->drawBitmap(getSprite16( 11, 14, 1), X_START, 2*Y_SPACE, kBitmapUnflipped);
-    pd->graphics->drawBitmap(getSprite16( 11, 14, 1), X_END,   2*Y_SPACE, kBitmapUnflipped);
-
     enum kBuildingType nextBuildingType = UnlockDecs[nextLevel].type;
     enum kUICat nextBuildingUICat = getBuildingTypeCat(nextBuildingType);
 
-    const char* t = toStringHeader(nextBuildingUICat, /*plural*/ false);
-    length = strlen(t);
-    width = pd->graphics->getTextWidth(getRoobert10(), t, length, kUTF8Encoding, 0);
-    pd->graphics->drawText(t, 128, kASCIIEncoding, CENTRE - width/2, 4*Y_SPACE);
+    snprintf(textD, 128, "%s", toStringHeader(nextBuildingUICat, /*plural*/ false));
+    sB = getSprite16(11, 13, 1);
 
-    pd->graphics->drawBitmap(getSprite16(11, 13, 1), X_START, 4*Y_SPACE, kBitmapUnflipped);
-    pd->graphics->drawBitmap(getSprite16(11, 13, 1), X_END, 4*Y_SPACE, kBitmapUnflipped);
+  } else if (nrs == kNewNoNeedsFarming) {
 
-  } else {
-
-    snprintf(text, 128, "Sell a total of:");
-    length = strlen(text);
-    width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
-    pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 1*Y_SPACE);
-
-    snprintf(text, 128, "To unlock the next:");
-    length = strlen(text);
-    width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
-    pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 3*Y_SPACE);
+    snprintf(textA, 128, "Sell a total of:");
+    snprintf(textC, 128, "To unlock the next:");
 
     const uint32_t nextLevel = p->m_buildingsUnlockedTo + 1;
     const enum kCargoType cargo = UnlockDecs[ nextLevel ].ofCargo;
@@ -106,51 +94,78 @@ LCDBitmap* getPauseImage() {
     #endif
     const uint16_t haveSold = p->m_soldCargo[ cargo ];
 
-    snprintf(text, 128, "%i %ss", needToSell, toStringCargoByType(cargo, /*plural=*/true));
-    length = strlen(text);
-    width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
-    pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 2*Y_SPACE);
-    pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[ cargo ].UIIcon , 1), X_START, 2*Y_SPACE, kBitmapUnflipped);
-    pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[ cargo ].UIIcon , 1), X_END, 2*Y_SPACE, kBitmapFlippedX);
+    snprintf(textB, 128, "%i %s", needToSell, toStringCargoByType(cargo, /*plural=*/true));
+    sA = getSprite16_byidx(CargoDesc[ cargo ].UIIcon, 1);
+    flip = kBitmapFlippedX;
 
     enum kBuildingType nextBuildingType = UnlockDecs[nextLevel].type;
     enum kUICat nextBuildingUICat = getBuildingTypeCat(nextBuildingType);
 
-    const char* t = toStringHeader(nextBuildingUICat, /*plural*/ false);
-    length = strlen(t);
-    width = pd->graphics->getTextWidth(getRoobert10(), t, length, kUTF8Encoding, 0);
-    pd->graphics->drawText(t, 128, kASCIIEncoding, CENTRE - width/2, 4*Y_SPACE);
+    snprintf(textD, 128, "%s", toStringHeader(nextBuildingUICat, /*plural*/ false));
+    sB = getSprite16(11, 13, 1);
 
-    pd->graphics->drawBitmap(getSprite16(11, 13, 1), X_START, 4*Y_SPACE, kBitmapUnflipped);
-    pd->graphics->drawBitmap(getSprite16(11, 13, 1), X_END, 4*Y_SPACE, kBitmapUnflipped);
+    snprintf(textE, 128, "Sold so far: %i", haveSold);
+  
+  } else if (nrs == kNewNoNeedsTutorial) {
 
-    snprintf(text, 128, "Sold so far: %i", haveSold);
-    length = strlen(text);
-    width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
-    pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 5*Y_SPACE);
+    snprintf(textA, 128, "Continue:");
+    snprintf(textB, 128, "The Tutorial");
+    snprintf(textC, 128, "To unlock the next:");
+    sA = getSprite16(13, 13, 1);
+
+    const uint32_t nextLevel = p->m_buildingsUnlockedTo + 1;
+    enum kBuildingType nextBuildingType = UnlockDecs[nextLevel].type;
+    enum kUICat nextBuildingUICat = getBuildingTypeCat(nextBuildingType);
+
+    snprintf(textD, 128, "%s", toStringHeader(nextBuildingUICat, /*plural*/ false));
+    sB = getSprite16(11, 13, 1);
 
   }
 
+  length = strlen(textA);
+  width = pd->graphics->getTextWidth(getRoobert10(), textA, length, kUTF8Encoding, 0);
+  pd->graphics->drawText(textA, 128, kASCIIEncoding, CENTRE - width/2, 1*Y_SPACE);
+
+  length = strlen(textB);
+  width = pd->graphics->getTextWidth(getRoobert10(), textB, length, kUTF8Encoding, 0);
+  pd->graphics->drawText(textB, 128, kASCIIEncoding, CENTRE - width/2, 2*Y_SPACE);
+
+  pd->graphics->drawBitmap(sA, X_START, 2*Y_SPACE, kBitmapUnflipped);
+  pd->graphics->drawBitmap(sA, X_END,   2*Y_SPACE, flip);
+
+  length = strlen(textC);
+  width = pd->graphics->getTextWidth(getRoobert10(), textC, length, kUTF8Encoding, 0);
+  pd->graphics->drawText(textC, 128, kASCIIEncoding, CENTRE - width/2, 3*Y_SPACE);
+
+  pd->graphics->drawBitmap(sB, X_START, 4*Y_SPACE, kBitmapUnflipped);
+  pd->graphics->drawBitmap(sB, X_END, 4*Y_SPACE, kBitmapUnflipped);
+
+  length = strlen(textD);
+  width = pd->graphics->getTextWidth(getRoobert10(), textD, length, kUTF8Encoding, 0);
+  pd->graphics->drawText(textD, 128, kASCIIEncoding, CENTRE - width/2, 4*Y_SPACE);
+
+  length = strlen(textE);
+  width = pd->graphics->getTextWidth(getRoobert10(), textE, length, kUTF8Encoding, 0);
+  pd->graphics->drawText(textE, 128, kASCIIEncoding, CENTRE - width/2, 5*Y_SPACE);
+
   pd->graphics->drawLine(X_START + TILE_PIX, 3*Y_SPACE - TILE_PIX/2, X_END, 3*Y_SPACE - TILE_PIX/2, 2, kColorBlack);
   pd->graphics->drawLine(X_START + TILE_PIX, 5*Y_SPACE - TILE_PIX/2, X_END, 5*Y_SPACE - TILE_PIX/2, 2, kColorBlack);
-
 
   pd->graphics->setDrawOffset(TILE_PIX/2, TILE_PIX*9 + TILE_PIX/2);
   roundedRect(0, DEVICE_PIX_X/2 - TILE_PIX, 4*TILE_PIX, TILE_PIX, kColorBlack);
   roundedRect(TILE_PIX/4, DEVICE_PIX_X/2 - TILE_PIX, 4*TILE_PIX, TILE_PIX, kColorWhite);
   pd->graphics->setDrawOffset(0, 0);
 
-  snprintf(text, 128, "Total Play Time:");
-  length = strlen(text);
-  width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 7*Y_SPACE);
+  snprintf(textA, 128, "Total Play Time:");
+  length = strlen(textA);
+  width = pd->graphics->getTextWidth(getRoobert10(), textA, length, kUTF8Encoding, 0);
+  pd->graphics->drawText(textA, 128, kASCIIEncoding, CENTRE - width/2, 7*Y_SPACE);
 
   const uint32_t pt = p->m_playTime / TICK_FREQUENCY;
-  playTime(text, pt);
-  length = strlen(text);
-  width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(text, 128, kASCIIEncoding, CENTRE - width/2, 8*Y_SPACE - TILE_PIX/4);
-
+  playTime(textA, pt);
+  length = strlen(textA);
+  width = pd->graphics->getTextWidth(getRoobert10(), textA, length, kUTF8Encoding, 0);
+  pd->graphics->drawText(textA, 128, kASCIIEncoding, CENTRE - width/2, 8*Y_SPACE - TILE_PIX/4);
 
   pd->graphics->popContext();
   return m_pause;
@@ -201,6 +216,9 @@ void autosave(uint32_t _time) {
 }
 
 void cheatMoney() {
+#ifdef DEMO
+  return;
+#endif
   static uint8_t counter = 0;
   if (++counter == 20) {
     modMoney(1000000);
@@ -210,6 +228,9 @@ void cheatMoney() {
 }
 
 void cheatUnlock() {
+#ifdef DEMO
+  return;
+#endif
   static uint8_t counter = 0;
   if (++counter == 20) {
     getPlayer()->m_buildingsUnlockedTo = getNUnlocks();

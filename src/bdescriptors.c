@@ -147,7 +147,7 @@ struct FactoryDescriptor_t FDesc[] = {
   {.subType = kSpareFac10, .unlock = DIS, .price = 0, .time = 1, .UIIcon = SID(12,10), .sprite = BID(0,0), .out = kNoCargo, .in1 = kNoCargo, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kSpareFac11, .unlock = DIS, .price = 0, .time = 1, .UIIcon = SID(12,10), .sprite = BID(0,0), .out = kNoCargo, .in1 = kNoCargo, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kParfumeFac, .unlock = 1, .price = 170000, .time = 1, .UIIcon = SID(12,10), .sprite = BID(0,4), .out = kParfume, .in1 = kSeaCucumber, .in2 = kStrawberry, .in3 = kEthanol, .in4 = kNoCargo, .in5 = kNoCargo},
-  {.subType = kMedicalSuplimentFac, .unlock = 1, .price = 180000, .time = 1, .UIIcon = SID(12,10), .sprite = BID(0,4), .out = kMedicalSupliment, .in1 = kSeaCucumber, .in2 = kProtein, .in3 = kCocoBean, .in4 = kCoffeeBean, .in5 = kNoCargo},
+  {.subType = kMiricalPowderFac, .unlock = 1, .price = 180000, .time = 1, .UIIcon = SID(12,10), .sprite = BID(0,4), .out = kMiricalPowder, .in1 = kSeaCucumber, .in2 = kProtein, .in3 = kCocoBean, .in4 = kCoffeeBean, .in5 = kNoCargo},
   {.subType = kTurkishDelightFac, .unlock = 1, .price = 200000, .time = 1, .UIIcon = SID(12,10), .sprite = BID(0,4), .out = kTurkishDelight, .in1 = kHFCS, .in2 = kRose, .in3 = kWaterBarrel, .in4 = kPotato, .in5 = kNoCargo},
   {.subType = kSpareFac12, .unlock = DIS, .price = 0, .time = 1, .UIIcon = SID(12,10), .sprite = BID(0,0), .out = kNoCargo, .in1 = kNoCargo, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
   {.subType = kSpareFac13, .unlock = DIS, .price = 0, .time = 1, .UIIcon = SID(12,10), .sprite = BID(0,0), .out = kNoCargo, .in1 = kNoCargo, .in2 = kNoCargo, .in3 = kNoCargo, .in4 = kNoCargo, .in5 = kNoCargo},
@@ -261,7 +261,7 @@ struct UnlockDescriptor_t UnlockDecs[] = {
 
   {.type = kUtility, .subType.utility = kRetirement, .fromSelling = 500, .ofCargo = kParfume},
   // Note: Health Supliment are used to unlock World 8
-  {.type = kFactory, .subType.factory = kMedicalSuplimentFac, .fromSelling = 700, .ofCargo = kParfume},
+  {.type = kFactory, .subType.factory = kMiricalPowderFac, .fromSelling = 700, .ofCargo = kParfume},
 
   // Note: The Player gets given some rose bushes by placing the retirement home.
   // Gates the final two unlocks

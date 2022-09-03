@@ -877,7 +877,7 @@ void drawUIRight() {
     pd->graphics->drawBitmap(getSprite16_byidx(cSprite, 1), DEVICE_PIX_Y/2, 0, kBitmapUnflipped);
 
     // Unlock?
-    if (checkHasNewToShow(p)) {
+    if (checkHasNewToShow(p) == kNewYes) {
       pd->graphics->drawBitmap(getSprite16(11, 11, 1), DEVICE_PIX_Y/2 + 2*TILE_PIX, 0, kBitmapUnflipped);
     }
   }

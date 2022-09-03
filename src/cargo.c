@@ -73,7 +73,7 @@ const struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kPartyPack, .price = 350, .UIIcon = SID(13,5)},
   {.subType = kSeaCucumber, .price = 70, .UIIcon = SID(8,22)},
   {.subType = kParfume, .price = 400, .UIIcon = SID(7,24)},
-  {.subType = kMedicalSupliment, .price = 500, .UIIcon = SID(5,25)},
+  {.subType = kMiricalPowder, .price = 500, .UIIcon = SID(5,25)},
   {.subType = kRose, .price = 100, .UIIcon = SID(0,25)},
   {.subType = kTurkishDelight, .price = 1000, .UIIcon = SID(6,25)},
   {.subType = kSpareCargo12, .price = DIS, .UIIcon = SID(0,0)},
@@ -152,7 +152,7 @@ const char* toStringCargoByType(enum kCargoType _type, bool _plural) {
     case kPartyPack: return _plural ? "Party Packs" : "Party Pack";
     case kSeaCucumber: return _plural ? "Sea Cucumbers" : "Sea Cucumber";
     case kParfume: return "Parfume";
-    case kMedicalSupliment: return "Medicinal Supliment";
+    case kMiricalPowder: return "Mirical Powder";
     case kRose: return _plural ? "Roses" : "Rose";
     case kTurkishDelight: "Turkish Delight";
     case kSpareCargo0: case kSpareCargo1: case kSpareCargo2: case kSpareCargo3:
