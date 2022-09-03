@@ -6,6 +6,10 @@ enum SfxSample {
  kSfxClearObstruction,
  kSfxPickCargo,
  kSfxPlacePlant,
+ kSfxPlaceConv,
+ kSfxPlaceFac,
+ kSfxPlaceExtract,
+ kSfxPlaceUtil,
  kSfxUnlock,
  kSfxSell,
  kSfxA,
@@ -21,6 +25,12 @@ enum SfxSample {
  kFootstepDefault3,
  kFootstepDefault4,
  kFootstepDefault5,
+ kFootstepWater,
+ kFootstepWater1,
+ kFootstepWater2,
+ kFootstepWater3,
+ kFootstepWater4,
+ kFootstepWater5,
  kNSFX
 };
 
@@ -29,6 +39,8 @@ enum SfxSample {
 void initSound(void);
 
 void updateMusic(bool _isTitle);
+
+void updateMusicVol(void);
 
 void updateSfx(void);
 

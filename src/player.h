@@ -65,6 +65,7 @@ struct Player_t{
 
   // Settings. Persistent and NOT overwritten on reset
   uint8_t m_soundSettings;
+  uint8_t m_musicVol;
   uint8_t m_autoUseConveyorBooster;
   uint8_t m_enableConveyorAnimation;
   uint8_t m_enableTutorial; // Also used to hold the tutorial stage

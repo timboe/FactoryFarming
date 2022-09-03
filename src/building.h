@@ -56,6 +56,7 @@ struct ExtractorDescriptor_t {
   uint32_t price;
   uint16_t UIIcon;
   uint16_t sprite;
+  bool invert;
   enum kCargoType out;
 };
 extern struct ExtractorDescriptor_t EDesc[];
@@ -67,6 +68,7 @@ struct FactoryDescriptor_t {
   uint16_t time;
   uint16_t UIIcon;
   uint16_t sprite;
+  bool invert;
   enum kCargoType out;
   enum kCargoType in1;
   enum kCargoType in2;

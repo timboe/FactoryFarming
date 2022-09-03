@@ -298,7 +298,8 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
     struct Building_t* building = _chunk->m_buildingsRender[i];
     if (building->m_type != kNoBuilding && building->m_image[1]) {
       if (isLargeBuilding(building->m_type, building->m_subType)) {
-        const bool invert = (building->m_type == kExtractor && building->m_subType.extractor == kCropHarvesterLarge);
+        bool invert = (building->m_type == kFactory && FDesc[ building->m_subType.factory ].invert);
+        invert |= (building->m_type == kExtractor && EDesc[ building->m_subType.extractor ].invert);
         const bool flip = (building->m_type == kSpecial && building->m_subType.special == kImportBox && building->m_dir != SN);
         pd->graphics->setDrawMode(invert ? kDrawModeInverted : kDrawModeCopy);
         pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - off48_x, building->m_pix_y - off48_y, flip ? kBitmapFlippedX : kBitmapUnflipped);

@@ -1272,7 +1272,9 @@ void drawUIMain() {
   if (m_mode != kMenuMain) {
     LCDSprite* selectedSprite = m_contentSprite[ m_selRow[m_mode] ][ m_selCol[m_mode] ];
     pd->sprite->setVisible(m_UISpriteSelected, 1);
-    pd->sprite->setImage(m_UISpriteSelected, pd->sprite->getImage(selectedSprite), kBitmapUnflipped);
+    // TODO - why is this crashing now too?
+    pd->system->logToConsole("r %i c %i", m_selRow[m_mode], m_selCol[m_mode]);
+    //pd->sprite->setImage(m_UISpriteSelected, pd->sprite->getImage(selectedSprite), kBitmapUnflipped);
   }
 
   // INGREDIENTS
@@ -1818,8 +1820,14 @@ void initiUI() {
           pd->graphics->drawBitmap(getSprite16(3, 16, 2), 0, 0, kBitmapUnflipped);
           pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), TILE_PIX/2, TILE_PIX/2, kBitmapUnflipped);
         } else if (c == kUICatFactory) {
+          //pd->graphics->setDrawMode(FDesc[i].invert ? kDrawModeInverted : kDrawModeCopy);
           pd->graphics->drawBitmap(getSprite16_byidx(FDesc[i].UIIcon + r, 2), 0, 0, kBitmapUnflipped);
+          //pd->graphics->setDrawMode(kDrawModeCopy);
           pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), TILE_PIX/2, TILE_PIX/2, kBitmapUnflipped);
+        //} else if (c == kUICatExtractor) {
+        //  pd->graphics->setDrawMode(EDesc[i].invert ? kDrawModeInverted : kDrawModeCopy);
+        //  pd->graphics->drawBitmap(getSprite16_byidx(spriteID + r, 2), 0, 0, kBitmapUnflipped);
+        //  pd->graphics->setDrawMode(kDrawModeCopy);
         } else {
           if (c != kUICatConv && c != kUICatExtractor && c != kUICatWarp && c != kUICatUtility) {
             roundedRect(1, TILE_PIX*2, TILE_PIX*2, TILE_PIX/2, kColorBlack);

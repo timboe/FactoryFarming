@@ -180,10 +180,10 @@ void doPlace() {
   if (placed) {
     switch (selectedCat) {
       case kUICatPlant:  addTrauma(0.5f); sfx(kSfxPlacePlant); break;
-      case kUICatConv:  addTrauma(0.5f); break;
-      case kUICatExtractor: addTrauma(1.0f); break;
-      case kUICatFactory: addTrauma(1.0f); break;
-      case kUICatUtility: if (selectedID != kConveyorGrease) addTrauma(0.5f); break;
+      case kUICatConv:  addTrauma(0.5f); sfx(kSfxPlaceConv); break;
+      case kUICatExtractor: addTrauma(1.0f); sfx(kSfxPlaceExtract); break;
+      case kUICatFactory: addTrauma(1.0f); sfx(kSfxPlaceFac); break;
+      case kUICatUtility: if (selectedID != kConveyorGrease) { addTrauma(0.5f); }  sfx(kSfxPlaceUtil); break;
       default: break;
     }
     

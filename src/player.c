@@ -267,7 +267,7 @@ bool movePlayer() {
       m_animFrame = (m_animFrame + 1) % PLAYER_ANIM_FRAMES;
       m_stepCounter = 0;
       const uint16_t animY = m_inWater ? m_facing + 4 : m_facing;
-      if (m_animFrame % 3 == 0) sfx(kFootstepDefault + rand() % N_FOOTSTEPS);
+      if (m_animFrame % 3 == 0) sfx( (m_inWater ? kFootstepWater : kFootstepDefault) + rand() % N_FOOTSTEPS);
       pd->sprite->setImage(m_player.m_sprite[zoom], getSprite18(m_animFrame, animY, zoom), kBitmapUnflipped);
     }
     m_wasFacing = m_facing;
@@ -513,6 +513,7 @@ void resetPlayer() {
 
 void setDefaultPlayerSettings() {
   m_player.m_soundSettings = 3;
+  m_player.m_musicVol = 100;
   m_player.m_autoUseConveyorBooster = 1;
   m_player.m_enableConveyorAnimation = 1;
   m_player.m_enableTutorial = 0;
@@ -556,6 +557,8 @@ void serialisePlayer(struct json_encoder* je) {
   // Settings - not reset new games
   je->addTableMember(je, "sets", 4);
   je->writeInt(je, m_player.m_soundSettings);
+  je->addTableMember(je, "setm", 4);
+  je->writeInt(je, m_player.m_musicVol);
   je->addTableMember(je, "setb", 4);
   je->writeInt(je, m_player.m_autoUseConveyorBooster);
   je->addTableMember(je, "setc", 4);
@@ -692,6 +695,8 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     setSlot( json_intValue(_value) ); 
   } else if (strcmp(_key, "sets") == 0) {
     m_player.m_soundSettings = json_intValue(_value); 
+  } else if (strcmp(_key, "setm") == 0) {
+    m_player.m_musicVol = json_intValue(_value); 
   } else if (strcmp(_key, "setb") == 0) {
     m_player.m_autoUseConveyorBooster = json_intValue(_value); 
   } else if (strcmp(_key, "setc") == 0) {

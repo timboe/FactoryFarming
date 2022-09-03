@@ -24,6 +24,14 @@ void resumeMusic() {
   pd->sound->fileplayer->play(m_music[m_trackPlaying], 1);
 }
 
+void updateMusicVol() {
+  if (m_trackPlaying == -1) return;
+  int8_t i = getPlayer()->m_musicVol;
+  if (!i) i = 100;
+  float v = i * 0.01f;
+  pd->sound->fileplayer->setVolume(m_music[m_trackPlaying], v, v);
+}
+
 void updateMusic(bool _isTitle) {
   if (_isTitle) {
     if (m_trackPlaying != -1) {
@@ -56,6 +64,7 @@ void updateMusic(bool _isTitle) {
       }
     }
   }
+  updateMusicVol();
 }
 
 void chooseMusic(int8_t _id) {
@@ -71,6 +80,7 @@ void chooseMusic(int8_t _id) {
   pd->sound->fileplayer->stop(m_music[toStop]);
   pd->sound->fileplayer->play(m_music[_id], 1); 
   m_trackPlaying = _id;
+  updateMusicVol();
 }
 
 void musicStopped(SoundSource* _c) {
@@ -109,6 +119,10 @@ void initSound() {
   m_audioSample[kSfxClearObstruction] = pd->sound->sample->load("sounds/clearObstruction");
   m_audioSample[kSfxPickCargo] = pd->sound->sample->load("sounds/pickCargo");
   m_audioSample[kSfxPlacePlant] = pd->sound->sample->load("sounds/placePlant");
+  m_audioSample[kSfxPlaceConv] = pd->sound->sample->load("sounds/placePlant");
+  m_audioSample[kSfxPlaceFac] = pd->sound->sample->load("sounds/placePlant");
+  m_audioSample[kSfxPlaceExtract] = pd->sound->sample->load("sounds/placePlant");
+  m_audioSample[kSfxPlaceUtil] = pd->sound->sample->load("sounds/placePlant");
   m_audioSample[kSfxUnlock] = pd->sound->sample->load("sounds/unlock");
   m_audioSample[kSfxSell] = pd->sound->sample->load("sounds/sell");
   m_audioSample[kSfxA] = pd->sound->sample->load("sounds/a");
@@ -124,6 +138,12 @@ void initSound() {
   m_audioSample[kFootstepDefault3] = pd->sound->sample->load("sounds/fs3");
   m_audioSample[kFootstepDefault4] = pd->sound->sample->load("sounds/fs4");
   m_audioSample[kFootstepDefault5] = pd->sound->sample->load("sounds/fs5");
+  m_audioSample[kFootstepWater] = pd->sound->sample->load("sounds/fs0");
+  m_audioSample[kFootstepWater1] = pd->sound->sample->load("sounds/fs1");
+  m_audioSample[kFootstepWater2] = pd->sound->sample->load("sounds/fs2");
+  m_audioSample[kFootstepWater3] = pd->sound->sample->load("sounds/fs3");
+  m_audioSample[kFootstepWater4] = pd->sound->sample->load("sounds/fs4");
+  m_audioSample[kFootstepWater5] = pd->sound->sample->load("sounds/fs5");
 
   for (int32_t i = 0; i < kNSFX; ++i) {
     m_samplePlayer[i] = pd->sound->sampleplayer->newPlayer();
