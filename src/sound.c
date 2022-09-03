@@ -119,12 +119,14 @@ void initSound() {
   m_audioSample[kSfxClearObstruction] = pd->sound->sample->load("sounds/clearObstruction");
   m_audioSample[kSfxPickCargo] = pd->sound->sample->load("sounds/pickCargo");
   m_audioSample[kSfxPlacePlant] = pd->sound->sample->load("sounds/placePlant");
-  m_audioSample[kSfxPlaceConv] = pd->sound->sample->load("sounds/placePlant");
-  m_audioSample[kSfxPlaceFac] = pd->sound->sample->load("sounds/placePlant");
-  m_audioSample[kSfxPlaceExtract] = pd->sound->sample->load("sounds/placePlant");
-  m_audioSample[kSfxPlaceUtil] = pd->sound->sample->load("sounds/placePlant");
+  m_audioSample[kSfxPlaceConv] = pd->sound->sample->load("sounds/placePlant");  // TODO
+  m_audioSample[kSfxPlaceFac] = pd->sound->sample->load("sounds/placePlant"); // TODO
+  m_audioSample[kSfxPlaceExtract] = pd->sound->sample->load("sounds/placePlant"); // TODO
+  m_audioSample[kSfxPlaceUtil] = pd->sound->sample->load("sounds/placePlant"); // TODO
+  m_audioSample[kSfxPlaceCargo] = pd->sound->sample->load("sounds/placePlant"); // TODO
   m_audioSample[kSfxUnlock] = pd->sound->sample->load("sounds/unlock");
   m_audioSample[kSfxSell] = pd->sound->sample->load("sounds/sell");
+  m_audioSample[kSfxBuy] = pd->sound->sample->load("sounds/a"); // TODO
   m_audioSample[kSfxA] = pd->sound->sample->load("sounds/a");
   m_audioSample[kSfxB] = pd->sound->sample->load("sounds/b");
   m_audioSample[kSfxD] = pd->sound->sample->load("sounds/d");
@@ -138,7 +140,7 @@ void initSound() {
   m_audioSample[kFootstepDefault3] = pd->sound->sample->load("sounds/fs3");
   m_audioSample[kFootstepDefault4] = pd->sound->sample->load("sounds/fs4");
   m_audioSample[kFootstepDefault5] = pd->sound->sample->load("sounds/fs5");
-  m_audioSample[kFootstepWater] = pd->sound->sample->load("sounds/fs0");
+  m_audioSample[kFootstepWater] = pd->sound->sample->load("sounds/fs0");  // TODO
   m_audioSample[kFootstepWater1] = pd->sound->sample->load("sounds/fs1");
   m_audioSample[kFootstepWater2] = pd->sound->sample->load("sounds/fs2");
   m_audioSample[kFootstepWater3] = pd->sound->sample->load("sounds/fs3");

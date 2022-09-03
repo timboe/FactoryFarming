@@ -23,11 +23,14 @@ enum kNewReturnStatus checkHasNewToShow(struct Player_t* _p) {
     // This is always the last unlock - cannot go on from here
     return kNewNoUnlockedAll;
   }
+
+  uint16_t needToSell = UnlockDecs[ currentLevel+1 ].fromSelling;
   #ifdef FAST_PROGRESS
-  const bool haveUnlocked = (_p->m_soldCargo[ UnlockDecs[ currentLevel+1 ].ofCargo ] >= FAST_PROGRESS_SALES);
-  #else
-  const bool haveUnlocked = (_p->m_soldCargo[ UnlockDecs[ currentLevel+1 ].ofCargo ] >= UnlockDecs[ currentLevel+1 ].fromSelling);
+  if (needToSell > FAST_PROGRESS_SALES) needToSell = FAST_PROGRESS_SALES;
   #endif
+
+  const bool haveUnlocked = (_p->m_soldCargo[ UnlockDecs[ currentLevel+1 ].ofCargo ] >= needToSell);
+
   // Tutorial
   if (getTutorialStage() < kTutBuildConveyor && UnlockDecs[currentLevel+1].type == kConveyor) {
     return kNewNoNeedsTutorial; // Need to progress the tutorial too to unlock conveyors

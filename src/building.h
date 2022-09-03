@@ -35,6 +35,7 @@ struct PlantDescriptor_t {
   uint32_t price;
   uint16_t sprite;
   uint16_t time;
+  float multi;
   enum kGroundWetness wetness;
   enum kGroundType soil;
   enum kCargoType out;
@@ -68,6 +69,7 @@ struct FactoryDescriptor_t {
   uint16_t time;
   uint16_t UIIcon;
   uint16_t sprite;
+  float multi;
   bool invert;
   enum kCargoType out;
   enum kCargoType in1;

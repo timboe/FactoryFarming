@@ -80,9 +80,10 @@ enum kCargoType {
 struct CargoDescriptor_t {
   enum kCargoType subType;
   uint32_t price;
+  float multi;
   uint16_t UIIcon;
 };
-extern const struct CargoDescriptor_t CargoDesc[];
+extern struct CargoDescriptor_t CargoDesc[];
 
 ///
 

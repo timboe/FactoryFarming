@@ -156,3 +156,5 @@
 #define SETTINGS_TO_ROW 47
 
 #define FAST_PROGRESS_SALES 5
+
+#define REFUND_AMOUNT 0.75f

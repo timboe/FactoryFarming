@@ -5,12 +5,12 @@
 
 void doSettings(void);
 
-void redrawMainmenuLine(LCDBitmap* _bitmap, int32_t _line);
+void redrawSettingsMenuLine(LCDBitmap* _bitmap, int32_t _line);
 
 void redrawAllSettingsMenuLines(void);
 
-void populateContentMainmenu(void);
+void populateContentSettingsMenu(void);
 
-void populateInfoMainmenu(void);
+void populateInfoSettingsMenu(void);
 
 LCDBitmap* getPauseImage(void);

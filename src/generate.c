@@ -372,10 +372,14 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
 
 }
 
-#define SPAWN_START_X 6
-#define SPAWN_Y TILES_PER_CHUNK_Y
-#define SPAWN_END_X 42
+#define SPAWN_START_X ((TOT_TILES_X/2) + 6)
+#define SPAWN_Y ((TOT_TILES_Y/2) + TILES_PER_CHUNK_Y)
+#define SPAWN_END_X ((TOT_TILES_X/2) + 42)
 #define SPAWN_RADIUS 4
+
+#define SPECIAL_STARTX ((TOT_TILES_X/2) + (TILES_PER_CHUNK_X/2))
+#define SPECIAL_STARTY ((TOT_TILES_Y/2) + TILES_PER_CHUNK_Y)
+
 void addSpawn() {
   for (int32_t x = 0; x < SPAWN_END_X+SPAWN_RADIUS; ++x) {
     for (int32_t y = 0; y < SPAWN_Y+SPAWN_RADIUS; ++y) {
@@ -991,15 +995,15 @@ void generate(uint32_t _actionProgress) {
 
   } else if (_actionProgress == 7) {
 
-    #define STARTX (TILES_PER_CHUNK_X/2)
+
 
     // By setting EW, we camouflage these buildings in the early game in slot 0
     const enum kDir camo = (slot == 0 ? EW : SN);
-    newBuilding(getLocation_noCheck(STARTX + 0, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kShop} );
-    newBuilding(getLocation_noCheck(STARTX + 9, TILES_PER_CHUNK_Y), SN, kSpecial, (union kSubType) {.special = kSellBox} );
-    newBuilding(getLocation_noCheck(STARTX + 18, TILES_PER_CHUNK_Y), camo, kSpecial, (union kSubType) {.special = kWarp} );
-    newBuilding(getLocation_noCheck(STARTX + 27, TILES_PER_CHUNK_Y), camo, kSpecial, (union kSubType) {.special = kExportBox} );
-    newBuilding(getLocation_noCheck(STARTX + 36, TILES_PER_CHUNK_Y), camo, kSpecial, (union kSubType) {.special = kImportBox} );
+    newBuilding(getLocation_noCheck(SPECIAL_STARTX + 0, SPECIAL_STARTY), SN, kSpecial, (union kSubType) {.special = kShop} );
+    newBuilding(getLocation_noCheck(SPECIAL_STARTX + 9, SPECIAL_STARTY), SN, kSpecial, (union kSubType) {.special = kSellBox} );
+    newBuilding(getLocation_noCheck(SPECIAL_STARTX + 18, SPECIAL_STARTY), camo, kSpecial, (union kSubType) {.special = kWarp} );
+    newBuilding(getLocation_noCheck(SPECIAL_STARTX + 27, SPECIAL_STARTY), camo, kSpecial, (union kSubType) {.special = kExportBox} );
+    newBuilding(getLocation_noCheck(SPECIAL_STARTX + 36, SPECIAL_STARTY), camo, kSpecial, (union kSubType) {.special = kImportBox} );
 
   } else if (_actionProgress == 8) {
 

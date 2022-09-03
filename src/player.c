@@ -480,7 +480,7 @@ void resetPlayer() {
   m_player.m_buildingsUnlockedTo = 0;
   m_player.m_saveTime = pd->system->getSecondsSinceEpoch(NULL);
   m_player.m_playTime = 0;
-  m_player.m_tutorialProgress = 0;
+  m_player.m_tutorialProgress = 0; // Note: not tutorial _stage_ (this is in m_enableTutorial)
   m_offX = 0;
   m_offY = 0;
   if (m_player.m_enableTutorial != TUTORIAL_DISABLED) m_player.m_enableTutorial = 0;
@@ -499,7 +499,7 @@ void resetPlayer() {
       m_player.m_exportPerWorld[i][c] = 0;
     }
   }
-  setPlayerPosition(SCREEN_PIX_X/4, (3*SCREEN_PIX_Y)/4, /*update current location = */ true);
+  setPlayerPosition((TOT_WORLD_PIX_X/2) + SCREEN_PIX_X/4, (TOT_WORLD_PIX_Y/2) + (3*SCREEN_PIX_Y)/4, /*update current location = */ true);
   m_currentChunk = getChunk_noCheck(0,0);
   m_facing = 0;
   m_wasFacing = 0;

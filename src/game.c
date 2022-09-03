@@ -257,7 +257,7 @@ void menuOptionsCallbackMenu(void* blank) {
   checkReturnDismissTutorialMsg();
   drawUITop("Main Menu");
   redrawAllSettingsMenuLines();
-  setGameMode(kMenuMain);
+  setGameMode(kMenuSettings);
 }
 
 // Call prior to loading anything
@@ -321,7 +321,19 @@ void initGame() {
     pd->system->error("PLAYER_ANIM_FRAMES != ");
   }
 
-  return;
+  // Set prices
+  for (int32_t i = 1; i < kNFactorySubTypes; ++i) {
+    FDesc[i].price = FDesc[i-1].price * FDesc[i].multi;
+    CargoDesc[ FDesc[i].out ].price = CargoDesc[ FDesc[i-1].out ].price * CargoDesc[ FDesc[i].out ].multi;  
+  }
+
+  for (int32_t i = 1; i < kNPlantSubTypes; ++i) {
+    PDesc[i].price = PDesc[i-1].price * PDesc[i].multi; 
+    CargoDesc[ PDesc[i].out ].price = CargoDesc[ PDesc[i-1].out ].price * CargoDesc[ PDesc[i].out ].multi;  
+  }
+
+  // Custom pricings
+  PDesc[kCarrotPlant].price = 0;
 
   // Populate unlock ordering
   int32_t i = -1;

@@ -184,6 +184,7 @@ void doPlace() {
       case kUICatExtractor: addTrauma(1.0f); sfx(kSfxPlaceExtract); break;
       case kUICatFactory: addTrauma(1.0f); sfx(kSfxPlaceFac); break;
       case kUICatUtility: if (selectedID != kConveyorGrease) { addTrauma(0.5f); }  sfx(kSfxPlaceUtil); break;
+      case kUICatCargo: sfx(kSfxPlaceCargo); break;
       default: break;
     }
     
@@ -202,7 +203,9 @@ void doPlace() {
       makeTutorialProgress();
     }
   } else {
-    sfx(kSfxNo);
+    if (selectedCat != kUICatPlant && selectedCat != kUICatConv && selectedCat != kUICatCargo) {
+      sfx(kSfxNo);
+    }
   }
 }
 
@@ -316,6 +319,12 @@ void doDestroy() {
       if (loc->m_building) {
         if (loc->m_building->m_type == kSpecial) doBuilding = false;
         else if (loc->m_building->m_type == kUtility && loc->m_building->m_subType.utility == kRetirement) doBuilding = false;
+      }
+      if (loc->m_building && doBuilding) {
+        // Refund
+        enum kUICat btc = getBuildingTypeCat(loc->m_building->m_type);
+        int32_t price = getPrice(btc, loc->m_building->m_subType.raw);
+        modMoney(price * REFUND_AMOUNT);
       }
       cleared |= clearLocation(loc, /*cargo=*/ true, /*building=*/ doBuilding);
     }

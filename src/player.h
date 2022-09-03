@@ -5,6 +5,7 @@
 
 enum kUITutorialStage{
   kTutWelcomeBuySeeds, 
+  kTutSeeObjective,
   kTutPlantCarrots, 
   kTutGetCarrots, 
   kTutSellCarrots, 

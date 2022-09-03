@@ -17,7 +17,7 @@ enum kGameMode {
   kMenuWarp, 
   kMenuExport, 
   kMenuImport, 
-  kMenuMain,
+  kMenuSettings,
   kMenuCredits, 
   kTitles, 
   kNGameModes
@@ -54,7 +54,7 @@ enum kUICat {
 
 #define MAX_ROWS_VISIBLE 4
 
-#define MAX_ROWS_VISIBLE_MAINMENU 9
+#define MAX_ROWS_VISIBLE_SETTINGSMENU 9
 
 #define TOP_TITLE_OFFSET 34
 
@@ -126,7 +126,7 @@ LCDSprite* getGenSprite(void);
 
 LCDBitmap* getInfoBitmap(void);
 
-LCDBitmap* getMainmenuUIBitmap(uint32_t _i);
+LCDBitmap* getSettingsMenuUIBitmap(uint32_t _i);
 
 const char* getRotationAsString(enum kUICat _cat, int16_t _selectedID, uint16_t _rotation);
 
@@ -138,7 +138,7 @@ bool checkReturnDismissTutorialMsg(void);
 
 void showTutorialMsg(enum kUITutorialStage _stage);
 
-void setUIContentMainMenu(int32_t _row, bool _isHeader);
+void setUIContentSettingsMenu(int32_t _row, bool _isHeader);
 
 void setUIContentHeader(int32_t _row, enum kUICat _c);
 

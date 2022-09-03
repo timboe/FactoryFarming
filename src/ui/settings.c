@@ -34,6 +34,11 @@ void cheatUnlock(void);
 LCDBitmap* getPauseImage() {
   if (m_pause == NULL) m_pause = pd->graphics->newBitmap(DEVICE_PIX_X, DEVICE_PIX_Y, kColorClear);
 
+  // Tutorial
+  if (getTutorialStage() == kTutSeeObjective) {
+    nextTutorialStage();
+  }
+
   pd->graphics->clearBitmap(m_pause, kColorClear);
   int32_t length, width = 0;
   char textA[128] = {0}, textB[128] = {0}, textC[128] = {0}, textD[128] = {0}, textE[128] = {0};
@@ -291,7 +296,7 @@ void doSettings() {
     //
     case 46: sfx(rand() % kNSFX); break;
   }
-  redrawMainmenuLine(getMainmenuUIBitmap(selectedID), selectedID);
+  redrawSettingsMenuLine(getSettingsMenuUIBitmap(selectedID), selectedID);
 }
 
 #define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_START 0
@@ -301,14 +306,14 @@ void doSettings() {
 
 void redrawAllSettingsMenuLines() {
   for (int32_t i = MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_START; i < MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_STOP; ++i) {
-    redrawMainmenuLine(getMainmenuUIBitmap(i), i);
+    redrawSettingsMenuLine(getSettingsMenuUIBitmap(i), i);
   }
   for (int32_t i = MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_START; i < MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_STOP; ++i) {
-    redrawMainmenuLine(getMainmenuUIBitmap(i), i);
+    redrawSettingsMenuLine(getSettingsMenuUIBitmap(i), i);
   }
 }
 
-void redrawMainmenuLine(LCDBitmap* _bitmap, int32_t _line) {
+void redrawSettingsMenuLine(LCDBitmap* _bitmap, int32_t _line) {
 
   setRoobert10();
   pd->graphics->clearBitmap(_bitmap, kColorWhite);
@@ -355,13 +360,13 @@ void redrawMainmenuLine(LCDBitmap* _bitmap, int32_t _line) {
   pd->graphics->popContext();
 }
 
-void populateContentMainmenu() {
+void populateContentSettingsMenu() {
   for (int32_t i = 0; i < SETTINGS_TO_ROW; ++i) {
-    setUIContentMainMenu(i, isTitle(i));
+    setUIContentSettingsMenu(i, isTitle(i));
   }
 }
 
-void populateInfoMainmenu() {
+void populateInfoSettingsMenu() {
 }
 
 bool isTitle(int32_t _line) {

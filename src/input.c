@@ -165,7 +165,7 @@ bool holdBMultiplierInput(uint32_t _buttonPressed) {
 void gameClickConfigHandler(uint32_t _buttonPressed) {
   switch (getGameMode()) {
     case kWanderMode: return clickHandleWander(_buttonPressed);
-    case kMenuMain: return clickHandleMenuMain(_buttonPressed);
+    case kMenuSettings: return clickHandleMenuMain(_buttonPressed);
     case kMenuBuy: return clickHandleMenuBuy(_buttonPressed);
     case kMenuNew: return clickHandleMenuNew(_buttonPressed);
     case kMenuSell: return clickHandleMenuSell(_buttonPressed);
@@ -257,7 +257,6 @@ void clickHandleMenuMain(uint32_t _buttonPressed) {
 
 void clickHandleMenuBuy(uint32_t _buttonPressed) {
   if (kButtonA == _buttonPressed) {
-    sfx(kSfxA);
     doPurchace();
   } else if (bPressed() && holdBMultiplierInput(_buttonPressed)) {
     // noop
@@ -344,10 +343,12 @@ void clickHandleBuilding(uint32_t _buttonPressed) {
     // Tutorial
     if (getTutorialStage() == kTutBuildHarvester && getTutorialProgress()) {
       nextTutorialStage();
+      modMoney(getPrice(kUICatConv, kBelt) * 50);
     }
     // Tutorial 
     if (getTutorialStage() == kTutBuildQuarry && getTutorialProgress()) {
       nextTutorialStage();
+      modMoney(getPrice(kUICatExtractor, kChalkQuarry));
     }
   }
 }
@@ -552,7 +553,7 @@ void clickHandlerReplacement() {
     case kPickMode: case kDestroyMode: rotateHandlePick(pd->system->getCrankChange()); break;
     case kMenuCredits: rotateHandleCredits(pd->system->getCrankChange()); break;
     case kMenuBuy: case kMenuSell: rotateHandleMultiplier(pd->system->getCrankChange()); break; 
-    case kMenuPlayer: case kMenuMain: case kMenuExport: case kMenuImport: case kMenuWarp: rotateHandleSettings(pd->system->getCrankChange()); break;
+    case kMenuPlayer: case kMenuSettings: case kMenuExport: case kMenuImport: case kMenuWarp: rotateHandleSettings(pd->system->getCrankChange()); break;
     case kMenuNew: case kPlantMode: case kInspectMode: case kTitles: case kNGameModes: break;
   }
 

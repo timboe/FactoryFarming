@@ -2,6 +2,7 @@
 #include "../player.h"
 #include "../sprite.h"
 #include "../generate.h"
+#include "../sound.h"
 
 void doPurchace() {
   const enum kUICat selectedCat = getUIContentCategory();
@@ -11,6 +12,7 @@ void doPurchace() {
 
   if (modMoney(-selectedPrice * multiplier)) {
     UIDirtyMain();
+    sfx(kSfxBuy);
     for (int32_t dummy = 0; dummy < multiplier; ++dummy) {
       modOwned(selectedCat, selectedID, /*add=*/ true);
       // Tutorial
@@ -18,25 +20,27 @@ void doPurchace() {
         makeTutorialProgress();
       }
     }
+  } else {
+    sfx(kSfxNo);
   }
 }
 
 void populateContentBuy() {
   struct Player_t* p = getPlayer();
-  const uint32_t unlockLevel = p->m_buildingsUnlockedTo;
+  const uint32_t myUnlockLevel = p->m_buildingsUnlockedTo;
   int16_t column = 0, row = 0;
   // Miss the first (Tools). Miss the last (Cargo)
   for (int32_t c = kUICatPlant; c < kUICatCargo; ++c) {
-    int32_t myLevel = getUnlockLevel(c, 0);
-    if (myLevel > unlockLevel) { // Can the first thing be bought? Should always be the 1st thing to be unlocked per cat
+    int32_t firstItemUnlockLevel = getUnlockLevel(c, 0);
+    if (myUnlockLevel < firstItemUnlockLevel) { // Can the first thing be bought? Should always be the 1st thing to be unlocked per cat
       continue;
     }
     setUIContentHeader(row, c);
     ++row;
     column = 0;
     for (int32_t i = 0; i < getNSubTypes(c); ++i) {
-      myLevel = getUnlockLevel(c, i);
-      if (myLevel > unlockLevel) {
+      int32_t itemUnlockLevel = getUnlockLevel(c, i);
+      if (myUnlockLevel < itemUnlockLevel) {
         continue;
       }
       if (column == ROW_WDTH) { // Only start a new row if we are sure we have something to put in it
@@ -56,9 +60,10 @@ void populateInfoBuy(bool _visible) {
   const uint16_t selectedID =  getUIContentID();
   const int32_t selectedPrice = getPrice(selectedCat, selectedID);
   const uint16_t selectedOwned = getOwned(selectedCat, selectedID);
+  const uint8_t multiplier = getBuySellMultiplier();
 
   // AFFORD
-  bool canAfford = (p->m_money >= selectedPrice);
+  bool canAfford = (p->m_money >= selectedPrice * multiplier);
   pd->sprite->setVisible(getCannotAffordSprite(), !canAfford && _visible);
 
   // INFO

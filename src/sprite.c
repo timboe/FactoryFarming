@@ -21,7 +21,7 @@ LCDBitmap* m_stickySelected;
 
 LCDBitmap* m_titleSelected;
 
-LCDBitmap* m_mainMenuSelected;
+LCDBitmap* m_settingsMenuSelected;
 
 LCDBitmap* m_new;
 
@@ -158,8 +158,8 @@ LCDBitmap* getTitleSelectedBitmap() {
   return m_titleSelected;
 }
 
-LCDBitmap* getMainmenuSelectedBitmap() {
-  return m_mainMenuSelected;
+LCDBitmap* getSettingsMenuSelectedBitmap() {
+  return m_settingsMenuSelected;
 }
 
 void setCooperHewitt12() {
@@ -223,7 +223,7 @@ void initSprite() {
   m_sheet48 = loadImageTableAtPath("images/sheet48");
   m_stickySelected = loadImageAtPath("images/selected");
   m_titleSelected = loadImageAtPath("images/titleSelected");
-  m_mainMenuSelected = loadImageAtPath("images/mainmenuSelected");
+  m_settingsMenuSelected = loadImageAtPath("images/mainmenuSelected");
   m_new = loadImageAtPath("images/new");
   m_splash = loadImageAtPath("images/splash");
   m_retirementNo[1] = loadImageAtPath("images/cross9x9");

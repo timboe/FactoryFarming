@@ -84,10 +84,10 @@ LCDBitmap* m_UIBitmapNewText;
 
 // Main Menu
 
-LCDSprite* m_UISpriteMainMenuItem[MAX_ROWS];
-LCDBitmap* m_UIBitmapMainMenuItem[MAX_ROWS];
+LCDSprite* m_UISpriteSettingsMenuItem[MAX_ROWS];
+LCDBitmap* m_UIBitmapSettingsMenuItem[MAX_ROWS];
 
-LCDSprite* m_UISpriteMainMenuCursor;
+LCDSprite* m_UISpriteSettingsMenuCursor;
 
 // Other Menus
 
@@ -202,8 +202,8 @@ uint16_t getCursorRotation() {
   return m_selRotation;
 }
 
-LCDBitmap* getMainmenuUIBitmap(uint32_t _i) {
-  return m_UIBitmapMainMenuItem[_i];
+LCDBitmap* getSettingsMenuUIBitmap(uint32_t _i) {
+  return m_UIBitmapSettingsMenuItem[_i];
 }
 
 enum kUICat getUIContentCategory() {
@@ -302,9 +302,9 @@ void updateUICredits(int _fc) {
   pd->sprite->setDrawMode(m_UISpriteSplash, kDrawModeInverted);
 
   for (int32_t i = CREDITS_FROM_ROW; i < CREDITS_TO_ROW; ++i) {
-    pd->sprite->setVisible(m_UISpriteMainMenuItem[i], 1);
-    pd->sprite->setDrawMode(m_UISpriteMainMenuItem[i], kDrawModeInverted);
-    pd->sprite->moveTo(m_UISpriteMainMenuItem[i], DEVICE_PIX_X/2, DEVICE_PIX_Y + ((i - CREDITS_FROM_ROW + 1) * TILE_PIX) - y/2);
+    pd->sprite->setVisible(m_UISpriteSettingsMenuItem[i], 1);
+    pd->sprite->setDrawMode(m_UISpriteSettingsMenuItem[i], kDrawModeInverted);
+    pd->sprite->moveTo(m_UISpriteSettingsMenuItem[i], DEVICE_PIX_X/2, DEVICE_PIX_Y + ((i - CREDITS_FROM_ROW + 1) * TILE_PIX) - y/2);
   }
 
   if (m_creditsCounter/2 > (CREDITS_TO_ROW - CREDITS_FROM_ROW)*TILE_PIX + DEVICE_PIX_Y) {
@@ -534,7 +534,7 @@ void addUIToSpriteList() {
   if (m_mode == kMenuCredits) {
     pd->sprite->addSprite(m_UISpriteSplash);
     for (int32_t i = CREDITS_FROM_ROW; i < CREDITS_TO_ROW; ++i) {
-      pd->sprite->addSprite(m_UISpriteMainMenuItem[i]);
+      pd->sprite->addSprite(m_UISpriteSettingsMenuItem[i]);
     }
     return;
   } else if (m_mode == kTitles) {
@@ -567,11 +567,11 @@ void addUIToSpriteList() {
       pd->sprite->addSprite(m_UISpriteNewSplash);
       pd->sprite->addSprite(m_UISpriteNewItem);
       pd->sprite->addSprite(m_UISpriteNewText);
-    } else if (m_mode == kMenuMain) {
+    } else if (m_mode == kMenuSettings) {
       for (int32_t i = 0; i < MAX_ROWS; ++i) {
-        pd->sprite->addSprite(m_UISpriteMainMenuItem[i]);
+        pd->sprite->addSprite(m_UISpriteSettingsMenuItem[i]);
       }
-      pd->sprite->addSprite(m_UISpriteMainMenuCursor);
+      pd->sprite->addSprite(m_UISpriteSettingsMenuCursor);
       pd->sprite->addSprite(m_UISpriteScrollBarLongOuter);
       pd->sprite->addSprite(m_UISpriteScrollBarInner);
     } else {    
@@ -751,6 +751,14 @@ void drawUIInspect() {
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   setRoobert10();
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
+  if (getTile_fromLocation(loc)->m_groundType == kObstructedGround) {
+    ++y;
+    snprintf(text, 128, "Obstructed ground cannot be built on.");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 128, "Maybe you will be able to clear it later on?");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  }
   
   if (loc->m_building) {
     switch (loc->m_building->m_type) {
@@ -877,7 +885,7 @@ void drawUIRight() {
     pd->graphics->drawBitmap(getSprite16_byidx(cSprite, 1), DEVICE_PIX_Y/2, 0, kBitmapUnflipped);
 
     // Unlock?
-    if (checkHasNewToShow(p) == kNewYes) {
+    if (checkHasNewToShow(p) == kNewYes && !(gm == kMenuBuy || gm == kMenuSell)) {
       pd->graphics->drawBitmap(getSprite16(11, 11, 1), DEVICE_PIX_Y/2 + 2*TILE_PIX, 0, kBitmapUnflipped);
     }
   }
@@ -1042,7 +1050,7 @@ uint16_t getUIIcon(enum kUICat _c, uint16_t _i) {
 }
 
 void moveRow(bool _down) {
-  const uint8_t maxRowsVisible = (m_mode == kMenuMain ? MAX_ROWS_VISIBLE_MAINMENU : MAX_ROWS_VISIBLE);
+  const uint8_t maxRowsVisible = (m_mode == kMenuSettings ? MAX_ROWS_VISIBLE_SETTINGSMENU : MAX_ROWS_VISIBLE);
   if (_down) {
     ++m_selRow[m_mode];
     if (m_cursorRowAbs[m_mode] == maxRowsVisible-1) ++m_selRowOffset[m_mode];
@@ -1088,7 +1096,7 @@ void setPlotCursorToWorld(enum kWorldType _wt) {
 
 void moveCursor(uint32_t _button) {
   sfx(kSfxD);
-  const uint8_t rowWidth = m_mode == kMenuMain ? 1 : ROW_WDTH;
+  const uint8_t rowWidth = m_mode == kMenuSettings ? 1 : ROW_WDTH;
   if (kButtonUp    == _button) {
     if (m_selRow[m_mode] == 1) {
       // noop
@@ -1118,8 +1126,8 @@ void moveCursor(uint32_t _button) {
   UIDirtyMain();
 }
 
-void setUIContentMainMenu(int32_t _row, bool _isHeader) {
-  m_contentSprite[_row][0] = m_UISpriteMainMenuItem[_row];
+void setUIContentSettingsMenu(int32_t _row, bool _isHeader) {
+  m_contentSprite[_row][0] = m_UISpriteSettingsMenuItem[_row];
   m_contentID[_row][0] = _row;
   m_rowIsTitle[_row] = _isHeader;
   m_contentMaxRow = (_row > m_contentMaxRow ? _row : m_contentMaxRow);
@@ -1164,7 +1172,7 @@ void drawUIMain() {
   bool empty = false;
   switch (gm) {
     case kMenuBuy:; populateContentBuy(); break;
-    case kMenuMain:; populateContentMainmenu(); break;
+    case kMenuSettings:; populateContentSettingsMenu(); break;
     case kMenuNew:; empty = true; break;
     case kMenuPlayer:; populateContentInventory(); break;
     case kMenuSell:; empty = populateContentSell(); break;
@@ -1178,10 +1186,10 @@ void drawUIMain() {
 
   // DRAW
   // Mark invisible
-  if (gm == kMenuMain) {
+  if (gm == kMenuSettings) {
     for (int32_t i = 0; i < MAX_ROWS; ++i) {
-      pd->sprite->setVisible(m_UISpriteMainMenuItem[i], 0);
-      pd->sprite->setDrawMode(m_UISpriteMainMenuItem[i], kDrawModeCopy);
+      pd->sprite->setVisible(m_UISpriteSettingsMenuItem[i], 0);
+      pd->sprite->setDrawMode(m_UISpriteSettingsMenuItem[i], kDrawModeCopy);
     }
   } else {
     for (enum kUICat c = 0; c < kNUICats; ++c) {
@@ -1200,7 +1208,7 @@ void drawUIMain() {
   }
 
 
-  #define MAINMENUSTARTY (TILE_PIX*3)
+  #define SETTINGSMENUSTARTY (TILE_PIX*3)
   #define UISTARTX (TILE_PIX*3)
   #define UISTARTY (TILE_PIX*5)
 
@@ -1221,13 +1229,13 @@ void drawUIMain() {
   pd->sprite->setVisible(m_UISpriteInfo, 1);
 
   // Render
-  const uint8_t ROWS_TO_RENDER = (m_mode == kMenuMain ? MAX_ROWS_VISIBLE_MAINMENU : MAX_ROWS_VISIBLE);
+  const uint8_t ROWS_TO_RENDER = (m_mode == kMenuSettings ? MAX_ROWS_VISIBLE_SETTINGSMENU : MAX_ROWS_VISIBLE);
 
   // Scroll bar
   #define SCROLL_TOP_SETTINGS (TILE_PIX*3)
   #define SCROLL_TOP (TILE_PIX*5)
   #define SCROLL_BOT (TILE_PIX*11)
-  const int16_t scrollTop = (m_mode == kMenuMain ? SCROLL_TOP_SETTINGS : SCROLL_TOP);
+  const int16_t scrollTop = (m_mode == kMenuSettings ? SCROLL_TOP_SETTINGS : SCROLL_TOP);
   float frac = (m_selRow[m_mode] - 1) / (float)(m_contentMaxRow-1); // -1 as cannot select the top row
   pd->sprite->moveTo(m_UISpriteScrollBarInner, TILE_PIX*21, scrollTop + (SCROLL_BOT-scrollTop)*frac);
 
@@ -1235,9 +1243,9 @@ void drawUIMain() {
     int32_t rID = r + m_selRowOffset[m_mode];
     if (rID >= MAX_ROWS) break;
     if (m_contentSprite[rID][0] == NULL) break; // Not populated
-    if (m_mode == kMenuMain) {
+    if (m_mode == kMenuSettings) {
       pd->sprite->setVisible(m_contentSprite[rID][0], 1);
-      pd->sprite->moveTo(m_contentSprite[rID][0], SCREEN_PIX_X/2 - TILE_PIX, MAINMENUSTARTY + r*TILE_PIX);
+      pd->sprite->moveTo(m_contentSprite[rID][0], SCREEN_PIX_X/2 - TILE_PIX, SETTINGSMENUSTARTY + r*TILE_PIX);
     } else if (m_rowIsTitle[rID]) {
       pd->sprite->setVisible(m_contentSprite[rID][0], 1);
       pd->sprite->moveTo(m_contentSprite[rID][0], SCREEN_PIX_X/2 - TILE_PIX, UISTARTY + r*2*TILE_PIX);
@@ -1260,21 +1268,19 @@ void drawUIMain() {
 
   // CURSOR
   const bool visible = (getFrameCount() % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
-  if (m_mode == kMenuMain) {
-    pd->sprite->setVisible(m_UISpriteMainMenuCursor, visible);
-    pd->sprite->moveTo(m_UISpriteMainMenuCursor, UISTARTX + TILE_PIX*8, MAINMENUSTARTY + m_cursorRowAbs[m_mode]*TILE_PIX);
+  if (m_mode == kMenuSettings) {
+    pd->sprite->setVisible(m_UISpriteSettingsMenuCursor, visible);
+    pd->sprite->moveTo(m_UISpriteSettingsMenuCursor, UISTARTX + TILE_PIX*8, SETTINGSMENUSTARTY + m_cursorRowAbs[m_mode]*TILE_PIX);
   } else {
     pd->sprite->setVisible(m_UISpriteCursor, visible);
     pd->sprite->moveTo(m_UISpriteCursor, UISTARTX + m_selCol[m_mode]*2*TILE_PIX, UISTARTY + m_cursorRowAbs[m_mode]*2*TILE_PIX);
   }
 
   // SELECTED
-  if (m_mode != kMenuMain) {
+  if (m_mode != kMenuSettings) {
     LCDSprite* selectedSprite = m_contentSprite[ m_selRow[m_mode] ][ m_selCol[m_mode] ];
     pd->sprite->setVisible(m_UISpriteSelected, 1);
-    // TODO - why is this crashing now too?
-    pd->system->logToConsole("r %i c %i", m_selRow[m_mode], m_selCol[m_mode]);
-    //pd->sprite->setImage(m_UISpriteSelected, pd->sprite->getImage(selectedSprite), kBitmapUnflipped);
+    pd->sprite->setImage(m_UISpriteSelected, pd->sprite->getImage(selectedSprite), kBitmapUnflipped);
   }
 
   // INGREDIENTS
@@ -1567,7 +1573,7 @@ void initiUI() {
   PDRect ingBound = {.x = 0, .y = 0, .width = INGREDIENTS_WIDTH, .height = INGREDIENTS_HEIGHT};
   PDRect tutBound = {.x = 0, .y = 0, .width = TUTORIAL_WIDTH, .height = TUTORIAL_HEIGHT};
   PDRect stickyBound = {.x = 0, .y = 0, .width = 38, .height = 38};
-  PDRect mainMenuBound = {.x = 0, .y = 0, .width = TILE_PIX*18, .height = TILE_PIX};
+  PDRect settingsMenuBound = {.x = 0, .y = 0, .width = TILE_PIX*18, .height = TILE_PIX};
   PDRect scrollShortBound = {.x = 0, .y = 0, .width = TILE_PIX*2, .height = TILE_PIX*8};
   PDRect scrollLongBound = {.x = 0, .y = 0, .width = TILE_PIX*2, .height = TILE_PIX*10};
 
@@ -1630,20 +1636,20 @@ void initiUI() {
   // Main Menu
 
   for (int32_t i = 0; i < MAX_ROWS; ++i) {
-    m_UIBitmapMainMenuItem[i] = pd->graphics->newBitmap(TILE_PIX*18, TILE_PIX*1, kColorClear);
-    m_UISpriteMainMenuItem[i] = pd->sprite->newSprite();
-    pd->sprite->setBounds(m_UISpriteMainMenuItem[i], mainMenuBound);
-    pd->sprite->setImage(m_UISpriteMainMenuItem[i], m_UIBitmapMainMenuItem[i], kBitmapUnflipped);
-    pd->sprite->setZIndex(m_UISpriteMainMenuItem[i], Z_INDEX_UI_M);
-    pd->sprite->setIgnoresDrawOffset(m_UISpriteMainMenuItem[i], 1);
-    redrawMainmenuLine(m_UIBitmapMainMenuItem[i], i);
+    m_UIBitmapSettingsMenuItem[i] = pd->graphics->newBitmap(TILE_PIX*18, TILE_PIX*1, kColorClear);
+    m_UISpriteSettingsMenuItem[i] = pd->sprite->newSprite();
+    pd->sprite->setBounds(m_UISpriteSettingsMenuItem[i], settingsMenuBound);
+    pd->sprite->setImage(m_UISpriteSettingsMenuItem[i], m_UIBitmapSettingsMenuItem[i], kBitmapUnflipped);
+    pd->sprite->setZIndex(m_UISpriteSettingsMenuItem[i], Z_INDEX_UI_M);
+    pd->sprite->setIgnoresDrawOffset(m_UISpriteSettingsMenuItem[i], 1);
+    redrawSettingsMenuLine(m_UIBitmapSettingsMenuItem[i], i);
   }
 
-  m_UISpriteMainMenuCursor = pd->sprite->newSprite();
-  pd->sprite->setBounds(m_UISpriteMainMenuCursor, mainMenuBound);
-  pd->sprite->setImage(m_UISpriteMainMenuCursor, getMainmenuSelectedBitmap(), kBitmapUnflipped);
-  pd->sprite->setZIndex(m_UISpriteMainMenuCursor, Z_INDEX_UI_T);
-  pd->sprite->setIgnoresDrawOffset(m_UISpriteMainMenuCursor, 1);
+  m_UISpriteSettingsMenuCursor = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteSettingsMenuCursor, settingsMenuBound);
+  pd->sprite->setImage(m_UISpriteSettingsMenuCursor, getSettingsMenuSelectedBitmap(), kBitmapUnflipped);
+  pd->sprite->setZIndex(m_UISpriteSettingsMenuCursor, Z_INDEX_UI_T);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteSettingsMenuCursor, 1);
 
   // New stuff
 
@@ -1917,6 +1923,19 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 7: return "Buy 10 Carrot Seeds from The Shop with Ⓐ.";
         case 8: return "Press Ⓑ to exit The Shop.";
       }
+    case kTutSeeObjective:;
+      switch (_n) {
+        case 0: return "-- The Next Objective --";
+        case 1: return "Your current objective is to sell at least";
+        case 2: return "5 carrots. You can check what your current objective";
+        case 3: return "is at any time by pressing the Menu Button.";
+        case 4: return "Do this now.";
+          
+        case 5: return "Press the Menu Button to see your current objective.";
+        case 6: return "From here you can also Save and Load the game, and";
+        case 7: return "open the Main Menu with game settings etc.";
+        case 8: return "";
+      }
     case kTutPlantCarrots:;
       switch (_n) {
         case 0: return "-- The First Crops --";
@@ -1925,7 +1944,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 3: return "Find a good nearby spot, open your inventory";
         case 4: return "with Ⓐ, select the seeds, and plant 10 Carrots.";
           
-        case 5: return "Find a nearby area of Silty Soil, preferably Moist. ";
+        case 5: return "Find a nearby area of Silty Soil, preferably Moist.";
         case 6: return "Press Ⓐ to enter your inventory, select the Carrot";
         case 7: return "Seeds and press Ⓐ again. Plant 10 Carrot Seeds on";
         case 8: return "empty patches of Silty Soil, then press Ⓑ.";
@@ -1934,13 +1953,13 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
       switch (_n) {
         case 0: return "-- The First Harvest --";
         case 1: return "Great, crops normally take some time to yield produce,";
-        case 2: return "but let's speed up these carrot plants. Press Ⓐ and";
-        case 3: return "enter 'Pickup Mode' and harvest 10 grown carrots.";
+        case 2: return "but let's speed up these carrot plants. Press Ⓐ, choose";
+        case 3: return "'Pickup Cargo Mode' and harvest 10 grown carrots.";
         case 4: return "You can pickup any cargo in the world, or in buildings.";
           
         case 5: return "Go to where you planted your Carrot Seeds. ";
         case 6: return "Press Ⓐ to enter your inventory, select 'Pickup";
-        case 7: return "Mode'. Press or hold Ⓐ when moving, pickup 10";
+        case 7: return "Cargo Mode'. Press or hold Ⓐ when moving, pickup 10";
         case 8: return "grown Carrots. Use the 🎣 to change the pickup area. ";
       }
     case kTutSellCarrots:;
@@ -1952,9 +1971,9 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 4: return "sales menu. Sell 10 carrots to continue.";
           
         case 5: return "Go to Sales (next to The Shop). ";
-        case 6: return "Press Ⓐ, choose the harvested Carrots";
-        case 7: return "Press or hold Ⓐ to sell at least 10 Carrots.";
-        case 8: return "Press Ⓑ to close the Sales window.";
+        case 6: return "Press or hold Ⓐ to sell at least 10 Carrots.";
+        case 7: return "Change the amount sold with each press of Ⓐ by";
+        case 8: return "turning the 🎣, or hold Ⓑ and press ⬆️ or ⬇️.";
       }
     case kTutBuildHarvester:;
       switch (_n) {

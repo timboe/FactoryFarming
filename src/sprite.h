@@ -39,7 +39,7 @@ LCDBitmap* getStickySelectedBitmap(void);
 
 LCDBitmap* getTitleSelectedBitmap(void);
 
-LCDBitmap* getMainmenuSelectedBitmap(void);
+LCDBitmap* getSettingsMenuSelectedBitmap(void);
 
 LCDBitmap* getRetirementNoBitmap(uint8_t _zoom);
 
