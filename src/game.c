@@ -293,37 +293,6 @@ uint16_t getCactusUnlock() {
 
 void initGame() {
 
-  // Perform runtime sanity check. Ignore placeholders
-  for (int32_t i = 0; i < kNFactorySubTypes; ++i) {
-    if (i != FDesc[i].subType) pd->system->error("FACTORY DESCRIPTOR ORDERING IS WRONG!");
-  }
-  for (int32_t i = 0; i < kNUtilitySubTypes; ++i) {
-    if (i != UDesc[i].subType) pd->system->error("UTILITY DESCRIPTOR ORDERING IS WRONG!");
-  }
-  for (int32_t i = 0; i < kNConvSubTypes; ++i) {
-    if (i != CDesc[i].subType) pd->system->error("CONVEYOR DESCRIPTOR ORDERING IS WRONG!");
-  }
-  for (int32_t i = 0; i < kNPlantSubTypes; ++i) {
-    if (i != PDesc[i].subType) pd->system->error("PLANT DESCRIPTOR ORDERING IS WRONG!");
-  }
-  for (int32_t i = 0; i < kNExtractorSubTypes; ++i) {
-    if (i != EDesc[i].subType) pd->system->error("EXTRACTOR DESCRIPTOR ORDERING IS WRONG!");
-  }
-  for (int32_t i = 0; i < kNCargoType; ++i) {
-    if (i != CargoDesc[i].subType) pd->system->error("CARGO DESCRIPTOR ORDERING IS WRONG!");
-  }
-  for (int32_t i = 0; i < kNWorldTypes; ++i) {
-    if (i != WDesc[i].subType) pd->system->error("WORLD DESCRIPTOR ORDERING IS WRONG!");
-  }
-
-  if (CREDITS_TO_ROW > MAX_ROWS) {
-    pd->system->error("INSUFFICIENT ROWS FOR CREDITS!");
-  }
-  
-  if (PLAYER_ANIM_FRAMES != N_FOOTSTEPS) {
-    pd->system->error("PLAYER_ANIM_FRAMES != ");
-  }
-
   // Populate unlock ordering
   int32_t i = -1;
   while (true) {
@@ -502,6 +471,69 @@ void initGame() {
   WDesc[kWaterWorld].price = 500; // This is now number of items
   WDesc[kTranquilWorld].unlock = kMiraclePowder;
   WDesc[kTranquilWorld].price = 1000; // This is now number of items
+
+  // Perform runtime sanity check.
+  for (int32_t i = 0; i < kNFactorySubTypes; ++i) {
+    if (i != FDesc[i].subType) pd->system->error("FACTORY DESCRIPTOR ORDERING IS WRONG!");
+  }
+  for (int32_t i = 0; i < kNUtilitySubTypes; ++i) {
+    if (i != UDesc[i].subType) pd->system->error("UTILITY DESCRIPTOR ORDERING IS WRONG!");
+  }
+  for (int32_t i = 0; i < kNConvSubTypes; ++i) {
+    if (i != CDesc[i].subType) pd->system->error("CONVEYOR DESCRIPTOR ORDERING IS WRONG!");
+  }
+  for (int32_t i = 0; i < kNPlantSubTypes; ++i) {
+    if (i != PDesc[i].subType) pd->system->error("PLANT DESCRIPTOR ORDERING IS WRONG!");
+  }
+  for (int32_t i = 0; i < kNExtractorSubTypes; ++i) {
+    if (i != EDesc[i].subType) pd->system->error("EXTRACTOR DESCRIPTOR ORDERING IS WRONG!");
+  }
+  for (int32_t i = 0; i < kNCargoType; ++i) {
+    if (i != CargoDesc[i].subType) pd->system->error("CARGO DESCRIPTOR ORDERING IS WRONG!");
+  }
+  for (int32_t i = 0; i < kNWorldTypes; ++i) {
+    if (i != WDesc[i].subType) pd->system->error("WORLD DESCRIPTOR ORDERING IS WRONG!");
+  }
+
+  if (CREDITS_TO_ROW > MAX_ROWS) {
+    pd->system->error("INSUFFICIENT ROWS FOR CREDITS!");
+  }
+  
+  if (PLAYER_ANIM_FRAMES != N_FOOTSTEPS) {
+    pd->system->error("PLAYER_ANIM_FRAMES != ");
+  }
+
+  // Check unlocks are all in the expected order
+  skip = 1;
+  for (int32_t i = 1; i < kNConvSubTypes; ++i) {
+    if (CDesc[i].unlock == DIS) { ++skip; continue; } // Skip placeholders
+    if (CDesc[i-skip].unlock > CDesc[i].unlock) pd->system->error("CONVEYOR UNLOCK ORDERING IS INCONSISTENT! i=%i=%i, i-1=%i=%i", i, CDesc[i].unlock, i-1, CDesc[i-1].unlock );
+    skip = 1;
+  }
+  skip = 1;
+  for (int32_t i = 1; i < kNExtractorSubTypes; ++i) {
+    if (EDesc[i].unlock == DIS) { ++skip; continue; } // Skip placeholders
+    if (EDesc[i-skip].unlock > EDesc[i].unlock) pd->system->error("EXTRACTOR UNLOCK ORDERING IS INCONSISTENT!");
+    skip = 1;
+  }
+  skip = 1;
+  for (int32_t i = 1; i < kNFactorySubTypes; ++i) {
+    if (FDesc[i].unlock == DIS) { ++skip; continue; } // Skip placeholders
+    if (FDesc[i-skip].unlock > FDesc[i].unlock) pd->system->error("FACTORY UNLOCK ORDERING IS INCONSISTENT!");
+    skip = 1;
+  }
+  skip = 1;
+  for (int32_t i = 1; i < kNPlantSubTypes; ++i) {
+    if (PDesc[i].unlock == DIS) { ++skip; continue; } // Skip placeholders
+    if (PDesc[i-skip].unlock > PDesc[i].unlock) pd->system->error("PLANT UNLOCK ORDERING IS INCONSISTENT!");
+    skip = 1;
+  }
+  skip = 1;
+  for (int32_t i = 1; i < kNUtilitySubTypes; ++i) {
+    if (UDesc[i].unlock == DIS) { ++skip; continue; } // Skip placeholders
+    if (UDesc[i-skip].unlock > UDesc[i].unlock) pd->system->error("UTILITY UNLOCK ORDERING IS INCONSISTENT!");
+    skip = 1;
+  }
 }
 
 int32_t getNUnlocks() {

@@ -31,10 +31,10 @@ struct ConveyorDescriptor_t CDesc[] = {
 struct PlantDescriptor_t PDesc[] = {
   // Carrot plant will be given price=0 later, but it needs an otherwise sensible starting price here
   {.subType = kCarrotPlant, .unlock = 1, .price = 0, .multi = 1.0f, .sprite = SID(10, 8), .time = PMED, .wetness = kMoist, .soil = kSiltyGround, .out = kCarrot},
-  {.subType = kPotatoPlant, .unlock = 1, .price = 0, .multi = 10.0f, .sprite = SID(14, 8), .time = PSLOW, .wetness = kWet, .soil = kPeatyGround, .out = kPotato},
+  {.subType = kSunflowerPlant, .unlock = 1, .price = 0, .multi = 5.0f, .sprite = SID(15, 8), .time = PFAST, .wetness = kDry, .soil = kChalkyGround, .out = kSunflower},
   {.subType = kSparePlant0, .unlock = DIS, .price = DIS, .multi = 0, .sprite = SID(0, 0), .time = PMED, .wetness = kMoist, .soil = kSiltyGround, .out = kNoCargo},
   {.subType = kSparePlant1, .unlock = DIS, .price = DIS, .multi = 0, .sprite = SID(0, 0), .time = PMED, .wetness = kMoist, .soil = kSiltyGround, .out = kNoCargo},
-  {.subType = kSunflowerPlant, .unlock = 1, .price = 0, .multi = 5.0f, .sprite = SID(15, 8), .time = PFAST, .wetness = kDry, .soil = kChalkyGround, .out = kSunflower},
+  {.subType = kPotatoPlant, .unlock = 1, .price = 0, .multi = 10.0f, .sprite = SID(14, 8), .time = PSLOW, .wetness = kWet, .soil = kPeatyGround, .out = kPotato},
   {.subType = kAppleTree, .unlock = 1, .price = 0, .multi = 2.0f, .sprite = SID(8, 8), .time = PVSLOW, .wetness = kMoist, .soil = kPeatyGround, .out = kApple},
   {.subType = kSeaweedPlant, .unlock = 1, .price = 0, .multi = 1.5f, .sprite = SID(3, 21), .time = PFAST, .wetness = kWater, .soil = kLake, .out = kSeaweed},
   {.subType = kSparePlant2, .unlock = DIS, .price = DIS, .multi = 0, .sprite = SID(0, 0), .time = PMED, .wetness = kMoist, .soil = kSiltyGround, .out = kNoCargo},

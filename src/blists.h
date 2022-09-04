@@ -22,10 +22,10 @@ enum kConvSubType{
 
 enum kPlantSubType{
   kCarrotPlant, // Silty
-  kPotatoPlant,  // Peaty
+  kSunflowerPlant, // Chalky
   kSparePlant0, // SPARE SLOT (Game Expansions)
   kSparePlant1, // SPARE SLOT (Game Expansions)
-  kSunflowerPlant, // Chalky
+  kPotatoPlant,  // Peaty
   kAppleTree, // Peaty
   kSeaweedPlant, // Lake
   kSparePlant2, // SPARE SLOT (Game Expansions)

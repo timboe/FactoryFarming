@@ -53,8 +53,8 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
     }
     case kPlant: switch (_subType.plant) {
       case kCarrotPlant: return _inworld ? "Carrot Plant" : "Carrot Seeds";
-      case kPotatoPlant: return _inworld ? "Potato Plant" : "Seed Potato";
       case kSunflowerPlant: return _inworld ? "Sunflower Plant" : "Sunflower Seeds";
+      case kPotatoPlant: return _inworld ? "Potato Plant" : "Seed Potato";
       case kAppleTree: return _inworld ? "Apple Tree" : "Apple Sapling";
       case kCornPlant: return _inworld ? "Corn Plant" : "Corn Seeds";
       case kSeaweedPlant: return _inworld ? "Seaweed Plant" : "Seaweed Spores";
