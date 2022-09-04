@@ -23,11 +23,11 @@ void doWarp() {
 
     bool doUnlock = false;
 
-    if (kWarpUnlockCargo[selectedID] != kNoCargo) {
-      doUnlock = (getOwned(kUICatCargo, kWarpUnlockCargo[selectedID]) >= selectedPriceOrAmount);
+    if (WDesc[selectedID].unlock != kNoCargo) {
+      doUnlock = (getOwned(kUICatCargo, WDesc[selectedID].unlock) >= selectedPriceOrAmount);
       if (doUnlock) {
         for (int32_t dummy = 0; dummy < selectedPriceOrAmount; ++dummy) {
-          modOwned(kUICatCargo, kWarpUnlockCargo[selectedID], /*add=*/false);
+          modOwned(kUICatCargo, WDesc[selectedID].unlock, /*add=*/false);
         }
       }
     } else {
@@ -63,8 +63,8 @@ void populateInfoWarp(bool _visible) {
 
   bool canAfford = (getPlayer()->m_money >= selectedPriceOrAmount);
   // Some slots are not unlocked with money
-  if (kWarpUnlockCargo[selectedID] != kNoCargo) {
-    canAfford = (getOwned(kUICatCargo, kWarpUnlockCargo[selectedID]) >= selectedPriceOrAmount);
+  if (WDesc[selectedID].unlock != kNoCargo) {
+    canAfford = (getOwned(kUICatCargo, WDesc[selectedID].unlock) >= selectedPriceOrAmount);
   } 
 
   pd->sprite->setVisible(getCannotAffordSprite(), _visible && !canAfford && !selectedOwned);
@@ -96,10 +96,10 @@ void populateInfoWarp(bool _visible) {
     char textM[32] = "";
     snprintf_c(textM, 32, selectedPriceOrAmount);
     snprintf(textB, 128, "Price:       %s", textM);
-    if (kWarpUnlockCargo[selectedID] == kNoCargo) { // buy for gold
+    if (WDesc[selectedID].unlock == kNoCargo) { // buy for gold
       pd->graphics->drawBitmap(getSprite16(2, 16, 1), 3*TILE_PIX + TILE_PIX/2, TILE_PIX - 2, kBitmapUnflipped);
     } else {
-      pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[kWarpUnlockCargo[selectedID]].UIIcon , 1), 3*TILE_PIX + TILE_PIX/2, TILE_PIX - 2, kBitmapUnflipped);
+      pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[WDesc[selectedID].unlock].UIIcon , 1), 3*TILE_PIX + TILE_PIX/2, TILE_PIX - 2, kBitmapUnflipped);
     }
   }
   pd->graphics->setDrawMode(kDrawModeFillBlack);

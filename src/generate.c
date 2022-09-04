@@ -12,12 +12,18 @@
 
 #include <math.h>
 
-//                                   {kSiltWorld, kChalkWorld, kPeatWorld, kSandWorld, kClayWorld, kLoamWoarld, kWaterWorld,  kTranquilWorld};
-const uint16_t kWarpUIIcon[] =       {SID(0,18),  SID(1,18),   SID(2,18),  SID(3,18),  SID(4,18),  SID(5,18),   SID(6,18),    SID(7,18)};
-uint32_t kWarpPrice[] =              {0,          0,           0,          0,          0,          0,           0,            0};
-enum kCargoType kWarpUnlockCargo[] = {kNoCargo,   kNoCargo,    kNoCargo,   kNoCargo,   kNoCargo,   kNoCargo,    kNoCargo,   kNoCargo};
-
+struct WorldDescriptor_t WDesc[] = {
+  {.subType = kSiltWorld, .price = 0, .UIIcon = SID(0,18), .unlock = kNoCargo},
+  {.subType = kChalkWorld, .price = 0, .UIIcon = SID(1,18), .unlock = kNoCargo},
+  {.subType = kPeatWorld, .price = 0, .UIIcon = SID(2,18), .unlock = kNoCargo},
+  {.subType = kSandWorld, .price = 0, .UIIcon = SID(3,18), .unlock = kNoCargo},
+  {.subType = kClayWorld, .price = 0, .UIIcon = SID(4,18), .unlock = kNoCargo},
+  {.subType = kLoamWoarld, .price = 0, .UIIcon = SID(5,18), .unlock = kNoCargo},
+  {.subType = kWaterWorld, .price = 0, .UIIcon = SID(6,18), .unlock = kNoCargo},
+  {.subType = kTranquilWorld, .price = 0, .UIIcon = SID(7,18), .unlock = kNoCargo},
+};
 // Note: final two are unlocked with items, not money. The "price here is the number of items needed"
+// See: game.c
 
 struct Tile_t* m_tiles = NULL;
 

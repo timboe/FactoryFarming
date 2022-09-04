@@ -312,6 +312,9 @@ void initGame() {
   for (int32_t i = 0; i < kNCargoType; ++i) {
     if (i != CargoDesc[i].subType) pd->system->error("CARGO DESCRIPTOR ORDERING IS WRONG!");
   }
+  for (int32_t i = 0; i < kNWorldTypes; ++i) {
+    if (i != WDesc[i].subType) pd->system->error("WORLD DESCRIPTOR ORDERING IS WRONG!");
+  }
 
   if (CREDITS_TO_ROW > MAX_ROWS) {
     pd->system->error("INSUFFICIENT ROWS FOR CREDITS!");
@@ -490,15 +493,15 @@ void initGame() {
   UDesc[kFence].price = FDesc[kMiraclePowderFac].price * 0.05f;
 
   // Warp prices
-  kWarpPrice[kChalkWorld] = FDesc[kBeerFac].price * 5; // First sand
-  kWarpPrice[kPeatWorld] = FDesc[kJelloShotFac].price * 6; // First Clay
-  kWarpPrice[kSandWorld] = FDesc[kCakeFac].price * 7; // First Loam
-  kWarpPrice[kClayWorld] = FDesc[kRaveJuiceFac].price * 8;
-  kWarpPrice[kLoamWoarld] = FDesc[kDessertFac].price * 9;
-  kWarpUnlockCargo[kWaterWorld] = kPartyPack;
-  kWarpPrice[kWaterWorld] = 500; // This is now number of items
-  kWarpUnlockCargo[kTranquilWorld] = kMiraclePowder;
-  kWarpPrice[kTranquilWorld] = 1000; // This is now number of items
+  WDesc[kChalkWorld].price = FDesc[kBeerFac].price * 5; // First sand
+  WDesc[kPeatWorld].price = FDesc[kJelloShotFac].price * 6; // First Clay
+  WDesc[kSandWorld].price = FDesc[kCakeFac].price * 7; // First Loam
+  WDesc[kClayWorld].price = FDesc[kRaveJuiceFac].price * 8;
+  WDesc[kLoamWoarld].price = FDesc[kDessertFac].price * 9;
+  WDesc[kWaterWorld].unlock = kPartyPack;
+  WDesc[kWaterWorld].price = 500; // This is now number of items
+  WDesc[kTranquilWorld].unlock = kMiraclePowder;
+  WDesc[kTranquilWorld].price = 1000; // This is now number of items
 }
 
 int32_t getNUnlocks() {

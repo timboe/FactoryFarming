@@ -955,7 +955,7 @@ int32_t getPrice(enum kUICat _c, int32_t _i) {
     case kUICatFactory: return FDesc[_i].price;
     case kUICatUtility: return UDesc[_i].price;
     case kUICatCargo: return CargoDesc[_i].price;
-    case kUICatWarp: return kWarpPrice[_i];
+    case kUICatWarp: return WDesc[_i].price;
     case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; return 0;
     case kNUICats: return 0;
   }
@@ -1051,7 +1051,7 @@ uint16_t getUIIcon(enum kUICat _c, uint16_t _i) {
     case kUICatFactory: return CargoDesc[ FDesc[_i].out ].UIIcon;
     case kUICatUtility: return UDesc[_i].UIIcon;
     case kUICatCargo: return CargoDesc[_i].UIIcon;
-    case kUICatWarp: return kWarpUIIcon[_i];
+    case kUICatWarp: return WDesc[_i].UIIcon;
     case kUICatImportN:; case kUICatImportE:; case kUICatImportS:; case kUICatImportW:; return CargoDesc[_i].UIIcon;
     case kNUICats: break;
   }

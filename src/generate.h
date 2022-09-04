@@ -40,9 +40,13 @@ enum kWorldType{
   kNWorldTypes
 };
 
-extern const uint16_t kWarpUIIcon[];
-extern uint32_t kWarpPrice[];
-extern enum kCargoType kWarpUnlockCargo[];
+struct WorldDescriptor_t {
+  enum kWorldType subType;
+  uint32_t price;
+  uint16_t UIIcon;
+  enum kCargoType unlock;
+};
+extern struct WorldDescriptor_t WDesc[];
 
 enum kGroundWetness{kWater, kWet, kMoist, kDry, kNGroundWetnesses};
 
