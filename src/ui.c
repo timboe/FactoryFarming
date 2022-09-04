@@ -218,6 +218,15 @@ uint16_t getUIContentID() {
   return m_contentID[ m_selRow[c] ][ m_selCol[c] ];
 }
 
+void snprintf_c(char* _buf, uint8_t _bufSize, int _n) {
+    if (_n < 1000) {
+        snprintf(_buf+strlen(_buf), _bufSize, "%d", _n);
+        return;
+    }
+    snprintf_c(_buf, _bufSize, _n / 1000);
+    snprintf(_buf+strlen(_buf), _bufSize, ",%03d", _n %1000);
+}
+
 //LCDSprite* getUIHeader(enum kUICat _c) {
 //  return m_UISpriteHeaders[_c];/
 //}
@@ -844,8 +853,8 @@ void drawUIBottom() {
 void drawUIRight() {
   pd->graphics->pushContext(m_UIBitmapRightRotated);
   pd->graphics->fillRect(0, 0, DEVICE_PIX_Y, TILE_PIX, kColorBlack);
-  static char text[32] = "";
-  snprintf(text, 32, "%u", (unsigned) getPlayer()->m_money);
+  char text[32] = "";
+  snprintf_c(text, 32, getPlayer()->m_money);
   pd->graphics->setDrawMode(kDrawModeFillWhite);
   setRoobert10();
   pd->graphics->drawText(text, 32, kASCIIEncoding, 2*TILE_PIX, 0);

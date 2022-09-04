@@ -483,7 +483,7 @@ void playerSpriteSetup() {
 void forceTorus() { m_forceTorus = true; }
 
 void resetPlayer() {
-  m_player.m_money = 0;
+  m_player.m_money = STARTING_MONEY;
   m_player.m_moneyCumulative = 0;
   m_player.m_buildingsUnlockedTo = 0;
   m_player.m_saveTime = pd->system->getSecondsSinceEpoch(NULL);

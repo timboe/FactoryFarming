@@ -96,8 +96,13 @@ void populateInfoBuy(bool _visible) {
     case kUtility:; snprintf(textA, 128, "Buy %s", toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false)); break;
     case kSpecial:; case kNoBuilding:; case kNBuildingTypes:; break;
   }
+
+  char textM[32] = "";
+  snprintf_c(textM, 32, selectedPrice);
+
   snprintf(textB, 128, "Inventory: %i", selectedOwned);
-  snprintf(textC, 128, "Price:     %i", (int)selectedPrice);
+  snprintf(textC, 128, "Price:     %s", textM);
+
   pd->graphics->drawText(textA, 128, kASCIIEncoding, 1*TILE_PIX, +2);
   pd->graphics->drawText(textB, 128, kASCIIEncoding, 1*TILE_PIX, TILE_PIX - 2);
   pd->graphics->drawText(textC, 128, kASCIIEncoding, 9*TILE_PIX, TILE_PIX - 2);

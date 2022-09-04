@@ -160,7 +160,7 @@ const char* getNewText() {
       case kCateringKitFac: return "Packaged Catering Kits";
       case kPartyPackFac: return "Everything a good party needs";
       case kParfumeFac: return "Fancy stuff";
-      case kMiricalPowderFac: return "What can't it cure?! (Anything...)";
+      case kMiraclePowderFac: return "What can't it cure?! (Anything...)";
       case kTurkishDelightFac: return "A Delectable Delicacy";
       case kSpareFac0: case kSpareFac1: case kSpareFac2: case kSpareFac3:
       case kSpareFac4: case kSpareFac5: case kSpareFac6: case kSpareFac7: 

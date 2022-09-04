@@ -13,7 +13,7 @@ struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kChalk, .price = 1, .multi = 1.0f, .UIIcon = SID(13,7)}, // Set by hand
   {.subType = kVitamin, .price = 8, .multi = 4.0f, .UIIcon = SID(12,8)}, // Set by hand
   {.subType = kSunflower, .price = 0, .multi = 2.0f, .UIIcon = SID(15,7)}, // CROP
-  {.subType = kPotato, .price = 0, .multi = 1.5f, .UIIcon = SID(14,7)}, // CROP
+  {.subType = kPotato, .price = 0, .multi = 2.0f, .UIIcon = SID(14,7)}, // CROP
   {.subType = kOil, .price = 0, .multi = 2.0f, .UIIcon = SID(12,7)},
   {.subType = kSalt, .price = 1, .multi = 2.0f, .UIIcon = SID(13,8)}, // Set by hand
   {.subType = kCrisps, .price = 0, .multi = 2.0f, .UIIcon = SID(0,21)},
@@ -73,7 +73,7 @@ struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kPartyPack, .price = 0, .multi = 2.0f, .UIIcon = SID(13,5)},
   {.subType = kSeaCucumber, .price = 0, .multi = 50.0f, .UIIcon = SID(8,22)}, // CROP
   {.subType = kParfume, .price = 0, .multi = 2.0f, .UIIcon = SID(7,24)},
-  {.subType = kMiricalPowder, .price = 0, .multi = 2.0f, .UIIcon = SID(5,25)},
+  {.subType = kMiraclePowder, .price = 0, .multi = 2.0f, .UIIcon = SID(5,25)},
   {.subType = kRose, .price = 0, .multi = 2.5f, .UIIcon = SID(0,25)}, // CROP
   {.subType = kTurkishDelight, .price = 0, .multi = 2.0f, .UIIcon = SID(6,25)},
   {.subType = kSpareCargo12, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
@@ -148,11 +148,11 @@ const char* toStringCargoByType(enum kCargoType _type, bool _plural) {
     case kPackaging: return "Packaging";
     case kDessert: return _plural ? "Desserts" : "Dessert";
     case kCateringKit: return _plural ? "Catering Kits" : "Catering Kit";
-    case kFooYoung: return _plural ? "Foo Young Meals" : "Foo Young Meal";
+    case kFooYoung: return _plural ? "Chinese Ready Meals" : "Foo Young Meal";
     case kPartyPack: return _plural ? "Party Packs" : "Party Pack";
     case kSeaCucumber: return _plural ? "Sea Cucumbers" : "Sea Cucumber";
     case kParfume: return "Parfume";
-    case kMiricalPowder: return "Mirical Powder";
+    case kMiraclePowder: return "Miracle Powder";
     case kRose: return _plural ? "Roses" : "Rose";
     case kTurkishDelight: return "Turkish Delight";
     case kSpareCargo0: case kSpareCargo1: case kSpareCargo2: case kSpareCargo3:

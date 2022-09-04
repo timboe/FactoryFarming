@@ -521,7 +521,7 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 5: *_isFlavour = false; return toStringCargoByType(kStrawberry, /*plural=*/ true);
       }
       break;
-    case kMiricalPowderFac:
+    case kMiraclePowderFac:
       switch (_n) {
         case 0: *_isFlavour = false; return "Ingredients: ";
         case 1: *_isFlavour = false; return toStringCargoByType(kProtein, /*plural=*/ false);

@@ -67,7 +67,7 @@ enum kCargoType {
   kPartyPack,
   kSeaCucumber,
   kParfume,
-  kMiricalPowder,
+  kMiraclePowder,
   kRose,
   kTurkishDelight,
   kSpareCargo12,

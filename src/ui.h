@@ -134,6 +134,8 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n);
 
 const char* toStringHeader(enum kUICat _c, bool _plural);
 
+void snprintf_c(char* _buf, uint8_t _bufSize, int _n);
+
 bool checkReturnDismissTutorialMsg(void);
 
 void showTutorialMsg(enum kUITutorialStage _stage);

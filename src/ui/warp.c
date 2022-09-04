@@ -92,7 +92,10 @@ void populateInfoWarp(bool _visible) {
     }
   } else { 
     snprintf(textA, 128, "Plot Location: %s", getWorldName(selectedID, /*mask*/ true));
-    snprintf(textB, 128, "Price:       %u", (unsigned)selectedPriceOrAmount);
+
+    char textM[32] = "";
+    snprintf_c(textM, 32, selectedPriceOrAmount);
+    snprintf(textB, 128, "Price:       %s", textM);
     if (kWarpUnlockCargo[selectedID] == kNoCargo) { // buy for gold
       pd->graphics->drawBitmap(getSprite16(2, 16, 1), 3*TILE_PIX + TILE_PIX/2, TILE_PIX - 2, kBitmapUnflipped);
     } else {

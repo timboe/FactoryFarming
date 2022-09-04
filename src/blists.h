@@ -142,7 +142,7 @@ enum kFactorySubType{
   kSpareFac10, // SPARE SLOT (Game Expansions)
   kSpareFac11, // SPARE SLOT (Game Expansions)
   kParfumeFac,
-  kMiricalPowderFac,
+  kMiraclePowderFac,
   kTurkishDelightFac,
   kSpareFac12, // SPARE SLOT (Game Expansions)
   kSpareFac13, // SPARE SLOT (Game Expansions)

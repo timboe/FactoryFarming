@@ -46,7 +46,7 @@ LCDBitmap* getPauseImage() {
   LCDBitmap* sA = NULL;
   LCDBitmap* sB = NULL;
 
-  #define CENTRE (TILE_PIX*6)
+  #define CENTRE (TILE_PIX*6 + TILE_PIX/4)
   #define Y_SPACE (3*TILE_PIX/2)
 
   #define X_START TILE_PIX

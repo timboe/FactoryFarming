@@ -331,8 +331,9 @@ void doDestroy() {
       if (loc->m_building && doBuilding) {
         // Refund
         enum kUICat btc = getBuildingTypeCat(loc->m_building->m_type);
-        int32_t price = getPrice(btc, loc->m_building->m_subType.raw);
-        modMoney(price * REFUND_AMOUNT);
+        int32_t refund = getPrice(btc, loc->m_building->m_subType.raw) * REFUND_AMOUNT;
+        if (!refund) refund = 1;
+        modMoney(refund);
       }
       cleared |= clearLocation(loc, /*cargo=*/ true, /*building=*/ doBuilding);
     }
@@ -438,7 +439,9 @@ void populateInfoInventory() {
   snprintf(textC, 2, " ");
   int32_t cOff = 0;
   if (selectedCat == kUICatCargo) {
-    snprintf(textC, 128, "Value:      %i", (int)selectedPrice);
+    char textM[32] = "";
+    snprintf_c(textM, 32, selectedPrice);
+    snprintf(textC, 128, "Value:      %s", textM);
   } else if (selectedCat == kUICatExtractor) {
     if (selectedID == kChalkQuarry) snprintf(textC, 128, "Build on %s", toStringSoil(kChalkyGround));
     else if (selectedID == kPump) snprintf(textC, 128, "Build on Water");
