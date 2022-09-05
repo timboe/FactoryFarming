@@ -507,7 +507,7 @@ void initGame() {
   skip = 1;
   for (int32_t i = 1; i < kNConvSubTypes; ++i) {
     if (CDesc[i].unlock == DIS) { ++skip; continue; } // Skip placeholders
-    if (CDesc[i-skip].unlock > CDesc[i].unlock) pd->system->error("CONVEYOR UNLOCK ORDERING IS INCONSISTENT! i=%i=%i, i-1=%i=%i", i, CDesc[i].unlock, i-1, CDesc[i-1].unlock );
+    if (CDesc[i-skip].unlock > CDesc[i].unlock) pd->system->error("CONVEYOR UNLOCK ORDERING IS INCONSISTENT!");
     skip = 1;
   }
   skip = 1;

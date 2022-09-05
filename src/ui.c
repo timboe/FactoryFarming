@@ -1935,7 +1935,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
       switch (_n) {
         case 0: return "-- The Next Objective --";
         case 1: return "Your current objective is to sell at least";
-        case 2: return "5 carrots. You can check what your current objective";
+        case 2: return "ten carrots. You can check what your current objective";
         case 3: return "is at any time by pressing the Menu Button.";
         case 4: return "Do this now.";
           
