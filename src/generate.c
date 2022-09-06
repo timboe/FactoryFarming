@@ -359,7 +359,8 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
       for (uint32_t i = 0; i < otherChunk->m_nBuildingsRender; ++i) {
         struct Building_t* building = otherChunk->m_buildingsRender[i];
         if (isLargeBuilding(building->m_type, building->m_subType) && building->m_image[1]) {
-          const bool invert = (building->m_type == kExtractor && building->m_subType.extractor == kCropHarvesterLarge);
+          bool invert = (building->m_type == kFactory && FDesc[ building->m_subType.factory ].invert);
+          invert |= (building->m_type == kExtractor && EDesc[ building->m_subType.extractor ].invert);
           pd->graphics->setDrawMode(invert ? kDrawModeInverted : kDrawModeCopy);
           pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - chunkOffX, building->m_pix_y - chunkOffY, kBitmapUnflipped);
           pd->graphics->setDrawMode(kDrawModeCopy);
@@ -1142,7 +1143,7 @@ void generateTitle() {
   newBuilding(getLocation(12,-1), SN, kUtility, (union kSubType) {.utility = kBin} );
   newBuilding(getLocation(8,15), SN, kUtility, (union kSubType) {.utility = kBin} );
 
-  growAtAll();
+  growAtAll(TICKS_PER_SEC * 20);
   doWetness(/*for titles = */ true);
 
 }

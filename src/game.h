@@ -4,9 +4,12 @@
 
 #define SLOW_LOAD
 
-//#define FAST_PROGRESS
+#define FAST_PROGRESS
 
 //#define DEMO
+
+// TODO
+//#define NO_MUSIC
 
 #define PRETEND_ZOOMED_IN false
 

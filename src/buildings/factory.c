@@ -91,7 +91,7 @@ void assignNeighborsFactory(struct Building_t* _building) {
 
 void buildingSetupFactory(struct Building_t* _building) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
-    _building->m_image[zoom] = getSprite48(0 + _building->m_dir, 4, zoom); 
+    _building->m_image[zoom] = getSprite48_byidx(FDesc[_building->m_subType.factory].sprite + _building->m_dir, zoom); 
 
     PDRect bound = {.x = (COLLISION_OFFSET_BIG/2)*zoom, .y = (COLLISION_OFFSET_BIG/2)*zoom, .width = (EXTRACTOR_PIX - COLLISION_OFFSET_BIG)*zoom, .height = (EXTRACTOR_PIX - COLLISION_OFFSET_BIG)*zoom};
     if (_building->m_sprite[zoom] == NULL) _building->m_sprite[zoom] = pd->sprite->newSprite();
@@ -205,7 +205,7 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 0: *_isFlavour = false; return "Ingredients: ";
         case 1: *_isFlavour = false; return toStringCargoByType(kOil, /*plural=*/ false);
         case 2: return ", ";
-        case 3: *_isFlavour = false; return toStringCargoByType(kWaterBarrel, /*plural=*/ false);
+        case 3: *_isFlavour = false; return toStringCargoByType(kHydrogen, /*plural=*/ false);
       }
       break;
     case kCornDogFac:

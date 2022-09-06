@@ -43,7 +43,7 @@ struct PlantDescriptor_t PDesc[] = {
   {.subType = kWheatPlant, .unlock = 1, .price = 0, .multi = 1.5f, .sprite = SID(11, 8), .time = PFAST, .wetness = kDry, .soil = kSiltyGround, .out = kWheat},
   {.subType = kSparePlant4, .unlock = DIS, .price = DIS, .multi = 0, .sprite = SID(0, 0), .time = PMED, .wetness = kMoist, .soil = kSiltyGround, .out = kNoCargo},
   {.subType = kSparePlant5, .unlock = DIS, .price = DIS, .multi = 0, .sprite = SID(0, 0), .time = PMED, .wetness = kMoist, .soil = kSiltyGround, .out = kNoCargo},
-  {.subType = kCactusPlant, .unlock = 1, .price = 0, .multi = 3.0f, .sprite = SID(0, 21), .time = PSLOW, .wetness = kDry, .soil = kSandyGround, .out = kCactus},
+  {.subType = kCactusPlant, .unlock = 1, .price = 0, .multi = 3.0f, .sprite = SID(0, 22), .time = PSLOW, .wetness = kDry, .soil = kSandyGround, .out = kCactus},
   {.subType = kLimeTree, .unlock = 1, .price = 0, .multi = 1.3f, .sprite = SID(4, 21), .time = PVSLOW, .wetness = kMoist, .soil = kSandyGround, .out = kLime},
   {.subType = kSparePlant6, .unlock = DIS, .price = DIS, .multi = 0, .sprite = SID(0, 0), .time = PMED, .wetness = kMoist, .soil = kSiltyGround, .out = kNoCargo},
   {.subType = kSparePlant7, .unlock = DIS, .price = DIS, .multi = 0, .sprite = SID(0, 0), .time = PMED, .wetness = kMoist, .soil = kSiltyGround, .out = kNoCargo},
@@ -189,11 +189,11 @@ struct UnlockDescriptor_t UnlockDecs[] = {
   {.type = kPlant, .subType.plant = kSeaweedPlant, .fromSelling = 100, .ofCargo = kHardCider},
 
   {.type = kFactory, .subType.factory = kAbattoir, .fromSelling = 100, .ofCargo = kSeaweed},
-  {.type = kFactory, .subType.factory = kHydrogenFac, .fromSelling = 200, .ofCargo = kSeaweed},
 
-  {.type = kPlant, .subType.plant = kCornPlant, .fromSelling = 150, .ofCargo = kHydrogen},
-  {.type = kFactory, .subType.factory = kHOILFac, .fromSelling = 200, .ofCargo = kHydrogen},
-  {.type = kFactory, .subType.factory = kCornDogFac, .fromSelling = 250, .ofCargo = kHydrogen},
+  {.type = kPlant, .subType.plant = kCornPlant, .fromSelling = 150, .ofCargo = kMeat},
+  {.type = kFactory, .subType.factory = kHydrogenFac, .fromSelling = 200, .ofCargo = kMeat},
+  {.type = kFactory, .subType.factory = kHOILFac, .fromSelling = 250, .ofCargo = kMeat},
+  {.type = kFactory, .subType.factory = kCornDogFac, .fromSelling = 300, .ofCargo = kMeat},
 
   {.type = kUtility, .subType.utility = kSign, .fromSelling = 50, .ofCargo = kCornDog},
   {.type = kPlant, .subType.plant = kWheatPlant, .fromSelling = 200, .ofCargo = kCornDog},

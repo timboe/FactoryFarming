@@ -61,7 +61,7 @@ const char* toStringToolInfo(enum kToolType _type) {
 
 float getTotalCargoExport(enum kCargoType _cargo) {
   float ret = 0.0f;
-  for (int32_t i = 0; i < WORLD_SAVE_SLOTS; ++i) {
+  for (int32_t i = 0; i < WORLD_SAVE_SLOTS; ++i) {      
     ret += m_player.m_exportPerWorld[i][_cargo];
   }
   return ret;
@@ -121,7 +121,7 @@ void nextTutorialStage() {
     m_player.m_enableTutorial = TUTORIAL_FINISHED;
     return;
   } else if (m_player.m_enableTutorial == kTutGetCarrots) {
-    growAtAll(); // Force all plants to grow
+    growAtAll(TICKS_PER_SEC * 2); // Force all plants to grow
   } else if (m_player.m_enableTutorial == kTutBuildHarvester) {
     toGive = EDesc[kCropHarvesterSmall].price;
   } else if (m_player.m_enableTutorial == kTutBuildConveyor) {
@@ -167,10 +167,11 @@ struct Location_t* getPlayerLocation() {
 }
 
 void setPlayerPosition(uint16_t _x, uint16_t _y, bool _updateCurrentLocation) {
-  uint8_t zoom = getZoom(); 
-  pd->sprite->moveTo(m_player.m_sprite[zoom], _x * zoom, _y * zoom);
+  pd->sprite->moveTo(m_player.m_sprite[1], _x, _y); // Note: Hard coded two zoom levels
+  pd->sprite->moveTo(m_player.m_sprite[2], _x * 2, _y * 2);
   updatePlayerPosition();
-  pd->sprite->setZIndex(m_player.m_sprite[zoom], (int16_t)m_player.m_pix_y * zoom);
+  // Not worth it - nothing to dynamically go in front of or behind
+  //pd->sprite->setZIndex(m_player.m_sprite[zoom], (int16_t)m_player.m_pix_y * zoom);
   if (_updateCurrentLocation) {
     m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
     m_currentChunk = getChunk(m_player.m_pix_x / CHUNK_PIX_X, m_player.m_pix_y / CHUNK_PIX_Y);
@@ -234,7 +235,7 @@ bool movePlayer() {
       fric *= 0.5f;
       m_inWater = true;
     } else if (m_currentLocation->m_building && m_currentLocation->m_building->m_type == kUtility && m_currentLocation->m_building->m_subType.utility == kPath) {
-      fric *= 1.1f;
+      acc *= 1.3f;
     }
   }
   if (bPressed()) acc *= 1.5f;
@@ -369,6 +370,9 @@ bool movePlayer() {
 }
 
 bool modMoney(int32_t _amount) {
+  if (m_player.m_infiniteMoney) {
+    return true;
+  }
   if (_amount < 0 && (_amount * -1) > m_player.m_money) {
     return false;
   }
@@ -489,6 +493,7 @@ void resetPlayer() {
   m_player.m_saveTime = pd->system->getSecondsSinceEpoch(NULL);
   m_player.m_playTime = 0;
   m_player.m_tutorialProgress = 0; // Note: not tutorial _stage_ (this is in m_enableTutorial)
+  m_player.m_infiniteMoney = false;
   m_offX = 0;
   m_offY = 0;
   if (m_player.m_enableTutorial != TUTORIAL_DISABLED) m_player.m_enableTutorial = 0;
@@ -778,8 +783,8 @@ void deserialiseArrayValuePlayer(json_decoder* jd, int _pos, json_value _value) 
     case 6: m_player.m_soldCargo[i] = v; break;
     case 7: m_player.m_importedCargo[i] = v; break;
 
-    case 8: m_player.m_exportPerWorld[0][i] = f; break;
-    case 9: m_player.m_exportPerWorld[1][i] = f; break;
+    case 8:  m_player.m_exportPerWorld[0][i] = f; break;
+    case 9:  m_player.m_exportPerWorld[1][i] = f; break;
     case 10: m_player.m_exportPerWorld[2][i] = f; break;
     case 11: m_player.m_exportPerWorld[3][i] = f; break;
     case 12: m_player.m_exportPerWorld[4][i] = f; break;

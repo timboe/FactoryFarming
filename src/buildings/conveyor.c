@@ -9,6 +9,8 @@ int8_t getConveyorDirection(enum kConvSubType _subType, enum kDir _dir, uint8_t 
 
 const char* getTransitText(int8_t _d);
 
+void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, bool _nearTick, bool _zoom);
+
 /// ///
 
 void conveyorLocationUpdate(struct Building_t* _building, uint8_t _zoom) {
@@ -25,8 +27,24 @@ void conveyorLocationUpdate(struct Building_t* _building, uint8_t _zoom) {
   }
 }
 
+void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, bool _nearTick, bool _zoom) {
+  _building->m_stored[3] = (_building->m_subType.conveyor == kTunnelIn); // hide 
+  switch (_direction) {
+    case SN:; _building->m_stored[1] = 0; _building->m_stored[2] = (uint8_t) -_building->m_progress; break;
+    case NS:; _building->m_stored[1] = 0; _building->m_stored[2] = _building->m_progress; break;
+    case EW:; _building->m_stored[1] = (uint8_t) -_building->m_progress; _building->m_stored[2] = 0; break;
+    case WE:; _building->m_stored[1] = _building->m_progress; _building->m_stored[2] = 0; break;
+    case kDirN:; break;
+  }
+  // Only needs to be done if we are rendering
+  if (_nearTick) {
+    conveyorLocationUpdate(_building, _zoom);
+  }
+}
+
 void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   struct Location_t* loc = _building->m_location;
+  const bool nearTick = _tick == NEAR_TICK_AMOUNT;
   if (loc->m_cargo == NULL) return;
   if (_building->m_progress < TILE_PIX) {
     _building->m_progress += _tick * _building->m_stored[0]; // Stored[0] used to hold conveyor speed
@@ -36,28 +54,14 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
     if (_building->m_subType.conveyor >= kFilterL) {
       // First encounter with an object? TODO can everything which can place an item on the chunk do this instead?
       if (_building->m_mode.mode16 == kNoCargo) {
-        _building->m_mode.mode16 = loc->m_cargo->m_type; // Note: This CANNOT be undone without re-writing the building
+        _building->m_mode.mode16 = _building->m_location->m_cargo->m_type; // Note: This CANNOT be undone without destroying the building
       }
-      direction = (_building->m_mode.mode16 == loc->m_cargo->m_type ? _building->m_nextDir[1] :  _building->m_nextDir[0]);  
+      direction = (_building->m_mode.mode16 == _building->m_location->m_cargo->m_type ? _building->m_nextDir[1] :  _building->m_nextDir[0]);  
     } else {
       direction = _building->m_nextDir[_building->m_mode.mode16];
     }
 
-    _building->m_stored[3] = (_building->m_subType.conveyor == kTunnelIn); // hide 
-
-    switch (direction) {
-      case SN:; _building->m_stored[1] = 0; _building->m_stored[2] = (uint8_t) -_building->m_progress; break;
-      case NS:; _building->m_stored[1] = 0; _building->m_stored[2] = _building->m_progress; break;
-      case EW:; _building->m_stored[1] = (uint8_t) -_building->m_progress; _building->m_stored[2] = 0; break;
-      case WE:; _building->m_stored[1] = _building->m_progress; _building->m_stored[2] = 0; break;
-      case kDirN:; break;
-    }
-
-    // Only needs to be done if we are rendering
-    if (_tick == NEAR_TICK_AMOUNT) {
-      conveyorLocationUpdate(_building, _zoom);
-    }
-    //pd->system->logToConsole("MOVE %i %i, %i", loc->m_pix_x, loc->m_pix_y, loc->m_progress);
+    conveyorSetLocation(_building, direction, nearTick, _zoom);
   }
 
   // Handle filters vs. splitters
@@ -77,6 +81,15 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
     // Carry over any excess ticks
     if (nextLoc->m_building && nextLoc->m_building->m_type == kConveyor) {
       nextLoc->m_building->m_progress = _building->m_progress - TILE_PIX;
+      // Note: The direction does not matter here as we are the 1st tick into the new tile 
+      // if we are actually looking at the sprite and hence calling conveyorLocationUpdate
+      // hence we'll be drawn in the centre of the tile for any of the 4 possible directions
+      conveyorSetLocation(nextLoc->m_building, NS, nearTick, _zoom);
+    } else {
+      // Dump the cargo in the centre of the tile
+      pd->sprite->moveTo(theCargo->m_sprite[_zoom], 
+                        (nextLoc->m_x*TILE_PIX + nextLoc->m_pix_off_x + TILE_PIX/2)*_zoom, 
+                        (nextLoc->m_y*TILE_PIX + nextLoc->m_pix_off_y + TILE_PIX/2)*_zoom);
     }
     // Cargo moves between chunks?
     if (nextLoc->m_chunk != loc->m_chunk) {
@@ -84,14 +97,9 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
       chunkRemoveCargo(loc->m_chunk, theCargo);
       chunkAddCargo(nextLoc->m_chunk, theCargo);
     }
-    // Cycle outputs
-    //switch (_building->m_subType.conveyor) {
-    //  case kSplitI:; case kSplitL:; _building->m_mode.mode16 = (_building->m_mode.mode16 + 1) % 2; break;
-    //  case kSplitT:; _building->m_mode.mode16 = (_building->m_mode.mode16 + 1) % 3; break;
-    //  case kBelt:; case kFilterI:; case kFilterL:; case kTunnelIn:; case kTunnelOut:; case kNConvSubTypes:; break;
-    //}
 
-    // Cycle outputs varient 2
+
+    // Cycle outputs varient 2 (keep this one, it is nicer on the player)
     uint16_t next = 0;
     switch (_building->m_subType.conveyor) {
       case kSplitI:; case kSplitL:; next = (_building->m_mode.mode16 + 1) % 2; break;
@@ -258,19 +266,6 @@ void buildingSetupConveyor(struct Building_t* _building) {
 
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     _building->m_image[zoom] = getSprite16( CDesc[cst].spriteX, CDesc[cst].spriteY + _building->m_dir, zoom);
-    /*
-    switch (_building->m_subType.conveyor) {
-      case kBelt:;     _building->m_image[zoom] = getSprite16(0,  CONV_START_Y + _building->m_dir, zoom); break;
-      case kSplitI:;   _building->m_image[zoom] = getSprite16(0,  11 + _building->m_dir, zoom); break;
-      case kSplitL:;   _building->m_image[zoom] = getSprite16(1,  11 + _building->m_dir, zoom); break;
-      case kSplitT:;   _building->m_image[zoom] = getSprite16(2,  11 + _building->m_dir, zoom); break;
-      case kFilterI:;  _building->m_image[zoom] = getSprite16(10, 11 + _building->m_dir, zoom); break;
-      case kFilterL:;  _building->m_image[zoom] = getSprite16(3,  11 + _building->m_dir, zoom); break;
-      case kTunnelIn:; _building->m_image[zoom] = getSprite16(8,  11 + _building->m_dir, zoom); break;
-      case kTunnelOut:;_building->m_image[zoom] = getSprite16(9,  11 + _building->m_dir, zoom); break;
-      case kNConvSubTypes:; break;
-    }
-    */
 
     // Animate the belt at zoom=2
     if (cst == kBelt && zoom == 2) {

@@ -235,7 +235,7 @@ void cheatMoney() {
 #endif
   static uint8_t counter = 0;
   if (++counter == 20) {
-    modMoney(1000000);
+    getPlayer()->m_infiniteMoney = !getPlayer()->m_infiniteMoney;
     counter = 0;
     sfx(kSfxUnlock);
   }
@@ -247,7 +247,11 @@ void cheatUnlock() {
 #endif
   static uint8_t counter = 0;
   if (++counter == 20) {
-    getPlayer()->m_buildingsUnlockedTo = getNUnlocks();
+    if (getPlayer()->m_buildingsUnlockedTo != getNUnlocks()) {
+      getPlayer()->m_buildingsUnlockedTo = getNUnlocks();
+    } else {
+      getPlayer()->m_buildingsUnlockedTo = 0;
+    }
     sfx(kSfxUnlock);
   }
 }

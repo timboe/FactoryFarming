@@ -510,7 +510,6 @@ void updateBlueprint() {
     if (selectedCat == kUICatExtractor) {
       switch (selectedID) {
         case kCropHarvesterLarge: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap9x9[zoom], kBitmapUnflipped);
-                                  pd->sprite->setDrawMode(bp, kDrawModeInverted); break;
         case kCropHarvesterSmall: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap7x7[zoom], kBitmapUnflipped); break;
         default: pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped); 
       }
@@ -520,8 +519,10 @@ void updateBlueprint() {
     bool canPlace = true;
     switch (selectedCat) {
       case kUICatExtractor:; canPlace = canBePlacedExtractor(pl, (union kSubType) {.extractor = selectedID});
+                             pd->sprite->setDrawMode(bp, EDesc[selectedID].invert ? kDrawModeInverted : kDrawModeCopy);
                              pd->sprite->setImage(bp, getSprite48_byidx( EDesc[selectedID].sprite + selectedRot, zoom), kBitmapUnflipped); break;
       case kUICatFactory:; canPlace = canBePlacedFactory(pl);
+                           pd->sprite->setDrawMode(bp, FDesc[selectedID].invert ? kDrawModeInverted : kDrawModeCopy);
                            pd->sprite->setImage(bp, getSprite48_byidx( FDesc[selectedID].sprite + selectedRot, zoom), kBitmapUnflipped); break;
       default: break;
     }
@@ -851,11 +852,15 @@ void drawUIBottom() {
 void drawUIRight() {
   pd->graphics->pushContext(m_UIBitmapRightRotated);
   pd->graphics->fillRect(0, 0, DEVICE_PIX_Y, TILE_PIX, kColorBlack);
-  char text[32] = "";
-  snprintf_c(text, 32, getPlayer()->m_money);
   pd->graphics->setDrawMode(kDrawModeFillWhite);
-  setRoobert10();
-  pd->graphics->drawText(text, 32, kASCIIEncoding, 2*TILE_PIX, 0);
+  if (getPlayer()->m_infiniteMoney) {
+    pd->graphics->drawBitmap(getSprite16(14, 13, 1), 2*TILE_PIX, 0, kBitmapUnflipped); // Inf
+  } else {
+    char textM[32] = "";
+    snprintf_c(textM, 32, getPlayer()->m_money);
+    setRoobert10();
+    pd->graphics->drawText(textM, 32, kASCIIEncoding, 2*TILE_PIX, 0);
+  }
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16(2, 16, 1), TILE_PIX/2, 0, kBitmapUnflipped); // Coin
   enum kGameMode gm = getGameMode();
@@ -863,7 +868,8 @@ void drawUIRight() {
     int16_t rotMod = (m_selRotation == 0 ? 3 : m_selRotation - 1); // We are drawing this sideways, so need to rotate it by pi/2
     const enum kUICat selectedCat = getUIContentCategory();
     const uint16_t selectedID =  getUIContentID();
-    snprintf(text, 32, "%u", (unsigned) getOwned(selectedCat, selectedID));
+    char text[16] = "";
+    snprintf(text, 16, "%u", (unsigned) getOwned(selectedCat, selectedID));
     uint16_t spriteID = getUIIcon(selectedCat, selectedID);
     if ((selectedCat >= kUICatConv && selectedCat < kUICatUtility) || (selectedCat == kUICatUtility && selectedID == kBuffferBox)) {
       spriteID += rotMod;
@@ -872,7 +878,7 @@ void drawUIRight() {
     //pd->graphics->drawRotatedBitmap(getSprite16_byidx(spriteID, 1), DEVICE_PIX_Y/2, -1, 90.0f, TILE_PIX/2, TILE_PIX/2, 0.0f, 0.0f);
     pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), DEVICE_PIX_Y/2, -1, kBitmapUnflipped);
     pd->graphics->setDrawMode(kDrawModeFillWhite);
-    pd->graphics->drawText(text, 32, kASCIIEncoding, DEVICE_PIX_Y/2 + 2*TILE_PIX, 0);
+    pd->graphics->drawText(text, 16, kASCIIEncoding, DEVICE_PIX_Y/2 + 2*TILE_PIX, 0);
     pd->graphics->setDrawMode(kDrawModeCopy);
   } else { // Compass
     #define PI 3.141592654f
@@ -899,8 +905,9 @@ void drawUIRight() {
   // Buy/sell multiplier
   if (gm == kMenuBuy || gm == kMenuSell) {
     pd->graphics->setDrawMode(kDrawModeFillWhite);
-    snprintf(text, 32, "x%u", (unsigned) m_buySellMultiplier[m_mode]);
-    pd->graphics->drawText(text, 32, kASCIIEncoding, DEVICE_PIX_Y/2 + 2*TILE_PIX, 0);
+    char text[16] = "";
+    snprintf(text, 16, "x%u", (unsigned) m_buySellMultiplier[m_mode]);
+    pd->graphics->drawText(text, 16, kASCIIEncoding, DEVICE_PIX_Y/2 + 2*TILE_PIX, 0);
     pd->graphics->setDrawMode(kDrawModeCopy);
   }
 
@@ -1262,12 +1269,8 @@ void drawUIMain() {
         pd->sprite->setVisible(m_contentSprite[rID][c], 1);
         pd->sprite->moveTo(m_contentSprite[rID][c], UISTARTX + c*2*TILE_PIX, UISTARTY + r*2*TILE_PIX);
         if (m_contentStickySelected[rID][c] != NULL) {
-
-          //pd->system->logToConsole("rid %i c %i sprite %i", rID, c, (int)m_contentStickySelected[rID][c]);
-
-          // TODO this started to crash?
-          //pd->sprite->setVisible(m_contentStickySelected[rID][c], 1);
-          //pd->sprite->moveTo(m_contentStickySelected[rID][c], UISTARTX + c*2*TILE_PIX, UISTARTY + r*2*TILE_PIX);
+          pd->sprite->setVisible(m_contentStickySelected[rID][c], 1);
+          pd->sprite->moveTo(m_contentStickySelected[rID][c], UISTARTX + c*2*TILE_PIX, UISTARTY + r*2*TILE_PIX);
         }
       }
     }

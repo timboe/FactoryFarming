@@ -388,19 +388,19 @@ void updateSales() {
   float collected = m_exportItemValueA + m_exportItemValueB;
   float av = collected / (m_exportTimer / TICKS_PER_SEC);
   p->m_sellPerWorld[slot] = av;
-  //#ifdef DEV
+  #ifdef DEV
   if (collected) pd->system->logToConsole("Integrated over %i s, the av sold value is %f /s", (m_exportTimer / TICKS_PER_SEC), (double)av);
-  //#endif
+  #endif
 
 }
 
 void updateExport() {
   struct Player_t* p = getPlayer();
   const uint8_t slot = getSlot();
-
   for (int32_t c = 1; c < kNCargoType; ++c) {
     float collected = m_exportItemCountA[c] + m_exportItemCountB[c];
-    float av = collected / (m_exportTimer / TICKS_PER_SEC);
+    float av = 0.0f;
+    if (m_exportTimer) av = collected / (m_exportTimer / TICKS_PER_SEC);
     p->m_exportPerWorld[slot][c] = av;
     #ifdef DEV
     if (collected) pd->system->logToConsole("Integrated over %i s, the av exported %s is %f /s", (m_exportTimer / TICKS_PER_SEC), toStringCargoByType(c, /*plural=*/true), (double)av);

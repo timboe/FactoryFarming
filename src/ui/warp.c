@@ -61,7 +61,7 @@ void populateInfoWarp(bool _visible) {
   
   const uint16_t selectedOwned = getOwned(kUICatWarp, selectedID);
 
-  bool canAfford = (getPlayer()->m_money >= selectedPriceOrAmount);
+  bool canAfford = (getPlayer()->m_money >= selectedPriceOrAmount || getPlayer()->m_infiniteMoney);
   // Some slots are not unlocked with money
   if (WDesc[selectedID].unlock != kNoCargo) {
     canAfford = (getOwned(kUICatCargo, WDesc[selectedID].unlock) >= selectedPriceOrAmount);

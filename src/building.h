@@ -158,7 +158,7 @@ struct Building_t* buildingManagerGetByIndex(uint16_t _index);
 
 bool buildingHasUpdateFunction(enum kBuildingType _type, union kSubType _subType);
 
-void growAtAll(void);
+void growAtAll(uint16_t _maxTicks);
 
 bool isLargeBuilding(enum kBuildingType _type, union kSubType _subType);
 

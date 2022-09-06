@@ -223,16 +223,20 @@ bool doNewWorld() {
 
 bool doSaveDelete() {
   #ifdef DEV
-  pd->system->logToConsole("SAVE DELTE Save:%i", m_save);
+  pd->system->logToConsole("DELETE SAVE (via rename to delete_world and delete_save) %i", m_save);
   #endif
 
-  // Hard file system reset
+  char filePathDelete[32];
+
+  // Don't actually delete, just rename to "deleted_"
   for (uint16_t ss = 0; ss < WORLD_SAVE_SLOTS; ++ss) {
     snprintf(m_filePath, 32, "world_%i_%i.json", m_save, ss);
-    pd->file->unlink(m_filePath, 0);
+    snprintf(filePathDelete, 32, "deleted_world_%i_%i.json", m_save, ss);
+    pd->file->rename(m_filePath, filePathDelete);
   }
   snprintf(m_filePath, 32, "player_%i.json", m_save);
-  pd->file->unlink(m_filePath, 0);
+  snprintf(filePathDelete, 32, "deleted_player_%i.json", m_save);
+  pd->file->rename(m_filePath, filePathDelete);
 
   // Finished
   return true;
@@ -332,6 +336,17 @@ bool doSave(bool _synchronous) {
   #endif
 
   if (m_actionProgress == 0) {
+
+    // Create backup
+    char filePathBackup[32];
+
+    snprintf(m_filePath, 32, "player_%i.json", m_save);
+    snprintf(filePathBackup, 32, "backup_player_%i.json", m_save);
+    pd->file->rename(m_filePath, filePathBackup);
+
+    snprintf(m_filePath, 32, "world_%i_%i.json", m_save, m_slot);
+    snprintf(filePathBackup, 32, "backup_world_%i_%i.json", m_save, m_slot);
+    pd->file->rename(m_filePath, filePathBackup);
 
     // Should get the latest export averages, guaranteed to be between 60 and 120s worth of data
     updateExport();

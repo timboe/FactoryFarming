@@ -201,9 +201,9 @@ void buildingManagerFreeBuilding(struct Building_t* _building) {
   m_buildingSearchLocation = _building->m_index;
 }
 
-void growAtAll() {
+void growAtAll(uint16_t _maxTicks) {
   for (uint32_t b = 0; b < TOT_CARGO_OR_BUILDINGS; ++b) {
-    if (m_buildings[b].m_type == kPlant) m_buildings[b].m_progress = rand() % (TICKS_PER_SEC * 2);
+    if (m_buildings[b].m_type == kPlant) m_buildings[b].m_progress = rand() % _maxTicks;
   }
 }
 

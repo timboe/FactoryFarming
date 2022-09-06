@@ -124,7 +124,10 @@ bool populateContentImport() {
       const float tot = getTotalCargoExport(i);
       if (!tot) {
         continue; // Am not exporting this type of cargo
-      }    
+      }
+      #ifdef DEV
+      if (!dir) pd->system->logToConsole("populate content import, cargo %s: total exports = %f", toStringCargoByType(i, true), (double)tot);
+      #endif
  
       if (column == ROW_WDTH) { // Only start a new row if we are sure we have something to put in it
         ++row;

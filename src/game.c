@@ -70,7 +70,7 @@ void tickNear() {
   uint8_t zoom = getZoom();
   struct Chunk_t* currentChunk = getCurrentChunk();
 
-  if (zoom > 1) animateConveyor();
+  if (zoom > 1 && getPlayer()->m_enableConveyorAnimation) animateConveyor();
 
   m_nearTickCount += chunkTickChunk(currentChunk, NEAR_TICK_AMOUNT, zoom);
 

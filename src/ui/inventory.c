@@ -211,7 +211,7 @@ void doPlace() {
       makeTutorialProgress();
     }
   } else {
-    if (selectedCat != kUICatPlant && selectedCat != kUICatConv && selectedCat != kUICatCargo) {
+    if (selectedCat != kUICatPlant && selectedCat != kUICatConv && selectedCat != kUICatCargo && selectedCat != kUICatUtility) {
       sfx(kSfxNo);
     }
   }
@@ -340,7 +340,7 @@ void doDestroy() {
   }
   if (cleared) {
     sfx(kSfxDestroy);
-    addTrauma(1.2f);
+    addTrauma(1.1f);
   }
 }
 
