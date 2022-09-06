@@ -8,9 +8,6 @@
 
 //#define DEMO
 
-// TODO
-//#define NO_MUSIC
-
 #define PRETEND_ZOOMED_IN false
 
 #include <stdio.h>

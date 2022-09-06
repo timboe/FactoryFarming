@@ -3,6 +3,8 @@
 
 bool m_sfxOn = true;
 
+bool m_hasMusic = true;
+
 int8_t m_trackPlaying = -1;
 
 FilePlayer* m_music[N_MUSIC_TRACKS + 1];
@@ -15,16 +17,19 @@ void musicStopped(SoundSource* _c);
 /// ///
 
 void pauseMusic() {
+  if (!m_hasMusic) return;
   if (m_trackPlaying == -1) return;
   pd->sound->fileplayer->pause(m_music[m_trackPlaying]);
 }
 
 void resumeMusic() {
+  if (!m_hasMusic) return;
   if (m_trackPlaying == -1) return;
   pd->sound->fileplayer->play(m_music[m_trackPlaying], 1);
 }
 
 void updateMusicVol() {
+  if (!m_hasMusic) return;
   if (m_trackPlaying == -1) return;
   int8_t i = getPlayer()->m_musicVol;
   if (!i) i = 100;
@@ -33,6 +38,7 @@ void updateMusicVol() {
 }
 
 void updateMusic(bool _isTitle) {
+  if (!m_hasMusic) return;
   if (_isTitle) {
     if (m_trackPlaying != -1) {
       int8_t toStop = m_trackPlaying;
@@ -68,6 +74,7 @@ void updateMusic(bool _isTitle) {
 }
 
 void chooseMusic(int8_t _id) {
+  if (!m_hasMusic) return;
   if (m_trackPlaying == -1) {
     // music is off
     return;
@@ -84,6 +91,7 @@ void chooseMusic(int8_t _id) {
 }
 
 void musicStopped(SoundSource* _c) {
+  if (!m_hasMusic) return;
   if (m_trackPlaying == -1) {
     return;
   }
@@ -101,19 +109,6 @@ void updateSfx() {
 }
 
 void initSound() {
-
-  for (int32_t i = 0; i < N_MUSIC_TRACKS + 1; ++i) {
-    m_music[i] = pd->sound->fileplayer->newPlayer();
-    switch (i) {
-      case 0: pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/1985"); break;
-      case 1: pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/b3"); break;
-      case 2: pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/pumped"); break;
-      case 3: pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/sweetSelfSatisfaction"); break;
-      case 4: pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/weAreTheResistors"); break;
-      case 5: pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/SoftAndFuriousHorizonEnding"); break;
-    }
-    pd->sound->fileplayer->setFinishCallback(m_music[i], musicStopped);
-  }
 
   m_audioSample[kSfxDestroy] = pd->sound->sample->load("sounds/destroy");
   m_audioSample[kSfxClearObstruction] = pd->sound->sample->load("sounds/clearObstruction");
@@ -152,6 +147,19 @@ void initSound() {
     pd->sound->sampleplayer->setSample(m_samplePlayer[i], m_audioSample[i]);
   }
 
+  m_hasMusic = true;
+  for (int32_t i = 0; i < N_MUSIC_TRACKS + 1; ++i) {
+    m_music[i] = pd->sound->fileplayer->newPlayer();
+    switch (i) {
+      case 0: m_hasMusic &= pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/1985"); break;
+      case 1: m_hasMusic &= pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/b3"); break;
+      case 2: m_hasMusic &= pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/pumped"); break;
+      case 3: m_hasMusic &= pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/sweetSelfSatisfaction"); break;
+      case 4: m_hasMusic &= pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/weAreTheResistors"); break;
+      case 5: m_hasMusic &= pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/SoftAndFuriousHorizonEnding"); break;
+    }
+    pd->sound->fileplayer->setFinishCallback(m_music[i], musicStopped);
+  }
 }
 
 void sfx(enum SfxSample _sample) {
