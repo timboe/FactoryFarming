@@ -193,6 +193,8 @@ void unlockOtherWorlds() {
     m_warp->m_image[zoom] = getSprite48(0, 2, zoom);
     m_exportBox->m_image[zoom] = getSprite48(2, 1, zoom);
     m_importBox->m_image[zoom] = getSprite48(3, 1, zoom);
+
+    pd->sprite->setVisible(m_warp->m_sprite[zoom], true);
   }
 
   renderChunkBackgroundImageAround(m_warp->m_location->m_chunk);
@@ -209,16 +211,24 @@ void buildingSetupSpecial(struct Building_t* _building) {
       case kSellBox:;   _building->m_image[zoom] = getSprite48(0, 1, zoom); m_sellBox = _building; break;
       case kExportBox:; _building->m_image[zoom] = getSprite48(2, 1, zoom); m_exportBox = _building; break;
       case kImportBox:; _building->m_image[zoom] = getSprite48(3, 1, zoom); m_importBox = _building; break;
-      case kWarp:;      _building->m_image[zoom] = getSprite48(0, 2, zoom); m_warp = _building; break;
+      case kWarp:;      _building->m_image[zoom] = getSprite48(0, 2, zoom); m_warp = _building; 
+                        _building->m_sprite[zoom] = pd->sprite->newSprite();
+                        pd->sprite->setImage(_building->m_sprite[zoom], getSpriteTruck(zoom), kBitmapUnflipped);
+                        pd->sprite->moveTo(_building->m_sprite[zoom], 
+                          (_building->m_pix_x)*zoom, 
+                          (_building->m_pix_y)*zoom);
+                         break;
       case kNSpecialSubTypes:;
     }
 
-    // Start of the game?
+    // Early game?
     if (_building->m_dir != SN) {
       switch (_building->m_subType.special) {
         case kExportBox:; _building->m_image[zoom] = getSprite48(3, 2, zoom); break;
         case kImportBox:; _building->m_image[zoom] = getSprite48(2, 2, zoom); break;
-        case kWarp:;      _building->m_image[zoom] = getSprite48(2, 2, zoom); break;
+        case kWarp:;      _building->m_image[zoom] = getSprite48(2, 2, zoom); 
+                          pd->sprite->setVisible(_building->m_sprite[zoom], false);
+                          break;
         default: break;
       }
     }

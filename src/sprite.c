@@ -27,6 +27,8 @@ LCDBitmap* m_new;
 
 LCDBitmap* m_splash;
 
+LCDBitmap* m_truck[ZOOM_LEVELS];
+
 LCDFont* m_fontRoobert24;
 
 LCDFont* m_fontRoobert10;
@@ -73,6 +75,8 @@ LCDFont* loadFontAtPath(const char* _path) {
 LCDBitmap* getSpriteNew() { return m_new; }
 
 LCDBitmap* getSpriteSplash() { return m_splash; }
+
+LCDBitmap* getSpriteTruck(uint8_t _zoom) { return m_truck[_zoom]; }
 
 LCDBitmap* getSprite16(uint32_t _x, uint32_t _y, uint8_t _zoom) {
   return getSprite16_byidx(SPRITE16_ID(_x, _y), _zoom);
@@ -186,11 +190,13 @@ LCDFont* getCooperHewitt12(void) {
   return m_fontCooperHewitt12;
 }
 
-
 void populateResizedSprites() {
   for (uint32_t zoom = 2; zoom < ZOOM_LEVELS; ++zoom) {
     pd->graphics->pushContext(m_retirementNo[zoom]);
     pd->graphics->drawScaledBitmap(m_retirementNo[1], 0, 0, zoom, zoom);
+    pd->graphics->popContext();
+    pd->graphics->pushContext(m_truck[zoom]);
+    pd->graphics->drawScaledBitmap(m_truck[1], 0, 0, zoom, zoom);
     pd->graphics->popContext();
     for (uint32_t i = 0; i < SHEET16_SIZE; ++i) {
       LCDBitmap* original = pd->graphics->getTableBitmap(m_sheet16, i);
@@ -227,6 +233,7 @@ void initSprite() {
   m_new = loadImageAtPath("images/new");
   m_splash = loadImageAtPath("images/splash");
   m_retirementNo[1] = loadImageAtPath("images/cross9x9");
+  m_truck[0] = loadImageAtPath("images/truck");
 
   populateResizedSprites();
 

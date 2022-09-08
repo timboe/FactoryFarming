@@ -33,6 +33,8 @@ LCDBitmap* getSpriteNew(void);
 
 LCDBitmap* getSpriteSplash(void);
 
+LCDBitmap* getSpriteTruck(uint8_t _zoom);
+
 LCDBitmap* getConveyorMaster(enum kDir _dir, uint8_t _speed);
 
 LCDBitmap* getStickySelectedBitmap(void);
