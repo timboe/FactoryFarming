@@ -61,7 +61,7 @@ struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kEnergyDrink, .price = 0, .multi = 2.0f, .UIIcon = SID(13,6)},
   {.subType = kRaveJuice, .price = 0, .multi = 2.0f, .UIIcon = SID(14,6)},
   {.subType = kPerkPills, .price = 0, .multi = 2.0f, .UIIcon = SID(15,6)},
-  {.subType = kBamboo, .price = 0, .multi = 0.1f, .UIIcon = SID(4,23)}, // CROP
+  {.subType = kBamboo, .price = 0, .multi = 0.1f, .UIIcon = SID(7,25)}, // CROP
   {.subType = kPackaging, .price = 0, .multi = 2.0f, .UIIcon = SID(11,5)},
   {.subType = kDessert, .price = 0, .multi = 2.0f, .UIIcon = SID(10,5)},
   {.subType = kCateringKit, .price = 0, .multi = 2.0f, .UIIcon = SID(12,5)},

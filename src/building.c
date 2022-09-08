@@ -221,6 +221,13 @@ bool isLargeBuilding(enum kBuildingType _type, union kSubType _subType) {
   return _type >= kExtractor || (_type >= kUtility && _subType.utility == kRetirement);
 }
 
+bool isInvertedBuilding(struct Building_t* _building) {
+  bool invert = (_building->m_type == kFactory && FDesc[ _building->m_subType.factory ].invert);
+  invert |= (_building->m_type == kExtractor && EDesc[ _building->m_subType.extractor ].invert);
+  invert |= (_building->m_type == kConveyor && _building->m_stored[0] >= 2);
+  return invert;
+}
+
 void assignNeighbors(struct Building_t* _building) {
   _building->m_location = getLocation(pixToLoc(_building->m_pix_x), pixToLoc(_building->m_pix_y));
   switch (_building->m_type) {

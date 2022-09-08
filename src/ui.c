@@ -874,8 +874,9 @@ void drawUIRight() {
     if ((selectedCat >= kUICatConv && selectedCat < kUICatUtility) || (selectedCat == kUICatUtility && selectedID == kBuffferBox)) {
       spriteID += rotMod;
     }
-    // TODO make this work?
-    //pd->graphics->drawRotatedBitmap(getSprite16_byidx(spriteID, 1), DEVICE_PIX_Y/2, -1, 90.0f, TILE_PIX/2, TILE_PIX/2, 0.0f, 0.0f);
+    if ((selectedCat == kUICatExtractor && EDesc[selectedID].invert) || (selectedCat == kUICatFactory && FDesc[selectedID].invert)) {
+      pd->graphics->setDrawMode(kDrawModeInverted);
+    }
     pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), DEVICE_PIX_Y/2, -1, kBitmapUnflipped);
     pd->graphics->setDrawMode(kDrawModeFillWhite);
     pd->graphics->drawText(text, 16, kASCIIEncoding, DEVICE_PIX_Y/2 + 2*TILE_PIX, 0);

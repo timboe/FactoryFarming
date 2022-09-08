@@ -304,8 +304,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
     struct Building_t* building = _chunk->m_buildingsRender[i];
     if (building->m_type != kNoBuilding && building->m_image[1]) {
       if (isLargeBuilding(building->m_type, building->m_subType)) {
-        bool invert = (building->m_type == kFactory && FDesc[ building->m_subType.factory ].invert);
-        invert |= (building->m_type == kExtractor && EDesc[ building->m_subType.extractor ].invert);
+        const bool invert = isInvertedBuilding(building);
         const bool flip = (building->m_type == kSpecial && building->m_subType.special == kImportBox && building->m_dir != SN);
         pd->graphics->setDrawMode(invert ? kDrawModeInverted : kDrawModeCopy);
         pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - off48_x, building->m_pix_y - off48_y, flip ? kBitmapFlippedX : kBitmapUnflipped);
@@ -331,7 +330,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
         pd->graphics->drawBitmap(s, building->m_pix_x - off16_x, building->m_pix_y - off16_y, flip ? kBitmapFlippedX : kBitmapUnflipped);
       } else {
         // Fast conveyors get drawn inverted. Stored[0] is used to hold the speed
-        const bool invert = (building->m_type == kConveyor && building->m_stored[0] >= 2);
+        const bool invert = isInvertedBuilding(building);
         const bool flip = (building->m_type == kPlant && (building->m_location->m_x + building->m_location->m_y) % 2);
         pd->graphics->setDrawMode(invert ? kDrawModeInverted : kDrawModeCopy);
         pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - off16_x, building->m_pix_y - off16_y, flip ? kBitmapFlippedX : kBitmapUnflipped);
@@ -359,8 +358,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
       for (uint32_t i = 0; i < otherChunk->m_nBuildingsRender; ++i) {
         struct Building_t* building = otherChunk->m_buildingsRender[i];
         if (isLargeBuilding(building->m_type, building->m_subType) && building->m_image[1]) {
-          bool invert = (building->m_type == kFactory && FDesc[ building->m_subType.factory ].invert);
-          invert |= (building->m_type == kExtractor && EDesc[ building->m_subType.extractor ].invert);
+          const bool invert = isInvertedBuilding(building);
           pd->graphics->setDrawMode(invert ? kDrawModeInverted : kDrawModeCopy);
           pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - chunkOffX, building->m_pix_y - chunkOffY, kBitmapUnflipped);
           pd->graphics->setDrawMode(kDrawModeCopy);

@@ -162,6 +162,8 @@ void growAtAll(uint16_t _maxTicks);
 
 bool isLargeBuilding(enum kBuildingType _type, union kSubType _subType);
 
+bool isInvertedBuilding(struct Building_t* _building);
+
 void buildingManagerFreeBuilding(struct Building_t* _buildings);
 
 bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _type, union kSubType _subType);

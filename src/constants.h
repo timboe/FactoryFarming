@@ -36,14 +36,14 @@
 
 // 16x16 sprite sheet has how many rows/columns
 #define SHEET16_SIZE_X 16
-#define SHEET16_SIZE_Y 32
+#define SHEET16_SIZE_Y 26
 #define SHEET16_SIZE (SHEET16_SIZE_X*SHEET16_SIZE_Y)
 
 #define SHEET18_SIZE_X 6
 #define SHEET18_SIZE_Y 8
 #define SHEET18_SIZE (SHEET18_SIZE_X*SHEET18_SIZE_Y)
 
-#define SHEET48_SIZE_X 8
+#define SHEET48_SIZE_X 4
 #define SHEET48_SIZE_Y 8
 #define SHEET48_SIZE (SHEET48_SIZE_X*SHEET48_SIZE_Y)
 
