@@ -18,7 +18,7 @@ uint8_t m_scanSlot = 0;
 
 char m_filePath[32];
 
-uint8_t m_worldVersions[N_SAVES][WORLD_SAVE_SLOTS] = {0};
+int8_t m_worldVersions[N_SAVES][WORLD_SAVE_SLOTS] = {0};
 
 bool m_worldExists[N_SAVES][WORLD_SAVE_SLOTS] = {false};
 
@@ -247,6 +247,8 @@ bool doSaveDelete() {
 void scanSlots() {
   m_foundSaveData[m_save] = false;
   for (m_scanSlot = 0; m_scanSlot < WORLD_SAVE_SLOTS; ++m_scanSlot) {
+    m_worldVersions[m_save][m_scanSlot] = -1;
+
     snprintf(m_filePath, 32, "world_%i_%i.json", m_save, m_scanSlot);
     SDFile* file = pd->file->open(m_filePath, kFileRead|kFileReadData);
     if (!file) {
@@ -276,7 +278,10 @@ void scanSlots() {
   // Filter
   for (uint16_t ss = 0; ss < WORLD_SAVE_SLOTS; ++ss) {
     if (m_worldExists[m_save][ss]) {
-      if (m_worldVersions[m_save][ss] != SAVE_FORMAT) {
+      if (m_worldVersions[m_save][ss] == -1) {
+        pd->system->error("Scan world: Unable to determine save version for save file %i", m_save);
+        m_foundSaveData[m_save] = false;
+      } else if (m_worldVersions[m_save][ss] != SAVE_FORMAT) {
         #ifdef DEV
         pd->system->logToConsole("Scan world: OLD WORLD DETECTED! Version 0. ACTION: Delete everything and start again");
         #endif

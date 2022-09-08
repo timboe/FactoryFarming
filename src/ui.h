@@ -4,6 +4,8 @@
  
 enum kGameMode {
   kWanderMode, 
+  kTruckModeNew,
+  kTruckModeLoad,
   kPlaceMode, 
   kBuildMode, 
   kPlantMode, 

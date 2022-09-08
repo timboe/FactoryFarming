@@ -233,7 +233,7 @@ void initSprite() {
   m_new = loadImageAtPath("images/new");
   m_splash = loadImageAtPath("images/splash");
   m_retirementNo[1] = loadImageAtPath("images/cross9x9");
-  m_truck[0] = loadImageAtPath("images/truck");
+  m_truck[1] = loadImageAtPath("images/truck");
 
   populateResizedSprites();
 

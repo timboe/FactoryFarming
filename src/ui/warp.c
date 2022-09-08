@@ -36,17 +36,15 @@ void doWarp() {
 
     if (doUnlock) {
       setForceSlot(selectedID); // This will be the ID of the world we generate
-      doIO(kDoSave, /*and then*/ kDoNewWorld);
-      // Tutorial
-      if (getTutorialStage() == kTutNewPlots) {
-        nextTutorialStage();
-      }
+      setGameMode(kTruckModeNew);
+      sfx(kSfxWarp);
     } else {
       sfx(kSfxNo);
     }
   } else { // Unlocked world, switch
     setForceSlot(selectedID); // This will be the ID of the slot we load from
-    doIO(kDoSave, /*and then*/ kDoLoad);
+    setGameMode(kTruckModeLoad);
+    sfx(kSfxWarp);
   }
 }
 

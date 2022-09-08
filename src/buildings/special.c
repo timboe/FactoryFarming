@@ -6,6 +6,7 @@
 #include "../cargo.h"
 #include "../player.h"
 #include "../io.h"
+#include "../ui.h"
 
 struct Building_t* m_sellBox = NULL;
 
@@ -39,7 +40,11 @@ void exportUpdateFn(struct Building_t* _building);
 
 void importUpdateFn(struct Building_t* _building, uint8_t _tick);
 
+void warpUpdateFn(void);
+
 bool nearbyConveyor(struct Building_t* _building);
+
+void setTruckPosition(int16_t _offset);
 
 /// ///
 
@@ -48,7 +53,6 @@ struct Building_t* getImportBox(void) {
 }
 
 float directionToBuy() {
-  //TODO - make this take into account the torus
   if (!m_buyBox) return 1000;
   struct Player_t* p = getPlayer();
   const int16_t dx1 = p->m_pix_x - m_buyBox->m_pix_x;
@@ -112,6 +116,46 @@ bool nearbyConveyor(struct Building_t* _building) {
   return false;
 }
 
+void warpUpdateFn() {
+  const enum kGameMode gm = getGameMode();
+  if (gm != kTruckModeNew && gm != kTruckModeLoad) return;
+
+  static float v = 0.0f, x = 0.0f;
+  #define A 0.25f
+
+  v += A;
+  x += v;
+
+  setTruckPosition((int16_t)x+0.5f);
+
+  struct Player_t* p = getPlayer();
+  for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+    pd->sprite->setVisible(p->m_sprite[zoom], false);
+    pd->sprite->setCollisionsEnabled(p->m_sprite[zoom], false);
+  }
+
+  #define MAX_TRUCK_MOVE (TILE_PIX*4)
+  if (x > MAX_TRUCK_MOVE) {
+    for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+      pd->sprite->setVisible(p->m_sprite[zoom], true);
+      pd->sprite->setCollisionsEnabled(p->m_sprite[zoom], true);
+    }
+    v = 0.0f;
+    x = 0.0f;
+    setTruckPosition(0);
+    if (gm == kTruckModeNew) {
+      doIO(kDoSave, /*and then*/ kDoNewWorld);
+      // Tutorial
+      if (getTutorialStage() == kTutNewPlots) {
+        nextTutorialStage();
+      }
+    } else if (gm == kTruckModeLoad) {
+      doIO(kDoSave, /*and then*/ kDoLoad);
+    }
+  }
+}
+
+
 void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tick) {
   for (int32_t x = _building->m_location->m_x - 1; x < _building->m_location->m_x + 2; ++x) {
     for (int32_t y = _building->m_location->m_y - 1; y < _building->m_location->m_y + 2; ++y) {
@@ -173,6 +217,7 @@ void specialUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom)
     case kSellBox:; return sellBoxUpdateFn(_building, _tick);
     case kExportBox:; return exportUpdateFn(_building);
     case kImportBox:; return importUpdateFn(_building, _tick);
+    case kWarp: return warpUpdateFn();
     default: return;
   }
 }
@@ -204,6 +249,14 @@ void unlockOtherWorlds() {
   startPlotsTutorial();
 }
 
+void setTruckPosition(int16_t _offset) {
+  for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+      pd->sprite->moveTo(m_warp->m_sprite[zoom], 
+          (m_warp->m_pix_x + _offset)*zoom, 
+          (m_warp->m_pix_y)*zoom);
+  }
+}
+
 void buildingSetupSpecial(struct Building_t* _building) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     switch (_building->m_subType.special) {
@@ -213,15 +266,32 @@ void buildingSetupSpecial(struct Building_t* _building) {
       case kImportBox:; _building->m_image[zoom] = getSprite48(3, 1, zoom); m_importBox = _building; break;
       case kWarp:;      _building->m_image[zoom] = getSprite48(0, 2, zoom); m_warp = _building; 
                         _building->m_sprite[zoom] = pd->sprite->newSprite();
-                        pd->sprite->setImage(_building->m_sprite[zoom], getSpriteTruck(zoom), kBitmapUnflipped);
-                        pd->sprite->moveTo(_building->m_sprite[zoom], 
-                          (_building->m_pix_x)*zoom, 
-                          (_building->m_pix_y)*zoom);
-                         break;
+
+
+                        break;
       case kNSpecialSubTypes:;
     }
 
-    // Early game?
+    if (_building->m_sprite[zoom] == NULL) _building->m_sprite[zoom] = pd->sprite->newSprite();
+    if (_building->m_subType.special == kWarp) {
+      pd->sprite->setImage(_building->m_sprite[zoom], getSpriteTruck(zoom), kBitmapUnflipped);
+      PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*2 * zoom, .height = TILE_PIX * zoom};
+      pd->sprite->setCollideRect(_building->m_sprite[zoom], bound);
+      pd->sprite->setZIndex(_building->m_sprite[zoom], Z_INDEX_TRUCK);
+      setTruckPosition(0);
+    } else {
+      PDRect bound = {.x = (COLLISION_OFFSET_BIG/2)*zoom, .y = (COLLISION_OFFSET_BIG/2)*zoom, .width = (EXTRACTOR_PIX-COLLISION_OFFSET_BIG)*zoom, .height = (EXTRACTOR_PIX-COLLISION_OFFSET_BIG)*zoom};
+      pd->sprite->setCollideRect(_building->m_sprite[zoom], bound);
+      pd->sprite->moveTo(_building->m_sprite[zoom], 
+        (_building->m_pix_x - EXTRACTOR_PIX/2)*zoom, 
+        (_building->m_pix_y - EXTRACTOR_PIX/2)*zoom);
+    }
+
+
+
+
+
+    // Early game? Replce with rocks
     if (_building->m_dir != SN) {
       switch (_building->m_subType.special) {
         case kExportBox:; _building->m_image[zoom] = getSprite48(3, 2, zoom); break;
@@ -233,12 +303,6 @@ void buildingSetupSpecial(struct Building_t* _building) {
       }
     }
 
-    PDRect bound = {.x = (COLLISION_OFFSET_BIG/2)*zoom, .y = (COLLISION_OFFSET_BIG/2)*zoom, .width = (EXTRACTOR_PIX-COLLISION_OFFSET_BIG)*zoom, .height = (EXTRACTOR_PIX-COLLISION_OFFSET_BIG)*zoom};
-    if (_building->m_sprite[zoom] == NULL) _building->m_sprite[zoom] = pd->sprite->newSprite();
-    pd->sprite->setCollideRect(_building->m_sprite[zoom], bound);
-    pd->sprite->moveTo(_building->m_sprite[zoom], 
-      (_building->m_pix_x + _building->m_location->m_pix_off_x - EXTRACTOR_PIX/2)*zoom, 
-      (_building->m_pix_y + _building->m_location->m_pix_off_y - EXTRACTOR_PIX/2)*zoom);
   }
 
   for (int32_t x = _building->m_location->m_x - 1; x < _building->m_location->m_x + 2; ++x) {
@@ -246,6 +310,7 @@ void buildingSetupSpecial(struct Building_t* _building) {
       clearLocation(getLocation(x, y), /*cargo*/ true, /*building*/ false);
     }
   }
+
 }
 
 bool hasExported() {

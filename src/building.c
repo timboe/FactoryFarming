@@ -134,7 +134,7 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kCateringKitFac: return "Catering Pack Factory";
       case kPartyPackFac: return "Party Pack Factory";
       case kParfumeFac: return "Parfume Factory";
-      case kMiraclePowderFac: return "Mirical Powder Factory";
+      case kMiraclePowderFac: return "Miracle Powder Factory";
       case kTurkishDelightFac: return "Turkish Delight Factory";
       case kSpareFac0: case kSpareFac1: case kSpareFac2: case kSpareFac3:
       case kSpareFac4: case kSpareFac5: case kSpareFac6: case kSpareFac7: 
@@ -271,7 +271,6 @@ bool buildingHasUpdateFunction(enum kBuildingType _type, union kSubType _subType
   if (_type == kUtility && _subType.utility == kSign) return false;
   if (_type == kUtility && _subType.utility == kRetirement) return false;
   if (_type == kUtility && _subType.utility == kFence) return false;
-  if (_type == kSpecial && _subType.special == kWarp) return false;
   if (_type == kSpecial && _subType.special == kShop) return false;
   return true;
 }

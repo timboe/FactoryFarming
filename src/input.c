@@ -165,6 +165,7 @@ bool holdBMultiplierInput(uint32_t _buttonPressed) {
 void gameClickConfigHandler(uint32_t _buttonPressed) {
   switch (getGameMode()) {
     case kWanderMode: return clickHandleWander(_buttonPressed);
+    case kTruckModeNew: case kTruckModeLoad: return; // Inputs ignored
     case kMenuSettings: return clickHandleMenuMain(_buttonPressed);
     case kMenuBuy: return clickHandleMenuBuy(_buttonPressed);
     case kMenuNew: return clickHandleMenuNew(_buttonPressed);
@@ -552,7 +553,7 @@ void clickHandlerReplacement() {
     case kMenuCredits: rotateHandleCredits(pd->system->getCrankChange()); break;
     case kMenuBuy: case kMenuSell: rotateHandleMultiplier(pd->system->getCrankChange()); break; 
     case kMenuPlayer: case kMenuSettings: case kMenuExport: case kMenuImport: case kMenuWarp: rotateHandleSettings(pd->system->getCrankChange()); break;
-    case kMenuNew: case kPlantMode: case kInspectMode: case kTitles: case kNGameModes: break;
+    case kMenuNew: case kPlantMode: case kInspectMode: case kTitles: case kTruckModeNew: case kTruckModeLoad: case kNGameModes: break;
   }
 
 }
