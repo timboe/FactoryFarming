@@ -791,8 +791,9 @@ void drawUIBottom() {
   setRoobert10();
 
   if (getPlayer()->m_enableDebug) {
-    snprintf(text, 128, "SL:%u, NT:%u, FT:%u, B:%u, C:%u", 
-      pd->sprite->getSpriteCount(), getNearTickCount(), getFarTickCount(), getNBuildings(), getNCargo() );
+    struct Player_t* p = getPlayer();
+    snprintf(text, 128, "SL:%u, NT:%u, FT:%u, B:%u, C:%u, P:(%i,%i)", 
+      pd->sprite->getSpriteCount(), getNearTickCount(), getFarTickCount(), getNBuildings(), getNCargo(), (int)p->m_pix_x, (int)p->m_pix_y );
     pd->graphics->pushContext(m_UIBitmapDev);
     pd->graphics->fillRect(0, 0, DEVICE_PIX_X, TILE_PIX, kColorClear);
     pd->graphics->setDrawMode(kDrawModeFillBlack);

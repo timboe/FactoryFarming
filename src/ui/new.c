@@ -117,7 +117,7 @@ const char* getNewText() {
     }
     case kExtractor: switch (m_nextSubType.extractor) {
       case kCropHarvesterSmall: return "Collects Cargo, can hold three different types";
-      case kPump: return "Must be built on water. Produced Water Barrels";
+      case kPump: return "Must be built on water. Produced Water buckets";
       case kChalkQuarry: return "Must be built on Chalky Soil. Produces Chalk";
       case kSaltMine: return "Must be built on Peaty Soil. Produces Salt";
       case kCropHarvesterLarge: return "Collects Cargo, can hold three different types";

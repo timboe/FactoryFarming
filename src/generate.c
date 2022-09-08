@@ -556,7 +556,7 @@ bool tryRemoveObstruction(struct Location_t* _loc) {
   setTile( getTile_idx(_loc->m_x, _loc->m_y), getNearbyBackground_Loc(_loc));
   chunkRemoveObstacle(_loc->m_chunk, _loc->m_obstacle);
   _loc->m_obstacle = NULL;
-  addTrauma(2.0f);
+  addTrauma(1.1f);
   renderChunkBackgroundImage(_loc->m_chunk);
   return true;
 }

@@ -230,12 +230,12 @@ bool doSaveDelete() {
 
   // Don't actually delete, just rename to "deleted_"
   for (uint16_t ss = 0; ss < WORLD_SAVE_SLOTS; ++ss) {
-    snprintf(m_filePath, 32, "world_%i_%i.json", m_save, ss);
-    snprintf(filePathDelete, 32, "deleted_world_%i_%i.json", m_save, ss);
+    snprintf(m_filePath, 32, "world_%i_%i.json", m_save+1, ss+1);
+    snprintf(filePathDelete, 32, "deleted_world_%i_%i.json", m_save+1, ss+1);
     pd->file->rename(m_filePath, filePathDelete);
   }
-  snprintf(m_filePath, 32, "player_%i.json", m_save);
-  snprintf(filePathDelete, 32, "deleted_player_%i.json", m_save);
+  snprintf(m_filePath, 32, "player_%i.json", m_save+1);
+  snprintf(filePathDelete, 32, "deleted_player_%i.json", m_save+1);
   pd->file->rename(m_filePath, filePathDelete);
 
   // Finished
@@ -249,7 +249,7 @@ void scanSlots() {
   for (m_scanSlot = 0; m_scanSlot < WORLD_SAVE_SLOTS; ++m_scanSlot) {
     m_worldVersions[m_save][m_scanSlot] = -1;
 
-    snprintf(m_filePath, 32, "world_%i_%i.json", m_save, m_scanSlot);
+    snprintf(m_filePath, 32, "world_%i_%i.json", m_save+1, m_scanSlot+1);
     SDFile* file = pd->file->open(m_filePath, kFileRead|kFileReadData);
     if (!file) {
       #ifdef DEV
@@ -292,7 +292,7 @@ void scanSlots() {
   }
 
   {
-    snprintf(m_filePath, 32, "player_%i.json", m_save);
+    snprintf(m_filePath, 32, "player_%i.json", m_save+1);
     SDFile* file = pd->file->open(m_filePath, kFileRead|kFileReadData);
     if (!file) {
       m_foundSaveData[m_save] = false;
@@ -345,19 +345,19 @@ bool doSave(bool _synchronous) {
     // Create backup
     char filePathBackup[32];
 
-    snprintf(m_filePath, 32, "player_%i.json", m_save);
-    snprintf(filePathBackup, 32, "backup_player_%i.json", m_save);
+    snprintf(m_filePath, 32, "player_%i.json", m_save+1);
+    snprintf(filePathBackup, 32, "backup_player_%i.json", m_save+1);
     pd->file->rename(m_filePath, filePathBackup);
 
-    snprintf(m_filePath, 32, "world_%i_%i.json", m_save, m_slot);
-    snprintf(filePathBackup, 32, "backup_world_%i_%i.json", m_save, m_slot);
+    snprintf(m_filePath, 32, "world_%i_%i.json", m_save+1, m_slot+1);
+    snprintf(filePathBackup, 32, "backup_world_%i_%i.json", m_save+1, m_slot+1);
     pd->file->rename(m_filePath, filePathBackup);
 
     // Should get the latest export averages, guaranteed to be between 60 and 120s worth of data
     updateExport();
     updateSales();
 
-    snprintf(m_filePath, 32, "TMP_player_%i.json", m_save);
+    snprintf(m_filePath, 32, "TMP_player_%i.json", m_save+1);
     m_file = pd->file->open(m_filePath, kFileWrite);
 
     pd->json->initEncoder(&m_je, doWrite, m_file, pretty);
@@ -372,7 +372,7 @@ bool doSave(bool _synchronous) {
 
   } else if (m_actionProgress == 2) {
 
-    snprintf(m_filePath, 32, "TMP_world_%i_%i.json", m_save, m_slot);
+    snprintf(m_filePath, 32, "TMP_world_%i_%i.json", m_save+1, m_slot+1);
     SDFile* file = pd->file->open(m_filePath, kFileWrite);
 
     pd->json->initEncoder(&m_je, doWrite, m_file, pretty);
@@ -403,12 +403,12 @@ bool doSave(bool _synchronous) {
     // Finish by moving into location
     char filePathFinal[32];
 
-    snprintf(m_filePath, 32, "TMP_player_%i.json", m_save);
-    snprintf(filePathFinal, 32, "player_%i.json", m_save);
+    snprintf(m_filePath, 32, "TMP_player_%i.json", m_save+1);
+    snprintf(filePathFinal, 32, "player_%i.json", m_save+1);
     pd->file->rename(m_filePath, filePathFinal);
 
-    snprintf(m_filePath, 32, "TMP_world_%i_%i.json", m_save, m_slot);
-    snprintf(filePathFinal, 32, "world_%i_%i.json", m_save, m_slot);
+    snprintf(m_filePath, 32, "TMP_world_%i_%i.json", m_save+1, m_slot+1);
+    snprintf(filePathFinal, 32, "world_%i_%i.json", m_save+1, m_slot+1);
     pd->file->rename(m_filePath, filePathFinal);
 
   } else if (m_actionProgress == 8) {
@@ -442,7 +442,7 @@ bool doLoad() {
     const bool resetThePlayerToo = (m_forceSlot == -1);
     reset(resetThePlayerToo);
 
-    snprintf(m_filePath, 32, "player_%i.json", m_save);
+    snprintf(m_filePath, 32, "player_%i.json", m_save+1);
     m_file = pd->file->open(m_filePath, kFileRead|kFileReadData);
 
     pd->json->decode(&m_jd_p, (json_reader){ .read = doRead, .userdata = m_file }, NULL);
@@ -461,7 +461,7 @@ bool doLoad() {
       setSlot(m_forceSlot);
     }
 
-    snprintf(m_filePath, 32, "world_%i_%i.json", m_save, m_slot);
+    snprintf(m_filePath, 32, "world_%i_%i.json", m_save+1, m_slot+1);
     m_file = pd->file->open(m_filePath, kFileRead|kFileReadData);
 
     // TODO - call this many times, each time with a different WILL DECODE
