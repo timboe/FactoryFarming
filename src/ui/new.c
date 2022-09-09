@@ -107,7 +107,7 @@ const char* getNewText() {
       case kStorageBox: return "Stores up to 3 different types of Cargo";
       case kBuffferBox: return "Like the Storage Box, but also self-empties";
       case kConveyorGrease: return "Upgrades Conveyor speed from x1 to x2";
-      case kObstructionRemover: return "Clears Obstructed Ground allowing it to be built on";
+      case kObstructionRemover: return "Clears Obstructed Ground, can then be built on";
       case kLandfill: return "Fills in water. Can be built on, but not planted on.";
       case kRetirement: return "A relaxing space to enjoy your amassed wealth.";
       case kFence: return "A charming wooden fence.";

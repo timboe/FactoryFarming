@@ -400,17 +400,19 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
     case kCakeFac:
       switch (_n) {
         case 0: *_isFlavour = false; return "Ingredients: ";
-        case 1: *_isFlavour = false; return toStringCargoByType(kCarrot, /*plural=*/ true);
-        case 2: return ", ";
-        case 3: *_isFlavour = false; return toStringCargoByType(kMeatPie, /*plural=*/ false);
-        case 4: return ", ";
-        case 5: return "Monosodium";
-        case 6: return "Glutamate ";
-        case 7: *_isFlavour = false; return "(";
-        case 8: *_isFlavour = false; return toStringCargoByType(kMSG, /*plural=*/ false);
-        case 9: *_isFlavour = false; return ")";
+        case 1: return "High ";
+        case 2: return "Fructose ";
+        case 3: return "Corn ";
+        case 4: return "Syrup ";
+        case 5: *_isFlavour = false; return "(";
+        case 6: *_isFlavour = false; return toStringCargoByType(kHFCS, /*plural=*/ false);
+        case 7: *_isFlavour = false; return ")";
+        case 8: return ", ";
+        case 9: *_isFlavour = false; return toStringCargoByType(kEggs, /*plural=*/ true);
         case 10: return ", ";
-        case 11: *_isFlavour = false; return toStringCargoByType(kEmulsifiers, /*plural=*/ true);
+        case 11: *_isFlavour = false; return toStringCargoByType(kWheat, /*plural=*/ false);
+        case 12: return ", ";
+        case 13: *_isFlavour = false; return toStringCargoByType(kChocolate, /*plural=*/ false);
       }
       break;
     case kCaffeineFac:

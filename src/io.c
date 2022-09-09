@@ -124,6 +124,8 @@ void enactIO() {
       m_forceSlot = -1;
       updateRenderList();
       resumeMusic();
+      setPlayerVisible(true);
+      setTruckPosition(0);
     }
   }
 }

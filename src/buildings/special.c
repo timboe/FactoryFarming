@@ -44,8 +44,6 @@ void warpUpdateFn(void);
 
 bool nearbyConveyor(struct Building_t* _building);
 
-void setTruckPosition(int16_t _offset);
-
 /// ///
 
 struct Building_t* getImportBox(void) {
@@ -128,21 +126,12 @@ void warpUpdateFn() {
 
   setTruckPosition((int16_t)x+0.5f);
 
-  struct Player_t* p = getPlayer();
-  for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
-    pd->sprite->setVisible(p->m_sprite[zoom], false);
-    pd->sprite->setCollisionsEnabled(p->m_sprite[zoom], false);
-  }
+  setPlayerVisible(false);
 
   #define MAX_TRUCK_MOVE (TILE_PIX*4)
   if (x > MAX_TRUCK_MOVE) {
-    for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
-      pd->sprite->setVisible(p->m_sprite[zoom], true);
-      pd->sprite->setCollisionsEnabled(p->m_sprite[zoom], true);
-    }
     v = 0.0f;
     x = 0.0f;
-    setTruckPosition(0);
     if (gm == kTruckModeNew) {
       doIO(kDoSave, /*and then*/ kDoNewWorld);
       // Tutorial
@@ -250,6 +239,7 @@ void unlockOtherWorlds() {
 }
 
 void setTruckPosition(int16_t _offset) {
+  if (!m_warp) return;
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
       pd->sprite->moveTo(m_warp->m_sprite[zoom], 
           (m_warp->m_pix_x + _offset)*zoom, 

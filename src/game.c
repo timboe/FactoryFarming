@@ -194,6 +194,7 @@ int gameLoop(void* _data) {
     pd->sprite->removeAllSprites();
     enactIO();
     pd->sprite->drawSprites();
+    m_autoSaveTimer = 0;
     return 1;
   }
 
@@ -216,7 +217,7 @@ int gameLoop(void* _data) {
   struct Player_t* p = getPlayer(); 
   ++p->m_playTime;
 
-  if (gm != kTitles && p->m_enableAutosave) {
+  if (gm == kWanderMode && p->m_enableAutosave) {
     if (++m_autoSaveTimer > 600*TICK_FREQUENCY) {
       m_autoSaveTimer = 0;
       doIO(kDoSave, /*and then*/ kDoNothing);
@@ -455,7 +456,7 @@ void initGame() {
   UDesc[kWell].price = FDesc[kHFCSFac].price * 0.40f;
   UDesc[kStorageBox].price = FDesc[kEmulsifierFac].price * 0.30f;
   UDesc[kBuffferBox].price = FDesc[kEmulsifierFac].price * 0.60f;
-  UDesc[kConveyorGrease].price = FDesc[kBatteryFarm].price * 0.05f;
+  UDesc[kConveyorGrease].price = FDesc[kBatteryFarm].price * 0.02f;
   UDesc[kObstructionRemover].price = FDesc[kMSGFac].price * 0.40f;
   UDesc[kLandfill].price = FDesc[kPerkPillFac].price * 0.1f;
   UDesc[kRetirement].price = FDesc[kMiraclePowderFac].price * 7.5f;

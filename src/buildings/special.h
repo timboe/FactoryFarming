@@ -37,3 +37,5 @@ void unlockOtherWorlds(void);
 bool hasExported(void);
 
 bool hasImported(void);
+
+void setTruckPosition(int16_t _offset);

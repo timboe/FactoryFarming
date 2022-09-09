@@ -524,14 +524,21 @@ void resetPlayer() {
   m_forceTorus = true;
 }
 
+void setPlayerVisible(bool _visible) {
+  for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+    pd->sprite->setVisible(m_player.m_sprite[zoom], _visible);
+    pd->sprite->setCollisionsEnabled(m_player.m_sprite[zoom], _visible);
+  }
+}
+
 void setDefaultPlayerSettings() {
   m_player.m_soundSettings = 3;
   m_player.m_musicVol = 100;
-  m_player.m_autoUseConveyorBooster = 1;
+  m_player.m_autoUseConveyorBooster = 0;
   m_player.m_enableConveyorAnimation = 1;
   m_player.m_enableTutorial = 0;
   m_player.m_enableDebug = 0;
-  m_player.m_enableAutosave = 5;
+  m_player.m_enableAutosave = 10;
   m_player.m_enablePickupOnDestroy = 1;
   m_player.m_enableScreenShake = 1;
 }

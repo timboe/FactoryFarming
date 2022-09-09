@@ -327,7 +327,12 @@ void clickHandleMenuImport(uint32_t _buttonPressed) {
 }
 
 void clickHandleBuilding(uint32_t _buttonPressed) {
-  if (bPressed() && holdBRotateInput(_buttonPressed)) {
+  if (bPressed() 
+    && getUIContentCategory() == kUICatUtility 
+    && (getUIContentID() == kConveyorGrease || getUIContentID() == kObstructionRemover) 
+    && holdBRadiusInput(_buttonPressed)) {
+    // noop
+  } else if (bPressed() && holdBRotateInput(_buttonPressed)) {
     // noop
   } else if (characterMoveInput(_buttonPressed)) {
     // noop

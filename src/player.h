@@ -143,6 +143,8 @@ void initPlayer(void);
 
 void resetPlayer(void);
 
+void setPlayerVisible(bool _visible);
+
 void setDefaultPlayerSettings(void);
 
 void serialisePlayer(struct json_encoder* je); 
