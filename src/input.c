@@ -208,7 +208,7 @@ void clickHandleWander(uint32_t _buttonPressed) {
     } else if (!ic && distanceFromIn() < ACTIVATE_DISTANCE) {
       setGameMode(kMenuImport);
       sfx(kSfxMenuOpen);
-    } else if (!ic && distanceFromRetirement() < ACTIVATE_DISTANCE) {
+    } else if (!ic && getSlot() == WORLD_SAVE_SLOTS-1 && distanceFromRetirement() < ACTIVATE_DISTANCE) {
       setGameMode(kMenuCredits);
       redrawAllSettingsMenuLines();
       chooseMusic(N_MUSIC_TRACKS);

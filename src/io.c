@@ -246,10 +246,19 @@ bool doSaveDelete() {
   for (uint16_t ss = 0; ss < WORLD_SAVE_SLOTS; ++ss) {
     snprintf(m_filePath, 32, "world_%i_%i.json", m_save+1, ss+1);
     snprintf(filePathDelete, 32, "deleted_world_%i_%i.json", m_save+1, ss+1);
+    // First unlink before moving
+    int status = pd->file->unlink(filePathDelete, 0);
+    #ifdef DEV
+    pd->system->logToConsole("DELETE: unlink previous world save %s, status %i", filePathDelete, status);
+    #endif
     pd->file->rename(m_filePath, filePathDelete);
   }
   snprintf(m_filePath, 32, "player_%i.json", m_save+1);
   snprintf(filePathDelete, 32, "deleted_player_%i.json", m_save+1);
+  int status = pd->file->unlink(filePathDelete, 0);
+  #ifdef DEV
+  pd->system->logToConsole("DELETE unlink previous player save %s, status %i", filePathDelete, status);
+  #endif
   pd->file->rename(m_filePath, filePathDelete);
 
   // Finished
@@ -368,6 +377,13 @@ bool doSave(bool _synchronous) {
     updateSales();
 
     snprintf(m_filePath, 32, "TMP_player_%i.json", m_save+1);
+
+    // This file should not already exist, double check
+    int status = pd->file->unlink(m_filePath, 0);
+    #ifdef DEV
+    pd->system->logToConsole("SAVE: unlink previous TMP_player %s, status %i (expect this to fail)", m_filePath, status);
+    #endif
+
     if (m_file) pd->system->error("SAVE ERROR: tmp player error: overwriting exiting file ptr");
     m_file = pd->file->open(m_filePath, kFileWrite);
     if (!m_file) pd->system->error("SAVE ERROR: tmp player error: %s", pd->file->geterr());
@@ -387,6 +403,13 @@ bool doSave(bool _synchronous) {
   } else if (m_actionProgress == 2) {
 
     snprintf(m_filePath, 32, "TMP_world_%i_%i.json", m_save+1, m_slot+1);
+
+    // This file should not already exist, double check
+    int status = pd->file->unlink(m_filePath, 0);
+    #ifdef DEV
+    pd->system->logToConsole("SAVE: unlink previous TMP_world %s, status %i (expect this to fail)", m_filePath, status);
+    #endif
+
     if (m_file) pd->system->error("SAVE ERROR: tmp world error: overwriting exiting file ptr");
     m_file = pd->file->open(m_filePath, kFileWrite);
     if (!m_file) pd->system->error("SAVE ERROR: tmp world error: %s", pd->file->geterr());
@@ -420,7 +443,9 @@ bool doSave(bool _synchronous) {
     if (!(m_doFirst == kDoResetPlayer || m_andThen == kDoResetPlayer)) {
       snprintf(m_filePath, 32, "player_%i.json", m_save+1);
       snprintf(filePathBackup, 32, "backup_player_%i.json", m_save+1);
+      status = pd->file->unlink(filePathBackup, 0);
       #ifdef DEV
+      pd->system->logToConsole("SAVE: unlink previous player backup %s, status %i", filePathBackup, status);
       pd->system->logToConsole("SAVE: Backup: %s -> %s", m_filePath, filePathBackup);
       #endif
       status = pd->file->rename(m_filePath, filePathBackup);
@@ -431,7 +456,9 @@ bool doSave(bool _synchronous) {
     if (!(m_doFirst == kDoNewWorld || m_andThen == kDoNewWorld)) {
       snprintf(m_filePath, 32, "world_%i_%i.json", m_save+1, m_slot+1);
       snprintf(filePathBackup, 32, "backup_world_%i_%i.json", m_save+1, m_slot+1);
+      status = pd->file->unlink(filePathBackup, 0);
       #ifdef DEV
+      pd->system->logToConsole("SAVE: unlink previous world backup %s, status %i", filePathBackup, status);
       pd->system->logToConsole("SAVE: Backup: %s -> %s", m_filePath, filePathBackup);
       #endif
       status = pd->file->rename(m_filePath, filePathBackup);
@@ -443,21 +470,23 @@ bool doSave(bool _synchronous) {
       char filePathFinal[32];
       snprintf(m_filePath, 32, "TMP_player_%i.json", m_save+1);
       snprintf(filePathFinal, 32, "player_%i.json", m_save+1);
+      status = pd->file->unlink(filePathFinal, 0);
+      #ifdef DEV
+      pd->system->logToConsole("SAVE: unlink previous player %s, status %i (expect this to fail)", filePathFinal, status);
+      pd->system->logToConsole("SAVE: Finalise: %s -> %s", m_filePath, filePathFinal);
+      #endif
       status = pd->file->rename(m_filePath, filePathFinal);
       if (status) pd->system->error("SAVE ERROR: mv player file->rename status code: %i", status);
 
-      #ifdef DEV
-      pd->system->logToConsole("SAVE: Finalise: %s -> %s", m_filePath, filePathFinal);
-      #endif
-
       snprintf(m_filePath, 32, "TMP_world_%i_%i.json", m_save+1, m_slot+1);
       snprintf(filePathFinal, 32, "world_%i_%i.json", m_save+1, m_slot+1);
-      status = pd->file->rename(m_filePath, filePathFinal);
-      if (status) pd->system->error("SAVE ERROR: mv world file->rename status code: %i", status);
-
+      status = pd->file->unlink(filePathFinal, 0);
       #ifdef DEV
+      pd->system->logToConsole("SAVE: unlink previous world %s, status %i (expect this to fail)", filePathFinal, status);
       pd->system->logToConsole("SAVE: Finalise: %s -> %s", m_filePath, filePathFinal);
       #endif
+      status = pd->file->rename(m_filePath, filePathFinal);
+      if (status) pd->system->error("SAVE ERROR: mv world file->rename status code: %i", status);
     }
 
     #ifdef DEV
