@@ -302,7 +302,7 @@ void doSettings() {
 #define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_START 0
 #define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_STOP 12
 #define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_START 48
-#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_STOP 53
+#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_STOP 55
 
 void redrawAllSettingsMenuLines() {
   for (int32_t i = MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_START; i < MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_STOP; ++i) {
@@ -442,7 +442,7 @@ const char* getLine(int32_t _line) {
     case 50: return "Most Money Held:";
     case 51: return "Total Cargo Sold:";
     case 52: return "Total Cargo Imported:";
-    case 53: return "Total Building in this Plot:";
+    case 53: return "Total Buildings in this Plot:";
     case 54: return "Total Cargo in this Plot:";
     //
     case 55: return " ";
@@ -458,7 +458,7 @@ const char* getLine(int32_t _line) {
     //
     case 64: return " ";
     case 65: return "Keep on Maximizing Profits,";
-    case 66: return "maximizing Efficiency.";
+    case 66: return "Maximizing Efficiency.";
     // can currently go to 120
   }
   return "???";

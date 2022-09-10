@@ -199,7 +199,7 @@ void doPlace() {
     modOwned(selectedCat, selectedID, /*add=*/ false);
     const enum kUITutorialStage tut = getTutorialStage(); 
     // Tutorial
-    if (tut == kTutPlantCarrots && selectedCat == kUICatPlant && selectedID == kCarrotPlant) {
+    if (tut <= kTutPlantCarrots && selectedCat == kUICatPlant && selectedID == kCarrotPlant) {
       makeTutorialProgress();
     }
     // Tutorial

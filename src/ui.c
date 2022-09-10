@@ -362,21 +362,28 @@ void updateUI(int _fc) {
     UIDirtyBottom();
     UIDirtyRight();
 
-    // Tutorial
-    if (getTutorialStage() == kTutBuildConveyor && m_mode == kWanderMode && getTutorialProgress()) {
-      nextTutorialStage();
-    }
-    // Tutorial
-    if (getTutorialStage() == kTutBuildVitamin && m_mode == kWanderMode && getTutorialProgress()) {
-      nextTutorialStage();
-    }
-    // Tutorial
-    if (getTutorialStage() == kTutExports && m_mode == kWanderMode && hasExported()) {
-      nextTutorialStage();
-    }
-    // Tutorial
-    if (getTutorialStage() == kTutImports && m_mode == kWanderMode && hasImported()) {
-      nextTutorialStage();
+    const enum kUITutorialStage ts = getTutorialStage();
+    if (ts < TUTORIAL_DISABLED) {
+      // Tutorial
+      if (ts == kTutPlantCarrots && m_mode == kWanderMode && getTutorialProgress() >= 10) {
+        nextTutorialStage();
+      }
+      // Tutorial
+      if (ts == kTutBuildConveyor && m_mode == kWanderMode && getTutorialProgress()) {
+        nextTutorialStage();
+      }
+      // Tutorial
+      if (ts == kTutBuildVitamin && m_mode == kWanderMode && getTutorialProgress()) {
+        nextTutorialStage();
+      }
+      // Tutorial
+      if (ts == kTutExports && m_mode == kWanderMode && hasExported()) {
+        nextTutorialStage();
+      }
+      // Tutorial
+      if (ts == kTutImports && m_mode == kWanderMode && hasImported()) {
+        nextTutorialStage();
+      }
     }
     // Unlock new worlds
     if (getImportBox()->m_dir != SN && m_mode == kWanderMode && getPlayer()->m_buildingsUnlockedTo >= getCactusUnlock()) {

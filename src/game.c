@@ -472,9 +472,9 @@ void initGame() {
   WDesc[kClayWorld].price = FDesc[kRaveJuiceFac].price * 8;
   WDesc[kLoamWoarld].price = FDesc[kDessertFac].price * 9;
   WDesc[kWaterWorld].unlock = kPartyPack;
-  WDesc[kWaterWorld].price = 500; // This is now number of items
+  WDesc[kWaterWorld].price = 200; // This is now number of items
   WDesc[kTranquilWorld].unlock = kMiraclePowder;
-  WDesc[kTranquilWorld].price = 1000; // This is now number of items
+  WDesc[kTranquilWorld].price = 400; // This is now number of items
 
   // Perform runtime sanity check.
   for (int32_t i = 0; i < kNFactorySubTypes; ++i) {

@@ -114,7 +114,9 @@ void startPlotsTutorial() {
 }
 
 void nextTutorialStage() {
-  m_player.m_tutorialProgress = 0;
+  if (m_player.m_enableTutorial != kTutSeeObjective) { // We let progress on this one task carry forward
+    m_player.m_tutorialProgress = 0;
+  }
   ++m_player.m_enableTutorial;
   int32_t toGive = 0;
   if (m_player.m_enableTutorial == kTutBreakOne || m_player.m_enableTutorial == kTutBreakTwo) {

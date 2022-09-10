@@ -727,6 +727,11 @@ void doRiverCrossings() {
     for (uint16_t x = 0; x < TOT_TILES_X; ++x) {
       struct Tile_t* tile = getTile(x, y);
       if (!isRiverTile(tile->m_tile)) continue;
+      // Only applying this to very specific tiles: the 4 corner tiles must be clear
+      if (isWaterTile(x+1, y+1)) continue;
+      if (isWaterTile(x+1, y-1)) continue;
+      if (isWaterTile(x-1, y+1)) continue;
+      if (isWaterTile(x-1, y-1)) continue;      
       const bool N = isRiverTile(getTile(x, y-1)->m_tile);
       const bool E = isRiverTile(getTile(x+1, y)->m_tile);
       const bool S = isRiverTile(getTile(x, y+1)->m_tile);

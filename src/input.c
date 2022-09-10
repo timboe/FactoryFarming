@@ -343,9 +343,9 @@ void clickHandleBuilding(uint32_t _buttonPressed) {
     setGameMode(kWanderMode);
     updateBlueprint();
     // Tutorial
-    if (getTutorialStage() == kTutPlantCarrots && getTutorialProgress() >= 10) {
-      nextTutorialStage();
-    }
+    //if (getTutorialStage() == kTutPlantCarrots && getTutorialProgress() >= 10) {
+    //  nextTutorialStage();
+    //}
     // Tutorial
     if (getTutorialStage() == kTutBuildHarvester && getTutorialProgress()) {
       nextTutorialStage();
@@ -367,9 +367,9 @@ if (characterMoveInput(_buttonPressed)) {
     setGameMode(kWanderMode);
     updateBlueprint();
     // Tutorial
-    if (getTutorialStage() == kTutPlantCarrots && getTutorialProgress() >= 10) {
-      nextTutorialStage();
-    }
+    //if (getTutorialStage() == kTutPlantCarrots && getTutorialProgress() >= 10) {
+    //  nextTutorialStage();
+    //}
   }
 }
 

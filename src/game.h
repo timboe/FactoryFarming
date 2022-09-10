@@ -2,9 +2,9 @@
 
 #define DEV
 
-#define SLOW_LOAD
+//#define SLOW_LOAD
 
-#define FAST_PROGRESS
+//#define FAST_PROGRESS
 
 //#define DEMO
 
