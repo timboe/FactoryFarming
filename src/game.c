@@ -220,7 +220,7 @@ int gameLoop(void* _data) {
   if (gm == kWanderMode && p->m_enableAutosave) {
     if (++m_autoSaveTimer > 600*TICK_FREQUENCY) {
       m_autoSaveTimer = 0;
-      doIO(kDoSave, /*and then*/ kDoNothing);
+      doIO(kDoSave, /*and then*/ kDoNothing, /*and finally*/ kDoNothing);
     }
   }
 
@@ -233,7 +233,7 @@ void menuOptionsCallbackDelete(void* _save) {
   pd->system->logToConsole("menuOptionsCallbackDelete %i", save);
   #endif
   setSave(save);
-  doIO(kDoSaveDelete, /*and then*/ kDoScanSlots);
+  doIO(kDoSaveDelete, /*and then*/ kDoScanSlots, /*and finally*/ kDoNothing);
 }
 
 void menuOptionsCallbackLoad(void* blank) {
@@ -241,14 +241,14 @@ void menuOptionsCallbackLoad(void* blank) {
   pd->system->logToConsole("menuOptionsCallbackLoad");
   #endif
   setForceSlot(-1); // -1 loads from the slot stored in the player's save file
-  doIO(kDoLoad, /*and then*/ kDoNothing);
+  doIO(kDoLoad, /*and then*/ kDoNothing, /*and finally*/ kDoNothing);
 }
 
 void menuOptionsCallbackSave(void* blank) {
   #ifdef DEV
   pd->system->logToConsole("menuOptionsCallbackSave");
   #endif
-  doIO(kDoSave, /*and then*/ kDoNothing);
+  doIO(kDoSave, /*and then*/ kDoNothing, /*and finally*/ kDoNothing);
 }
 
 void menuOptionsCallbackMenu(void* blank) {

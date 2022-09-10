@@ -281,8 +281,8 @@ void doSettings() {
     case 9: p->m_enablePickupOnDestroy = !p->m_enablePickupOnDestroy; break;
     case 10: p->m_autoUseConveyorBooster = !p->m_autoUseConveyorBooster; break;
     case 11: p->m_enableDebug = !p->m_enableDebug;; break;
-    case 13: doIO(kDoSave, /*and then*/ kDoTitle); break;
-    case 14: doIO(kDoTitle, /*and then*/ kDoNothing); break;
+    case 13: doIO(kDoSave, /*and then*/ kDoTitle, /*and finally*/ kDoNothing); break;
+    case 14: doIO(kDoTitle, /*and then*/ kDoNothing, /*and finally*/ kDoNothing); break;
     //
     case 21: cheatMoney(); break;
     case 22: cheatUnlock(); break;

@@ -62,6 +62,8 @@ struct Tile_t* getTile_fromLocation(struct Location_t* _loc);
 
 void setTile(uint16_t _i, uint8_t _tileValue);
 
+void setTile_ptr(struct Tile_t* _tile, uint8_t _tileValue);
+
 void renderChunkBackgroundImage(struct Chunk_t* _chunk);
 
 void renderChunkBackgroundImageAround(struct Chunk_t* _chunk);

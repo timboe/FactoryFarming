@@ -21,7 +21,7 @@ bool hasWorld(uint8_t _slot);
 
 void hardReset(void);
 
-void doIO(enum kSaveLoadRequest _first, enum kSaveLoadRequest _andThen);
+void doIO(enum kSaveLoadRequest _first, enum kSaveLoadRequest _andThen, enum kSaveLoadRequest _andFinally);
 
 enum kSaveLoadRequest currentIOAction(void);
 

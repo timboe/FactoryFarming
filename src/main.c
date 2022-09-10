@@ -36,7 +36,7 @@ static void init(void) {
     scanSlots();
   }
 
-  doIO(kDoTitle, /*and then*/ kDoNothing);
+  doIO(kDoTitle, /*and then*/ kDoNothing, /*and finally*/ kDoNothing);
 }
 
 static void deinit(void) {

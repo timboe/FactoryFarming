@@ -29,8 +29,17 @@ struct Tile_t* m_tiles = NULL;
 
 const int32_t SIZE_GENERATE = TOT_TILES * sizeof(struct Tile_t);
 
-#define SEASTART (TILES_PER_CHUNK_Y*2)
-#define SEAEND (TILES_PER_CHUNK_Y*5)
+
+#define SPAWN_START_X ((TOT_TILES_X/2) + 6)
+#define SPAWN_Y ((TOT_TILES_Y/2) + TILES_PER_CHUNK_Y)
+#define SPAWN_END_X ((TOT_TILES_X/2) + 42)
+#define SPAWN_RADIUS 4
+
+#define SPECIAL_STARTX ((TOT_TILES_X/2) + (TILES_PER_CHUNK_X/2))
+#define SPECIAL_STARTY ((TOT_TILES_Y/2) + TILES_PER_CHUNK_Y)
+
+#define SEASTART (SPAWN_Y + SPAWN_RADIUS + 2)
+#define SEAEND (SEASTART + (TILES_PER_CHUNK_Y*3))
  
 void generateSpriteSetup(struct Chunk_t* _chunk);
 
@@ -60,8 +69,11 @@ void addBiome(uint8_t _size, int32_t _offX, int32_t _offY, uint16_t _imgStart);
 
 void doSea(void);
 
+void  doRiverCrossings(void);
 
 enum kGroundType getGroundType(uint8_t _tile); // Make this private as faster to use the cached version
+
+bool isRiverTile(const uint8_t tValue);
 
 /// ///
 
@@ -280,9 +292,9 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
       if (building->m_subType.plant == kSeaweedPlant || building->m_subType.plant == kSeaCucumberPlant) {
         // noop
       } else if (building->m_mode.mode16 >= 2 * N_CROPS_BEFORE_FARMLAND) { // Draw farm land
-        pd->graphics->drawBitmap(getSprite16(7,12,1), building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
+        pd->graphics->drawBitmap(getSprite16(13,17,1), building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
       } else if (building->m_mode.mode16 >= N_CROPS_BEFORE_FARMLAND) { // Draw farm land
-        pd->graphics->drawBitmap(getSprite16(6,12,1), building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
+        pd->graphics->drawBitmap(getSprite16(12,17,1), building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
       } 
     }
   }
@@ -377,13 +389,6 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
 
 }
 
-#define SPAWN_START_X ((TOT_TILES_X/2) + 6)
-#define SPAWN_Y ((TOT_TILES_Y/2) + TILES_PER_CHUNK_Y)
-#define SPAWN_END_X ((TOT_TILES_X/2) + 42)
-#define SPAWN_RADIUS 4
-
-#define SPECIAL_STARTX ((TOT_TILES_X/2) + (TILES_PER_CHUNK_X/2))
-#define SPECIAL_STARTY ((TOT_TILES_Y/2) + TILES_PER_CHUNK_Y)
 
 void addSpawn() {
   for (int32_t x = 0; x < SPAWN_END_X+SPAWN_RADIUS; ++x) {
@@ -430,13 +435,18 @@ bool isGroundTypeTile(int32_t _x, int32_t _y, enum kGroundType _ground) {
 }
 
 bool isWaterTile(int32_t _x, int32_t _y) {
-  const uint16_t tValue = getTile(_x, _y)->m_tile;
+  const uint8_t tValue = getTile(_x, _y)->m_tile;
   if (tValue < TOT_FLOOR_TILES_INC_PAVED) return false;
-  if (tValue >= SPRITE16_ID(0, 5)  && tValue < SPRITE16_ID(0, 7)) return true;
+  if (tValue >= SPRITE16_ID(0, 5)  && tValue < SPRITE16_ID(0, 7)) return true; // Lake / Ocean
+  return isRiverTile(tValue);
+}
+
+bool isRiverTile(const uint8_t tValue) {
   if (tValue >= SPRITE16_ID(4, 11) && tValue < SPRITE16_ID(8, 11)) return true;
-  if (tValue >= SPRITE16_ID(4, 12) && tValue < SPRITE16_ID(6, 12)) return true;
+  if (tValue >= SPRITE16_ID(4, 12) && tValue < SPRITE16_ID(8, 12)) return true;
   if (tValue >= SPRITE16_ID(4, 13) && tValue < SPRITE16_ID(8, 13)) return true;
   if (tValue >= SPRITE16_ID(4, 14) && tValue < SPRITE16_ID(8, 14)) return true;
+  if (tValue >= SPRITE16_ID(4, 15) && tValue < SPRITE16_ID(8, 15)) return true;
   return false;
 }
 
@@ -498,7 +508,7 @@ enum kGroundType getGroundType(uint8_t _tile) {
   } else if (_tile < 192) {
     if (getSlot() == kWaterWorld) return kOcean;
     return kLake;
-  } else if (_tile < 232) {
+  } else if (_tile < 240) {
     return kRiver;
   } else {
     return kNGroundTypes;
@@ -712,6 +722,24 @@ bool addRiver(int32_t _startX, int32_t _startY, enum kDir _dir, int32_t _lakePro
 
 }
 
+void doRiverCrossings() {
+  for (uint16_t y = 0; y < TOT_TILES_Y; ++y) {
+    for (uint16_t x = 0; x < TOT_TILES_X; ++x) {
+      struct Tile_t* tile = getTile(x, y);
+      if (!isRiverTile(tile->m_tile)) continue;
+      const bool N = isRiverTile(getTile(x, y-1)->m_tile);
+      const bool E = isRiverTile(getTile(x+1, y)->m_tile);
+      const bool S = isRiverTile(getTile(x, y+1)->m_tile);
+      const bool W = isRiverTile(getTile(x-1, y)->m_tile);
+      if (N && E && S && W) setTile_ptr(tile, SPRITE16_ID(6, 12));
+      else if (W && N && E) setTile_ptr(tile, SPRITE16_ID(4, 15));
+      else if (N && E && S) setTile_ptr(tile, SPRITE16_ID(5, 15));
+      else if (E && S && W) setTile_ptr(tile, SPRITE16_ID(6, 15));
+      else if (S && W && N) setTile_ptr(tile, SPRITE16_ID(7, 15));
+    }
+  }
+}
+
 bool addLake(int32_t _startX, int32_t _startY, int32_t _riverProb) {
   uint8_t w = rand() % (LAKE_MAX - LAKE_MIN) + LAKE_MIN; 
   uint8_t h = rand() % (LAKE_MAX - LAKE_MIN) + LAKE_MIN; 
@@ -823,6 +851,7 @@ void doSea() {
       setTile( getTile_idx(x, y), SPRITE16_ID(4 + rand() % 4, 6) );
     }
   }
+  doRiverCrossings();
 }
 
 void doLakesAndRivers(uint8_t _slot) {
@@ -831,14 +860,14 @@ void doLakesAndRivers(uint8_t _slot) {
   //if (rand() % 2 == 0) addToRegion[rand() % 7] = 0;
   //if (rand() % 4 == 0) addToRegion[rand() % 7] = 0;
 
-  uint8_t lakesToTry = 5;
+  uint8_t lakesToTry = 6;
   if (_slot == kPeatWorld) {
     lakesToTry = 32;
   } 
 
   for (uint8_t i = 0; i < lakesToTry; ++i) {
     //if (!addToRegion[i]) continue;
-    for (int32_t try = 0; try < 5; ++try) {
+    for (int32_t try = 0; try < 8; ++try) {
       int32_t x = rand() % (TOT_TILES_X/2);
       int32_t y = rand() % (TOT_TILES_Y/2);
       switch (i) {
@@ -871,7 +900,7 @@ void doLakesAndRivers(uint8_t _slot) {
     }
   }
   pd->system->realloc(backup, 0); // Free
-  
+  doRiverCrossings();
 }
 
 void generateSpriteSetup(struct Chunk_t* _chunk) {
@@ -954,8 +983,12 @@ void addObstacles() {
 }
 
 void setTile(uint16_t _i, uint8_t _tileValue) {
-  m_tiles[_i].m_tile = _tileValue;
-  m_tiles[_i].m_groundType = getGroundType(_tileValue);
+  setTile_ptr(&m_tiles[_i], _tileValue);
+}
+
+void setTile_ptr(struct Tile_t* _tile, uint8_t _tileValue) {
+  _tile->m_tile = _tileValue;
+  _tile->m_groundType = getGroundType(_tileValue);
 }
 
 void generate(uint32_t _actionProgress) {

@@ -230,10 +230,10 @@ void clickHandleTitles(uint32_t _buttonPressed) {
     setSave(getTitleCursorSelected());
     if (hasSaveData(getTitleCursorSelected())) {
       setForceSlot(-1); // -1 loads from the slot stored in the player's save file
-      doIO(kDoLoad, /*and then*/ kDoNothing);
+      doIO(kDoLoad, /*and then*/ kDoNothing, /*and finally*/ kDoNothing);
     } else {
       setForceSlot(0); // This will be the ID of the world we generate
-      doIO(kDoResetPlayer, /*and then*/ kDoNewWorld);
+      doIO(kDoResetPlayer, /*and then*/ kDoNewWorld, /*and finally*/ kDoSave);
     }
   } else if (kButtonB == _buttonPressed) {
     sfx(kSfxNo);

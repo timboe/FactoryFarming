@@ -133,13 +133,13 @@ void warpUpdateFn() {
     v = 0.0f;
     x = 0.0f;
     if (gm == kTruckModeNew) {
-      doIO(kDoSave, /*and then*/ kDoNewWorld);
+      doIO(kDoSave, /*and then*/ kDoNewWorld, /*and finally*/ kDoSave);
       // Tutorial
       if (getTutorialStage() == kTutNewPlots) {
         nextTutorialStage();
       }
     } else if (gm == kTruckModeLoad) {
-      doIO(kDoSave, /*and then*/ kDoLoad);
+      doIO(kDoSave, /*and then*/ kDoLoad, /*and finally*/ kDoNothing);
     }
   }
 }

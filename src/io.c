@@ -24,9 +24,9 @@ bool m_worldExists[N_SAVES][WORLD_SAVE_SLOTS] = {false};
 
 bool m_foundSaveData[N_SAVES] = {false};
 
-enum kSaveLoadRequest m_doFirst = kDoNothing, m_andThen = kDoNothing;
+enum kSaveLoadRequest m_doFirst = kDoNothing, m_andThen = kDoNothing, m_andFinally = kDoNothing;
 
-bool m_secondStage = false;
+int8_t m_ioStage = 0;
 
 int8_t m_forceSlot = -1;
 
@@ -72,10 +72,11 @@ json_decoder m_jd = {
 
 /// ///
 
-void doIO(enum kSaveLoadRequest _first, enum kSaveLoadRequest _andThen) {
+void doIO(enum kSaveLoadRequest _first, enum kSaveLoadRequest _andThen, enum kSaveLoadRequest _andFinally) {
   m_doFirst = _first;
   m_andThen = _andThen;
-  m_secondStage = false;
+  m_andFinally = _andFinally;
+  m_ioStage = 0;
   m_actionProgress = 0;
   pauseMusic();
   #ifdef DEV
@@ -88,7 +89,13 @@ bool IOOperationInProgress() {
 }
 
 enum kSaveLoadRequest currentIOAction() {
-  return (m_secondStage ? m_andThen : m_doFirst);
+  switch (m_ioStage) {
+    case 0: return m_doFirst;
+    case 1: return m_andThen;
+    case 2: return m_andFinally;
+    default: return kDoNothing;
+  }
+  return kDoNothing;
 }
 
 void enactIO() {
@@ -106,21 +113,28 @@ void enactIO() {
   }
 
   if (finished) {
-    if (!m_secondStage) {
+    if (m_ioStage == 0) {
       #ifdef DEV
       pd->system->logToConsole("IO: Stage 1 Finished");
       #endif
-      m_secondStage = true;
+      ++m_ioStage;
+      m_actionProgress = 0;
+    } else if (m_ioStage == 1) {
+      #ifdef DEV
+      pd->system->logToConsole("IO: Stage 2 Finished");
+      #endif
+      ++m_ioStage;
       m_actionProgress = 0;
     } else {
       // Specials...
       #ifdef DEV
-      pd->system->logToConsole("IO: Stage 2 Finished");
+      pd->system->logToConsole("IO: Stage 3 Finished");
       #endif
-      m_secondStage = false;
+      m_ioStage = 0;
       m_actionProgress = 0;
       m_doFirst = kDoNothing;
       m_andThen = kDoNothing;
+      m_andFinally = kDoNothing;
       m_forceSlot = -1;
       updateRenderList();
       resumeMusic();
@@ -146,7 +160,7 @@ void doWrite(void* _userdata, const char* _str, int _len) {
 
 void decodeError(json_decoder* jd, const char* _error, int _linenum) {
   pd->system->logToConsole("decode error line %i: %s", _linenum, _error);
-  doIO(kDoTitle, /*and then*/ kDoNothing);
+  doIO(kDoTitle, /*and then*/ kDoNothing, /*and finally*/ kDoNothing);
 }
 
 void setSlot(uint8_t _slot) { m_slot = _slot; }
@@ -212,9 +226,7 @@ bool doNewWorld() {
     setPlotCursorToWorld(getSlot());
 
     // Finished
-    // Need to save now, so issue another doIO command from here (TODO, make the IO procedure allow up to three things to be chained instead?)
-    doIO(kDoSave, kDoNothing);
-    return false; // Hence then have to return false otherwise we'd complete the current doIO...
+    return true;
   }
 
   ++m_actionProgress;
@@ -402,25 +414,28 @@ bool doSave(bool _synchronous) {
     m_file = NULL;
 
     // Create backup
-    {
-      char filePathBackupP[32] = {0};
+    char filePathBackup[32] = {0};
+
+    // We can only backup the player if we are not resetting them (new game)
+    if (!(m_doFirst == kDoResetPlayer || m_andThen == kDoResetPlayer)) {
       snprintf(m_filePath, 32, "player_%i.json", m_save+1);
-      snprintf(filePathBackupP, 32, "backup_player_%i.json", m_save+1);
+      snprintf(filePathBackup, 32, "backup_player_%i.json", m_save+1);
       #ifdef DEV
-      pd->system->logToConsole("SAVE: Backup: %s -> %s", m_filePath, filePathBackupP);
+      pd->system->logToConsole("SAVE: Backup: %s -> %s", m_filePath, filePathBackup);
       #endif
-      status = pd->file->rename(m_filePath, filePathBackupP);
+      status = pd->file->rename(m_filePath, filePathBackup);
       if (status) pd->system->error("SAVE ERROR: backup player file->rename status code: %i", status);
+    }
 
-      char filePathBackupW[32] = {0};
+    // We can only backup a previous world file if we are not in worldgen mode
+    if (!(m_doFirst == kDoNewWorld || m_andThen == kDoNewWorld)) {
       snprintf(m_filePath, 32, "world_%i_%i.json", m_save+1, m_slot+1);
-      snprintf(filePathBackupW, 32, "backup_world_%i_%i.json", m_save+1, m_slot+1);
+      snprintf(filePathBackup, 32, "backup_world_%i_%i.json", m_save+1, m_slot+1);
       #ifdef DEV
-      pd->system->logToConsole("SAVE: Backup: %s -> %s", m_filePath, filePathBackupW);
+      pd->system->logToConsole("SAVE: Backup: %s -> %s", m_filePath, filePathBackup);
       #endif
-      status = pd->file->rename(m_filePath, filePathBackupW);
+      status = pd->file->rename(m_filePath, filePathBackup);
       if (status) pd->system->error("SAVE ERROR: backup world file->rename status code: %i", status);
-
     }
 
     // Finish by moving into location

@@ -337,7 +337,7 @@ void drawUIInspectPlant(struct Building_t* _building) {
   if (_building->m_progress > INT16_MAX/2) {
     snprintf(text, 128, "Cannot Grow Here"); 
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "Time Remaining: XXX"); 
+    snprintf(text, 128, " "); 
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   } else {
     snprintf(text, 128, "Grow Time: %is", growTime / TICKS_PER_SEC); 

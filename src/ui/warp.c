@@ -24,8 +24,8 @@ void doWarp() {
     bool doUnlock = false;
 
     if (WDesc[selectedID].unlock != kNoCargo) {
-      doUnlock = (getOwned(kUICatCargo, WDesc[selectedID].unlock) >= selectedPriceOrAmount);
-      if (doUnlock) {
+      doUnlock = (getOwned(kUICatCargo, WDesc[selectedID].unlock) >= selectedPriceOrAmount || getPlayer()->m_infiniteMoney);
+      if (doUnlock && !getPlayer()->m_infiniteMoney) {
         for (int32_t dummy = 0; dummy < selectedPriceOrAmount; ++dummy) {
           modOwned(kUICatCargo, WDesc[selectedID].unlock, /*add=*/false);
         }
