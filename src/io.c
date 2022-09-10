@@ -268,7 +268,8 @@ void scanSlots() {
     };
 
     pd->json->decode(&jd, (json_reader){ .read = doRead, .userdata = file }, NULL);
-    pd->file->close(file);
+    int status = pd->file->close(file);
+    if (status) pd->system->error("SCAN SLOTS ERROR: wold file->close status code: %i", status);
 
     #ifdef DEV
     pd->system->logToConsole("Scan world: Save:%i, Slot:%i, Version:%i", m_save, m_scanSlot, m_worldVersions[m_save][m_scanSlot]);
@@ -283,11 +284,14 @@ void scanSlots() {
       if (m_worldVersions[m_save][ss] == -1) {
         pd->system->error("Scan world: Unable to determine save version for save file %i", m_save);
         m_foundSaveData[m_save] = false;
+        m_worldExists[m_save][ss] = false;
       } else if (m_worldVersions[m_save][ss] != SAVE_FORMAT) {
         #ifdef DEV
-        pd->system->logToConsole("Scan world: OLD WORLD DETECTED! Version 0. ACTION: Delete everything and start again");
+        pd->system->logToConsole("Scan world: OLD WORLD DETECTED! Version %i != %i."
+          " ACTION: Delete everything and start again", m_worldVersions[m_save][ss], SAVE_FORMAT);
         #endif
         m_foundSaveData[m_save] = false;
+        m_worldExists[m_save][ss] = false;
         doSaveDelete();
       }
     }
@@ -301,6 +305,9 @@ void scanSlots() {
       #ifdef DEV
       pd->system->logToConsole("Scan world: No Player data found!");
       #endif
+    } else {
+      int status = pd->file->close(file);
+      if (status) pd->system->error("SCAN SLOTS ERROR: player file->close status code: %i", status);
     }
   }
 
@@ -344,23 +351,14 @@ bool doSave(bool _synchronous) {
 
   if (m_actionProgress == 0) {
 
-    // Create backup
-    char filePathBackup[32];
-
-    snprintf(m_filePath, 32, "player_%i.json", m_save+1);
-    snprintf(filePathBackup, 32, "backup_player_%i.json", m_save+1);
-    pd->file->rename(m_filePath, filePathBackup);
-
-    snprintf(m_filePath, 32, "world_%i_%i.json", m_save+1, m_slot+1);
-    snprintf(filePathBackup, 32, "backup_world_%i_%i.json", m_save+1, m_slot+1);
-    pd->file->rename(m_filePath, filePathBackup);
-
     // Should get the latest export averages, guaranteed to be between 60 and 120s worth of data
     updateExport();
     updateSales();
 
     snprintf(m_filePath, 32, "TMP_player_%i.json", m_save+1);
+    if (m_file) pd->system->error("SAVE ERROR: tmp player error: overwriting exiting file ptr");
     m_file = pd->file->open(m_filePath, kFileWrite);
+    if (!m_file) pd->system->error("SAVE ERROR: tmp player error: %s", pd->file->geterr());
 
     pd->json->initEncoder(&m_je, doWrite, m_file, pretty);
 
@@ -371,11 +369,15 @@ bool doSave(bool _synchronous) {
     m_je.endTable(&m_je);
 
     int status = pd->file->close(m_file);
+    if (status) pd->system->error("SAVE ERROR: tmp player file->close status code: %i", status);
+    m_file = NULL;
 
   } else if (m_actionProgress == 2) {
 
     snprintf(m_filePath, 32, "TMP_world_%i_%i.json", m_save+1, m_slot+1);
-    SDFile* file = pd->file->open(m_filePath, kFileWrite);
+    if (m_file) pd->system->error("SAVE ERROR: tmp world error: overwriting exiting file ptr");
+    m_file = pd->file->open(m_filePath, kFileWrite);
+    if (!m_file) pd->system->error("SAVE ERROR: tmp world error: %s", pd->file->geterr());
 
     pd->json->initEncoder(&m_je, doWrite, m_file, pretty);
 
@@ -396,22 +398,56 @@ bool doSave(bool _synchronous) {
     m_je.endTable(&m_je);
 
     int status = pd->file->close(m_file);
+    if (status) pd->system->error("SAVE ERROR: tmp world file->close status code: %i", status);
     m_file = NULL;
+
+    // Create backup
+    {
+      char filePathBackupP[32] = {0};
+      snprintf(m_filePath, 32, "player_%i.json", m_save+1);
+      snprintf(filePathBackupP, 32, "backup_player_%i.json", m_save+1);
+      #ifdef DEV
+      pd->system->logToConsole("SAVE: Backup: %s -> %s", m_filePath, filePathBackupP);
+      #endif
+      status = pd->file->rename(m_filePath, filePathBackupP);
+      if (status) pd->system->error("SAVE ERROR: backup player file->rename status code: %i", status);
+
+      char filePathBackupW[32] = {0};
+      snprintf(m_filePath, 32, "world_%i_%i.json", m_save+1, m_slot+1);
+      snprintf(filePathBackupW, 32, "backup_world_%i_%i.json", m_save+1, m_slot+1);
+      #ifdef DEV
+      pd->system->logToConsole("SAVE: Backup: %s -> %s", m_filePath, filePathBackupW);
+      #endif
+      status = pd->file->rename(m_filePath, filePathBackupW);
+      if (status) pd->system->error("SAVE ERROR: backup world file->rename status code: %i", status);
+
+    }
+
+    // Finish by moving into location
+    {
+      char filePathFinal[32];
+      snprintf(m_filePath, 32, "TMP_player_%i.json", m_save+1);
+      snprintf(filePathFinal, 32, "player_%i.json", m_save+1);
+      status = pd->file->rename(m_filePath, filePathFinal);
+      if (status) pd->system->error("SAVE ERROR: mv player file->rename status code: %i", status);
+
+      #ifdef DEV
+      pd->system->logToConsole("SAVE: Finalise: %s -> %s", m_filePath, filePathFinal);
+      #endif
+
+      snprintf(m_filePath, 32, "TMP_world_%i_%i.json", m_save+1, m_slot+1);
+      snprintf(filePathFinal, 32, "world_%i_%i.json", m_save+1, m_slot+1);
+      status = pd->file->rename(m_filePath, filePathFinal);
+      if (status) pd->system->error("SAVE ERROR: mv world file->rename status code: %i", status);
+
+      #ifdef DEV
+      pd->system->logToConsole("SAVE: Finalise: %s -> %s", m_filePath, filePathFinal);
+      #endif
+    }
 
     #ifdef DEV
     pd->system->logToConsole("SAVE: Saved to Save:%i, Slot %u, save status %i", m_save, m_slot, status);
     #endif
-
-    // Finish by moving into location
-    char filePathFinal[32];
-
-    snprintf(m_filePath, 32, "TMP_player_%i.json", m_save+1);
-    snprintf(filePathFinal, 32, "player_%i.json", m_save+1);
-    pd->file->rename(m_filePath, filePathFinal);
-
-    snprintf(m_filePath, 32, "TMP_world_%i_%i.json", m_save+1, m_slot+1);
-    snprintf(filePathFinal, 32, "world_%i_%i.json", m_save+1, m_slot+1);
-    pd->file->rename(m_filePath, filePathFinal);
 
   } else if (m_actionProgress == 8) {
     
@@ -445,11 +481,14 @@ bool doLoad() {
     reset(resetThePlayerToo);
 
     snprintf(m_filePath, 32, "player_%i.json", m_save+1);
+    if (m_file) pd->system->error("LOAD ERROR: read player error: overwriting exiting file ptr");
     m_file = pd->file->open(m_filePath, kFileRead|kFileReadData);
+    if (!m_file) pd->system->error("LOAD ERROR: read player error: %s", pd->file->geterr());
 
     pd->json->decode(&m_jd_p, (json_reader){ .read = doRead, .userdata = m_file }, NULL);
 
-    pd->file->close(m_file);
+    int status = pd->file->close(m_file);
+    if (status) pd->system->error("LOAD ERROR: player file->close status code: %i", status);
     m_file = NULL;
 
   } else if (m_actionProgress == 1) {
@@ -464,13 +503,16 @@ bool doLoad() {
     }
 
     snprintf(m_filePath, 32, "world_%i_%i.json", m_save+1, m_slot+1);
+    if (m_file) pd->system->error("LOAD ERROR: read world error: overwriting exiting file ptr");
     m_file = pd->file->open(m_filePath, kFileRead|kFileReadData);
+    if (!m_file) pd->system->error("LOAD ERROR: read world error: %s", pd->file->geterr());
 
     // TODO - call this many times, each time with a different WILL DECODE
     pd->json->decode(&m_jd, (json_reader){ .read = doRead, .userdata = m_file }, NULL);
 
-    pd->file->close(m_file);
-    m_file == NULL;
+    int status = pd->file->close(m_file);
+    if (status) pd->system->error("LOAD ERROR: world file->close status code: %i", status);
+    m_file = NULL;
 
   } else if (m_actionProgress == 2) {
 

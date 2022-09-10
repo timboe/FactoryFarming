@@ -269,9 +269,12 @@ void reset(bool _resetThePlayer) {
   resetLocation();
   resetChunk();
   resetWorld();
-  if (_resetThePlayer) resetPlayer();
+  if (_resetThePlayer) {
+    resetPlayer();
+    resetUI();
+  }
   forceTorus();
-  resetUI();
+  
 }
 
 void populateMenuTitle() {

@@ -241,9 +241,10 @@ void unlockOtherWorlds() {
 void setTruckPosition(int16_t _offset) {
   if (!m_warp) return;
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
-      pd->sprite->moveTo(m_warp->m_sprite[zoom], 
-          (m_warp->m_pix_x + _offset)*zoom, 
-          (m_warp->m_pix_y)*zoom);
+    if (!m_warp->m_sprite[zoom]) continue;
+    pd->sprite->moveTo(m_warp->m_sprite[zoom], 
+        (m_warp->m_pix_x + _offset)*zoom, 
+        (m_warp->m_pix_y)*zoom);
   }
 }
 
