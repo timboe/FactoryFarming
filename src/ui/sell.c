@@ -53,7 +53,9 @@ void populateInfoSell() {
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   snprintf(textA, 128, "Sell %s", toStringCargoByType(selectedID, /*plural=*/false));
   snprintf(textB, 128, "Inventory: %i", selectedOwned);
-  snprintf(textC, 128, "Value:      %i", (int)selectedPrice);
+  char textM[32] = "";
+  snprintf_c(textM, 32, selectedPrice);
+  snprintf(textC, 128, "Value:      %s", textM);
   pd->graphics->drawText(textA, 128, kASCIIEncoding, 1*TILE_PIX, +2);
   pd->graphics->drawText(textB, 128, kASCIIEncoding, 1*TILE_PIX, TILE_PIX - 2);
   pd->graphics->drawText(textC, 128, kASCIIEncoding, 9*TILE_PIX, TILE_PIX - 2);

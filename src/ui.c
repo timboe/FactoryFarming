@@ -321,6 +321,17 @@ void updateUICredits(int _fc) {
 
 void updateUITitles(int _fc) {
   pd->sprite->setDrawMode(m_UISpriteSplash, kDrawModeCopy);
+  #ifdef TITLE_LOGO_ONLY
+  const int32_t o = round( TILE_PIX/2 * fabs( sin( 0.1f * _fc ) ) );
+  pd->sprite->moveTo(m_UISpriteSplash, DEVICE_PIX_X/2, DEVICE_PIX_Y/2 - o );
+  pd->sprite->setVisible(m_UISpriteTitleSelected, 0);
+  for (int32_t i = 0; i < 3; ++i) {
+    pd->sprite->setVisible(m_UISpriteTitleNew[i], 0);
+    pd->sprite->setVisible(m_UISpriteTitleCont[i], 0);
+  }
+  return;
+  #endif
+
   pd->sprite->setVisible(m_UISpriteTitleSelected, _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
   pd->sprite->moveTo(m_UISpriteTitleSelected, 
     m_UITitleSelected*TILE_PIX*7 + (7*TILE_PIX)/2 + (m_UITitleSelected+1)*TILE_PIX, 
@@ -445,6 +456,7 @@ void updateBlueprint() {
   const uint16_t selectedID =  getUIContentID();
   uint16_t selectedRot = getCursorRotation();
   struct Location_t* pl = getPlayerLocation();
+  const uint16_t owned = getOwned(selectedCat, selectedID);
 
   // Fence are placed one tile away, dependent on rotation
   if (selectedCat == kUICatUtility && selectedID == kFence) {
@@ -492,6 +504,7 @@ void updateBlueprint() {
                          pd->sprite->setImage(bp, getSprite16_byidx( CargoDesc[selectedID].UIIcon, zoom), kBitmapUnflipped); break;
       default: break;
     }
+    canPlace &= (owned > 0);
 
     if (!canPlace && selectedCat == kUICatUtility && selectedID == kRetirement) {
       pd->sprite->setImage(bp, getRetirementNoBitmap(zoom), kBitmapUnflipped);
@@ -501,9 +514,8 @@ void updateBlueprint() {
 
   } else if (gm == kPlantMode) { // Of crops
 
-    bool canPlace;
     pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped);
-    if (canBePlacedPlant(pl, (union kSubType) {.plant = selectedID})) {
+    if (owned && canBePlacedPlant(pl, (union kSubType) {.plant = selectedID})) {
       const struct Tile_t* t = getTile_fromLocation( pl );
       const int8_t gb = getGroundBonus( PDesc[selectedID].soil, (enum kGroundType) t->m_groundType );
       const int8_t wb = getWaterBonus( PDesc[selectedID].wetness, getWetness( t->m_wetness ) );
@@ -533,6 +545,7 @@ void updateBlueprint() {
                            pd->sprite->setImage(bp, getSprite48_byidx( FDesc[selectedID].sprite + selectedRot, zoom), kBitmapUnflipped); break;
       default: break;
     }
+    canPlace &= (owned > 0);
     if (!canPlace) pd->sprite->setImage(bp, getSprite48(1, 2, zoom), kBitmapUnflipped);
 
   } else { // Clear blueprint
@@ -544,6 +557,10 @@ void updateBlueprint() {
 }
 
 void addUIToSpriteList() {
+  #ifdef TITLE_LOGO_ONLY
+  return;
+  #endif
+
   struct Player_t* p = getPlayer();
 
   if (m_mode == kMenuCredits) {
@@ -879,10 +896,10 @@ void drawUIRight() {
     char text[16] = "";
     snprintf(text, 16, "%u", (unsigned) getOwned(selectedCat, selectedID));
     uint16_t spriteID = getUIIcon(selectedCat, selectedID);
-    if ((selectedCat >= kUICatConv && selectedCat < kUICatUtility) || (selectedCat == kUICatUtility && selectedID == kBuffferBox)) {
+    if (selectedCat == kUICatConv || selectedCat == kUICatExtractor || (selectedCat == kUICatUtility && selectedID == kBuffferBox)) {
       spriteID += rotMod;
     }
-    if ((selectedCat == kUICatExtractor && EDesc[selectedID].invert) || (selectedCat == kUICatFactory && FDesc[selectedID].invert)) {
+    if (selectedCat == kUICatExtractor && EDesc[selectedID].invert) { // No Factory here as we display the end product
       pd->graphics->setDrawMode(kDrawModeInverted);
     }
     pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), DEVICE_PIX_Y/2, -1, kBitmapUnflipped);
@@ -1935,8 +1952,8 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 0: return "-- The Initial Seed Purchase --";
         case 1: return "Welcome to Factory Farming! There's money to be";
         case 2: return "made, and it won't make itself! So let's get started by";
-        case 3: return "vising The Shop with Ⓐ and buying some Carrot";
-        case 4: return "Seeds. Use Ⓑ to exit any mode or menu.";
+        case 3: return "vising The Shop with Ⓐ and buying some Carrot Seeds";
+        case 4: return "The compass (right) will always point to The Shop.";
 
         case 5: return "Move with the D-Pad, ✛. Zoom in & out with 🎣.";
         case 6: return "Hold Ⓑ to run.  Go to The Shop and press Ⓐ.";

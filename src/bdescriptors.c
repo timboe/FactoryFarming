@@ -27,7 +27,7 @@ struct ConveyorDescriptor_t CDesc[] = {
 #define PFAST 70
 #define PMED 80
 #define PSLOW 90
-#define PVSLOW 90
+#define PVSLOW 95
 struct PlantDescriptor_t PDesc[] = {
   // Carrot plant will be given price=0 later, but it needs an otherwise sensible starting price here
   {.subType = kCarrotPlant, .unlock = 1, .price = 0, .multi = 1.0f, .sprite = SID(10, 8), .time = PMED, .wetness = kMoist, .soil = kSiltyGround, .out = kCarrot},

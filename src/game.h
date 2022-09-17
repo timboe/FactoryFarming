@@ -8,6 +8,8 @@
 
 //#define DEMO
 
+//#define TITLE_LOGO_ONLY
+
 #define PRETEND_ZOOMED_IN false
 
 #include <stdio.h>

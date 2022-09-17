@@ -9,16 +9,16 @@
 
 struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kNoCargo, .price = 0, .multi = 0.0f, .UIIcon = SID(0,0)},
-  {.subType = kCarrot, .price = 1, .multi = 1.0f, .UIIcon = SID(10,7)}, // Set by hand
-  {.subType = kChalk, .price = 1, .multi = 1.0f, .UIIcon = SID(13,7)}, // Set by hand
-  {.subType = kVitamin, .price = 8, .multi = 4.0f, .UIIcon = SID(12,8)}, // Set by hand
+  {.subType = kCarrot, .price = 0, .multi = 1.0f, .UIIcon = SID(10,7)}, // Set by hand
+  {.subType = kChalk, .price = 0, .multi = 1.0f, .UIIcon = SID(13,7)}, // Set by hand
+  {.subType = kVitamin, .price = 0, .multi = 4.0f, .UIIcon = SID(12,8)}, // Set by hand
   {.subType = kSunflower, .price = 0, .multi = 2.0f, .UIIcon = SID(15,7)}, // CROP
   {.subType = kPotato, .price = 0, .multi = 2.0f, .UIIcon = SID(14,7)}, // CROP
   {.subType = kOil, .price = 0, .multi = 2.0f, .UIIcon = SID(12,7)},
-  {.subType = kSalt, .price = 1, .multi = 2.0f, .UIIcon = SID(13,8)}, // Set by hand
+  {.subType = kSalt, .price = 0, .multi = 2.0f, .UIIcon = SID(13,8)}, // Set by hand
   {.subType = kCrisps, .price = 0, .multi = 2.0f, .UIIcon = SID(0,21)},
   {.subType = kApple, .price = 0, .multi = 2.0f, .UIIcon = SID(8,7)}, // CROP
-  {.subType = kWaterBarrel, .price = 1, .multi = 0.0f, .UIIcon = SID(0,24)}, // Set by hand
+  {.subType = kWaterBarrel, .price = 0, .multi = 1.0f, .UIIcon = SID(0,24)}, // Set by hand
   {.subType = kEthanol, .price = 0, .multi = 2.0f, .UIIcon = SID(6,23)},
   {.subType = kHardCider, .price = 0, .multi = 2.0f, .UIIcon = SID(14,5)},
   {.subType = kCorn, .price = 0, .multi = 1.5f, .UIIcon = SID(2,22)}, // CROP
@@ -56,7 +56,7 @@ struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kTVDinner, .price = 0, .multi = 2.0f, .UIIcon = SID(9,6)},
   {.subType = kCake, .price = 0, .multi = 2.0f, .UIIcon = SID(2,25)},
   {.subType = kCoffeeBean, .price = 0, .multi = 3.0f, .UIIcon = SID(11,6)}, // CROP
-  {.subType = kCO2, .price = 0, .multi = 2.0f, .UIIcon = SID(2,23)},
+  {.subType = kCO2, .price = 0, .multi = 1.0f, .UIIcon = SID(2,23)}, // Set by hand
   {.subType = kCaffeine, .price = 0, .multi = 2.0f, .UIIcon = SID(3,23)},
   {.subType = kEnergyDrink, .price = 0, .multi = 2.0f, .UIIcon = SID(13,6)},
   {.subType = kRaveJuice, .price = 0, .multi = 2.0f, .UIIcon = SID(14,6)},
@@ -105,7 +105,7 @@ const char* toStringCargoByType(enum kCargoType _type, bool _plural) {
     case kVitamin: return "Vitamins";
     case kPotato: return _plural ? "Potatoes" : "Potato";
     case kSunflower: return _plural ? "Sunflowers" : "Sunflower";
-    case kOil: return _plural ? "Vegtable Oils" : "Vegtable Oil";
+    case kOil: return _plural ? "Vegetable Oils" : "Vegetable Oil";
     case kSalt: return "Salt";
     case kCrisps: return "Chips";
     case kApple: return _plural ? "Apples" : "Apple";

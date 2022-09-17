@@ -543,6 +543,7 @@ void setDefaultPlayerSettings() {
   m_player.m_enableAutosave = 10;
   m_player.m_enablePickupOnDestroy = 1;
   m_player.m_enableScreenShake = 1;
+  m_player.m_enableExtractorOutlines = 0;
 }
 
 void initPlayer() {
@@ -595,6 +596,9 @@ void serialisePlayer(struct json_encoder* je) {
   je->writeInt(je, m_player.m_enablePickupOnDestroy);
   je->addTableMember(je, "seth", 4);
   je->writeInt(je, m_player.m_enableScreenShake);
+  je->addTableMember(je, "seto", 4);
+  je->writeInt(je, m_player.m_enableExtractorOutlines);
+
   
   je->addTableMember(je, "cargos", 6);
   je->startArray(je);
@@ -731,6 +735,8 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_player.m_enablePickupOnDestroy = json_intValue(_value); 
   } else if (strcmp(_key, "seth") == 0) {
     m_player.m_enableScreenShake = json_intValue(_value); 
+  } else if (strcmp(_key, "seto") == 0) {
+    m_player.m_enableExtractorOutlines = json_intValue(_value); 
   } else if (strcmp(_key, "seta") == 0) {
     m_player.m_enableAutosave = json_intValue(_value); 
     m_deserialiseArrayID = 0; // Note "one behind"

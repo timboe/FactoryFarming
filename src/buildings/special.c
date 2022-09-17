@@ -34,6 +34,9 @@ bool m_hasExported = false, m_hasImported = false; // tutorial only
 #define IMPORT_SECONDS 10
 #define IMPORT_SEC_IN_TICKS (IMPORT_SECONDS*TICKS_PER_SEC)
 
+#define EXTERNAL_SALES_SECONDS 2
+#define EXTERNAL_SALES_SEC_IN_TICKS (EXTERNAL_SALES_SECONDS*TICKS_PER_SEC)
+
 void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tick);
 
 void exportUpdateFn(struct Building_t* _building);
@@ -177,9 +180,9 @@ void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tick) {
 
   // Process external sales
   _building->m_progress += _tick;
-  if (_building->m_progress >= IMPORT_SEC_IN_TICKS) {
-    _building->m_progress -= IMPORT_SEC_IN_TICKS;
-    const float totInputSales = getOtherWorldCargoSales() * IMPORT_SECONDS;
+  if (_building->m_progress >= EXTERNAL_SALES_SEC_IN_TICKS) {
+    _building->m_progress -= EXTERNAL_SALES_SEC_IN_TICKS;
+    const float totInputSales = getOtherWorldCargoSales() * EXTERNAL_SALES_SECONDS;
     modMoney( totInputSales ); // Rounds down
   } 
 
