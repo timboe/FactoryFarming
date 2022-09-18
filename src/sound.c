@@ -153,7 +153,7 @@ void initSound() {
     switch (i) {
       case 0: m_hasMusic &= pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/1985"); break;
       case 1: m_hasMusic &= pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/b3"); break;
-      case 2: m_hasMusic &= pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/pumped"); break;
+      case 2: m_hasMusic &= pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/weeklybeats2014_4"); break;
       case 3: m_hasMusic &= pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/sweetSelfSatisfaction"); break;
       case 4: m_hasMusic &= pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/weAreTheResistors"); break;
       case 5: m_hasMusic &= pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/SoftAndFuriousHorizonEnding"); break;

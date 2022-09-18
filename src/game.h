@@ -2,11 +2,13 @@
 
 #define DEV
 
-#define SLOW_LOAD
+//#define SLOW_LOAD
 
-#define FAST_PROGRESS
+//#define FAST_PROGRESS
 
 //#define DEMO
+
+//#define TITLE_LOGO_ONLY
 
 #define PRETEND_ZOOMED_IN false
 

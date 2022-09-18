@@ -114,7 +114,9 @@ void startPlotsTutorial() {
 }
 
 void nextTutorialStage() {
-  m_player.m_tutorialProgress = 0;
+  if (m_player.m_enableTutorial != kTutSeeObjective) { // We let progress on this one task carry forward
+    m_player.m_tutorialProgress = 0;
+  }
   ++m_player.m_enableTutorial;
   int32_t toGive = 0;
   if (m_player.m_enableTutorial == kTutBreakOne || m_player.m_enableTutorial == kTutBreakTwo) {
@@ -196,7 +198,7 @@ void updatePlayerPosition() {
   //pd->system->logToConsole("P@ %f %f", m_player.m_pix_x , m_player.m_pix_y);
 }
 
-bool movePlayer() {
+bool movePlayer(bool _forceUpdate) {
 
   uint8_t zoom = getZoom();
 
@@ -271,7 +273,7 @@ bool movePlayer() {
   goalX += m_player.m_vX;
   goalY += m_player.m_vY; 
 
-  if (moving) {
+  if (moving || _forceUpdate) {
     if (++m_stepCounter * acc > PLAYER_ANIM_DELAY || m_facing != m_wasFacing || m_inWater != m_wasInWater) {
       m_animFrame = (m_animFrame + 1) % PLAYER_ANIM_FRAMES;
       m_stepCounter = 0;
@@ -337,7 +339,7 @@ bool movePlayer() {
   struct Location_t* wasAt = m_currentLocation;
   m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
 
-  if (wasAt != m_currentLocation) {
+  if (wasAt != m_currentLocation || _forceUpdate) {
     int32_t bpX = (TILE_PIX*m_currentLocation->m_x + TILE_PIX/2.0) * zoom, bpY = (TILE_PIX*m_currentLocation->m_y  + TILE_PIX/2.0) * zoom;
     pd->sprite->moveTo(m_player.m_blueprint[zoom], bpX, bpY);
     pd->sprite->moveTo(m_player.m_blueprintRadius[zoom], bpX, bpY);
@@ -541,6 +543,7 @@ void setDefaultPlayerSettings() {
   m_player.m_enableAutosave = 10;
   m_player.m_enablePickupOnDestroy = 1;
   m_player.m_enableScreenShake = 1;
+  m_player.m_enableExtractorOutlines = 0;
 }
 
 void initPlayer() {
@@ -593,6 +596,9 @@ void serialisePlayer(struct json_encoder* je) {
   je->writeInt(je, m_player.m_enablePickupOnDestroy);
   je->addTableMember(je, "seth", 4);
   je->writeInt(je, m_player.m_enableScreenShake);
+  je->addTableMember(je, "seto", 4);
+  je->writeInt(je, m_player.m_enableExtractorOutlines);
+
   
   je->addTableMember(je, "cargos", 6);
   je->startArray(je);
@@ -729,6 +735,8 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_player.m_enablePickupOnDestroy = json_intValue(_value); 
   } else if (strcmp(_key, "seth") == 0) {
     m_player.m_enableScreenShake = json_intValue(_value); 
+  } else if (strcmp(_key, "seto") == 0) {
+    m_player.m_enableExtractorOutlines = json_intValue(_value); 
   } else if (strcmp(_key, "seta") == 0) {
     m_player.m_enableAutosave = json_intValue(_value); 
     m_deserialiseArrayID = 0; // Note "one behind"

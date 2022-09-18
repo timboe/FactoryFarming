@@ -247,6 +247,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   if (!_chunk->m_bkgImage[1]) {
     return;
   }
+  struct Player_t* p = getPlayer();
 
   pd->graphics->pushContext(_chunk->m_bkgImage[1]);
   pd->graphics->setDrawMode(kDrawModeCopy);
@@ -270,7 +271,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
     }
   }
 
-  if (getPlayer()->m_enableDebug) {
+  if (p->m_enableDebug) {
     setRoobert24();
     pd->graphics->drawRect(0, 0, CHUNK_PIX_X, CHUNK_PIX_Y, kColorBlack);
     static char text[16];
@@ -328,6 +329,17 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
         } else if (building->m_type == kExtractor) {
           pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ EDesc[building->m_subType.extractor].out ].UIIcon, 1), 
             building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
+          // Also draw factory range
+          if (p->m_enableExtractorOutlines && building->m_subType.extractor == kCropHarvesterSmall) {
+            pd->graphics->setDrawMode(kDrawModeNXOR);
+            pd->graphics->drawBitmap(p->m_blueprintRadiusBitmap7x7[/*zoom*/1], 
+              building->m_pix_x - off48_x - TILE_PIX*2, building->m_pix_y - off48_y - TILE_PIX*2, kBitmapUnflipped);
+          } else if (p->m_enableExtractorOutlines && building->m_subType.extractor == kCropHarvesterLarge) {
+            pd->graphics->setDrawMode(kDrawModeNXOR);
+            pd->graphics->drawBitmap(p->m_blueprintRadiusBitmap9x9[/*zoom*/1], 
+              building->m_pix_x - off48_x - TILE_PIX*3, building->m_pix_y - off48_y - TILE_PIX*3, kBitmapUnflipped);
+          }
+          pd->graphics->setDrawMode(kDrawModeCopy);
         }
       } else if (building->m_type == kUtility && (building->m_subType.utility == kPath || building->m_subType.utility == kFence)) {
         LCDBitmapFlip flip = kBitmapUnflipped;
@@ -373,6 +385,16 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
           const bool invert = isInvertedBuilding(building);
           pd->graphics->setDrawMode(invert ? kDrawModeInverted : kDrawModeCopy);
           pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - chunkOffX, building->m_pix_y - chunkOffY, kBitmapUnflipped);
+          pd->graphics->setDrawMode(kDrawModeCopy);
+          if (p->m_enableExtractorOutlines && building->m_type == kExtractor && building->m_subType.extractor == kCropHarvesterSmall) {
+            pd->graphics->setDrawMode(kDrawModeNXOR);
+            pd->graphics->drawBitmap(p->m_blueprintRadiusBitmap7x7[/*zoom*/1], 
+              building->m_pix_x - chunkOffX - TILE_PIX*2, building->m_pix_y - chunkOffY - TILE_PIX*2, kBitmapUnflipped);
+          } else if (p->m_enableExtractorOutlines && building->m_type == kExtractor && building->m_subType.extractor == kCropHarvesterLarge) {
+            pd->graphics->setDrawMode(kDrawModeNXOR);
+            pd->graphics->drawBitmap(p->m_blueprintRadiusBitmap9x9[/*zoom*/1], 
+              building->m_pix_x - chunkOffX - TILE_PIX*3, building->m_pix_y - chunkOffY - TILE_PIX*3, kBitmapUnflipped);
+          }
           pd->graphics->setDrawMode(kDrawModeCopy);
         }
       }
@@ -727,6 +749,11 @@ void doRiverCrossings() {
     for (uint16_t x = 0; x < TOT_TILES_X; ++x) {
       struct Tile_t* tile = getTile(x, y);
       if (!isRiverTile(tile->m_tile)) continue;
+      // Only applying this to very specific tiles: the 4 corner tiles must be clear
+      if (isWaterTile(x+1, y+1)) continue;
+      if (isWaterTile(x+1, y-1)) continue;
+      if (isWaterTile(x-1, y+1)) continue;
+      if (isWaterTile(x-1, y-1)) continue;      
       const bool N = isRiverTile(getTile(x, y-1)->m_tile);
       const bool E = isRiverTile(getTile(x+1, y)->m_tile);
       const bool S = isRiverTile(getTile(x, y+1)->m_tile);
@@ -863,6 +890,10 @@ void doLakesAndRivers(uint8_t _slot) {
   uint8_t lakesToTry = 6;
   if (_slot == kPeatWorld) {
     lakesToTry = 32;
+  } else if (_slot == kChalkWorld) {
+    lakesToTry /= 2;
+  } else if (_slot == kLoamWoarld) {
+    lakesToTry *= 2;
   } 
 
   for (uint8_t i = 0; i < lakesToTry; ++i) {

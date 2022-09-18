@@ -80,11 +80,17 @@ bool holdBRadiusInput(uint32_t _buttonPressed);
 
 bool holdBMultiplierInput(uint32_t _buttonPressed);
 
+bool holdAShortcutsInput(uint32_t _buttonPressed);
+
 void toggleZoom(void);
 
 void modRadius(bool _inc);
 
-uint8_t m_b;
+bool aPressed(void);
+
+void postChangeZoom(void);
+
+uint16_t m_b, m_a, m_blockA;
 
 /// ///
 
@@ -117,6 +123,10 @@ bool bPressed() {
   return m_b;
 }
 
+bool aPressed() {
+  return m_a;
+}
+
 void unZoom() {
   m_zoom = 1;
 }
@@ -126,6 +136,11 @@ void toggleZoom() {
   if (++m_zoom == ZOOM_LEVELS) {
     m_zoom = 1;
   }
+  postChangeZoom();
+}
+
+void postChangeZoom() {
+  movePlayer(/*forceUpdate*/ true);
   updateRenderList();
   updateBlueprint();
 }
@@ -162,6 +177,15 @@ bool holdBMultiplierInput(uint32_t _buttonPressed) {
   return true;
 }
 
+bool holdAShortcutsInput(uint32_t _buttonPressed) {
+  if (kButtonLeft == _buttonPressed) { setGameMode(kPickMode); m_blockA = 1; }
+  else if (kButtonRight == _buttonPressed) { setGameMode(kDestroyMode); m_blockA = 1; }
+  else if (kButtonUp == _buttonPressed) { setGameMode(kInspectMode); m_blockA = 1; }
+  else if (kButtonDown == _buttonPressed) toggleZoom();
+  else return false;
+  return true;
+}
+
 void gameClickConfigHandler(uint32_t _buttonPressed) {
   switch (getGameMode()) {
     case kWanderMode: return clickHandleWander(_buttonPressed);
@@ -186,8 +210,11 @@ void gameClickConfigHandler(uint32_t _buttonPressed) {
 }
 
 void clickHandleWander(uint32_t _buttonPressed) {
-  if (characterMoveInput(_buttonPressed)) { /*noop*/ }
-  else if (kButtonA == _buttonPressed) {
+  if (aPressed() && holdAShortcutsInput(_buttonPressed)) {
+    /*noop*/
+  } else if (characterMoveInput(_buttonPressed)) {
+    /*noop*/
+  } else if (kButtonA == _buttonPressed) {
     // 254: tutorial finised, 255: tutorial disabled
     const bool ic = isCamouflaged();
     if (getTutorialStage() < TUTORIAL_FINISHED && checkReturnDismissTutorialMsg()) { /*noop*/ } // NOTE: The second function call has side-effects
@@ -208,7 +235,7 @@ void clickHandleWander(uint32_t _buttonPressed) {
     } else if (!ic && distanceFromIn() < ACTIVATE_DISTANCE) {
       setGameMode(kMenuImport);
       sfx(kSfxMenuOpen);
-    } else if (!ic && distanceFromRetirement() < ACTIVATE_DISTANCE) {
+    } else if (!ic && getSlot() == WORLD_SAVE_SLOTS-1 && distanceFromRetirement() < ACTIVATE_DISTANCE) {
       setGameMode(kMenuCredits);
       redrawAllSettingsMenuLines();
       chooseMusic(N_MUSIC_TRACKS);
@@ -343,9 +370,9 @@ void clickHandleBuilding(uint32_t _buttonPressed) {
     setGameMode(kWanderMode);
     updateBlueprint();
     // Tutorial
-    if (getTutorialStage() == kTutPlantCarrots && getTutorialProgress() >= 10) {
-      nextTutorialStage();
-    }
+    //if (getTutorialStage() == kTutPlantCarrots && getTutorialProgress() >= 10) {
+    //  nextTutorialStage();
+    //}
     // Tutorial
     if (getTutorialStage() == kTutBuildHarvester && getTutorialProgress()) {
       nextTutorialStage();
@@ -366,19 +393,17 @@ if (characterMoveInput(_buttonPressed)) {
     sfx(kSfxB);
     setGameMode(kWanderMode);
     updateBlueprint();
-    // Tutorial
-    if (getTutorialStage() == kTutPlantCarrots && getTutorialProgress() >= 10) {
-      nextTutorialStage();
-    }
   }
 }
 
 void clickHandlePick(uint32_t _buttonPressed) {
-  if (bPressed() && holdBRadiusInput(_buttonPressed)) {
+  if (aPressed() && (m_a < 3*BUTTON_PRESSED_FRAMES || m_blockA) && holdAShortcutsInput(_buttonPressed)) {
+    /*noop*/
+  } else if (bPressed() && holdBRadiusInput(_buttonPressed)) {
     /*noop*/
   } else if (characterMoveInput(_buttonPressed)) {
     // noop
-  } else if (kButtonA    == _buttonPressed) {
+  } else if (!m_blockA && kButtonA    == _buttonPressed) {
     doPick(); // Sfx handled internally
   } else if (kButtonB    == _buttonPressed) {
     sfx(kSfxB);
@@ -391,16 +416,18 @@ void clickHandlePick(uint32_t _buttonPressed) {
 }
 
 void clickHandleInspect(uint32_t _buttonPressed) {
-  if (characterMoveInput(_buttonPressed)) { /*noop*/} 
+  if (aPressed() && holdAShortcutsInput(_buttonPressed)) { /*noop*/ }
+  else if (characterMoveInput(_buttonPressed)) { /*noop*/ } 
   // Note: The tutorial and inspect boxes share the samme UI component
-  else if (kButtonA == _buttonPressed) { checkReturnDismissTutorialMsg(); setGameMode(kWanderMode); sfx(kSfxA); }
+  else if (!m_blockA && kButtonA == _buttonPressed) { checkReturnDismissTutorialMsg(); setGameMode(kWanderMode); sfx(kSfxA); }
   else if (kButtonB == _buttonPressed) { checkReturnDismissTutorialMsg(); setGameMode(kWanderMode); sfx(kSfxB); }
 }
 
 void clickHandleDestroy(uint32_t _buttonPressed) {
-  if (bPressed() && holdBRadiusInput(_buttonPressed)) { /*noop*/ }
+  if (aPressed() && (m_a < 3*BUTTON_PRESSED_FRAMES || m_blockA) && holdAShortcutsInput(_buttonPressed)) { /*noop*/ }
+  else if (bPressed() && holdBRadiusInput(_buttonPressed)) { /*noop*/ }
   else if (characterMoveInput(_buttonPressed)) { /*noop*/ }
-  else if (kButtonA == _buttonPressed) doDestroy(); // sfx handled internally
+  else if (!m_blockA && kButtonA == _buttonPressed) doDestroy(); // sfx handled internally
   else if (kButtonB == _buttonPressed) { setGameMode(kWanderMode); sfx(kSfxB); }
 }
 
@@ -432,8 +459,7 @@ void rotateHandleWander(float _rotation) {
     #ifdef DEV
     pd->system->logToConsole("ZOOM IN");
     #endif
-    updateRenderList();
-    updateBlueprint();
+    postChangeZoom();
   } else if (rot < -UI_ROTATE_ACTION) {
     sfx(kSfxRotate); // TODO different here?
     rot = 0.0f;
@@ -441,8 +467,7 @@ void rotateHandleWander(float _rotation) {
     pd->system->logToConsole("ZOOM OUT");
     #endif
     if (--m_zoom == 0) m_zoom = 1;
-    updateRenderList();
-    updateBlueprint();
+    postChangeZoom();
   }
 }
 
@@ -531,10 +556,13 @@ void clickHandlerReplacement() {
     m_b = 0;
   }
   if (released & kButtonA) {
-    gameClickConfigHandler(kButtonA);
+    if (m_a < BUTTON_PRESSED_FRAMES) gameClickConfigHandler(kButtonA);
     multiClickCount = 8;
     multiClickNext = 8;
+    m_a = 0;
+    m_blockA = 0;
   } else if (current & kButtonA)  {
+    ++m_a;
     if (gm == kPlaceMode || gm == kPickMode || gm == kPlantMode || gm == kDestroyMode) {
       gameClickConfigHandler(kButtonA); // Special, allow pick/placing rows of conveyors
     } else if (gm >= kMenuBuy) {
@@ -552,13 +580,13 @@ void clickHandlerReplacement() {
   if (released & kButtonDown) m_pressed[3] = 0;
 
   switch (gm) {
-    case kWanderMode: rotateHandleWander(pd->system->getCrankChange()); break;
+    case kWanderMode: case kPlantMode: rotateHandleWander(pd->system->getCrankChange()); break;
     case kBuildMode: case kPlaceMode: rotateHandlePlacement(pd->system->getCrankChange()); break;
     case kPickMode: case kDestroyMode: rotateHandlePick(pd->system->getCrankChange()); break;
     case kMenuCredits: rotateHandleCredits(pd->system->getCrankChange()); break;
     case kMenuBuy: case kMenuSell: rotateHandleMultiplier(pd->system->getCrankChange()); break; 
     case kMenuPlayer: case kMenuSettings: case kMenuExport: case kMenuImport: case kMenuWarp: rotateHandleSettings(pd->system->getCrankChange()); break;
-    case kMenuNew: case kPlantMode: case kInspectMode: case kTitles: case kTruckModeNew: case kTruckModeLoad: case kNGameModes: break;
+    case kMenuNew:  case kInspectMode: case kTitles: case kTruckModeNew: case kTruckModeLoad: case kNGameModes: break;
   }
 
 }

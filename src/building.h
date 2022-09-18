@@ -179,3 +179,6 @@ void serialiseBuilding(struct json_encoder* je);
 void deserialiseValueBuilding(json_decoder* jd, const char* _key, json_value _value);
 
 void* deserialiseStructDoneBuilding(json_decoder* jd, const char* _name, json_value_type _type);
+
+// Note: Under pdescriptors.c
+void setPrices(void);

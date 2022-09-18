@@ -74,6 +74,7 @@ struct Player_t{
   uint8_t m_enableAutosave;
   uint8_t m_enablePickupOnDestroy;
   uint8_t m_enableScreenShake;
+  uint8_t m_enableExtractorOutlines;
 
   // Transient   
   LCDSprite* m_sprite[ZOOM_LEVELS]; // Index 0 not used - OWNED
@@ -137,7 +138,7 @@ void nextTutorialStage(void);
 
 void startPlotsTutorial(void);
 
-bool movePlayer(void);
+bool movePlayer(bool _forceUpdate);
 
 void initPlayer(void);
 
