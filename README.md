@@ -4,6 +4,8 @@ Factory Farming is an **Automation & Logistics** game themed around intensive ag
 
 Build up an expansive industrial complex by *growing, harvesting, refining* and *manufacturing* a wide variety of highly-processed products, and sell it all for a massive profit. 
 
+![Promotional Image](https://raw.githubusercontent.com/timboe/FactoryFarming/main/promo/factory_farming_splash_x2_stamp.gif)
+
 ## Factory Farming features:
 - **15 different crops** to cultivate, with differing soil & water needs.
 - **6 different growing biomes**.
