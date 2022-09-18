@@ -198,7 +198,7 @@ void updatePlayerPosition() {
   //pd->system->logToConsole("P@ %f %f", m_player.m_pix_x , m_player.m_pix_y);
 }
 
-bool movePlayer() {
+bool movePlayer(bool _forceUpdate) {
 
   uint8_t zoom = getZoom();
 
@@ -273,7 +273,7 @@ bool movePlayer() {
   goalX += m_player.m_vX;
   goalY += m_player.m_vY; 
 
-  if (moving) {
+  if (moving || _forceUpdate) {
     if (++m_stepCounter * acc > PLAYER_ANIM_DELAY || m_facing != m_wasFacing || m_inWater != m_wasInWater) {
       m_animFrame = (m_animFrame + 1) % PLAYER_ANIM_FRAMES;
       m_stepCounter = 0;
@@ -339,7 +339,7 @@ bool movePlayer() {
   struct Location_t* wasAt = m_currentLocation;
   m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
 
-  if (wasAt != m_currentLocation) {
+  if (wasAt != m_currentLocation || _forceUpdate) {
     int32_t bpX = (TILE_PIX*m_currentLocation->m_x + TILE_PIX/2.0) * zoom, bpY = (TILE_PIX*m_currentLocation->m_y  + TILE_PIX/2.0) * zoom;
     pd->sprite->moveTo(m_player.m_blueprint[zoom], bpX, bpY);
     pd->sprite->moveTo(m_player.m_blueprintRadius[zoom], bpX, bpY);

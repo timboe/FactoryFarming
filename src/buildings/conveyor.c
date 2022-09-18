@@ -44,8 +44,9 @@ void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, boo
 
 void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   struct Location_t* loc = _building->m_location;
-  const bool nearTick = _tick == NEAR_TICK_AMOUNT;
   if (loc->m_cargo == NULL) return;
+  const bool nearTick = _tick == NEAR_TICK_AMOUNT;
+  // if (_building->m_subType.conveyor == kTunnelIn) _tick /= 2; // As travelling two tiles. But tricky, near tick amount is 1...
   if (_building->m_progress < TILE_PIX) {
     _building->m_progress += _tick * _building->m_stored[0]; // Stored[0] used to hold conveyor speed
 

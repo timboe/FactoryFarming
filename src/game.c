@@ -203,7 +203,7 @@ int gameLoop(void* _data) {
   clickHandlerReplacement();
 
   if (gm < kMenuBuy) {
-    movePlayer();
+    movePlayer(/*forceUpdate*/ false);
   }
 
   tickNear();

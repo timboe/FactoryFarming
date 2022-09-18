@@ -1410,6 +1410,8 @@ void setGameMode(enum kGameMode _mode) {
     drawUITop("Inventory");
   } else if (_mode == kInspectMode) {
     drawUITop("Inspect");
+  } else if (_mode == kDestroyMode) {
+    drawUITop("Demolition");
   } else if (_mode >= kMenuBuy) {
     /*noop*/ 
   } else drawUITop(NULL);

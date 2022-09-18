@@ -138,7 +138,7 @@ void nextTutorialStage(void);
 
 void startPlotsTutorial(void);
 
-bool movePlayer(void);
+bool movePlayer(bool _forceUpdate);
 
 void initPlayer(void);
 
