@@ -317,6 +317,7 @@ void updateUICredits(int _fc) {
   if (m_creditsCounter/2 > (CREDITS_TO_ROW - CREDITS_FROM_ROW)*TILE_PIX + DEVICE_PIX_Y) {
     setGameMode(kWanderMode);
   }
+
 }
 
 void updateUITitles(int _fc) {
