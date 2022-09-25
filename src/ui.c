@@ -1934,16 +1934,20 @@ void initiUI() {
       const char* str = toStringIngredients(fac, w++, &isFlavourText);
       if (strcmp(str, "FIN") == 0) {
         break;
-      }
-      isFlavourText ? setCooperHewitt12() : setRoobert10();
-      int16_t len = strlen(str);
-      int32_t width = pd->graphics->getTextWidth(isFlavourText ? getCooperHewitt12() : getRoobert10(), str, len, kASCIIEncoding, 0);
-      if (cur_x + width > ING_ROW_MAX) {
+      } else if (strcmp(str, "LB") == 0) {
         cur_y += textSize;
         cur_x = ING_X_START;
+      } else {
+        isFlavourText ? setCooperHewitt12() : setRoobert10();
+        int16_t len = strlen(str);
+        int32_t width = pd->graphics->getTextWidth(isFlavourText ? getCooperHewitt12() : getRoobert10(), str, len, kASCIIEncoding, 0);
+        if (cur_x + width > ING_ROW_MAX) {
+          cur_y += textSize;
+          cur_x = ING_X_START;
+        }
+        pd->graphics->drawText(str, len, kASCIIEncoding, cur_x, cur_y);
+        cur_x += width;
       }
-      pd->graphics->drawText(str, len, kASCIIEncoding, cur_x, cur_y);
-      cur_x += width;
     }
     pd->graphics->popContext();
   }

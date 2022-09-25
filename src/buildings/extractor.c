@@ -3,12 +3,11 @@
 #include "../sprite.h"
 #include "../generate.h"
 #include "../cargo.h"
-
+#include "../ui.h"
 
 void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick);
 
 void mineUpdateFn(struct Building_t* _building, uint8_t _tick);
-
 
 /// ///
 
@@ -161,7 +160,9 @@ void drawUIInspectExtractor(struct Building_t* _building) {
 
   static char text[128];
   uint8_t y = 1;
-  snprintf(text, 128, "%s", toStringBuilding(_building->m_type, _building->m_subType, false));
+  snprintf(text, 128, "%s (%s)",
+    toStringBuilding(_building->m_type, _building->m_subType, false),
+    getRotationAsString(kUICatExtractor, _building->m_subType.extractor, _building->m_dir));
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   if (est == kCropHarvesterSmall || est == kCropHarvesterLarge) {
