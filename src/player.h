@@ -75,6 +75,7 @@ struct Player_t{
   uint8_t m_enablePickupOnDestroy;
   uint8_t m_enableScreenShake;
   uint8_t m_enableExtractorOutlines;
+  uint8_t m_enableSteps;
 
   // Transient   
   LCDSprite* m_sprite[ZOOM_LEVELS]; // Index 0 not used - OWNED

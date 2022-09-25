@@ -278,7 +278,7 @@ bool movePlayer(bool _forceUpdate) {
       m_animFrame = (m_animFrame + 1) % PLAYER_ANIM_FRAMES;
       m_stepCounter = 0;
       const uint16_t animY = m_inWater ? m_facing + 4 : m_facing;
-      if (m_animFrame % 3 == 0) sfx( (m_inWater ? kFootstepWater : kFootstepDefault) + rand() % N_FOOTSTEPS);
+      if (m_animFrame % 3 == 0 && m_player.m_enableSteps) sfx( (m_inWater ? kFootstepWater : kFootstepDefault) + rand() % N_FOOTSTEPS);
       pd->sprite->setImage(m_player.m_sprite[zoom], getSprite18(m_animFrame, animY, zoom), kBitmapUnflipped);
     }
     m_wasFacing = m_facing;
@@ -544,6 +544,7 @@ void setDefaultPlayerSettings() {
   m_player.m_enablePickupOnDestroy = 1;
   m_player.m_enableScreenShake = 1;
   m_player.m_enableExtractorOutlines = 0;
+  m_player.m_enableSteps = 1;
 }
 
 void initPlayer() {
@@ -598,6 +599,8 @@ void serialisePlayer(struct json_encoder* je) {
   je->writeInt(je, m_player.m_enableScreenShake);
   je->addTableMember(je, "seto", 4);
   je->writeInt(je, m_player.m_enableExtractorOutlines);
+  je->addTableMember(je, "sete", 4);
+  je->writeInt(je, m_player.m_enableSteps);
 
   
   je->addTableMember(je, "cargos", 6);
@@ -737,6 +740,8 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_player.m_enableScreenShake = json_intValue(_value); 
   } else if (strcmp(_key, "seto") == 0) {
     m_player.m_enableExtractorOutlines = json_intValue(_value); 
+  } else if (strcmp(_key, "sete") == 0) {
+    m_player.m_enableSteps = json_intValue(_value); 
   } else if (strcmp(_key, "seta") == 0) {
     m_player.m_enableAutosave = json_intValue(_value); 
     m_deserialiseArrayID = 0; // Note "one behind"

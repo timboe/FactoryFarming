@@ -239,7 +239,7 @@ void setCursorRotation(int8_t _value) {
   m_selRotation = _value;
   sfx(kSfxRotate);
   UIDirtyRight();
-  updateBlueprint();
+  updateBlueprint(/*beep*/ false);
 }
 
 void rotateCursor(bool _increment) {
@@ -251,7 +251,7 @@ void rotateCursor(bool _increment) {
   if (m_mode >= kMenuPlayer) UIDirtyMain();
   sfx(kSfxRotate);
   UIDirtyRight();
-  updateBlueprint();
+  updateBlueprint(/*beep*/ false);
 }
 
 void modTitleCursor(bool _increment) {
@@ -365,8 +365,9 @@ void updateUI(int _fc) {
     UIDirtyMain();
   } else if ((m_mode == kPlaceMode || m_mode == kBuildMode || m_mode == kPlantMode) && flash) {
     // Flashing blueprint 
-    updateBlueprint();
-    pd->sprite->setVisible(getPlayer()->m_blueprint[getZoom()], _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
+    const bool flashOn = _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4; 
+    updateBlueprint(!flashOn);
+    pd->sprite->setVisible(getPlayer()->m_blueprint[getZoom()], flashOn);
   }
   if (_fc % FAR_TICK_FREQUENCY == 0) {
     // Update bottom ticker
@@ -445,7 +446,7 @@ void updateUI(int _fc) {
   }
 }
 
-void updateBlueprint() {
+void updateBlueprint(bool _beep) {
   uint8_t zoom = getZoom();
   struct Player_t* player = getPlayer();
   enum kGameMode gm = getGameMode();
@@ -508,8 +509,10 @@ void updateBlueprint() {
 
     if (!canPlace && selectedCat == kUICatUtility && selectedID == kRetirement) {
       pd->sprite->setImage(bp, getRetirementNoBitmap(zoom), kBitmapUnflipped);
+      if (_beep) sfx(kSfxB);
     } else if (!canPlace) {
       pd->sprite->setImage(bp, getSprite16(1, 16, zoom), kBitmapUnflipped);
+      if (_beep) sfx(kSfxB);
     }
 
   } else if (gm == kPlantMode) { // Of crops
@@ -521,6 +524,7 @@ void updateBlueprint() {
       const int8_t wb = getWaterBonus( PDesc[selectedID].wetness, getWetness( t->m_wetness ) );
       pd->sprite->setImage(bp, getSprite16_byidx( getPlantSmilieSprite(gb+wb), zoom), kBitmapUnflipped);
     } else {
+      if (_beep) sfx(kSfxB);
       pd->sprite->setImage(bp, getSprite16(1, 16, zoom), kBitmapUnflipped);
     }
 
@@ -546,7 +550,10 @@ void updateBlueprint() {
       default: break;
     }
     canPlace &= (owned > 0);
-    if (!canPlace) pd->sprite->setImage(bp, getSprite48(1, 2, zoom), kBitmapUnflipped);
+    if (!canPlace) {
+      pd->sprite->setImage(bp, getSprite48(1, 2, zoom), kBitmapUnflipped);
+      if (_beep) sfx(kSfxB);
+    }
 
   } else { // Clear blueprint
 
@@ -902,9 +909,9 @@ void drawUIRight() {
     if (selectedCat == kUICatExtractor && EDesc[selectedID].invert) { // No Factory here as we display the end product
       pd->graphics->setDrawMode(kDrawModeInverted);
     }
-    pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), DEVICE_PIX_Y/2, -1, kBitmapUnflipped);
+    pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), DEVICE_PIX_Y/2 + TILE_PIX, -1, kBitmapUnflipped);
     pd->graphics->setDrawMode(kDrawModeFillWhite);
-    pd->graphics->drawText(text, 16, kASCIIEncoding, DEVICE_PIX_Y/2 + 2*TILE_PIX, 0);
+    pd->graphics->drawText(text, 16, kASCIIEncoding, DEVICE_PIX_Y/2 + 3*TILE_PIX, 0);
     pd->graphics->setDrawMode(kDrawModeCopy);
   } else { // Compass
     #define PI 3.141592654f
@@ -921,11 +928,11 @@ void drawUIRight() {
     else if (a > (180.0f - 5*FF_DEG) - A_OFF) cSprite += 5;
     else if (a > (180.0f - 6*FF_DEG) - A_OFF) cSprite += 6;
     else if (a > (180.0f - 7*FF_DEG) - A_OFF) cSprite += 7;
-    pd->graphics->drawBitmap(getSprite16_byidx(cSprite, 1), DEVICE_PIX_Y/2, 0, kBitmapUnflipped);
+    pd->graphics->drawBitmap(getSprite16_byidx(cSprite, 1), DEVICE_PIX_Y/2 + TILE_PIX, 0, kBitmapUnflipped);
 
     // Unlock?
     if (checkHasNewToShow(p) == kNewYes && !(gm == kMenuBuy || gm == kMenuSell)) {
-      pd->graphics->drawBitmap(getSprite16(11, 11, 1), DEVICE_PIX_Y/2 + 2*TILE_PIX, 0, kBitmapUnflipped);
+      pd->graphics->drawBitmap(getSprite16(11, 11, 1), DEVICE_PIX_Y/2 + 3*TILE_PIX, 0, kBitmapUnflipped);
     }
   }
   // Buy/sell multiplier
@@ -933,7 +940,7 @@ void drawUIRight() {
     pd->graphics->setDrawMode(kDrawModeFillWhite);
     char text[16] = "";
     snprintf(text, 16, "x%u", (unsigned) m_buySellMultiplier[m_mode]);
-    pd->graphics->drawText(text, 16, kASCIIEncoding, DEVICE_PIX_Y/2 + 2*TILE_PIX, 0);
+    pd->graphics->drawText(text, 16, kASCIIEncoding, DEVICE_PIX_Y/2 + 3*TILE_PIX, 0);
     pd->graphics->setDrawMode(kDrawModeCopy);
   }
 
@@ -1418,7 +1425,7 @@ void setGameMode(enum kGameMode _mode) {
 
   if (m_mode >= kMenuBuy) UIDirtyMain();
   UIDirtyRight(); // Just safer to always do this here
-  updateBlueprint();
+  updateBlueprint(/*beep*/ false);
   updateRenderList();
 }
 
@@ -1431,7 +1438,7 @@ void resetUI() {
     m_buySellMultiplier[i] = 1;
   }
   m_selRotation = 0;
-  updateBlueprint();
+  updateBlueprint(/*beep*/ false);
   m_UITitleOffset = UI_TITLE_OFFSET;
   m_UITopOffset = 0;
   m_UITitleSelected = 0;
@@ -2078,7 +2085,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 1: return "Excellent! You now know all the basics of exploiting";
         case 2: return "the world for profit. As your bank account swells,";
         case 3: return "more Crops, Factories, and other items will unlock.";
-        case 4: return "Use them well to maximize profit.";
+        case 4: return "Use them to maximize profit, maximize efficiency.";
         #endif
           
         case 5: return " ";

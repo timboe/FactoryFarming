@@ -88,7 +88,7 @@ void updateUITitles(int _fc);
 
 void updateUICredits(int _fc);
 
-void updateBlueprint(void);
+void updateBlueprint(bool _beep);
 
 void drawUITop(const char* _text);
 

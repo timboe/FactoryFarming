@@ -104,7 +104,7 @@ void modRadius(bool _inc) {
     m_pickRadius -= 2;
   }
   updateRenderList();
-  updateBlueprint();
+  updateBlueprint(/*beep*/ false);
 }
 
 uint8_t getZoom() {
@@ -132,7 +132,6 @@ void unZoom() {
 }
 
 void toggleZoom() {
-  sfx(kSfxRotate); // TODO own sound?
   if (++m_zoom == ZOOM_LEVELS) {
     m_zoom = 1;
   }
@@ -142,7 +141,8 @@ void toggleZoom() {
 void postChangeZoom() {
   movePlayer(/*forceUpdate*/ true);
   updateRenderList();
-  updateBlueprint();
+  updateBlueprint(/*beep*/ false);
+  sfx(kSfxZoom);
 }
 
 bool characterMoveInput(uint32_t _buttonPressed) {
@@ -246,9 +246,6 @@ void clickHandleWander(uint32_t _buttonPressed) {
   } else if (kButtonB == _buttonPressed) {
     if (getTutorialStage() < TUTORIAL_FINISHED) checkReturnDismissTutorialMsg();
   }
-
-  //else if (kButtonB == _buttonPressed) toggleZoom(); // Press B to change zoom?
-  // Hold down B to go faster?
 }
 
 void clickHandleTitles(uint32_t _buttonPressed) {
@@ -368,11 +365,7 @@ void clickHandleBuilding(uint32_t _buttonPressed) {
   } else if (kButtonB    == _buttonPressed) {
     sfx(kSfxB);
     setGameMode(kWanderMode);
-    updateBlueprint();
-    // Tutorial
-    //if (getTutorialStage() == kTutPlantCarrots && getTutorialProgress() >= 10) {
-    //  nextTutorialStage();
-    //}
+    updateBlueprint(/*beep*/ false);
     // Tutorial
     if (getTutorialStage() == kTutBuildHarvester && getTutorialProgress()) {
       nextTutorialStage();
@@ -392,7 +385,7 @@ if (characterMoveInput(_buttonPressed)) {
   } else if (kButtonB    == _buttonPressed) {
     sfx(kSfxB);
     setGameMode(kWanderMode);
-    updateBlueprint();
+    updateBlueprint(/*beep*/ false);
   }
 }
 
@@ -453,7 +446,6 @@ void rotateHandleWander(float _rotation) {
   static float rot = 0.0f;
   rot += _rotation;
   if (rot > UI_ROTATE_ACTION) {
-    sfx(kSfxRotate); // TODO different here?
     rot = 0.0f;
     if (++m_zoom == ZOOM_LEVELS) m_zoom = ZOOM_LEVELS-1;
     #ifdef DEV
@@ -461,7 +453,6 @@ void rotateHandleWander(float _rotation) {
     #endif
     postChangeZoom();
   } else if (rot < -UI_ROTATE_ACTION) {
-    sfx(kSfxRotate); // TODO different here?
     rot = 0.0f;
     #ifdef DEV
     pd->system->logToConsole("ZOOM OUT");

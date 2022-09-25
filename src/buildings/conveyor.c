@@ -4,6 +4,7 @@
 #include "../sprite.h"
 #include "../generate.h"
 #include "../ui.h"
+#include "../sound.h"
 
 int8_t getConveyorDirection(enum kConvSubType _subType, enum kDir _dir, uint8_t _progress );
 
@@ -251,7 +252,10 @@ void upgradeConveyor(struct Building_t* _building, bool _forFree) {
   if (_building->m_stored[0] == 2) return; // Already upgraded
   if (!_forFree && !getOwned(kUICatUtility, kConveyorGrease)) return;
 
-  if (!_forFree) modOwned(kUICatUtility, kConveyorGrease, /*add*/ false);
+  if (!_forFree) {
+    modOwned(kUICatUtility, kConveyorGrease, /*add*/ false);
+    sfx(kSfxPlaceUtil);
+  }
   _building->m_stored[0] = 2;
   if (_building->m_subType.conveyor == kBelt) {
     pd->sprite->setImage(_building->m_sprite[2], getConveyorMaster(_building->m_dir, 2), kBitmapUnflipped);

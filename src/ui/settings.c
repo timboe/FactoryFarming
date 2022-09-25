@@ -268,43 +268,44 @@ void doSettings() {
               case 25: p->m_musicVol = 100; break;
             }; break;
     case 3: p->m_soundSettings = p->m_soundSettings ^ 2; updateSfx(); break;
-    case 5: p->m_enableScreenShake = !p->m_enableScreenShake; break;
-    case 6: if (p->m_enableTutorial == 255) p->m_enableTutorial = 0; else p->m_enableTutorial = 255; break;
-    case 7: p->m_enableConveyorAnimation = !p->m_enableConveyorAnimation; break;
-    case 8: p->m_enableExtractorOutlines = !p->m_enableExtractorOutlines; break;
-    case 9: switch(p->m_enableAutosave) {
+    case 4: p->m_enableSteps = !p->m_enableSteps; break;
+    case 6: p->m_enableScreenShake = !p->m_enableScreenShake; break;
+    case 7: if (p->m_enableTutorial == 255) p->m_enableTutorial = 0; else p->m_enableTutorial = 255; break;
+    case 8: p->m_enableConveyorAnimation = !p->m_enableConveyorAnimation; break;
+    case 9: p->m_enableExtractorOutlines = !p->m_enableExtractorOutlines; break;
+    case 10: switch(p->m_enableAutosave) {
               case 0: p->m_enableAutosave = 5; break;
               case 5: p->m_enableAutosave = 10; break;
               case 10: p->m_enableAutosave = 15; break;
               case 15: p->m_enableAutosave = 30; break;
               case 30: p->m_enableAutosave = 0; break;
             }; break;
-    case 10: p->m_enablePickupOnDestroy = !p->m_enablePickupOnDestroy; break;
-    case 11: p->m_autoUseConveyorBooster = !p->m_autoUseConveyorBooster; break;
-    case 12: p->m_enableDebug = !p->m_enableDebug;; break;
+    case 11: p->m_enablePickupOnDestroy = !p->m_enablePickupOnDestroy; break;
+    case 12: p->m_autoUseConveyorBooster = !p->m_autoUseConveyorBooster; break;
+    case 13: p->m_enableDebug = !p->m_enableDebug;; break;
     //
-    case 14: doIO(kDoSave, /*and then*/ kDoTitle, /*and finally*/ kDoNothing); break;
-    case 15: doIO(kDoTitle, /*and then*/ kDoNothing, /*and finally*/ kDoNothing); break;
+    case 15: doIO(kDoSave, /*and then*/ kDoTitle, /*and finally*/ kDoNothing); break;
+    case 16: doIO(kDoTitle, /*and then*/ kDoNothing, /*and finally*/ kDoNothing); break;
     //
-    case 22: cheatMoney(); break;
-    case 23: cheatUnlock(); break;
+    case 23: cheatMoney(); break;
+    case 24: cheatUnlock(); break;
     //
-    case 27: chooseMusic(0); break;
-    case 28: chooseMusic(1); break;
-    case 29: chooseMusic(4); break;
-    case 30: chooseMusic(3); break;
-    case 31: chooseMusic(2); break;
-    case 32: chooseMusic(5); break;
+    case 31: chooseMusic(0); break;
+    case 32: chooseMusic(1); break;
+    case 33: chooseMusic(4); break;
+    case 34: chooseMusic(3); break;
+    case 35: chooseMusic(2); break;
+    case 36: chooseMusic(5); break;
     //
-    case 47: sfx(rand() % kNSFX); break;
+    case 51: sfx(rand() % kNSFX); break;
   }
   redrawSettingsMenuLine(getSettingsMenuUIBitmap(selectedID), selectedID);
 }
 
 #define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_START 0
-#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_STOP 13
-#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_START 52
-#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_STOP 59
+#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_STOP 14
+#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_START 53
+#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_STOP 60
 
 void redrawAllSettingsMenuLines() {
   for (int32_t i = MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_START; i < MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_STOP; ++i) {
@@ -344,22 +345,24 @@ void redrawSettingsMenuLine(LCDBitmap* _bitmap, int32_t _line) {
     case 1: (p->m_soundSettings == 1 || p->m_soundSettings == 3) ? checked() : unchecked(); break;
     case 2: musicvol(p->m_musicVol); break;
     case 3: (p->m_soundSettings == 2 || p->m_soundSettings == 3) ? checked() : unchecked(); break;
-    case 5: p->m_enableScreenShake ? checked() : unchecked(); break;
-    case 6: p->m_enableTutorial != 255 ? checked() : unchecked(); break;
-    case 7: p->m_enableConveyorAnimation ? checked() : unchecked(); break;
-    case 8: p->m_enableExtractorOutlines ? checked() : unchecked(); break;
-    case 9: autosave(p->m_enableAutosave); break;
-    case 10: p->m_enablePickupOnDestroy ? checked() : unchecked(); break;
-    case 11: p->m_autoUseConveyorBooster ? checked() : unchecked(); break;
-    case 12: p->m_enableDebug ? checked() : unchecked(); break;
+    case 4: p->m_enableSteps ? checked() : unchecked(); break;
+
+    case 6: p->m_enableScreenShake ? checked() : unchecked(); break;
+    case 7: p->m_enableTutorial != 255 ? checked() : unchecked(); break;
+    case 8: p->m_enableConveyorAnimation ? checked() : unchecked(); break;
+    case 9: p->m_enableExtractorOutlines ? checked() : unchecked(); break;
+    case 10: autosave(p->m_enableAutosave); break;
+    case 11: p->m_enablePickupOnDestroy ? checked() : unchecked(); break;
+    case 12: p->m_autoUseConveyorBooster ? checked() : unchecked(); break;
+    case 13: p->m_enableDebug ? checked() : unchecked(); break;
     // 
-    case 52: addText(playTime(buf, p->m_playTime / TICK_FREQUENCY)); break;
-    case 53: addNumber(p->m_moneyCumulative); break;
-    case 54: addNumber(p->m_moneyHighWaterMark); break;
-    case 55: addNumber(getTotalSoldCargo()); break;
-    case 56: addNumber(getTotalImportedCargo()); break;
-    case 57: addNumber(getNBuildings()); break;
-    case 58: addNumber(getNCargo()); break;
+    case 53: addText(playTime(buf, p->m_playTime / TICK_FREQUENCY)); break;
+    case 54: addNumber(p->m_moneyCumulative); break;
+    case 55: addNumber(p->m_moneyHighWaterMark); break;
+    case 56: addNumber(getTotalSoldCargo()); break;
+    case 57: addNumber(getTotalImportedCargo()); break;
+    case 58: addNumber(getNBuildings()); break;
+    case 59: addNumber(getNCargo()); break;
   }
 
   pd->graphics->popContext();
@@ -376,7 +379,7 @@ void populateInfoSettingsMenu() {
 
 bool isTitle(int32_t _line) {
   switch (_line) {
-    case 0: case 4: case 13: case 16: case 27: case 29: case 36: case 44: case 49: case 51: case 59: case 64: case 68: return true;
+    case 0: case 5: case 14: case 17: case 28: case 30: case 37: case 45: case 50: case 52: case 60: case 65: case 69: return true;
   }
   return false;
 }
@@ -387,85 +390,86 @@ const char* getLine(int32_t _line) {
     case 1: return "Music";
     case 2: return "Music Volume";
     case 3: return "Sound Effects";
+    case 4: return "Footsteps";
     //
-    case 4: return "--- Game Settings ---";
-    case 5: return "Screen Shake";
-    case 6: return "Tutorial Enabled";
-    case 7: return "Conveyor Animation";
-    case 8: return "Show Harvester Outlines";
-    case 9: return "Auto Save Time";
-    case 10: return "Auto Pickup on Destroy";
-    case 11: return "Auto Apply Conveyor Grease";
-    case 12: return "Show Debug Information";
+    case 5: return "--- Game Settings ---";
+    case 6: return "Screen Shake";
+    case 7: return "Tutorial Enabled";
+    case 8: return "Conveyor Animation";
+    case 9: return "Show Harvester Outlines";
+    case 10: return "Auto Save Time";
+    case 11: return "Auto Pickup on Destroy";
+    case 12: return "Auto Apply Conveyor Grease";
+    case 13: return "Show Debug Information";
     //
-    case 13: return "--- Exit Game ---";
-    case 14: return "Save & Exit to Title";
-    case 15: return "Exit to Title WITHOUT Saving";
+    case 14: return "--- Exit Game ---";
+    case 15: return "Save & Exit to Title";
+    case 16: return "Exit to Title WITHOUT Saving";
     //
-    case 16: return "--- Controls ---";
-    case 17: return "Inventory/Select/Interact: Ⓐ";
-    case 18: return "Back/Cancel: Ⓑ";
-    case 19: return "Walk: ✛";
-    case 20: return "Run: Hold Ⓑ + ✛";
-    case 21: return "Zoom in/out: 🎣 or Hold Ⓐ + ⬇️";
-    case 22: return "Rotate: 🎣 or Hold Ⓑ + ⬆️/➡️/⬇️/⬅️";
-    case 23: return "Resize: 🎣 or Hold Ⓑ + ⬆️/⬇️";
-    case 24: return "Quick Pickup Mode: Hold Ⓐ + ⬅️";
-    case 25: return "Quick Inspect Mode: Hold Ⓐ + ⬆️";
-    case 26: return "Quick Demolition Mode: Hold Ⓐ + ➡️";
+    case 17: return "--- Controls ---";
+    case 18: return "Inventory/Select/Interact: Ⓐ";
+    case 19: return "Back/Cancel: Ⓑ";
+    case 20: return "Walk: ✛";
+    case 21: return "Run: Hold Ⓑ + ✛";
+    case 22: return "Zoom in/out: 🎣 or Hold Ⓐ + ⬇️";
+    case 23: return "Rotate: 🎣 or Hold Ⓑ + ⬆️/➡️/⬇️/⬅️";
+    case 24: return "Resize: 🎣 or Hold Ⓑ + ⬆️/⬇️";
+    case 25: return "Quick Pickup Mode: Hold Ⓐ + ⬅️";
+    case 26: return "Quick Inspect Mode: Hold Ⓐ + ⬆️";
+    case 27: return "Quick Demolition Mode: Hold Ⓐ + ➡️";
     //
-    case 27: return "--- Credits ---";
-    case 28: return "Factory Farming by Tim Martin";
+    case 28: return "--- Credits ---";
+    case 29: return "Factory Farming by Tim Martin";
     //
-    case 29: return "-- Music --";
-    case 30: return "♬ Dr Tikov: 1985";
-    case 31: return "♬ BoxCat Games: B-3";
-    case 32: return "♬ Eric Skiff: We're the Resistors";
-    case 33: return "♬ RoccoW: Sweet Self Satisfaction";
-    case 34: return "♬ RoccoW: Weeklybeats 2014 #4";
-    case 35: return "♬ Soft & Furious: Horizon Ending";
+    case 30: return "-- Music --";
+    case 31: return "♬ Dr Tikov: 1985";
+    case 32: return "♬ BoxCat Games: B-3";
+    case 33: return "♬ Eric Skiff: We're the Resistors";
+    case 34: return "♬ RoccoW: Sweet Self Satisfaction";
+    case 35: return "♬ RoccoW: Weeklybeats 2014 #4";
+    case 36: return "♬ Soft & Furious: Horizon Ending";
     //
-    case 36: return "-- Art --";
-    case 37: return "Kenney: 1-Bit Pack";
-    case 38: return "VectorPixelStar: 1-Bit Patterns";
-    case 39: return "Josehzz: Farming Crops";
-    case 40: return "ScratchIO: Farming Set";
-    case 41: return "Varkalandar: Isometric Rocks";
-    case 42: return "Withthelove: Character Sprites";
-    case 43: return "DinosoftLab: New (NounProject)";
+    case 37: return "-- Art --";
+    case 38: return "Kenney: 1-Bit Pack";
+    case 39: return "VectorPixelStar: 1-Bit Patterns";
+    case 40: return "Josehzz: Farming Crops";
+    case 41: return "ScratchIO: Farming Set";
+    case 42: return "Varkalandar: Isometric Rocks";
+    case 43: return "Withthelove: Character Sprites";
+    case 44: return "DinosoftLab: New (NounProject)";
     //
-    case 44: return "-- Fonts --";
-    case 45: return "Chester Jenkins: Cooper Hewitt";
-    case 46: return "Martin Vacha: Roobert";
-    case 47: return "Mediengestaltung: Messing Lettern";
-    case 48: return "Nick's Fonts: Coventry Garden";
+    case 45: return "-- Fonts --";
+    case 46: return "Chester Jenkins: Cooper Hewitt";
+    case 47: return "Martin Vacha: Roobert";
+    case 48: return "Mediengestaltung: Messing Lettern";
+    case 49: return "Nick's Fonts: Coventry Garden";
     //
-    case 49: return "-- Sound Effects --";
-    case 50: return "sfxr.me";
+    case 50: return "-- Sound Effects --";
+    case 51: return "sfxr.me";
     //
-    case 51: return "-- Statistics --";
-    case 52: return "Play Time:";
-    case 53: return "Total Money Earned:";
-    case 54: return "Most Money Held:";
-    case 55: return "Total Cargo Sold:";
-    case 56: return "Total Cargo Imported:";
-    case 57: return "Total Buildings in this Plot:";
-    case 58: return "Total Cargo in this Plot:";
+    case 52: return "-- Statistics --";
+    case 53: return "Play Time:";
+    case 54: return "Total Money Earned:";
+    case 55: return "Most Money Held:";
+    case 56: return "Total Cargo Sold:";
+    case 57: return "Total Cargo Imported:";
+    case 58: return "Total Buildings in this Plot:";
+    case 59: return "Total Cargo in this Plot:";
     //
-    case 59: return " ";
-    case 60: return "© Tim Martin 2022";
-    case 61: return "Factory Farming is an MIT";
-    case 62: return "Licensed Open Source Project";
-    case 63: return "github.com/timboe/FactoryFarming";
+    case 60: return " ";
+    case 61: return "© Tim Martin 2022";
+    case 62: return "Factory Farming is an MIT";
+    case 63: return "Licensed Open Source Project";
+    case 64: return "github.com/timboe/FactoryFarming";
     //
-    case 64: return " ";
-    case 65: return "Thank you for playing!";
-    case 66: return "And for your support of niche";
-    case 67: return "indy game dev projects :)";
+    case 65: return " ";
+    case 66: return "Thank you for playing!";
+    case 67: return "And for your support of niche";
+    case 68: return "Indy game dev projects :)";
     //
-    case 68: return " ";
-    case 69: return "Keep on Maximizing Profits,";
-    case 70: return "Maximizing Efficiency.";
+    case 69: return " ";
+    case 70: return "Keep on Maximizing Profit,";
+    case 71: return "Maximizing Efficiency.";
     // can currently go to 120
   }
   return "???";

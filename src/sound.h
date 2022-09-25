@@ -20,6 +20,7 @@ enum SfxSample {
  kSfxMenuOpen,
  kSfxRotate,
  kSfxWarp,
+ kSfxZoom,
  kSfxNo,
  kFootstepDefault,
  kFootstepDefault1,
