@@ -116,11 +116,11 @@ void setPrices() {
   UDesc[kFence].price = FDesc[kMiraclePowderFac].price * 0.05f;
 
   // Warp prices
-  WDesc[kChalkWorld].price = FDesc[kBeerFac].price * 5; // First sand
-  WDesc[kPeatWorld].price = FDesc[kJelloShotFac].price * 6; // First Clay
-  WDesc[kSandWorld].price = FDesc[kCakeFac].price * 7; // First Loam
-  WDesc[kClayWorld].price = FDesc[kRaveJuiceFac].price * 8;
-  WDesc[kLoamWoarld].price = FDesc[kDessertFac].price * 9;
+  WDesc[kChalkWorld].price = FDesc[kBeerFac].price * 3; // First sand
+  WDesc[kPeatWorld].price = FDesc[kJelloShotFac].price * 4; // First Clay
+  WDesc[kSandWorld].price = FDesc[kCakeFac].price * 5; // First Loam
+  WDesc[kClayWorld].price = FDesc[kRaveJuiceFac].price * 6;
+  WDesc[kLoamWoarld].price = FDesc[kDessertFac].price * 7;
   WDesc[kWaterWorld].unlock = kPartyPack;
   WDesc[kWaterWorld].price = 200; // This is now number of items
   WDesc[kTranquilWorld].unlock = kMiraclePowder;

@@ -390,7 +390,7 @@ if (characterMoveInput(_buttonPressed)) {
 }
 
 void clickHandlePick(uint32_t _buttonPressed) {
-  if (aPressed() && (m_a < 3*BUTTON_PRESSED_FRAMES || m_blockA) && holdAShortcutsInput(_buttonPressed)) {
+  if (aPressed() && (m_a < BUTTON_PRESSED_FRAMES || m_blockA) && holdAShortcutsInput(_buttonPressed)) {
     /*noop*/
   } else if (bPressed() && holdBRadiusInput(_buttonPressed)) {
     /*noop*/
@@ -417,7 +417,7 @@ void clickHandleInspect(uint32_t _buttonPressed) {
 }
 
 void clickHandleDestroy(uint32_t _buttonPressed) {
-  if (aPressed() && (m_a < 3*BUTTON_PRESSED_FRAMES || m_blockA) && holdAShortcutsInput(_buttonPressed)) { /*noop*/ }
+  if (aPressed() && (m_a < BUTTON_PRESSED_FRAMES || m_blockA) && holdAShortcutsInput(_buttonPressed)) { /*noop*/ }
   else if (bPressed() && holdBRadiusInput(_buttonPressed)) { /*noop*/ }
   else if (characterMoveInput(_buttonPressed)) { /*noop*/ }
   else if (!m_blockA && kButtonA == _buttonPressed) doDestroy(); // sfx handled internally
