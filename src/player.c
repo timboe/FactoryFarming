@@ -177,6 +177,9 @@ void setPlayerPosition(uint16_t _x, uint16_t _y, bool _updateCurrentLocation) {
   if (_updateCurrentLocation) {
     m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
     m_currentChunk = getChunk(m_player.m_pix_x / CHUNK_PIX_X, m_player.m_pix_y / CHUNK_PIX_Y);
+    uint8_t zoom = getZoom();
+    m_offX = -(m_player.m_pix_x*zoom - (SCREEN_PIX_X/2));
+    m_offY = -(m_player.m_pix_y*zoom - (SCREEN_PIX_Y/2));
   }
 }
 

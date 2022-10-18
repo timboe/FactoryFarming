@@ -242,13 +242,15 @@ void menuOptionsCallbackLoad(void* blank) {
   #endif
   setForceSlot(-1); // -1 loads from the slot stored in the player's save file
   doIO(kDoLoad, /*and then*/ kDoNothing, /*and finally*/ kDoNothing);
+  m_autoSaveTimer = 0;
 }
 
 void menuOptionsCallbackSave(void* blank) {
   #ifdef DEV
   pd->system->logToConsole("menuOptionsCallbackSave");
   #endif
-  doIO(kDoSave, /*and then*/ kDoNothing, /*and finally*/ kDoNothing);
+  doIO(kDoSave, /*and then*/ kDoNothing, /*and finally*/ kDoScreenShot);
+  m_autoSaveTimer = 0;
 }
 
 void menuOptionsCallbackMenu(void* blank) {

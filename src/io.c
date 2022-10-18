@@ -8,6 +8,7 @@
 #include "generate.h"
 #include "player.h"
 #include "sound.h"
+#include "sshot.h"
 #include "buildings/special.h"
 
 uint8_t m_save = 0;
@@ -110,6 +111,7 @@ void enactIO() {
     case kDoSaveDelete: finished = doSaveDelete(); break;
     case kDoScanSlots: finished = true; scanSlots(); break;
     case kDoResetPlayer: finished = true; resetPlayer(); break;
+    case kDoScreenShot: finished = doScreenShot(&m_actionProgress); break;
   }
 
   if (finished) {

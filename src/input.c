@@ -7,6 +7,7 @@
 #include "sound.h"
 #include "ui.h"
 #include "io.h"
+#include "sshot.h"
 #include "buildings/special.h"
 #include "buildings/utility.h"
 #include "ui/inventory.h"
@@ -245,6 +246,10 @@ void clickHandleWander(uint32_t _buttonPressed) {
     }
   } else if (kButtonB == _buttonPressed) {
     if (getTutorialStage() < TUTORIAL_FINISHED) checkReturnDismissTutorialMsg();
+
+    // Temp
+    //uint32_t i = 0;
+    //doScreenShot(&i);
   }
 }
 

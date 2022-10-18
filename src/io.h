@@ -1,7 +1,7 @@
 #pragma once
 #include "game.h"
 
-enum kSaveLoadRequest {kDoNothing, kDoSave, kDoLoad, kDoNewWorld, kDoSaveDelete, kDoScanSlots, kDoResetPlayer, kDoTitle};
+enum kSaveLoadRequest {kDoNothing, kDoSave, kDoLoad, kDoNewWorld, kDoSaveDelete, kDoScanSlots, kDoResetPlayer, kDoTitle, kDoScreenShot};
 
 void synchronousSave(void);
 
