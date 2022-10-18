@@ -118,9 +118,9 @@ void setPrices() {
   // Warp prices
   WDesc[kChalkWorld].price = FDesc[kBeerFac].price * 3; // First sand
   WDesc[kPeatWorld].price = FDesc[kJelloShotFac].price * 4; // First Clay
-  WDesc[kSandWorld].price = FDesc[kCakeFac].price * 5; // First Loam
-  WDesc[kClayWorld].price = FDesc[kRaveJuiceFac].price * 6;
-  WDesc[kLoamWoarld].price = FDesc[kDessertFac].price * 7;
+  WDesc[kSandWorld].price = FDesc[kCakeFac].price * 4; // First Loam
+  WDesc[kClayWorld].price = FDesc[kRaveJuiceFac].price * 4;
+  WDesc[kLoamWoarld].price = FDesc[kDessertFac].price * 4;
   WDesc[kWaterWorld].unlock = kPartyPack;
   WDesc[kWaterWorld].price = 200; // This is now number of items
   WDesc[kTranquilWorld].unlock = kMiraclePowder;
