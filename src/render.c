@@ -5,6 +5,7 @@
 #include "player.h"
 #include "sprite.h"
 #include "chunk.h"
+#include "io.h"
 #include "input.h"
 #include "ui.h"
 #include "buildings/conveyor.h"
@@ -85,7 +86,11 @@ void updateRenderList() {
   pd->sprite->addSprite(player->m_sprite[zoom]);
   pd->sprite->addSprite(player->m_blueprint[zoom]);
   pd->sprite->addSprite(player->m_blueprintRadius[zoom]);
-  addUIToSpriteList();
+
+  if (currentIOAction() != kDoScreenShot) {
+    addUIToSpriteList();
+  }
+
   chunkAddToRender(currentChunk, zoom);
   if (getZoom() == 1 && !PRETEND_ZOOMED_IN) {
     for (uint32_t i = 0; i < CHUNK_NEIGHBORS_ALL; ++i) {

@@ -1,9 +1,15 @@
 #include "sshot.h"
 #include "player.h"
 #include "render.h"
+#include "chunk.h"
+#include "io.h"
 
 SDFile* m_imageFile;
 LCDBitmap* m_imageBitmap;
+
+bool m_modeSnap;
+int16_t m_chunkX;
+int16_t m_chunkY;
 
 // Simple BMP class by u/Daeke
 
@@ -24,46 +30,61 @@ typedef struct {
 
 bool doScreenShot(uint32_t* _actionProgress) {
 
+  bool finished = false;
 
-  int chunkX = *_actionProgress % WORLD_CHUNKS_X;
-  int chunkY = *_actionProgress / WORLD_CHUNKS_X;
+  if (*_actionProgress == 0) {
 
-  int offX = chunkX * CHUNK_PIX_X;
-  int offY = chunkY * CHUNK_PIX_Y;
+    char filePath[64];
+    snprintf(filePath, 64, "sshot_%i_%i_%i.bmp", getSave()+1, getSlot()+1, (int) getPlayer()->m_playTime);
+    m_imageFile = pd->file->open(filePath, kFileWrite);
 
+    m_imageBitmap = pd->graphics->newBitmap(TOT_WORLD_PIX_X, TOT_WORLD_PIX_Y, kColorWhite);
 
+    chunkResetTorus();
 
-  setPlayerVisible(true);
+    m_chunkX = 0;
+    m_chunkY = 0;
+    m_modeSnap = true;
+  } else if (m_modeSnap == false) {
+    m_modeSnap = true;
+
+    m_chunkX += 2;
+    if (m_chunkX >= WORLD_CHUNKS_X) {
+
+      m_chunkX = 0;
+      m_chunkY += 2;
+
+      if (m_chunkY >= WORLD_CHUNKS_Y) {
+        finished = true;
+      }
+    }
+  
+  } else if (m_modeSnap == true) {
+    m_modeSnap = false;
+
+    LCDBitmap* frame = pd->graphics->getDisplayBufferBitmap(); // Not owned
+
+    pd->graphics->pushContext(m_imageBitmap);
+    pd->graphics->drawBitmap(frame, m_chunkX * CHUNK_PIX_X, m_chunkY * CHUNK_PIX_Y, kBitmapUnflipped);
+    pd->graphics->popContext();
+
+  }
+
+  uint16_t offX = m_chunkX * CHUNK_PIX_X;
+  uint16_t offY = m_chunkY * CHUNK_PIX_Y;
+
+  setPlayerVisible(false);
   setPlayerPosition(offX + CHUNK_PIX_X, offY + CHUNK_PIX_Y, /*updateCurrentLocation*/ true);
   updateRenderList();
   pd->graphics->setDrawOffset(getOffX(), getOffY());
   pd->sprite->drawSprites();
 
-  pd->system->logToConsole("doScreenShot %i c(%i,%i) camera off:(%i,%i) draw off:(%i,%i)", *_actionProgress, chunkX, chunkY, offX, offY, getOffX(), getOffY());
+  #ifdef DEV
+  pd->system->logToConsole("doScreenShot %i c(%i,%i) camera off:(%i,%i) draw off:(%i,%i)", *_actionProgress, m_chunkX, m_chunkY, offX, offY, getOffX(), getOffY());
+  #endif
 
-
-  if (*_actionProgress == 0) {
-
-    char filePath[32];
-    snprintf(filePath, 32, "screenshot.bmp");
-    m_imageFile = pd->file->open(filePath, kFileWrite);
-
-    m_imageBitmap = pd->graphics->newBitmap(TOT_WORLD_PIX_X, TOT_WORLD_PIX_Y, kColorWhite);
-
-  } else if (*_actionProgress < 15) {
-
-    LCDBitmap* frame = pd->graphics->getDisplayBufferBitmap(); // Not owned
-
-    pd->graphics->pushContext(m_imageBitmap);
-    pd->graphics->setDrawOffset(offX, offY);
-    pd->graphics->drawBitmap(frame, offX, offY, kBitmapUnflipped);
-    pd->graphics->popContext();
-
-  } else if (*_actionProgress == 15) {
-
+  if (finished) {
     saveLCDBitmapToFile(m_imageFile, m_imageBitmap);
-
-  } else if (*_actionProgress == 16) {
 
     pd->file->close(m_imageFile);
     m_imageFile = NULL;
@@ -73,10 +94,11 @@ bool doScreenShot(uint32_t* _actionProgress) {
 
     setPlayerVisible(true);
 
+    forceTorus();
   }
 
   (*_actionProgress)++;
-  return *_actionProgress == 17;
+  return finished;
 
 }
 

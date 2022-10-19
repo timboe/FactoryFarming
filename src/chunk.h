@@ -67,6 +67,8 @@ uint16_t chunkTickChunk(struct Chunk_t* _chunk, uint8_t _tick, uint8_t _zoom);
 
 void chunkShiftTorus(bool _top, bool _left);
 
+void chunkResetTorus(void);
+
 void initChunk(void);
 
 void resetChunk(void);

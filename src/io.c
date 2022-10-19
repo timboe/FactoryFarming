@@ -169,6 +169,9 @@ void setSlot(uint8_t _slot) { m_slot = _slot; }
 
 uint8_t getSlot() { return m_slot; }
 
+uint8_t getSave() { return m_save; }
+
+
 void setForceSlot(int8_t _slot) { m_forceSlot = _slot; }
 
 ///

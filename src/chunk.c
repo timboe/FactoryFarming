@@ -76,6 +76,23 @@ void setChunkSpriteOffsets(struct Chunk_t* _c, int16_t _x, int16_t _y) {
 }
 
 
+void chunkResetTorus() {
+  for (int32_t x = 0; x < WORLD_CHUNKS_X; ++x) {
+    struct Chunk_t* top = getChunk_noCheck(x, 0);
+    struct Chunk_t* bottom = getChunk_noCheck(x, WORLD_CHUNKS_Y-1);
+    setChunkSpriteOffsets(top, 0, 0);
+    setChunkSpriteOffsets(bottom, 0, 0);
+  }
+
+  for (int32_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
+    struct Chunk_t* left = getChunk_noCheck(0, y);
+    struct Chunk_t* right = getChunk_noCheck(WORLD_CHUNKS_X-1, y);
+    setChunkSpriteOffsets(left, 0, 0);
+    setChunkSpriteOffsets(right, 0, 0);
+  }
+}
+
+
 void chunkShiftTorus(bool _top, bool _left) {
 
   #ifdef DEV
