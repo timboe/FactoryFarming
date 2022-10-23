@@ -138,6 +138,7 @@ enum kFactorySubType{
   kPackagingFac,
   kDessertFac,
   kCateringKitFac,
+  kChineseReayMealFac,
   kPartyPackFac,
   kSpareFac10, // SPARE SLOT (Game Expansions)
   kSpareFac11, // SPARE SLOT (Game Expansions)

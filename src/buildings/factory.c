@@ -608,6 +608,24 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 11: *_isFlavour = false; return ")";
       }
       break;
+    case kChineseReayMealFac:
+      switch (_n) {
+        case 0: *_isFlavour = false; return "Ingredients: ";
+        case 1: return "LB";
+        case 2: *_isFlavour = false; return toStringCargoByType(kMeat, /*plural=*/ false);
+        case 3: return ", ";
+        case 4: *_isFlavour = false; return toStringCargoByType(kEggs, /*plural=*/ true);
+        case 5: return ", ";
+        case 6: *_isFlavour = false; return toStringCargoByType(kBamboo, /*plural=*/ false);
+        case 7: return ", ";
+        case 8: *_isFlavour = false; return toStringCargoByType(kMSG, /*plural=*/ false);
+        case 9: return ", ";
+        case 10: return "Preservatives";
+        case 11: return ", ";
+        case 12: return "Artificial ";
+        case 13: return "Flavorings";
+      }
+      break;
     case kPartyPackFac:
       switch (_n) {
         case 0: *_isFlavour = false; return "Pack Content: ";

@@ -132,6 +132,7 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kPackagingFac: return "Packaging Manufacturer";
       case kDessertFac: return "Dessert Factory";
       case kCateringKitFac: return "Catering Pack Factory";
+      case kChineseReayMealFac: return "Foo Young Meal Factory";
       case kPartyPackFac: return "Party Pack Factory";
       case kParfumeFac: return "Parfume Factory";
       case kMiraclePowderFac: return "Miracle Powder Factory";

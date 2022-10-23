@@ -46,7 +46,12 @@ void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, boo
 void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   struct Location_t* loc = _building->m_location;
   if (loc->m_cargo == NULL) return;
+  #ifdef ONLY_SLOW_TICKS
+  const bool nearTick = true;
+  #else
   const bool nearTick = _tick == NEAR_TICK_AMOUNT;
+  #endif
+  
   // if (_building->m_subType.conveyor == kTunnelIn) _tick /= 2; // As travelling two tiles. But tricky, near tick amount is 1...
   if (_building->m_progress < TILE_PIX) {
     _building->m_progress += _tick * _building->m_stored[0]; // Stored[0] used to hold conveyor speed
@@ -65,6 +70,20 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
 
     conveyorSetLocation(_building, direction, nearTick, _zoom);
   }
+  #ifdef ONLY_SLOW_TICKS
+  else { 
+    enum kDir direction;
+    if (_building->m_subType.conveyor >= kFilterL) {
+      if (_building->m_mode.mode16 == kNoCargo) {
+        _building->m_mode.mode16 = _building->m_location->m_cargo->m_type;
+      }
+      direction = (_building->m_mode.mode16 == _building->m_location->m_cargo->m_type ? _building->m_nextDir[1] :  _building->m_nextDir[0]);  
+    } else {
+      direction = _building->m_nextDir[_building->m_mode.mode16];
+    }
+    conveyorSetLocation(_building, direction, nearTick, _zoom);
+  }
+  #endif
 
   // Handle filters vs. splitters
   struct Location_t* nextLoc = NULL;

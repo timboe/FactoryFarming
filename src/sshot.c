@@ -10,6 +10,8 @@ LCDBitmap* m_imageBitmap;
 bool m_modeSnap;
 int16_t m_chunkX;
 int16_t m_chunkY;
+uint16_t m_cachePlayerX;
+uint16_t m_cachePlayerY;
 
 // Simple BMP class by u/Daeke
 
@@ -44,6 +46,8 @@ bool doScreenShot(uint32_t* _actionProgress) {
 
     m_chunkX = 0;
     m_chunkY = 0;
+    m_cachePlayerX = getPlayer()->m_pix_x;
+    m_cachePlayerY = getPlayer()->m_pix_y;
     m_modeSnap = true;
   } else if (m_modeSnap == false) {
     m_modeSnap = true;
@@ -92,6 +96,8 @@ bool doScreenShot(uint32_t* _actionProgress) {
     pd->graphics->freeBitmap(m_imageBitmap);
     m_imageBitmap = NULL;
 
+    setPlayerPosition(m_cachePlayerX, m_cachePlayerY, /*updateCurrentLocation*/ true);
+    updateRenderList();
     setPlayerVisible(true);
 
     forceTorus();

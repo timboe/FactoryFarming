@@ -157,7 +157,8 @@ const char* getNewText() {
       case kCakeFac: return "Chocolatey, soft, and an infinite shelf life";
       case kDessertFac: return "Sweet tooth?";
       case kPackagingFac: return "Scaling up with custom packaging";
-      case kCateringKitFac: return "Packaged Catering Kits";
+      case kCateringKitFac: return "Packaged catering kits, great markup";
+      case kChineseReayMealFac: return "Gelatinous, and dehydrating";
       case kPartyPackFac: return "Everything a good party needs";
       case kParfumeFac: return "Fancy stuff";
       case kMiraclePowderFac: return "What can't it cure?! (Anything...)";

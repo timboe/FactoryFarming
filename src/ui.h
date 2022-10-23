@@ -114,6 +114,8 @@ uint16_t getTitleCursorSelected(void);
 
 uint8_t getBuySellMultiplier(void);
 
+void setBuySellMultiplier(uint8_t _v);
+
 enum kBuildingType getCatBuildingSubType(enum kUICat _c);
 
 enum kUICat getBuildingTypeCat(enum kBuildingType _b);

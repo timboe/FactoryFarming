@@ -275,6 +275,10 @@ uint8_t getBuySellMultiplier() {
   return m_buySellMultiplier[m_mode];
 }
 
+void setBuySellMultiplier(uint8_t _v) {
+  m_buySellMultiplier[m_mode] = _v;
+}
+
 void modMultiplier(bool _increment) {
   sfx(kSfxRotate);
   if (_increment) {
@@ -283,11 +287,11 @@ void modMultiplier(bool _increment) {
       case 5: m_buySellMultiplier[m_mode] = 10; break;
       case 10: m_buySellMultiplier[m_mode] = 50; break;
       case 50: m_buySellMultiplier[m_mode] = 100; break;
-      case 100: m_buySellMultiplier[m_mode] = 1; break;
+      case 100: m_buySellMultiplier[m_mode] = 100; break;
     }
   } else {
     switch (m_buySellMultiplier[m_mode]) {
-      case 1: case 0: m_buySellMultiplier[m_mode] = 100; break;
+      case 1: case 0: m_buySellMultiplier[m_mode] = 1; break;
       case 5: m_buySellMultiplier[m_mode] = 1; break;
       case 10: m_buySellMultiplier[m_mode] = 5; break;
       case 50: m_buySellMultiplier[m_mode] = 10; break;
@@ -525,7 +529,12 @@ void updateBlueprint(bool _beep) {
       const int8_t wb = getWaterBonus( PDesc[selectedID].wetness, getWetness( t->m_wetness ) );
       pd->sprite->setImage(bp, getSprite16_byidx( getPlantSmilieSprite(gb+wb), zoom), kBitmapUnflipped);
     } else {
-      if (_beep) sfx(kSfxB);
+      if (_beep) {
+        // Don't beep if it's another plant - this is annoying
+        if ( ! (pl->m_building && pl->m_building->m_type == kPlant) ) {
+          sfx(kSfxB);
+        }
+      }
       pd->sprite->setImage(bp, getSprite16(1, 16, zoom), kBitmapUnflipped);
     }
 
@@ -1421,7 +1430,7 @@ void setGameMode(enum kGameMode _mode) {
   } else if (_mode == kDestroyMode) {
     drawUITop("Demolition");
   } else if (_mode >= kMenuBuy) {
-    /*noop*/ 
+    setBuySellMultiplier(1);
   } else drawUITop(NULL);
 
   if (m_mode >= kMenuBuy) UIDirtyMain();

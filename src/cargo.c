@@ -58,8 +58,8 @@ struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kCoffeeBean, .price = 0, .multi = 2.5f, .UIIcon = SID(11,6)}, // CROP
   {.subType = kCO2, .price = 0, .multi = 1.0f, .UIIcon = SID(2,23)}, // Set by hand
   {.subType = kCaffeine, .price = 0, .multi = 1.5f, .UIIcon = SID(3,23)},
-  {.subType = kEnergyDrink, .price = 0, .multi = 1.5f, .UIIcon = SID(13,6)},
-  {.subType = kRaveJuice, .price = 0, .multi = 1.5f, .UIIcon = SID(14,6)},
+  {.subType = kEnergyDrink, .price = 0, .multi = 1.3f, .UIIcon = SID(13,6)},
+  {.subType = kRaveJuice, .price = 0, .multi = 1.3f, .UIIcon = SID(14,6)},
   {.subType = kPerkPills, .price = 0, .multi = 1.5f, .UIIcon = SID(15,6)},
   {.subType = kBamboo, .price = 0, .multi = 0.1f, .UIIcon = SID(7,25)}, // CROP
   {.subType = kPackaging, .price = 0, .multi = 1.5f, .UIIcon = SID(11,5)},
@@ -148,7 +148,7 @@ const char* toStringCargoByType(enum kCargoType _type, bool _plural) {
     case kPackaging: return "Packaging";
     case kDessert: return _plural ? "Desserts" : "Dessert";
     case kCateringKit: return _plural ? "Catering Kits" : "Catering Kit";
-    case kFooYoung: return _plural ? "Chinese Ready Meals" : "Chinese Ready Meal";
+    case kFooYoung: return _plural ? "Foo Youngs" : "Foo Youns";
     case kPartyPack: return _plural ? "Party Packs" : "Party Pack";
     case kSeaCucumber: return _plural ? "Sea Cucumbers" : "Sea Cucumber";
     case kParfume: return "Parfume";

@@ -61,6 +61,10 @@ uint16_t pixToLoc(uint16_t _pix) {
 
 
 void tickNear() {
+  #ifdef ONLY_SLOW_TICKS
+  return;
+  #endif
+
   if (m_frameCount % NEAR_TICK_FREQUENCY) {
     return;
   }
@@ -118,6 +122,17 @@ void tickFar() {
   //static uint32_t tickTock = 0;
   uint8_t zoom = getZoom();
   struct Chunk_t* currentChunk = getCurrentChunk();
+
+  #ifdef ONLY_SLOW_TICKS
+  m_farTickCount += chunkTickChunk(currentChunk, FAR_TICK_AMOUNT, zoom);
+  for (uint32_t i = 0; i < CHUNK_NEIGHBORS_ALL; ++i) {
+    m_farTickCount += chunkTickChunk(currentChunk->m_neighborsALL[i], FAR_TICK_AMOUNT, zoom);
+  }
+  for (uint32_t i = 0; i < CHUNK_NONNEIGHBORS_ALL; ++i) { 
+    m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsALL[i], FAR_TICK_AMOUNT, zoom); 
+  }
+  return;
+  #endif
 
   if (zoom == 1 && !PRETEND_ZOOMED_IN) {
 
@@ -220,7 +235,11 @@ int gameLoop(void* _data) {
   if (gm == kWanderMode && p->m_enableAutosave) {
     if (++m_autoSaveTimer > 600*TICK_FREQUENCY) {
       m_autoSaveTimer = 0;
+      #ifdef DEV
+      doIO(kDoSave, /*and then*/ kDoScreenShot, /*and finally*/ kDoNothing);
+      #else
       doIO(kDoSave, /*and then*/ kDoNothing, /*and finally*/ kDoNothing);
+      #endif
     }
   }
 
@@ -249,7 +268,7 @@ void menuOptionsCallbackSave(void* blank) {
   #ifdef DEV
   pd->system->logToConsole("menuOptionsCallbackSave");
   #endif
-  doIO(kDoSave, /*and then*/ kDoNothing, /*and finally*/ kDoScreenShot);
+  doIO(kDoSave, /*and then*/ kDoNothing, /*and finally*/ kDoNothing);
   m_autoSaveTimer = 0;
 }
 

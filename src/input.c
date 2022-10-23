@@ -246,10 +246,6 @@ void clickHandleWander(uint32_t _buttonPressed) {
     }
   } else if (kButtonB == _buttonPressed) {
     if (getTutorialStage() < TUTORIAL_FINISHED) checkReturnDismissTutorialMsg();
-
-    // Temp
-    //uint32_t i = 0;
-    //doScreenShot(&i);
   }
 }
 

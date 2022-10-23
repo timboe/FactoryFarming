@@ -122,7 +122,8 @@ bool populateContentImport() {
 
     for (int32_t i = 0; i < getNSubTypes(cat); ++i) {
       const float tot = getTotalCargoExport(i);
-      if (!tot) {
+      const uint16_t totConsumers = getCargoImportConsumers(i);
+      if (!tot && !totConsumers) {
         continue; // Am not exporting this type of cargo
       }
       #ifdef DEV
