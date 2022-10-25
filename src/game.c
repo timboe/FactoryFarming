@@ -232,8 +232,8 @@ int gameLoop(void* _data) {
   struct Player_t* p = getPlayer(); 
   ++p->m_playTime;
 
-  if (gm == kWanderMode && p->m_enableAutosave) {
-    if (++m_autoSaveTimer > 600*TICK_FREQUENCY) {
+  if (p->m_enableAutosave) {
+    if (++m_autoSaveTimer > p->m_enableAutosave*60*TICK_FREQUENCY && gm == kWanderMode ) {
       m_autoSaveTimer = 0;
       #ifdef DEV
       doIO(kDoSave, /*and then*/ kDoScreenShot, /*and finally*/ kDoNothing);
