@@ -12,12 +12,24 @@ const char* getTransitText(int8_t _d);
 
 void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, bool _nearTick, bool _zoom);
 
+uint8_t m_tickCounter = 0;
+
+#define CONV_SPEED 0
+#define CONV_X 1
+#define CONV_Y 2
+#define CONV_HIDE 3
+#define CONV_MOVEDTO 4
+
 /// ///
 
+void newConveyorTick() {
+  ++m_tickCounter;
+}
+
 void conveyorLocationUpdate(struct Building_t* _building, uint8_t _zoom) {
-  const int8_t x = (int8_t) _building->m_stored[1];
-  const int8_t y = (int8_t) _building->m_stored[2];
-  const bool hide  = _building->m_stored[3];
+  const int8_t x = (int8_t) _building->m_stored[CONV_X];
+  const int8_t y = (int8_t) _building->m_stored[CONV_Y];
+  const bool hide  = _building->m_stored[CONV_HIDE];
   struct Location_t* loc = _building->m_location;
   if (hide) {
     pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], 65536, 65536);
@@ -29,12 +41,12 @@ void conveyorLocationUpdate(struct Building_t* _building, uint8_t _zoom) {
 }
 
 void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, bool _nearTick, bool _zoom) {
-  _building->m_stored[3] = (_building->m_subType.conveyor == kTunnelIn); // hide 
+  _building->m_stored[CONV_HIDE] = (_building->m_subType.conveyor == kTunnelIn); // hide 
   switch (_direction) {
-    case SN:; _building->m_stored[1] = 0; _building->m_stored[2] = (uint8_t) -_building->m_progress; break;
-    case NS:; _building->m_stored[1] = 0; _building->m_stored[2] = _building->m_progress; break;
-    case EW:; _building->m_stored[1] = (uint8_t) -_building->m_progress; _building->m_stored[2] = 0; break;
-    case WE:; _building->m_stored[1] = _building->m_progress; _building->m_stored[2] = 0; break;
+    case SN:; _building->m_stored[CONV_X] = 0; _building->m_stored[CONV_Y] = (uint8_t) -_building->m_progress; break;
+    case NS:; _building->m_stored[CONV_X] = 0; _building->m_stored[CONV_Y] = _building->m_progress; break;
+    case EW:; _building->m_stored[CONV_X] = (uint8_t) -_building->m_progress; _building->m_stored[CONV_Y] = 0; break;
+    case WE:; _building->m_stored[CONV_X] = _building->m_progress; _building->m_stored[CONV_Y] = 0; break;
     case kDirN:; break;
   }
   // Only needs to be done if we are rendering
@@ -45,7 +57,7 @@ void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, boo
 
 void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   struct Location_t* loc = _building->m_location;
-  if (loc->m_cargo == NULL) return;
+  if (loc->m_cargo == NULL || _building->m_stored[CONV_MOVEDTO] == m_tickCounter) return;
   #ifdef ONLY_SLOW_TICKS
   const bool nearTick = true;
   #else
@@ -99,8 +111,11 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
     // Move cargo
     nextLoc->m_cargo = theCargo;
     loc->m_cargo = NULL;
+
     // Carry over any excess ticks
     if (nextLoc->m_building && nextLoc->m_building->m_type == kConveyor) {
+      nextLoc->m_building->m_stored[CONV_MOVEDTO] = m_tickCounter;
+
       nextLoc->m_building->m_progress = _building->m_progress - TILE_PIX;
       // Note: The direction does not matter here as we are the 1st tick into the new tile 
       // if we are actually looking at the sprite and hence calling conveyorLocationUpdate

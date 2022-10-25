@@ -132,7 +132,12 @@ struct Building_t{
   // For locations which store/produce fixed items, location 0 is always for produced items, 1-5 for inputs.
   // For locations which store variable items, locations 0,1,2 are the number of items, 3,4,5 are the item ID 
   // For plants: locations 0, 1 are used for item animation.
-  // For conveyors, location 0 stores the conveyor's speed multiplier (1 or 2). Location 1 stores the current cargo x and 2 the y SIGNED offset.
+  // For conveyors
+  // - location 0 stores the conveyor's speed multiplier (1 or 2).
+  // - location 1 stores the current cargo x SIGNED offset.
+  // - location 2 stores the current cargo y SIGNED offset.
+  // - location 3 is reserved for tunnels and causes the cargo to render off-screen.
+  // - location 4 is marked when a cargo moves into the conveyor. It should not update again on the same tick
   uint8_t m_stored[MAX_STORE]; 
 
   // Transient

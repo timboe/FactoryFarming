@@ -12,6 +12,7 @@
 #include "io.h"
 #include "building.h"
 #include "buildings/special.h"
+#include "buildings/conveyor.h"
 #include "ui/settings.h"
 
 PlaydateAPI* pd = NULL;
@@ -69,6 +70,7 @@ void tickNear() {
     return;
   }
 
+  newConveyorTick();
   m_nearTickCount = 0;
 
   uint8_t zoom = getZoom();
@@ -117,6 +119,7 @@ void tickFar() {
     return;
   }
 
+  newConveyorTick();
   m_farTickCount = 0;
 
   //static uint32_t tickTock = 0;

@@ -19,3 +19,5 @@ void upgradeConveyor(struct Building_t* _building, bool _forFree);
 void conveyorLocationUpdate(struct Building_t* _building, uint8_t _zoom);
 
 void drawUIInspectConveyor(struct Building_t* _building);
+
+void newConveyorTick(void);
