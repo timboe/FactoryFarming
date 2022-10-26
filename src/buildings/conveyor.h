@@ -21,3 +21,5 @@ void conveyorLocationUpdate(struct Building_t* _building, uint8_t _zoom);
 void drawUIInspectConveyor(struct Building_t* _building);
 
 void newConveyorTick(void);
+
+void processDesiresToMove(uint8_t _tick, uint8_t _zoom);

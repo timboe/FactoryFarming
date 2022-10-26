@@ -10,7 +10,9 @@ int8_t getConveyorDirection(enum kConvSubType _subType, enum kDir _dir, uint8_t 
 
 const char* getTransitText(int8_t _d);
 
-void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, bool _nearTick, bool _zoom);
+void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, bool _nearTick, uint8_t _zoom);
+
+void moveCargo(struct Location_t* _loc, struct Location_t* _nextLoc, uint8_t _tick, uint8_t _zoom);
 
 uint8_t m_tickCounter = 0;
 
@@ -20,10 +22,77 @@ uint8_t m_tickCounter = 0;
 #define CONV_HIDE 3
 #define CONV_MOVEDTO 4
 
+#define MAX_DESIRES_TO_MOVE 2048
+
+#define MOVE_CUTOFF_THRESHOLD 2
+#define MAX_ITERATIONS 8
+
+void regDesireToMove(struct Location_t* _from, struct Location_t* _to);
+uint16_t m_nDesiresToMoveA;
+uint16_t m_nDesiresToMoveB;
+struct Location_t* m_desiresToMoveToA[MAX_DESIRES_TO_MOVE];
+struct Location_t* m_desiresToMoveToB[MAX_DESIRES_TO_MOVE];
+
 /// ///
 
 void newConveyorTick() {
   ++m_tickCounter;
+  m_nDesiresToMoveA = 0;
+}
+
+void regDesireToMove(struct Location_t* _from, struct Location_t* _to) {
+  if (m_nDesiresToMoveA == MAX_DESIRES_TO_MOVE) {
+    #ifdef DEV
+    pd->system->error("More conveyor desires to move than we can support!");
+    #endif
+    return;
+  }
+
+  m_desiresToMoveToA[m_nDesiresToMoveA++] = _to;
+  _to->m_desiredToMoveFrom = _from;
+}
+
+int16_t doDesireToMoveA(uint8_t _tick, uint8_t _zoom) {
+  int16_t moved = 0;
+  m_nDesiresToMoveB = 0;
+  for (int16_t i = m_nDesiresToMoveA - 1; i >=0; --i) {
+    if ( m_desiresToMoveToA[i]->m_cargo == NULL) {
+      ++moved;
+      moveCargo(/*from*/ m_desiresToMoveToA[i]->m_desiredToMoveFrom, /*to*/ m_desiresToMoveToA[i], _tick, _zoom);
+    } else {
+      m_desiresToMoveToB[m_nDesiresToMoveB++] = m_desiresToMoveToA[i];
+    }
+  }
+  pd->system->logToConsole("A Iteration: moved %i of %i", moved, m_nDesiresToMoveA);
+  return moved;
+}
+
+int16_t doDesireToMoveB(uint8_t _tick, uint8_t _zoom) {
+  int16_t moved = 0;
+  m_nDesiresToMoveA = 0;
+  for (int16_t i = 0; i < m_nDesiresToMoveB; ++i) {
+    if ( m_desiresToMoveToB[i]->m_cargo == NULL) {
+      ++moved;
+      moveCargo(/*from*/ m_desiresToMoveToB[i]->m_desiredToMoveFrom, /*to*/ m_desiresToMoveToB[i], _tick, _zoom);
+    } else {
+      m_desiresToMoveToA[m_nDesiresToMoveA++] = m_desiresToMoveToB[i];
+    }
+  }
+  pd->system->logToConsole("B Iteration: moved %i of %i", moved, m_nDesiresToMoveB);
+  return moved;
+}
+
+void processDesiresToMove(uint8_t _tick, uint8_t _zoom) {
+  if (!m_nDesiresToMoveA) return;
+
+  pd->system->logToConsole("---");
+  int16_t moved = INT16_MAX;
+  int16_t iterations = 0;
+  bool flipFlop = true;
+  while (moved > MOVE_CUTOFF_THRESHOLD && iterations++ < MAX_ITERATIONS) {
+    moved = flipFlop ? doDesireToMoveA(_tick, _zoom) : doDesireToMoveB(_tick, _zoom);
+    flipFlop = !flipFlop;
+  }
 }
 
 void conveyorLocationUpdate(struct Building_t* _building, uint8_t _zoom) {
@@ -40,7 +109,7 @@ void conveyorLocationUpdate(struct Building_t* _building, uint8_t _zoom) {
   }
 }
 
-void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, bool _nearTick, bool _zoom) {
+void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, bool _nearTick, uint8_t _zoom) {
   _building->m_stored[CONV_HIDE] = (_building->m_subType.conveyor == kTunnelIn); // hide 
   switch (_direction) {
     case SN:; _building->m_stored[CONV_X] = 0; _building->m_stored[CONV_Y] = (uint8_t) -_building->m_progress; break;
@@ -105,45 +174,66 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
     nextLoc = _building->m_next[_building->m_mode.mode16];
   }
 
-  if (_building->m_progress >= TILE_PIX && nextLoc->m_cargo == NULL) {
-    struct Cargo_t* theCargo = loc->m_cargo;
+  if (_building->m_progress < TILE_PIX) return;
 
-    // Move cargo
-    nextLoc->m_cargo = theCargo;
-    loc->m_cargo = NULL;
+  if (nextLoc->m_cargo != NULL) {
 
-    // Carry over any excess ticks
-    if (nextLoc->m_building && nextLoc->m_building->m_type == kConveyor) {
-      nextLoc->m_building->m_stored[CONV_MOVEDTO] = m_tickCounter;
+    // Register desire to move
+    regDesireToMove(/*from*/ loc, /*to*/ nextLoc);
 
-      nextLoc->m_building->m_progress = _building->m_progress - TILE_PIX;
-      // Note: The direction does not matter here as we are the 1st tick into the new tile 
-      // if we are actually looking at the sprite and hence calling conveyorLocationUpdate
-      // hence we'll be drawn in the centre of the tile for any of the 4 possible directions
-      conveyorSetLocation(nextLoc->m_building, NS, nearTick, _zoom);
-    } else {
-      // Dump the cargo in the centre of the tile
-      pd->sprite->moveTo(theCargo->m_sprite[_zoom], 
-                        (nextLoc->m_x*TILE_PIX + nextLoc->m_pix_off_x + TILE_PIX/2)*_zoom, 
-                        (nextLoc->m_y*TILE_PIX + nextLoc->m_pix_off_y + TILE_PIX/2)*_zoom);
-    }
-    // Cargo moves between chunks?
-    if (nextLoc->m_chunk != loc->m_chunk) {
-      //pd->system->logToConsole("CHANGE CHUNK");
-      chunkRemoveCargo(loc->m_chunk, theCargo);
-      chunkAddCargo(nextLoc->m_chunk, theCargo);
-    }
+  } else {
 
+    moveCargo(loc, nextLoc, _tick, _zoom);
+  
+  }
+}
+
+void moveCargo(struct Location_t* _loc, struct Location_t* _nextLoc, uint8_t _tick, uint8_t _zoom) {
+
+  struct Building_t* building = _loc->m_building;
+  struct Building_t* nextBuilding = _nextLoc->m_building;
+  struct Cargo_t* theCargo = _loc->m_cargo;
+
+  // Move cargo
+  _nextLoc->m_cargo = theCargo;
+  _loc->m_cargo = NULL;
+
+  // Carry over any excess ticks
+  if (nextBuilding && nextBuilding->m_type == kConveyor) {
+    nextBuilding->m_stored[CONV_MOVEDTO] = m_tickCounter;
+
+    nextBuilding->m_progress = building->m_progress - TILE_PIX;
+    // Note: The direction does not matter here as we are the 1st tick into the new tile 
+    // if we are actually looking at the sprite and hence calling conveyorLocationUpdate
+    // hence we'll be drawn in the centre of the tile for any of the 4 possible directions
+    conveyorSetLocation(nextBuilding, NS, _tick, _zoom);
 
     // Cycle outputs varient 2 (keep this one, it is nicer on the player)
     uint16_t next = 0;
-    switch (_building->m_subType.conveyor) {
-      case kSplitI:; case kSplitL:; next = (_building->m_mode.mode16 + 1) % 2; break;
-      case kSplitT:; next = (_building->m_mode.mode16 + 1) % 3; break;
+    switch (nextBuilding->m_subType.conveyor) {
+      case kSplitI:; case kSplitL:; next = (nextBuilding->m_mode.mode16 + 1) % 2; break;
+      case kSplitT:; next = (nextBuilding->m_mode.mode16 + 1) % 3; break;
       default: break;
     }
-    if (_building->m_next[ next ]->m_cargo == NULL) _building->m_mode.mode16 = next;
+
+    if (nextBuilding->m_next[ next ]->m_cargo == NULL) nextBuilding->m_mode.mode16 = next;
+
+
+  } else {
+    // Dump the cargo in the centre of the tile
+    pd->sprite->moveTo(theCargo->m_sprite[_zoom], // TODO pass down zoom
+                      (_nextLoc->m_x*TILE_PIX + _nextLoc->m_pix_off_x + TILE_PIX/2)* _zoom, 
+                      (_nextLoc->m_y*TILE_PIX + _nextLoc->m_pix_off_y + TILE_PIX/2)* _zoom);
   }
+  // Cargo moves between chunks?
+  if (_nextLoc->m_chunk != _loc->m_chunk) {
+    chunkRemoveCargo(_loc->m_chunk, theCargo);
+    chunkAddCargo(_nextLoc->m_chunk, theCargo);
+  }
+
+
+
+
 }
 
 bool canBePlacedConveyor(struct Location_t* _loc, enum kDir _dir, union kSubType _subType) {

@@ -78,6 +78,18 @@ void tickNear() {
 
   if (zoom > 1 && getPlayer()->m_enableConveyorAnimation) animateConveyor();
 
+  #ifdef ONLY_FAST_TICKS
+  m_nearTickCount += chunkTickChunk(currentChunk, NEAR_TICK_AMOUNT, zoom);
+  for (uint32_t i = 0; i < CHUNK_NEIGHBORS_ALL; ++i) {
+    m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsALL[i], NEAR_TICK_AMOUNT, zoom);
+  }
+  for (uint32_t i = 0; i < CHUNK_NONNEIGHBORS_ALL; ++i) { 
+    m_nearTickCount += chunkTickChunk(currentChunk->m_nonNeighborsALL[i], NEAR_TICK_AMOUNT, zoom); 
+  }
+  processDesiresToMove(NEAR_TICK_AMOUNT, zoom);
+  return;
+  #endif
+
   m_nearTickCount += chunkTickChunk(currentChunk, NEAR_TICK_AMOUNT, zoom);
 
   if (zoom == 1 && !PRETEND_ZOOMED_IN) {
@@ -108,9 +120,14 @@ void tickNear() {
         break;
     }
   }
+  processDesiresToMove(NEAR_TICK_AMOUNT, zoom);
 }
 
 void tickFar() {
+  #ifdef ONLY_FAST_TICKS
+  return;
+  #endif
+
   if((m_frameCount + 3) % FAR_TICK_FREQUENCY == 0) { // +3 to put this out-of-sync with tickNear() and tickFar()
     updateRenderList();
   }
@@ -134,6 +151,7 @@ void tickFar() {
   for (uint32_t i = 0; i < CHUNK_NONNEIGHBORS_ALL; ++i) { 
     m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsALL[i], FAR_TICK_AMOUNT, zoom); 
   }
+  processDesiresToMove(FAR_TICK_AMOUNT, zoom);
   return;
   #endif
 
@@ -200,6 +218,8 @@ void tickFar() {
         break;
     }
   }
+
+  processDesiresToMove(FAR_TICK_AMOUNT, zoom);
 } 
 
 

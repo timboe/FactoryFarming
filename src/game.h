@@ -10,7 +10,9 @@
 
 //#define TITLE_LOGO_ONLY
 
-#define ONLY_SLOW_TICKS 
+//#define ONLY_SLOW_TICKS 
+
+//#define ONLY_FAST_TICKS
 
 #define PRETEND_ZOOMED_IN false
 
