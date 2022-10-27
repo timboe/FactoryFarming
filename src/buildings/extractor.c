@@ -1,5 +1,4 @@
 #include "extractor.h"
-#include "conveyor.h"
 #include "../location.h"
 #include "../sprite.h"
 #include "../generate.h"
@@ -13,9 +12,6 @@ void mineUpdateFn(struct Building_t* _building, uint8_t _tick);
 /// ///
 
 #define COLLECT_TIME (TICKS_PER_SEC*4)
-
-#define PLACE_INITIAL 0
-#define PLACE_NEXT 1
 
 void tryPickupAnyCargo(struct Location_t* _from, struct Building_t* _building) {
   for (int32_t try = 0; try < (MAX_STORE/2); ++try) {
@@ -32,19 +28,16 @@ void tryPickupAnyCargo(struct Location_t* _from, struct Building_t* _building) {
 }
 
 void tryPutdownAnyCargo(struct Building_t* _building, uint8_t _tick) {
-  if (_building->m_next[PLACE_INITIAL]->m_cargo == NULL) {
+  if (_building->m_next[0]->m_cargo == NULL) {
     for (int32_t try = 0; try < (MAX_STORE/2); ++try) {
       if (_building->m_stored[try]) {
-        newCargo(_building->m_next[PLACE_INITIAL], _building->m_stored[try + (MAX_STORE/2)], _tick == NEAR_TICK_AMOUNT);
+        newCargo(_building->m_next[0], _building->m_stored[try + (MAX_STORE/2)], _tick == NEAR_TICK_AMOUNT);
         if (--_building->m_stored[try] == 0) {
           _building->m_stored[try + 3] = kNoCargo; // Reset the slot if we have run out of items 
         }
         break;
       }
     }
-  }
-  if (_building->m_next[PLACE_INITIAL]->m_cargo) {
-    regDesireToMove(_building->m_next[PLACE_INITIAL], _building->m_next[PLACE_NEXT]);
   }
 }
 
@@ -79,17 +72,13 @@ void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick) {
 
 
 void mineUpdateFn(struct Building_t* _building, uint8_t _tick) {
-  if (_building->m_next[PLACE_INITIAL]->m_cargo) {
-    regDesireToMove(_building->m_next[PLACE_INITIAL], _building->m_next[PLACE_NEXT]);
-  }
-
   _building->m_progress += _tick;
   if (_building->m_progress < MAX_DROP_RATE) {
     return;
   }
-  if (_building->m_next[PLACE_INITIAL]->m_cargo == NULL) {
+  if (_building->m_next[0]->m_cargo == NULL) {
     _building->m_progress = 0;
-    newCargo(_building->m_next[PLACE_INITIAL], EDesc[_building->m_subType.extractor].out, _tick == NEAR_TICK_AMOUNT);
+    newCargo(_building->m_next[0], EDesc[_building->m_subType.extractor].out, _tick == NEAR_TICK_AMOUNT);
   }
 }
 
@@ -136,20 +125,12 @@ void assignNeighborsExtractor(struct Building_t* _building) {
   struct Location_t* below;
   struct Location_t* left;
   struct Location_t* right;
-  getBuildingNeighbors(_building, 1, &above, &below, &left, &right);
-  switch (_building->m_dir) {
-    case SN:; _building->m_next[PLACE_INITIAL] = above; break;
-    case WE:; _building->m_next[PLACE_INITIAL] = right; break;
-    case NS:; _building->m_next[PLACE_INITIAL] = below; break;
-    case EW:; _building->m_next[PLACE_INITIAL] = left; break;
-    case kDirN:; break;
-  }
   getBuildingNeighbors(_building, 2, &above, &below, &left, &right);
   switch (_building->m_dir) {
-    case SN:; _building->m_next[PLACE_NEXT] = above; break;
-    case WE:; _building->m_next[PLACE_NEXT] = right; break;
-    case NS:; _building->m_next[PLACE_NEXT] = below; break;
-    case EW:; _building->m_next[PLACE_NEXT] = left; break;
+    case SN:; _building->m_next[0] = above; break;
+    case WE:; _building->m_next[0] = right; break;
+    case NS:; _building->m_next[0] = below; break;
+    case EW:; _building->m_next[0] = left; break;
     case kDirN:; break;
   }
 }
