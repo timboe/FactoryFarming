@@ -14,6 +14,10 @@ void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, boo
 
 void moveCargo(struct Location_t* _loc, struct Location_t* _nextLoc, uint8_t _tick, uint8_t _zoom);
 
+int16_t doDesireToMoveA(uint8_t _tick, uint8_t _zoom);
+
+int16_t doDesireToMoveB(uint8_t _tick, uint8_t _zoom);
+
 uint8_t m_tickCounter = 0;
 
 #define CONV_SPEED 0
@@ -27,7 +31,6 @@ uint8_t m_tickCounter = 0;
 #define MOVE_CUTOFF_THRESHOLD 2
 #define MAX_ITERATIONS 8
 
-void regDesireToMove(struct Location_t* _from, struct Location_t* _to);
 uint16_t m_nDesiresToMoveA;
 uint16_t m_nDesiresToMoveB;
 struct Location_t* m_desiresToMoveToA[MAX_DESIRES_TO_MOVE];
@@ -63,7 +66,7 @@ int16_t doDesireToMoveA(uint8_t _tick, uint8_t _zoom) {
       m_desiresToMoveToB[m_nDesiresToMoveB++] = m_desiresToMoveToA[i];
     }
   }
-  pd->system->logToConsole("A Iteration: moved %i of %i", moved, m_nDesiresToMoveA);
+  //pd->system->logToConsole("A Iteration: moved %i of %i", moved, m_nDesiresToMoveA);
   return moved;
 }
 
@@ -78,7 +81,7 @@ int16_t doDesireToMoveB(uint8_t _tick, uint8_t _zoom) {
       m_desiresToMoveToA[m_nDesiresToMoveA++] = m_desiresToMoveToB[i];
     }
   }
-  pd->system->logToConsole("B Iteration: moved %i of %i", moved, m_nDesiresToMoveB);
+  //pd->system->logToConsole("B Iteration: moved %i of %i", moved, m_nDesiresToMoveB);
   return moved;
 }
 
@@ -98,9 +101,8 @@ void processDesiresToMove(uint8_t _tick, uint8_t _zoom) {
 void conveyorLocationUpdate(struct Building_t* _building, uint8_t _zoom) {
   const int8_t x = (int8_t) _building->m_stored[CONV_X];
   const int8_t y = (int8_t) _building->m_stored[CONV_Y];
-  const bool hide  = _building->m_stored[CONV_HIDE];
   struct Location_t* loc = _building->m_location;
-  if (hide) {
+  if (_building->m_stored[CONV_HIDE]) {
     pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], 65536, 65536);
   } else {
     pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], 
@@ -202,7 +204,10 @@ void moveCargo(struct Location_t* _loc, struct Location_t* _nextLoc, uint8_t _ti
   if (nextBuilding && nextBuilding->m_type == kConveyor) {
     nextBuilding->m_stored[CONV_MOVEDTO] = m_tickCounter;
 
-    nextBuilding->m_progress = building->m_progress - TILE_PIX;
+    if (building && building->m_type == kConveyor) {
+      nextBuilding->m_progress = building->m_progress - TILE_PIX;
+    }
+
     // Note: The direction does not matter here as we are the 1st tick into the new tile 
     // if we are actually looking at the sprite and hence calling conveyorLocationUpdate
     // hence we'll be drawn in the centre of the tile for any of the 4 possible directions
@@ -215,9 +220,7 @@ void moveCargo(struct Location_t* _loc, struct Location_t* _nextLoc, uint8_t _ti
       case kSplitT:; next = (nextBuilding->m_mode.mode16 + 1) % 3; break;
       default: break;
     }
-
     if (nextBuilding->m_next[ next ]->m_cargo == NULL) nextBuilding->m_mode.mode16 = next;
-
 
   } else {
     // Dump the cargo in the centre of the tile
@@ -225,14 +228,12 @@ void moveCargo(struct Location_t* _loc, struct Location_t* _nextLoc, uint8_t _ti
                       (_nextLoc->m_x*TILE_PIX + _nextLoc->m_pix_off_x + TILE_PIX/2)* _zoom, 
                       (_nextLoc->m_y*TILE_PIX + _nextLoc->m_pix_off_y + TILE_PIX/2)* _zoom);
   }
+
   // Cargo moves between chunks?
   if (_nextLoc->m_chunk != _loc->m_chunk) {
     chunkRemoveCargo(_loc->m_chunk, theCargo);
     chunkAddCargo(_nextLoc->m_chunk, theCargo);
   }
-
-
-
 
 }
 
