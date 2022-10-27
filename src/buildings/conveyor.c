@@ -204,16 +204,17 @@ void moveCargo(struct Location_t* _loc, struct Location_t* _nextLoc, uint8_t _ti
   if (nextBuilding && nextBuilding->m_type == kConveyor) {
     nextBuilding->m_stored[CONV_MOVEDTO] = m_tickCounter;
 
-    if (building && building->m_type == kConveyor) {
+    // Only need to comment out if non-conveyors start to register move orders
+    //if (building && building->m_type == kConveyor) {
       nextBuilding->m_progress = building->m_progress - TILE_PIX;
-    }
+    //}
 
     // Note: The direction does not matter here as we are the 1st tick into the new tile 
     // if we are actually looking at the sprite and hence calling conveyorLocationUpdate
     // hence we'll be drawn in the centre of the tile for any of the 4 possible directions
     conveyorSetLocation(nextBuilding, NS, _tick, _zoom);
 
-    // Cycle outputs varient 2 (keep this one, it is nicer on the player)
+    // Cycle outputs variant 2 (keep this one, it is nicer on the player)
     uint16_t next = 0;
     switch (nextBuilding->m_subType.conveyor) {
       case kSplitI:; case kSplitL:; next = (nextBuilding->m_mode.mode16 + 1) % 2; break;
