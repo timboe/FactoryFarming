@@ -2,6 +2,7 @@
 #include "player.h"
 #include "render.h"
 #include "chunk.h"
+#include "input.h"
 #include "io.h"
 
 SDFile* m_imageFile;
@@ -12,6 +13,8 @@ int16_t m_chunkX;
 int16_t m_chunkY;
 uint16_t m_cachePlayerX;
 uint16_t m_cachePlayerY;
+uint8_t m_cacheZoom;
+
 
 // Simple BMP class by u/Daeke
 
@@ -48,6 +51,8 @@ bool doScreenShot(uint32_t* _actionProgress) {
     m_chunkY = 0;
     m_cachePlayerX = getPlayer()->m_pix_x;
     m_cachePlayerY = getPlayer()->m_pix_y;
+    m_cacheZoom = getZoom();
+    unZoom();
     m_modeSnap = true;
   } else if (m_modeSnap == false) {
     m_modeSnap = true;
@@ -99,6 +104,7 @@ bool doScreenShot(uint32_t* _actionProgress) {
     setPlayerPosition(m_cachePlayerX, m_cachePlayerY, /*updateCurrentLocation*/ true);
     updateRenderList();
     setPlayerVisible(true);
+    setZoom(m_cacheZoom);
 
     forceTorus();
   }

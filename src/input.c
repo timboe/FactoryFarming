@@ -112,6 +112,10 @@ uint8_t getZoom() {
   return m_zoom;
 }
 
+void setZoom(uint8_t _z) {
+  m_zoom = _z;
+}
+
 uint8_t getRadius() {
  return m_pickRadius;
 }

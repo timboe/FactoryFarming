@@ -9,6 +9,8 @@ uint8_t getPressed(uint32_t _i);
 
 uint8_t getZoom(void);
 
+void setZoom(uint8_t _z);
+
 uint8_t getRadius(void);
 
 bool bPressed(void);
