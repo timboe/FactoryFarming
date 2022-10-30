@@ -894,6 +894,8 @@ void doLakesAndRivers(uint8_t _slot) {
     lakesToTry /= 2;
   } else if (_slot == kLoamWoarld) {
     lakesToTry *= 2;
+  } else if (_slot == kTranquilWorld) {
+    lakesToTry = 1;
   } 
 
   for (uint8_t i = 0; i < lakesToTry; ++i) {
@@ -914,7 +916,7 @@ void doLakesAndRivers(uint8_t _slot) {
         bool riverWE = rand() % 2;
         if (riverWE) reject = addRiver(x, y, WE, 0, true);
         else reject = addRiver(x, y, NS, 0, true);
-      } else {
+      } else if (_slot != kTranquilWorld) {
         reject = addLake(x, y, RAND_MAX/2);
       }
       if (reject) {
@@ -1052,7 +1054,7 @@ void generate(uint32_t _actionProgress) {
 
     if (slot == kWaterWorld) {
       doSea();
-    } else if (slot != kTranquilWorld && slot != kSandWorld) {
+    } else if (slot != kSandWorld) {
       doLakesAndRivers(slot);
     }
 

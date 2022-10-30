@@ -6,7 +6,7 @@ digraph G {
      node [style="filled", fontname="Arial", colorscheme=ylgnbu3];
 
     Vitamins, Oil, Chips, Ethanol, HardCider, HFCS, Eggs, Tequila, Meat, MSG, Beer,
-    Emulsifiers, Hydrogen, IceCream, HOil, ProteinPowder, Chocolate, TVDinner, ChineseReadyMeal, Caffeine, EnergyDrink,
+    Emulsifiers, Hydrogen, IceCream, HOil, ProteinPowder, Chocolate, TVDinner, FooYoung, Caffeine, EnergyDrink,
     RaveJuice, JelloShots, Cake, CateringKit, Packaging, PartyPack, CornDog, Dessert, Jelly, 
     Gelatin, Pie, PerkPills, Rose, TurkishDelight, Parfume, MiraclePowder
     [shape=Square, fillcolor=1]
@@ -108,7 +108,7 @@ digraph G {
     }
     subgraph f5_a {
         rank="same"
-        Caffeine, Packaging, Dessert, ChineseReadyMeal
+        Caffeine, Packaging, Dessert, FooYoung
     }
     subgraph f5_b {
         rank="same"
@@ -268,12 +268,12 @@ digraph G {
     EnergyDrink -> CateringKit
     Packaging -> CateringKit
     
-    MSG -> ChineseReadyMeal
-    Eggs -> ChineseReadyMeal
-    Bamboo -> ChineseReadyMeal
-    Meat -> ChineseReadyMeal
+    MSG -> FooYoung
+    Eggs -> FooYoung
+    Bamboo -> FooYoung
+    Meat -> FooYoung
 
-    Beer -> PartyPack
+    FooYoung -> PartyPack
     JelloShots -> PartyPack
     Cake -> PartyPack
     RaveJuice -> PartyPack
@@ -287,7 +287,7 @@ digraph G {
     
     ProteinPowder -> MiraclePowder
     SeaCucumber -> MiraclePowder
-    Coffee -> MiraclePowder
+    PerkPills -> MiraclePowder
     Cocoa -> MiraclePowder
     
     Rose -> TurkishDelight

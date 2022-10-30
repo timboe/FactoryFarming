@@ -183,7 +183,7 @@ bool doTitle() {
   setChunkBackgrounds(/*for title = */ true);
   setGameMode(kTitles);
   unZoom();
-  setPlayerPosition(14*TILE_PIX, 9*TILE_PIX, /*update current location = */ true);
+  setPlayerPosition(12*TILE_PIX, 7*TILE_PIX, /*update current location = */ true);
 
   populateMenuTitle();
   updateMusic(/*isTitle=*/true);

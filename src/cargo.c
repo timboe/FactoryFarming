@@ -69,13 +69,13 @@ struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kSpareCargo9, .price = DIS, .multi = 0.0f, .UIIcon = SID(0,0)},
   {.subType = kSpareCargo10, .price = DIS, .multi = 0.0f, .UIIcon = SID(0,0)},
   {.subType = kSpareCargo11, .price = DIS, .multi = 0.0f, .UIIcon = SID(0,0)},
-  {.subType = kFooYoung, .price = 0, .multi = 1.5f, .UIIcon = SID(4,25)},
-  {.subType = kPartyPack, .price = 0, .multi = 1.5f, .UIIcon = SID(13,5)},
+  {.subType = kFooYoung, .price = 0, .multi = 7.5f, .UIIcon = SID(4,25)},
+  {.subType = kPartyPack, .price = 0, .multi = 1.75f, .UIIcon = SID(13,5)},
   {.subType = kSeaCucumber, .price = 0, .multi = 50.0f, .UIIcon = SID(8,22)}, // CROP
-  {.subType = kParfume, .price = 0, .multi = 1.5f, .UIIcon = SID(7,24)},
-  {.subType = kMiraclePowder, .price = 0, .multi = 1.5f, .UIIcon = SID(5,25)},
+  {.subType = kParfume, .price = 0, .multi = 4.0f, .UIIcon = SID(7,24)},
+  {.subType = kMiraclePowder, .price = 0, .multi = 4.0f, .UIIcon = SID(5,25)},
   {.subType = kRose, .price = 0, .multi = 2.5f, .UIIcon = SID(0,25)}, // CROP
-  {.subType = kTurkishDelight, .price = 0, .multi = 1.5f, .UIIcon = SID(6,25)},
+  {.subType = kTurkishDelight, .price = 0, .multi = 5.0f, .UIIcon = SID(6,25)},
   {.subType = kSpareCargo12, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
   {.subType = kSpareCargo13, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
   {.subType = kSpareCargo14, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
@@ -148,7 +148,7 @@ const char* toStringCargoByType(enum kCargoType _type, bool _plural) {
     case kPackaging: return "Packaging";
     case kDessert: return _plural ? "Desserts" : "Dessert";
     case kCateringKit: return _plural ? "Catering Kits" : "Catering Kit";
-    case kFooYoung: return _plural ? "Foo Youngs" : "Foo Youns";
+    case kFooYoung: return "Foo Young";
     case kPartyPack: return _plural ? "Party Packs" : "Party Pack";
     case kSeaCucumber: return _plural ? "Sea Cucumbers" : "Sea Cucumber";
     case kParfume: return "Parfume";
