@@ -88,7 +88,6 @@ int16_t doDesireToMoveB(uint8_t _tick, uint8_t _zoom) {
 void processDesiresToMove(uint8_t _tick, uint8_t _zoom) {
   if (!m_nDesiresToMoveA) return;
 
-  pd->system->logToConsole("---");
   int16_t moved = INT16_MAX;
   int16_t iterations = 0;
   bool flipFlop = true;
@@ -126,6 +125,7 @@ void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, boo
   }
 }
 
+
 void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   struct Location_t* loc = _building->m_location;
   if (loc->m_cargo == NULL || _building->m_stored[CONV_MOVEDTO] == m_tickCounter) return;
@@ -144,15 +144,16 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
     if (_building->m_subType.conveyor >= kFilterL) {
       // First encounter with an object? TODO can everything which can place an item on the chunk do this instead?
       if (_building->m_mode.mode16 == kNoCargo) {
-        _building->m_mode.mode16 = _building->m_location->m_cargo->m_type; // Note: This CANNOT be undone without destroying the building
+        _building->m_mode.mode16 = loc->m_cargo->m_type; // Note: This CANNOT be undone without destroying the building
       }
-      direction = (_building->m_mode.mode16 == _building->m_location->m_cargo->m_type ? _building->m_nextDir[1] :  _building->m_nextDir[0]);  
+      direction = (_building->m_mode.mode16 == loc->m_cargo->m_type ? _building->m_nextDir[1] :  _building->m_nextDir[0]);  
     } else {
       direction = _building->m_nextDir[_building->m_mode.mode16];
     }
 
     conveyorSetLocation(_building, direction, nearTick, _zoom);
   }
+  //////////////////////////////////////////
   #ifdef ONLY_SLOW_TICKS
   else { 
     enum kDir direction;
@@ -167,6 +168,7 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
     conveyorSetLocation(_building, direction, nearTick, _zoom);
   }
   #endif
+  //////////////////////////////////////////
 
   // Handle filters vs. splitters
   struct Location_t* nextLoc = NULL;
@@ -189,6 +191,18 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
   
   }
 }
+
+void updateConveyorDirection(struct Building_t* _building) {
+  // Cycle outputs variant 2 (keep this one, it is nicer on the player)
+  uint16_t next = 0;
+  switch (_building->m_subType.conveyor) {
+    case kSplitI:; case kSplitL:; next = (_building->m_mode.mode16 + 1) % 2; break;
+    case kSplitT:; next = (_building->m_mode.mode16 + 1) % 3; break;
+    default: return; // NOTE: We catch kFilterX here and do NOT update m_mode for filters
+  }
+  if (_building->m_next[ next ]->m_cargo == NULL) _building->m_mode.mode16 = next;
+}
+
 
 void moveCargo(struct Location_t* _loc, struct Location_t* _nextLoc, uint8_t _tick, uint8_t _zoom) {
 
@@ -214,14 +228,7 @@ void moveCargo(struct Location_t* _loc, struct Location_t* _nextLoc, uint8_t _ti
     // hence we'll be drawn in the centre of the tile for any of the 4 possible directions
     conveyorSetLocation(nextBuilding, NS, _tick, _zoom);
 
-    // Cycle outputs variant 2 (keep this one, it is nicer on the player)
-    uint16_t next = 0;
-    switch (nextBuilding->m_subType.conveyor) {
-      case kSplitI:; case kSplitL:; next = (nextBuilding->m_mode.mode16 + 1) % 2; break;
-      case kSplitT:; next = (nextBuilding->m_mode.mode16 + 1) % 3; break;
-      default: break;
-    }
-    if (nextBuilding->m_next[ next ]->m_cargo == NULL) nextBuilding->m_mode.mode16 = next;
+    updateConveyorDirection(nextBuilding);
 
   } else {
     // Dump the cargo in the centre of the tile

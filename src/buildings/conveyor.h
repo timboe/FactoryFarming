@@ -25,3 +25,5 @@ void newConveyorTick(void);
 void processDesiresToMove(uint8_t _tick, uint8_t _zoom);
 
 void regDesireToMove(struct Location_t* _from, struct Location_t* _to);
+
+void updateConveyorDirection(struct Building_t* _building);

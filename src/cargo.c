@@ -4,6 +4,7 @@
 #include "render.h"
 #include "building.h"
 #include "input.h"
+#include "buildings/conveyor.h"
 
 #define DIS UINT32_MAX
 
@@ -242,6 +243,7 @@ bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addToDisplay
   _loc->m_cargo = cargo;
   if (_loc->m_building && _loc->m_building->m_type == kConveyor) {
     _loc->m_building->m_progress = 0;
+    updateConveyorDirection(_loc->m_building);
   }
 
   struct Chunk_t* chunk = _loc->m_chunk;

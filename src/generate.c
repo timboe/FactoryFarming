@@ -916,7 +916,7 @@ void doLakesAndRivers(uint8_t _slot) {
         bool riverWE = rand() % 2;
         if (riverWE) reject = addRiver(x, y, WE, 0, true);
         else reject = addRiver(x, y, NS, 0, true);
-      } else if (_slot != kTranquilWorld) {
+      } else {
         reject = addLake(x, y, RAND_MAX/2);
       }
       if (reject) {
@@ -1065,8 +1065,6 @@ void generate(uint32_t _actionProgress) {
     }
 
   } else if (_actionProgress == 7) {
-
-
 
     // By setting EW, we camouflage these buildings in the early game in slot 0
     const enum kDir camo = (slot == 0 ? EW : SN);
