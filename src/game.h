@@ -1,6 +1,6 @@
 #pragma once
 
-#define DEV
+//#define DEV
 
 //#define SLOW_LOAD
 
@@ -15,6 +15,15 @@
 //#define ONLY_FAST_TICKS
 
 //#define SYNCHRONOUS_SAVE_ENABLED
+
+// Aggressive free: dealocate used sprites
+// Agressive alocate: allocate all sprites at load
+// Neither: Allocate as we go, don't free
+
+//#define AGGRESSIVE_FREE_CARGO_SPRITES
+
+//#define AGGRESSIVE_ALLOCATE_CARGO_SPRITES
+
 
 #define PRETEND_ZOOMED_IN false
 

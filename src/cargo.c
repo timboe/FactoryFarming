@@ -203,26 +203,36 @@ struct Cargo_t* cargoManagerGetByIndex(uint16_t _index) {
 
 void cargoManagerFreeCargo(struct Cargo_t* _cargo) {
   _cargo->m_type = kNoCargo;
+  ///////
+  #ifdef AGGRESSIVE_FREE_CARGO_SPRITES
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     if (_cargo->m_sprite[zoom]) {
       pd->sprite->freeSprite(_cargo->m_sprite[zoom]);
       _cargo->m_sprite[zoom] = NULL;
     }
   }
+  #endif
+  /////
   m_cargoSearchLocation = _cargo->m_index;
   --m_nCargo;
 }
 
 void cargoSpriteSetup(struct Cargo_t* _cargo, uint16_t _x, uint16_t _y, uint16_t _idx) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+    
+    /////
+    #ifndef AGGRESSIVE_ALLOCATE_CARGO_SPRITES
     PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
     if (_cargo->m_sprite[zoom] == NULL) {
       _cargo->m_sprite[zoom] = pd->sprite->newSprite();
     }
     pd->sprite->setBounds(_cargo->m_sprite[zoom], bound);
+    pd->sprite->setZIndex(_cargo->m_sprite[zoom], Z_INDEX_CARGO);
+    #endif
+    /////
+
     pd->sprite->setImage(_cargo->m_sprite[zoom], getSprite16_byidx(_idx, zoom), kBitmapUnflipped);
     pd->sprite->moveTo(_cargo->m_sprite[zoom], _x * zoom, _y * zoom);
-    pd->sprite->setZIndex(_cargo->m_sprite[zoom], Z_INDEX_CARGO);
   }
 }
 
@@ -260,15 +270,20 @@ void resetCargo() {
     }
   }
   memset(m_cargos, 0, SIZE_CARGO);
+
   for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
     m_cargos[i].m_index = i;
+    /////
+    #ifdef AGGRESSIVE_ALLOCATE_CARGO_SPRITES
+    for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+      PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
+      m_cargos[i].m_sprite[zoom] = pd->sprite->newSprite();
+      pd->sprite->setBounds(m_cargos[i].m_sprite[zoom], bound);
+      pd->sprite->setZIndex(m_cargos[i].m_sprite[zoom], Z_INDEX_CARGO);
+    }
+    #endif
+    /////
   }
-  // Max alocate?
-//  for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
-//    for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
-//      m_cargos[i].m_sprite[zoom] = pd->sprite->newSprite();
-//    }
-//  }
   m_deserialiseIndexCargo = 0;
   m_cargoSearchLocation = 0;
   m_nCargo = 0;
