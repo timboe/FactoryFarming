@@ -14,6 +14,8 @@
 
 //#define ONLY_FAST_TICKS
 
+//#define SYNCHRONOUS_SAVE_ENABLED
+
 #define PRETEND_ZOOMED_IN false
 
 #include <stdio.h>

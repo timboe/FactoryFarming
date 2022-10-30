@@ -48,6 +48,7 @@ LCDBitmap* getPauseImage() {
 
   #define CENTRE (TILE_PIX*6 + TILE_PIX/4)
   #define Y_SPACE (3*TILE_PIX/2)
+  #define OFFS 16
 
   #define X_START TILE_PIX
   #define X_END (11*TILE_PIX - TILE_PIX/2)
@@ -56,8 +57,8 @@ LCDBitmap* getPauseImage() {
 
   pd->graphics->pushContext(m_pause);
   pd->graphics->setDrawOffset(TILE_PIX/2, TILE_PIX/2);
-  roundedRect(0, DEVICE_PIX_X/2 - TILE_PIX, 9*TILE_PIX, TILE_PIX, kColorBlack);
-  roundedRect(TILE_PIX/4, DEVICE_PIX_X/2 - TILE_PIX, 9*TILE_PIX, TILE_PIX, kColorWhite);
+  roundedRect(0, DEVICE_PIX_X/2 - TILE_PIX, 8*TILE_PIX, TILE_PIX, kColorBlack);
+  roundedRect(TILE_PIX/4, DEVICE_PIX_X/2 - TILE_PIX, 8*TILE_PIX, TILE_PIX, kColorWhite);
   pd->graphics->setDrawOffset(0, 0);
 
   setRoobert10();
@@ -124,50 +125,65 @@ LCDBitmap* getPauseImage() {
 
   }
 
+
   length = strlen(textA);
   width = pd->graphics->getTextWidth(getRoobert10(), textA, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textA, 128, kASCIIEncoding, CENTRE - width/2, 1*Y_SPACE);
+  pd->graphics->drawText(textA, 128, kASCIIEncoding, CENTRE - width/2, 0*Y_SPACE+OFFS);
 
   length = strlen(textB);
   width = pd->graphics->getTextWidth(getRoobert10(), textB, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textB, 128, kASCIIEncoding, CENTRE - width/2, 2*Y_SPACE);
+  pd->graphics->drawText(textB, 128, kASCIIEncoding, CENTRE - width/2, 1*Y_SPACE+OFFS);
 
-  pd->graphics->drawBitmap(sA, X_START, 2*Y_SPACE, kBitmapUnflipped);
-  pd->graphics->drawBitmap(sA, X_END,   2*Y_SPACE, flip);
+  pd->graphics->drawBitmap(sA, X_START, 1*Y_SPACE, kBitmapUnflipped);
+  pd->graphics->drawBitmap(sA, X_END,   1*Y_SPACE, flip);
 
   length = strlen(textC);
   width = pd->graphics->getTextWidth(getRoobert10(), textC, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textC, 128, kASCIIEncoding, CENTRE - width/2, 3*Y_SPACE);
+  pd->graphics->drawText(textC, 128, kASCIIEncoding, CENTRE - width/2, 2*Y_SPACE+OFFS);
 
-  pd->graphics->drawBitmap(sB, X_START, 4*Y_SPACE, kBitmapUnflipped);
-  pd->graphics->drawBitmap(sB, X_END, 4*Y_SPACE, kBitmapUnflipped);
+  pd->graphics->drawBitmap(sB, X_START, 3*Y_SPACE, kBitmapUnflipped);
+  pd->graphics->drawBitmap(sB, X_END, 3*Y_SPACE, kBitmapUnflipped);
 
   length = strlen(textD);
   width = pd->graphics->getTextWidth(getRoobert10(), textD, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textD, 128, kASCIIEncoding, CENTRE - width/2, 4*Y_SPACE);
+  pd->graphics->drawText(textD, 128, kASCIIEncoding, CENTRE - width/2, 3*Y_SPACE+OFFS);
 
   length = strlen(textE);
   width = pd->graphics->getTextWidth(getRoobert10(), textE, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textE, 128, kASCIIEncoding, CENTRE - width/2, 5*Y_SPACE);
+  pd->graphics->drawText(textE, 128, kASCIIEncoding, CENTRE - width/2, 4*Y_SPACE+OFFS);
 
-  pd->graphics->drawLine(X_START + TILE_PIX, 3*Y_SPACE - TILE_PIX/2, X_END, 3*Y_SPACE - TILE_PIX/2, 2, kColorBlack);
-  pd->graphics->drawLine(X_START + TILE_PIX, 5*Y_SPACE - TILE_PIX/2, X_END, 5*Y_SPACE - TILE_PIX/2, 2, kColorBlack);
+  pd->graphics->drawLine(X_START + TILE_PIX, 2*Y_SPACE+OFFS - TILE_PIX/2, X_END, 2*Y_SPACE+OFFS - TILE_PIX/2, 2, kColorBlack);
+  pd->graphics->drawLine(X_START + TILE_PIX, 4*Y_SPACE+OFFS - TILE_PIX/2, X_END, 4*Y_SPACE+OFFS - TILE_PIX/2, 2, kColorBlack);
 
-  pd->graphics->setDrawOffset(TILE_PIX/2, TILE_PIX*9 + TILE_PIX/2);
-  roundedRect(0, DEVICE_PIX_X/2 - TILE_PIX, 4*TILE_PIX, TILE_PIX, kColorBlack);
-  roundedRect(TILE_PIX/4, DEVICE_PIX_X/2 - TILE_PIX, 4*TILE_PIX, TILE_PIX, kColorWhite);
+  //
+
+  pd->graphics->setDrawOffset(TILE_PIX/2, TILE_PIX*8 + TILE_PIX/2);
+  roundedRect(0, DEVICE_PIX_X/2 - TILE_PIX, 2*TILE_PIX, TILE_PIX, kColorBlack);
+  roundedRect(TILE_PIX/4, DEVICE_PIX_X/2 - TILE_PIX, 2*TILE_PIX, TILE_PIX, kColorWhite);
+  pd->graphics->setDrawOffset(0, 0);
+  
+  snprintf(textA, 128, "SAVE BEFORE EXITING!");
+  length = strlen(textA);
+  width = pd->graphics->getTextWidth(getRoobert10(), textA, length, kUTF8Encoding, 0);
+  pd->graphics->drawText(textA, 128, kASCIIEncoding, CENTRE - width/2, 6*Y_SPACE);
+
+  //
+
+  pd->graphics->setDrawOffset(TILE_PIX/2, TILE_PIX*10 + TILE_PIX/2);
+  roundedRect(0, DEVICE_PIX_X/2 - TILE_PIX, 3*TILE_PIX, TILE_PIX, kColorBlack);
+  roundedRect(TILE_PIX/4, DEVICE_PIX_X/2 - TILE_PIX, 3*TILE_PIX, TILE_PIX, kColorWhite);
   pd->graphics->setDrawOffset(0, 0);
 
   snprintf(textA, 128, "Total Play Time:");
   length = strlen(textA);
   width = pd->graphics->getTextWidth(getRoobert10(), textA, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textA, 128, kASCIIEncoding, CENTRE - width/2, 7*Y_SPACE);
+  pd->graphics->drawText(textA, 128, kASCIIEncoding, CENTRE - width/2, 8*Y_SPACE-OFFS);
 
   const uint32_t pt = p->m_playTime / TICK_FREQUENCY;
   playTime(textA, pt);
   length = strlen(textA);
   width = pd->graphics->getTextWidth(getRoobert10(), textA, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textA, 128, kASCIIEncoding, CENTRE - width/2, 8*Y_SPACE - TILE_PIX/4);
+  pd->graphics->drawText(textA, 128, kASCIIEncoding, CENTRE - width/2, 9*Y_SPACE-OFFS - TILE_PIX/4);
 
   pd->graphics->popContext();
   return m_pause;

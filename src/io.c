@@ -334,6 +334,9 @@ void scanSlots() {
     } else {
       int status = pd->file->close(file);
       if (status) pd->system->error("SCAN SLOTS ERROR: player file->close status code: %i", status);
+      #ifdef DEV
+      pd->system->logToConsole("Scan world: Player data found");
+      #endif
     }
   }
 
@@ -386,12 +389,12 @@ bool doSave(bool _synchronous) {
     // This file should not already exist, double check
     int status = pd->file->unlink(m_filePath, 0);
     #ifdef DEV
-    pd->system->logToConsole("SAVE: unlink previous TMP_player %s, status %i (expect this to fail)", m_filePath, status);
+    pd->system->logToConsole("SAVE: unlink previous TMP_player %s, status %i (expect this to fail, err: %s)", m_filePath, status, pd->file->geterr());
     #endif
 
     if (m_file) pd->system->error("SAVE ERROR: tmp player error: overwriting exiting file ptr");
     m_file = pd->file->open(m_filePath, kFileWrite);
-    if (!m_file) pd->system->error("SAVE ERROR: tmp player error: %s", pd->file->geterr());
+    if (!m_file) pd->system->error("SAVE ERROR: tmp player file creation error: %s", pd->file->geterr());
 
     pd->json->initEncoder(&m_je, doWrite, m_file, pretty);
 
@@ -402,7 +405,7 @@ bool doSave(bool _synchronous) {
     m_je.endTable(&m_je);
 
     int status = pd->file->close(m_file);
-    if (status) pd->system->error("SAVE ERROR: tmp player file->close status code: %i", status);
+    if (status) pd->system->error("SAVE ERROR: tmp player file->close status code: %i, err: %s", status, pd->file->geterr());
     m_file = NULL;
 
   } else if (m_actionProgress == 2) {
@@ -412,12 +415,12 @@ bool doSave(bool _synchronous) {
     // This file should not already exist, double check
     int status = pd->file->unlink(m_filePath, 0);
     #ifdef DEV
-    pd->system->logToConsole("SAVE: unlink previous TMP_world %s, status %i (expect this to fail)", m_filePath, status);
+    pd->system->logToConsole("SAVE: unlink previous TMP_world %s, status %i (expect this to fail, err: %s)", m_filePath, status, pd->file->geterr());
     #endif
 
     if (m_file) pd->system->error("SAVE ERROR: tmp world error: overwriting exiting file ptr");
     m_file = pd->file->open(m_filePath, kFileWrite);
-    if (!m_file) pd->system->error("SAVE ERROR: tmp world error: %s", pd->file->geterr());
+    if (!m_file) pd->system->error("SAVE ERROR: tmp world file creation error: %s", pd->file->geterr());
 
     pd->json->initEncoder(&m_je, doWrite, m_file, pretty);
 
@@ -438,14 +441,14 @@ bool doSave(bool _synchronous) {
     m_je.endTable(&m_je);
 
     int status = pd->file->close(m_file);
-    if (status) pd->system->error("SAVE ERROR: tmp world file->close status code: %i", status);
+    if (status) pd->system->error("SAVE ERROR: tmp world file->close status code: %i, err %s", status, pd->file->geterr());
     m_file = NULL;
 
     // Create backup
     char filePathBackup[32] = {0};
 
     // We can only backup the player if we are not resetting them (new game)
-    if (!(m_doFirst == kDoResetPlayer || m_andThen == kDoResetPlayer)) {
+    if (m_doFirst != kDoResetPlayer) {
       snprintf(m_filePath, 32, "player_%i.json", m_save+1);
       snprintf(filePathBackup, 32, "backup_player_%i.json", m_save+1);
       status = pd->file->unlink(filePathBackup, 0);
@@ -454,11 +457,11 @@ bool doSave(bool _synchronous) {
       pd->system->logToConsole("SAVE: Backup: %s -> %s", m_filePath, filePathBackup);
       #endif
       status = pd->file->rename(m_filePath, filePathBackup);
-      if (status) pd->system->error("SAVE ERROR: backup player file->rename status code: %i", status);
+      if (status) pd->system->error("SAVE ERROR: backup player file->rename status code: %i, err: %s", status, pd->file->geterr());
     }
 
     // We can only backup a previous world file if we are not in worldgen mode
-    if (!(m_doFirst == kDoNewWorld || m_andThen == kDoNewWorld)) {
+    if (m_andThen != kDoNewWorld) {
       snprintf(m_filePath, 32, "world_%i_%i.json", m_save+1, m_slot+1);
       snprintf(filePathBackup, 32, "backup_world_%i_%i.json", m_save+1, m_slot+1);
       status = pd->file->unlink(filePathBackup, 0);
@@ -467,7 +470,7 @@ bool doSave(bool _synchronous) {
       pd->system->logToConsole("SAVE: Backup: %s -> %s", m_filePath, filePathBackup);
       #endif
       status = pd->file->rename(m_filePath, filePathBackup);
-      if (status) pd->system->error("SAVE ERROR: backup world file->rename status code: %i", status);
+      if (status) pd->system->error("SAVE ERROR: backup world file->rename status code: %i, err: %s", status, pd->file->geterr());
     }
 
     // Finish by moving into location
@@ -477,21 +480,21 @@ bool doSave(bool _synchronous) {
       snprintf(filePathFinal, 32, "player_%i.json", m_save+1);
       status = pd->file->unlink(filePathFinal, 0);
       #ifdef DEV
-      pd->system->logToConsole("SAVE: unlink previous player %s, status %i (expect this to fail)", filePathFinal, status);
+      pd->system->logToConsole("SAVE: unlink previous player %s, status %i (expect this to fail, err: %s)", filePathFinal, status, pd->file->geterr());
       pd->system->logToConsole("SAVE: Finalise: %s -> %s", m_filePath, filePathFinal);
       #endif
       status = pd->file->rename(m_filePath, filePathFinal);
-      if (status) pd->system->error("SAVE ERROR: mv player file->rename status code: %i", status);
+      if (status) pd->system->error("SAVE ERROR: mv player file->rename status code: %i, err: %s", status, pd->file->geterr());
 
       snprintf(m_filePath, 32, "TMP_world_%i_%i.json", m_save+1, m_slot+1);
       snprintf(filePathFinal, 32, "world_%i_%i.json", m_save+1, m_slot+1);
       status = pd->file->unlink(filePathFinal, 0);
       #ifdef DEV
-      pd->system->logToConsole("SAVE: unlink previous world %s, status %i (expect this to fail)", filePathFinal, status);
+      pd->system->logToConsole("SAVE: unlink previous world %s, status %i (expect this to fail, err: %s)", filePathFinal, status, pd->file->geterr());
       pd->system->logToConsole("SAVE: Finalise: %s -> %s", m_filePath, filePathFinal);
       #endif
       status = pd->file->rename(m_filePath, filePathFinal);
-      if (status) pd->system->error("SAVE ERROR: mv world file->rename status code: %i", status);
+      if (status) pd->system->error("SAVE ERROR: mv world file->rename status code: %i, err: %s", status, pd->file->geterr());
     }
 
     #ifdef DEV

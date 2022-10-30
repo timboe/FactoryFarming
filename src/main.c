@@ -57,9 +57,13 @@ int eventHandler(PlaydateAPI* playdate, PDSystemEvent event, uint32_t arg) {
       #ifdef DEV
       playdate->system->logToConsole("EH: terminate/lock/low-p, %i", event);
       #endif
+      //
+      #ifdef SYNCHRONOUS_SAVE_ENABLED
       if (getGameMode() != kTitles && !IOOperationInProgress()) {
         synchronousSave();
       }
+      #endif
+      //
       if (event == kEventTerminate) {
         deinit();
       }
