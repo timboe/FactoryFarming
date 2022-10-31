@@ -446,11 +446,13 @@ bool doSave(bool _synchronous) {
 
     // Create backup
     char filePathBackup[32] = {0};
+    FileStat fs;
 
     // We can only backup the player if we are not resetting them (new game)
-    if (m_doFirst != kDoResetPlayer) {
+    snprintf(filePathBackup, 32, "backup_player_%i.json", m_save+1);
+    status = pd->file->stat(filePathBackup, &fs); // Check also we have a player to backup
+    if (m_doFirst != kDoResetPlayer && status == 0) {
       snprintf(m_filePath, 32, "player_%i.json", m_save+1);
-      snprintf(filePathBackup, 32, "backup_player_%i.json", m_save+1);
       status = pd->file->unlink(filePathBackup, 0);
       #ifdef DEV
       pd->system->logToConsole("SAVE: unlink previous player backup %s, status %i", filePathBackup, status);
@@ -461,9 +463,10 @@ bool doSave(bool _synchronous) {
     }
 
     // We can only backup a previous world file if we are not in worldgen mode
-    if (m_andThen != kDoNewWorld) {
+    snprintf(filePathBackup, 32, "backup_world_%i_%i.json", m_save+1, m_slot+1);
+    status = pd->file->stat(filePathBackup, &fs); // Check also we have a world to backup
+    if (m_andThen != kDoNewWorld && status == 0) {
       snprintf(m_filePath, 32, "world_%i_%i.json", m_save+1, m_slot+1);
-      snprintf(filePathBackup, 32, "backup_world_%i_%i.json", m_save+1, m_slot+1);
       status = pd->file->unlink(filePathBackup, 0);
       #ifdef DEV
       pd->system->logToConsole("SAVE: unlink previous world backup %s, status %i", filePathBackup, status);

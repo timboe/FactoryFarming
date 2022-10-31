@@ -258,7 +258,7 @@ int gameLoop(void* _data) {
   if (p->m_enableAutosave) {
     if (++m_autoSaveTimer > p->m_enableAutosave*60*TICK_FREQUENCY && gm == kWanderMode ) {
       m_autoSaveTimer = 0;
-      #ifdef DEV
+      #ifdef SSHOT_ON_AUTOSAVE
       doIO(kDoSave, /*and then*/ kDoScreenShot, /*and finally*/ kDoNothing);
       #else
       doIO(kDoSave, /*and then*/ kDoNothing, /*and finally*/ kDoNothing);

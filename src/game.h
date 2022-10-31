@@ -2,8 +2,11 @@
 
 //#define DEV
 
+//#define SSHOT_ON_AUTOSAVE
+
 //#define SLOW_LOAD
 
+// Careful - can seem to break things 
 //#define FAST_PROGRESS
 
 //#define DEMO
