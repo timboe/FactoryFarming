@@ -4,11 +4,21 @@
 #include "chunk.h"
 #include "input.h"
 #include "io.h"
+#include "ui.h"
 
 SDFile* m_imageFile;
 LCDBitmap* m_imageBitmap;
 
 bool m_modeSnap;
+bool m_doSaving;
+
+bool m_doSnapshots;
+
+int32_t m_pixIndex;
+
+int m_pixWidth, m_pixHeight, m_pixRowBytes;
+uint8_t* m_pixData;
+
 int16_t m_chunkX;
 int16_t m_chunkY;
 uint16_t m_cachePlayerX;
@@ -33,9 +43,14 @@ typedef struct {
   int16_t bitsPerPixel;
 } BitmapCoreHeader;
 
+void saveLCDBitmapHeader(SDFile* _file, LCDBitmap* _bitmap);
+
+bool saveLCDBitmapToFile(SDFile* _file);
+
+/// ///
+
 bool doScreenShot(uint32_t* _actionProgress) {
 
-  bool finished = false;
 
   if (*_actionProgress == 0) {
 
@@ -49,12 +64,24 @@ bool doScreenShot(uint32_t* _actionProgress) {
 
     m_chunkX = 0;
     m_chunkY = 0;
+
+    m_pixIndex = 0;
+    m_pixWidth = 0;
+    m_pixHeight = 0;
+    m_pixRowBytes = 0;
+    m_pixData = NULL;
+
     m_cachePlayerX = getPlayer()->m_pix_x;
     m_cachePlayerY = getPlayer()->m_pix_y;
     m_cacheZoom = getZoom();
     unZoom();
     m_modeSnap = true;
-  } else if (m_modeSnap == false) {
+    m_doSnapshots = true;
+    m_doSaving = false;
+
+    saveLCDBitmapHeader(m_imageFile, m_imageBitmap);
+
+  } else if (m_doSnapshots && m_modeSnap == false) {
     m_modeSnap = true;
 
     m_chunkX += 2;
@@ -64,11 +91,12 @@ bool doScreenShot(uint32_t* _actionProgress) {
       m_chunkY += 2;
 
       if (m_chunkY >= WORLD_CHUNKS_Y) {
-        finished = true;
+        m_doSnapshots = false;
+        m_doSaving = true;
       }
     }
   
-  } else if (m_modeSnap == true) {
+  } else if (m_doSnapshots && m_modeSnap == true) {
     m_modeSnap = false;
 
     LCDBitmap* frame = pd->graphics->getDisplayBufferBitmap(); // Not owned
@@ -79,34 +107,41 @@ bool doScreenShot(uint32_t* _actionProgress) {
 
   }
 
-  uint16_t offX = m_chunkX * CHUNK_PIX_X;
-  uint16_t offY = m_chunkY * CHUNK_PIX_Y;
+  if (m_doSnapshots) {
+    uint16_t offX = m_chunkX * CHUNK_PIX_X;
+    uint16_t offY = m_chunkY * CHUNK_PIX_Y;
 
-  setPlayerVisible(false);
-  setPlayerPosition(offX + CHUNK_PIX_X, offY + CHUNK_PIX_Y, /*updateCurrentLocation*/ true);
-  updateRenderList();
-  pd->graphics->setDrawOffset(getOffX(), getOffY());
-  pd->sprite->drawSprites();
-
-  #ifdef DEV
-  pd->system->logToConsole("doScreenShot %i c(%i,%i) camera off:(%i,%i) draw off:(%i,%i)", *_actionProgress, m_chunkX, m_chunkY, offX, offY, getOffX(), getOffY());
-  #endif
-
-  if (finished) {
-    saveLCDBitmapToFile(m_imageFile, m_imageBitmap);
-
-    pd->file->close(m_imageFile);
-    m_imageFile = NULL;
-
-    pd->graphics->freeBitmap(m_imageBitmap);
-    m_imageBitmap = NULL;
-
-    setPlayerPosition(m_cachePlayerX, m_cachePlayerY, /*updateCurrentLocation*/ true);
+    setPlayerVisible(false);
+    setPlayerPosition(offX + CHUNK_PIX_X, offY + CHUNK_PIX_Y, /*updateCurrentLocation*/ true);
     updateRenderList();
-    setPlayerVisible(true);
-    setZoom(m_cacheZoom);
+    pd->graphics->setDrawOffset(getOffX(), getOffY());
+    pd->sprite->drawSprites();
 
-    forceTorus();
+    #ifdef DEV
+    pd->system->logToConsole("doScreenShot %i c(%i,%i) camera off:(%i,%i) draw off:(%i,%i)", *_actionProgress, m_chunkX, m_chunkY, offX, offY, getOffX(), getOffY());
+    #endif
+  }
+
+  bool finished = false;
+  if (m_doSaving) {
+    pd->sprite->addSprite(getSaveSprite());
+
+    finished = saveLCDBitmapToFile(m_imageFile);
+
+    if (finished) {
+      pd->file->close(m_imageFile);
+      m_imageFile = NULL;
+
+      pd->graphics->freeBitmap(m_imageBitmap);
+      m_imageBitmap = NULL;
+
+      setPlayerPosition(m_cachePlayerX, m_cachePlayerY, /*updateCurrentLocation*/ true);
+      updateRenderList();
+      setPlayerVisible(true);
+      setZoom(m_cacheZoom);
+
+      forceTorus();
+    }
   }
 
   (*_actionProgress)++;
@@ -114,7 +149,7 @@ bool doScreenShot(uint32_t* _actionProgress) {
 
 }
 
-void saveLCDBitmapToFile(SDFile* _file, LCDBitmap* _bitmap) {
+void saveLCDBitmapHeader(SDFile* _file, LCDBitmap* _bitmap) {
   const int32_t fileHeaderLength = 14;
   const int32_t coreHeaderLength = 12;
   const int32_t bitsInAByte = 8;
@@ -146,17 +181,31 @@ void saveLCDBitmapToFile(SDFile* _file, LCDBitmap* _bitmap) {
   pd->file->write(_file, &coreHeader.planes, sizeof(int16_t));
   pd->file->write(_file, &coreHeader.bitsPerPixel, sizeof(int16_t));
 
-  const int32_t count = width * height;
-  for (int32_t index = 0; index < count; index++) {
-    const int32_t x = index % width;
-    const int32_t y = height - (index / width) - 1;
+  pd->graphics->getBitmapData(_bitmap, &m_pixWidth, &m_pixHeight, &m_pixRowBytes, NULL, &m_pixData);
+}
 
-    const int32_t byteIndex = x / bitsInAByte + y * rowBytes;
+
+bool saveLCDBitmapToFile(SDFile* _file) {
+  const int32_t bitsInAByte = 8;
+
+  const int32_t count = m_pixWidth * m_pixHeight;
+  int32_t localCount = 0;
+
+  while (true) {
+    const int32_t x = m_pixIndex % m_pixWidth;
+    const int32_t y = m_pixHeight - (m_pixIndex / m_pixWidth) - 1;
+
+    const int32_t byteIndex = x / bitsInAByte + y * m_pixRowBytes;
     const int bitIndex = (1 << (bitsInAByte - 1)) >> (x % bitsInAByte);
 
-    const uint8_t color = data[byteIndex] & bitIndex ? 0xFF : 0x00;
+    const uint8_t color = m_pixData[byteIndex] & bitIndex ? 0xFF : 0x00;
     pd->file->write(_file, &color, sizeof(uint8_t)); // Red
     pd->file->write(_file, &color, sizeof(uint8_t)); // Green
     pd->file->write(_file, &color, sizeof(uint8_t)); // Blue
+
+    if (++m_pixIndex == count) return true; 
+    if (++localCount == 16384) return false;
   }
+
+  return false;
 }

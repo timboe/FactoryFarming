@@ -36,6 +36,10 @@ void populateInfoSell() {
   const uint16_t selectedID =  getUIContentID();
   const int32_t selectedPrice = getPrice(kUICatCargo, selectedID);
   const uint16_t selectedOwned = getOwned(kUICatCargo, selectedID);
+  int32_t toSell = getBuySellMultiplier();
+  if (toSell > selectedOwned) {
+    toSell = selectedOwned;
+  }  
 
   // AFFORD (N/A)
   pd->sprite->setVisible(getCannotAffordSprite(), 0);
@@ -54,7 +58,7 @@ void populateInfoSell() {
   snprintf(textA, 128, "Sell %s", toStringCargoByType(selectedID, /*plural=*/false));
   snprintf(textB, 128, "Inventory: %i", selectedOwned);
   char textM[32] = "";
-  snprintf_c(textM, 32, selectedPrice);
+  snprintf_c(textM, 32, selectedPrice * toSell);
   snprintf(textC, 128, "Value:      %s", textM);
   pd->graphics->drawText(textA, 128, kASCIIEncoding, 1*TILE_PIX, +2);
   pd->graphics->drawText(textB, 128, kASCIIEncoding, 1*TILE_PIX, TILE_PIX - 2);

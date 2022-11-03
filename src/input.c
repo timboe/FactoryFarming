@@ -120,6 +120,13 @@ uint8_t getRadius() {
  return m_pickRadius;
 }
 
+void resetMomentum() {
+  m_pressed[0] = 0;
+  m_pressed[1] = 0;
+  m_pressed[2] = 0;
+  m_pressed[3] = 0;
+}
+
 uint8_t getPressed(uint32_t _i) {
   return m_pressed[_i];
 }
@@ -275,11 +282,14 @@ void clickHandleTitles(uint32_t _buttonPressed) {
 
 void clickHandleMenuMain(uint32_t _buttonPressed) {
   if (kButtonA == _buttonPressed) {
-    sfx(kSfxA);
-    doSettings();
+    doSettings(true);
   } else if (kButtonB == _buttonPressed) {
     sfx(kSfxB);
     setGameMode(kWanderMode);
+  } else if (kButtonRight == _buttonPressed) {
+    doSettings(true);
+  } else if (kButtonLeft == _buttonPressed) {
+    doSettings(false);
   } else {
     moveCursor(_buttonPressed);
   }
@@ -452,7 +462,11 @@ void rotateHandleWander(float _rotation) {
   rot += _rotation;
   if (rot > UI_ROTATE_ACTION) {
     rot = 0.0f;
-    if (++m_zoom == ZOOM_LEVELS) m_zoom = ZOOM_LEVELS-1;
+    if (++m_zoom == ZOOM_LEVELS) {
+      m_zoom = ZOOM_LEVELS-1;
+      sfx(kSfxNo);
+      return;
+    }
     #ifdef DEV
     pd->system->logToConsole("ZOOM IN");
     #endif
@@ -462,7 +476,11 @@ void rotateHandleWander(float _rotation) {
     #ifdef DEV
     pd->system->logToConsole("ZOOM OUT");
     #endif
-    if (--m_zoom == 0) m_zoom = 1;
+    if (--m_zoom == 0) {
+      m_zoom = 1;
+      sfx(kSfxNo);
+      return;
+    }
     postChangeZoom();
   }
 }

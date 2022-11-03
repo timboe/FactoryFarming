@@ -970,11 +970,11 @@ void drawUITop(const char* _text) {
   }
   pd->graphics->pushContext(m_UIBitmapTop);
   pd->graphics->setLineCapStyle(kLineCapStyleRound);
-  pd->graphics->drawLine(TILE_PIX, TILE_PIX, SCREEN_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorBlack);
+  pd->graphics->drawLine(TILE_PIX, TILE_PIX, SCREEN_PIX_X/2 - TILE_PIX + TILE_PIX*4, TILE_PIX, TILE_PIX*2, kColorBlack);
   pd->graphics->setDrawMode(kDrawModeFillWhite);
   setRoobert24();
   int32_t len = pd->graphics->getTextWidth(getRoobert24(), _text, 16, kASCIIEncoding, 0);
-  pd->graphics->drawText(_text, 16, kASCIIEncoding, (SCREEN_PIX_X/2 - len)/2, 0);
+  pd->graphics->drawText(_text, 16, kASCIIEncoding, (SCREEN_PIX_X/2 + TILE_PIX*4 - len)/2, 0);
   pd->graphics->popContext();
 }
 
@@ -1422,13 +1422,13 @@ void setGameMode(enum kGameMode _mode) {
   } else if (_mode == kBuildMode) {
     drawUITop("Build Mode");
   } else if (_mode == kPickMode) {
-    drawUITop("Pick Mode");
+    drawUITop("Pickup Mode");
   } else if (_mode == kMenuPlayer) {
     drawUITop("Inventory");
   } else if (_mode == kInspectMode) {
     drawUITop("Inspect");
   } else if (_mode == kDestroyMode) {
-    drawUITop("Demolition");
+    drawUITop("Deconstruction");
   } else if (_mode >= kMenuBuy) {
     setBuySellMultiplier(1);
   } else drawUITop(NULL);
@@ -1521,7 +1521,7 @@ void initiUI() {
   m_UISpriteBottom = pd->sprite->newSprite();
   m_UISpriteRight = pd->sprite->newSprite();
 
-  m_UIBitmapTop = pd->graphics->newBitmap(SCREEN_PIX_X/2, TILE_PIX*2, kColorClear);
+  m_UIBitmapTop = pd->graphics->newBitmap(SCREEN_PIX_X/2 + TILE_PIX*4, TILE_PIX*2, kColorClear);
   m_UIBitmapSave = pd->graphics->newBitmap(DEVICE_PIX_X/2, TILE_PIX*2, kColorClear);
   m_UIBitmapGen = pd->graphics->newBitmap(DEVICE_PIX_X/2, TILE_PIX*2, kColorClear);
   m_UIBitmapLoad = pd->graphics->newBitmap(DEVICE_PIX_X/2, TILE_PIX*2, kColorClear);
@@ -1529,15 +1529,18 @@ void initiUI() {
   m_UIBitmapRight = pd->graphics->newBitmap(TILE_PIX, DEVICE_PIX_Y, kColorBlack);
   m_UIBitmapRightRotated = pd->graphics->newBitmap(DEVICE_PIX_Y, TILE_PIX, kColorBlack);
 
-  PDRect boundTop = {.x = 0, .y = 0, .width = SCREEN_PIX_X/2, .height = TILE_PIX*2};
-  pd->sprite->setBounds(m_UISpriteTop, boundTop);
+  PDRect boundTopA = {.x = 0, .y = 0, .width = SCREEN_PIX_X/2 + TILE_PIX*4, .height = TILE_PIX*2};
+
+  PDRect boundTopB = {.x = 0, .y = 0, .width = SCREEN_PIX_X/2, .height = TILE_PIX*2};
+
+  pd->sprite->setBounds(m_UISpriteTop, boundTopA);
   pd->sprite->setImage(m_UISpriteTop, m_UIBitmapTop, kBitmapUnflipped);
   pd->sprite->moveTo(m_UISpriteTop, SCREEN_PIX_X/2 - 32, TILE_PIX);
   pd->sprite->setZIndex(m_UISpriteTop, Z_INDEX_UI_T);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteTop, 1);
   pd->sprite->setVisible(m_UISpriteTop, 1);
 
-  pd->sprite->setBounds(m_UISpriteSave, boundTop);
+  pd->sprite->setBounds(m_UISpriteSave, boundTopB);
   pd->sprite->setImage(m_UISpriteSave, m_UIBitmapSave, kBitmapUnflipped);
   pd->sprite->moveTo(m_UISpriteSave, DEVICE_PIX_X/2, DEVICE_PIX_Y/2);
   pd->sprite->setZIndex(m_UISpriteSave, Z_INDEX_UI_TT);
@@ -1553,7 +1556,7 @@ void initiUI() {
   pd->graphics->drawText("SAVING", 16, kASCIIEncoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
   pd->graphics->popContext();
 
-  pd->sprite->setBounds(m_UISpriteGen, boundTop);
+  pd->sprite->setBounds(m_UISpriteGen, boundTopB);
   pd->sprite->setImage(m_UISpriteGen, m_UIBitmapGen, kBitmapUnflipped);
   pd->sprite->moveTo(m_UISpriteGen, DEVICE_PIX_X/2, DEVICE_PIX_Y/2);
   pd->sprite->setZIndex(m_UISpriteGen, Z_INDEX_UI_TT);
@@ -1569,7 +1572,7 @@ void initiUI() {
   pd->graphics->drawText("GENERATING", 16, kASCIIEncoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
   pd->graphics->popContext();
 
-  pd->sprite->setBounds(m_UISpriteLoad, boundTop);
+  pd->sprite->setBounds(m_UISpriteLoad, boundTopB);
   pd->sprite->setImage(m_UISpriteLoad, m_UIBitmapLoad, kBitmapUnflipped);
   pd->sprite->moveTo(m_UISpriteLoad, DEVICE_PIX_X/2, DEVICE_PIX_Y/2);
   pd->sprite->setZIndex(m_UISpriteLoad, Z_INDEX_UI_TT);

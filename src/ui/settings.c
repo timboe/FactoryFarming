@@ -272,38 +272,62 @@ void cheatUnlock() {
   }
 }
 
-void doSettings() {
+void doSettings(bool _forward) {
+  sfx(kSfxA);
   struct Player_t* p = getPlayer();
   const uint16_t selectedID =  getUIContentID();
   switch (selectedID) {
     case 1: p->m_soundSettings = p->m_soundSettings ^ 1; updateMusic(/*isTitle=*/false); break;
-    case 2: switch(p->m_musicVol) {
+    case 2: 
+          if (!_forward) {
+            switch(p->m_musicVol) {
               case 100: case 0: p->m_musicVol = 75; break;
               case 75: p->m_musicVol = 50; break;
               case 50: p->m_musicVol = 25; break;
               case 25: p->m_musicVol = 100; break;
-            }; break;
+            }; 
+          } else {
+            switch(p->m_musicVol) {
+              case 100: case 0: p->m_musicVol = 25; break;
+              case 75: p->m_musicVol = 100; break;
+              case 50: p->m_musicVol = 75; break;
+              case 25: p->m_musicVol = 50; break;
+            }; 
+          }
+          break;
     case 3: p->m_soundSettings = p->m_soundSettings ^ 2; updateSfx(); break;
     case 4: p->m_enableSteps = !p->m_enableSteps; break;
     case 6: p->m_enableScreenShake = !p->m_enableScreenShake; break;
     case 7: if (p->m_enableTutorial == 255) p->m_enableTutorial = 0; else p->m_enableTutorial = 255; break;
     case 8: p->m_enableConveyorAnimation = !p->m_enableConveyorAnimation; break;
     case 9: p->m_enableExtractorOutlines = !p->m_enableExtractorOutlines; break;
-    case 10: switch(p->m_enableAutosave) {
-              case 0: p->m_enableAutosave = 5; break;
-              case 5: p->m_enableAutosave = 10; break;
-              case 10: p->m_enableAutosave = 15; break;
-              case 15: p->m_enableAutosave = 30; break;
-              case 30: p->m_enableAutosave = 0; break;
-            }; break;
+    case 10: 
+            if (_forward) {
+              switch(p->m_enableAutosave) {
+                case 0: p->m_enableAutosave = 5; break;
+                case 5: p->m_enableAutosave = 10; break;
+                case 10: p->m_enableAutosave = 15; break;
+                case 15: p->m_enableAutosave = 30; break;
+                case 30: p->m_enableAutosave = 0; break;
+              }; 
+            } else {
+              switch(p->m_enableAutosave) {
+                case 0: p->m_enableAutosave = 30; break;
+                case 5: p->m_enableAutosave = 0; break;
+                case 10: p->m_enableAutosave = 5; break;
+                case 15: p->m_enableAutosave = 10; break;
+                case 30: p->m_enableAutosave = 15; break;
+              }; 
+            }
+            break;
     case 11: p->m_enablePickupOnDestroy = !p->m_enablePickupOnDestroy; break;
     case 12: p->m_autoUseConveyorBooster = !p->m_autoUseConveyorBooster; break;
     case 13: p->m_enableDebug = !p->m_enableDebug;; break;
     //
-    case 15: doIO(kDoSave, /*and then*/ kDoTitle, /*and finally*/ kDoNothing); break;
-    case 16: doIO(kDoTitle, /*and then*/ kDoNothing, /*and finally*/ kDoNothing); break;
+    case 15: if (_forward) { doIO(kDoSave, /*and then*/ kDoTitle, /*and finally*/ kDoNothing); } break;
+    case 16: if (_forward) { doIO(kDoTitle, /*and then*/ kDoNothing, /*and finally*/ kDoNothing); } break;
     //
-    case 18: doIO(kDoScreenShot, /*and then*/ kDoNothing, /*and finally*/ kDoNothing); break;
+    case 18: if (_forward) { doIO(kDoScreenShot, /*and then*/ kDoNothing, /*and finally*/ kDoNothing); } break;
     //
     case 25: cheatMoney(); break;
     case 26: cheatUnlock(); break;
@@ -437,7 +461,7 @@ const char* getLine(int32_t _line) {
     case 26: return "Resize: 🎣 or Hold Ⓑ + ⬆️/⬇️";
     case 27: return "Quick Pickup Mode: Hold Ⓐ + ⬅️";
     case 28: return "Quick Inspect Mode: Hold Ⓐ + ⬆️";
-    case 29: return "Quick Demolition Mode: Hold Ⓐ + ➡️";
+    case 29: return "Quick Deconstruct Mode: Hold Ⓐ + ➡️";
     //
     case 30: return "--- Credits ---";
     case 31: return "Factory Farming by Tim Martin";

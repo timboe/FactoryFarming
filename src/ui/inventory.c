@@ -331,9 +331,7 @@ void doDestroy() {
       if (loc->m_building && doBuilding) {
         // Refund
         enum kUICat btc = getBuildingTypeCat(loc->m_building->m_type);
-        int32_t refund = getPrice(btc, loc->m_building->m_subType.raw) * REFUND_AMOUNT;
-        if (!refund) refund = 1;
-        modMoney(refund);
+        modOwned(btc, loc->m_building->m_subType.raw, /*add*/ true);
       }
       cleared |= clearLocation(loc, /*cargo=*/ true, /*building=*/ doBuilding);
     }

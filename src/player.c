@@ -45,7 +45,7 @@ const char* toStringTool(enum kToolType _type) {
   switch(_type) {
     case kToolPickup: return "Pickup Cargo Mode";
     case kToolInspect: return "Inspection Mode";
-    case kToolDestroy: return "Demolition Mode";
+    case kToolDestroy: return "Deconstruction Mode";
     default: return "Tool???";
   }
 }
@@ -54,7 +54,7 @@ const char* toStringToolInfo(enum kToolType _type) {
   switch(_type) {
     case kToolPickup: return "Grabs nearby cargo, empties buildings";
     case kToolInspect: return "See details about the current tile";
-    case kToolDestroy: return "Destroys everything in the area";
+    case kToolDestroy: return "Deconstructs everything in the area";
     default: return "Tool???";
   }
 }

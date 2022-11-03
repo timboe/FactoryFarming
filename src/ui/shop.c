@@ -98,7 +98,7 @@ void populateInfoBuy(bool _visible) {
   }
 
   char textM[32] = "";
-  snprintf_c(textM, 32, selectedPrice);
+  snprintf_c(textM, 32, selectedPrice * multiplier);
 
   snprintf(textB, 128, "Inventory: %i", selectedOwned);
   snprintf(textC, 128, "Price:     %s", textM);

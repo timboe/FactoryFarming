@@ -158,6 +158,4 @@
 
 #define FAST_PROGRESS_SALES 10
 
-#define REFUND_AMOUNT 0.9f
-
 #define STARTING_MONEY 50

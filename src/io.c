@@ -140,6 +140,7 @@ void enactIO() {
       m_forceSlot = -1;
       updateRenderList();
       resumeMusic();
+      resetMomentum();
       setPlayerVisible(true);
       setTruckPosition(0);
     }

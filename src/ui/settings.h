@@ -3,7 +3,7 @@
 #include "../ui.h"
 
 
-void doSettings(void);
+void doSettings(bool _forward);
 
 void redrawSettingsMenuLine(LCDBitmap* _bitmap, int32_t _line);
 
