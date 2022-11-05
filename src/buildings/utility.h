@@ -2,7 +2,7 @@
 #include "../game.h"
 #include "../building.h"
 
-bool utilityUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom);
+void utilityUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom);
 
 void assignNeighborsUtility(struct Building_t* _building);
 

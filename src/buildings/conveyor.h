@@ -2,7 +2,7 @@
 #include "../game.h"
 #include "../building.h"
 
-bool conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom);
+void conveyorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom);
 
 void assignNeighborsConveyor(struct Building_t* _building);
 
@@ -19,11 +19,5 @@ void upgradeConveyor(struct Building_t* _building, bool _forFree);
 void conveyorLocationUpdate(struct Building_t* _building, uint8_t _zoom);
 
 void drawUIInspectConveyor(struct Building_t* _building);
-
-void newConveyorTick(void);
-
-//void processDesiresToMove(uint8_t _tick, uint8_t _zoom);
-
-//void regDesireToMove(struct Location_t* _from, struct Location_t* _to);
 
 void updateConveyorDirection(struct Building_t* _building);

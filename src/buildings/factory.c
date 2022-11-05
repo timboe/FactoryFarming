@@ -9,8 +9,10 @@
 /// ///
 
 
-bool factoryUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
-  
+void factoryUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
+  if (_building->m_tickProcessed == _tickID) return;
+  _building->m_tickProcessed = _tickID;
+
   const enum kFactorySubType fst = _building->m_subType.factory;
   // Production
   if (_building->m_stored[0] < 255 /*out*/ &&
@@ -20,7 +22,7 @@ bool factoryUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom)
     (FDesc[fst].in4 == kNoCargo || _building->m_stored[4]) &&
     (FDesc[fst].in5 == kNoCargo || _building->m_stored[5])) 
   {
-    _building->m_progress += _tick;
+    _building->m_progress += _tickLength;
     if (_building->m_progress >= FDesc[fst].time * TICKS_PER_SEC) {
       _building->m_progress -= (FDesc[fst].time * TICKS_PER_SEC);
       ++_building->m_stored[0];
@@ -57,10 +59,8 @@ bool factoryUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom)
   // Placing down
   if (_building->m_stored[0] && _building->m_next[0]->m_cargo == NULL) {
     --_building->m_stored[0];
-    newCargo(_building->m_next[0], FDesc[fst].out, _tick == NEAR_TICK_AMOUNT);
+    newCargo(_building->m_next[0], FDesc[fst].out, _tickLength == NEAR_TICK_AMOUNT);
   }
-
-  return false;
 }
 
 bool canBePlacedFactory(struct Location_t* _loc) {

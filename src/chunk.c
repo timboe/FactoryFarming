@@ -250,9 +250,9 @@ void chunkRemoveObstacle(struct Chunk_t* _chunk, LCDSprite* _obstacleZ1) {
   --(_chunk->m_nObstacles);
 }
 
-uint16_t chunkTickChunk(struct Chunk_t* _chunk, uint8_t _tick, uint8_t _zoom) {
+uint16_t chunkTickChunk(struct Chunk_t* _chunk, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
   for (uint32_t i = 0; i < _chunk->m_nBuildingsUpdate; ++i) {
-    (*_chunk->m_buildingsUpdate[i]->m_updateFn)(_chunk->m_buildingsUpdate[i], _tick, _zoom);
+    (*_chunk->m_buildingsUpdate[i]->m_updateFn)(_chunk->m_buildingsUpdate[i], _tickLength, _tickID, _zoom);
   }
   return _chunk->m_nBuildingsUpdate;
 }

@@ -12,92 +12,12 @@ const char* getTransitText(int8_t _d);
 
 void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, bool _nearTick, uint8_t _zoom);
 
-void moveCargo(struct Location_t* _loc, struct Location_t* _nextLoc, uint8_t _tick, uint8_t _zoom);
-
-int16_t doDesireToMoveA(uint8_t _tick, uint8_t _zoom);
-
-int16_t doDesireToMoveB(uint8_t _tick, uint8_t _zoom);
-
-uint8_t m_tickCounter = 0;
+void moveCargo(struct Location_t* _loc, struct Location_t* _nextLoc, bool _nearTick, uint8_t _tickID, uint8_t _zoom);
 
 #define CONV_SPEED 0
 #define CONV_X 1
 #define CONV_Y 2
 #define CONV_HIDE 3
-#define CONV_PROCESSED_THIS_TICK 4
-
-//#define MAX_DESIRES_TO_MOVE 2048
-
-//#define MOVE_CUTOFF_THRESHOLD 2
-//#define MAX_ITERATIONS 8
-
-//uint16_t m_nDesiresToMoveA;
-//uint16_t m_nDesiresToMoveB;
-//struct Location_t* m_desiresToMoveToA[MAX_DESIRES_TO_MOVE];
-//struct Location_t* m_desiresToMoveToB[MAX_DESIRES_TO_MOVE];
-
-/// ///
-
-void newConveyorTick() {
-  ++m_tickCounter;
-  //m_nDesiresToMoveA = 0;
-}
-
-/*
-void regDesireToMove(struct Location_t* _from, struct Location_t* _to) {
-  if (m_nDesiresToMoveA == MAX_DESIRES_TO_MOVE) {
-    #ifdef DEV
-    pd->system->error("More conveyor desires to move than we can support!");
-    #endif
-    return;
-  }
-
-  m_desiresToMoveToA[m_nDesiresToMoveA++] = _to;
-  _to->m_desiredToMoveFrom = _from;
-}
-
-int16_t doDesireToMoveA(uint8_t _tick, uint8_t _zoom) {
-  int16_t moved = 0;
-  m_nDesiresToMoveB = 0;
-  for (int16_t i = m_nDesiresToMoveA - 1; i >=0; --i) {
-    if ( m_desiresToMoveToA[i]->m_cargo == NULL) {
-      ++moved;
-      moveCargo(m_desiresToMoveToA[i]->m_desiredToMoveFrom,  m_desiresToMoveToA[i], _tick, _zoom);
-    } else {
-      m_desiresToMoveToB[m_nDesiresToMoveB++] = m_desiresToMoveToA[i];
-    }
-  }
-  //pd->system->logToConsole("A Iteration: moved %i of %i", moved, m_nDesiresToMoveA);
-  return moved;
-}
-
-int16_t doDesireToMoveB(uint8_t _tick, uint8_t _zoom) {
-  int16_t moved = 0;
-  m_nDesiresToMoveA = 0;
-  for (int16_t i = 0; i < m_nDesiresToMoveB; ++i) {
-    if ( m_desiresToMoveToB[i]->m_cargo == NULL) {
-      ++moved;
-      moveCargo(m_desiresToMoveToB[i]->m_desiredToMoveFrom, m_desiresToMoveToB[i], _tick, _zoom);
-    } else {
-      m_desiresToMoveToA[m_nDesiresToMoveA++] = m_desiresToMoveToB[i];
-    }
-  }
-  //pd->system->logToConsole("B Iteration: moved %i of %i", moved, m_nDesiresToMoveB);
-  return moved;
-}
-
-void processDesiresToMove(uint8_t _tick, uint8_t _zoom) {
-  if (!m_nDesiresToMoveA) return;
-
-  int16_t moved = INT16_MAX;
-  int16_t iterations = 0;
-  bool flipFlop = true;
-  while (moved > MOVE_CUTOFF_THRESHOLD && iterations++ < MAX_ITERATIONS) {
-    moved = flipFlop ? doDesireToMoveA(_tick, _zoom) : doDesireToMoveB(_tick, _zoom);
-    flipFlop = !flipFlop;
-  }
-}
-*/
 
 void conveyorLocationUpdate(struct Building_t* _building, uint8_t _zoom) {
   const int8_t x = (int8_t) _building->m_stored[CONV_X];
@@ -128,26 +48,24 @@ void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, boo
 }
 
 
-bool conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
+void conveyorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
   struct Location_t* loc = _building->m_location;
-  if (loc->m_cargo == NULL || _building->m_stored[CONV_PROCESSED_THIS_TICK] == m_tickCounter) {
-    return (loc->m_cargo == NULL);
+  if (loc->m_cargo == NULL || _building->m_tickProcessed == _tickID) {
+    return;
   }
-
-  // Make a note that this conveyor has already processed on this tick.
-  _building->m_stored[CONV_PROCESSED_THIS_TICK] = m_tickCounter;
+  _building->m_tickProcessed = _tickID;
 
   #ifdef ONLY_SLOW_TICKS
   const bool nearTick = true;
   #else
-  const bool nearTick = _tick == NEAR_TICK_AMOUNT;
+  const bool nearTick = (_tickLength == NEAR_TICK_AMOUNT);
   #endif
 
   
   // if (_building->m_subType.conveyor == kTunnelIn) _tick /= 2; // As travelling two tiles. But tricky, near tick amount is 1...
 
   if (_building->m_progress < TILE_PIX) {
-    _building->m_progress += _tick * _building->m_stored[0]; // Stored[0] used to hold conveyor speed
+    _building->m_progress += _tickLength * _building->m_stored[0]; // Stored[0] used to hold conveyor speed
 
     // Handle filters vs. splitters
     enum kDir direction;
@@ -180,7 +98,7 @@ bool conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
   #endif
   //////////////////////////////////////////
 
-  if (_building->m_progress < TILE_PIX) return false; // loc->m_cargo must be !=NULL here
+  if (_building->m_progress < TILE_PIX) return;
 
   // Handle filters vs. splitters
   struct Location_t* nextLoc = NULL;
@@ -194,22 +112,21 @@ bool conveyorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom
   if (nextLoc->m_cargo != NULL) {
 
     // Cascade the call
-    /// XXX just to conveyors for now...
     struct Building_t* nextBuilding = nextLoc->m_building;
     if (nextBuilding == NULL) {
       ableToMove = false;
-    } else if (nextBuilding->m_type != kConveyor) {
-      ableToMove = false;
     } else {
-      ableToMove = conveyorUpdateFn(nextBuilding, _tick, _zoom); // Caution: recursive!
+      // Cuation: When calling into other conveyors this is a potentially recursive fn!
+      (*nextBuilding->m_updateFn)(nextBuilding, _tickLength, _tickID, _zoom);
+      // We might have been able to move the cargo on/into a building, check again
+      ableToMove = (nextLoc->m_cargo == NULL);
     }
+
   } 
 
   if (ableToMove) {
-    moveCargo(loc, nextLoc, _tick, _zoom);
+    moveCargo(loc, nextLoc, nearTick, _tickID, _zoom);
   }
-
-  return (loc->m_cargo == NULL);
 }
 
 void updateConveyorDirection(struct Building_t* _building) {
@@ -224,7 +141,7 @@ void updateConveyorDirection(struct Building_t* _building) {
 }
 
 
-void moveCargo(struct Location_t* _loc, struct Location_t* _nextLoc, uint8_t _tick, uint8_t _zoom) {
+void moveCargo(struct Location_t* _loc, struct Location_t* _nextLoc, bool _nearTick, uint8_t _tickID, uint8_t _zoom) {
 
   struct Building_t* building = _loc->m_building;
   struct Building_t* nextBuilding = _nextLoc->m_building;
@@ -236,9 +153,10 @@ void moveCargo(struct Location_t* _loc, struct Location_t* _nextLoc, uint8_t _ti
 
   // Carry over any excess ticks
   if (nextBuilding && nextBuilding->m_type == kConveyor) {
-    nextBuilding->m_stored[CONV_PROCESSED_THIS_TICK] = m_tickCounter;
+    // Don't process this tile again this tick
+    nextBuilding->m_tickProcessed = _tickID;
 
-    // Only need to comment out if non-conveyors start to register move orders
+    // Only need to comment out if non-conveyors start to register moveCargo orders
     //if (building && building->m_type == kConveyor) {
       nextBuilding->m_progress = building->m_progress - TILE_PIX;
     //}
@@ -246,7 +164,7 @@ void moveCargo(struct Location_t* _loc, struct Location_t* _nextLoc, uint8_t _ti
     // Note: The direction does not matter here as we are the 1st tick into the new tile 
     // if we are actually looking at the sprite and hence calling conveyorLocationUpdate
     // hence we'll be drawn in the centre of the tile for any of the 4 possible directions
-    conveyorSetLocation(nextBuilding, NS, _tick, _zoom);
+    conveyorSetLocation(nextBuilding, NS, _nearTick, _zoom);
 
     updateConveyorDirection(nextBuilding);
 

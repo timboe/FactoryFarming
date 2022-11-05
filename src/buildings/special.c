@@ -37,11 +37,11 @@ bool m_hasExported = false, m_hasImported = false; // tutorial only
 #define EXTERNAL_SALES_SECONDS 2
 #define EXTERNAL_SALES_SEC_IN_TICKS (EXTERNAL_SALES_SECONDS*TICKS_PER_SEC)
 
-void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tick);
+void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tickLength);
 
 void exportUpdateFn(struct Building_t* _building);
 
-void importUpdateFn(struct Building_t* _building, uint8_t _tick);
+void importUpdateFn(struct Building_t* _building, uint8_t _tickLength);
 
 void warpUpdateFn(void);
 
@@ -148,7 +148,7 @@ void warpUpdateFn() {
 }
 
 
-void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tick) {
+void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tickLength) {
   for (int32_t x = _building->m_location->m_x - 1; x < _building->m_location->m_x + 2; ++x) {
     for (int32_t y = _building->m_location->m_y - 1; y < _building->m_location->m_y + 2; ++y) {
       struct Location_t* loc = getLocation_noCheck(x, y); // Will never straddle the world boundary
@@ -179,7 +179,7 @@ void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tick) {
   }
 
   // Process external sales
-  _building->m_progress += _tick;
+  _building->m_progress += _tickLength;
   if (_building->m_progress >= EXTERNAL_SALES_SEC_IN_TICKS) {
     _building->m_progress -= EXTERNAL_SALES_SEC_IN_TICKS;
     const float totInputSales = getOtherWorldCargoSales() * EXTERNAL_SALES_SECONDS;
@@ -188,7 +188,7 @@ void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tick) {
 
 
   // Process exporting of sales data (and exports data, though m_exportItemCountA/B are only incremented by the Exports update fn)
-  m_exportTimer += _tick;
+  m_exportTimer += _tickLength;
   if (m_exportTimer < TWO_MIN) return;
 
   updateExport();
@@ -204,15 +204,17 @@ void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tick) {
   }
 }
 
-bool specialUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
+void specialUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
+  if (_building->m_tickProcessed == _tickID) return;
+  _building->m_tickProcessed = _tickID;
+
   switch (_building->m_subType.special) {
-    case kSellBox:; sellBoxUpdateFn(_building, _tick); break;
-    case kExportBox:; exportUpdateFn(_building); break;
-    case kImportBox:; importUpdateFn(_building, _tick); break;
-    case kWarp: warpUpdateFn(); break;
-    default:;
+    case kSellBox:; return sellBoxUpdateFn(_building, _tickLength);
+    case kExportBox:; return exportUpdateFn(_building);
+    case kImportBox:; return importUpdateFn(_building, _tickLength);
+    case kWarp: return warpUpdateFn();
+    default: return;
   }
-  return false;
 }
 
 void assignNeighborsSpecial(struct Building_t* _building) {
@@ -282,10 +284,6 @@ void buildingSetupSpecial(struct Building_t* _building) {
         (_building->m_pix_y - EXTRACTOR_PIX/2)*zoom);
     }
 
-
-
-
-
     // Early game? Replce with rocks
     if (_building->m_dir != SN) {
       switch (_building->m_subType.special) {
@@ -345,7 +343,7 @@ bool hasImported() {
   return m_hasImported; // Tutorial
 }
 
-void importUpdateFn(struct Building_t* _building, uint8_t _tick) {
+void importUpdateFn(struct Building_t* _building, uint8_t _tickLength) {
   if (_building->m_dir != SN) return;
 
   struct Location_t* loc = NULL;
@@ -355,7 +353,7 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tick) {
     for (int32_t s = -1; s < 2; ++s) {
       loc = getLocation(_building->m_location->m_x + s, _building->m_location->m_y - 2);
       if (_building->m_stored[0] && loc->m_cargo == NULL) {
-        newCargo(loc, _building->m_stored[3], _tick == NEAR_TICK_AMOUNT);
+        newCargo(loc, _building->m_stored[3], _tickLength == NEAR_TICK_AMOUNT);
         --_building->m_stored[0];
       }
     }
@@ -366,7 +364,7 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tick) {
     for (int32_t s = -1; s < 2; ++s) {
       loc = getLocation(_building->m_location->m_x + 2, _building->m_location->m_y + s);
       if (_building->m_stored[1] && loc->m_cargo == NULL) {
-        newCargo(loc, _building->m_stored[4], _tick == NEAR_TICK_AMOUNT);
+        newCargo(loc, _building->m_stored[4], _tickLength == NEAR_TICK_AMOUNT);
         --_building->m_stored[1];
       }
     }
@@ -377,7 +375,7 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tick) {
     for (int32_t s = -1; s < 2; ++s) {
       loc = getLocation(_building->m_location->m_x + s, _building->m_location->m_y + 2);
       if (_building->m_stored[2] && loc->m_cargo == NULL) {
-        newCargo(loc, _building->m_stored[5], _tick == NEAR_TICK_AMOUNT);
+        newCargo(loc, _building->m_stored[5], _tickLength == NEAR_TICK_AMOUNT);
         --_building->m_stored[2];
       }
     }
@@ -388,14 +386,14 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tick) {
     for (int32_t s = -1; s < 2; ++s) {
       loc = getLocation(_building->m_location->m_x - 2, _building->m_location->m_y + s);
       if (_building->m_mode.mode8[0] && loc->m_cargo == NULL) {
-        newCargo(loc, _building->m_mode.mode8[1], _tick == NEAR_TICK_AMOUNT);
+        newCargo(loc, _building->m_mode.mode8[1], _tickLength == NEAR_TICK_AMOUNT);
         --_building->m_mode.mode8[0];
       }
     }
   }
 
   // Add new items
-  _building->m_progress += _tick;
+  _building->m_progress += _tickLength;
   if (_building->m_progress < IMPORT_SEC_IN_TICKS) return;
   _building->m_progress -= IMPORT_SEC_IN_TICKS;
 

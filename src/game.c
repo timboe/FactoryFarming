@@ -29,6 +29,8 @@ uint16_t m_cactusUnlock = 0; // Used to unlock 2nd half of the game
 
 int32_t m_nUnlocks = 0;
 
+uint8_t m_tickID;
+
 void tickNear(void);
 
 void tickFar(void);
@@ -70,7 +72,7 @@ void tickNear() {
     return;
   }
 
-  newConveyorTick();
+  ++m_tickID;
   m_nearTickCount = 0;
 
   uint8_t zoom = getZoom();
@@ -79,48 +81,50 @@ void tickNear() {
   if (zoom > 1 && getPlayer()->m_enableConveyorAnimation) animateConveyor();
 
   #ifdef ONLY_FAST_TICKS
-  m_nearTickCount += chunkTickChunk(currentChunk, NEAR_TICK_AMOUNT, zoom);
+  m_nearTickCount += chunkTickChunk(currentChunk, NEAR_TICK_AMOUNT, m_tickID, zoom);
   for (uint32_t i = 0; i < CHUNK_NEIGHBORS_ALL; ++i) {
-    m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsALL[i], NEAR_TICK_AMOUNT, zoom);
+    m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsALL[i], NEAR_TICK_AMOUNT, m_tickID, zoom);
   }
   for (uint32_t i = 0; i < CHUNK_NONNEIGHBORS_ALL; ++i) { 
-    m_nearTickCount += chunkTickChunk(currentChunk->m_nonNeighborsALL[i], NEAR_TICK_AMOUNT, zoom); 
+    m_nearTickCount += chunkTickChunk(currentChunk->m_nonNeighborsALL[i], NEAR_TICK_AMOUNT, m_tickID, zoom); 
   }
-  //processDesiresToMove(NEAR_TICK_AMOUNT, zoom); xxx
   return;
   #endif
 
-  m_nearTickCount += chunkTickChunk(currentChunk, NEAR_TICK_AMOUNT, zoom);
+  m_nearTickCount += chunkTickChunk(currentChunk, NEAR_TICK_AMOUNT, m_tickID, zoom);
 
   if (zoom == 1 && !PRETEND_ZOOMED_IN) {
+
     for (uint32_t i = 0; i < CHUNK_NEIGHBORS_ALL; ++i) {
-      m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsALL[i], NEAR_TICK_AMOUNT, zoom);
+      m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsALL[i], NEAR_TICK_AMOUNT, m_tickID, zoom);
     }
+
   } else {
+
     switch (getCurrentQuadrant()) {
       case NE:;
-        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNE[0], NEAR_TICK_AMOUNT, zoom);
-        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNE[1], NEAR_TICK_AMOUNT, zoom);
-        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNE[2], NEAR_TICK_AMOUNT, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNE[0], NEAR_TICK_AMOUNT, m_tickID, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNE[1], NEAR_TICK_AMOUNT, m_tickID, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNE[2], NEAR_TICK_AMOUNT, m_tickID, zoom);
         break;
       case SE:;
-        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSE[0], NEAR_TICK_AMOUNT, zoom);
-        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSE[1], NEAR_TICK_AMOUNT, zoom);
-        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSE[2], NEAR_TICK_AMOUNT, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSE[0], NEAR_TICK_AMOUNT, m_tickID, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSE[1], NEAR_TICK_AMOUNT, m_tickID, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSE[2], NEAR_TICK_AMOUNT, m_tickID, zoom);
         break;
       case SW:;
-        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSW[0], NEAR_TICK_AMOUNT, zoom);
-        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSW[1], NEAR_TICK_AMOUNT, zoom);
-        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSW[2], NEAR_TICK_AMOUNT, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSW[0], NEAR_TICK_AMOUNT, m_tickID, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSW[1], NEAR_TICK_AMOUNT, m_tickID, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSW[2], NEAR_TICK_AMOUNT, m_tickID, zoom);
         break;
       case NW:;
-        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNW[0], NEAR_TICK_AMOUNT, zoom);
-        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNW[1], NEAR_TICK_AMOUNT, zoom);
-        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNW[2], NEAR_TICK_AMOUNT, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNW[0], NEAR_TICK_AMOUNT, m_tickID, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNW[1], NEAR_TICK_AMOUNT, m_tickID, zoom);
+        m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNW[2], NEAR_TICK_AMOUNT, m_tickID, zoom);
         break;
     }
+
   }
-  //processDesiresToMove(NEAR_TICK_AMOUNT, zoom); xxx
 }
 
 void tickFar() {
@@ -136,7 +140,7 @@ void tickFar() {
     return;
   }
 
-  newConveyorTick();
+  ++m_tickID;
   m_farTickCount = 0;
 
   //static uint32_t tickTock = 0;
@@ -144,85 +148,50 @@ void tickFar() {
   struct Chunk_t* currentChunk = getCurrentChunk();
 
   #ifdef ONLY_SLOW_TICKS
-  m_farTickCount += chunkTickChunk(currentChunk, FAR_TICK_AMOUNT, zoom);
+  m_farTickCount += chunkTickChunk(currentChunk, FAR_TICK_AMOUNT, m_tickID, zoom);
   for (uint32_t i = 0; i < CHUNK_NEIGHBORS_ALL; ++i) {
-    m_farTickCount += chunkTickChunk(currentChunk->m_neighborsALL[i], FAR_TICK_AMOUNT, zoom);
+    m_farTickCount += chunkTickChunk(currentChunk->m_neighborsALL[i], FAR_TICK_AMOUNT, m_tickID, zoom);
   }
   for (uint32_t i = 0; i < CHUNK_NONNEIGHBORS_ALL; ++i) { 
-    m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsALL[i], FAR_TICK_AMOUNT, zoom); 
+    m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsALL[i], FAR_TICK_AMOUNT, m_tickID, zoom); 
   }
-  //processDesiresToMove(FAR_TICK_AMOUNT, zoom); xxx
   return;
   #endif
 
   if (zoom == 1 && !PRETEND_ZOOMED_IN) {
 
-    // Save CPU mode
-    /*
-    int32_t start = 0;
-    int32_t stop = CHUNK_NONNEIGHBORS_ALL/2;
-    int32_t amount = FAR_TICK_AMOUNT*2;
-    if (++tickTock % 2) {
-      start = CHUNK_NONNEIGHBORS_ALL/2;
-      stop = CHUNK_NONNEIGHBORS_ALL;
-    }
-    */
-
-    // Regular mode
-    int32_t start = 0;
-    int32_t stop = CHUNK_NONNEIGHBORS_ALL;
-    int32_t amount = FAR_TICK_AMOUNT;
-
-    for (uint32_t i = start; i < stop; ++i) { 
+    for (uint32_t i = 0; i < CHUNK_NONNEIGHBORS_ALL; ++i) { 
       //pd->system->logToConsole("B %u = %i", i, (int) currentChunk->m_nonNeighborsALL[i]);
-      m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsALL[i], amount, zoom); // [not currently active] * 2 due to only calling each chunk 50% of the time 
+      m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsALL[i], FAR_TICK_AMOUNT, m_tickID, zoom);
     }
+
   } else {
     
-    // Save CPU mode
-    /*
-    int32_t start = 0;
-    int32_t stop = CHUNK_NONNEIGHBORS_CORNER/2;
-    int32_t amount = FAR_TICK_AMOUNT*2;
-    if (++tickTock % 2) {
-      start = CHUNK_NONNEIGHBORS_CORNER/2;
-      stop = CHUNK_NONNEIGHBORS_CORNER;
-    }
-    */
-
-    // Regular mode
-    int32_t start = 0;
-    int32_t stop = CHUNK_NONNEIGHBORS_CORNER;
-    int32_t amount = FAR_TICK_AMOUNT;
-
     switch (getCurrentQuadrant()) {
       case NE:;
-        for (uint32_t i = start; i < stop; ++i) {
-          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsNE[i], amount, zoom);
+        for (uint32_t i = 0; i < CHUNK_NONNEIGHBORS_CORNER; ++i) {
+          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsNE[i], FAR_TICK_AMOUNT, m_tickID, zoom);
         }
         break;
       case SE:;
-        for (uint32_t i = start; i < stop; ++i) {
-          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsSE[i], amount, zoom);
+        for (uint32_t i = 0; i < CHUNK_NONNEIGHBORS_CORNER; ++i) {
+          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsSE[i], FAR_TICK_AMOUNT, m_tickID, zoom);
         }
         break;
       case SW:;
-        for (uint32_t i = start; i < stop; ++i) {
-          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsSW[i], amount, zoom);
+        for (uint32_t i = 0; i < CHUNK_NONNEIGHBORS_CORNER; ++i) {
+          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsSW[i], FAR_TICK_AMOUNT, m_tickID, zoom);
         }
         break;
       case NW:;
-        for (uint32_t i = start; i < stop; ++i) {
-          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsNW[i], amount, zoom);
+        for (uint32_t i = 0; i < CHUNK_NONNEIGHBORS_CORNER; ++i) {
+          m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsNW[i], FAR_TICK_AMOUNT, m_tickID, zoom);
         }
         break;
     }
+
   }
-
-  //processDesiresToMove(FAR_TICK_AMOUNT, zoom); xxx
 } 
-
-
 
 int gameLoop(void* _data) {
   ++m_frameCount;

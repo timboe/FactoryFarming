@@ -5,9 +5,9 @@
 #include "../cargo.h"
 #include "../ui.h"
 
-void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick);
+void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tickLength);
 
-void mineUpdateFn(struct Building_t* _building, uint8_t _tick);
+void mineUpdateFn(struct Building_t* _building, uint8_t _tickLength);
 
 /// ///
 
@@ -27,11 +27,11 @@ void tryPickupAnyCargo(struct Location_t* _from, struct Building_t* _building) {
   }
 }
 
-void tryPutdownAnyCargo(struct Building_t* _building, uint8_t _tick) {
+void tryPutdownAnyCargo(struct Building_t* _building, uint8_t _tickLength) {
   if (_building->m_next[0]->m_cargo == NULL) {
     for (int32_t try = 0; try < (MAX_STORE/2); ++try) {
       if (_building->m_stored[try]) {
-        newCargo(_building->m_next[0], _building->m_stored[try + (MAX_STORE/2)], _tick == NEAR_TICK_AMOUNT);
+        newCargo(_building->m_next[0], _building->m_stored[try + (MAX_STORE/2)], _tickLength == NEAR_TICK_AMOUNT);
         if (--_building->m_stored[try] == 0) {
           _building->m_stored[try + 3] = kNoCargo; // Reset the slot if we have run out of items 
         }
@@ -71,24 +71,26 @@ void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tick) {
 }
 
 
-void mineUpdateFn(struct Building_t* _building, uint8_t _tick) {
-  _building->m_progress += _tick;
+void mineUpdateFn(struct Building_t* _building, uint8_t _tickLength) {
+  _building->m_progress += _tickLength;
   if (_building->m_progress < MAX_DROP_RATE) {
     return;
   }
   if (_building->m_next[0]->m_cargo == NULL) {
     _building->m_progress = 0;
-    newCargo(_building->m_next[0], EDesc[_building->m_subType.extractor].out, _tick == NEAR_TICK_AMOUNT);
+    newCargo(_building->m_next[0], EDesc[_building->m_subType.extractor].out, _tickLength == NEAR_TICK_AMOUNT);
   }
 }
 
-bool extractorUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
+void extractorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
+  if (_building->m_tickProcessed == _tickID) return;
+  _building->m_tickProcessed = _tickID;
+
   switch (_building->m_subType.extractor) {
-    case kCropHarvesterSmall:; case kCropHarvesterLarge:; cropHarveserUpdateFn(_building, _tick); break;
-    case kChalkQuarry:; case kPump:; case kSaltMine:; case kCO2Extractor:; mineUpdateFn(_building, _tick); break;
-    default:;
+    case kCropHarvesterSmall:; case kCropHarvesterLarge:; return cropHarveserUpdateFn(_building, _tickLength);
+    case kChalkQuarry:; case kPump:; case kSaltMine:; case kCO2Extractor:; return mineUpdateFn(_building, _tickLength);
+    default: break;
   }
-  return false;
 }
 
 bool canBePlacedExtractor(struct Location_t* _loc, union kSubType _subType) {

@@ -13,13 +13,13 @@ uint16_t getGrowdownTimer(struct Building_t* _building, bool _smear);
 
 /// ///
 
-void plantTrySpawnCargo(struct Building_t* _building, uint8_t _tick) {
+void plantTrySpawnCargo(struct Building_t* _building, uint8_t _tickLength) {
   struct Location_t* loc = _building->m_location;
   if (loc->m_cargo != NULL) {
     return;
   }
 
-  newCargo(loc, PDesc[_building->m_subType.plant].out, _tick == NEAR_TICK_AMOUNT);
+  newCargo(loc, PDesc[_building->m_subType.plant].out, _tickLength == NEAR_TICK_AMOUNT);
 
   _building->m_progress = getGrowdownTimer(_building, true);
   
@@ -54,13 +54,15 @@ uint16_t getGrowdownTimer(struct Building_t* _building, bool _smear) {
 }
 
 #define CARGO_BOUNCE_OFFSET 4
-bool plantUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
+void plantUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
+  if (_building->m_tickProcessed == _tickID) return;
+  _building->m_tickProcessed = _tickID;
 
   if (_building->m_location->m_cargo == NULL) {
-    _building->m_progress -= _tick;
+    _building->m_progress -= _tickLength;
   }
 
-  if (_tick == NEAR_TICK_AMOUNT && _building->m_location->m_cargo) {
+  if (_tickLength == NEAR_TICK_AMOUNT && _building->m_location->m_cargo) {
     _building->m_stored[0] = _building->m_stored[0] + (_building->m_stored[1] == 0 ? 1 : -1);
     if      (_building->m_stored[0] == CARGO_BOUNCE_OFFSET) _building->m_stored[1] = 1;
     else if (_building->m_stored[0] == 0)                   _building->m_stored[1] = 0;
@@ -70,11 +72,10 @@ bool plantUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
       (_building->m_pix_y + _building->m_location->m_pix_off_y - _building->m_stored[0])*_zoom);
   }
 
-  if (_building->m_progress > 0) return false;
+  if (_building->m_progress > 0) return;
 
-  plantTrySpawnCargo(_building, _tick);
+  plantTrySpawnCargo(_building, _tickLength);
 
-  return false;
 }
 
 bool canBePlacedPlant(struct Location_t* _loc, union kSubType _subType) {

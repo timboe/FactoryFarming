@@ -2,7 +2,7 @@
 #include "../game.h"
 #include "../building.h"
 
-bool specialUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom);
+void specialUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom);
 
 void assignNeighborsSpecial(struct Building_t* _building);
 
