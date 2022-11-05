@@ -54,7 +54,7 @@ uint16_t getGrowdownTimer(struct Building_t* _building, bool _smear) {
 }
 
 #define CARGO_BOUNCE_OFFSET 4
-void plantUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
+bool plantUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
 
   if (_building->m_location->m_cargo == NULL) {
     _building->m_progress -= _tick;
@@ -70,10 +70,11 @@ void plantUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
       (_building->m_pix_y + _building->m_location->m_pix_off_y - _building->m_stored[0])*_zoom);
   }
 
-  if (_building->m_progress > 0) return;
+  if (_building->m_progress > 0) return false;
 
   plantTrySpawnCargo(_building, _tick);
 
+  return false;
 }
 
 bool canBePlacedPlant(struct Location_t* _loc, union kSubType _subType) {

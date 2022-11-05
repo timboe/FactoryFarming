@@ -204,14 +204,15 @@ void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tick) {
   }
 }
 
-void specialUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
+bool specialUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   switch (_building->m_subType.special) {
-    case kSellBox:; return sellBoxUpdateFn(_building, _tick);
-    case kExportBox:; return exportUpdateFn(_building);
-    case kImportBox:; return importUpdateFn(_building, _tick);
-    case kWarp: return warpUpdateFn();
-    default: return;
+    case kSellBox:; sellBoxUpdateFn(_building, _tick); break;
+    case kExportBox:; exportUpdateFn(_building); break;
+    case kImportBox:; importUpdateFn(_building, _tick); break;
+    case kWarp: warpUpdateFn(); break;
+    default:;
   }
+  return false;
 }
 
 void assignNeighborsSpecial(struct Building_t* _building) {

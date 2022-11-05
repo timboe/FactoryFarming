@@ -86,7 +86,7 @@ void tickNear() {
   for (uint32_t i = 0; i < CHUNK_NONNEIGHBORS_ALL; ++i) { 
     m_nearTickCount += chunkTickChunk(currentChunk->m_nonNeighborsALL[i], NEAR_TICK_AMOUNT, zoom); 
   }
-  processDesiresToMove(NEAR_TICK_AMOUNT, zoom);
+  //processDesiresToMove(NEAR_TICK_AMOUNT, zoom); xxx
   return;
   #endif
 
@@ -120,7 +120,7 @@ void tickNear() {
         break;
     }
   }
-  processDesiresToMove(NEAR_TICK_AMOUNT, zoom);
+  //processDesiresToMove(NEAR_TICK_AMOUNT, zoom); xxx
 }
 
 void tickFar() {
@@ -151,7 +151,7 @@ void tickFar() {
   for (uint32_t i = 0; i < CHUNK_NONNEIGHBORS_ALL; ++i) { 
     m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsALL[i], FAR_TICK_AMOUNT, zoom); 
   }
-  processDesiresToMove(FAR_TICK_AMOUNT, zoom);
+  //processDesiresToMove(FAR_TICK_AMOUNT, zoom); xxx
   return;
   #endif
 
@@ -219,7 +219,7 @@ void tickFar() {
     }
   }
 
-  processDesiresToMove(FAR_TICK_AMOUNT, zoom);
+  //processDesiresToMove(FAR_TICK_AMOUNT, zoom); xxx
 } 
 
 

@@ -146,7 +146,7 @@ struct Building_t{
   struct Location_t* m_next[4]; // Where to send outputs
   struct Location_t* m_location; // Building's location
   enum kDir m_nextDir[4];// Where to animate outputs (conveyor only)
-  void (*m_updateFn)(struct Building_t*, uint8_t, uint8_t);
+  bool (*m_updateFn)(struct Building_t*, uint8_t, uint8_t);
 };
 
 ///

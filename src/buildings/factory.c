@@ -9,7 +9,7 @@
 /// ///
 
 
-void factoryUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
+bool factoryUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   
   const enum kFactorySubType fst = _building->m_subType.factory;
   // Production
@@ -59,6 +59,8 @@ void factoryUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom)
     --_building->m_stored[0];
     newCargo(_building->m_next[0], FDesc[fst].out, _tick == NEAR_TICK_AMOUNT);
   }
+
+  return false;
 }
 
 bool canBePlacedFactory(struct Location_t* _loc) {

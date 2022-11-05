@@ -50,14 +50,15 @@ void binUpdateFn(struct Building_t* _building) {
   }
 }
 
-void utilityUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
+bool utilityUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom) {
   if (_building->m_subType.utility == kBin) {
-  	return binUpdateFn(_building);
+  	binUpdateFn(_building);
   } else if (_building->m_subType.utility == kStorageBox) {
-    return storageUpdateFn(_building);
+    storageUpdateFn(_building);
   } else if (_building->m_subType.utility == kBuffferBox) {
-    return bufferUpdateFn(_building, _tick);
+    bufferUpdateFn(_building, _tick);
   }
+  return false;
 }
 
 bool doPlaceRetirement(struct Location_t* _loc) {

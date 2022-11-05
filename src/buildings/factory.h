@@ -2,7 +2,7 @@
 #include "../game.h"
 #include "../building.h"
 
-void factoryUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom);
+bool factoryUpdateFn(struct Building_t* _building, uint8_t _tick, uint8_t _zoom);
 
 void assignNeighborsFactory(struct Building_t* _building);
 
