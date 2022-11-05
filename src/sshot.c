@@ -126,6 +126,8 @@ bool doScreenShot(uint32_t* _actionProgress) {
   if (m_doSaving) {
     pd->sprite->addSprite(getSaveSprite());
 
+    addSaveProgressSprite(m_pixIndex / 16384, (m_pixWidth * m_pixHeight) / 16384);
+
     finished = saveLCDBitmapToFile(m_imageFile);
 
     if (finished) {

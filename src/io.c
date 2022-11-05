@@ -374,7 +374,10 @@ bool doSave(bool _synchronous) {
   pretty = 1;
   #endif
 
-  if (!_synchronous) pd->sprite->addSprite(getSaveSprite());
+  if (!_synchronous) {
+    pd->sprite->addSprite(getSaveSprite());
+    addSaveProgressSprite(m_actionProgress, 8);
+  }
   #ifdef DEV
   pd->system->logToConsole("SAVE: Save:%i, Sync:%i, Progress %i", m_save, _synchronous, m_actionProgress);
   #endif

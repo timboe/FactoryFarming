@@ -122,6 +122,8 @@ enum kUICat getBuildingTypeCat(enum kBuildingType _b);
 
 LCDSprite* getCannotAffordSprite(void);
 
+void addSaveProgressSprite(int32_t _doneX, int32_t _ofY);
+
 LCDSprite* getSaveSprite(void);
 
 LCDSprite* getLoadSprite(void);

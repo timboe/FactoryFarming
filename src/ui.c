@@ -36,10 +36,12 @@ LCDBitmap* m_UIBitmapRight;
 LCDBitmap* m_UIBitmapRightRotated;
 
 LCDSprite* m_UISpriteSave;
+LCDSprite* m_UISpriteSaveProgress;
 LCDSprite* m_UISpriteLoad;
 LCDSprite* m_UISpriteGen;
 
 LCDBitmap* m_UIBitmapSave;
+LCDBitmap* m_UIBitmapSaveProgress;
 LCDBitmap* m_UIBitmapLoad;
 LCDBitmap* m_UIBitmapGen;
 
@@ -190,6 +192,19 @@ void UIDirtyRight() {
 
 void UIDirtyMain() {
   m_UIDirtyMain = true;
+}
+
+void addSaveProgressSprite(int32_t _doneX, int32_t _ofY) {
+  char text[128];
+  snprintf(text, 128, "%i/%i", (int)_doneX, (int)_ofY);
+  setRoobert10();
+  int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, 128, kASCIIEncoding, 0);
+  pd->graphics->clearBitmap(m_UIBitmapSaveProgress, kColorClear);
+  pd->graphics->pushContext(m_UIBitmapSaveProgress);
+  pd->graphics->setDrawMode(kDrawModeFillWhite);
+  pd->graphics->drawText(text, 128, kASCIIEncoding, (TILE_PIX*6-width)/2, 0);
+  pd->graphics->popContext();
+  pd->sprite->addSprite(m_UISpriteSaveProgress);
 }
 
 LCDSprite* getSaveSprite() { return m_UISpriteSave; } 
@@ -1516,6 +1531,7 @@ void initiUI() {
 
   m_UISpriteTop = pd->sprite->newSprite();
   m_UISpriteSave = pd->sprite->newSprite();
+  m_UISpriteSaveProgress = pd->sprite->newSprite();
   m_UISpriteLoad = pd->sprite->newSprite();
   m_UISpriteGen = pd->sprite->newSprite();
   m_UISpriteBottom = pd->sprite->newSprite();
@@ -1523,6 +1539,7 @@ void initiUI() {
 
   m_UIBitmapTop = pd->graphics->newBitmap(SCREEN_PIX_X/2 + TILE_PIX*4, TILE_PIX*2, kColorClear);
   m_UIBitmapSave = pd->graphics->newBitmap(DEVICE_PIX_X/2, TILE_PIX*2, kColorClear);
+  m_UIBitmapSaveProgress = pd->graphics->newBitmap(TILE_PIX*6, TILE_PIX*1, kColorClear);
   m_UIBitmapGen = pd->graphics->newBitmap(DEVICE_PIX_X/2, TILE_PIX*2, kColorClear);
   m_UIBitmapLoad = pd->graphics->newBitmap(DEVICE_PIX_X/2, TILE_PIX*2, kColorClear);
   m_UIBitmapBottom = pd->graphics->newBitmap(DEVICE_PIX_X, TILE_PIX, kColorBlack);
@@ -1530,8 +1547,8 @@ void initiUI() {
   m_UIBitmapRightRotated = pd->graphics->newBitmap(DEVICE_PIX_Y, TILE_PIX, kColorBlack);
 
   PDRect boundTopA = {.x = 0, .y = 0, .width = SCREEN_PIX_X/2 + TILE_PIX*4, .height = TILE_PIX*2};
-
   PDRect boundTopB = {.x = 0, .y = 0, .width = SCREEN_PIX_X/2, .height = TILE_PIX*2};
+  PDRect boundSpriteSave = {.x = 0, .y = 0, .width = TILE_PIX*6, .height = TILE_PIX};
 
   pd->sprite->setBounds(m_UISpriteTop, boundTopA);
   pd->sprite->setImage(m_UISpriteTop, m_UIBitmapTop, kBitmapUnflipped);
@@ -1546,6 +1563,13 @@ void initiUI() {
   pd->sprite->setZIndex(m_UISpriteSave, Z_INDEX_UI_TT);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteSave, 1);
   pd->sprite->setVisible(m_UISpriteSave, 1);
+
+  pd->sprite->setBounds(m_UISpriteSaveProgress, boundSpriteSave);
+  pd->sprite->setImage(m_UISpriteSaveProgress, m_UIBitmapSaveProgress, kBitmapUnflipped);
+  pd->sprite->moveTo(m_UISpriteSaveProgress, DEVICE_PIX_X/2, DEVICE_PIX_Y/2 + 2*TILE_PIX);
+  pd->sprite->setZIndex(m_UISpriteSaveProgress, Z_INDEX_UI_TT);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteSaveProgress, 1);
+  pd->sprite->setVisible(m_UISpriteSaveProgress, 1);
 
   pd->graphics->pushContext(m_UIBitmapSave);
   pd->graphics->setLineCapStyle(kLineCapStyleRound);
@@ -2143,7 +2167,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 1: return "Now that you're exporting Cargo, let's look at imports too.";
         case 2: return "Go to a different Plot and visit the Imports Manager,";
         case 3: return "you can import up to four Cargo per Plot.";
-        case 4: return " Try setting up an Import now.";
+        case 4: return "Try setting up an Import now.";
           
         case 5: return "Import some Cargo in a different Plot via the Imports";
         case 6: return "Manager (right of the Exports Manager). N, S, E, W";
