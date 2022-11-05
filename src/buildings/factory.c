@@ -5,6 +5,7 @@
 #include "../cargo.h"
 #include "../building.h"
 #include "../ui.h"
+#include "../chunk.h"
 
 /// ///
 
@@ -12,6 +13,7 @@
 void factoryUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
   if (_building->m_tickProcessed == _tickID) return;
   _building->m_tickProcessed = _tickID;
+  ++m_recursionCount;
 
   const enum kFactorySubType fst = _building->m_subType.factory;
   // Production

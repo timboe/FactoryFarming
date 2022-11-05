@@ -4,6 +4,7 @@
 #include "../generate.h"
 #include "../cargo.h"
 #include "../building.h"
+#include "../chunk.h"
 
 int8_t getWaterBonus(enum kGroundWetness _likes, enum kGroundWetness _has);
 
@@ -57,6 +58,7 @@ uint16_t getGrowdownTimer(struct Building_t* _building, bool _smear) {
 void plantUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
   if (_building->m_tickProcessed == _tickID) return;
   _building->m_tickProcessed = _tickID;
+  ++m_recursionCount;
 
   if (_building->m_location->m_cargo == NULL) {
     _building->m_progress -= _tickLength;

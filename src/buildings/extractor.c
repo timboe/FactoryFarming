@@ -4,6 +4,7 @@
 #include "../generate.h"
 #include "../cargo.h"
 #include "../ui.h"
+#include "../chunk.h"
 
 void cropHarveserUpdateFn(struct Building_t* _building, uint8_t _tickLength);
 
@@ -85,6 +86,7 @@ void mineUpdateFn(struct Building_t* _building, uint8_t _tickLength) {
 void extractorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
   if (_building->m_tickProcessed == _tickID) return;
   _building->m_tickProcessed = _tickID;
+  ++m_recursionCount;
 
   switch (_building->m_subType.extractor) {
     case kCropHarvesterSmall:; case kCropHarvesterLarge:; return cropHarveserUpdateFn(_building, _tickLength);

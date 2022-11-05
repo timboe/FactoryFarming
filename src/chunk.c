@@ -3,6 +3,11 @@
 
 const int32_t SIZE_CHUNK = TOT_CHUNKS * sizeof(struct Chunk_t);
 
+uint32_t m_recursionCount;
+#ifdef PRINT_MAX_RECURSION
+uint32_t m_maxRecursion;
+#endif
+
 struct Chunk_t* m_chunks;
 
 void setChunkAssociations(void);
@@ -252,10 +257,24 @@ void chunkRemoveObstacle(struct Chunk_t* _chunk, LCDSprite* _obstacleZ1) {
 
 uint16_t chunkTickChunk(struct Chunk_t* _chunk, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
   for (uint32_t i = 0; i < _chunk->m_nBuildingsUpdate; ++i) {
+    m_recursionCount = 0;
     (*_chunk->m_buildingsUpdate[i]->m_updateFn)(_chunk->m_buildingsUpdate[i], _tickLength, _tickID, _zoom);
+    #ifdef PRINT_MAX_RECURSION
+    if (_tickLength == FAR_TICK_AMOUNT && m_recursionCount > m_maxRecursion) {
+      m_maxRecursion = m_recursionCount;
+    }
+    #endif
   }
   return _chunk->m_nBuildingsUpdate;
 }
+
+#ifdef PRINT_MAX_RECURSION
+void printRecursionSummary() {
+  pd->system->logToConsole("Max recursion %i", m_maxRecursion);
+  m_maxRecursion = 0;
+}
+#endif
+
 
 void doNonNeighborAssociation(struct Chunk_t* _chunk, struct Chunk_t** _theNeighborList, struct Chunk_t** _theNonNeighborList, uint32_t _theListSize) {
   uint32_t counter = 0;

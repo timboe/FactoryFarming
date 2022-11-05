@@ -72,3 +72,8 @@ void chunkResetTorus(void);
 void initChunk(void);
 
 void resetChunk(void);
+
+extern uint32_t m_recursionCount;
+#ifdef PRINT_MAX_RECURSION
+void printRecursionSummary(void);
+#endif

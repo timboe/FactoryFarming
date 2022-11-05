@@ -7,6 +7,7 @@
 #include "../player.h"
 #include "../io.h"
 #include "../ui.h"
+#include "../chunk.h"
 
 struct Building_t* m_sellBox = NULL;
 
@@ -207,6 +208,7 @@ void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tickLength) {
 void specialUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
   if (_building->m_tickProcessed == _tickID) return;
   _building->m_tickProcessed = _tickID;
+  ++m_recursionCount;
 
   switch (_building->m_subType.special) {
     case kSellBox:; return sellBoxUpdateFn(_building, _tickLength);

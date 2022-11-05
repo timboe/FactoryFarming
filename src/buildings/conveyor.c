@@ -54,6 +54,8 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t
     return;
   }
   _building->m_tickProcessed = _tickID;
+  // Most important place to track this
+  ++m_recursionCount;
 
   #ifdef ONLY_SLOW_TICKS
   const bool nearTick = true;
@@ -113,7 +115,7 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t
 
     // Cascade the call
     struct Building_t* nextBuilding = nextLoc->m_building;
-    if (nextBuilding == NULL) {
+    if (nextBuilding == NULL ) {
       ableToMove = false;
     } else {
       // Cuation: When calling into other conveyors this is a potentially recursive fn!
@@ -123,7 +125,7 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t
     }
 
   } 
-
+ 
   if (ableToMove) {
     moveCargo(loc, nextLoc, nearTick, _tickID, _zoom);
   }

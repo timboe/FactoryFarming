@@ -6,6 +6,7 @@
 #include "../cargo.h"
 #include "../ui.h"
 #include "../io.h"
+#include "../chunk.h"
 
 struct Building_t* m_retirement = NULL;
 
@@ -53,6 +54,7 @@ void binUpdateFn(struct Building_t* _building) {
 void utilityUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
   if (_building->m_tickProcessed == _tickID) return;
   _building->m_tickProcessed = _tickID;
+  ++m_recursionCount;
 
   if (_building->m_subType.utility == kBin) {
   	return binUpdateFn(_building);

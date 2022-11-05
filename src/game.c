@@ -191,6 +191,10 @@ void tickFar() {
     }
 
   }
+
+  #ifdef PRINT_MAX_RECURSION
+  printRecursionSummary();
+  #endif
 } 
 
 int gameLoop(void* _data) {
