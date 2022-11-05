@@ -42,7 +42,7 @@ void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tickLength);
 
 void exportUpdateFn(struct Building_t* _building);
 
-void importUpdateFn(struct Building_t* _building, uint8_t _tickLength);
+void importUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom);
 
 void warpUpdateFn(void);
 
@@ -213,7 +213,7 @@ void specialUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t 
   switch (_building->m_subType.special) {
     case kSellBox:; return sellBoxUpdateFn(_building, _tickLength);
     case kExportBox:; return exportUpdateFn(_building);
-    case kImportBox:; return importUpdateFn(_building, _tickLength);
+    case kImportBox:; return importUpdateFn(_building, _tickLength, _tickID, _zoom);
     case kWarp: return warpUpdateFn();
     default: return;
   }
@@ -345,7 +345,7 @@ bool hasImported() {
   return m_hasImported; // Tutorial
 }
 
-void importUpdateFn(struct Building_t* _building, uint8_t _tickLength) {
+void importUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
   if (_building->m_dir != SN) return;
 
   struct Location_t* loc = NULL;
@@ -354,9 +354,23 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tickLength) {
   if (_building->m_stored[0]) {
     for (int32_t s = -1; s < 2; ++s) {
       loc = getLocation(_building->m_location->m_x + s, _building->m_location->m_y - 2);
-      if (_building->m_stored[0] && loc->m_cargo == NULL) {
-        newCargo(loc, _building->m_stored[3], _tickLength == NEAR_TICK_AMOUNT);
-        --_building->m_stored[0];
+      if (_building->m_stored[0]) {
+
+        bool ableToMove = true;
+        if (loc->m_cargo != NULL) {
+          if (loc->m_building == NULL) {
+            ableToMove = false;
+          } else {
+            // Try recursion
+            (*loc->m_building->m_updateFn)(loc->m_building, _tickLength, _tickID, _zoom);
+            ableToMove = (loc->m_cargo == NULL);
+          }
+        }
+        if (ableToMove) {
+          newCargo(loc, _building->m_stored[3], _tickLength == NEAR_TICK_AMOUNT);
+          --_building->m_stored[0];
+        }
+
       }
     }
   }
@@ -365,9 +379,23 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tickLength) {
   if (_building->m_stored[1]) {
     for (int32_t s = -1; s < 2; ++s) {
       loc = getLocation(_building->m_location->m_x + 2, _building->m_location->m_y + s);
-      if (_building->m_stored[1] && loc->m_cargo == NULL) {
-        newCargo(loc, _building->m_stored[4], _tickLength == NEAR_TICK_AMOUNT);
-        --_building->m_stored[1];
+      if (_building->m_stored[1]) {
+
+        bool ableToMove = true;
+        if (loc->m_cargo != NULL) {
+          if (loc->m_building == NULL) {
+            ableToMove = false;
+          } else {
+            // Try recursion
+            (*loc->m_building->m_updateFn)(loc->m_building, _tickLength, _tickID, _zoom);
+            ableToMove = (loc->m_cargo == NULL);
+          }
+        }
+        if (ableToMove) {
+          newCargo(loc, _building->m_stored[4], _tickLength == NEAR_TICK_AMOUNT);
+          --_building->m_stored[1];
+        }
+
       }
     }
   }
@@ -376,9 +404,23 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tickLength) {
   if (_building->m_stored[2]) {
     for (int32_t s = -1; s < 2; ++s) {
       loc = getLocation(_building->m_location->m_x + s, _building->m_location->m_y + 2);
-      if (_building->m_stored[2] && loc->m_cargo == NULL) {
-        newCargo(loc, _building->m_stored[5], _tickLength == NEAR_TICK_AMOUNT);
-        --_building->m_stored[2];
+      if (_building->m_stored[2]) {
+
+        bool ableToMove = true;
+        if (loc->m_cargo != NULL) {
+          if (loc->m_building == NULL) {
+            ableToMove = false;
+          } else {
+            // Try recursion
+            (*loc->m_building->m_updateFn)(loc->m_building, _tickLength, _tickID, _zoom);
+            ableToMove = (loc->m_cargo == NULL);
+          }
+        }
+        if (ableToMove) {
+          newCargo(loc, _building->m_stored[5], _tickLength == NEAR_TICK_AMOUNT);
+          --_building->m_stored[2];
+        }
+
       }
     }
   }
@@ -387,9 +429,23 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tickLength) {
   if (_building->m_mode.mode8[0]) {
     for (int32_t s = -1; s < 2; ++s) {
       loc = getLocation(_building->m_location->m_x - 2, _building->m_location->m_y + s);
-      if (_building->m_mode.mode8[0] && loc->m_cargo == NULL) {
-        newCargo(loc, _building->m_mode.mode8[1], _tickLength == NEAR_TICK_AMOUNT);
-        --_building->m_mode.mode8[0];
+      if (_building->m_mode.mode8[0]) {
+
+        bool ableToMove = true;
+        if (loc->m_cargo != NULL) {
+          if (loc->m_building == NULL) {
+            ableToMove = false;
+          } else {
+            // Try recursion
+            (*loc->m_building->m_updateFn)(loc->m_building, _tickLength, _tickID, _zoom);
+            ableToMove = (loc->m_cargo == NULL);
+          }
+        }
+        if (ableToMove) {
+          newCargo(loc, _building->m_mode.mode8[1], _tickLength == NEAR_TICK_AMOUNT);
+          --_building->m_mode.mode8[0];
+        }
+        
       }
     }
   }

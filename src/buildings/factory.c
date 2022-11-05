@@ -59,7 +59,20 @@ void factoryUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t 
   }
 
   // Placing down
-  if (_building->m_stored[0] && _building->m_next[0]->m_cargo == NULL) {
+  if (_building->m_stored[0] == 0) return; 
+
+  bool ableToMove = true;
+  if (_building->m_next[0]->m_cargo != NULL) {
+    if (_building->m_next[0]->m_building == NULL) {
+      ableToMove = false;
+    } else {
+      // Try recursion
+      (*_building->m_next[0]->m_building->m_updateFn)(_building->m_next[0]->m_building, _tickLength, _tickID, _zoom);
+      ableToMove = (_building->m_next[0]->m_cargo == NULL);
+    }
+  }
+
+  if (ableToMove) {
     --_building->m_stored[0];
     newCargo(_building->m_next[0], FDesc[fst].out, _tickLength == NEAR_TICK_AMOUNT);
   }

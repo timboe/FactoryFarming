@@ -126,7 +126,7 @@ bool doScreenShot(uint32_t* _actionProgress) {
   if (m_doSaving) {
     pd->sprite->addSprite(getSaveSprite());
 
-    addSaveProgressSprite(m_pixIndex / 16384, (m_pixWidth * m_pixHeight) / 16384);
+    addSaveProgressSprite(m_pixIndex / SSHOT_PIXELS_PER_FRAME, (m_pixWidth * m_pixHeight) / SSHOT_PIXELS_PER_FRAME);
 
     finished = saveLCDBitmapToFile(m_imageFile);
 
@@ -206,7 +206,7 @@ bool saveLCDBitmapToFile(SDFile* _file) {
     pd->file->write(_file, &color, sizeof(uint8_t)); // Blue
 
     if (++m_pixIndex == count) return true; 
-    if (++localCount == 16384) return false;
+    if (++localCount == SSHOT_PIXELS_PER_FRAME) return false;
   }
 
   return false;

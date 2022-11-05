@@ -14,7 +14,7 @@ void binUpdateFn(struct Building_t* _building);
 
 void storageUpdateFn(struct Building_t* _building);
 
-void bufferUpdateFn(struct Building_t* _building, uint8_t _tick);
+void bufferUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom);
 
 void buildingSetupRetirement(struct Building_t* _building);
 
@@ -29,7 +29,7 @@ void storageUpdateFn(struct Building_t* _building) {
 
 }
 
-void bufferUpdateFn(struct Building_t* _building, uint8_t _tick) {
+void bufferUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
 
   // Pickup
   if (_building->m_location->m_cargo) {
@@ -37,10 +37,10 @@ void bufferUpdateFn(struct Building_t* _building, uint8_t _tick) {
   }
 
   // Putdown
-  _building->m_progress += _tick;
+  _building->m_progress += _tickLength;
   if (_building->m_progress >= MAX_DROP_RATE) {
     _building->m_progress = 0;
-    tryPutdownAnyCargo(_building, _tick);
+    tryPutdownAnyCargo(_building, _tickLength, _tickID, _zoom);
   }
 
 }
@@ -61,7 +61,7 @@ void utilityUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t 
   } else if (_building->m_subType.utility == kStorageBox) {
     return storageUpdateFn(_building);
   } else if (_building->m_subType.utility == kBuffferBox) {
-    return bufferUpdateFn(_building, _tickLength);
+    return bufferUpdateFn(_building, _tickLength, _tickID, _zoom);
   }
 }
 
