@@ -1,6 +1,6 @@
 #pragma once
 
-#define DEV
+//#define DEV
 
 //#define SSHOT_ON_AUTOSAVE
 
@@ -27,7 +27,7 @@
 
 //#define AGGRESSIVE_ALLOCATE_CARGO_SPRITES
 
-//#define PRINT_MAX_RECURSION
+#define PRINT_MAX_RECURSION
 
 #define PRETEND_ZOOMED_IN false
 

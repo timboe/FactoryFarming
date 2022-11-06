@@ -33,8 +33,11 @@ struct Chunk_t{
   uint16_t m_nBuildingsRender;
   struct Building_t* m_buildingsRender[TILES_PER_CHUNK];
 
-  uint16_t m_nBuildingsUpdate;
-  struct Building_t* m_buildingsUpdate[TILES_PER_CHUNK];
+  uint16_t m_nBuildingsUpdateConveyor;
+  struct Building_t* m_buildingsUpdateConveyor[TILES_PER_CHUNK];
+
+  uint16_t m_nBuildingsUpdateOther;
+  struct Building_t* m_buildingsUpdateOther[TILES_PER_CHUNK];
 
   uint16_t m_nCargos;
   struct Cargo_t* m_cargos[TILES_PER_CHUNK];

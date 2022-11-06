@@ -6,6 +6,7 @@ const int32_t SIZE_CHUNK = TOT_CHUNKS * sizeof(struct Chunk_t);
 uint32_t m_recursionCount;
 #ifdef PRINT_MAX_RECURSION
 uint32_t m_maxRecursion;
+uint32_t m_totalRecursion;
 #endif
 
 struct Chunk_t* m_chunks;
@@ -15,6 +16,10 @@ void setChunkAssociations(void);
 void setNonNeighborAssociationsFor(struct Chunk_t* _chunk);
 
 void doNonNeighborAssociation(struct Chunk_t* _chunk, struct Chunk_t** _theNeighborList, struct Chunk_t** _theNonNeighborList, uint32_t _theListSize);
+
+void chunkRemoveBuildingUpdateConveyor(struct Chunk_t* _chunk, struct Building_t* _building);
+
+void chunkRemoveBuildingUpdateOther(struct Chunk_t* _chunk, struct Building_t* _building);
 
 /// ///
 
@@ -39,13 +44,13 @@ void setChunkSpriteOffsets(struct Chunk_t* _c, int16_t _x, int16_t _y) {
     // This should always be present
     pd->sprite->moveTo(_c->m_bkgSprite[zoom], (CHUNK_PIX_X*_c->m_x + CHUNK_PIX_X/2.0 + _x)*zoom, (CHUNK_PIX_Y*_c->m_y + CHUNK_PIX_Y/2.0 + _y)*zoom);
   }
-  // Set the offet to all locations such that any other moveTo calls can also apply the correct offset
+  // Set the offset to all locations such that any other moveTo calls can also apply the correct offset
   for (uint32_t x = TILES_PER_CHUNK_X * _c->m_x; x < TILES_PER_CHUNK_X * (_c->m_x + 1); ++x) {
     for (uint32_t y = TILES_PER_CHUNK_Y * _c->m_y; y < TILES_PER_CHUNK_Y * (_c->m_y + 1); ++y) {
       struct Location_t* loc = getLocation_noCheck(x, y);
       loc->m_pix_off_x = _x;
       loc->m_pix_off_y = _y; 
-      // Apply the offset to any cargo we come accross on the ground
+      // Apply the offset to any cargo we come across on the ground
       if (loc->m_cargo && (!loc->m_building || loc->m_building->m_type != kConveyor)) {
         for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
           // Cargo should always have a sprite
@@ -163,8 +168,13 @@ void chunkAddBuildingRender(struct Chunk_t* _chunk, struct Building_t* _building
 }
 
 void chunkAddBuildingUpdate(struct Chunk_t* _chunk, struct Building_t* _building) {
-  _chunk->m_buildingsUpdate[ _chunk->m_nBuildingsUpdate ] = _building;
-  ++(_chunk->m_nBuildingsUpdate);
+  if (_building->m_type == kConveyor) {
+    _chunk->m_buildingsUpdateConveyor[ _chunk->m_nBuildingsUpdateConveyor ] = _building;
+    ++(_chunk->m_nBuildingsUpdateConveyor);
+  } else {
+    _chunk->m_buildingsUpdateOther[ _chunk->m_nBuildingsUpdateOther ] = _building;
+    ++(_chunk->m_nBuildingsUpdateOther);
+  }
 }
 
 void chunkRemoveBuildingRender(struct Chunk_t* _chunk, struct Building_t* _building) {
@@ -186,22 +196,49 @@ void chunkRemoveBuildingRender(struct Chunk_t* _chunk, struct Building_t* _build
 }
 
 void chunkRemoveBuildingUpdate(struct Chunk_t* _chunk, struct Building_t* _building) {
+  if (_building->m_type == kConveyor) {
+    chunkRemoveBuildingUpdateConveyor(_chunk, _building);
+  } else {
+    chunkRemoveBuildingUpdateOther(_chunk, _building);
+  }
+}
+
+void chunkRemoveBuildingUpdateConveyor(struct Chunk_t* _chunk, struct Building_t* _building) {
   int32_t idx = -1;
   for (uint32_t i = 0; i < TILES_PER_CHUNK; ++i) {
-    if (_chunk->m_buildingsUpdate[i] == _building) {
+    if (_chunk->m_buildingsUpdateConveyor[i] == _building) {
       idx = i;
       break;
     }
   }
   if (idx == -1) {
-    // All buildings are Render, but not all buildinds are Update. Return if not found
+    // All buildings are Render, but not all buildings are Update. Return if not found
     return;
   }
   for(uint32_t i = idx; i < TILES_PER_CHUNK - 1; i++) {
-    _chunk->m_buildingsUpdate[i] = _chunk->m_buildingsUpdate[i + 1];
-    if (_chunk->m_buildingsUpdate[i] == NULL) break;
+    _chunk->m_buildingsUpdateConveyor[i] = _chunk->m_buildingsUpdateConveyor[i + 1];
+    if (_chunk->m_buildingsUpdateConveyor[i] == NULL) break;
   }
-  --(_chunk->m_nBuildingsUpdate);
+  --(_chunk->m_nBuildingsUpdateConveyor);
+}
+
+void chunkRemoveBuildingUpdateOther(struct Chunk_t* _chunk, struct Building_t* _building) {
+  int32_t idx = -1;
+  for (uint32_t i = 0; i < TILES_PER_CHUNK; ++i) {
+    if (_chunk->m_buildingsUpdateOther[i] == _building) {
+      idx = i;
+      break;
+    }
+  }
+  if (idx == -1) {
+    // All buildings are Render, but not all buildings are Update. Return if not found
+    return;
+  }
+  for(uint32_t i = idx; i < TILES_PER_CHUNK - 1; i++) {
+    _chunk->m_buildingsUpdateOther[i] = _chunk->m_buildingsUpdateOther[i + 1];
+    if (_chunk->m_buildingsUpdateOther[i] == NULL) break;
+  }
+  --(_chunk->m_nBuildingsUpdateOther);
 }
 
 void chunkAddCargo(struct Chunk_t* _chunk, struct Cargo_t* _cargo) {
@@ -256,22 +293,27 @@ void chunkRemoveObstacle(struct Chunk_t* _chunk, LCDSprite* _obstacleZ1) {
 }
 
 uint16_t chunkTickChunk(struct Chunk_t* _chunk, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
-  for (uint32_t i = 0; i < _chunk->m_nBuildingsUpdate; ++i) {
+  for (uint32_t i = 0; i < _chunk->m_nBuildingsUpdateConveyor; ++i) {
     m_recursionCount = 0;
-    (*_chunk->m_buildingsUpdate[i]->m_updateFn)(_chunk->m_buildingsUpdate[i], _tickLength, _tickID, _zoom);
+    (*_chunk->m_buildingsUpdateConveyor[i]->m_updateFn)(_chunk->m_buildingsUpdateConveyor[i], _tickLength, _tickID, _zoom);
     #ifdef PRINT_MAX_RECURSION
     if (_tickLength == FAR_TICK_AMOUNT && m_recursionCount > m_maxRecursion) {
       m_maxRecursion = m_recursionCount;
+      m_totalRecursion += m_recursionCount;
     }
     #endif
   }
-  return _chunk->m_nBuildingsUpdate;
+  for (uint32_t i = 0; i < _chunk->m_nBuildingsUpdateOther; ++i) {
+    (*_chunk->m_buildingsUpdateOther[i]->m_updateFn)(_chunk->m_buildingsUpdateOther[i], _tickLength, _tickID, _zoom);
+  }
+  return _chunk->m_nBuildingsUpdateConveyor + _chunk->m_nBuildingsUpdateOther;
 }
 
 #ifdef PRINT_MAX_RECURSION
 void printRecursionSummary() {
-  pd->system->logToConsole("Max recursion %i", m_maxRecursion);
+  pd->system->logToConsole("Max recursion: %i, total recursion: %i", m_maxRecursion, m_totalRecursion);
   m_maxRecursion = 0;
+  m_totalRecursion = 0;
 }
 #endif
 
