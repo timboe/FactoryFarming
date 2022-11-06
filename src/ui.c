@@ -36,12 +36,12 @@ LCDBitmap* m_UIBitmapRight;
 LCDBitmap* m_UIBitmapRightRotated;
 
 LCDSprite* m_UISpriteSave;
-LCDSprite* m_UISpriteSaveProgress;
+LCDSprite* m_UISpriteSaveLoadProgress;
 LCDSprite* m_UISpriteLoad;
 LCDSprite* m_UISpriteGen;
 
 LCDBitmap* m_UIBitmapSave;
-LCDBitmap* m_UIBitmapSaveProgress;
+LCDBitmap* m_UIBitmapSaveLoadProgress;
 LCDBitmap* m_UIBitmapLoad;
 LCDBitmap* m_UIBitmapGen;
 
@@ -194,17 +194,17 @@ void UIDirtyMain() {
   m_UIDirtyMain = true;
 }
 
-void addSaveProgressSprite(int32_t _doneX, int32_t _ofY) {
+void addSaveLoadProgressSprite(int32_t _doneX, int32_t _ofY) {
   char text[128];
   snprintf(text, 128, "%i/%i", (int)_doneX, (int)_ofY);
   setRoobert10();
   int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, 128, kASCIIEncoding, 0);
-  pd->graphics->clearBitmap(m_UIBitmapSaveProgress, kColorClear);
-  pd->graphics->pushContext(m_UIBitmapSaveProgress);
+  pd->graphics->clearBitmap(m_UIBitmapSaveLoadProgress, kColorClear);
+  pd->graphics->pushContext(m_UIBitmapSaveLoadProgress);
   pd->graphics->setDrawMode(kDrawModeFillWhite);
   pd->graphics->drawText(text, 128, kASCIIEncoding, (TILE_PIX*6-width)/2, 0);
   pd->graphics->popContext();
-  pd->sprite->addSprite(m_UISpriteSaveProgress);
+  pd->sprite->addSprite(m_UISpriteSaveLoadProgress);
 }
 
 LCDSprite* getSaveSprite() { return m_UISpriteSave; } 
@@ -1530,7 +1530,7 @@ void initiUI() {
 
   m_UISpriteTop = pd->sprite->newSprite();
   m_UISpriteSave = pd->sprite->newSprite();
-  m_UISpriteSaveProgress = pd->sprite->newSprite();
+  m_UISpriteSaveLoadProgress = pd->sprite->newSprite();
   m_UISpriteLoad = pd->sprite->newSprite();
   m_UISpriteGen = pd->sprite->newSprite();
   m_UISpriteBottom = pd->sprite->newSprite();
@@ -1538,7 +1538,7 @@ void initiUI() {
 
   m_UIBitmapTop = pd->graphics->newBitmap(SCREEN_PIX_X/2 + TILE_PIX*4, TILE_PIX*2, kColorClear);
   m_UIBitmapSave = pd->graphics->newBitmap(DEVICE_PIX_X/2, TILE_PIX*2, kColorClear);
-  m_UIBitmapSaveProgress = pd->graphics->newBitmap(TILE_PIX*6, TILE_PIX*1, kColorClear);
+  m_UIBitmapSaveLoadProgress = pd->graphics->newBitmap(TILE_PIX*6, TILE_PIX*1, kColorClear);
   m_UIBitmapGen = pd->graphics->newBitmap(DEVICE_PIX_X/2, TILE_PIX*2, kColorClear);
   m_UIBitmapLoad = pd->graphics->newBitmap(DEVICE_PIX_X/2, TILE_PIX*2, kColorClear);
   m_UIBitmapBottom = pd->graphics->newBitmap(DEVICE_PIX_X, TILE_PIX, kColorBlack);
@@ -1563,12 +1563,12 @@ void initiUI() {
   pd->sprite->setIgnoresDrawOffset(m_UISpriteSave, 1);
   pd->sprite->setVisible(m_UISpriteSave, 1);
 
-  pd->sprite->setBounds(m_UISpriteSaveProgress, boundSpriteSave);
-  pd->sprite->setImage(m_UISpriteSaveProgress, m_UIBitmapSaveProgress, kBitmapUnflipped);
-  pd->sprite->moveTo(m_UISpriteSaveProgress, DEVICE_PIX_X/2, DEVICE_PIX_Y/2 + 2*TILE_PIX);
-  pd->sprite->setZIndex(m_UISpriteSaveProgress, Z_INDEX_UI_TT);
-  pd->sprite->setIgnoresDrawOffset(m_UISpriteSaveProgress, 1);
-  pd->sprite->setVisible(m_UISpriteSaveProgress, 1);
+  pd->sprite->setBounds(m_UISpriteSaveLoadProgress, boundSpriteSave);
+  pd->sprite->setImage(m_UISpriteSaveLoadProgress, m_UIBitmapSaveLoadProgress, kBitmapUnflipped);
+  pd->sprite->moveTo(m_UISpriteSaveLoadProgress, DEVICE_PIX_X/2, DEVICE_PIX_Y/2 + 2*TILE_PIX);
+  pd->sprite->setZIndex(m_UISpriteSaveLoadProgress, Z_INDEX_UI_TT);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteSaveLoadProgress, 1);
+  pd->sprite->setVisible(m_UISpriteSaveLoadProgress, 1);
 
   pd->graphics->pushContext(m_UIBitmapSave);
   pd->graphics->setLineCapStyle(kLineCapStyleRound);

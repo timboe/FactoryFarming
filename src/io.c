@@ -199,6 +199,7 @@ bool doNewWorld() {
   pd->system->logToConsole("NEW WORLD: Progress %i", m_actionProgress);
   #endif
   pd->sprite->addSprite(getGenSprite());
+  addSaveLoadProgressSprite(m_actionProgress, 10);
 
   // Create and go to new world!
   if (m_actionProgress == 0) {
@@ -376,7 +377,7 @@ bool doSave(bool _synchronous) {
 
   if (!_synchronous) {
     pd->sprite->addSprite(getSaveSprite());
-    addSaveProgressSprite(m_actionProgress, 8);
+    addSaveLoadProgressSprite(m_actionProgress, 8);
   }
   #ifdef DEV
   pd->system->logToConsole("SAVE: Save:%i, Sync:%i, Progress %i", m_save, _synchronous, m_actionProgress);
@@ -529,6 +530,7 @@ bool doSave(bool _synchronous) {
 bool doLoad() {
 
   pd->sprite->addSprite(getLoadSprite());
+  addSaveLoadProgressSprite(m_actionProgress, 5);
   #ifdef DEV
   pd->system->logToConsole("LOAD: Save:%i, Progress %i", m_save, m_actionProgress);
   #endif
@@ -550,7 +552,7 @@ bool doLoad() {
     if (status) pd->system->error("LOAD ERROR: player file->close status code: %i", status);
     m_file = NULL;
 
-  } else if (m_actionProgress == 1) {
+  } else if (m_actionProgress >= 1 && m_actionProgress <= 4) {
 
     // We have now loaded the correct slot number for this player-save.
     // But we might want to be loading into a different world 
@@ -566,14 +568,13 @@ bool doLoad() {
     m_file = pd->file->open(m_filePath, kFileRead|kFileReadData);
     if (!m_file) pd->system->error("LOAD ERROR: read world error: %s", pd->file->geterr());
 
-    // TODO - call this many times, each time with a different WILL DECODE
     pd->json->decode(&m_jd, (json_reader){ .read = doRead, .userdata = m_file }, NULL);
 
     int status = pd->file->close(m_file);
     if (status) pd->system->error("LOAD ERROR: world file->close status code: %i", status);
     m_file = NULL;
 
-  } else if (m_actionProgress == 2) {
+  } else if (m_actionProgress == 5) {
 
     // Things which need to run post-load
     addObstacles();
@@ -608,16 +609,16 @@ void willDecodeSublist(json_decoder* jd, const char* _name, json_value_type _typ
 
   if (strcmp(truncated, "sf") == 0 && _type == kJSONTable) {
     jd->didDecodeTableValue = NULL;
-  } else if (strcmp(truncated, "cargo") == 0 && _type == kJSONTable) {
+  } else if (m_actionProgress == 1 && strcmp(truncated, "cargo") == 0 && _type == kJSONTable) {
     jd->didDecodeTableValue = deserialiseValueCargo;
     jd->didDecodeSublist = deserialiseStructDoneCargo;
-  } else if (strcmp(truncated, "build") == 0 && _type == kJSONTable) {
+  } else if (m_actionProgress == 2 && strcmp(truncated, "build") == 0 && _type == kJSONTable) {
     jd->didDecodeTableValue = deserialiseValueBuilding;
     jd->didDecodeSublist = deserialiseStructDoneBuilding;
-  } else if (strcmp(truncated, "locat") == 0 && _type == kJSONTable) {
+  } else if (m_actionProgress == 3 && strcmp(truncated, "locat") == 0 && _type == kJSONTable) {
     jd->didDecodeTableValue = deserialiseValueLocation;
     jd->didDecodeSublist = deserialiseStructDoneLocation;
-  } else if (strcmp(truncated, "world") == 0 && _type == kJSONArray) {
+  } else if (m_actionProgress == 4 && strcmp(truncated, "world") == 0 && _type == kJSONArray) {
     jd->didDecodeTableValue = NULL;
     jd->didDecodeSublist = NULL;
     jd->didDecodeArrayValue = deserialiseArrayValueWorld;
