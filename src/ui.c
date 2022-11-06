@@ -295,22 +295,21 @@ void setBuySellMultiplier(uint8_t _v) {
 }
 
 void modMultiplier(bool _increment) {
-  sfx(kSfxRotate);
   if (_increment) {
     switch (m_buySellMultiplier[m_mode]) {
-      case 1: case 0: m_buySellMultiplier[m_mode] = 5; break;
-      case 5: m_buySellMultiplier[m_mode] = 10; break;
-      case 10: m_buySellMultiplier[m_mode] = 50; break;
-      case 50: m_buySellMultiplier[m_mode] = 100; break;
-      case 100: m_buySellMultiplier[m_mode] = 100; break;
+      case 1: case 0: m_buySellMultiplier[m_mode] = 5; sfx(kSfxRotate); break;
+      case 5: m_buySellMultiplier[m_mode] = 10; sfx(kSfxRotate); break;
+      case 10: m_buySellMultiplier[m_mode] = 50; sfx(kSfxRotate); break;
+      case 50: m_buySellMultiplier[m_mode] = 100; sfx(kSfxRotate); break;
+      case 100: m_buySellMultiplier[m_mode] = 100; sfx(kSfxNo); break;
     }
   } else {
     switch (m_buySellMultiplier[m_mode]) {
-      case 1: case 0: m_buySellMultiplier[m_mode] = 1; break;
-      case 5: m_buySellMultiplier[m_mode] = 1; break;
-      case 10: m_buySellMultiplier[m_mode] = 5; break;
-      case 50: m_buySellMultiplier[m_mode] = 10; break;
-      case 100: m_buySellMultiplier[m_mode] = 50; break;
+      case 1: case 0: m_buySellMultiplier[m_mode] = 1; sfx(kSfxNo); break;
+      case 5: m_buySellMultiplier[m_mode] = 1; sfx(kSfxRotate); break;
+      case 10: m_buySellMultiplier[m_mode] = 5; sfx(kSfxRotate); break;
+      case 50: m_buySellMultiplier[m_mode] = 10; sfx(kSfxRotate); break;
+      case 100: m_buySellMultiplier[m_mode] = 50; sfx(kSfxRotate); break;
     }
   }
   UIDirtyRight();

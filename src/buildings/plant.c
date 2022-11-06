@@ -27,11 +27,11 @@ void plantTrySpawnCargo(struct Building_t* _building, uint8_t _tickLength) {
   ++_building->m_mode.mode16;
   // If _building->m_mode.mode16 >= N_CROPS_BEFORE_FARMLAND or 2*N_CROPS_BEFORE_FARMLAND then we
   // render the soil differently. But it is too expensive to do this here.
-  // Wait until the tile gets re-rendered for some other reason.
+  // Wait until the tile gets re-rendered for some other reason. Should still do it for the 1st grow, though
   
-  //if (_building->m_mode.mode16 == 1 || _building->m_mode.mode16 == N_CROPS_BEFORE_FARMLAND || _building->m_mode.mode16 == 2*N_CROPS_BEFORE_FARMLAND ) {
-  //  renderChunkBackgroundImage(loc->m_chunk);
-  //}
+  if (_building->m_mode.mode16 == 1) {
+    renderChunkBackgroundImage(loc->m_chunk);
+  }
 }
 
 uint16_t getGrowdownTimer(struct Building_t* _building, bool _smear) {

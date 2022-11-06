@@ -192,29 +192,34 @@ LCDFont* getCooperHewitt12(void) {
 
 void populateResizedSprites() {
   for (uint32_t zoom = 2; zoom < ZOOM_LEVELS; ++zoom) {
+    //
+    m_retirementNo[zoom] = pd->graphics->newBitmap(TILE_PIX*3 * zoom, TILE_PIX*3 * zoom, kColorClear);
     pd->graphics->pushContext(m_retirementNo[zoom]);
     pd->graphics->drawScaledBitmap(m_retirementNo[1], 0, 0, zoom, zoom);
     pd->graphics->popContext();
+    //
+    m_truck[zoom] = pd->graphics->newBitmap(TILE_PIX*2 * zoom, TILE_PIX * zoom, kColorClear);
     pd->graphics->pushContext(m_truck[zoom]);
     pd->graphics->drawScaledBitmap(m_truck[1], 0, 0, zoom, zoom);
     pd->graphics->popContext();
+    //
     for (uint32_t i = 0; i < SHEET16_SIZE; ++i) {
       LCDBitmap* original = pd->graphics->getTableBitmap(m_sheet16, i);
-      m_bitmap16_zoom[zoom][i] = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*2, kColorClear);
+      m_bitmap16_zoom[zoom][i] = pd->graphics->newBitmap(TILE_PIX * zoom, TILE_PIX * zoom, kColorClear);
       pd->graphics->pushContext(m_bitmap16_zoom[zoom][i]);
       pd->graphics->drawScaledBitmap(original, 0, 0, zoom, zoom);
       pd->graphics->popContext();
     }
     for (uint32_t i = 0; i < SHEET18_SIZE; ++i) {
       LCDBitmap* original = pd->graphics->getTableBitmap(m_sheet18, i);
-      m_bitmap18_zoom[zoom][i] = pd->graphics->newBitmap(TILE_PIX*2, 18*2, kColorClear);
+      m_bitmap18_zoom[zoom][i] = pd->graphics->newBitmap(TILE_PIX * zoom, 18 * zoom, kColorClear);
       pd->graphics->pushContext(m_bitmap18_zoom[zoom][i]);
       pd->graphics->drawScaledBitmap(original, 0, 0, zoom, zoom);
       pd->graphics->popContext();
     }
     for (uint32_t i = 0; i < SHEET48_SIZE; ++i) {
       LCDBitmap* original = pd->graphics->getTableBitmap(m_sheet48, i);
-      m_bitmap48_zoom[zoom][i] = pd->graphics->newBitmap(TILE_PIX*3*2, TILE_PIX*3*2, kColorClear);
+      m_bitmap48_zoom[zoom][i] = pd->graphics->newBitmap(TILE_PIX*3 * zoom, TILE_PIX*3 * zoom, kColorClear);
       pd->graphics->pushContext(m_bitmap48_zoom[zoom][i]);
       pd->graphics->drawScaledBitmap(original, 0, 0, zoom, zoom);
       pd->graphics->popContext();
@@ -233,6 +238,7 @@ void initSprite() {
   m_new = loadImageAtPath("images/new");
   m_splash = loadImageAtPath("images/splash");
   m_retirementNo[1] = loadImageAtPath("images/cross9x9");
+
   m_truck[1] = loadImageAtPath("images/truck");
 
   populateResizedSprites();

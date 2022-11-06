@@ -277,7 +277,6 @@ void buildingSetupSpecial(struct Building_t* _building) {
       PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*2 * zoom, .height = TILE_PIX * zoom};
       pd->sprite->setCollideRect(_building->m_sprite[zoom], bound);
       pd->sprite->setZIndex(_building->m_sprite[zoom], Z_INDEX_TRUCK);
-      setTruckPosition(0);
     } else {
       PDRect bound = {.x = (COLLISION_OFFSET_BIG/2)*zoom, .y = (COLLISION_OFFSET_BIG/2)*zoom, .width = (EXTRACTOR_PIX-COLLISION_OFFSET_BIG)*zoom, .height = (EXTRACTOR_PIX-COLLISION_OFFSET_BIG)*zoom};
       pd->sprite->setCollideRect(_building->m_sprite[zoom], bound);
@@ -298,6 +297,10 @@ void buildingSetupSpecial(struct Building_t* _building) {
       }
     }
 
+  }
+
+  if (_building->m_subType.special == kWarp) {
+   setTruckPosition(0);
   }
 
   for (int32_t x = _building->m_location->m_x - 1; x < _building->m_location->m_x + 2; ++x) {

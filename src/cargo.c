@@ -126,7 +126,7 @@ const char* toStringCargoByType(enum kCargoType _type, bool _plural) {
     case kLime: return _plural ? "Limes" : "Lime";
     case kHFCS: return "H.F.C.S.";
     case kGelatin: return "Gelatin";
-    case kJelly: return _plural ? "Jellies" : "Jelly";
+    case kJelly: return "Jello";
     case kJelloShot: return _plural ? "Jello-Shots" : "Jello-Shot";
     case kStrawberry: return _plural ? "Strawberries" : "Strawberry";
     case kEmulsifiers: return _plural ? "Emulsifiers" : "Emulsifier";
@@ -253,7 +253,8 @@ bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addToDisplay
   _loc->m_cargo = cargo;
   if (_loc->m_building && _loc->m_building->m_type == kConveyor) {
     _loc->m_building->m_progress = 0;
-    updateConveyorDirection(_loc->m_building);
+    // No longer doing conveyor update on IN, doing it on OUT instead 
+    //updateConveyorDirection(_loc->m_building);
   }
 
   struct Chunk_t* chunk = _loc->m_chunk;

@@ -12,8 +12,6 @@ const char* getTransitText(int8_t _d);
 
 void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, bool _nearTick, uint8_t _zoom);
 
-void moveCargo(struct Location_t* _loc, struct Location_t* _nextLoc, bool _nearTick, uint8_t _tickID, uint8_t _zoom);
-
 #define CONV_SPEED 0
 #define CONV_X 1
 #define CONV_Y 2
@@ -67,7 +65,8 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t
   // if (_building->m_subType.conveyor == kTunnelIn) _tick /= 2; // As travelling two tiles. But tricky, near tick amount is 1...
 
   if (_building->m_progress < TILE_PIX) {
-    _building->m_progress += _tickLength * _building->m_stored[0]; // Stored[0] used to hold conveyor speed
+    uint8_t newProgress = _building->m_progress + (_tickLength * _building->m_stored[0]); // Stored[0] used to hold conveyor speed  
+    _building->m_progress = newProgress < TILE_PIX ? newProgress : TILE_PIX;
 
     // Handle filters vs. splitters
     enum kDir direction;
@@ -126,62 +125,84 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t
 
   } 
  
-  if (ableToMove) {
-    moveCargo(loc, nextLoc, nearTick, _tickID, _zoom);
-  }
-}
+  if (!ableToMove) return;
 
-void updateConveyorDirection(struct Building_t* _building) {
-  // Cycle outputs variant 2 (keep this one, it is nicer on the player)
-  uint16_t next = 0;
-  switch (_building->m_subType.conveyor) {
-    case kSplitI:; case kSplitL:; next = (_building->m_mode.mode16 + 1) % 2; break;
-    case kSplitT:; next = (_building->m_mode.mode16 + 1) % 3; break;
-    default: return; // NOTE: We catch kFilterX here and do NOT update m_mode for filters
-  }
-  if (_building->m_next[ next ]->m_cargo == NULL) _building->m_mode.mode16 = next;
-}
-
-
-void moveCargo(struct Location_t* _loc, struct Location_t* _nextLoc, bool _nearTick, uint8_t _tickID, uint8_t _zoom) {
-
-  struct Building_t* building = _loc->m_building;
-  struct Building_t* nextBuilding = _nextLoc->m_building;
-  struct Cargo_t* theCargo = _loc->m_cargo;
+  // MOVE CARGO
+  struct Building_t* nextBuilding = nextLoc->m_building;
+  struct Cargo_t* theCargo = loc->m_cargo;
 
   // Move cargo
-  _nextLoc->m_cargo = theCargo;
-  _loc->m_cargo = NULL;
+  nextLoc->m_cargo = theCargo;
+  loc->m_cargo = NULL;
 
-  // Carry over any excess ticks
+  // Carry over any excess ticks (?)
   if (nextBuilding && nextBuilding->m_type == kConveyor) {
     // Don't process this tile again this tick
     nextBuilding->m_tickProcessed = _tickID;
 
-    // Only need to comment out if non-conveyors start to register moveCargo orders
-    //if (building && building->m_type == kConveyor) {
-      nextBuilding->m_progress = building->m_progress - TILE_PIX;
-    //}
+    //nextBuilding->m_progress = _building->m_progress - TILE_PIX;
+    nextBuilding->m_progress = 0;
 
     // Note: The direction does not matter here as we are the 1st tick into the new tile 
     // if we are actually looking at the sprite and hence calling conveyorLocationUpdate
     // hence we'll be drawn in the centre of the tile for any of the 4 possible directions
-    conveyorSetLocation(nextBuilding, NS, _nearTick, _zoom);
+    conveyorSetLocation(nextBuilding, NS, nearTick, _zoom);
 
-    updateConveyorDirection(nextBuilding);
+    // No longer doing conveyor update on IN, doing it on OUT instead (see below)
+    //updateConveyorDirection(nextBuilding);
 
   } else {
     // Dump the cargo in the centre of the tile
     pd->sprite->moveTo(theCargo->m_sprite[_zoom], // TODO pass down zoom
-                      (_nextLoc->m_x*TILE_PIX + _nextLoc->m_pix_off_x + TILE_PIX/2)* _zoom, 
-                      (_nextLoc->m_y*TILE_PIX + _nextLoc->m_pix_off_y + TILE_PIX/2)* _zoom);
+                      (nextLoc->m_x*TILE_PIX + nextLoc->m_pix_off_x + TILE_PIX/2)* _zoom, 
+                      (nextLoc->m_y*TILE_PIX + nextLoc->m_pix_off_y + TILE_PIX/2)* _zoom);
   }
 
   // Cargo moves between chunks?
-  if (_nextLoc->m_chunk != _loc->m_chunk) {
-    chunkRemoveCargo(_loc->m_chunk, theCargo);
-    chunkAddCargo(_nextLoc->m_chunk, theCargo);
+  if (nextLoc->m_chunk != loc->m_chunk) {
+    chunkRemoveCargo(loc->m_chunk, theCargo);
+    chunkAddCargo(nextLoc->m_chunk, theCargo);
   }
+
+  // Update conveyor direction
+  // Cycle outputs variant 2 (keep this one, it is nicer on the player)
+  int16_t proposedNext = -1;
+  switch (_building->m_subType.conveyor) {
+    case kSplitI:; case kSplitL:; proposedNext = (_building->m_mode.mode16 + 1) % 2; break;
+    case kSplitT:; proposedNext = (_building->m_mode.mode16 + 1) % 3; break;
+    default:; // NOTE: We catch kFilterX etc. here and do NOT update m_mode for filters
+  }
+
+  if (proposedNext == -1) return;
+
+  // Update nextLoc to the _proposed_ next location for this splitter
+  nextLoc = _building->m_next[proposedNext];
+
+  bool ableToSwitch = true;
+  if (nextLoc->m_cargo != NULL) {
+
+    // Cascade the call
+    struct Building_t* nextBuilding = nextLoc->m_building;
+    if (nextBuilding == NULL || m_recursionCount >= MAX_RECURSION) {
+      ableToSwitch = false;
+    } else {
+      // Cuation: When calling into other conveyors this is a potentially recursive fn!
+      (*nextBuilding->m_updateFn)(nextBuilding, _tickLength, _tickID, _zoom);
+      // We might have been able to move the cargo on/into a building, check again
+      ableToSwitch = (nextLoc->m_cargo == NULL);
+    }
+
+  } 
+
+  if (ableToSwitch) _building->m_mode.mode16 = proposedNext;
+}
+
+void updateConveyorDirection(struct Building_t* _building) {
+
+}
+
+
+void moveCargo(struct Location_t* _loc, struct Location_t* _nextLoc, bool _nearTick, uint8_t _tickID, uint8_t _zoom) {
 
 }
 

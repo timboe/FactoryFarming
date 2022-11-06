@@ -7,7 +7,7 @@ digraph G {
 
     Vitamins, Oil, Chips, Ethanol, HardCider, HFCS, Eggs, Tequila, Meat, MSG, Beer,
     Emulsifiers, Hydrogen, IceCream, HOil, ProteinPowder, Chocolate, TVDinner, FooYoung, Caffeine, EnergyDrink,
-    RaveJuice, JelloShots, Cake, CateringKit, Packaging, PartyPack, CornDog, Dessert, Jelly, 
+    RaveJuice, JelloShots, Cake, CateringKit, Packaging, PartyPack, CornDog, Dessert, Jello, 
     Gelatin, Pie, PerkPills, Rose, TurkishDelight, Parfume, MiraclePowder
     [shape=Square, fillcolor=1]
 
@@ -88,7 +88,7 @@ digraph G {
     }
     subgraph f3_b {
         rank="same"
-        Jelly
+        Jello
     }
     subgraph f3_c {
         rank="same"
@@ -194,12 +194,12 @@ digraph G {
     
     Meat -> Gelatin
     
-    Gelatin -> Jelly
-    Lime -> Jelly
-    HFCS -> Jelly  
+    Gelatin -> Jello
+    Lime -> Jello
+    HFCS -> Jello  
     
     Tequila -> JelloShots
-    Jelly -> JelloShots
+    Jello -> JelloShots
     
     // t4
     
@@ -259,7 +259,7 @@ digraph G {
     Bamboo -> Packaging
     Cactus -> Packaging
     
-    Jelly -> Dessert
+    Jello -> Dessert
     IceCream -> Dessert
     Apples -> Dessert
     

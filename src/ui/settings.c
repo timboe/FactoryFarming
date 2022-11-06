@@ -134,15 +134,15 @@ LCDBitmap* getPauseImage() {
   width = pd->graphics->getTextWidth(getRoobert10(), textB, length, kUTF8Encoding, 0);
   pd->graphics->drawText(textB, 128, kASCIIEncoding, CENTRE - width/2, 1*Y_SPACE+OFFS);
 
-  pd->graphics->drawBitmap(sA, X_START, 1*Y_SPACE, kBitmapUnflipped);
-  pd->graphics->drawBitmap(sA, X_END,   1*Y_SPACE, flip);
+  pd->graphics->drawBitmap(sA, X_START, 1*Y_SPACE+OFFS, kBitmapUnflipped);
+  pd->graphics->drawBitmap(sA, X_END,   1*Y_SPACE+OFFS, flip);
 
   length = strlen(textC);
   width = pd->graphics->getTextWidth(getRoobert10(), textC, length, kUTF8Encoding, 0);
   pd->graphics->drawText(textC, 128, kASCIIEncoding, CENTRE - width/2, 2*Y_SPACE+OFFS);
 
-  pd->graphics->drawBitmap(sB, X_START, 3*Y_SPACE, kBitmapUnflipped);
-  pd->graphics->drawBitmap(sB, X_END, 3*Y_SPACE, kBitmapUnflipped);
+  pd->graphics->drawBitmap(sB, X_START, 3*Y_SPACE+OFFS, kBitmapUnflipped);
+  pd->graphics->drawBitmap(sB, X_END,   3*Y_SPACE+OFFS, kBitmapUnflipped);
 
   length = strlen(textD);
   width = pd->graphics->getTextWidth(getRoobert10(), textD, length, kUTF8Encoding, 0);
