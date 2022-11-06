@@ -164,6 +164,10 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t
     chunkAddCargo(nextLoc->m_chunk, theCargo);
   }
 
+  updateConveyorDirection(_building, _tickLength, _tickID, _zoom);
+}
+
+void updateConveyorDirection(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
   // Update conveyor direction
   // Cycle outputs variant 2 (keep this one, it is nicer on the player)
   int16_t proposedNext = -1;
@@ -176,7 +180,7 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t
   if (proposedNext == -1) return;
 
   // Update nextLoc to the _proposed_ next location for this splitter
-  nextLoc = _building->m_next[proposedNext];
+  struct Location_t* nextLoc = _building->m_next[proposedNext];
 
   bool ableToSwitch = true;
   if (nextLoc->m_cargo != NULL) {
@@ -195,10 +199,6 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t
   } 
 
   if (ableToSwitch) _building->m_mode.mode16 = proposedNext;
-}
-
-void updateConveyorDirection(struct Building_t* _building) {
-
 }
 
 

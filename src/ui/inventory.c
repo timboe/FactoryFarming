@@ -256,8 +256,7 @@ bool doPickAtLocation(struct Location_t* _loc) {
     if (building->m_type == kExtractor) {
       if (building->m_subType.extractor == kCropHarvesterSmall) doBoxHarvest = true;
       if (building->m_subType.extractor == kCropHarvesterLarge) doBoxHarvest = true;
-    }
-    if (building->m_type == kUtility) {
+    } else if (building->m_type == kUtility) {
       if (building->m_subType.utility == kBuffferBox || building->m_subType.utility == kStorageBox) doBoxHarvest = true;
     }
     if (doBoxHarvest) {
@@ -301,6 +300,9 @@ bool doPickAtLocation(struct Location_t* _loc) {
         building->m_stored[5] = 0;
         update = true;
       }
+    } else if (building->m_type == kConveyor) {
+      m_recursionCount = MAX_RECURSION; // This prevents the call here from acting recursivly 
+      updateConveyorDirection(building, 0, 0, 0);
     }
   }
   return update;

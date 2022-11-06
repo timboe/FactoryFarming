@@ -20,4 +20,4 @@ void conveyorLocationUpdate(struct Building_t* _building, uint8_t _zoom);
 
 void drawUIInspectConveyor(struct Building_t* _building);
 
-void updateConveyorDirection(struct Building_t* _building);
+void updateConveyorDirection(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom);
