@@ -331,9 +331,10 @@ void doDestroy() {
         else if (loc->m_building->m_type == kUtility && loc->m_building->m_subType.utility == kRetirement) doBuilding = false;
       }
       if (loc->m_building && doBuilding) {
-        // Refund
-        enum kUICat btc = getBuildingTypeCat(loc->m_building->m_type);
-        modOwned(btc, loc->m_building->m_subType.raw, /*add*/ true);
+        // Refund - but not conveyor exits
+        if (!(loc->m_building->m_type == kConveyor && loc->m_building->m_subType.conveyor == kTunnelOut)) {
+          modOwned(getBuildingTypeCat(loc->m_building->m_type), loc->m_building->m_subType.raw, /*add*/ true);
+        }
       }
       cleared |= clearLocation(loc, /*cargo=*/ true, /*building=*/ doBuilding);
     }

@@ -427,10 +427,10 @@ void updateUI(int _fc) {
       if (_fc % (TICK_FREQUENCY/2) == 0) {
         const bool ic = isCamouflaged();
         if      (distanceFromBuy()  < ACTIVATE_DISTANCE) drawUITop("The Shop");
-        else if (distanceFromSell() < ACTIVATE_DISTANCE) drawUITop("Sales");
+        else if (distanceFromSell() < ACTIVATE_DISTANCE) drawUITop("Sales Depot");
         else if (!ic && distanceFromWarp() < ACTIVATE_DISTANCE) drawUITop("Plots");
-        else if (!ic && distanceFromOut() < ACTIVATE_DISTANCE) drawUITop("Exports"); // Or Deliveries TODO
-        else if (!ic && distanceFromIn() < ACTIVATE_DISTANCE) drawUITop("Imports"); // Or Shipping TODO
+        else if (!ic && distanceFromOut() < ACTIVATE_DISTANCE) drawUITop("Exports Depot"); // Or Deliveries TODO
+        else if (!ic && distanceFromIn() < ACTIVATE_DISTANCE) drawUITop("Imports Depot"); // Or Shipping TODO
         else if (distanceFromRetirement() < ACTIVATE_DISTANCE) drawUITop("Credits");
       }
     } else {
@@ -2139,12 +2139,12 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 0: return "-- But I Don't Have The Soil For That! --";
         case 1: return "Problem, the Cactus Plant you just unlocked wants";
         case 2: return "Sandy Soil, but there isn't any here. Expansion time!";
-        case 3: return "Visit the Plots Manager (next to Sales) and buy a new";
+        case 3: return "Visit the Plots Depot (next to Sales) and buy a new";
         case 4: return "plot of land to develop.";
           
-        case 5: return "The Plots Manager, Exports Manager and";
-        case 6: return "Imports Manager are all now unlocked.";
-        case 7: return "Visit the Plots Manager to the right of Sales.";
+        case 5: return "The Plots Depot, Exports Depot and";
+        case 6: return "Imports Depot are all now unlocked.";
+        case 7: return "Visit the Plots Depot to the right of Sales.";
         case 8: return "Buy a new plot of land to expand the factory.";
       }
     case kTutExports:
@@ -2153,10 +2153,10 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 1: return "Welcome to you new plot of land! More room for your";
         case 2: return "manufacturing empire to grow. Instead of selling Cargo,";
         case 3: return "you can also move it between Plots. Use Belts to feed";
-        case 4: return "Cargo in to the Exports Manager in any of your Plots.";
+        case 4: return "Cargo in to the Exports Depot in any of your Plots.";
           
         case 5: return "Export some Cargo by moving it via Belts into the";
-        case 6: return "Exports Manager (to the right of the Plot Manager) on";
+        case 6: return "Exports Depot (to the right of the Plot Depot) on";
         case 7: return "any Plot. The export rate of each Cargo type is";
         case 8: return "averaged over the previous two minutes.";
       }
@@ -2164,12 +2164,12 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
       switch (_n) {
         case 0: return "-- Accessing The Goods --";
         case 1: return "Now that you're exporting Cargo, let's look at imports too.";
-        case 2: return "Go to a different Plot and visit the Imports Manager,";
+        case 2: return "Go to a different Plot and visit the Imports Depot,";
         case 3: return "you can import up to four Cargo per Plot.";
         case 4: return "Try setting up an Import now.";
           
         case 5: return "Import some Cargo in a different Plot via the Imports";
-        case 6: return "Manager (right of the Exports Manager). N, S, E, W";
+        case 6: return "Depot (right of the Exports Depot). N, S, E, W";
         case 7: return "imports can be individually chosen. You cannot export a";
         case 8: return "Cargo type which is being imported to the same Plot.";
       }
@@ -2178,7 +2178,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 0: return "-- Imports & Exports & Plots --";
         case 1: return "Wonderful! Continue to buy more Plots in order to";
         case 2: return "access new soil types and to expand the factory.";
-        case 3: return "Use the Export and Import Manager to move Cargo";
+        case 3: return "Use the Export and Import Depot to move Cargo";
         case 4: return "between plots, and continue to maximize efficiency!";
           
         case 5: return " ";
