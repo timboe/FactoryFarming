@@ -440,7 +440,7 @@ const char* getLine(int32_t _line) {
     case 8: return "Conveyor Animation";
     case 9: return "Show Harvester Outlines";
     case 10: return "Auto Save Time";
-    case 11: return "Auto Pickup on Destroy";
+    case 11: return "Auto Pickup on Deconstruct";
     case 12: return "Auto Apply Conveyor Grease";
     case 13: return "Show Debug Information";
     //
