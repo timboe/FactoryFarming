@@ -428,7 +428,7 @@ void updateUI(int _fc) {
         const bool ic = isCamouflaged();
         if      (distanceFromBuy()  < ACTIVATE_DISTANCE) drawUITop("The Shop");
         else if (distanceFromSell() < ACTIVATE_DISTANCE) drawUITop("Sales Depot");
-        else if (!ic && distanceFromWarp() < ACTIVATE_DISTANCE) drawUITop("Plots");
+        else if (!ic && distanceFromWarp() < ACTIVATE_DISTANCE) drawUITop("Plots Depot");
         else if (!ic && distanceFromOut() < ACTIVATE_DISTANCE) drawUITop("Exports Depot"); // Or Deliveries TODO
         else if (!ic && distanceFromIn() < ACTIVATE_DISTANCE) drawUITop("Imports Depot"); // Or Shipping TODO
         else if (distanceFromRetirement() < ACTIVATE_DISTANCE) drawUITop("Credits");
@@ -2001,39 +2001,39 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 0: return "-- The Initial Seed Purchase --";
         case 1: return "Welcome to Factory Farming! There's money to be";
         case 2: return "made, and it won't make itself! So let's get started by";
-        case 3: return "vising The Shop with Ⓐ and buying some Carrot Seeds";
-        case 4: return "The compass (right) will always point to The Shop.";
+        case 3: return "vising the shop with Ⓐ and buying some carrot seeds";
+        case 4: return "The compass (right) will always point to the shop.";
 
         case 5: return "Move with the D-Pad, ✛. Zoom in & out with 🎣.";
-        case 6: return "Hold Ⓑ to run.  Go to The Shop and press Ⓐ.";
-        case 7: return "Buy 10 Carrot Seeds from The Shop with Ⓐ.";
-        case 8: return "Press Ⓑ to exit The Shop.";
+        case 6: return "Hold Ⓑ to run.  Go to the shop and press Ⓐ.";
+        case 7: return "Buy 10 carrot Seeds from the shop with Ⓐ.";
+        case 8: return "Press Ⓑ to exit the shop.";
       }
     case kTutSeeObjective:;
       switch (_n) {
         case 0: return "-- The Next Objective --";
         case 1: return "Your current objective is to sell at least";
-        case 2: return "ten carrots. You can check what your current objective";
-        case 3: return "is at any time by pressing the Menu Button.";
+        case 2: return "10 carrots. You can check what your current objective";
+        case 3: return "is at any time by pressing the Menu button.";
         case 4: return "Do this now.";
           
-        case 5: return "Press the Menu Button to see your current objective.";
-        case 6: return "From here you can also Save and Load the game, and";
-        case 7: return "open the Main Menu with game settings etc.";
+        case 5: return "Press the Menu button to see your current objective.";
+        case 6: return "From here you can also save and load the game, and";
+        case 7: return "open the main menu with game settings etc.";
         case 8: return "";
       }
     case kTutPlantCarrots:;
       switch (_n) {
         case 0: return "-- The First Crops --";
-        case 1: return "Good, carrots will grow well in the Silty Soil near to the";
-        case 2: return "shop. Pay attention to the Soil & Water each plant likes.";
+        case 1: return "Good, carrots will grow well in the silty soil near to the";
+        case 2: return "shop. Pay attention to the soil & water each plant likes.";
         case 3: return "Find a good nearby spot, open your inventory";
-        case 4: return "with Ⓐ, select the seeds, and plant 10 Carrots.";
+        case 4: return "with Ⓐ, select the seeds, and plant 10 carrots.";
           
-        case 5: return "Find a nearby area of Silty Soil, preferably Moist.";
-        case 6: return "Press Ⓐ to enter your inventory, select the Carrot";
-        case 7: return "Seeds and press Ⓐ again. Plant 10 Carrot Seeds on";
-        case 8: return "empty patches of Silty Soil, then press Ⓑ.";
+        case 5: return "Find a nearby area of silty soil, preferably moist.";
+        case 6: return "Press Ⓐ to enter your inventory, select the carrot";
+        case 7: return "seeds and press Ⓐ again. Plant 10 carrot seeds on";
+        case 8: return "empty patches of silty soil, then press Ⓑ.";
       }
     case kTutGetCarrots:;
       switch (_n) {
@@ -2043,21 +2043,21 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 3: return "'Pickup Cargo Mode' and harvest 10 grown carrots.";
         case 4: return "You can pickup any cargo in the world, or in buildings.";
           
-        case 5: return "Go to where you planted your Carrot Seeds. ";
+        case 5: return "Go to where you planted your carrot seeds. ";
         case 6: return "Press Ⓐ to enter your inventory, select 'Pickup";
         case 7: return "Cargo Mode'. Press or hold Ⓐ when moving, pickup 10";
-        case 8: return "grown Carrots. Use the 🎣 to change the pickup area. ";
+        case 8: return "grown carrots. Use the 🎣 to change the pickup area. ";
       }
     case kTutSellCarrots:;
       switch (_n) {
         case 0: return "-- The First Sale --";
-        case 1: return "Nice, you know what we can do with Cargo like those";
-        case 2: return "fresh Carrots? Sell them for a profit! Visit Sales";
-        case 3: return "(next to The Shop) and press Ⓐ to access the";
+        case 1: return "Nice, you know what we can do with cargo like those";
+        case 2: return "fresh carrots? Sell them for a profit! Visit the sales";
+        case 3: return "depot (next to the shop) and press Ⓐ to access the";
         case 4: return "sales menu. Sell 10 carrots to continue.";
           
-        case 5: return "Go to Sales (next to The Shop). ";
-        case 6: return "Press or hold Ⓐ to sell at least 10 Carrots.";
+        case 5: return "Go to the sales depot (next to the shop). ";
+        case 6: return "Press or hold Ⓐ to sell at least 10 carrots.";
         case 7: return "Change the amount sold with each press of Ⓐ by";
         case 8: return "turning the 🎣, or hold Ⓑ and press ⬆️ or ⬇️.";
       }
@@ -2066,52 +2066,52 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 0: return "-- The First Automated Harvest --";
         case 1: return "Sweet, but that was a lot of manual labor... Let's";
         case 2: return "use an Automatic Harvester instead! Buy one from";
-        case 3: return "The Shop and build it where some Carrot Plants are";
+        case 3: return "the shop and build it where some carrot plants are";
         case 4: return "within its harvest catchment area.";
           
-        case 5: return "Go to the The Shop, buy an Automatic Harvester.";
+        case 5: return "Go to the the shop, buy an automatic harvester.";
         case 6: return "Press Ⓐ and choose this from your inventory.";
         case 7: return "Place the harvester such that it located on empty";
-        case 8: return "soil, and Carrot Plants are within its harvest range.";
+        case 8: return "soil, and carrot plants are within its harvest range.";
       }
     case kTutBuildConveyor:;
       switch (_n) {
         case 0: return "-- The First Cargo Line --";
-        case 1: return "Good, We're harvesting Carrots. But we need to get them";
-        case 2: return "to Sales. We need Conveyor Belts! Buy around";
-        case 3: return "50 from The Shop and lay the path to move & sell";
-        case 4: return "the carrots. Rotate belt pieces with 🎣.";
+        case 1: return "Good, We're harvesting carrots. But we need to get them";
+        case 2: return "to the sales depot. We need conveyor belts! Buy around";
+        case 3: return "50 from the shop and lay the path to move & sell";
+        case 4: return "the carrots. Rotate belt pieces with 🎣 or Ⓑ + ✛.";
           
-        case 5: return "Go to the The Shop, buy around 50 Conveyor Belts.";
+        case 5: return "Go to the the shop, buy around 50 conveyor belts.";
         case 6: return "Press Ⓐ and choose these from your inventory.";
-        case 7: return "Make a chain of belts from the Automatic Harvester to";
-        case 8: return "Sales. Rotate belts with 🎣, or hold Ⓑ and press ✛.";
+        case 7: return "Make a chain of belts from the automatic harvester to";
+        case 8: return "sales. Rotate belts with 🎣, or hold Ⓑ and press ✛.";
       }
     case kTutBuildQuarry:
       switch (_n) {
         case 0: return "-- Mining The Earth --";
         case 1: return "OK. But not all exploitable resources are grown.";
-        case 2: return "Some are dug up, or pumped out. Let's build a Chalk";
-        case 3: return "Quarry next. Buy one from The Shop and build it on";
-        case 4: return "Chalky Soil. There should be some to the North.";
+        case 2: return "Some are dug up, or pumped out. Let's build a chalk";
+        case 3: return "quarry next. Buy one from the shop and build it on";
+        case 4: return "chalky soil. There should be some to the north.";
           
-        case 5: return "Go to the The Shop, buy a Chalk Quarry.";
+        case 5: return "Go to the the shop, buy a chalk quarry.";
         case 6: return "Press Ⓐ and choose this from your inventory.";
-        case 7: return "Go North from The Shop and look for Chalky Soil.";
-        case 8: return "Place the Quarry on at least one Chalky Soil tile.";
+        case 7: return "Go north from the shop and look for chalky soil.";
+        case 8: return "Place the quarry on at least one chalky soil tile.";
       }
     case kTutBuildVitamin:
       switch (_n) {
         case 0: return "-- Manufacturing Value --";
         case 1: return "Nice. We can finally set up a full production line!";
-        case 2: return "Buy a Vitamin Factory from The Shop, supply it with";
-        case 3: return "both Chalk and Carrots, and transport the Vitamins";
-        case 4: return "to Sales for a much bigger profit!";
+        case 2: return "Buy a vitamin factory from the shop, supply it with";
+        case 3: return "both chalk and carrots, and transport the vitamins";
+        case 4: return "to the sales depot for a much bigger profit!";
           
-        case 5: return "Go to the The Shop, buy a Vitamin Factory.";
-        case 6: return "Place it in a good spot. Use Conveyor Belts to";
-        case 7: return "supply it with Carrots and Chalk. Use a more Belts";
-        case 8: return "to transport the Vitamins to Sales.";
+        case 5: return "Go to the the shop, buy a vitamin factory.";
+        case 6: return "Place it in a good spot. Use conveyor belts to";
+        case 7: return "supply it with carrots and chalk. Use a more belts";
+        case 8: return "to transport the vitamins to the sales depot.";
       }
     case kTutFinishedOne:
       switch (_n) {
@@ -2124,7 +2124,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         #else
         case 1: return "Excellent! You now know all the basics of exploiting";
         case 2: return "the world for profit. As your bank account swells,";
-        case 3: return "more Crops, Factories, and other items will unlock.";
+        case 3: return "more crops, factories, and other items will unlock.";
         case 4: return "Use them to maximize profit, maximize efficiency.";
         #endif
           
@@ -2137,48 +2137,48 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
     case kTutNewPlots:
       switch (_n) {
         case 0: return "-- But I Don't Have The Soil For That! --";
-        case 1: return "Problem, the Cactus Plant you just unlocked wants";
-        case 2: return "Sandy Soil, but there isn't any here. Expansion time!";
-        case 3: return "Visit the Plots Depot (next to Sales) and buy a new";
+        case 1: return "Problem, the cactus plant you just unlocked wants";
+        case 2: return "sandy soil, but there isn't any here. Expansion time!";
+        case 3: return "Visit the plots depot (next to sales) and buy a new";
         case 4: return "plot of land to develop.";
           
-        case 5: return "The Plots Depot, Exports Depot and";
-        case 6: return "Imports Depot are all now unlocked.";
-        case 7: return "Visit the Plots Depot to the right of Sales.";
+        case 5: return "The plots depot, exports depot and";
+        case 6: return "imports depot are all now unlocked.";
+        case 7: return "Visit the plots depot to the right of sales.";  
         case 8: return "Buy a new plot of land to expand the factory.";
       }
     case kTutExports:
       switch (_n) {
         case 0: return "-- A New Horizon --";
         case 1: return "Welcome to you new plot of land! More room for your";
-        case 2: return "manufacturing empire to grow. Instead of selling Cargo,";
-        case 3: return "you can also move it between Plots. Use Belts to feed";
-        case 4: return "Cargo in to the Exports Depot in any of your Plots.";
+        case 2: return "manufacturing empire to grow. Instead of selling cargo,";
+        case 3: return "you can also move it between plots. Use belts to feed";
+        case 4: return "cargo in to the exports depot in any of your plots.";
           
-        case 5: return "Export some Cargo by moving it via Belts into the";
-        case 6: return "Exports Depot (to the right of the Plot Depot) on";
-        case 7: return "any Plot. The export rate of each Cargo type is";
+        case 5: return "Export some cargo by moving it via belts into the";
+        case 6: return "exports depot (to the right of the plot depot) on";
+        case 7: return "any plot. The export rate of each cargo type is";
         case 8: return "averaged over the previous two minutes.";
       }
     case kTutImports:
       switch (_n) {
         case 0: return "-- Accessing The Goods --";
-        case 1: return "Now that you're exporting Cargo, let's look at imports too.";
-        case 2: return "Go to a different Plot and visit the Imports Depot,";
-        case 3: return "you can import up to four Cargo per Plot.";
-        case 4: return "Try setting up an Import now.";
+        case 1: return "Now that you're exporting cargo, let's look at imports too.";
+        case 2: return "Go to a different plot and visit the imports depot,";
+        case 3: return "you can import up to four cargo per plot.";
+        case 4: return "Try setting up an import now.";
           
-        case 5: return "Import some Cargo in a different Plot via the Imports";
-        case 6: return "Depot (right of the Exports Depot). N, S, E, W";
+        case 5: return "Import some cargo in a different plot via the imports";
+        case 6: return "depot (right of the exports depot). N, S, E, W";
         case 7: return "imports can be individually chosen. You cannot export a";
-        case 8: return "Cargo type which is being imported to the same Plot.";
+        case 8: return "cargo type which is being imported to the same plot.";
       }
     case kTutFinishedTwo:
       switch (_n) {
         case 0: return "-- Imports & Exports & Plots --";
-        case 1: return "Wonderful! Continue to buy more Plots in order to";
+        case 1: return "Wonderful! Continue to buy more lots in order to";
         case 2: return "access new soil types and to expand the factory.";
-        case 3: return "Use the Export and Import Depot to move Cargo";
+        case 3: return "Use the export and import depots to move cargo";
         case 4: return "between plots, and continue to maximize efficiency!";
           
         case 5: return " ";

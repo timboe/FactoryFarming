@@ -357,6 +357,16 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _
   if (_building->m_stored[0]) {
     for (int32_t s = -1; s < 2; ++s) {
       loc = getLocation(_building->m_location->m_x + s, _building->m_location->m_y - 2);
+      
+      if (_building->m_stored[0] && loc->m_cargo == NULL) {
+        newCargo(loc, _building->m_stored[3], _tickLength == NEAR_TICK_AMOUNT);
+        --_building->m_stored[0];
+      }
+
+      // These commented out blocks are only of use if we are not guarenteed that
+      // conveyors will all update before other buildings
+
+/*
       if (_building->m_stored[0]) {
 
         bool ableToMove = true;
@@ -375,13 +385,22 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _
         }
 
       }
-    }
+      */
+    } 
   }
 
   // EAST
   if (_building->m_stored[1]) {
     for (int32_t s = -1; s < 2; ++s) {
       loc = getLocation(_building->m_location->m_x + 2, _building->m_location->m_y + s);
+
+
+      if (_building->m_stored[1] && loc->m_cargo == NULL) {
+        newCargo(loc, _building->m_stored[4], _tickLength == NEAR_TICK_AMOUNT);
+        --_building->m_stored[1];
+      }
+
+/*
       if (_building->m_stored[1]) {
 
         bool ableToMove = true;
@@ -400,6 +419,8 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _
         }
 
       }
+  */
+
     }
   }
 
@@ -407,6 +428,13 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _
   if (_building->m_stored[2]) {
     for (int32_t s = -1; s < 2; ++s) {
       loc = getLocation(_building->m_location->m_x + s, _building->m_location->m_y + 2);
+
+      if (_building->m_stored[2] && loc->m_cargo == NULL) {
+        newCargo(loc, _building->m_stored[5], _tickLength == NEAR_TICK_AMOUNT);
+        --_building->m_stored[2];
+      }
+
+/*
       if (_building->m_stored[2]) {
 
         bool ableToMove = true;
@@ -425,6 +453,8 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _
         }
 
       }
+*/
+
     }
   }
 
@@ -432,6 +462,13 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _
   if (_building->m_mode.mode8[0]) {
     for (int32_t s = -1; s < 2; ++s) {
       loc = getLocation(_building->m_location->m_x - 2, _building->m_location->m_y + s);
+
+      if (_building->m_mode.mode8[0] && loc->m_cargo == NULL) {
+        newCargo(loc, _building->m_mode.mode8[1], _tickLength == NEAR_TICK_AMOUNT);
+        --_building->m_mode.mode8[0];
+      }
+
+/*
       if (_building->m_mode.mode8[0]) {
 
         bool ableToMove = true;
@@ -450,6 +487,8 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _
         }
         
       }
+
+  */
     }
   }
 
