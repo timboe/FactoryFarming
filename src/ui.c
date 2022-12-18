@@ -40,6 +40,8 @@ LCDSprite* m_UISpriteSaveLoadProgress;
 LCDSprite* m_UISpriteLoad;
 LCDSprite* m_UISpriteGen;
 
+LCDSprite* m_UISpriteBacking;
+
 LCDBitmap* m_UIBitmapSave;
 LCDBitmap* m_UIBitmapSaveLoadProgress;
 LCDBitmap* m_UIBitmapLoad;
@@ -625,6 +627,7 @@ void addUIToSpriteList() {
 
   if (m_mode >= kMenuBuy) {
     pd->sprite->addSprite(m_UISpriteFull);
+    pd->sprite->addSprite(m_UISpriteBacking);
     if (m_mode == kMenuNew) {
       pd->sprite->addSprite(m_UISpriteNewBanner);
       pd->sprite->addSprite(m_UISpriteNewSplash);
@@ -1536,6 +1539,8 @@ void initiUI() {
   m_UISpriteBottom = pd->sprite->newSprite();
   m_UISpriteRight = pd->sprite->newSprite();
 
+  m_UISpriteBacking = pd->sprite->newSprite();
+
   m_UIBitmapTop = pd->graphics->newBitmap(SCREEN_PIX_X/2 + TILE_PIX*4, TILE_PIX*2, kColorClear);
   m_UIBitmapSave = pd->graphics->newBitmap(DEVICE_PIX_X/2, TILE_PIX*2, kColorClear);
   m_UIBitmapSaveLoadProgress = pd->graphics->newBitmap(TILE_PIX*6, TILE_PIX*1, kColorClear);
@@ -1548,6 +1553,15 @@ void initiUI() {
   PDRect boundTopA = {.x = 0, .y = 0, .width = SCREEN_PIX_X/2 + TILE_PIX*4, .height = TILE_PIX*2};
   PDRect boundTopB = {.x = 0, .y = 0, .width = SCREEN_PIX_X/2, .height = TILE_PIX*2};
   PDRect boundSpriteSave = {.x = 0, .y = 0, .width = TILE_PIX*6, .height = TILE_PIX};
+
+  PDRect boundSpriteBacking = {.x = 0, .y = 0, .width = SCREEN_PIX_X, .height = SCREEN_PIX_Y};
+
+  pd->sprite->setBounds(m_UISpriteBacking, boundSpriteBacking);
+  pd->sprite->setImage(m_UISpriteBacking, getMenuBacking(), kBitmapUnflipped);
+  pd->sprite->moveTo(m_UISpriteBacking, SCREEN_PIX_X/2, SCREEN_PIX_Y/2);
+  pd->sprite->setZIndex(m_UISpriteBacking, Z_INDEX_UI_BACK);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteBacking, 1);
+  pd->sprite->setVisible(m_UISpriteBacking, 1);
 
   pd->sprite->setBounds(m_UISpriteTop, boundTopA);
   pd->sprite->setImage(m_UISpriteTop, m_UIBitmapTop, kBitmapUnflipped);

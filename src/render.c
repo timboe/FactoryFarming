@@ -12,7 +12,7 @@
 
 float m_trauma = 0.0f, m_decay = 0.0f;
 
-void chunkAddToRender(struct Chunk_t* _chunk, uint8_t _zoom);
+void chunkAddToRender(struct Chunk_t* _chunk, uint8_t _zoom, bool _includeCargoAndObs);
 
 /// ///
 
@@ -44,12 +44,12 @@ void render() {
   }
 
   // Draw FPS indicator (dbg only)
-  if (p->m_enableDebug) {
+  if (p->m_enableDebug || ALWAYS_FPS) {
     pd->system->drawFPS(0, 0);
   }
 }
 
-void chunkAddToRender(struct Chunk_t* _chunk, uint8_t _zoom) {
+void chunkAddToRender(struct Chunk_t* _chunk, uint8_t _zoom, bool _includeCargoAndObs) {
   if (_chunk->m_bkgSprite[_zoom]) pd->sprite->addSprite(_chunk->m_bkgSprite[_zoom]);
   for (uint32_t i = 0; i < _chunk->m_nBuildingsRender; ++i) {
     // TODO - efficient way to not include conveyors if getPlayer()->m_enableConveyorAnimation is false?
@@ -62,6 +62,9 @@ void chunkAddToRender(struct Chunk_t* _chunk, uint8_t _zoom) {
       conveyorLocationUpdate(b, _zoom);
     }
   }
+  if (!_includeCargoAndObs) {
+    return;
+  }
   for (uint32_t i = 0; i < _chunk->m_nCargos; ++i) {
     pd->sprite->addSprite(_chunk->m_cargos[i]->m_sprite[_zoom]);
   }
@@ -71,7 +74,8 @@ void chunkAddToRender(struct Chunk_t* _chunk, uint8_t _zoom) {
 }
 
 void updateRenderList() {
-  if (getGameMode() == kMenuCredits) {
+  const enum kGameMode gm = getGameMode();
+  if (gm == kMenuCredits) {
     pd->sprite->removeAllSprites();
     addUIToSpriteList();
     return;
@@ -91,32 +95,34 @@ void updateRenderList() {
     addUIToSpriteList();
   }
 
-  chunkAddToRender(currentChunk, zoom);
+  const bool includeCargoAndObs = (gm < kMenuBuy);
+
+  chunkAddToRender(currentChunk, zoom, includeCargoAndObs);
   if (getZoom() == 1 && !PRETEND_ZOOMED_IN) {
     for (uint32_t i = 0; i < CHUNK_NEIGHBORS_ALL; ++i) {
-      chunkAddToRender(currentChunk->m_neighborsALL[i], zoom);
+      chunkAddToRender(currentChunk->m_neighborsALL[i], zoom, includeCargoAndObs);
     }
   } else {
     switch (getCurrentQuadrant()) {
       case NE:;
-        chunkAddToRender(currentChunk->m_neighborsNE[0], zoom);
-        chunkAddToRender(currentChunk->m_neighborsNE[1], zoom);
-        chunkAddToRender(currentChunk->m_neighborsNE[2], zoom);
+        chunkAddToRender(currentChunk->m_neighborsNE[0], zoom, includeCargoAndObs);
+        chunkAddToRender(currentChunk->m_neighborsNE[1], zoom, includeCargoAndObs);
+        chunkAddToRender(currentChunk->m_neighborsNE[2], zoom, includeCargoAndObs);
         break;
       case SE:;
-        chunkAddToRender(currentChunk->m_neighborsSE[0], zoom);
-        chunkAddToRender(currentChunk->m_neighborsSE[1], zoom);
-        chunkAddToRender(currentChunk->m_neighborsSE[2], zoom);
+        chunkAddToRender(currentChunk->m_neighborsSE[0], zoom, includeCargoAndObs);
+        chunkAddToRender(currentChunk->m_neighborsSE[1], zoom, includeCargoAndObs);
+        chunkAddToRender(currentChunk->m_neighborsSE[2], zoom, includeCargoAndObs);
         break;
       case SW:;
-        chunkAddToRender(currentChunk->m_neighborsSW[0], zoom);
-        chunkAddToRender(currentChunk->m_neighborsSW[1], zoom);
-        chunkAddToRender(currentChunk->m_neighborsSW[2], zoom);
+        chunkAddToRender(currentChunk->m_neighborsSW[0], zoom, includeCargoAndObs);
+        chunkAddToRender(currentChunk->m_neighborsSW[1], zoom, includeCargoAndObs);
+        chunkAddToRender(currentChunk->m_neighborsSW[2], zoom, includeCargoAndObs);
         break;
       case NW:;
-        chunkAddToRender(currentChunk->m_neighborsNW[0], zoom);
-        chunkAddToRender(currentChunk->m_neighborsNW[1], zoom);
-        chunkAddToRender(currentChunk->m_neighborsNW[2], zoom);
+        chunkAddToRender(currentChunk->m_neighborsNW[0], zoom, includeCargoAndObs);
+        chunkAddToRender(currentChunk->m_neighborsNW[1], zoom, includeCargoAndObs);
+        chunkAddToRender(currentChunk->m_neighborsNW[2], zoom, includeCargoAndObs);
         break;
     }
   }

@@ -29,6 +29,8 @@
 
 //#define PRINT_MAX_RECURSION
 
+#define ALWAYS_FPS true
+
 #define PRETEND_ZOOMED_IN false
 
 #include <stdio.h>
