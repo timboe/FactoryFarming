@@ -74,6 +74,9 @@ json_decoder m_jd = {
 /// ///
 
 void doIO(enum kSaveLoadRequest _first, enum kSaveLoadRequest _andThen, enum kSaveLoadRequest _andFinally) {
+  if (IOOperationInProgress()) {
+    return;
+  }
   m_doFirst = _first;
   m_andThen = _andThen;
   m_andFinally = _andFinally;

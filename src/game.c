@@ -243,6 +243,7 @@ int gameLoop(void* _data) {
 }
 
 void menuOptionsCallbackDelete(void* _save) {
+  if (IOOperationInProgress()) { return; }
   int save = (uintptr_t) _save;
   #ifdef DEV
   pd->system->logToConsole("menuOptionsCallbackDelete %i", save);
@@ -252,6 +253,7 @@ void menuOptionsCallbackDelete(void* _save) {
 }
 
 void menuOptionsCallbackLoad(void* blank) {
+  if (IOOperationInProgress()) { return; }
   #ifdef DEV
   pd->system->logToConsole("menuOptionsCallbackLoad");
   #endif
@@ -261,6 +263,7 @@ void menuOptionsCallbackLoad(void* blank) {
 }
 
 void menuOptionsCallbackSave(void* blank) {
+  if (IOOperationInProgress()) { return; }
   #ifdef DEV
   pd->system->logToConsole("menuOptionsCallbackSave");
   #endif
@@ -269,6 +272,7 @@ void menuOptionsCallbackSave(void* blank) {
 }
 
 void menuOptionsCallbackMenu(void* blank) {
+  if (IOOperationInProgress()) { return; }
   #ifdef DEV
   pd->system->logToConsole("menuOptionsCallbackMenu");
   #endif

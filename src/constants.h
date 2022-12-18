@@ -30,7 +30,7 @@
 
 //#define ALLOW_ROTATED_MENU_ICONS
 
-#define ALWAYS_FPS false
+#define ALWAYS_FPS true
 
 #define PRETEND_ZOOMED_IN false
 
@@ -200,4 +200,4 @@
 
 #define MAX_RECURSION 128
 
-#define SSHOT_PIXELS_PER_FRAME 16384
+#define SSHOT_PIXELS_PER_FRAME 32768

@@ -211,7 +211,7 @@ bool movePlayer(bool _forceUpdate) {
   if (convMotion > 0) { // Make this just "if (convMotion)" to allow backwards travel too
     if (m_currentLocation && m_currentLocation->m_building && m_currentLocation->m_building->m_type == kConveyor) {
       enum kDir direction;
-      if (++convNoise % 16 == 0) {
+      if (++convNoise % 8 == 0) {
         sfx(kSfxConveyor);
       }
       if (m_currentLocation->m_building->m_subType.conveyor >= kFilterL) {
@@ -221,13 +221,19 @@ bool movePlayer(bool _forceUpdate) {
       }
       int8_t dist = -NEAR_TICK_AMOUNT * m_currentLocation->m_building->m_stored[0]; // Holds speed multiplier
       if (convMotion > 0) dist *= -2; // Speed boost when going forwards (also negates the above invesion)
+      int16_t x = 0, y = 0;
       switch (direction) {
-        case SN: setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y - dist, /*update current location = */ false); m_facing = 2; break;
-        case NS: setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y + dist, /*update current location = */ false); m_facing = 3; break;
-        case EW: setPlayerPosition(m_player.m_pix_x - dist, m_player.m_pix_y, /*update current location = */ false); m_facing = 0; break;
-        case WE: setPlayerPosition(m_player.m_pix_x + dist, m_player.m_pix_y, /*update current location = */ false); m_facing = 1; break;
+        case SN: x = m_player.m_pix_x; y = m_player.m_pix_y - dist; m_facing = 2; break;
+        case NS: x = m_player.m_pix_x; y = m_player.m_pix_y + dist; m_facing = 3; break;
+        case EW: x = m_player.m_pix_x - dist; y = m_player.m_pix_y; m_facing = 0; break;
+        case WE: x = m_player.m_pix_x + dist; y = m_player.m_pix_y; m_facing = 1; break;
         case kDirN: break;
       }
+      if (x < 0) x += TOT_WORLD_PIX_X;
+      else if (x >= TOT_WORLD_PIX_X) x -= TOT_WORLD_PIX_X;
+      if (y < 0) y += TOT_WORLD_PIX_Y;
+      else if (y >= TOT_WORLD_PIX_Y) y -= TOT_WORLD_PIX_Y;
+      setPlayerPosition(x, y, /*update current location = */ false);
       pd->sprite->setImage(m_player.m_sprite[zoom], getSprite18(0, m_facing, zoom), kBitmapUnflipped);
     }
   }

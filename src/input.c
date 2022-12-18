@@ -453,8 +453,8 @@ void rotateHandleWander(float _rotation) {
   if (_rotation) {
     struct Location_t* loc = getPlayerLocation();
     if (loc && loc->m_building && loc->m_building->m_type == kConveyor) {
-      if (_rotation > 0) m_followConveyor = 16;
-      else               m_followConveyor = -16;
+      if (_rotation > 0) m_followConveyor = 8;
+      else               m_followConveyor = -8;
       return;
     }
   }
