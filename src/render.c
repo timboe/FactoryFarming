@@ -95,7 +95,7 @@ void updateRenderList() {
     addUIToSpriteList();
   }
 
-  const bool includeCargoAndObs = (gm < kMenuBuy);
+  const bool includeCargoAndObs = (gm < kMenuBuy || gm == kTitles);
 
   chunkAddToRender(currentChunk, zoom, includeCargoAndObs);
   if (getZoom() == 1 && !PRETEND_ZOOMED_IN) {

@@ -75,6 +75,8 @@ void rotateHandleSettings(float _rotation);
 
 void rotateHandleMultiplier(float _rotation);
 
+void rotateHandleTitles(float _rotation);
+
 bool holdBRotateInput(uint32_t _buttonPressed);
 
 bool holdBRadiusInput(uint32_t _buttonPressed);
@@ -545,6 +547,19 @@ void rotateHandleSettings(float _rotation) {
   }
 }
 
+
+void rotateHandleTitles(float _rotation) {
+  static float rot = 0.0f;
+  rot += _rotation;
+  if (rot > UI_ROTATE_ACTION) {
+    rot = 0.0f;
+    modTitleCursor(true);
+  } else if (rot < -UI_ROTATE_ACTION) {
+    rot = 0.0f;
+    modTitleCursor(false);
+  }
+}
+
 int8_t getAndReduceFollowConveyor() {
   if (m_followConveyor > 0) {
     return m_followConveyor--;
@@ -600,7 +615,8 @@ void clickHandlerReplacement() {
     case kMenuCredits: rotateHandleCredits(pd->system->getCrankChange()); break;
     case kMenuBuy: case kMenuSell: rotateHandleMultiplier(pd->system->getCrankChange()); break; 
     case kMenuPlayer: case kMenuSettings: case kMenuExport: case kMenuImport: case kMenuWarp: rotateHandleSettings(pd->system->getCrankChange()); break;
-    case kMenuNew:  case kInspectMode: case kTitles: case kTruckModeNew: case kTruckModeLoad: case kNGameModes: break;
+    case kTitles: rotateHandleTitles(pd->system->getCrankChange()); break; 
+    case kMenuNew:  case kInspectMode: case kTruckModeNew: case kTruckModeLoad: case kNGameModes: break;
   }
 
 }

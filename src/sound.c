@@ -130,6 +130,7 @@ void initSound() {
   m_audioSample[kSfxWarp] = pd->sound->sample->load("sounds/warp");
   m_audioSample[kSfxZoom] = pd->sound->sample->load("sounds/zoom");
   m_audioSample[kSfxNo] = pd->sound->sample->load("sounds/no");
+  m_audioSample[kSfxConveyor] = pd->sound->sample->load("sounds/conveyor");
   m_audioSample[kFootstepDefault] = pd->sound->sample->load("sounds/foot0");
   m_audioSample[kFootstepDefault1] = pd->sound->sample->load("sounds/foot1");
   m_audioSample[kFootstepDefault2] = pd->sound->sample->load("sounds/foot2");

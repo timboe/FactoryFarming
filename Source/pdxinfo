@@ -4,4 +4,5 @@ description=Cultivation meets Automation
 bundleID=uk.co.tim-martin.factoryfarming
 version=1.00
 buildNumber=100
-imagePath=titles/
+imagePath=titles
+launchSoundPath=sounds/warp

@@ -206,10 +206,14 @@ bool movePlayer(bool _forceUpdate) {
   uint8_t zoom = getZoom();
 
   // Do conveyor movement
+  static uint8_t convNoise = 0;
   int8_t convMotion = getAndReduceFollowConveyor();
   if (convMotion > 0) { // Make this just "if (convMotion)" to allow backwards travel too
     if (m_currentLocation && m_currentLocation->m_building && m_currentLocation->m_building->m_type == kConveyor) {
       enum kDir direction;
+      if (++convNoise % 16 == 0) {
+        sfx(kSfxConveyor);
+      }
       if (m_currentLocation->m_building->m_subType.conveyor >= kFilterL) {
         direction = m_currentLocation->m_building->m_nextDir[0];  
       } else {

@@ -22,6 +22,7 @@ enum SfxSample {
  kSfxWarp,
  kSfxZoom,
  kSfxNo,
+ kSfxConveyor,
  kFootstepDefault,
  kFootstepDefault1,
  kFootstepDefault2,
