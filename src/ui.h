@@ -90,7 +90,7 @@ void updateUICredits(int _fc);
 
 void updateBlueprint(bool _beep);
 
-void drawUITop(const char* _text);
+void drawUITop(const char* _text, LCDBitmapDrawMode _mode);
 
 int32_t getUnlockLevel(enum kUICat _c, int32_t _i);
 

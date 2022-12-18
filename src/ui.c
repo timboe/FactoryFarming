@@ -26,44 +26,44 @@
 #include "buildings/plant.h"
 #include "buildings/utility.h"
 
-enum kGameMode m_mode;
+enum kGameMode m_mode = 0;
 
-LCDSprite* m_UISpriteBottom;
-LCDBitmap* m_UIBitmapBottom;
+LCDSprite* m_UISpriteBottom = NULL;
+LCDBitmap* m_UIBitmapBottom = NULL;
 
-LCDSprite* m_UISpriteRight;
-LCDBitmap* m_UIBitmapRight;
-LCDBitmap* m_UIBitmapRightRotated;
+LCDSprite* m_UISpriteRight = NULL;
+LCDBitmap* m_UIBitmapRight = NULL;
+LCDBitmap* m_UIBitmapRightRotated = NULL;
 
-LCDSprite* m_UISpriteSave;
-LCDSprite* m_UISpriteSaveLoadProgress;
-LCDSprite* m_UISpriteLoad;
-LCDSprite* m_UISpriteGen;
+LCDSprite* m_UISpriteSave = NULL;
+LCDSprite* m_UISpriteSaveLoadProgress = NULL;
+LCDSprite* m_UISpriteLoad = NULL;
+LCDSprite* m_UISpriteGen = NULL;
 
-LCDSprite* m_UISpriteBacking;
+LCDSprite* m_UISpriteBacking = NULL;
 
-LCDBitmap* m_UIBitmapSave;
-LCDBitmap* m_UIBitmapSaveLoadProgress;
-LCDBitmap* m_UIBitmapLoad;
-LCDBitmap* m_UIBitmapGen;
+LCDBitmap* m_UIBitmapSave = NULL;
+LCDBitmap* m_UIBitmapSaveLoadProgress = NULL;
+LCDBitmap* m_UIBitmapLoad = NULL;
+LCDBitmap* m_UIBitmapGen = NULL;
 
 // Title Screen
-LCDSprite* m_UISpriteSplash;
-LCDSprite* m_UISpriteTitleSelected;
+LCDSprite* m_UISpriteSplash = NULL;
+LCDSprite* m_UISpriteTitleSelected = NULL;
 int16_t m_UITitleOffset = 0;
 int16_t m_UITitleSelected = 0;
-LCDSprite* m_UISpriteTitleNew[3];
-LCDSprite* m_UISpriteTitleCont[3];
-LCDBitmap* m_UIBitmapTitleNew[3];
-LCDBitmap* m_UIBitmapTitleCont[3];
+LCDSprite* m_UISpriteTitleNew[3] = {NULL};
+LCDSprite* m_UISpriteTitleCont[3] = {NULL};
+LCDBitmap* m_UIBitmapTitleNew[3] = {NULL};
+LCDBitmap* m_UIBitmapTitleCont[3] = {NULL};
 
-LCDSprite* m_UISpriteTop;
-LCDBitmap* m_UIBitmapTop;
+LCDSprite* m_UISpriteTop = NULL;
+LCDBitmap* m_UIBitmapTop = NULL;
 int16_t m_UITopOffset = 0;
 bool m_UITopVisible = false;
 
-LCDBitmap* m_UIBitmapDev;
-LCDSprite* m_UISpriteDev;
+LCDBitmap* m_UIBitmapDev = NULL;
+LCDSprite* m_UISpriteDev = NULL;
 
 bool m_UIDirtyBottom = false;
 
@@ -74,83 +74,81 @@ bool m_UIDirtyMain = false;
 // Menu screens
 
 // "New"
-LCDSprite* m_UISpriteNewBanner;
+LCDSprite* m_UISpriteNewBanner = NULL;
 LCDBitmap* m_UIBitmapNewBanner[kNUICats] = {NULL};
 
-LCDSprite* m_UISpriteNewSplash;
-LCDBitmap* m_UIBitmapNewSplash;
+LCDSprite* m_UISpriteNewSplash = NULL;
+LCDBitmap* m_UIBitmapNewSplash = NULL;
 
-LCDSprite* m_UISpriteNewItem;
-LCDBitmap* m_UIBitmapNewItem;
+LCDSprite* m_UISpriteNewItem = NULL;
+LCDBitmap* m_UIBitmapNewItem = NULL;
 
-LCDSprite* m_UISpriteNewText;
-LCDBitmap* m_UIBitmapNewText;
+LCDSprite* m_UISpriteNewText = NULL;
+LCDBitmap* m_UIBitmapNewText = NULL;
 
 // Main Menu
 
-LCDSprite* m_UISpriteSettingsMenuItem[MAX_ROWS];
-LCDBitmap* m_UIBitmapSettingsMenuItem[MAX_ROWS];
+LCDSprite* m_UISpriteSettingsMenuItem[MAX_ROWS] = {NULL};
+LCDBitmap* m_UIBitmapSettingsMenuItem[MAX_ROWS] = {NULL};
 
-LCDSprite* m_UISpriteSettingsMenuCursor;
+LCDSprite* m_UISpriteSettingsMenuCursor = NULL;
 
 // Other Menus
 
-LCDSprite* m_UISpriteCursor;
+LCDSprite* m_UISpriteCursor = NULL;
 
-LCDSprite* m_UISpriteSelected;
-LCDSprite* m_UISpriteCannotAfford;
-LCDSprite* m_UISpriteInfo;
-LCDBitmap* m_UIBitmapInfo;
+LCDSprite* m_UISpriteSelected = NULL;
+LCDSprite* m_UISpriteCannotAfford = NULL;
+LCDSprite* m_UISpriteInfo = NULL;
+LCDBitmap* m_UIBitmapInfo = NULL;
 
-LCDSprite* m_UISpriteScrollBarInner;
-LCDBitmap* m_UIBitmapScrollBarInner;
+LCDSprite* m_UISpriteScrollBarInner = NULL;
+LCDBitmap* m_UIBitmapScrollBarInner = NULL;
 
-LCDSprite* m_UISpriteScrollBarShortOuter;
-LCDBitmap* m_UIBitmapScrollBarShortOuter;
+LCDSprite* m_UISpriteScrollBarShortOuter = NULL;
+LCDBitmap* m_UIBitmapScrollBarShortOuter = NULL;
 
-LCDSprite* m_UISpriteScrollBarLongOuter;
-LCDBitmap* m_UIBitmapScrollBarLongOuter;
+LCDSprite* m_UISpriteScrollBarLongOuter = NULL;
+LCDBitmap* m_UIBitmapScrollBarLongOuter = NULL;
 
-LCDSprite* m_UISpriteFull; // Main window backing
-LCDBitmap* m_UIBitmapFull;
+LCDSprite* m_UISpriteFull = NULL; // Main window backing
+LCDBitmap* m_UIBitmapFull = NULL;
 
 #define TUTORIAL_WIDTH DEVICE_PIX_X
 #define TUTORIAL_HEIGHT (TILE_PIX*6)
 
 #define INGREDIENTS_WIDTH (TILE_PIX*10)
 #define INGREDIENTS_HEIGHT (TILE_PIX*6)
-LCDSprite* m_UISpriteIngredients; // Main window backing
-LCDBitmap* m_UIBitmapIngredients[kNFactorySubTypes];
 
-LCDSprite* m_UISpriteIngredients; // Main window backing
-LCDBitmap* m_UIBitmapIngredients[kNFactorySubTypes];
+LCDSprite* m_UISpriteIngredients = NULL; // Main window backing
+LCDBitmap* m_UIBitmapIngredients[kNFactorySubTypes] = {NULL};
 
-LCDSprite* m_UISpriteTutorialMain; 
-LCDBitmap* m_UIBitmapTutorialMain;
+LCDSprite* m_UISpriteTutorialMain = NULL; 
+LCDBitmap* m_UIBitmapTutorialMain = NULL;
 
-LCDSprite* m_UISpriteTutorialHint; 
-LCDBitmap* m_UIBitmapTutorialHint;
+LCDSprite* m_UISpriteTutorialHint = NULL; 
+LCDBitmap* m_UIBitmapTutorialHint = NULL;
 
-LCDSprite* m_UISpriteHeaders[kNUICats]; // Category headers: Crops. Conveyors. Utility. Harvesters. Factories. 
-LCDBitmap* m_UIBitmapHeaders[kNUICats]; // Category headers: Crops. Conveyors. Utility. Harvesters. Factories. 
+LCDSprite* m_UISpriteHeaders[kNUICats] = {NULL}; // Category headers: Crops. Conveyors. Utility. Harvesters. Factories. 
+LCDBitmap* m_UIBitmapHeaders[kNUICats] = {NULL}; // Category headers: Crops. Conveyors. Utility. Harvesters. Factories. 
 
-LCDSprite* m_UISpriteItems[kNUICats][MAX_PER_CAT][4]; // Final 4 is for rotation states
-LCDBitmap* m_UIBitmapItems[kNUICats][MAX_PER_CAT][4];
+LCDSprite* m_UISpriteItems[kNUICats][MAX_PER_CAT][4] = {NULL}; // Final 4 is for rotation states
+LCDBitmap* m_UIBitmapItems[kNUICats][MAX_PER_CAT][4] = {NULL};
 
-LCDSprite* m_UISpriteStickySelected[4];
+LCDSprite* m_UISpriteStickySelected[4] = {NULL};
 
 uint16_t m_selCol[kNGameModes] = {0}, m_selRow[kNGameModes] = {1}, m_selRotation = 0;
 uint16_t m_selRowOffset[kNGameModes] = {0}, m_cursorRowAbs[kNGameModes] = {1};
 
 LCDSprite* m_contentSprite[MAX_ROWS][ROW_WDTH] = {NULL};
 LCDSprite* m_contentStickySelected[MAX_ROWS][ROW_WDTH] = {NULL};
-enum kUICat m_contentCat[MAX_ROWS][ROW_WDTH];
-uint16_t m_contentID[MAX_ROWS][ROW_WDTH];
-uint16_t m_contentMaxRow;
+enum kUICat m_contentCat[MAX_ROWS][ROW_WDTH] = {0};
+uint16_t m_contentID[MAX_ROWS][ROW_WDTH] = {0};
+uint16_t m_contentMaxRow = 0;
 
 bool m_rowIsTitle[MAX_ROWS] = {false};
 
-int16_t m_creditsCounter;
+int16_t m_creditsCounter = 0;
 
 uint8_t m_buySellMultiplier[kNGameModes] = {1};
 
@@ -428,12 +426,12 @@ void updateUI(int _fc) {
     if (!m_UITopVisible) {
       if (_fc % (TICK_FREQUENCY/2) == 0) {
         const bool ic = isCamouflaged();
-        if      (distanceFromBuy()  < ACTIVATE_DISTANCE) drawUITop("The Shop");
-        else if (distanceFromSell() < ACTIVATE_DISTANCE) drawUITop("Sales Depot");
-        else if (!ic && distanceFromWarp() < ACTIVATE_DISTANCE) drawUITop("Plots Depot");
-        else if (!ic && distanceFromOut() < ACTIVATE_DISTANCE) drawUITop("Exports Depot"); // Or Deliveries TODO
-        else if (!ic && distanceFromIn() < ACTIVATE_DISTANCE) drawUITop("Imports Depot"); // Or Shipping TODO
-        else if (distanceFromRetirement() < ACTIVATE_DISTANCE) drawUITop("Credits");
+        if      (distanceFromBuy()  < ACTIVATE_DISTANCE) drawUITop("The Shop", kDrawModeCopy);
+        else if (distanceFromSell() < ACTIVATE_DISTANCE) drawUITop("Sales Depot", kDrawModeCopy);
+        else if (!ic && distanceFromWarp() < ACTIVATE_DISTANCE) drawUITop("Plots Depot", kDrawModeCopy);
+        else if (!ic && distanceFromOut() < ACTIVATE_DISTANCE) drawUITop("Exports Depot", kDrawModeCopy); // Or Deliveries TODO
+        else if (!ic && distanceFromIn() < ACTIVATE_DISTANCE) drawUITop("Imports Depot", kDrawModeCopy); // Or Shipping TODO
+        else if (distanceFromRetirement() < ACTIVATE_DISTANCE) drawUITop("Credits", kDrawModeCopy);
       }
     } else {
       if (distanceFromBuy() >= ACTIVATE_DISTANCE && 
@@ -441,7 +439,7 @@ void updateUI(int _fc) {
           distanceFromWarp() >= ACTIVATE_DISTANCE &&
           distanceFromOut() >= ACTIVATE_DISTANCE &&
           distanceFromIn() >= ACTIVATE_DISTANCE &&
-          distanceFromRetirement() >= ACTIVATE_DISTANCE) drawUITop(NULL);
+          distanceFromRetirement() >= ACTIVATE_DISTANCE) drawUITop(NULL, kDrawModeCopy);
     }
   }
 
@@ -652,15 +650,31 @@ void addUIToSpriteList() {
         pd->sprite->addSprite(m_UISpriteStickySelected[i]);
       }
       for (enum kUICat c = 0; c < kNUICats; ++c) {
+
+        // Not all c need to be added for all menus
+        switch (m_mode) {
+          case kMenuBuy: case kMenuPlayer: if (c > kUICatCargo) { continue; }; break;
+          case kMenuSell: case kMenuExport: if (c != kUICatCargo) { continue; }; break;
+          case kMenuWarp: if (c != kUICatWarp) { continue; }; break;
+          case kMenuImport: if (c <= kUICatCargo) { continue; }; break;
+          default: break;
+        }
+
         if (m_UISpriteHeaders[c] != NULL) {
           pd->sprite->addSprite(m_UISpriteHeaders[c]);
         }
         for (int32_t i = 0; i < MAX_PER_CAT; ++i) {
+          #ifdef ALLOW_ROTATED_MENU_ICONS
           for (int32_t r = 0; r < 4; ++r) {
             if (m_UISpriteItems[c][i][r] != NULL) {
               pd->sprite->addSprite(m_UISpriteItems[c][i][r]);
             }
           }
+          #else
+          if (m_UISpriteItems[c][i][0] != NULL) {
+            pd->sprite->addSprite(m_UISpriteItems[c][i][0]);
+          }
+          #endif
         }
       }
     }
@@ -980,11 +994,12 @@ void drawUIRight() {
   //UIDirtyBottom(); // why?
 }
 
-void drawUITop(const char* _text) {
+void drawUITop(const char* _text, LCDBitmapDrawMode _mode) {
   m_UITopVisible = (_text != NULL);
   if (_text == NULL) {
     return;
   }
+  pd->sprite->setDrawMode(m_UISpriteTop, _mode);
   pd->graphics->pushContext(m_UIBitmapTop);
   pd->graphics->setLineCapStyle(kLineCapStyleRound);
   pd->graphics->drawLine(TILE_PIX, TILE_PIX, SCREEN_PIX_X/2 - TILE_PIX + TILE_PIX*4, TILE_PIX, TILE_PIX*2, kColorBlack);
@@ -1218,6 +1233,9 @@ void setUIContentStickySelected(int32_t _row, int32_t _col, uint8_t _selID) {
 }
 
 void setUIContentItem(int32_t _row, int32_t _col, enum kUICat _c, uint16_t _i, uint16_t _r) {
+  #ifndef ALLOW_ROTATED_MENU_ICONS
+  _r = 0;
+  #endif
   m_contentSprite[_row][_col] = m_UISpriteItems[_c][_i][_r];
   m_contentCat[_row][_col] = _c;
   m_contentID[_row][_col] = _i;
@@ -1241,6 +1259,8 @@ void drawUIMain() {
   m_contentMaxRow = 0;
 
   const enum kGameMode gm = getGameMode();
+
+  const LCDBitmapDrawMode dm = (gm == kMenuPlayer ? kDrawModeInverted : kDrawModeCopy);
 
   // POPULATE
   bool empty = false;
@@ -1269,11 +1289,17 @@ void drawUIMain() {
     for (enum kUICat c = 0; c < kNUICats; ++c) {
       pd->sprite->setVisible(m_UISpriteHeaders[c], 0);
       for (int32_t i = 0; i < MAX_PER_CAT; ++i) {
+        #ifdef ALLOW_ROTATED_MENU_ICONS
         for (int32_t r = 0; r < 4; ++r) {
           if (m_UISpriteItems[c][i][r] != NULL) {
             pd->sprite->setVisible(m_UISpriteItems[c][i][r], 0);
           }
         }
+        #else
+        if (m_UISpriteItems[c][i][0] != NULL) {
+          pd->sprite->setVisible(m_UISpriteItems[c][i][0], 0);
+        }
+        #endif
       }
     }
     for (int32_t i = 0; i < 4; ++i) {
@@ -1302,6 +1328,13 @@ void drawUIMain() {
   }
   pd->sprite->setVisible(m_UISpriteInfo, 1);
 
+  pd->sprite->setDrawMode(m_UISpriteFull, dm);
+  pd->sprite->setDrawMode(m_UISpriteBacking, dm);
+  pd->sprite->setDrawMode(m_UISpriteCannotAfford, dm);
+  pd->sprite->setDrawMode(m_UISpriteInfo, dm);
+  pd->sprite->setDrawMode(m_UISpriteScrollBarShortOuter, dm);
+  pd->sprite->setDrawMode(m_UISpriteScrollBarInner, dm);
+
   // Render
   const uint8_t ROWS_TO_RENDER = (m_mode == kMenuSettings ? MAX_ROWS_VISIBLE_SETTINGSMENU : MAX_ROWS_VISIBLE);
 
@@ -1310,7 +1343,10 @@ void drawUIMain() {
   #define SCROLL_TOP (TILE_PIX*5)
   #define SCROLL_BOT (TILE_PIX*11)
   const int16_t scrollTop = (m_mode == kMenuSettings ? SCROLL_TOP_SETTINGS : SCROLL_TOP);
-  float frac = (m_selRow[m_mode] - 1) / (float)(m_contentMaxRow-1); // -1 as cannot select the top row
+  float frac = 0;
+  if (m_contentMaxRow-1) {
+    frac = (m_selRow[m_mode] - 1) / (float)(m_contentMaxRow-1); // -1 as cannot select the top row
+  }
   pd->sprite->moveTo(m_UISpriteScrollBarInner, TILE_PIX*21, scrollTop + (SCROLL_BOT-scrollTop)*frac);
 
   for (int32_t r = 0; r < ROWS_TO_RENDER; ++r) {
@@ -1319,17 +1355,21 @@ void drawUIMain() {
     if (m_contentSprite[rID][0] == NULL) break; // Not populated
     if (m_mode == kMenuSettings) {
       pd->sprite->setVisible(m_contentSprite[rID][0], 1);
+      pd->sprite->setDrawMode(m_contentSprite[rID][0], dm);
       pd->sprite->moveTo(m_contentSprite[rID][0], SCREEN_PIX_X/2 - TILE_PIX, SETTINGSMENUSTARTY + r*TILE_PIX);
     } else if (m_rowIsTitle[rID]) {
       pd->sprite->setVisible(m_contentSprite[rID][0], 1);
+      pd->sprite->setDrawMode(m_contentSprite[rID][0], dm);
       pd->sprite->moveTo(m_contentSprite[rID][0], SCREEN_PIX_X/2 - TILE_PIX, UISTARTY + r*2*TILE_PIX);
     } else {
       for (int32_t c = 0; c < ROW_WDTH; ++c) {
         if (m_contentSprite[rID][c] == NULL) break; // Not populated
         pd->sprite->setVisible(m_contentSprite[rID][c], 1);
+        pd->sprite->setDrawMode(m_contentSprite[rID][c], dm);
         pd->sprite->moveTo(m_contentSprite[rID][c], UISTARTX + c*2*TILE_PIX, UISTARTY + r*2*TILE_PIX);
         if (m_contentStickySelected[rID][c] != NULL) {
           pd->sprite->setVisible(m_contentStickySelected[rID][c], 1);
+          pd->sprite->setDrawMode(m_contentStickySelected[rID][c], dm);
           pd->sprite->moveTo(m_contentStickySelected[rID][c], UISTARTX + c*2*TILE_PIX, UISTARTY + r*2*TILE_PIX);
         }
       }
@@ -1340,9 +1380,11 @@ void drawUIMain() {
   const bool visible = (getFrameCount() % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
   if (m_mode == kMenuSettings) {
     pd->sprite->setVisible(m_UISpriteSettingsMenuCursor, visible);
+    pd->sprite->setDrawMode(m_UISpriteSettingsMenuCursor, dm);
     pd->sprite->moveTo(m_UISpriteSettingsMenuCursor, UISTARTX + TILE_PIX*8, SETTINGSMENUSTARTY + m_cursorRowAbs[m_mode]*TILE_PIX);
   } else {
     pd->sprite->setVisible(m_UISpriteCursor, visible);
+    pd->sprite->setDrawMode(m_UISpriteCursor, dm);
     pd->sprite->moveTo(m_UISpriteCursor, UISTARTX + m_selCol[m_mode]*2*TILE_PIX, UISTARTY + m_cursorRowAbs[m_mode]*2*TILE_PIX);
   }
 
@@ -1350,6 +1392,7 @@ void drawUIMain() {
   if (m_mode != kMenuSettings) {
     LCDSprite* selectedSprite = m_contentSprite[ m_selRow[m_mode] ][ m_selCol[m_mode] ];
     pd->sprite->setVisible(m_UISpriteSelected, 1);
+    pd->sprite->setDrawMode(m_UISpriteSelected, dm);
     pd->sprite->setImage(m_UISpriteSelected, pd->sprite->getImage(selectedSprite), kBitmapUnflipped);
   }
 
@@ -1359,6 +1402,7 @@ void drawUIMain() {
     pd->sprite->setImage(m_UISpriteIngredients, m_UIBitmapIngredients[getUIContentID()], kBitmapUnflipped);
     pd->sprite->moveTo(m_UISpriteIngredients, x, TILE_PIX*8);
     pd->sprite->setVisible(m_UISpriteIngredients, 1);
+    pd->sprite->setDrawMode(m_UISpriteIngredients, dm);
   } else {
    pd->sprite->setVisible(m_UISpriteIngredients, 0);
   }
@@ -1433,22 +1477,22 @@ void setGameMode(enum kGameMode _mode) {
   }
 
   if (_mode == kPlaceMode) {
-    drawUITop("Place Mode");
+    drawUITop("Place Mode", kDrawModeCopy);
   } else if (_mode == kPlantMode) {
-    drawUITop("Plant Mode");
+    drawUITop("Plant Mode", kDrawModeCopy);
   } else if (_mode == kBuildMode) {
-    drawUITop("Build Mode");
+    drawUITop("Build Mode", kDrawModeCopy);
   } else if (_mode == kPickMode) {
-    drawUITop("Pickup Mode");
+    drawUITop("Pickup Mode", kDrawModeCopy);
   } else if (_mode == kMenuPlayer) {
-    drawUITop("Inventory");
+    drawUITop("Inventory", kDrawModeInverted);
   } else if (_mode == kInspectMode) {
-    drawUITop("Inspect");
+    drawUITop("Inspect", kDrawModeCopy);
   } else if (_mode == kDestroyMode) {
-    drawUITop("Deconstruction");
+    drawUITop("Deconstruction", kDrawModeCopy);
   } else if (_mode >= kMenuBuy) {
     setBuySellMultiplier(1);
-  } else drawUITop(NULL);
+  } else drawUITop(NULL, kDrawModeCopy);
 
   if (m_mode >= kMenuBuy) UIDirtyMain();
   UIDirtyRight(); // Just safer to always do this here
@@ -1913,6 +1957,19 @@ void initiUI() {
     pd->sprite->setIgnoresDrawOffset(m_UISpriteHeaders[c], 1);
 
     for (int32_t i = 0; i < getNSubTypes(c); ++i) {
+
+      // Exclude placeholders
+      switch (c) {
+        case kUICatPlant: if (PDesc[i].sprite == 0) { continue; }; break;
+        case kUICatConv: if (CDesc[i].UIIcon == 0) { continue; }; break;
+        case kUICatExtractor: if (EDesc[i].UIIcon == 0) { continue; }; break;
+        case kUICatFactory: if (FDesc[i].UIIcon == 0) { continue; }; break;
+        case kUICatUtility: if (UDesc[i].UIIcon == 0) { continue; }; break;
+        case kUICatCargo: case kUICatImportN: case kUICatImportE: case kUICatImportS: case kUICatImportW:
+          if (CargoDesc[i].UIIcon == 0) { continue; }; break;
+        default: break;
+      }
+
       uint16_t spriteID = getUIIcon(c, i);
       for (int32_t r = 0; r < 4; ++r) {
 

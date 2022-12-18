@@ -1,4 +1,41 @@
 
+//#define DEV
+
+//#define SSHOT_ON_AUTOSAVE
+
+//#define SLOW_LOAD
+
+// Careful - can seem to break things 
+//#define FAST_PROGRESS
+
+//#define DEMO
+
+//#define TITLE_LOGO_ONLY
+
+//#define ONLY_SLOW_TICKS 
+
+//#define ONLY_FAST_TICKS
+
+//#define SYNCHRONOUS_SAVE_ENABLED
+
+// Aggressive free: dealocate used sprites
+// Agressive alocate: allocate all sprites at load
+// Neither: Allocate as we go, don't free
+
+//#define AGGRESSIVE_FREE_CARGO_SPRITES
+
+//#define AGGRESSIVE_ALLOCATE_CARGO_SPRITES
+
+//#define PRINT_MAX_RECURSION
+
+//#define ALLOW_ROTATED_MENU_ICONS
+
+#define ALWAYS_FPS true
+
+#define PRETEND_ZOOMED_IN false
+
+/// ///
+
 #define TICK_FREQUENCY 32
 
 #define NEAR_TICK_FREQUENCY 2

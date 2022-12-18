@@ -273,7 +273,7 @@ void menuOptionsCallbackMenu(void* blank) {
   pd->system->logToConsole("menuOptionsCallbackMenu");
   #endif
   checkReturnDismissTutorialMsg();
-  drawUITop("Main Menu");
+  drawUITop("Main Menu", kDrawModeCopy);
   redrawAllSettingsMenuLines();
   setGameMode(kMenuSettings);
 }
