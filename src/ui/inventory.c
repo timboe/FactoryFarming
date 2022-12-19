@@ -454,7 +454,7 @@ void populateInfoInventory() {
   pd->graphics->drawText(textA, 128, kASCIIEncoding, 1*TILE_PIX, +2);
   pd->graphics->drawText(textB, 128, kASCIIEncoding, 1*TILE_PIX, TILE_PIX - 2);
   pd->graphics->drawText(textC, 128, kASCIIEncoding, 9*TILE_PIX - cOff, TILE_PIX - 2);
-  pd->graphics->setDrawMode(kDrawModeCopy);
+  pd->graphics->setDrawMode(kDrawModeCopy); // Draw coin
   if (selectedCat == kUICatCargo) pd->graphics->drawBitmap(getSprite16(2, 16, 1), 11*TILE_PIX + TILE_PIX/2, TILE_PIX - 2, kBitmapUnflipped);
   pd->graphics->popContext();
 }

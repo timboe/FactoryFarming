@@ -555,7 +555,7 @@ void setDefaultPlayerSettings() {
   m_player.m_enableAutosave = 10;
   m_player.m_enablePickupOnDestroy = 1;
   m_player.m_enableScreenShake = 1;
-  m_player.m_enableExtractorOutlines = 0;
+  m_player.m_enableExtractorOutlines = 1;
   m_player.m_enableSteps = 1;
 }
 

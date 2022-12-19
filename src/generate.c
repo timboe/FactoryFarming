@@ -313,6 +313,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   }
 
   // Render locations 
+  const enum kGameMode gm = getGameMode();
   for (uint32_t i = 0; i < _chunk->m_nBuildingsRender; ++i) {
     struct Building_t* building = _chunk->m_buildingsRender[i];
     if (building->m_type != kNoBuilding && building->m_image[1]) {
@@ -330,11 +331,11 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
           pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ EDesc[building->m_subType.extractor].out ].UIIcon, 1), 
             building->m_pix_x - off16_x, building->m_pix_y - off16_y, kBitmapUnflipped);
           // Also draw factory range
-          if (p->m_enableExtractorOutlines && building->m_subType.extractor == kCropHarvesterSmall) {
+          if (p->m_enableExtractorOutlines && gm != kTitles && building->m_subType.extractor == kCropHarvesterSmall) {
             pd->graphics->setDrawMode(kDrawModeNXOR);
             pd->graphics->drawBitmap(p->m_blueprintRadiusBitmap7x7[/*zoom*/1], 
               building->m_pix_x - off48_x - TILE_PIX*2, building->m_pix_y - off48_y - TILE_PIX*2, kBitmapUnflipped);
-          } else if (p->m_enableExtractorOutlines && building->m_subType.extractor == kCropHarvesterLarge) {
+          } else if (p->m_enableExtractorOutlines && gm != kTitles && building->m_subType.extractor == kCropHarvesterLarge) {
             pd->graphics->setDrawMode(kDrawModeNXOR);
             pd->graphics->drawBitmap(p->m_blueprintRadiusBitmap9x9[/*zoom*/1], 
               building->m_pix_x - off48_x - TILE_PIX*3, building->m_pix_y - off48_y - TILE_PIX*3, kBitmapUnflipped);

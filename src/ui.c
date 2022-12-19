@@ -1312,6 +1312,11 @@ void drawUIMain() {
   #define UISTARTX (TILE_PIX*3)
   #define UISTARTY (TILE_PIX*5)
 
+  pd->sprite->setDrawMode(m_UISpriteFull, dm);
+  pd->sprite->setDrawMode(m_UISpriteInfo, dm);
+  pd->sprite->setDrawMode(m_UISpriteScrollBarShortOuter, dm);
+  pd->sprite->setDrawMode(m_UISpriteScrollBarInner, dm);
+
   if (gm == kMenuNew) {
     return renderNewUI();
   }
@@ -1327,13 +1332,6 @@ void drawUIMain() {
     return;
   }
   pd->sprite->setVisible(m_UISpriteInfo, 1);
-
-  pd->sprite->setDrawMode(m_UISpriteFull, dm);
-  pd->sprite->setDrawMode(m_UISpriteBacking, dm);
-  //pd->sprite->setDrawMode(m_UISpriteCannotAfford, dm);
-  pd->sprite->setDrawMode(m_UISpriteInfo, dm);
-  pd->sprite->setDrawMode(m_UISpriteScrollBarShortOuter, dm);
-  pd->sprite->setDrawMode(m_UISpriteScrollBarInner, dm);
 
   // Render
   const uint8_t ROWS_TO_RENDER = (m_mode == kMenuSettings ? MAX_ROWS_VISIBLE_SETTINGSMENU : MAX_ROWS_VISIBLE);
@@ -1390,7 +1388,6 @@ void drawUIMain() {
   if (m_mode != kMenuSettings) {
     LCDSprite* selectedSprite = m_contentSprite[ m_selRow[m_mode] ][ m_selCol[m_mode] ];
     pd->sprite->setVisible(m_UISpriteSelected, 1);
-    pd->sprite->setDrawMode(m_UISpriteSelected, dm);
     pd->sprite->setImage(m_UISpriteSelected, pd->sprite->getImage(selectedSprite), kBitmapUnflipped);
   }
 
@@ -1611,7 +1608,7 @@ void initiUI() {
   pd->sprite->setBounds(m_UISpriteTop, boundTopA);
   pd->sprite->setImage(m_UISpriteTop, m_UIBitmapTop, kBitmapUnflipped);
   pd->sprite->moveTo(m_UISpriteTop, SCREEN_PIX_X/2 - 32, TILE_PIX);
-  pd->sprite->setZIndex(m_UISpriteTop, Z_INDEX_UI_T);
+  pd->sprite->setZIndex(m_UISpriteTop, Z_INDEX_UI_M);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteTop, 1);
   pd->sprite->setVisible(m_UISpriteTop, 1);
 
@@ -1909,7 +1906,7 @@ void initiUI() {
   m_UISpriteInfo = pd->sprite->newSprite();
   pd->sprite->setBounds(m_UISpriteInfo, infoBound);
   pd->sprite->setImage(m_UISpriteInfo, m_UIBitmapInfo, kBitmapUnflipped);
-  pd->sprite->setZIndex(m_UISpriteInfo, Z_INDEX_UI_M);
+  pd->sprite->setZIndex(m_UISpriteInfo, Z_INDEX_UI_T);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteInfo, 1);
   pd->sprite->moveTo(m_UISpriteInfo, TILE_PIX*(9+4), TILE_PIX*3);
 
@@ -2081,7 +2078,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
 
         case 5: return "Move with the D-Pad, ✛. Zoom in & out with 🎣.";
         case 6: return "Hold Ⓑ to run.  Go to the shop and press Ⓐ.";
-        case 7: return "Buy 10 carrot Seeds from the shop with Ⓐ.";
+        case 7: return "Buy 10 carrot seeds from the shop with Ⓐ.";
         case 8: return "Press Ⓑ to exit the shop.";
       }
     case kTutSeeObjective:;

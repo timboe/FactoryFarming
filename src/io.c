@@ -580,6 +580,8 @@ bool doLoad() {
   } else if (m_actionProgress == 5) {
 
     // Things which need to run post-load
+    setGameMode(kWanderMode);
+
     addObstacles();
     doWetness(/*for titles = */ false);
     setChunkBackgrounds(/*for title = */ false);
@@ -589,7 +591,6 @@ bool doLoad() {
     updateSfx();
     updateMusic(/*isTitle=*/ false);
 
-    setGameMode(kWanderMode);
     populateMenuGame();
 
     // Finished
