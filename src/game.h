@@ -44,3 +44,5 @@ uint16_t getCactusUnlock(void);
 int32_t getNUnlocks(void);
 
 void reset(bool _resetThePlayer);
+
+char* ftos(float _value, int16_t _size, char* _dest);

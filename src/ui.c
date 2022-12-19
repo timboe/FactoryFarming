@@ -1510,10 +1510,13 @@ void resetUI() {
   }
   m_selRotation = 0;
   updateBlueprint(/*beep*/ false);
+  drawUITop(NULL, kDrawModeCopy);
   m_UITitleOffset = UI_TITLE_OFFSET;
   m_UITopOffset = 0;
   m_UITitleSelected = 0;
-
+  if (m_UISpriteTop) {
+    pd->sprite->moveTo(m_UISpriteTop, SCREEN_PIX_X/2, TILE_PIX - TOP_TITLE_OFFSET + 1 );
+  }
 }
 
 void roundedRect(uint16_t _o, uint16_t _w, uint16_t _h, uint16_t _r, LCDColor _c) {

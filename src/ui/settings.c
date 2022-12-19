@@ -273,7 +273,7 @@ void cheatUnlock() {
 }
 
 void doSettings(bool _forward) {
-  sfx(kSfxA);
+
   struct Player_t* p = getPlayer();
   const uint16_t selectedID =  getUIContentID();
   switch (selectedID) {
@@ -339,9 +339,10 @@ void doSettings(bool _forward) {
     case 37: chooseMusic(2); break;
     case 38: chooseMusic(5); break;
     //
-    case 53: sfx(rand() % kNSFX); break;
+    case 53: sfx(rand() % kNSFX); return; // Do not also play kSfxA
   }
   redrawSettingsMenuLine(getSettingsMenuUIBitmap(selectedID), selectedID);
+  sfx(kSfxA);
 }
 
 #define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_START 0

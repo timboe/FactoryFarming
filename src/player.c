@@ -550,7 +550,7 @@ void setDefaultPlayerSettings() {
   m_player.m_soundSettings = 3;
   m_player.m_musicVol = 100;
   m_player.m_autoUseConveyorBooster = 0;
-  m_player.m_enableConveyorAnimation = 1;
+  m_player.m_enableConveyorAnimation = 0;
   m_player.m_enableTutorial = 0;
   m_player.m_enableDebug = 0;
   m_player.m_enableAutosave = 10;

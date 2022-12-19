@@ -450,3 +450,19 @@ void initGame() {
 int32_t getNUnlocks() {
   return m_nUnlocks;
 }
+
+char* ftos(float _value, int16_t _size, char* _dest) {
+  char* tmpSign = (_value < 0) ? "-" : "";
+  float tmpVal = (_value < 0) ? -_value : _value;
+
+  int16_t tmpInt1 = tmpVal;
+  float tmpFrac = tmpVal - tmpInt1;
+  int16_t tmpInt2 = trunc(tmpFrac * 10000);
+
+  char truncStr[8];
+  snprintf (_dest, _size, "%02d", tmpInt2);
+  snprintf (truncStr, 8, "%.2s", _dest);
+
+  snprintf (_dest, _size, "%s%d.%s", tmpSign, tmpInt1, truncStr);
+  return _dest;
+}

@@ -192,9 +192,9 @@ bool holdBMultiplierInput(uint32_t _buttonPressed) {
 }
 
 bool holdAShortcutsInput(uint32_t _buttonPressed) {
-  if (kButtonLeft == _buttonPressed) { setGameMode(kPickMode); m_blockA = 1; }
-  else if (kButtonRight == _buttonPressed) { setGameMode(kDestroyMode); m_blockA = 1; }
-  else if (kButtonUp == _buttonPressed) { setGameMode(kInspectMode); m_blockA = 1; }
+  if (kButtonLeft == _buttonPressed) { sfx(kSfxA); setGameMode(kPickMode); m_blockA = 1; }
+  else if (kButtonRight == _buttonPressed) { sfx(kSfxA); setGameMode(kDestroyMode); m_blockA = 1; }
+  else if (kButtonUp == _buttonPressed) { sfx(kSfxA); setGameMode(kInspectMode); m_blockA = 1; }
   else if (kButtonDown == _buttonPressed) toggleZoom();
   else return false;
   return true;

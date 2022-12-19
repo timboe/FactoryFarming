@@ -2,6 +2,7 @@
 #include "generate.h"
 #include "chunk.h"
 #include "building.h"
+#include "sound.h"
 #include "sprite.h"
 #include "render.h"
 #include "buildings/special.h"
@@ -45,6 +46,7 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
     // Special - well
     bool wideRedraw = false;
     if (_loc->m_building->m_type == kUtility && _loc->m_building->m_subType.utility == kWell) {
+      pauseMusic();
       setTile( getTile_idx(_loc->m_x, _loc->m_y), _loc->m_building->m_mode.mode16 ); // Undo before destroying
       doWetness(/*for titles = */ false);
       wideRedraw = true;
@@ -77,7 +79,9 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
     buildingManagerFreeBuilding(_loc->m_building);
 
     if (isMultiBlock || wideRedraw) {
+      pauseMusic();
       renderChunkBackgroundImageAround(_loc->m_chunk);
+      resumeMusic();
     } else {
       renderChunkBackgroundImage(_loc->m_chunk);
     }

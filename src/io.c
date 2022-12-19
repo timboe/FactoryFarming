@@ -183,9 +183,9 @@ void setForceSlot(int8_t _slot) { m_forceSlot = _slot; }
 bool doTitle() {
 
   reset(true); // including player
+  setGameMode(kTitles);
   generateTitle();
   setChunkBackgrounds(/*for title = */ true);
-  setGameMode(kTitles);
   unZoom();
   setPlayerPosition(12*TILE_PIX, 7*TILE_PIX, /*update current location = */ true);
 

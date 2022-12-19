@@ -91,6 +91,8 @@ void populateInfoImport() {
   static char textA[128] = " ";
   static char textB[128] = " ";
   static char textC[128] = " ";
+  static char strFloat[16] = " ";
+
   setRoobert10();
   pd->graphics->clearBitmap(infoBitmap, kColorClear);
   pd->graphics->pushContext(infoBitmap);
@@ -99,7 +101,8 @@ void populateInfoImport() {
 
   snprintf(textA, 128, "Import of: %s", toStringCargoByType(selectedID, /*plural=*/true));
   snprintf(textB, 128, "Importers: %i", totConsumers);
-  snprintf(textC, 128, "Imported: %.2f/s", (double)importPerConsumer);
+  snprintf(textC, 128, "Imported: %s/s", ftos(importPerConsumer, 16, strFloat));
+
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   pd->graphics->drawText(textA, 128, kASCIIEncoding, 1*TILE_PIX, +2);
   pd->graphics->drawText(textB, 128, kASCIIEncoding, 1*TILE_PIX, TILE_PIX - 2);

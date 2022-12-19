@@ -10,6 +10,8 @@ void doExport() {
   // noop
 }
 
+
+
 void populateInfoExport() {
   const uint16_t selectedID =  getUIContentID();
   updateExport();
@@ -21,14 +23,16 @@ void populateInfoExport() {
   static char textA[128] = " ";
   static char textB[128] = " ";
   static char textC[128] = " ";
+  static char strFloat[16] = " ";
+
   setRoobert10();
   pd->graphics->clearBitmap(infoBitmap, kColorClear);
   pd->graphics->pushContext(infoBitmap);
   roundedRect(1, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorBlack);
   roundedRect(3, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorWhite);
   snprintf(textA, 128, "Exporting: %s", toStringCargoByType(selectedID, /*plural=*/true));
-  snprintf(textB, 128, "This Plot: %.2f/s", (double)getThisWorldCargoExport(selectedID));
-  snprintf(textC, 128, "All Plots: %.2f/s", (double)getTotalCargoExport(selectedID));
+  snprintf(textB, 128, "This Plot: %s/s", ftos(getThisWorldCargoExport(selectedID), 16, strFloat));
+  snprintf(textC, 128, "All Plots: %s/s", ftos(getTotalCargoExport(selectedID), 16, strFloat));
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   pd->graphics->drawText(textA, 128, kASCIIEncoding, 1*TILE_PIX, +2);
   pd->graphics->drawText(textB, 128, kASCIIEncoding, 1*TILE_PIX, TILE_PIX - 2);
