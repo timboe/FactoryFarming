@@ -155,7 +155,7 @@
 #define UI_ROTATE_ACTION 90.0f
 
 // Note: 1 larger than actual zoom levels (0 index unused)
-// TODO changing this will break the chunk->obstacle add/remove 
+// CAUTION: changing this will break the chunk->obstacle add/remove 
 #define ZOOM_LEVELS 3
 
 // 5 fixed inputs plus 1 fixed output. Or three variable self-describings outputs. 
@@ -200,4 +200,4 @@
 
 #define MAX_RECURSION 128
 
-#define SSHOT_PIXELS_PER_FRAME 32768
+#define SSHOT_PIXELS_PER_FRAME 16384

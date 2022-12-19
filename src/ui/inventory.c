@@ -75,7 +75,6 @@ bool doClearObstruction(struct Location_t* _loc) {
   return false; // We have handled the removal of the obstruction removers inside tryRemoveObstruction
 }
 
-// TODO make this more generic if needed...
 bool isInRangeOfCarrotPlant(struct Location_t* _placeLocation) {
   for (int32_t x = -3; x < 4; ++x) {
     for (int32_t y = -3; y < 4; ++y) {

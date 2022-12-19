@@ -418,7 +418,6 @@ uint32_t getTotalImportedCargo() {
   return t;
 }
 
-// TODO this is named wrong in the docs
 SpriteCollisionResponseType playerLCDSpriteCollisionFilterProc(LCDSprite* _player, LCDSprite* _other) {
   return kCollisionTypeSlide;
 }

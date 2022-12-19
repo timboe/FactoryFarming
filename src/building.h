@@ -9,7 +9,7 @@ enum kBuildingType {
   kConveyor, 
   kPlant, 
   kUtility, 
-  kExtractor, 
+  kExtractor, // Only large buildings from here on
   kFactory, 
   kSpecial, 
   kNBuildingTypes

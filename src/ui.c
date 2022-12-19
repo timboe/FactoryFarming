@@ -1330,7 +1330,7 @@ void drawUIMain() {
 
   pd->sprite->setDrawMode(m_UISpriteFull, dm);
   pd->sprite->setDrawMode(m_UISpriteBacking, dm);
-  pd->sprite->setDrawMode(m_UISpriteCannotAfford, dm);
+  //pd->sprite->setDrawMode(m_UISpriteCannotAfford, dm);
   pd->sprite->setDrawMode(m_UISpriteInfo, dm);
   pd->sprite->setDrawMode(m_UISpriteScrollBarShortOuter, dm);
   pd->sprite->setDrawMode(m_UISpriteScrollBarInner, dm);
@@ -1355,21 +1355,19 @@ void drawUIMain() {
     if (m_contentSprite[rID][0] == NULL) break; // Not populated
     if (m_mode == kMenuSettings) {
       pd->sprite->setVisible(m_contentSprite[rID][0], 1);
-      pd->sprite->setDrawMode(m_contentSprite[rID][0], dm);
       pd->sprite->moveTo(m_contentSprite[rID][0], SCREEN_PIX_X/2 - TILE_PIX, SETTINGSMENUSTARTY + r*TILE_PIX);
     } else if (m_rowIsTitle[rID]) {
       pd->sprite->setVisible(m_contentSprite[rID][0], 1);
-      pd->sprite->setDrawMode(m_contentSprite[rID][0], dm);
+      //pd->sprite->setDrawMode(m_contentSprite[rID][0], dm);
       pd->sprite->moveTo(m_contentSprite[rID][0], SCREEN_PIX_X/2 - TILE_PIX, UISTARTY + r*2*TILE_PIX);
     } else {
       for (int32_t c = 0; c < ROW_WDTH; ++c) {
         if (m_contentSprite[rID][c] == NULL) break; // Not populated
         pd->sprite->setVisible(m_contentSprite[rID][c], 1);
-        pd->sprite->setDrawMode(m_contentSprite[rID][c], dm);
+        //pd->sprite->setDrawMode(m_contentSprite[rID][c], dm);
         pd->sprite->moveTo(m_contentSprite[rID][c], UISTARTX + c*2*TILE_PIX, UISTARTY + r*2*TILE_PIX);
         if (m_contentStickySelected[rID][c] != NULL) {
           pd->sprite->setVisible(m_contentStickySelected[rID][c], 1);
-          pd->sprite->setDrawMode(m_contentStickySelected[rID][c], dm);
           pd->sprite->moveTo(m_contentStickySelected[rID][c], UISTARTX + c*2*TILE_PIX, UISTARTY + r*2*TILE_PIX);
         }
       }
@@ -1402,7 +1400,7 @@ void drawUIMain() {
     pd->sprite->setImage(m_UISpriteIngredients, m_UIBitmapIngredients[getUIContentID()], kBitmapUnflipped);
     pd->sprite->moveTo(m_UISpriteIngredients, x, TILE_PIX*8);
     pd->sprite->setVisible(m_UISpriteIngredients, 1);
-    pd->sprite->setDrawMode(m_UISpriteIngredients, dm);
+    //pd->sprite->setDrawMode(m_UISpriteIngredients, dm);
   } else {
    pd->sprite->setVisible(m_UISpriteIngredients, 0);
   }
@@ -1485,7 +1483,7 @@ void setGameMode(enum kGameMode _mode) {
   } else if (_mode == kPickMode) {
     drawUITop("Pickup Mode", kDrawModeCopy);
   } else if (_mode == kMenuPlayer) {
-    drawUITop("Inventory", kDrawModeInverted);
+    drawUITop("Inventory", kDrawModeCopy);
   } else if (_mode == kInspectMode) {
     drawUITop("Inspect", kDrawModeCopy);
   } else if (_mode == kDestroyMode) {
@@ -1991,7 +1989,10 @@ void initiUI() {
           pd->graphics->drawBitmap(getSprite16_byidx(spriteID + r, 2), 0, 0, kBitmapUnflipped);
           pd->graphics->setDrawMode(kDrawModeCopy);
         } else {
-          if (c != kUICatConv && c != kUICatWarp && c != kUICatUtility) {
+          if (c != kUICatConv && c != kUICatWarp
+              && !(c == kUICatUtility && i == kBuffferBox)
+              && !(c == kUICatUtility && i == kRetirement)
+              && !(c == kUICatUtility && i == kStorageBox)) {
             roundedRect(1, TILE_PIX*2, TILE_PIX*2, TILE_PIX/2, kColorBlack);
             roundedRect(3, TILE_PIX*2, TILE_PIX*2, TILE_PIX/2, kColorWhite);
             pd->graphics->setDrawMode(kDrawModeNXOR);

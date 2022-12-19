@@ -51,10 +51,10 @@ void render() {
 
 void chunkAddToRender(struct Chunk_t* _chunk, uint8_t _zoom, bool _includeCargoAndObs) {
   if (_chunk->m_bkgSprite[_zoom]) pd->sprite->addSprite(_chunk->m_bkgSprite[_zoom]);
+  const bool animOn = getPlayer()->m_enableConveyorAnimation; 
   for (uint32_t i = 0; i < _chunk->m_nBuildingsRender; ++i) {
-    // TODO - efficient way to not include conveyors if getPlayer()->m_enableConveyorAnimation is false?
     struct Building_t* b = _chunk->m_buildingsRender[i];
-    if (b->m_sprite[_zoom]) {
+    if (b->m_sprite[_zoom] && (animOn || b->m_type != kConveyor)) {
       pd->sprite->addSprite(b->m_sprite[_zoom]);
     }
     // Force update the drawing of the current location of the cargo

@@ -71,7 +71,7 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t
     // Handle filters vs. splitters
     enum kDir direction;
     if (_building->m_subType.conveyor >= kFilterL) {
-      // First encounter with an object? TODO can everything which can place an item on the chunk do this instead?
+      // First encounter with an object?
       if (_building->m_mode.mode16 == kNoCargo) {
         _building->m_mode.mode16 = loc->m_cargo->m_type; // Note: This CANNOT be undone without destroying the building
       }
