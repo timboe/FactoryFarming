@@ -528,10 +528,10 @@ void updateBlueprint(bool _beep) {
 
     if (!canPlace && selectedCat == kUICatUtility && selectedID == kRetirement) {
       pd->sprite->setImage(bp, getRetirementNoBitmap(zoom), kBitmapUnflipped);
-      if (_beep) sfx(kSfxB);
+      if (_beep) sfx(kSfxNo);
     } else if (!canPlace) {
       pd->sprite->setImage(bp, getSprite16(1, 16, zoom), kBitmapUnflipped);
-      if (_beep) sfx(kSfxB);
+      if (_beep) sfx(kSfxNo);
     }
 
   } else if (gm == kPlantMode) { // Of crops
@@ -546,7 +546,7 @@ void updateBlueprint(bool _beep) {
       if (_beep) {
         // Don't beep if it's another plant - this is annoying
         if ( ! (pl->m_building && pl->m_building->m_type == kPlant) ) {
-          sfx(kSfxB);
+          sfx(kSfxNo);
         }
       }
       pd->sprite->setImage(bp, getSprite16(1, 16, zoom), kBitmapUnflipped);
