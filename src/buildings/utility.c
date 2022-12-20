@@ -122,9 +122,11 @@ bool doPlaceLandfill(struct Location_t* _loc) {
     return false;
   }
   // Update the tile, re-do wetness (like for a well, but this is irreversible)
+  pauseMusic();
   setTile( getTile_idx(_loc->m_x, _loc->m_y), UDesc[kLandfill].sprite );
   doWetnessAroundLoc(_loc);
   renderChunkBackgroundImageAround(_loc->m_chunk);
+  resumeMusic();
   return true;
 }
 

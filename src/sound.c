@@ -152,7 +152,7 @@ void initSound() {
   m_hasMusic = true;
   for (int32_t i = 0; i < N_MUSIC_TRACKS + 1; ++i) {
     m_music[i] = pd->sound->fileplayer->newPlayer();
-    pd->sound->fileplayer->setBufferLength(m_music[i], 2.0f);
+    pd->sound->fileplayer->setBufferLength(m_music[i], 5.0f); 
     switch (i) {
       case 0: m_hasMusic &= pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/1985"); break;
       case 1: m_hasMusic &= pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/b3"); break;

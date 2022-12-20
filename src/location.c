@@ -46,9 +46,9 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
     // Special - well
     bool wideRedraw = false;
     if (_loc->m_building->m_type == kUtility && _loc->m_building->m_subType.utility == kWell) {
+      pauseMusic();
       setTile( getTile_idx(_loc->m_x, _loc->m_y), _loc->m_building->m_mode.mode16 ); // Undo before destroying
       doWetnessAroundLoc(_loc);
-      //doWetness(false);
       wideRedraw = true;
     }
 
@@ -82,6 +82,7 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
       renderChunkBackgroundImageAround3x3(_loc->m_chunk, _loc);
     } else if (wideRedraw) {
       renderChunkBackgroundImageAround(_loc->m_chunk);
+      resumeMusic();
     } else {
       renderChunkBackgroundImage(_loc->m_chunk);
     }

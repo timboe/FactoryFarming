@@ -576,7 +576,7 @@ void updateBlueprint(bool _beep) {
     canPlace &= (owned > 0);
     if (!canPlace) {
       pd->sprite->setImage(bp, getSprite48(1, 2, zoom), kBitmapUnflipped);
-      if (_beep) sfx(kSfxB);
+      if (_beep) sfx(kSfxNo);
     }
 
   } else { // Clear blueprint

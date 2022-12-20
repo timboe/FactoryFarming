@@ -534,7 +534,7 @@ void doWetness(bool _forTitles) {
 
 void doWetnessAroundLoc(struct Location_t* _loc) {
   for (int32_t x = _loc->m_x - TILES_PER_CHUNK_X; x < _loc->m_x + TILES_PER_CHUNK_X; ++x) {
-    for (int32_t y = _loc->m_y - TILES_PER_CHUNK_Y; y < _loc->m_y - TILES_PER_CHUNK_Y; ++y) {
+    for (int32_t y = _loc->m_y - TILES_PER_CHUNK_Y; y < _loc->m_y + TILES_PER_CHUNK_Y; ++y) {
       getTile(x, y)->m_wetness = distanceFromWater(x,y);
     }
   }
