@@ -84,9 +84,11 @@ void tickNear() {
   m_nearTickCount += chunkTickChunk(currentChunk, NEAR_TICK_AMOUNT, m_tickID, zoom);
   for (uint32_t i = 0; i < CHUNK_NEIGHBORS_ALL; ++i) {
     m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsALL[i], NEAR_TICK_AMOUNT, m_tickID, zoom);
+    currentChunk->m_neighborsALL[i]->m_isNearTick = true;
   }
   for (uint32_t i = 0; i < CHUNK_NONNEIGHBORS_ALL; ++i) { 
     m_nearTickCount += chunkTickChunk(currentChunk->m_nonNeighborsALL[i], NEAR_TICK_AMOUNT, m_tickID, zoom); 
+    currentChunk->m_nonNeighborsALL[i]->m_isNearTick = true;
   }
   return;
   #endif
@@ -97,6 +99,7 @@ void tickNear() {
 
     for (uint32_t i = 0; i < CHUNK_NEIGHBORS_ALL; ++i) {
       m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsALL[i], NEAR_TICK_AMOUNT, m_tickID, zoom);
+      currentChunk->m_neighborsALL[i]->m_isNearTick = true;
     }
 
   } else {
@@ -106,21 +109,33 @@ void tickNear() {
         m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNE[0], NEAR_TICK_AMOUNT, m_tickID, zoom);
         m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNE[1], NEAR_TICK_AMOUNT, m_tickID, zoom);
         m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNE[2], NEAR_TICK_AMOUNT, m_tickID, zoom);
+        currentChunk->m_neighborsNE[0]->m_isNearTick = true;
+        currentChunk->m_neighborsNE[1]->m_isNearTick = true;
+        currentChunk->m_neighborsNE[2]->m_isNearTick = true;
         break;
       case SE:;
         m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSE[0], NEAR_TICK_AMOUNT, m_tickID, zoom);
         m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSE[1], NEAR_TICK_AMOUNT, m_tickID, zoom);
         m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSE[2], NEAR_TICK_AMOUNT, m_tickID, zoom);
+        currentChunk->m_neighborsSE[0]->m_isNearTick = true;
+        currentChunk->m_neighborsSE[1]->m_isNearTick = true;
+        currentChunk->m_neighborsSE[2]->m_isNearTick = true;
         break;
       case SW:;
         m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSW[0], NEAR_TICK_AMOUNT, m_tickID, zoom);
         m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSW[1], NEAR_TICK_AMOUNT, m_tickID, zoom);
         m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsSW[2], NEAR_TICK_AMOUNT, m_tickID, zoom);
+        currentChunk->m_neighborsSW[0]->m_isNearTick = true;
+        currentChunk->m_neighborsSW[1]->m_isNearTick = true;
+        currentChunk->m_neighborsSW[2]->m_isNearTick = true;
         break;
       case NW:;
         m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNW[0], NEAR_TICK_AMOUNT, m_tickID, zoom);
         m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNW[1], NEAR_TICK_AMOUNT, m_tickID, zoom);
         m_nearTickCount += chunkTickChunk(currentChunk->m_neighborsNW[2], NEAR_TICK_AMOUNT, m_tickID, zoom);
+        currentChunk->m_neighborsNW[0]->m_isNearTick = true;
+        currentChunk->m_neighborsNW[1]->m_isNearTick = true;
+        currentChunk->m_neighborsNW[2]->m_isNearTick = true;
         break;
     }
 
@@ -151,9 +166,11 @@ void tickFar() {
   m_farTickCount += chunkTickChunk(currentChunk, FAR_TICK_AMOUNT, m_tickID, zoom);
   for (uint32_t i = 0; i < CHUNK_NEIGHBORS_ALL; ++i) {
     m_farTickCount += chunkTickChunk(currentChunk->m_neighborsALL[i], FAR_TICK_AMOUNT, m_tickID, zoom);
+    currentChunk->m_neighborsALL[i]->m_isNearTick = false;
   }
   for (uint32_t i = 0; i < CHUNK_NONNEIGHBORS_ALL; ++i) { 
     m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsALL[i], FAR_TICK_AMOUNT, m_tickID, zoom); 
+    currentChunk->m_nonNeighborsALL[i]->m_isNearTick = false;
   }
   return;
   #endif
@@ -163,6 +180,7 @@ void tickFar() {
     for (uint32_t i = 0; i < CHUNK_NONNEIGHBORS_ALL; ++i) { 
       //pd->system->logToConsole("B %u = %i", i, (int) currentChunk->m_nonNeighborsALL[i]);
       m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsALL[i], FAR_TICK_AMOUNT, m_tickID, zoom);
+      currentChunk->m_nonNeighborsALL[i]->m_isNearTick = false;
     }
 
   } else {
@@ -171,21 +189,25 @@ void tickFar() {
       case NE:;
         for (uint32_t i = 0; i < CHUNK_NONNEIGHBORS_CORNER; ++i) {
           m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsNE[i], FAR_TICK_AMOUNT, m_tickID, zoom);
+          currentChunk->m_nonNeighborsNE[i]->m_isNearTick = false;
         }
         break;
       case SE:;
         for (uint32_t i = 0; i < CHUNK_NONNEIGHBORS_CORNER; ++i) {
           m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsSE[i], FAR_TICK_AMOUNT, m_tickID, zoom);
+          currentChunk->m_nonNeighborsSE[i]->m_isNearTick = false;
         }
         break;
       case SW:;
         for (uint32_t i = 0; i < CHUNK_NONNEIGHBORS_CORNER; ++i) {
           m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsSW[i], FAR_TICK_AMOUNT, m_tickID, zoom);
+          currentChunk->m_nonNeighborsSW[i]->m_isNearTick = false;
         }
         break;
       case NW:;
         for (uint32_t i = 0; i < CHUNK_NONNEIGHBORS_CORNER; ++i) {
           m_farTickCount += chunkTickChunk(currentChunk->m_nonNeighborsNW[i], FAR_TICK_AMOUNT, m_tickID, zoom);
+          currentChunk->m_nonNeighborsNW[i]->m_isNearTick = false;
         }
         break;
     }

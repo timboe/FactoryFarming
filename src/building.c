@@ -354,7 +354,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   bool wideRedraw = false;
   enum kGameMode gm = getGameMode();
   if (_type == kUtility && _subType.utility == kWell) {
-    pauseMusic();
+    if (gm != kTitles) pauseMusic();
     struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
     building->m_mode.mode16 = t->m_tile;
     setTile( getTile_idx(_loc->m_x, _loc->m_y), SPRITE16_ID(4,14));
@@ -363,7 +363,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   }
 
   if (getPlayer()->m_enableExtractorOutlines && _type == kExtractor && (_subType.extractor == kCropHarvesterSmall || _subType.extractor == kCropHarvesterLarge)) {
-    pauseMusic();
+    if (gm != kTitles) pauseMusic();
     wideRedraw = true;
   }
 
@@ -375,7 +375,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     // Bake into the background
     if (wideRedraw) {
       renderChunkBackgroundImageAround(_loc->m_chunk);
-      resumeMusic();
+      if (gm != kTitles) resumeMusic();
     } else if (ilb || isPathOrFence) {
       renderChunkBackgroundImageAround3x3(_loc->m_chunk, _loc);
     } else {

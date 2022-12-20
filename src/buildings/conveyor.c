@@ -114,7 +114,7 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t
 
     // Cascade the call
     struct Building_t* nextBuilding = nextLoc->m_building;
-    if (nextBuilding == NULL || m_recursionCount >= MAX_RECURSION) {
+    if (nextBuilding == NULL || m_recursionCount >= MAX_RECURSION || nextLoc->m_chunk->m_isNearTick) {
       ableToMove = false;
     } else {
       // Cuation: When calling into other conveyors this is a potentially recursive fn!

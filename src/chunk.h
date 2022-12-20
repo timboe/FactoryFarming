@@ -11,6 +11,8 @@ struct Chunk_t{
   uint16_t m_x; // In chunk coords
   uint16_t m_y;
 
+  bool m_isNearTick;
+
   LCDSprite* m_bkgSprite[ZOOM_LEVELS]; // Index 0 not used - OWNED
   LCDBitmap* m_bkgImage[ZOOM_LEVELS];  // Index 0 not used - OWNED
   // Not enough RAM :(
