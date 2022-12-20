@@ -68,6 +68,8 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk);
 
 void renderChunkBackgroundImageAround(struct Chunk_t* _chunk);
 
+void renderChunkBackgroundImageAround3x3(struct Chunk_t* _chunk, struct Location_t* _loc);
+
 void setChunkBackgrounds(bool _forTitles);
 
 bool isGroundTile(struct Tile_t* _tile);
@@ -79,6 +81,8 @@ bool isGroundTypeTile(int32_t _x, int32_t _y, enum kGroundType);
 void addObstacles(void);
 
 void doWetness(bool _forTitles);
+
+void doWetnessAroundLoc(struct Location_t* _loc);
 
 bool tryRemoveObstruction(struct Location_t* _loc);
 

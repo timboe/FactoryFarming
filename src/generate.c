@@ -145,6 +145,39 @@ void renderChunkBackgroundImageAround(struct Chunk_t* _chunk) {
   }
 }
 
+void renderChunkBackgroundImageAround3x3(struct Chunk_t* _chunk, struct Location_t* _loc) {
+  const bool left = _loc->m_x % TILES_PER_CHUNK_X == 0;
+  const bool right = _loc->m_x % TILES_PER_CHUNK_X == TILES_PER_CHUNK_X-1;
+  const bool top = _loc->m_y % TILES_PER_CHUNK_Y == 0;
+  const bool bot = _loc->m_y % TILES_PER_CHUNK_Y == TILES_PER_CHUNK_Y-1;
+  struct Building_t* b = _loc->m_building;
+  const bool cornerVeto = (b->m_type == kUtility && (b->m_subType.utility == kPath || b->m_subType.utility == kSign));
+  for (int32_t x = -1; x < 2; ++x) {
+    for (int32_t y = -1; y < 2; ++y) {
+      if (x == -1 && y == -1) {
+        if (!left || !top || cornerVeto) continue;
+      } else if (x == 0 && y == -1) {
+        if (!top) continue;
+      } else if (x == 1 && y == -1) {
+        if (!right || !top || cornerVeto) continue;
+      } else if (x == -1 && y == 0) {
+        if (!left) continue;
+      } else if (x == 1 && y == 0) {
+        if (!right) continue;
+      } else if (x == -1 && y == 1) {
+        if (!left || !bot || cornerVeto) continue;
+      } else if (x == 0 && y == 1) {
+        if (!bot) continue; 
+      } else if (x == 1 && y == 1) {
+        if (!right || !bot || cornerVeto) continue;
+      }
+      struct Chunk_t* toRedraw = getChunk(_chunk->m_x + x, _chunk->m_y + y);
+      //pd->system->logToConsole("REDRAW %i %i", toRedraw->m_x, toRedraw->m_y);
+      renderChunkBackgroundImage(toRedraw);
+    }
+  }
+}
+
 uint8_t getNearbyBackground_Chunk(struct Chunk_t* _chunk, uint16_t _u, uint16_t _v) {
   uint8_t tValue = getTileInChunk(_chunk, _u - 1, _v)->m_tile;
   if (tValue < TOT_FLOOR_TILES) return tValue;
@@ -387,11 +420,11 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
           pd->graphics->setDrawMode(invert ? kDrawModeInverted : kDrawModeCopy);
           pd->graphics->drawBitmap(building->m_image[1], building->m_pix_x - chunkOffX, building->m_pix_y - chunkOffY, kBitmapUnflipped);
           pd->graphics->setDrawMode(kDrawModeCopy);
-          if (p->m_enableExtractorOutlines && building->m_type == kExtractor && building->m_subType.extractor == kCropHarvesterSmall) {
+          if (p->m_enableExtractorOutlines && gm != kTitles && building->m_type == kExtractor && building->m_subType.extractor == kCropHarvesterSmall) {
             pd->graphics->setDrawMode(kDrawModeNXOR);
             pd->graphics->drawBitmap(p->m_blueprintRadiusBitmap7x7[/*zoom*/1], 
               building->m_pix_x - chunkOffX - TILE_PIX*2, building->m_pix_y - chunkOffY - TILE_PIX*2, kBitmapUnflipped);
-          } else if (p->m_enableExtractorOutlines && building->m_type == kExtractor && building->m_subType.extractor == kCropHarvesterLarge) {
+          } else if (p->m_enableExtractorOutlines && gm != kTitles && building->m_type == kExtractor && building->m_subType.extractor == kCropHarvesterLarge) {
             pd->graphics->setDrawMode(kDrawModeNXOR);
             pd->graphics->drawBitmap(p->m_blueprintRadiusBitmap9x9[/*zoom*/1], 
               building->m_pix_x - chunkOffX - TILE_PIX*3, building->m_pix_y - chunkOffY - TILE_PIX*3, kBitmapUnflipped);
@@ -494,6 +527,14 @@ void doWetness(bool _forTitles) {
   const uint16_t maxX = (_forTitles ? TILES_PER_CHUNK_X * 3 : TOT_TILES_X);
   for (int32_t x = 0; x < maxX; ++x) {
     for (int32_t y = 0; y < maxY; ++y) {
+      getTile(x, y)->m_wetness = distanceFromWater(x,y);
+    }
+  }
+}
+
+void doWetnessAroundLoc(struct Location_t* _loc) {
+  for (int32_t x = _loc->m_x - TILES_PER_CHUNK_X; x < _loc->m_x + TILES_PER_CHUNK_X; ++x) {
+    for (int32_t y = _loc->m_y - TILES_PER_CHUNK_Y; y < _loc->m_y - TILES_PER_CHUNK_Y; ++y) {
       getTile(x, y)->m_wetness = distanceFromWater(x,y);
     }
   }

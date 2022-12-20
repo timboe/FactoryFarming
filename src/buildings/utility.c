@@ -7,6 +7,7 @@
 #include "../ui.h"
 #include "../io.h"
 #include "../chunk.h"
+#include "../sound.h"
 
 struct Building_t* m_retirement = NULL;
 
@@ -70,6 +71,8 @@ bool doPlaceRetirement(struct Location_t* _loc) {
     return false;
   }
 
+  pauseMusic();
+
   // Cottage
   newBuilding(getLocation(_loc->m_x, _loc->m_y - 1), SN, kUtility, (union kSubType) {.utility = kRetirement} );
 
@@ -109,6 +112,8 @@ bool doPlaceRetirement(struct Location_t* _loc) {
     newBuilding(getLocation(_loc->m_x + 3, y), SN, kPlant, (union kSubType) {.plant = kSunflowerPlant} );
   }
 
+  resumeMusic();
+
   return true;
 }
 
@@ -118,7 +123,7 @@ bool doPlaceLandfill(struct Location_t* _loc) {
   }
   // Update the tile, re-do wetness (like for a well, but this is irreversible)
   setTile( getTile_idx(_loc->m_x, _loc->m_y), UDesc[kLandfill].sprite );
-  doWetness(/*for titles = */ false);
+  doWetnessAroundLoc(_loc);
   renderChunkBackgroundImageAround(_loc->m_chunk);
   return true;
 }
