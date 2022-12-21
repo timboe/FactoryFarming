@@ -1356,7 +1356,7 @@ void drawUIMain() {
       pd->sprite->moveTo(m_contentSprite[rID][0], SCREEN_PIX_X/2 - TILE_PIX, SETTINGSMENUSTARTY + r*TILE_PIX);
     } else if (m_rowIsTitle[rID]) {
       pd->sprite->setVisible(m_contentSprite[rID][0], 1);
-      //pd->sprite->setDrawMode(m_contentSprite[rID][0], dm);
+      pd->sprite->setDrawMode(m_contentSprite[rID][0], dm);
       pd->sprite->moveTo(m_contentSprite[rID][0], SCREEN_PIX_X/2 - TILE_PIX, UISTARTY + r*2*TILE_PIX);
     } else {
       for (int32_t c = 0; c < ROW_WDTH; ++c) {

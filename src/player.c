@@ -205,12 +205,11 @@ bool movePlayer(bool _forceUpdate) {
 
   // Note: This may set the zoom
   if (m_player.m_enableZoomWhenMove && !_forceUpdate) {
-    static bool once = false;
+    static uint8_t delay = 0;
     if (getPressedAny()) {
-      once = true;
+      delay = 32;
       setZoom(2);
-    } else if (once) {
-      once = false;
+    } else if (delay > 0 && --delay == 0) {
       setZoom(1);
     }
   }
@@ -266,7 +265,7 @@ bool movePlayer(bool _forceUpdate) {
     }
   }
   if (bPressed()) acc *= 1.5f;
-  if (zoom == 2) acc *= 0.75f;
+  if (zoom == 2) acc *= 0.9f;
 
   float diffX = 0;
   float diffY = 0;

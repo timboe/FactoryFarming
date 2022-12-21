@@ -59,7 +59,7 @@ With thanks to the following creators for releasing great assets under permissiv
   - Chester Jenkins: [Cooper Hewitt](https://www.cooperhewitt.org/open-source-at-cooper-hewitt/cooper-hewitt-the-typeface-by-chester-jenkins/) [OFL 1.1u3] 
   - Martin Vacha: [Roobert](https://displaay.net/typeface/roobert-collection/roobert/) [Playdate Fonts licenced under CC BY 4.0] 
   - Mediengestaltung: [Messing Lettern](https://www.1001fonts.com/messing-lettern-font.html) [1001Fonts FFC]
-  - Nick's Fonts: [Coventry Garden](https://www.1001fonts.com/coventrygarden-font.html) [1001Fonts FFC] 
+  - Nick's Fonts: [Coventry Garden](https://www.1001fonts.com/coventry-garden-font.html) [1001Fonts FFC] 
 - Sound Effects
   - [sfxr.me](sfxr.me)
     - [Explosion](https://sfxr.me/#7BMHBGDfB7bXUHcciAq4wMGNUpYw48pjEAN8Qwjz71VED1x1KQo6efC67z9fs6NXtECpHTGSAcLDwrrBcrw7XhyfQuzvHVxWDMmkaHnBEHrdJzm9zv75Y9tAT)
