@@ -341,8 +341,9 @@ void updateUICredits(int _fc) {
 void updateUITitles(int _fc) {
   pd->sprite->setDrawMode(m_UISpriteSplash, kDrawModeCopy);
   #ifdef TITLE_LOGO_ONLY
+  pd->sprite->setVisible(m_UISpriteSplash, 1);
   const int32_t o = round( TILE_PIX/2 * fabs( sin( 0.1f * _fc ) ) );
-  pd->sprite->moveTo(m_UISpriteSplash, DEVICE_PIX_X/2, DEVICE_PIX_Y/2 - o );
+  pd->sprite->moveTo(m_UISpriteSplash, DEVICE_PIX_X/2, DEVICE_PIX_Y/2 - o - TILE_PIX );
   pd->sprite->setVisible(m_UISpriteTitleSelected, 0);
   for (int32_t i = 0; i < 3; ++i) {
     pd->sprite->setVisible(m_UISpriteTitleNew[i], 0);
@@ -589,6 +590,7 @@ void updateBlueprint(bool _beep) {
 
 void addUIToSpriteList() {
   #ifdef TITLE_LOGO_ONLY
+  pd->sprite->addSprite(m_UISpriteSplash);
   return;
   #endif
 
@@ -1328,6 +1330,7 @@ void drawUIMain() {
     pd->sprite->setVisible(m_UISpriteInfo, 0);
     pd->sprite->setVisible(m_UISpriteCannotAfford, 1);
     pd->sprite->setVisible(m_contentSprite[0][0], 1); // Still have the title
+    pd->sprite->setDrawMode(m_contentSprite[0][0], dm);
     pd->sprite->moveTo(m_contentSprite[0][0], SCREEN_PIX_X/2 - TILE_PIX, UISTARTY);
     return;
   }

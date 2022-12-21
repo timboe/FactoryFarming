@@ -318,6 +318,7 @@ void doDestroy() {
   }
   struct Location_t* ploc = getPlayerLocation();
   bool cleared = false;
+  pauseMusic();
   for (int32_t x = min; x < max; ++x) {
     for (int32_t y = min; y < max; ++y) {
       struct Location_t* loc = getLocation(ploc->m_x + x, ploc->m_y + y);
@@ -338,6 +339,7 @@ void doDestroy() {
       cleared |= clearLocation(loc, /*cargo=*/ true, /*building=*/ doBuilding);
     }
   }
+  resumeMusic();
   if (cleared) {
     sfx(kSfxDestroy);
     addTrauma(1.1f);
