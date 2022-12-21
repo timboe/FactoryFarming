@@ -491,7 +491,7 @@ const char* getLine(int32_t _line) {
     case 49: return "Chester Jenkins: Cooper Hewitt";
     case 50: return "Martin Vacha: Roobert";
     case 51: return "Mediengestaltung: Messing Lettern";
-    case 52: return "Nick's Fonts: Coventry Garden";
+    case 52: return "Mediengestaltung: Coventry Garden";
     //
     case 53: return "-- Sound Effects --";
     case 54: return "sfxr.me";

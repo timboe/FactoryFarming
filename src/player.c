@@ -245,7 +245,8 @@ bool movePlayer(bool _forceUpdate) {
       if (y < 0) y += TOT_WORLD_PIX_Y;
       else if (y >= TOT_WORLD_PIX_Y) y -= TOT_WORLD_PIX_Y;
       setPlayerPosition(x, y, /*update current location = */ false);
-      pd->sprite->setImage(m_player.m_sprite[zoom], getSprite18(0, m_facing, zoom), kBitmapUnflipped);
+      uint8_t i_n = direction == WE ? 5 : 0;
+      pd->sprite->setImage(m_player.m_sprite[zoom], getSprite18(i_n, m_facing, zoom), kBitmapUnflipped);
     }
   }
 

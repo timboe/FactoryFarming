@@ -212,7 +212,7 @@ struct UnlockDescriptor_t UnlockDecs[] = {
   {.type = kPlant, .subType.plant = kLimeTree, .fromSelling = 200, .ofCargo = kTequila},
   {.type = kFactory, .subType.factory = kHFCSFac, .fromSelling = 250, .ofCargo = kTequila},
   {.type = kFactory, .subType.factory = kGelatinFac, .fromSelling = 300, .ofCargo = kTequila},
-  {.type = kFactory, .subType.factory = kJellyFac, .fromSelling = 530, .ofCargo = kTequila},
+  {.type = kFactory, .subType.factory = kJellyFac, .fromSelling = 350, .ofCargo = kTequila},
 
   {.type = kFactory, .subType.factory = kJelloShotFac, .fromSelling = 160, .ofCargo = kJelly},
 

@@ -30,7 +30,8 @@ uint16_t m_exportItemCountB[kNCargoType];
 uint16_t m_exportItemValueA = 0;
 uint16_t m_exportItemValueB = 0;
 
-bool m_hasExported = false, m_hasImported = false; // tutorial only
+bool m_hasExported = false; // tutorial only
+bool m_hasImported = false; // tutorial only
 
 #define ONE_MIN (60*TICKS_PER_SEC)
 #define TWO_MIN (120*TICKS_PER_SEC)
