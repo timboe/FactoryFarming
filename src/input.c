@@ -91,7 +91,7 @@ void modRadius(bool _inc);
 
 bool aPressed(void);
 
-void postChangeZoom(void);
+void postChangeZoom(bool _sfx);
 
 uint16_t m_b, m_a, m_blockA;
 
@@ -115,7 +115,9 @@ uint8_t getZoom() {
 }
 
 void setZoom(uint8_t _z) {
+  if (m_zoom == _z) return;
   m_zoom = _z;
+  postChangeZoom(false);
 }
 
 uint8_t getRadius() {
@@ -131,6 +133,10 @@ void resetMomentum() {
 
 uint8_t getPressed(uint32_t _i) {
   return m_pressed[_i];
+}
+
+bool getPressedAny() {
+  return m_pressed[0] || m_pressed[1] || m_pressed[2] || m_pressed[3];
 }
 
 bool bPressed() {
@@ -149,14 +155,14 @@ void toggleZoom() {
   if (++m_zoom == ZOOM_LEVELS) {
     m_zoom = 1;
   }
-  postChangeZoom();
+  postChangeZoom(true);
 }
 
-void postChangeZoom() {
+void postChangeZoom(bool _sfx) {
   movePlayer(/*forceUpdate*/ true);
   updateRenderList();
   updateBlueprint(/*beep*/ false);
-  sfx(kSfxZoom);
+  if (_sfx) sfx(kSfxZoom);
 }
 
 bool characterMoveInput(uint32_t _buttonPressed) {
@@ -472,7 +478,7 @@ void rotateHandleWander(float _rotation) {
     #ifdef DEV
     pd->system->logToConsole("ZOOM IN");
     #endif
-    postChangeZoom();
+    postChangeZoom(true);
   } else if (rot < -UI_ROTATE_ACTION) {
     rot = 0.0f;
     #ifdef DEV
@@ -483,7 +489,7 @@ void rotateHandleWander(float _rotation) {
       sfx(kSfxNo);
       return;
     }
-    postChangeZoom();
+    postChangeZoom(true);
   }
 }
 

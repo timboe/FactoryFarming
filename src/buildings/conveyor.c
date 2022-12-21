@@ -156,6 +156,8 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t
     pd->sprite->moveTo(theCargo->m_sprite[_zoom], // TODO pass down zoom
                       (nextLoc->m_x*TILE_PIX + nextLoc->m_pix_off_x + TILE_PIX/2)* _zoom, 
                       (nextLoc->m_y*TILE_PIX + nextLoc->m_pix_off_y + TILE_PIX/2)* _zoom);
+    pd->sprite->setZIndex(theCargo->m_sprite[1], Z_INDEX_CARGO_FLOOR);
+    pd->sprite->setZIndex(theCargo->m_sprite[2], Z_INDEX_CARGO_FLOOR);
   }
 
   // Cargo moves between chunks?

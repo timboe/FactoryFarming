@@ -227,7 +227,7 @@ void cargoSpriteSetup(struct Cargo_t* _cargo, uint16_t _x, uint16_t _y, uint16_t
       _cargo->m_sprite[zoom] = pd->sprite->newSprite();
     }
     pd->sprite->setBounds(_cargo->m_sprite[zoom], bound);
-    pd->sprite->setZIndex(_cargo->m_sprite[zoom], Z_INDEX_CARGO);
+    pd->sprite->setZIndex(_cargo->m_sprite[zoom], Z_INDEX_CARGO_FLOOR);
     #endif
     /////
 
@@ -242,6 +242,7 @@ bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addToDisplay
 
   struct Cargo_t* cargo = cargoManagerNewCargo(_type);
   if (!cargo) { // Run out of slots
+    pd->system->error("NO MORE CARGO SLOTS");
     return false;
   }
 
@@ -255,6 +256,8 @@ bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addToDisplay
     _loc->m_building->m_progress = 0;
     // No longer doing conveyor update on IN, doing it on OUT instead 
     //updateConveyorDirection(_loc->m_building);
+    pd->sprite->setZIndex(cargo->m_sprite[1], Z_INDEX_CARGO_BELT);
+    pd->sprite->setZIndex(cargo->m_sprite[2], Z_INDEX_CARGO_BELT);
   }
 
   struct Chunk_t* chunk = _loc->m_chunk;
@@ -280,7 +283,7 @@ void resetCargo() {
       PDRect bound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = TILE_PIX*zoom};
       m_cargos[i].m_sprite[zoom] = pd->sprite->newSprite();
       pd->sprite->setBounds(m_cargos[i].m_sprite[zoom], bound);
-      pd->sprite->setZIndex(m_cargos[i].m_sprite[zoom], Z_INDEX_CARGO);
+      pd->sprite->setZIndex(m_cargos[i].m_sprite[zoom], Z_INDEX_CARGO_FLOOR);
     }
     #endif
     /////

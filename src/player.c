@@ -203,6 +203,18 @@ void updatePlayerPosition() {
 
 bool movePlayer(bool _forceUpdate) {
 
+  // Note: This may set the zoom
+  if (m_player.m_enableZoomWhenMove && !_forceUpdate) {
+    static bool once = false;
+    if (getPressedAny()) {
+      once = true;
+      setZoom(2);
+    } else if (once) {
+      once = false;
+      setZoom(1);
+    }
+  }
+
   uint8_t zoom = getZoom();
 
   // Do conveyor movement
@@ -557,6 +569,7 @@ void setDefaultPlayerSettings() {
   m_player.m_enableScreenShake = 1;
   m_player.m_enableExtractorOutlines = 1;
   m_player.m_enableSteps = 1;
+  m_player.m_enableZoomWhenMove = 0;
 }
 
 void initPlayer() {
@@ -613,7 +626,8 @@ void serialisePlayer(struct json_encoder* je) {
   je->writeInt(je, m_player.m_enableExtractorOutlines);
   je->addTableMember(je, "sete", 4);
   je->writeInt(je, m_player.m_enableSteps);
-
+  je->addTableMember(je, "setz", 4);
+  je->writeInt(je, m_player.m_enableZoomWhenMove);
   
   je->addTableMember(je, "cargos", 6);
   je->startArray(je);
@@ -754,6 +768,8 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_player.m_enableExtractorOutlines = json_intValue(_value); 
   } else if (strcmp(_key, "sete") == 0) {
     m_player.m_enableSteps = json_intValue(_value); 
+  } else if (strcmp(_key, "setz") == 0) {
+    m_player.m_enableZoomWhenMove = json_intValue(_value); 
   } else if (strcmp(_key, "seta") == 0) {
     m_player.m_enableAutosave = json_intValue(_value); 
     m_deserialiseArrayID = 0; // Note "one behind"
