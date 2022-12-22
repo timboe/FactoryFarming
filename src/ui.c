@@ -148,6 +148,8 @@ uint16_t m_contentMaxRow = 0;
 
 bool m_rowIsTitle[MAX_ROWS] = {false};
 
+bool m_unlockPing = true;
+
 int16_t m_creditsCounter = 0;
 
 uint8_t m_buySellMultiplier[kNGameModes] = {1};
@@ -172,6 +174,10 @@ void renderTutorialInspectRect(bool _bothSides);
 void renderNewUI(void);
 
 /// ///
+
+void resetUnlockPing() {
+  m_unlockPing = true;
+}
 
 
 LCDBitmap* getUIContentItemBitmap(enum kUICat _c, uint16_t _i, uint16_t _r) {
@@ -975,6 +981,11 @@ void drawUIRight() {
 
     // Unlock?
     if (checkHasNewToShow(p) == kNewYes && !(gm == kMenuBuy || gm == kMenuSell)) {
+      // unlock ping
+      if (m_unlockPing) {
+        sfx(kSfxSell);
+        m_unlockPing = false;
+      }
       pd->graphics->drawBitmap(getSprite16(11, 11, 1), DEVICE_PIX_Y/2 + 3*TILE_PIX, 0, kBitmapUnflipped);
     }
   }

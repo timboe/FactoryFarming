@@ -94,7 +94,7 @@ uint16_t m_deserialiseXCargo = 0, m_deserialiseYCargo = 0;
 
 struct Cargo_t* m_cargos;
 
-void cargoSpriteSetup(struct Cargo_t* _cargo, uint16_t _x, uint16_t _y, uint16_t _idx);
+void cargoSpriteSetup(struct Cargo_t* _cargo, int16_t _x, int16_t _y, uint16_t _idx);
 
 /// ///
 
@@ -217,7 +217,7 @@ void cargoManagerFreeCargo(struct Cargo_t* _cargo) {
   --m_nCargo;
 }
 
-void cargoSpriteSetup(struct Cargo_t* _cargo, uint16_t _x, uint16_t _y, uint16_t _idx) {
+void cargoSpriteSetup(struct Cargo_t* _cargo, int16_t _x, int16_t _y, uint16_t _idx) {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     
     /////
@@ -258,6 +258,7 @@ bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addToDisplay
     //updateConveyorDirection(_loc->m_building);
     pd->sprite->setZIndex(cargo->m_sprite[1], Z_INDEX_CARGO_BELT);
     pd->sprite->setZIndex(cargo->m_sprite[2], Z_INDEX_CARGO_BELT);
+    // Note: We need to setZIndex in deserialisation too - done in Location
   }
 
   struct Chunk_t* chunk = _loc->m_chunk;

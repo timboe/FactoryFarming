@@ -151,6 +151,8 @@
 #define Z_INDEX_CONVEYOR 1
 #define Z_INDEX_FLOOR -1
 
+#define Z_INDEX_PLAYER 32
+
 #define UI_ITEMS 12
 
 #define UI_ROTATE_ACTION 90.0f

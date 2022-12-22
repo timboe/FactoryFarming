@@ -346,6 +346,7 @@ void doSettings(bool _forward) {
   sfx(kSfxA);
 }
 
+// NOTE: There are defs in constants.h which might need updating too
 #define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_START 0
 #define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_STOP 15
 #define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_START 56

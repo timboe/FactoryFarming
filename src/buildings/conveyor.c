@@ -22,7 +22,7 @@ void conveyorLocationUpdate(struct Building_t* _building, uint8_t _zoom) {
   const int8_t y = (int8_t) _building->m_stored[CONV_Y];
   struct Location_t* loc = _building->m_location;
   if (_building->m_stored[CONV_HIDE]) {
-    pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], 65536, 65536);
+    pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], 32768, 32768);
   } else {
     pd->sprite->moveTo(loc->m_cargo->m_sprite[_zoom], 
                       (_building->m_pix_x + loc->m_pix_off_x + x)*_zoom, 
@@ -114,7 +114,7 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t
 
     // Cascade the call
     struct Building_t* nextBuilding = nextLoc->m_building;
-    if (nextBuilding == NULL || m_recursionCount >= MAX_RECURSION || nextLoc->m_chunk->m_isNearTick) {
+    if (nextBuilding == NULL || m_recursionCount >= MAX_RECURSION || nextLoc->m_chunk->m_isNearTick != nearTick) {
       ableToMove = false;
     } else {
       // Cuation: When calling into other conveyors this is a potentially recursive fn!

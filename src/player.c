@@ -172,8 +172,6 @@ void setPlayerPosition(uint16_t _x, uint16_t _y, bool _updateCurrentLocation) {
   pd->sprite->moveTo(m_player.m_sprite[1], _x, _y); // Note: Hard coded two zoom levels
   pd->sprite->moveTo(m_player.m_sprite[2], _x * 2, _y * 2);
   updatePlayerPosition();
-  // Not worth it - nothing to dynamically go in front of or behind
-  //pd->sprite->setZIndex(m_player.m_sprite[zoom], (int16_t)m_player.m_pix_y * zoom);
   if (_updateCurrentLocation) {
     m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
     m_currentChunk = getChunk(m_player.m_pix_x / CHUNK_PIX_X, m_player.m_pix_y / CHUNK_PIX_Y);
@@ -189,8 +187,6 @@ void movePlayerPosition(float _goalX, float _goalY) {
   SpriteCollisionInfo* collInfo = pd->sprite->moveWithCollisions(m_player.m_sprite[zoom], _goalX * zoom, _goalY * zoom, &(m_player.m_pix_x), &(m_player.m_pix_y), &len);
   if (len) pd->system->realloc(collInfo, 0); // Free
   updatePlayerPosition();
-  pd->sprite->setZIndex(m_player.m_sprite[zoom], (int16_t)m_player.m_pix_y * zoom);
-
 }
 
 void updatePlayerPosition() {
@@ -443,6 +439,7 @@ void playerSpriteSetup() {
     pd->sprite->setImage(m_player.m_sprite[zoom], getSprite18(0, 3, zoom), kBitmapUnflipped);
     pd->sprite->setCollideRect(m_player.m_sprite[zoom], cBound);
     pd->sprite->setCollisionResponseFunction(m_player.m_sprite[zoom], playerLCDSpriteCollisionFilterProc);
+    pd->sprite->setZIndex(m_player.m_sprite[zoom], Z_INDEX_PLAYER);
 
     m_player.m_blueprint[zoom] = pd->sprite->newSprite();
     pd->sprite->setBounds(m_player.m_blueprint[zoom], pBound);

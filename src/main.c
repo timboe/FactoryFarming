@@ -51,6 +51,7 @@ int eventHandler(PlaydateAPI* playdate, PDSystemEvent event, uint32_t arg) {
       setPDPtr(playdate);
       init();
       playdate->display->setRefreshRate(TICK_FREQUENCY);
+      playdate->system->setAutoLockDisabled(true);
       playdate->system->setUpdateCallback(gameLoop, NULL);
       break;
     case kEventTerminate:; case kEventLock:; case kEventLowPower:;

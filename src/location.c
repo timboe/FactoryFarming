@@ -5,6 +5,7 @@
 #include "sound.h"
 #include "sprite.h"
 #include "render.h"
+#include "player.h"
 #include "buildings/special.h"
 
 struct Location_t* m_locations = NULL;
@@ -43,12 +44,20 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
   if (_clearBuilding && _loc->m_building) {
     cleared = true;
 
-    // Special - well
+
     bool wideRedraw = false;
     if (_loc->m_building->m_type == kUtility && _loc->m_building->m_subType.utility == kWell) {
+      // Special - well
       pauseMusic();
       setTile( getTile_idx(_loc->m_x, _loc->m_y), _loc->m_building->m_mode.mode16 ); // Undo before destroying
       doWetnessAroundLoc(_loc);
+      wideRedraw = true;
+    } else if (getPlayer()->m_enableExtractorOutlines 
+      && _loc->m_building->m_type == kExtractor 
+      && (_loc->m_building->m_subType.extractor == kCropHarvesterSmall || _loc->m_building->m_subType.extractor == kCropHarvesterLarge))
+    {
+      // Special, harvester with outline
+      pauseMusic();
       wideRedraw = true;
     }
 
@@ -78,11 +87,12 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
     chunkRemoveBuildingUpdate(_loc->m_chunk, _loc->m_building);
     buildingManagerFreeBuilding(_loc->m_building);
 
-    if (ilb) {
-      renderChunkBackgroundImageAround3x3(_loc->m_chunk, _loc);
-    } else if (wideRedraw) {
+    if (wideRedraw) {
       renderChunkBackgroundImageAround(_loc->m_chunk);
       resumeMusic();
+    } else if (ilb) {
+      renderChunkBackgroundImageAround3x3(_loc->m_chunk, _loc);
+
     } else {
       renderChunkBackgroundImage(_loc->m_chunk);
     }
@@ -186,6 +196,10 @@ void* deserialiseStructDoneLocation(json_decoder* jd, const char* _name, json_va
   if (m_deserialiseIDCargo >= 0) {
     loc->m_cargo = cargoManagerGetByIndex(m_deserialiseIDCargo);
     chunkAddCargo(loc->m_chunk, loc->m_cargo);
+    if (loc->m_building && loc->m_building->m_type == kConveyor) {
+      pd->sprite->setZIndex(loc->m_cargo->m_sprite[1], Z_INDEX_CARGO_BELT);
+      pd->sprite->setZIndex(loc->m_cargo->m_sprite[2], Z_INDEX_CARGO_BELT);
+    }
   }
 
   //pd->system->logToConsole("-- Location (%i, %i) building:#%i (not owned? %i), cargo:#%i",

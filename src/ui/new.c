@@ -60,6 +60,7 @@ bool checkShowNew() {
   p->m_buildingsUnlockedTo += 1;
   setGameMode(kMenuNew);
   sfx(kSfxUnlock);
+  resetUnlockPing();
   return true;
 }
 

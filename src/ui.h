@@ -60,6 +60,8 @@ enum kUICat {
 
 #define TOP_TITLE_OFFSET 34
 
+void resetUnlockPing(void);
+
 void addUIToSpriteList(void);
 
 void rotateCursor(bool _increment);
