@@ -739,6 +739,7 @@ void showTutorialMsg(enum kUITutorialStage _stage) {
 bool checkReturnDismissTutorialMsg() {
   if (pd->sprite->isVisible(m_UISpriteTutorialMain)) {
     pd->sprite->setVisible(m_UISpriteTutorialMain, 0);
+    sfx(kSfxB);
     // Tutorial - end of a tutorial stage
     if (getTutorialStage() == kTutFinishedOne || getTutorialStage() == kTutFinishedTwo) {
       nextTutorialStage();
