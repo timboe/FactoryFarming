@@ -1,6 +1,10 @@
 # Factory Farming
 
+## Cultivation meets Automation
+
 Factory Farming is an **Automation & Logistics** game themed around intensive agricultural practices.
+
+[This game is available to buy on itch.io](https://timboe.itch.io/factory-farming).
 
 Build up an expansive industrial complex by *growing, harvesting, refining* and *manufacturing* a wide variety of highly-processed products, and sell it all for a massive profit. 
 
@@ -18,19 +22,21 @@ Build up an expansive industrial complex by *growing, harvesting, refining* and 
 - **35 different factories** in which to refine and manufacture a vast array of different end-products.
 - **11 unlockable utility items**. Storage chests, paths, placeable signs, and more.
 - **In-game tutorial**, guiding your through the setup of your first factory.
-- **Crank controls!** Crank to zoom, to rotate, to resize and to follow conveyors (non-crank alternate controls provided for most common crank operations). 
+- **Crank controls!** Crank to zoom, to rotate, to resize and to follow conveyors (non-crank alternatives provided too). 
+- **Two zoom levels**, get a close-up view of your factory.
 - Complete with music, sound effects and in-game customisable settings.
-- **Full Save & Load system**, with optional Auto-Save, Save-on-Exit, and access to three save slots.
+- **Full Save & Load system**, with customisable Auto-Save time, and access to three save slots.
+- **Long playtime.** Expect to spend at least 25 hours with your factory if you want to unlock every building in the game!
 
 For much more information on the game and how to play, check out the [Community Wiki](https://playdate-wiki.com/wiki/Factory_Farming).
 
-## Build Information
+## Build & Performance Information
 
-Factory Farming was written specifically for Playdate devices in pure C-code in order to extract the maximum performance out of the tiny little system's hardware. The game uses a chunk system to manage the rendering and simulation of huge factories (thousands of buildings & items in-transit) while aiming to maintain a steady 30 FPS. More information on the technical details of the game can be found over on this blog post.
+Factory Farming was written specifically for Playdate hardware in pure C code in order to extract the maximum performance out of the tiny little system. The game uses a chunk system to manage the simulation of huge factories in real time.
 
-The latest version of **Factory Farming (V1.0)** is available for Playdate devices and the Playdate Linux Simulator (Compiled under: Ubuntu Linux, x86_64).
+Factory Farming's simulation performance has been check on the Playdate hardware using a test factory with a total of 6,300 buildings, crops and conveyor belts, and with 3,000 pieces of cargo moving around the facility on conveyor belts at any one time. Factories cannot grow very much larger than this due to the limited plot size.
 
-Regular and NoMusic builds are available, the NoMusic build does not come bundled with a music folder in the pdx. This results in a substantially smaller download (21 MB vs 300 KB). 
+Moving around regions of a factory with lots of cargo in motion on conveyor belts can cause the framerate to dip. This can be fixed by zooming in, which reduces the number of sprites which need to be rendered. Enable "Auto Zoom-In When Moving" from the settings menu to automate this.
 
 This game can be Side Loaded onto the Playdate - [see how to do this here](https://help.play.date/games/sideloading/).
 
