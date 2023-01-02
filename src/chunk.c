@@ -60,6 +60,7 @@ void setChunkSpriteOffsets(struct Chunk_t* _c, int16_t _x, int16_t _y) {
         }
       }
       // Apply the offset to any buildings which have animated or large collision sprites. Utility is included due to fences
+      /*
       if (loc->m_building) {
         if (loc->m_building->m_type >= kUtility) {
           for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
@@ -78,6 +79,7 @@ void setChunkSpriteOffsets(struct Chunk_t* _c, int16_t _x, int16_t _y) {
           }
         }
       }
+      */
     }
   }
 
@@ -88,17 +90,25 @@ void setChunkSpriteOffsets(struct Chunk_t* _c, int16_t _x, int16_t _y) {
 
 void chunkResetTorus() {
   for (int32_t x = 0; x < WORLD_CHUNKS_X; ++x) {
-    struct Chunk_t* top = getChunk_noCheck(x, 0);
-    struct Chunk_t* bottom = getChunk_noCheck(x, WORLD_CHUNKS_Y-1);
+    struct Chunk_t* top         = getChunk_noCheck(x, 0);
+    struct Chunk_t* top_next    = getChunk_noCheck(x, 1);
+    struct Chunk_t* bottom      = getChunk_noCheck(x, WORLD_CHUNKS_Y-1);
+    struct Chunk_t* bottom_next = getChunk_noCheck(x, WORLD_CHUNKS_Y-2);
     setChunkSpriteOffsets(top, 0, 0);
+    setChunkSpriteOffsets(top_next, 0, 0);
     setChunkSpriteOffsets(bottom, 0, 0);
+    setChunkSpriteOffsets(bottom_next, 0, 0);
   }
 
   for (int32_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
     struct Chunk_t* left = getChunk_noCheck(0, y);
+    struct Chunk_t* left_next = getChunk_noCheck(1, y);
     struct Chunk_t* right = getChunk_noCheck(WORLD_CHUNKS_X-1, y);
+    struct Chunk_t* right_next = getChunk_noCheck(WORLD_CHUNKS_X-2, y);
     setChunkSpriteOffsets(left, 0, 0);
+    setChunkSpriteOffsets(left_next, 0, 0);
     setChunkSpriteOffsets(right, 0, 0);
+    setChunkSpriteOffsets(right_next, 0, 0);
   }
 }
 
@@ -111,54 +121,101 @@ void chunkShiftTorus(bool _top, bool _left) {
 
   for (int32_t x = 1; x < WORLD_CHUNKS_X - 1; ++x) {
     struct Chunk_t* top = getChunk_noCheck(x, 0);
+    struct Chunk_t* top_next    = getChunk_noCheck(x, 1);
     struct Chunk_t* bottom = getChunk_noCheck(x, WORLD_CHUNKS_Y-1);
+    struct Chunk_t* bottom_next = getChunk_noCheck(x, WORLD_CHUNKS_Y-2);
     if (_top) {
       setChunkSpriteOffsets(top, 0, 0);
+      setChunkSpriteOffsets(top_next, 0, 0);
       setChunkSpriteOffsets(bottom, 0, -TOT_WORLD_PIX_Y);
+      setChunkSpriteOffsets(bottom_next, 0, -TOT_WORLD_PIX_Y);
     } else {
       setChunkSpriteOffsets(top, 0, TOT_WORLD_PIX_Y);
+      setChunkSpriteOffsets(top_next, 0, TOT_WORLD_PIX_Y);
       setChunkSpriteOffsets(bottom, 0, 0);
+      setChunkSpriteOffsets(bottom_next, 0, 0);
     }
   }
 
   for (int32_t y = 1; y < WORLD_CHUNKS_Y - 1; ++y) {
     struct Chunk_t* left = getChunk_noCheck(0, y);
+    struct Chunk_t* left_next = getChunk_noCheck(1, y);
     struct Chunk_t* right = getChunk_noCheck(WORLD_CHUNKS_X-1, y);
+    struct Chunk_t* right_next = getChunk_noCheck(WORLD_CHUNKS_X-2, y);
     if (_left) {
       setChunkSpriteOffsets(left, 0, 0);
+      setChunkSpriteOffsets(left_next, 0, 0);
       setChunkSpriteOffsets(right, -TOT_WORLD_PIX_X, 0);
+      setChunkSpriteOffsets(right_next, -TOT_WORLD_PIX_X, 0);
     } else {
       setChunkSpriteOffsets(left, TOT_WORLD_PIX_X, 0);
+      setChunkSpriteOffsets(left_next, TOT_WORLD_PIX_X, 0);
       setChunkSpriteOffsets(right, 0, 0);
+      setChunkSpriteOffsets(right_next, 0, 0);
     }
   }
 
   // Handle the corners
   struct Chunk_t* TL = getChunk_noCheck(0, 0);
+  struct Chunk_t* TL_next = getChunk_noCheck(1, 1);
+
   struct Chunk_t* TR = getChunk_noCheck(WORLD_CHUNKS_X-1, 0);
+  struct Chunk_t* TR_next = getChunk_noCheck(WORLD_CHUNKS_X-2, 1);
+
   struct Chunk_t* BL = getChunk_noCheck(0, WORLD_CHUNKS_Y-1);
+  struct Chunk_t* BL_next = getChunk_noCheck(1, WORLD_CHUNKS_Y-2);
+
   struct Chunk_t* BR = getChunk_noCheck(WORLD_CHUNKS_X-1, WORLD_CHUNKS_Y-1);
+  struct Chunk_t* BR_next = getChunk_noCheck(WORLD_CHUNKS_X-2, WORLD_CHUNKS_Y-2);
 
   if (_top && _left) {
     setChunkSpriteOffsets(TL, 0, 0);
+    setChunkSpriteOffsets(TL_next, 0, 0);
+
     setChunkSpriteOffsets(TR, -TOT_WORLD_PIX_X, 0);
+    setChunkSpriteOffsets(TR_next, -TOT_WORLD_PIX_X, 0);
+
     setChunkSpriteOffsets(BL, 0, -TOT_WORLD_PIX_Y);
+    setChunkSpriteOffsets(BL_next, 0, -TOT_WORLD_PIX_Y);
+
     setChunkSpriteOffsets(BR, -TOT_WORLD_PIX_X, -TOT_WORLD_PIX_Y);
+    setChunkSpriteOffsets(BR_next, -TOT_WORLD_PIX_X, -TOT_WORLD_PIX_Y);
   } else if (_top && !_left) {
     setChunkSpriteOffsets(TL, +TOT_WORLD_PIX_X, 0);
+    setChunkSpriteOffsets(TL_next, +TOT_WORLD_PIX_X, 0);
+
     setChunkSpriteOffsets(TR, 0, 0);
+    setChunkSpriteOffsets(TR_next, 0, 0);
+
     setChunkSpriteOffsets(BL, +TOT_WORLD_PIX_X, -TOT_WORLD_PIX_Y);
+    setChunkSpriteOffsets(BL_next, +TOT_WORLD_PIX_X, -TOT_WORLD_PIX_Y);
+
     setChunkSpriteOffsets(BR, 0, -TOT_WORLD_PIX_Y);
+    setChunkSpriteOffsets(BR_next, 0, -TOT_WORLD_PIX_Y);
   } else if (!_top && _left) {
     setChunkSpriteOffsets(TL, 0, +TOT_WORLD_PIX_Y);
+    setChunkSpriteOffsets(TL_next, 0, +TOT_WORLD_PIX_Y);
+
     setChunkSpriteOffsets(TR, -TOT_WORLD_PIX_X, +TOT_WORLD_PIX_Y);
+    setChunkSpriteOffsets(TR_next, -TOT_WORLD_PIX_X, +TOT_WORLD_PIX_Y);
+
     setChunkSpriteOffsets(BL, 0, 0);
+    setChunkSpriteOffsets(BL_next, 0, 0);
+
     setChunkSpriteOffsets(BR, -TOT_WORLD_PIX_X, 0);
+    setChunkSpriteOffsets(BR_next, -TOT_WORLD_PIX_X, 0);
   } else {
     setChunkSpriteOffsets(TL, +TOT_WORLD_PIX_X, +TOT_WORLD_PIX_Y);
+    setChunkSpriteOffsets(TL_next, +TOT_WORLD_PIX_X, +TOT_WORLD_PIX_Y);
+
     setChunkSpriteOffsets(TR, 0, +TOT_WORLD_PIX_Y);
+    setChunkSpriteOffsets(TR_next, 0, +TOT_WORLD_PIX_Y);
+
     setChunkSpriteOffsets(BL, +TOT_WORLD_PIX_X, 0);
+    setChunkSpriteOffsets(BL_next, +TOT_WORLD_PIX_X, 0);
+
     setChunkSpriteOffsets(BR, 0, 0);
+    setChunkSpriteOffsets(BR_next, 0, 0);
   }
 }
 
