@@ -1,5 +1,5 @@
 
-//#define DEV
+#define DEV
 
 //#define SSHOT_ON_AUTOSAVE
 
@@ -182,6 +182,10 @@
 
 // Out of 1000
 #define CLUTTER_CHANCE 2
+#define MULTI_CLUTTER_CHANCE 50
+
+#define MULTI_CLUTTER_MIN 6
+#define MULTI_CLUTTER_MAX 12
 
 #define UI_TITLE_OFFSET (TILE_PIX*1)
 

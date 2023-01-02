@@ -49,6 +49,8 @@ bool addLake(int32_t _startX, int32_t _startY, int32_t _riverProb);
 
 bool addRiver(int32_t _startX, int32_t _startY, enum kDir _dir, int32_t _lakeProb, bool _isolated);
 
+bool reportLakeReject(uint8_t _reason, uint8_t _id);
+
 void addSpawn(void);
 
 void doLakesAndRivers(uint8_t _slot);
@@ -498,11 +500,15 @@ bool isGroundTypeTile_ptr(struct Tile_t* _t, enum kGroundType _ground) {
   return (tValue >= _ground * FLOOR_VARIETIES && tValue < (_ground + 1) * FLOOR_VARIETIES);
 }
 
-bool isWaterTile(int32_t _x, int32_t _y) {
-  const uint8_t tValue = getTile(_x, _y)->m_tile;
+bool isWaterTile_ptr(struct Tile_t* _tile) {
+  const uint8_t tValue = _tile->m_tile;
   if (tValue < TOT_FLOOR_TILES_INC_PAVED) return false;
   if (tValue >= SPRITE16_ID(0, 5)  && tValue < SPRITE16_ID(0, 7)) return true; // Lake / Ocean
   return isRiverTile(tValue);
+}
+
+bool isWaterTile(int32_t _x, int32_t _y) {
+  return isWaterTile_ptr(getTile(_x, _y));
 }
 
 bool isRiverTile(const uint8_t tValue) {
@@ -650,12 +656,41 @@ void doClutterObstacles() {
         continue;
       }
       struct Tile_t* t = getTile(x,y);
-      if (t->m_tile >= TOT_FLOOR_TILES) {
+      if (!isSoilTile(t)) {
         continue;
       }
       setTile( getTile_idx(x,y), rand() % 2 + SPRITE16_ID(0, 4) + t->m_groundType*2 ); // Note: relies on ground type not being obstructed when this is called
+      if (rand() % 1000 >= MULTI_CLUTTER_CHANCE) {
+        continue;
+      }
+      const int8_t nMC = MULTI_CLUTTER_MIN + (rand() % (MULTI_CLUTTER_MAX - MULTI_CLUTTER_MIN));
+      int8_t placed = 0;
+      int16_t trials = 0;
+      int32_t prevX = x;
+      int32_t prevY = y;
+      while (++trials < 128) {
+        int32_t testX = prevX - 1 + (rand() % 3);
+        int32_t testY = prevY - 1 + (rand() % 3);
+        t = getTile(testX,testY);
+        if (!isSoilTile(t)) {
+          continue;
+        }
+        setTile( getTile_idx(testX,testY), rand() % 2 + SPRITE16_ID(0, 4) + t->m_groundType*2 );
+        prevX = testX;
+        prevY = testY;
+        if (++placed == nMC) {
+          break;
+        }
+      }
     }
   }
+}
+
+bool reportLakeReject(uint8_t _reason, uint8_t _id) {
+  #ifdef DEV
+  pd->system->logToConsole("generate: river rejected due to code:%i. Tile ID was %i", _reason, _id);
+  #endif
+  return true;
 }
 
 #define LAKE_MIN 10
@@ -666,7 +701,11 @@ void doClutterObstacles() {
 #define RIVER_MAX 16
 bool addRiver(int32_t _startX, int32_t _startY, enum kDir _dir, int32_t _lakeProb, bool _isolated) {
 
-  if (getTile(_startX,_startY)->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+  struct Tile_t* t;
+  t = getTile(_startX,_startY);
+  if (!isWaterTile_ptr(t) && !isSoilTile(t)) {
+    return reportLakeReject(200, t->m_tile); // Reject
+  }
 
   if (_isolated) {
     setTile( getTile_idx(_startX,_startY), SPRITE16_ID(6+(_dir == NS ? 0 : 1), 14));
@@ -683,35 +722,48 @@ bool addRiver(int32_t _startX, int32_t _startY, enum kDir _dir, int32_t _lakePro
 
   bool endInLake = !_isolated && rand() % 2;
 
-  struct Tile_t* t;
 
   if (_dir == WE) {
     for (int32_t x = _startX + 1; x < _startX + lenA; ++x) {
       t = getTile(x, _startY);
-      if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+      if (!isSoilTile(t)) {
+        return reportLakeReject(0, t->m_tile); // Reject
+      } 
       setTile( getTile_idx(x, _startY), SPRITE16_ID(5, 12) );
     }
     t = getTile(_startX + lenA, _startY);
-    if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+    if (!isSoilTile(t)) {
+      return reportLakeReject(1, t->m_tile); // Reject
+    } 
     if (switchA) setTile( getTile_idx(_startX + lenA, _startY), SPRITE16_ID(6 + (switchDir ? 0 : 1), 13) );
     else if (endInLake) {
-      bool lakeGood = addLake(_startX + lenA, _startY - LAKE_MIN/2, _lakeProb);
+      bool lakeReject = addLake(_startX + lenA, _startY - LAKE_MIN/2, _lakeProb);
       setTile( getTile_idx(_startX + lenA, _startY), SPRITE16_ID(7, 11) );
-      return lakeGood;
+      if (lakeReject) {
+        return reportLakeReject(100, t->m_tile); // Reject
+      }
+      return false;
     } else setTile( getTile_idx(_startX + lenA, _startY), SPRITE16_ID(5, 14) );
   } else if (_dir == NS) {
     for (int32_t y = _startY + 1; y < _startY + lenA; ++y) {
       t = getTile(_startX, y);
-      if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+      if (!isSoilTile(t)) {
+        return reportLakeReject(2, t->m_tile); // Reject
+      }
       setTile( getTile_idx(_startX, y), SPRITE16_ID(4, 12) );
     }
     t = getTile(_startX, _startY + lenA);
-    if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+    if (!isSoilTile(t)) {
+      return reportLakeReject(3, t->m_tile); // Reject
+    } 
     if (switchA) setTile( getTile_idx(_startX, _startY + lenA), SPRITE16_ID(4 + (switchDir ? 0 : 3), 13) );
     else if (endInLake) {
-      bool lakeGood = addLake(_startX - LAKE_MIN/2, _startY + lenA, _lakeProb);
+      bool lakeReject = addLake(_startX - LAKE_MIN/2, _startY + lenA, _lakeProb);
       setTile( getTile_idx(_startX, _startY + lenA), SPRITE16_ID(4, 11) );
-      return lakeGood;
+      if (lakeReject) {
+        return reportLakeReject(101, t->m_tile); // Reject
+      }
+      return false;
     } else setTile( getTile_idx(_startX, _startY + lenA), SPRITE16_ID(4, 14) );
   }
 
@@ -719,21 +771,29 @@ bool addRiver(int32_t _startX, int32_t _startY, enum kDir _dir, int32_t _lakePro
     if (switchDir) {
       for (int32_t y = _startY + 1; y < _startY + lenB; ++y) {
         t = getTile(_startX + lenA, y);
-        if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+        if (!isSoilTile(t)) {
+          return reportLakeReject(4, t->m_tile); // Reject
+        } 
         setTile( getTile_idx(_startX + lenA, y), SPRITE16_ID(4, 12) );
       }
       t = getTile(_startX + lenA, _startY + lenB);
-      if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+      if (!isSoilTile(t)) {
+        return reportLakeReject(5, t->m_tile); // Reject
+      } 
       if (switchB) setTile( getTile_idx(_startX + lenA, _startY + lenB), SPRITE16_ID(4, 13) );
       else setTile( getTile_idx(_startX + lenA, _startY + lenB), SPRITE16_ID(4, 14) );
     } else {
       for (int32_t y = _startY - 1; y > _startY - lenB; --y) {
         t = getTile(_startX + lenA, y);
-        if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+        if (!isSoilTile(t)) {
+          return reportLakeReject(6, t->m_tile); // Reject
+        } 
         setTile( getTile_idx(_startX + lenA, y), SPRITE16_ID(4, 12) );
       }
       t = getTile(_startX + lenA, _startY - lenB);
-      if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+      if (!isSoilTile(t)) {
+        return reportLakeReject(7, t->m_tile); // Reject
+      } 
       if (switchB) setTile( getTile_idx(_startX + lenA, _startY - lenB), SPRITE16_ID(5, 13) );
       else setTile( getTile_idx(_startX + lenA, _startY - lenB), SPRITE16_ID(6, 14) );
     }
@@ -741,21 +801,29 @@ bool addRiver(int32_t _startX, int32_t _startY, enum kDir _dir, int32_t _lakePro
     if (switchDir) {
       for (int32_t x = _startX + 1; x < _startX + lenB; ++x) {
         t = getTile(x, _startY + lenA);
-        if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+        if (!isSoilTile(t)) {
+          return reportLakeReject(8, t->m_tile); // Reject
+        } 
         setTile( getTile_idx(x, _startY + lenA), SPRITE16_ID(5, 12) );
       }
       t = getTile(_startX + lenB, _startY + lenA);
-      if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+      if (!isSoilTile(t)) {
+        return reportLakeReject(9, t->m_tile); // Reject 
+      }
       if (switchB) setTile( getTile_idx(_startX + lenB, _startY + lenA), SPRITE16_ID(6, 13) );
       else setTile( getTile_idx(_startX + lenB, _startY + lenA), SPRITE16_ID(5, 14) );
     } else {
       for (int32_t x = _startX - 1; x > _startX - lenB; --x) {
         t = getTile(x, _startY + lenA);
-        if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+        if (!isSoilTile(t)) {
+          return reportLakeReject(10, t->m_tile); // Reject
+        } 
         setTile( getTile_idx(x, _startY + lenA), SPRITE16_ID(5, 12) );
       } 
       t = getTile(_startX - lenB, _startY + lenA);
-      if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+      if (!isSoilTile(t)) {
+        return reportLakeReject(11, t->m_tile); // Reject
+      } 
       if (switchB) setTile( getTile_idx(_startX - lenB, _startY + lenA), SPRITE16_ID(5, 13) );
       else setTile( getTile_idx(_startX - lenB, _startY + lenA), SPRITE16_ID(7, 14) );
     }
@@ -765,28 +833,42 @@ bool addRiver(int32_t _startX, int32_t _startY, enum kDir _dir, int32_t _lakePro
   if (switchB && _dir == WE) {
     for (int32_t x = _startX + lenA + 1; x < _startX + lenA + lenC; ++x) {
       t = getTile(x, _startY + signedLenB);
-      if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+      if (!isSoilTile(t)) {
+        return reportLakeReject(12, t->m_tile); // Reject 
+      }
       setTile( getTile_idx(x, _startY + signedLenB), SPRITE16_ID(5, 12) );
     }
     t = getTile(_startX + lenA + lenC, _startY + signedLenB);
-    if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+    if (!isSoilTile(t)) {
+      return reportLakeReject(13, t->m_tile); // Reject
+    } 
     if (endInLake) {
-      bool lakeGood = addLake(_startX + lenA + lenC, _startY + signedLenB - LAKE_MIN/2, _lakeProb);
+      bool lakeReject = addLake(_startX + lenA + lenC, _startY + signedLenB - LAKE_MIN/2, _lakeProb);
       setTile( getTile_idx(_startX + lenA + lenC, _startY + signedLenB), SPRITE16_ID(7, 11) );
-      return lakeGood;
+      if (lakeReject) {
+        return reportLakeReject(102, t->m_tile); // Reject
+      }
+      return false;
     } else setTile( getTile_idx(_startX + lenA + lenC, _startY + signedLenB), SPRITE16_ID(5, 14) );
   } else if (switchB && _dir == NS) {
     for (int32_t y = _startY + lenA + 1; y < _startY + lenA + lenC; ++y) {
       t = getTile(_startX + signedLenB, y);
-      if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+      if (!isSoilTile(t)) {
+        return reportLakeReject(14, t->m_tile); // Reject
+      } 
       setTile( getTile_idx(_startX + signedLenB, y), SPRITE16_ID(4, 12) );
     }
     t = getTile(_startX + signedLenB, _startY + lenA + lenC);
-    if (t->m_tile > TOT_FLOOR_TILES) return true; // Reject 
+    if (!isSoilTile(t)) {
+      return reportLakeReject(15, t->m_tile); // Reject
+    } 
     if (endInLake) {
-      bool lakeGood = addLake(_startX + signedLenB - LAKE_MIN/2, _startY + lenA + lenC, _lakeProb); 
+      bool lakeReject = addLake(_startX + signedLenB - LAKE_MIN/2, _startY + lenA + lenC, _lakeProb); 
       setTile( getTile_idx(_startX + signedLenB, _startY + lenA + lenC), SPRITE16_ID(4, 11) );
-      return lakeGood;
+      if (lakeReject) {
+        return reportLakeReject(103, t->m_tile); // Reject
+      }
+      return false;
     } else setTile( getTile_idx(_startX + signedLenB, _startY + lenA + lenC), SPRITE16_ID(4, 14) );
   }
 
@@ -831,12 +913,12 @@ bool addLake(int32_t _startX, int32_t _startY, int32_t _riverProb) {
 
   // Check
   for (int32_t x = _startX; x < _startX + w; ++x) {
-    if (getTile(x,_startY)->m_tile > TOT_FLOOR_TILES) return true; // Reject
-    if (getTile(x,_startY+h)->m_tile > TOT_FLOOR_TILES) return true; // Reject
+    if (getTile(x,_startY)->m_tile > TOT_FLOOR_TILES) return reportLakeReject(220, getTile(x,_startY)->m_tile); // Reject
+    if (getTile(x,_startY+h)->m_tile > TOT_FLOOR_TILES) return reportLakeReject(221, getTile(x,_startY+h)->m_tile); // Reject
   }
   for (int32_t y = _startY; y < _startY + h + 1; ++y) {
-    if (getTile(_startX,y)->m_tile > TOT_FLOOR_TILES) return true; // Reject
-    if (getTile(_startX+w,y)->m_tile > TOT_FLOOR_TILES) return true; // Reject
+    if (getTile(_startX,y)->m_tile > TOT_FLOOR_TILES) return reportLakeReject(222, getTile(_startX,y)->m_tile); // Reject
+    if (getTile(_startX+w,y)->m_tile > TOT_FLOOR_TILES) return reportLakeReject(223, getTile(_startX+w,y)->m_tile); // Reject
   }
 
   uint16_t tex;
@@ -897,18 +979,26 @@ bool addLake(int32_t _startX, int32_t _startY, int32_t _riverProb) {
     bool fill = false;
     for (int32_t y = _startY; y < _startY + h; ++y) {
       struct Tile_t* t = getTile(x,y);
-      if (fill && t->m_tile > TOT_FLOOR_TILES) break;
+      if (fill && !isSoilTile(t)) break;
       if (fill) setTile( getTile_idx(x,y), SPRITE16_ID(4 + rand() % 4, 6) );
-      if (!fill && t->m_tile > TOT_FLOOR_TILES && getTile(x,y+1)->m_tile <= TOT_FLOOR_TILES) fill = true;
+      if (!fill && !isSoilTile(t) && getTile(x,y+1)->m_tile <= TOT_FLOOR_TILES) fill = true;
     }
   }
 
   bool toAddRiver = rand() < _riverProb;
   bool riverWE = rand() % 2;
   if (toAddRiver) {
-    if (riverWE) return addRiver(_startX + w, _startY + h/2, WE, /*lake prob=*/ _riverProb/2, /*isolated=*/ false);
-    else return addRiver(_startX + w/2, _startY + h, NS, /*lake prob=*/ _riverProb/2, /*isolated=*/ false);
+    bool riverRejected = false;
+    if (riverWE) riverRejected = addRiver(_startX + w, _startY + h/2, WE, /*lake prob=*/ _riverProb/2, /*isolated=*/ false);
+    else riverRejected = addRiver(_startX + w/2, _startY + h, NS, /*lake prob=*/ _riverProb/2, /*isolated=*/ false);
+    #ifdef DEV
+    pd->system->logToConsole("generate: river prob:%i, decision:%i, river polarity:%i, river rejected?:%i", _riverProb, toAddRiver, riverWE, riverRejected);
+    #endif
+    return riverRejected;
   }
+  #ifdef DEV
+  pd->system->logToConsole("generate: river prob:%i, decision:FALSE");
+  #endif
 
   return false;
 }
@@ -933,9 +1023,6 @@ void doSea() {
 
 void doLakesAndRivers(uint8_t _slot) {
   struct Tile_t* backup = pd->system->realloc(NULL, SIZE_GENERATE);
-  //int8_t addToRegion[7] = {1,1,1,1,1,1,1};
-  //if (rand() % 2 == 0) addToRegion[rand() % 7] = 0;
-  //if (rand() % 4 == 0) addToRegion[rand() % 7] = 0;
 
   uint8_t lakesToTry = 6;
   if (_slot == kPeatWorld) {
@@ -949,7 +1036,6 @@ void doLakesAndRivers(uint8_t _slot) {
   } 
 
   for (uint8_t i = 0; i < lakesToTry; ++i) {
-    //if (!addToRegion[i]) continue;
     for (int32_t try = 0; try < 8; ++try) {
       int32_t x = rand() % (TOT_TILES_X/2);
       int32_t y = rand() % (TOT_TILES_Y/2);

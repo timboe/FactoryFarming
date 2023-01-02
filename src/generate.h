@@ -78,6 +78,8 @@ bool isSoilTile(struct Tile_t* _tile);
 
 bool isWaterTile(int32_t _x, int32_t _y);
 
+bool isWaterTile_ptr(struct Tile_t* _tile);
+
 bool isGroundTypeTile(int32_t _x, int32_t _y, enum kGroundType);
 
 bool isGroundTypeTile_ptr(struct Tile_t* _t, enum kGroundType _ground);

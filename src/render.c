@@ -91,11 +91,13 @@ void updateRenderList() {
   pd->sprite->addSprite(player->m_blueprint[zoom]);
   pd->sprite->addSprite(player->m_blueprintRadius[zoom]);
 
-  if (currentIOAction() != kDoScreenShot) {
+  const enum kSaveLoadRequest io = currentIOAction();
+
+  if (io != kDoScreenShot) {
     addUIToSpriteList();
   }
 
-  const bool includeCargoAndObs = (gm < kMenuBuy || gm == kTitles);
+  const bool includeCargoAndObs = (gm < kMenuBuy || gm == kTitles || io == kDoScreenShot);
 
   chunkAddToRender(currentChunk, zoom, includeCargoAndObs);
   if (getZoom() == 1 && !PRETEND_ZOOMED_IN) {

@@ -224,14 +224,14 @@ struct UnlockDescriptor_t UnlockDecs[] = {
   {.type = kUtility, .subType.utility = kStorageBox, .fromSelling = 110, .ofCargo = kStrawberry},
   {.type = kUtility, .subType.utility = kBuffferBox, .fromSelling = 140, .ofCargo = kStrawberry},
 
-  {.type = kUtility, .subType.utility = kConveyorGrease, .fromSelling = 100, .ofCargo = kIceCream},
-  {.type = kFactory, .subType.factory = kBatteryFarm, .fromSelling = 140, .ofCargo = kIceCream},
+  {.type = kUtility, .subType.utility = kFactoryUpgrade, .fromSelling = 60, .ofCargo = kChocolate}, // New to v1.1
+  {.type = kFactory, .subType.factory = kBatteryFarm, .fromSelling = 100, .ofCargo = kIceCream},
+  {.type = kUtility, .subType.utility = kConveyorGrease, .fromSelling = 140, .ofCargo = kIceCream},
   {.type = kFactory, .subType.factory = kProteinFac, .fromSelling = 180, .ofCargo = kIceCream},
 
   {.type = kPlant, .subType.plant = kCocoaPlant, .fromSelling = 150, .ofCargo = kProtein}, 
   {.type = kFactory, .subType.factory = kChocolateFac, .fromSelling = 200, .ofCargo = kProtein}, 
 
-  {.type = kFactory, .subType.utility = kFactoryUpgrade, .fromSelling = 100, .ofCargo = kChocolate}, // New to v1.1
   {.type = kFactory, .subType.factory = kPieFac, .fromSelling = 175, .ofCargo = kChocolate},
 
   {.type = kUtility, .subType.utility = kObstructionRemover, .fromSelling = 220, .ofCargo = kMeatPie},
