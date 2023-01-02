@@ -109,9 +109,11 @@ void setPrices() {
   UDesc[kWell].price = FDesc[kHFCSFac].price * 0.40f;
   UDesc[kStorageBox].price = FDesc[kEmulsifierFac].price * 0.30f;
   UDesc[kBuffferBox].price = FDesc[kEmulsifierFac].price * 0.60f;
+  UDesc[kFactoryUpgrade].price = FDesc[kChocolateFac].price * 0.80f;
   UDesc[kConveyorGrease].price = FDesc[kBatteryFarm].price * 0.02f;
   UDesc[kObstructionRemover].price = FDesc[kMSGFac].price * 0.40f;
   UDesc[kLandfill].price = FDesc[kPerkPillFac].price * 0.1f;
+  UDesc[kRotavator].price = FDesc[kPerkPillFac].price * 0.60f;
   UDesc[kRetirement].price = FDesc[kMiraclePowderFac].price * 7.5f;
   UDesc[kFence].price = FDesc[kMiraclePowderFac].price * 0.05f;
 

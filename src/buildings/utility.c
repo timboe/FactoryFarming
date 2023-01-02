@@ -266,7 +266,7 @@ void drawUIInspectUtility(struct Building_t* _building) {
   
   } else if (ust == kSign) {
 
-    snprintf(text, 128, "Place a Cargo here to display it on the Sign.");
+    snprintf(text, 128, "Place a cargo here to display it on the sign.");
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
     if (_building->m_mode.mode16) {
@@ -276,14 +276,32 @@ void drawUIInspectUtility(struct Building_t* _building) {
 
   } else if (ust == kBin) {
 
-    snprintf(text, 128, "Permanently erases unwanted Cargo.");
+    snprintf(text, 128, "Permanently erases unwanted cargo.");
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "Drop the unwanted Cargo, or use Conveyors");
+    snprintf(text, 128, "Drop the unwanted cargo, or use conveyors");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
+  } else if (ust == kRotavator) {
+
+    snprintf(text, 128, "Converts the 8 surrounding tiles to loamy soil.");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 128, "Removing the rotavator will revert these tiles");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 128, "to their previous soil type.");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
+  } else if (ust == kFactoryUpgrade) {
+
+    snprintf(text, 128, "Reduces production time by 0.5 seconds in any");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 128, "factory immediately N, S, E or W of the module.");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 128, "Minimum production time: 0.5 seconds.");
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   } else if (ust == kWell) {
 
-    snprintf(text, 128, "Creates a surrounding area of Wet and Moist soil.");
+    snprintf(text, 128, "Creates a surrounding area of wet and moist soil.");
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   } else if (ust == kBuffferBox || ust == kStorageBox) {

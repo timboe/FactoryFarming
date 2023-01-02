@@ -107,13 +107,15 @@ const char* getNewText() {
       case kWell: return "Place to dampen the surrounding soil";
       case kStorageBox: return "Stores up to 3 different types of Cargo";
       case kBuffferBox: return "Like the Storage Box, but also self-empties";
+      case kFactoryUpgrade: return "Place adjacent to factories to reduce production time."; // New to v1.1
       case kConveyorGrease: return "Upgrades Conveyor speed from x1 to x2";
       case kObstructionRemover: return "Clears Obstructed Ground, can then be built on";
       case kLandfill: return "Fills in water. Can be built on, but not planted on.";
+      case kRotavator: return "Turns nearby land into loamy soil."; // New to v1.1 
       case kRetirement: return "A relaxing space to enjoy your amassed wealth.";
       case kFence: return "A charming wooden fence.";
-      case kSpareUtil0: case kSpareUtil1: case kSpareUtil2: case kSpareUtil3:
-      case kSpareUtil4: case kSpareUtil5: case kSpareUtil6: case kSpareUtil7: 
+      case kSpareUtil0: case kSpareUtil1: case kSpareUtil3:
+      case kSpareUtil5: case kSpareUtil6: case kSpareUtil7: 
       case kNUtilitySubTypes:;
     }
     case kExtractor: switch (m_nextSubType.extractor) {

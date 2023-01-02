@@ -81,13 +81,15 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kWell: return "Well";
       case kStorageBox: return "Storage Box";
       case kBuffferBox: return "Buffer Box";
+      case kFactoryUpgrade: return "Factory Upgrade Module";
       case kConveyorGrease: return "Conveyor Grease";
       case kObstructionRemover: return "Obstruction Remover";
       case kLandfill: return "Landfill";
+      case kRotavator: return "Rotavator";
       case kRetirement: return "Retirement Cottage";
       case kFence: return "Fence"; 
-      case kSpareUtil0: case kSpareUtil1: case kSpareUtil2: case kSpareUtil3:
-      case kSpareUtil4: case kSpareUtil5: case kSpareUtil6: case kSpareUtil7: 
+      case kSpareUtil0: case kSpareUtil1: case kSpareUtil3:
+      case kSpareUtil5: case kSpareUtil6: case kSpareUtil7: 
       case kNUtilitySubTypes: return "U_PLACEHOLDER";
     }
     case kExtractor: switch (_subType.extractor) {

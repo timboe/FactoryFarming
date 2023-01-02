@@ -64,12 +64,12 @@ enum kUtilitySubType{
   kWell, 
   kStorageBox,
   kBuffferBox,
-  kSpareUtil2, // SPARE SLOT (Game Expansions)
+  kFactoryUpgrade, // New to v1.1, was spare 2
   kSpareUtil3, // SPARE SLOT (Game Expansions)
   kConveyorGrease, 
   kObstructionRemover,
   kLandfill, 
-  kSpareUtil4, // SPARE SLOT (Game Expansions)
+  kRotavator, // New to v1.1, was spare 4
   kSpareUtil5, // SPARE SLOT (Game Expansions)
   kRetirement,
   kFence,

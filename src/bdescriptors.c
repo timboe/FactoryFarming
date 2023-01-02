@@ -72,12 +72,12 @@ struct UtilityDescriptor_t UDesc[] = {
   {.subType = kWell, .unlock = 1, .price = 0, .UIIcon = SID(0,15), .sprite = SID(12,14)},
   {.subType = kStorageBox, .unlock = 1, .price = 0, .UIIcon = SID(8,15), .sprite = SID(8,15)},
   {.subType = kBuffferBox, .unlock = 1, .price = 0, .UIIcon = SID(8,16), .sprite = SID(8,16)},
-  {.subType = kSpareUtil2, .unlock = DIS, .price = DIS, .UIIcon = SID(0,0), .sprite = SID(0,0)},
+  {.subType = kFactoryUpgrade, .unlock = 1, .price = 0, .UIIcon = SID(13,15), .sprite = SID(15,13)}, // New to v1.1
   {.subType = kSpareUtil3, .unlock = DIS, .price = DIS, .UIIcon = SID(0,0), .sprite = SID(0,0)},
   {.subType = kConveyorGrease, .unlock = 1, .price = 0, .UIIcon = SID(1,15), .sprite = SID(1,15)},
   {.subType = kObstructionRemover, .unlock = 1, .price = 0, .UIIcon = SID(11,15), .sprite = SID(11,15)},
   {.subType = kLandfill, .unlock = 1, .price = 0, .UIIcon = SID(3,15), .sprite = SID(0,3)},
-  {.subType = kSpareUtil4, .unlock = DIS, .price = DIS, .UIIcon = SID(0,0), .sprite = SID(0,0)},
+  {.subType = kRotavator, .unlock = 1, .price = 0, .UIIcon = SID(14,15), .sprite = SID(15,14)}, // New to v1.1
   {.subType = kSpareUtil5, .unlock = DIS, .price = DIS, .UIIcon = SID(0,0), .sprite = SID(0,0)},
   {.subType = kRetirement, .unlock = 1, .price = 0, .UIIcon = SID(10,15), .sprite = BID(0,7)},
   {.subType = kFence, .unlock = 1, .price = 0, .UIIcon = SID(12,15), .sprite = SID(0,0)},
@@ -231,6 +231,7 @@ struct UnlockDescriptor_t UnlockDecs[] = {
   {.type = kPlant, .subType.plant = kCocoaPlant, .fromSelling = 150, .ofCargo = kProtein}, 
   {.type = kFactory, .subType.factory = kChocolateFac, .fromSelling = 200, .ofCargo = kProtein}, 
 
+  {.type = kFactory, .subType.utility = kFactoryUpgrade, .fromSelling = 100, .ofCargo = kChocolate}, // New to v1.1
   {.type = kFactory, .subType.factory = kPieFac, .fromSelling = 175, .ofCargo = kChocolate},
 
   {.type = kUtility, .subType.utility = kObstructionRemover, .fromSelling = 220, .ofCargo = kMeatPie},
@@ -249,10 +250,10 @@ struct UnlockDescriptor_t UnlockDecs[] = {
   {.type = kUtility, .subType.utility = kLandfill, .fromSelling = 260, .ofCargo = kRaveJuice},
   {.type = kFactory, .subType.factory = kPerkPillFac, .fromSelling = 310, .ofCargo = kRaveJuice},
 
-  {.type = kPlant, .subType.plant = kBambooPlant, .fromSelling = 270, .ofCargo = kPerkPills},
-  {.type = kFactory, .subType.factory = kPackagingFac, .fromSelling = 320, .ofCargo = kPerkPills},
+  {.type = kPlant, .subType.plant = kBambooPlant, .fromSelling = 220, .ofCargo = kPerkPills},
+  {.type = kFactory, .subType.factory = kPackagingFac, .fromSelling = 270, .ofCargo = kPerkPills},
+  {.type = kUtility, .subType.utility = kRotavator, .fromSelling = 320, .ofCargo = kPerkPills}, // New to v1.1
   {.type = kFactory, .subType.factory = kDessertFac, .fromSelling = 370, .ofCargo = kPerkPills},
-  // Do we make it such that Dessert is needed to unlock Catering...?
   {.type = kFactory, .subType.factory = kCateringKitFac, .fromSelling = 420, .ofCargo = kPerkPills},
 
   {.type = kFactory, .subType.factory = kChineseReayMealFac, .fromSelling = 280, .ofCargo = kCateringKit},
