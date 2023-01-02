@@ -13,3 +13,7 @@ bool canBePlacedFactory(struct Location_t* _loc);
 const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _isFlavour);
 
 void drawUIInspectFactory(struct Building_t* _building);
+
+void updateFactoryUpgrade(struct Building_t* _building);
+
+void checkUpdateFactoryUpgradeAroundLoc(struct Location_t* _loc);

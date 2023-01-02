@@ -7,6 +7,8 @@
 #include "render.h"
 #include "player.h"
 #include "buildings/special.h"
+#include "buildings/factory.h"
+#include "buildings/utility.h"
 
 struct Location_t* m_locations = NULL;
 
@@ -43,18 +45,25 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
 
   if (_clearBuilding && _loc->m_building) {
     cleared = true;
-
+    const enum kBuildingType bt = _loc->m_building->m_type;
+    const union kSubType bst = _loc->m_building->m_subType;
 
     bool wideRedraw = false;
-    if (_loc->m_building->m_type == kUtility && _loc->m_building->m_subType.utility == kWell) {
+    bool checkFactoryUpgrades = false;
+    if (bt == kUtility && bst.utility == kWell) {
       // Special - well
       pauseMusic();
       setTile( getTile_idx(_loc->m_x, _loc->m_y), _loc->m_building->m_mode.mode16 ); // Undo before destroying
       doWetnessAroundLoc(_loc);
       wideRedraw = true;
+    } else if (bt == kUtility && bst.utility == kFactoryUpgrade) {
+      // Special - factory upgrade
+      checkFactoryUpgrades = true;
+    } else if (bt == kUtility && bst.utility == kRotavator) {
+      // Special - rotavator
+      destroyRotavator(_loc);
     } else if (getPlayer()->m_enableExtractorOutlines 
-      && _loc->m_building->m_type == kExtractor 
-      && (_loc->m_building->m_subType.extractor == kCropHarvesterSmall || _loc->m_building->m_subType.extractor == kCropHarvesterLarge))
+      && bt == kExtractor && (bst.extractor == kCropHarvesterSmall || bst.extractor == kCropHarvesterLarge))
     {
       // Special, harvester with outline
       pauseMusic();
@@ -66,7 +75,7 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
       return clearLocation(_loc->m_building->m_location, _clearCargo, _clearBuilding);
     }
 
-    const bool ilb = isLargeBuilding(_loc->m_building->m_type, _loc->m_building->m_subType); 
+    const bool ilb = isLargeBuilding(bt, bst); 
 
     // If multi-block, first clear the other non-owning links
     if (ilb) {
@@ -83,6 +92,8 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
       }
     }
 
+    const bool isPathOrFenceOrRotavator = bt == kUtility && (bst.utility == kPath || bst.utility == kFence || bst.utility == kRotavator);
+
     chunkRemoveBuildingRender(_loc->m_chunk, _loc->m_building);
     chunkRemoveBuildingUpdate(_loc->m_chunk, _loc->m_building);
     buildingManagerFreeBuilding(_loc->m_building);
@@ -90,15 +101,19 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
     if (wideRedraw) {
       renderChunkBackgroundImageAround(_loc->m_chunk);
       resumeMusic();
-    } else if (ilb) {
+    } else if (ilb || isPathOrFenceOrRotavator) {
       renderChunkBackgroundImageAround3x3(_loc->m_chunk, _loc);
-
     } else {
       renderChunkBackgroundImage(_loc->m_chunk);
     }
 
     _loc->m_building = NULL;
     _loc->m_notOwned = false;
+
+    if (checkFactoryUpgrades) {
+      checkUpdateFactoryUpgradeAroundLoc(_loc);
+    }
+
   }
 
   return cleared;

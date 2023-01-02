@@ -485,8 +485,16 @@ bool isGroundTile(struct Tile_t* _tile) {
   return _tile->m_tile < TOT_FLOOR_TILES_INC_PAVED;
 }
 
+bool isSoilTile(struct Tile_t* _tile) {
+  return _tile->m_tile < TOT_FLOOR_TILES;
+}
+
 bool isGroundTypeTile(int32_t _x, int32_t _y, enum kGroundType _ground) {
-  const uint16_t tValue = getTile(_x, _y)->m_tile;
+  return isGroundTypeTile_ptr(getTile(_x, _y), _ground);
+}
+
+bool isGroundTypeTile_ptr(struct Tile_t* _t, enum kGroundType _ground) {
+  const uint16_t tValue = _t->m_tile;
   return (tValue >= _ground * FLOOR_VARIETIES && tValue < (_ground + 1) * FLOOR_VARIETIES);
 }
 

@@ -364,12 +364,25 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     wideRedraw = true;
   }
 
+  // Special - factory upgrade
+  if (_type == kUtility && _subType.utility == kFactoryUpgrade) {
+    checkUpdateFactoryUpgradeAroundLoc(_loc); // New upgrade: check for factories
+  } else if (_type == kFactory) {
+    updateFactoryUpgrade(building); // New factory: check for upgrades
+  }
+
+  // Special - rotavator
+  if (_type == kUtility && _subType.utility == kRotavator) {
+    buildRotavator(_loc);
+  }
+
+  // Special - harvester borders
   if (getPlayer()->m_enableExtractorOutlines && _type == kExtractor && (_subType.extractor == kCropHarvesterSmall || _subType.extractor == kCropHarvesterLarge)) {
     if (gm != kTitles) pauseMusic();
     wideRedraw = true;
   }
 
-  const bool isPathOrFence = _type == kUtility && (_subType.utility == kPath || _subType.utility == kFence);
+  const bool isPathOrFenceOrRotavator = _type == kUtility && (_subType.utility == kPath || _subType.utility == kFence || _subType.utility == kRotavator);
 
   // The Special objects get added during gen - don't redraw for these
   if (_type != kSpecial) {
@@ -378,7 +391,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     if (wideRedraw) {
       renderChunkBackgroundImageAround(_loc->m_chunk);
       if (gm != kTitles) resumeMusic();
-    } else if (ilb || isPathOrFence) {
+    } else if (ilb || isPathOrFenceOrRotavator) {
       renderChunkBackgroundImageAround3x3(_loc->m_chunk, _loc);
     } else {
       renderChunkBackgroundImage(_loc->m_chunk);

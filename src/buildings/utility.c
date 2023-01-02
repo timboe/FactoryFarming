@@ -19,6 +19,10 @@ void bufferUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _
 
 void buildingSetupRetirement(struct Building_t* _building);
 
+void rotavatorCheckSet(struct Tile_t* _t, uint8_t* _stored);
+
+void rotavatorCheckRevert(struct Tile_t* _t, uint8_t _stored);
+
 /// ///
 
 void storageUpdateFn(struct Building_t* _building) {
@@ -64,6 +68,43 @@ void utilityUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t 
   } else if (_building->m_subType.utility == kBuffferBox) {
     return bufferUpdateFn(_building, _tickLength, _tickID, _zoom);
   }
+}
+
+void rotavatorCheckSet(struct Tile_t* _t, uint8_t* _stored) {
+  if (!isSoilTile(_t) || isGroundTypeTile_ptr(_t, kLoamyGround)) {
+    *_stored = 255;
+  } else {
+    *_stored = _t->m_tile;
+    setTile_ptr(_t, (FLOOR_VARIETIES * kLoamyGround) + rand() % FLOOR_VARIETIES);
+  }
+}
+
+void buildRotavator(struct Location_t* _loc) {
+    rotavatorCheckSet(getTile(_loc->m_x - 1, _loc->m_y + 1), &_loc->m_building->m_stored[0]);
+    rotavatorCheckSet(getTile(_loc->m_x    , _loc->m_y + 1), &_loc->m_building->m_stored[1]);
+    rotavatorCheckSet(getTile(_loc->m_x + 1, _loc->m_y + 1), &_loc->m_building->m_stored[2]);
+    rotavatorCheckSet(getTile(_loc->m_x - 1, _loc->m_y    ), &_loc->m_building->m_stored[3]);
+    rotavatorCheckSet(getTile(_loc->m_x + 1, _loc->m_y    ), &_loc->m_building->m_stored[4]);
+    rotavatorCheckSet(getTile(_loc->m_x - 1, _loc->m_y - 1), &_loc->m_building->m_stored[5]);
+    rotavatorCheckSet(getTile(_loc->m_x    , _loc->m_y - 1), &_loc->m_building->m_mode.mode8[0]);
+    rotavatorCheckSet(getTile(_loc->m_x + 1, _loc->m_y - 1), &_loc->m_building->m_mode.mode8[1]);
+}
+
+void rotavatorCheckRevert(struct Tile_t* _t, uint8_t _stored) {
+  if (_stored != 255) {
+    setTile_ptr(_t, _stored);
+  }
+}
+
+void destroyRotavator(struct Location_t* _loc) {
+    rotavatorCheckRevert(getTile(_loc->m_x - 1, _loc->m_y + 1), _loc->m_building->m_stored[0]);
+    rotavatorCheckRevert(getTile(_loc->m_x    , _loc->m_y + 1), _loc->m_building->m_stored[1]);
+    rotavatorCheckRevert(getTile(_loc->m_x + 1, _loc->m_y + 1), _loc->m_building->m_stored[2]);
+    rotavatorCheckRevert(getTile(_loc->m_x - 1, _loc->m_y    ), _loc->m_building->m_stored[3]);
+    rotavatorCheckRevert(getTile(_loc->m_x + 1, _loc->m_y    ), _loc->m_building->m_stored[4]);
+    rotavatorCheckRevert(getTile(_loc->m_x - 1, _loc->m_y - 1), _loc->m_building->m_stored[5]);
+    rotavatorCheckRevert(getTile(_loc->m_x    , _loc->m_y - 1), _loc->m_building->m_mode.mode8[0]);
+    rotavatorCheckRevert(getTile(_loc->m_x + 1, _loc->m_y - 1), _loc->m_building->m_mode.mode8[1]);
 }
 
 bool doPlaceRetirement(struct Location_t* _loc) {

@@ -7,8 +7,9 @@
 #include "../ui.h"
 #include "../chunk.h"
 
-/// ///
+int8_t locationHasUpgradeModule(int32_t _x, int32_t _y);
 
+/// ///
 
 void factoryUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
   if (_building->m_tickProcessed == _tickID) return;
@@ -25,8 +26,8 @@ void factoryUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t 
     (FDesc[fst].in5 == kNoCargo || _building->m_stored[5])) 
   {
     _building->m_progress += _tickLength;
-    if (_building->m_progress >= FDesc[fst].time * TICKS_PER_SEC) {
-      _building->m_progress -= (FDesc[fst].time * TICKS_PER_SEC);
+    if (_building->m_progress >= _building->m_mode.mode16) {
+      _building->m_progress -= _building->m_mode.mode16;
       ++_building->m_stored[0];
       for (int32_t i = 1; i < 6; ++i) if (_building->m_stored[i]) --_building->m_stored[i];
     }
@@ -126,6 +127,56 @@ void buildingSetupFactory(struct Building_t* _building) {
   }
 
 }
+
+int8_t locationHasUpgradeModule(int32_t _x, int32_t _y) {
+  struct Location_t* loc = getLocation(_x, _y);
+  return (int8_t) (loc->m_building && loc->m_building->m_type == kUtility && loc->m_building->m_subType.utility == kFactoryUpgrade);
+}
+
+
+void updateFactoryUpgrade(struct Building_t* _building) {
+  if (!_building || _building->m_type != kFactory) {
+    return;
+  }
+
+  const enum kFactorySubType fst = _building->m_subType.factory;
+  int16_t prodTime = FDesc[fst].time; // Base time
+
+  // Check for upgrade modules, there can in theory be up to 12. But in practice I/O will mean this is much smaller
+  int8_t nModules = 0;
+
+  int32_t b_x = _building->m_location->m_x;
+  int32_t b_y = _building->m_location->m_y;
+  for (int32_t x = b_x - 1; x < b_x + 2; ++x) {
+    nModules += locationHasUpgradeModule(x, b_y + 2);
+    nModules += locationHasUpgradeModule(x, b_y - 2);
+  }
+  for (int32_t y = b_y - 1; y < b_y + 2; ++y) {
+    nModules += locationHasUpgradeModule(b_x + 2, y);
+    nModules += locationHasUpgradeModule(b_x - 2, y);
+  }
+
+  prodTime -= (TICKS_PER_SEC/2) * nModules;
+
+  if (prodTime < TICKS_PER_SEC/2) {
+    prodTime = TICKS_PER_SEC/2;
+  }
+
+  _building->m_mode.mode16 = (uint16_t) prodTime;
+
+}
+
+void checkUpdateFactoryUpgradeAroundLoc(struct Location_t* _loc) {
+  struct Location_t* l = getLocation(_loc->m_x + 1, _loc->m_y);
+  if (l->m_building && l->m_building->m_type == kFactory) updateFactoryUpgrade(l->m_building);
+  l = getLocation(_loc->m_x - 1, _loc->m_y);
+  if (l->m_building && l->m_building->m_type == kFactory) updateFactoryUpgrade(l->m_building);
+  l = getLocation(_loc->m_x, _loc->m_y + 1);
+  if (l->m_building && l->m_building->m_type == kFactory) updateFactoryUpgrade(l->m_building);
+  l = getLocation(_loc->m_x, _loc->m_y - 1);
+  if (l->m_building && l->m_building->m_type == kFactory) updateFactoryUpgrade(l->m_building);
+}
+
 
 const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _isFlavour) {
   *_isFlavour = true;
@@ -726,16 +777,17 @@ void drawUIInspectFactory(struct Building_t* _building) {
   enum kFactorySubType fst = _building->m_subType.factory;
 
   static char text[128];
+  static char strFloat[16] = " ";
   uint8_t y = 1;
   snprintf(text, 128, "%s (%s)",
     toStringBuilding(_building->m_type, _building->m_subType, false),
     getRotationAsString(kUICatFactory, _building->m_subType.factory, _building->m_dir));
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
-  snprintf(text, 128, "Prod. Time: %is", FDesc[fst].time);
+  snprintf(text, 128, "Prod. Time: %ss", ftos(_building->m_mode.mode16 / (float)TICKS_PER_SEC, 16, strFloat));
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*6 - TUT_Y_SHFT);
 
-  snprintf(text, 128, "Time Remaining: %is", FDesc[fst].time - (_building->m_progress) / TICKS_PER_SEC);
+  snprintf(text, 128, "Time Remaining: %ss", ftos((_building->m_mode.mode16 -_building->m_progress) / (float)TICKS_PER_SEC, 16, strFloat));
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*13, TUT_Y_SPACING*6 - TUT_Y_SHFT);
 
   snprintf(text, 128, "Out:      %.*s (%i)", STR_PRINT_LEN, toStringCargoByType( FDesc[fst].out, /*plural=*/(_building->m_stored[0] != 1) ), _building->m_stored[0]);

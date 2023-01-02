@@ -17,3 +17,7 @@ bool doPlaceLandfill(struct Location_t* _loc);
 bool doPlaceRetirement(struct Location_t* _loc);
 
 int16_t distanceFromRetirement(void);
+
+void buildRotavator(struct Location_t* _loc);
+
+void destroyRotavator(struct Location_t* _loc);

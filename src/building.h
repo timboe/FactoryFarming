@@ -127,7 +127,7 @@ struct Building_t{
   // Plant (16): how many plants have grown
   // Well (16): The underlying tile type, before we overwrote it with water (replaced on destruct)
   // Import box (8,8): The ID [0] and capacity [1] of the 4th item slot: West. (N, E, S are stored in m_stored)
-  // Factory: Not used
+  // Factory (16): Production time in ticks
   union kMode m_mode; 
   // m_stored
   // For locations which store/produce fixed items, location 0 is always for produced items, 1-5 for inputs.
