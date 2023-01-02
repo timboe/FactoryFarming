@@ -2088,7 +2088,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 0: return "-- The Initial Seed Purchase --";
         case 1: return "Welcome to Factory Farming! There's money to be";
         case 2: return "made, and it won't make itself! So let's get started by";
-        case 3: return "vising the shop with Ⓐ and buying some carrot seeds";
+        case 3: return "visiting the shop with Ⓐ and buying some carrot seeds";
         case 4: return "The compass (right) will always point to the shop.";
 
         case 5: return "Move with the D-Pad, ✛. Zoom in & out with 🎣.";
