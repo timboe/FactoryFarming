@@ -13,15 +13,15 @@ struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kCarrot, .price = 0, .multi = 1.0f, .UIIcon = SID(10,7)}, // Set by hand
   {.subType = kChalk, .price = 0, .multi = 1.0f, .UIIcon = SID(13,7)}, // Set by hand
   {.subType = kVitamin, .price = 0, .multi = 4.0f, .UIIcon = SID(12,8)}, // Set by hand
-  {.subType = kSunflower, .price = 0, .multi = 2.0f, .UIIcon = SID(15,7)}, // CROP
-  {.subType = kPotato, .price = 0, .multi = 2.0f, .UIIcon = SID(14,7)}, // CROP
+  {.subType = kSunflower, .price = 0, .multi = 2.0f, .UIIcon = SID(14,24)}, // CROP
+  {.subType = kPotato, .price = 0, .multi = 2.0f, .UIIcon = SID(12,24)}, // CROP
   {.subType = kOil, .price = 0, .multi = 2.0f, .UIIcon = SID(12,7)},
   {.subType = kSalt, .price = 0, .multi = 2.0f, .UIIcon = SID(13,8)}, // Set by hand
   {.subType = kCrisps, .price = 0, .multi = 2.0f, .UIIcon = SID(0,21)},
   {.subType = kApple, .price = 0, .multi = 2.0f, .UIIcon = SID(8,7)}, // CROP
   {.subType = kWaterBarrel, .price = 0, .multi = 1.0f, .UIIcon = SID(0,24)}, // Set by hand
   {.subType = kEthanol, .price = 0, .multi = 2.0f, .UIIcon = SID(6,23)},
-  {.subType = kHardCider, .price = 0, .multi = 2.0f, .UIIcon = SID(14,5)},
+  {.subType = kHardCider, .price = 0, .multi = 2.0f, .UIIcon = SID(10,24)},
   {.subType = kCorn, .price = 0, .multi = 1.5f, .UIIcon = SID(2,22)}, // CROP
   {.subType = kSeaweed, .price = 0, .multi = 0.5f, .UIIcon = SID(3,22)}, // CROP
   {.subType = kMeat, .price = 0, .multi = 2.0f, .UIIcon = SID(9,8)},
@@ -40,10 +40,10 @@ struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kHFCS, .price = 0, .multi = 1.5f, .UIIcon = SID(1,24)},
   {.subType = kGelatin, .price = 0, .multi = 1.5f, .UIIcon = SID(8,24)},
   {.subType = kJelly, .price = 0, .multi = 1.5f, .UIIcon = SID(10,6)},
-  {.subType = kJelloShot, .price = 0, .multi = 1.5f, .UIIcon = SID(15,5)},
+  {.subType = kJelloShot, .price = 0, .multi = 1.5f, .UIIcon = SID(9,24)},
   {.subType = kStrawberry, .price = 0, .multi = 1.5f, .UIIcon = SID(5,22)}, // CROP
   {.subType = kEmulsifiers, .price = 0, .multi = 1.5f, .UIIcon = SID(6,24)},
-  {.subType = kIceCream, .price = 0, .multi = 1.5f, .UIIcon = SID(8,23)},
+  {.subType = kIceCream, .price = 0, .multi = 1.5f, .UIIcon = SID(8,25)},
   {.subType = kEggs, .price = 0, .multi = 1.5f, .UIIcon = SID(2,24)},
   {.subType = kSpareCargo4, .price = DIS, .multi = 0.0f, .UIIcon = SID(0,0)},
   {.subType = kSpareCargo5, .price = DIS, .multi = 0.0f, .UIIcon = SID(0,0)},
@@ -60,8 +60,8 @@ struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kCO2, .price = 0, .multi = 1.0f, .UIIcon = SID(2,23)}, // Set by hand
   {.subType = kCaffeine, .price = 0, .multi = 1.5f, .UIIcon = SID(3,23)},
   {.subType = kEnergyDrink, .price = 0, .multi = 1.3f, .UIIcon = SID(13,6)},
-  {.subType = kRaveJuice, .price = 0, .multi = 1.3f, .UIIcon = SID(14,6)},
-  {.subType = kPerkPills, .price = 0, .multi = 1.5f, .UIIcon = SID(15,6)},
+  {.subType = kRaveJuice, .price = 0, .multi = 1.3f, .UIIcon = SID(11,24)},
+  {.subType = kPerkPills, .price = 0, .multi = 1.5f, .UIIcon = SID(9,5)},
   {.subType = kBamboo, .price = 0, .multi = 0.1f, .UIIcon = SID(7,25)}, // CROP
   {.subType = kPackaging, .price = 0, .multi = 1.5f, .UIIcon = SID(11,5)},
   {.subType = kDessert, .price = 0, .multi = 1.5f, .UIIcon = SID(10,5)},
