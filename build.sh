@@ -14,6 +14,10 @@ sed 's|uk.co.tim-martin.factoryfarmingtechdemo|uk.co.tim-martin.factoryfarming|g
 
 make
 
+rm -r FactoryFarming.pdx/demo
+rm FactoryFarming.pdx/player_2.json
+rm FactoryFarming.pdx/world_2_1.json
+
 zip -r -q FactoryFarmingTechDemo_v1.1.pdx.zip FactoryFarmingTechDemo.pdx
 
 zip -r -q FactoryFarming_v1.1.pdx.zip FactoryFarming.pdx

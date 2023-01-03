@@ -53,7 +53,9 @@ void decodeError(json_decoder* jd, const char* _error, int _linenum);
 
 void willDecodeSublist(json_decoder* jd, const char* _name, json_value_type _type);
 
-void scanDidDecode(json_decoder* jd, const char* _key, json_value _value);
+void scanDidDecodeSaveFormat(json_decoder* jd, const char* _key, json_value _value);
+
+void deserialiseValueSaveFormat(json_decoder* jd, const char* _key, json_value _value);
 
 int scanShouldDecodeTableValueForKey(json_decoder* jd, const char* _key);
 
@@ -294,7 +296,7 @@ void scanSlots() {
 
     json_decoder jd = {
       .decodeError = decodeError,
-      .didDecodeTableValue = scanDidDecode,
+      .didDecodeTableValue = scanDidDecodeSaveFormat,
       .shouldDecodeTableValueForKey = scanShouldDecodeTableValueForKey
     };
 
@@ -318,8 +320,8 @@ void scanSlots() {
         m_worldExists[m_save][ss] = false;
       } else if (m_worldVersions[m_save][ss] < EARLIEST_SUPPORTED_SAVE_FORMAT) {
         #ifdef DEV
-        pd->system->logToConsole("Scan world: OLD WORLD DETECTED! Version %i != %i."
-          " ACTION: Delete everything and start again", m_worldVersions[m_save][ss], SAVE_FORMAT);
+        pd->system->logToConsole("Scan world: PRE-BETA WORLD DETECTED! Version %i < %i."
+          " ACTION: Delete everything and start again", m_worldVersions[m_save][ss], EARLIEST_SUPPORTED_SAVE_FORMAT);
         #endif
         m_foundSaveData[m_save] = false;
         m_worldExists[m_save][ss] = false;
@@ -354,11 +356,19 @@ int scanShouldDecodeTableValueForKey(json_decoder* jd, const char* _key) {
   return (strcmp(_key, "sf") == 0);
 }
 
-void scanDidDecode(json_decoder* jd, const char* _key, json_value _value) {
+void scanDidDecodeSaveFormat(json_decoder* jd, const char* _key, json_value _value) {
   if (strcmp(_key, "sf") == 0) {
     m_worldVersions[m_save][m_scanSlot] = json_intValue(_value);
   } else {
-    pd->system->error("scanDidDecode DECODE ISSUE, %s", _key);
+    pd->system->error("scanDidDecodeSaveFormat DECODE ISSUE, %s", _key);
+  }
+}
+
+void deserialiseValueSaveFormat(json_decoder* jd, const char* _key, json_value _value) {
+  if (strcmp(_key, "sf") == 0) {
+    m_worldVersions[m_save][m_slot] = json_intValue(_value);
+  } else {
+    pd->system->error("deserialiseValueSaveFormat DECODE ISSUE, %s", _key);
   }
 }
 
@@ -583,6 +593,14 @@ bool doLoad() {
 
   } else if (m_actionProgress == 5) {
 
+    // SCHEMA EVOLUTION - V4 to V5 (v1.0 to v1.1)
+    if (m_worldVersions[m_save][m_slot] == V1p0_SAVE_FORMAT) {
+      m_worldVersions[m_save][m_slot] = V1p1_SAVE_FORMAT;
+      // Nothing to do
+      pd->system->logToConsole("-- Performed world schema evolution from v%i to v%i (Save:%i, World:%i)", V1p0_SAVE_FORMAT, V1p1_SAVE_FORMAT, m_save, m_slot);
+    }
+
+
     // Things which need to run post-load
     setGameMode(kWanderMode);
 
@@ -616,7 +634,7 @@ void willDecodeSublist(json_decoder* jd, const char* _name, json_value_type _typ
   truncated[5] = '\0';
 
   if (strcmp(truncated, "sf") == 0 && _type == kJSONTable) {
-    jd->didDecodeTableValue = NULL;
+    jd->didDecodeTableValue = deserialiseValueSaveFormat;
   } else if (m_actionProgress == 1 && strcmp(truncated, "cargo") == 0 && _type == kJSONTable) {
     jd->didDecodeTableValue = deserialiseValueCargo;
     jd->didDecodeSublist = deserialiseStructDoneCargo;

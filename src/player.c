@@ -869,6 +869,20 @@ void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_valu
     (int32_t)m_player.m_pix_x, (int32_t)m_player.m_pix_y, m_currentLocation->m_x, m_currentLocation->m_y, m_player.m_money, m_player.m_buildingsUnlockedTo);
   #endif
 
+  // SCHEMA EVOLUTION - V4 to V5 (v1.0 to v1.1)
+  if (m_player.m_saveFormat == V1p0_SAVE_FORMAT) {
+    m_player.m_saveFormat = V1p1_SAVE_FORMAT;
+    const uint32_t prevUnlockedTo = m_player.m_buildingsUnlockedTo; 
+    if (prevUnlockedTo >= 65) { // Dessert Factory from 1.0
+      m_player.m_buildingsUnlockedTo += 4;
+    } else if (prevUnlockedTo >= 46) { // Conveyor Grease from 1.0
+      m_player.m_buildingsUnlockedTo += 3;
+    } else if (prevUnlockedTo >= 26) { // Sign from 1.0
+      m_player.m_buildingsUnlockedTo += 2;
+    }
+    pd->system->logToConsole("-- Performed player schema evolution from v%i to v%i, UnlockedTo:%i -> %i", V1p0_SAVE_FORMAT, V1p1_SAVE_FORMAT, prevUnlockedTo, m_player.m_buildingsUnlockedTo);
+  }
+
   m_deserialiseArrayID = -1;
 
   return NULL;

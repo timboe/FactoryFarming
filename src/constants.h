@@ -1,5 +1,5 @@
 
-#define DEV
+//#define DEV
 
 //#define SSHOT_ON_AUTOSAVE
 
