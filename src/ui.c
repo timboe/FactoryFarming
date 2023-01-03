@@ -760,28 +760,28 @@ const char* getRotationAsString(enum kUICat _cat, int16_t _selectedID, uint16_t 
   }
 
   switch (_selectedID) {
-    case kBelt:; case kTunnelIn:; case kTunnelOut:;
+    case kBelt: case kTunnelIn: case kTunnelOut:
       switch (_rotation) {
         case 0: return "N";
         case 1: return "E";
         case 2: return "S";
         case 3: return "W";
       }
-    case kSplitI:; case kFilterI:;
+    case kSplitI: case kFilterI: case kOverflowI:
       switch (_rotation) {
         case 0: return "W, E";
         case 1: return "N, S";
         case 2: return "W, E";
         case 3: return "N, S";
       }
-    case kSplitL:; case kFilterL:;
+    case kSplitL: case kFilterL: case kOverflowL:
       switch (_rotation) {
         case 0: return "N, E";
         case 1: return "E, S";
         case 2: return "S, W";
         case 3: return "W, N";
       }
-    case kSplitT:;
+    case kSplitT:
       switch (_rotation) {
         case 0: return "W, N, E";
         case 1: return "N, E, S";

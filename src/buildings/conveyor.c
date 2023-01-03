@@ -12,10 +12,14 @@ const char* getTransitText(int8_t _d);
 
 void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, bool _nearTick, uint8_t _zoom);
 
+bool recursiveGetIsAbleToMove(struct Location_t* _nextLoc, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom);
+
 #define CONV_SPEED 0
 #define CONV_X 1
 #define CONV_Y 2
 #define CONV_HIDE 3
+
+/// ///
 
 void conveyorLocationUpdate(struct Building_t* _building, uint8_t _zoom) {
   const int8_t x = (int8_t) _building->m_stored[CONV_X];
@@ -45,6 +49,22 @@ void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, boo
   }
 }
 
+bool recursiveGetIsAbleToMove(struct Location_t* _nextLoc, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
+  if (_nextLoc->m_cargo != NULL) {
+    // Cascade the call
+    struct Building_t* nextBuilding = _nextLoc->m_building;
+    if (nextBuilding == NULL || m_recursionCount >= MAX_RECURSION || _nextLoc->m_chunk->m_isNearTick != (_tickLength == NEAR_TICK_AMOUNT)) {
+      return false;
+    } else {
+      // Cuation: When calling into other conveyors this is a potentially recursive fn!
+      (*nextBuilding->m_updateFn)(nextBuilding, _tickLength, _tickID, _zoom);
+      // We might have been able to move the cargo on/into a building, check again
+      return (_nextLoc->m_cargo == NULL);
+    }
+  }
+  return true;
+}
+
 
 void conveyorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
   struct Location_t* loc = _building->m_location;
@@ -61,6 +81,8 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t
   const bool nearTick = (_tickLength == NEAR_TICK_AMOUNT);
   #endif
 
+  const enum kConvSubType bst = _building->m_subType.conveyor;
+
   
   // if (_building->m_subType.conveyor == kTunnelIn) _tick /= 2; // As travelling two tiles. But tricky, near tick amount is 1...
 
@@ -70,7 +92,7 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t
 
     // Handle filters vs. splitters
     enum kDir direction;
-    if (_building->m_subType.conveyor >= kFilterL) {
+    if (bst >= kFilterL) {
       // First encounter with an object?
       if (_building->m_mode.mode16 == kNoCargo) {
         _building->m_mode.mode16 = loc->m_cargo->m_type; // Note: This CANNOT be undone without destroying the building
@@ -86,7 +108,7 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t
   #ifdef ONLY_SLOW_TICKS
   else { 
     enum kDir direction;
-    if (_building->m_subType.conveyor >= kFilterL) {
+    if (bst >= kFilterL) {
       if (_building->m_mode.mode16 == kNoCargo) {
         _building->m_mode.mode16 = _building->m_location->m_cargo->m_type;
       }
@@ -103,27 +125,20 @@ void conveyorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t
 
   // Handle filters vs. splitters
   struct Location_t* nextLoc = NULL;
-  if (_building->m_subType.conveyor >= kFilterL) {
+  if (bst >= kFilterL) {
     nextLoc = (_building->m_mode.mode16 == loc->m_cargo->m_type ? _building->m_next[1] :  _building->m_next[0]);  
   } else {
     nextLoc = _building->m_next[_building->m_mode.mode16];
   }
 
-  bool ableToMove = true;
-  if (nextLoc->m_cargo != NULL) {
+  bool ableToMove = recursiveGetIsAbleToMove(nextLoc, _tickLength, _tickID, _zoom);
 
-    // Cascade the call
-    struct Building_t* nextBuilding = nextLoc->m_building;
-    if (nextBuilding == NULL || m_recursionCount >= MAX_RECURSION || nextLoc->m_chunk->m_isNearTick != nearTick) {
-      ableToMove = false;
-    } else {
-      // Cuation: When calling into other conveyors this is a potentially recursive fn!
-      (*nextBuilding->m_updateFn)(nextBuilding, _tickLength, _tickID, _zoom);
-      // We might have been able to move the cargo on/into a building, check again
-      ableToMove = (nextLoc->m_cargo == NULL);
-    }
-
-  } 
+  // Handle overflow
+  if (!ableToMove && (bst == kOverflowI || bst == kOverflowL)) {
+    // Try again 
+    nextLoc = _building->m_next[1];
+    ableToMove = recursiveGetIsAbleToMove(nextLoc, _tickLength, _tickID, _zoom);
+  }
  
   if (!ableToMove) return;
 
@@ -176,7 +191,7 @@ void updateConveyorDirection(struct Building_t* _building, uint8_t _tickLength, 
   switch (_building->m_subType.conveyor) {
     case kSplitI:; case kSplitL:; proposedNext = (_building->m_mode.mode16 + 1) % 2; break;
     case kSplitT:; proposedNext = (_building->m_mode.mode16 + 1) % 3; break;
-    default:; // NOTE: We catch kFilterX etc. here and do NOT update m_mode for filters
+    default:; // NOTE: We catch kFilterX etc. here and do NOT update m_mode for filters, regular belts, or overflows
   }
 
   if (proposedNext == -1) return;
@@ -184,40 +199,20 @@ void updateConveyorDirection(struct Building_t* _building, uint8_t _tickLength, 
   // Update nextLoc to the _proposed_ next location for this splitter
   struct Location_t* nextLoc = _building->m_next[proposedNext];
 
-  bool ableToSwitch = true;
-  if (nextLoc->m_cargo != NULL) {
-
-    // Cascade the call
-    struct Building_t* nextBuilding = nextLoc->m_building;
-    if (nextBuilding == NULL || m_recursionCount >= MAX_RECURSION) {
-      ableToSwitch = false;
-    } else {
-      // Cuation: When calling into other conveyors this is a potentially recursive fn!
-      (*nextBuilding->m_updateFn)(nextBuilding, _tickLength, _tickID, _zoom);
-      // We might have been able to move the cargo on/into a building, check again
-      ableToSwitch = (nextLoc->m_cargo == NULL);
-    }
-
-  } 
+  const bool ableToSwitch = recursiveGetIsAbleToMove(nextLoc, _tickLength, _tickID, _zoom);;
 
   if (ableToSwitch) _building->m_mode.mode16 = proposedNext;
 }
 
 
-void moveCargo(struct Location_t* _loc, struct Location_t* _nextLoc, bool _nearTick, uint8_t _tickID, uint8_t _zoom) {
-
-}
-
 bool canBePlacedConveyor(struct Location_t* _loc, enum kDir _dir, union kSubType _subType) {
   bool floor = false;
   struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
   if (t->m_tile < TOT_FLOOR_TILES_INC_PAVED) floor = true;
-  //else if (t->m_tile >= SPRITE16_ID(8, 16) && t->m_tile < SPRITE16_ID(8+4, 16)) floor = true; // what was this for?  Paved?
 
   if (_subType.conveyor == kTunnelIn) {
     t = getTunnelOutTile(_loc, _dir);
     floor &= (t->m_tile < TOT_FLOOR_TILES_INC_PAVED);
-    //else if (t->m_tile >= SPRITE16_ID(8, 16) && t->m_tile < SPRITE16_ID(8+4, 16)) floor &= true; // what was this for? Paved?
   }
 
   if (!floor) return false;
@@ -293,7 +288,7 @@ void assignNeighborsConveyor(struct Building_t* _building) {
     case W: _building->m_next[1] = left;  _building->m_nextDir[1] = EW; break;
   }
 
-  if (bst == kSplitI || bst == kFilterI || bst == kSplitL || bst == kFilterL ) return;
+  if (bst == kSplitI || bst == kFilterI || bst == kSplitL || bst == kFilterL || bst == kOverflowI || bst == kOverflowL) return;
 
   switch (getConveyorDirection(bst, _building->m_dir, 2)) {
     case N: _building->m_next[2] = above; _building->m_nextDir[2] = SN; break;
@@ -313,7 +308,7 @@ int8_t getConveyorDirection(enum kConvSubType _subType, enum kDir _dir, uint8_t 
       case EW:; return W;
       case kDirN:; return 4;
     }
-  } else if (_subType == kSplitI || _subType == kFilterI) {
+  } else if (_subType == kSplitI || _subType == kFilterI || _subType == kOverflowI) {
     switch (_dir) {
       case WE:; if (_progress == 0) { return N; } else { return S; }
       case SN:; if (_progress == 0) { return W; } else { return E; }
@@ -321,7 +316,7 @@ int8_t getConveyorDirection(enum kConvSubType _subType, enum kDir _dir, uint8_t 
       case NS:; if (_progress == 0) { return E; } else { return W; }
       case kDirN:; return 4;
     }
-  } else if (_subType == kSplitL || _subType == kFilterL) {
+  } else if (_subType == kSplitL || _subType == kFilterL || _subType == kOverflowL) {
     switch (_dir) {
       case SN:; if (_progress == 0) { return N; } else { return E; }
       case WE:; if (_progress == 0) { return E; } else { return S; }
@@ -411,7 +406,9 @@ void drawUIInspectConveyor(struct Building_t* _building) {
   pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   if (_building->m_subType.conveyor >= kFilterL) {
     if (_building->m_mode.mode16 == kNoCargo) {
-      snprintf(text, 128, "Filter Not Yet Set");
+      snprintf(text, 128, "Filter not yet set.");
+      pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+      snprintf(text, 128, "Pass cargo through to set the filter.");
       pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
     } else {
       snprintf(text, 128, "Filters On:      %s", toStringCargoByType(_building->m_mode.mode16, /*plural=*/true));

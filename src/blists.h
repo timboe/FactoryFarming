@@ -9,8 +9,8 @@ enum kConvSubType{
   kSpareConv1, // SPARE SLOT (Game Expansions)
   kTunnelIn, 
   kTunnelOut,
-  kSpareConv2, // SPARE SLOT (Game Expansions)
-  kSpareConv3,  // SPARE SLOT (Game Expansions)
+  kOverflowL, // New to v1.1, was spare 3
+  kOverflowI, // New to v1.1, was spare 4
   kFilterL, 
   kFilterI,
   kSpareConv4, // SPARE SLOT (Game Expansions)
@@ -38,7 +38,7 @@ enum kPlantSubType{
   kLimeTree, // Desert
   kSparePlant6, // SPARE SLOT (Game Expansions)
   kSparePlant7, // SPARE SLOT (Game Expansions)
-  kStrawberryPlant, // Clay - Need to do more with this
+  kStrawberryPlant, // Clay
   kCocoaPlant, // Clay 
   kSparePlant8, // SPARE SLOT (Game Expansions)
   kSparePlant9, // SPARE SLOT (Game Expansions)

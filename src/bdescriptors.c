@@ -13,8 +13,8 @@ struct ConveyorDescriptor_t CDesc[] = {
   {.subType = kSpareConv1, .unlock = DIS, .price = DIS,        .UIIcon = SID(0,0),   .spriteX = 0,  .spriteY = 0},
   {.subType = kTunnelIn,   .unlock = 1,   .price = 1000,       .UIIcon = SID(8,17),  .spriteX = 8,  .spriteY = 11},
   {.subType = kTunnelOut,  .unlock = DIS, .price = UINT32_MAX, .UIIcon = SID(9,10),  .spriteX = 9,  .spriteY = 11},
-  {.subType = kSpareConv2, .unlock = DIS, .price = DIS,        .UIIcon = SID(0,0),   .spriteX = 0,  .spriteY = 0},
-  {.subType = kSpareConv3, .unlock = DIS, .price = DIS,        .UIIcon = SID(0,0),   .spriteX = 0,  .spriteY = 0},
+  {.subType = kOverflowL,  .unlock = 1,   .price = 2000,       .UIIcon = SID(8,23),  .spriteX = 14, .spriteY = 5},
+  {.subType = kOverflowI,  .unlock = 1,   .price = 2000,       .UIIcon = SID(12,23), .spriteX = 15, .spriteY = 5},
   {.subType = kFilterL,    .unlock = 1,   .price = 2500,       .UIIcon = SID(8,20),  .spriteX = 3,  .spriteY = 11},
   {.subType = kFilterI,    .unlock = 1,   .price = 2500,       .UIIcon = SID(12,20), .spriteX = 10, .spriteY = 11},
   {.subType = kSpareConv4, .unlock = DIS, .price = DIS,        .UIIcon = SID(0,0),   .spriteX = 0,  .spriteY = 0},
@@ -195,6 +195,8 @@ struct UnlockDescriptor_t UnlockDecs[] = {
   {.type = kFactory, .subType.factory = kHydrogenFac, .fromSelling = 150, .ofCargo = kMeat},
   {.type = kFactory, .subType.factory = kHOILFac, .fromSelling = 200, .ofCargo = kMeat},
   {.type = kFactory, .subType.factory = kCornDogFac, .fromSelling = 250, .ofCargo = kMeat},
+  {.type = kConveyor, .subType.conveyor = kOverflowL, .fromSelling = 275, .ofCargo = kMeat}, // New to v1.1
+  {.type = kConveyor, .subType.conveyor = kOverflowI, .fromSelling = 300, .ofCargo = kMeat}, // New to v1.1
 
   {.type = kUtility, .subType.utility = kSign, .fromSelling = 110, .ofCargo = kCornDog},
   {.type = kPlant, .subType.plant = kWheatPlant, .fromSelling = 160, .ofCargo = kCornDog},
@@ -224,7 +226,7 @@ struct UnlockDescriptor_t UnlockDecs[] = {
   {.type = kUtility, .subType.utility = kStorageBox, .fromSelling = 110, .ofCargo = kStrawberry},
   {.type = kUtility, .subType.utility = kBuffferBox, .fromSelling = 140, .ofCargo = kStrawberry},
 
-  {.type = kUtility, .subType.utility = kFactoryUpgrade, .fromSelling = 60, .ofCargo = kChocolate}, // New to v1.1
+  {.type = kUtility, .subType.utility = kFactoryUpgrade, .fromSelling = 60, .ofCargo = kIceCream}, // New to v1.1
   {.type = kFactory, .subType.factory = kBatteryFarm, .fromSelling = 100, .ofCargo = kIceCream},
   {.type = kUtility, .subType.utility = kConveyorGrease, .fromSelling = 140, .ofCargo = kIceCream},
   {.type = kFactory, .subType.factory = kProteinFac, .fromSelling = 180, .ofCargo = kIceCream},
@@ -264,7 +266,7 @@ struct UnlockDescriptor_t UnlockDecs[] = {
 
   {.type = kFactory, .subType.factory = kParfumeFac, .fromSelling = 30, .ofCargo = kSeaCucumber},
 
-  // Note: Health Supliment are used to unlock World 8
+  // Note: Miracle Powder is used to unlock World 8
   {.type = kFactory, .subType.factory = kMiraclePowderFac, .fromSelling = 250, .ofCargo = kParfume},
   {.type = kUtility, .subType.utility = kRetirement, .fromSelling = 300, .ofCargo = kParfume},
 

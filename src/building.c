@@ -48,8 +48,10 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kFilterI: return _inworld ? "'I' Filter" : "Conveyor Belt 'I' Filter";
       case kFilterL: return _inworld ? "'L' Filter" : "Conveyor Belt 'L' Filter";
       case kTunnelIn: case kTunnelOut: return _inworld ? "Tunnel" : "Conveyor Belt Tunnel";
-      case kSpareConv0: case kSpareConv1: case kSpareConv2: case kSpareConv3:
-      case kSpareConv4: case kSpareConv5: case kSpareConv6: case kSpareConv7: 
+      case kOverflowI: return _inworld ? "'I' Overflow" : "Conveyor Belt 'I' Overflow";
+      case kOverflowL: return _inworld ? "'L' Overflow" : "Conveyor Belt 'L' Overflow";
+      case kSpareConv0: case kSpareConv1: case kSpareConv4: case kSpareConv5:
+      case kSpareConv6: case kSpareConv7: 
       case kNConvSubTypes: return "C_PLACEHOLDER";
     }
     case kPlant: switch (_subType.plant) {
