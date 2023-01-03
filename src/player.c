@@ -39,6 +39,8 @@ void updatePlayerPosition(void);
 
 void playerSpriteSetup(void);
 
+void flipCamera(void);
+
 /// ///
 
 const char* toStringTool(enum kToolType _type) {
@@ -144,14 +146,6 @@ void nextTutorialStage() {
   showTutorialMsg(m_player.m_enableTutorial);
 }
 
-int16_t getOffX() {
-  return m_offX;
-}
-
-int16_t getOffY() {
-  return m_offY;
-}
-
 struct Player_t* getPlayer() {
   return &m_player;
 }
@@ -169,15 +163,21 @@ struct Location_t* getPlayerLocation() {
 }
 
 void setPlayerPosition(uint16_t _x, uint16_t _y, bool _updateCurrentLocation) {
+  // keep track of camera offset and preserve it
+  const float cOffX = m_player.m_camera_pix_x - m_player.m_pix_x;
+  const float cOffY = m_player.m_camera_pix_y - m_player.m_pix_y; 
   pd->sprite->moveTo(m_player.m_sprite[1], _x, _y); // Note: Hard coded two zoom levels
   pd->sprite->moveTo(m_player.m_sprite[2], _x * 2, _y * 2);
   updatePlayerPosition();
+  // reset camera
+  m_player.m_camera_pix_x = m_player.m_pix_x - cOffX;
+  m_player.m_camera_pix_y = m_player.m_pix_y - cOffY;
   if (_updateCurrentLocation) {
     m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
     m_currentChunk = getChunk(m_player.m_pix_x / CHUNK_PIX_X, m_player.m_pix_y / CHUNK_PIX_Y);
     uint8_t zoom = getZoom();
-    m_offX = -(m_player.m_pix_x*zoom - (SCREEN_PIX_X/2));
-    m_offY = -(m_player.m_pix_y*zoom - (SCREEN_PIX_Y/2));
+    //m_offX = -(m_player.m_pix_x*zoom - (SCREEN_PIX_X/2));
+    //m_offY = -(m_player.m_pix_y*zoom - (SCREEN_PIX_Y/2));
   }
 }
 
@@ -195,6 +195,11 @@ void updatePlayerPosition() {
   m_player.m_pix_x = m_player.m_pix_x / zoom;
   m_player.m_pix_y = m_player.m_pix_y / zoom;
   //pd->system->logToConsole("P@ %f %f", m_player.m_pix_x , m_player.m_pix_y);
+}
+
+void flipCamera() {
+  m_player.m_camera_pix_x += 2 * (m_player.m_pix_x - m_player.m_camera_pix_x);
+  m_player.m_camera_pix_y += 2 * (m_player.m_pix_y - m_player.m_camera_pix_y);
 }
 
 bool movePlayer(bool _forceUpdate) {
@@ -311,31 +316,42 @@ bool movePlayer(bool _forceUpdate) {
   movePlayerPosition(goalX, goalY);
 
   if (m_player.m_pix_x > TOT_WORLD_PIX_X) {
+    flipCamera();
     setPlayerPosition(m_player.m_pix_x - TOT_WORLD_PIX_X, m_player.m_pix_y, /*update current location = */ false);
-    m_offX += TOT_WORLD_PIX_X;
   } else if (m_player.m_pix_x < 0) {
+    flipCamera();
     setPlayerPosition(m_player.m_pix_x + TOT_WORLD_PIX_X, m_player.m_pix_y, /*update current location = */ false);
-    m_offX -= TOT_WORLD_PIX_X;
   }
 
   if (m_player.m_pix_y > TOT_WORLD_PIX_Y) {
+    flipCamera();
     setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y - TOT_WORLD_PIX_Y, /*update current location = */ false);
-    m_offY += TOT_WORLD_PIX_Y;
   } else if (m_player.m_pix_y < 0) {
+    flipCamera();
     setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y + TOT_WORLD_PIX_Y, /*update current location = */ false);
-    m_offY -= TOT_WORLD_PIX_Y;
   }
 
-  m_offX = -(m_player.m_pix_x*zoom - (SCREEN_PIX_X/2));
-  m_offY = -(m_player.m_pix_y*zoom - (SCREEN_PIX_Y/2));
+  const static int16_t MOVE_THRESHOLD_X = (SCREEN_PIX_X * 0.8f) - (SCREEN_PIX_X/2); 
+  if (m_player.m_pix_x - m_player.m_camera_pix_x > MOVE_THRESHOLD_X / zoom) {
+    m_player.m_camera_pix_x = m_player.m_pix_x - (MOVE_THRESHOLD_X / zoom); 
+  } else if (m_player.m_pix_x - m_player.m_camera_pix_x < -(MOVE_THRESHOLD_X / zoom)) {
+    m_player.m_camera_pix_x = m_player.m_pix_x + (MOVE_THRESHOLD_X / zoom);
+  }
+
+  const static int16_t MOVE_THRESHOLD_Y = (SCREEN_PIX_Y * 0.8f) - (SCREEN_PIX_Y/2); 
+  if (m_player.m_pix_y - m_player.m_camera_pix_y > MOVE_THRESHOLD_Y / zoom) {
+    m_player.m_camera_pix_y = m_player.m_pix_y - (MOVE_THRESHOLD_Y / zoom); 
+  } else if (m_player.m_pix_y - m_player.m_camera_pix_y < -(MOVE_THRESHOLD_Y / zoom)) {
+    m_player.m_camera_pix_y = m_player.m_pix_y + (MOVE_THRESHOLD_Y / zoom);
+  }
 
   // Check chunk change
-  uint16_t chunkX = m_player.m_pix_x / (CHUNK_PIX_X);
-  uint16_t chunkY = m_player.m_pix_y / (CHUNK_PIX_Y);
+  uint16_t chunkX = m_player.m_camera_pix_x / (CHUNK_PIX_X);
+  uint16_t chunkY = m_player.m_camera_pix_y / (CHUNK_PIX_Y);
 
   // Subchunk change
-  uint8_t subChunkX = (int16_t)m_player.m_pix_x / (CHUNK_PIX_X/2) % 2;
-  uint8_t subChunkY = (int16_t)m_player.m_pix_y / (CHUNK_PIX_Y/2) % 2;
+  uint8_t subChunkX = m_player.m_camera_pix_x / (CHUNK_PIX_X/2) % 2;
+  uint8_t subChunkY = m_player.m_camera_pix_y / (CHUNK_PIX_Y/2) % 2;
   enum kChunkQuad quadrant = NW;
   if (subChunkX && subChunkY) {
     quadrant = SE;
@@ -517,8 +533,10 @@ void resetPlayer() {
   m_player.m_playTime = 0;
   m_player.m_tutorialProgress = 0; // Note: not tutorial _stage_ (this is in m_enableTutorial)
   m_player.m_infiniteMoney = false;
-  m_offX = 0;
-  m_offY = 0;
+  m_player.m_pix_x = 0;
+  m_player.m_pix_y = 0;
+  m_player.m_camera_pix_x = 0;
+  m_player.m_camera_pix_y = 0;
   if (m_player.m_enableTutorial != TUTORIAL_DISABLED) m_player.m_enableTutorial = 0;
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_carryCargo[i] = 0;
   for (int32_t i = 0; i < kNConvSubTypes; ++i) m_player.m_carryConveyor[i] = 0;

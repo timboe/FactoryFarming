@@ -90,10 +90,8 @@ struct Tile_t* getTileInChunk(struct Chunk_t* _chunk, int32_t _u, int32_t _v) {
 }
 
 int32_t getTile_idx(int32_t _x, int32_t _y) {
-  if (_x < 0) _x += TOT_TILES_X;
-  else if (_x >= TOT_TILES_X) _x -= TOT_TILES_X;
-  if (_y < 0) _y += TOT_TILES_Y;
-  else if (_y >= TOT_TILES_Y) _y -= TOT_TILES_Y;
+  _x = _x % TOT_TILES_X;
+  _y = _y % TOT_TILES_Y;
   return TOT_TILES_X*_y + _x;
 }
 

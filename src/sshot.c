@@ -108,17 +108,24 @@ bool doScreenShot(uint32_t* _actionProgress) {
   }
 
   if (m_doSnapshots) {
-    uint16_t offX = m_chunkX * CHUNK_PIX_X;
-    uint16_t offY = m_chunkY * CHUNK_PIX_Y;
+    const uint16_t offX = m_chunkX * CHUNK_PIX_X;
+    const uint16_t offY = m_chunkY * CHUNK_PIX_Y;
+
+    struct Player_t* p = getPlayer();
 
     setPlayerVisible(false);
     setPlayerPosition(offX + CHUNK_PIX_X, offY + CHUNK_PIX_Y, /*updateCurrentLocation*/ true);
     updateRenderList();
-    pd->graphics->setDrawOffset(getOffX(), getOffY());
+
+    // We're zoomed out here
+    const int16_t drawOffX = -(p->m_pix_x - (SCREEN_PIX_X/2));
+    const int16_t drawOffY = -(p->m_pix_y - (SCREEN_PIX_Y/2));
+
+    pd->graphics->setDrawOffset(drawOffX, drawOffY);
     pd->sprite->drawSprites();
 
     #ifdef DEV
-    pd->system->logToConsole("doScreenShot %i c(%i,%i) camera off:(%i,%i) draw off:(%i,%i)", *_actionProgress, m_chunkX, m_chunkY, offX, offY, getOffX(), getOffY());
+    pd->system->logToConsole("doScreenShot %i c(%i,%i) camera off:(%i,%i) draw off:(%i,%i)", *_actionProgress, m_chunkX, m_chunkY, offX, offY, drawOffX, drawOffY);
     #endif
   }
 

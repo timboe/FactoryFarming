@@ -25,6 +25,7 @@ void addTrauma(float _amount) {
 void render() {
 
   struct Player_t* p = getPlayer();
+  const uint8_t zoom = getZoom();
 
   if (p->m_enableScreenShake && m_decay > 0.0f) {
     m_decay -= TRAUMA_DECAY;
@@ -34,8 +35,11 @@ void render() {
     pd->display->setOffset(0, 0);
   }
 
+  const float offX = -(p->m_camera_pix_x*zoom - (SCREEN_PIX_X/2));
+  const float offY = -(p->m_camera_pix_y*zoom - (SCREEN_PIX_Y/2));
+
   pd->graphics->setDrawMode(kDrawModeCopy);
-  pd->graphics->setDrawOffset(getOffX(), getOffY());
+  pd->graphics->setDrawOffset(offX, offY);
 
   if (getFrameCount() % NEAR_TICK_FREQUENCY == 0) {
     pd->sprite->updateAndDrawSprites();

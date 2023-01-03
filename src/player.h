@@ -41,6 +41,8 @@ struct Player_t{
   uint8_t m_saveFormat;
   float m_pix_x; // Note: Centre
   float m_pix_y;
+  int16_t m_camera_pix_x;
+  int16_t m_camera_pix_y;
   uint32_t m_money;
   uint32_t m_moneyCumulative;
   uint32_t m_moneyHighWaterMark;
@@ -109,10 +111,6 @@ float getThisWorldCargoSales(void);
 float getOtherWorldCargoSales(void);
 
 bool modMoney(int32_t _amount);
-
-int16_t getOffX(void);
-
-int16_t getOffY(void);
 
 void forceTorus(void);
 
