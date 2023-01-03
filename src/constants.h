@@ -8,7 +8,7 @@
 // Careful - can seem to break things 
 //#define FAST_PROGRESS
 
-#define DEMO
+//#define DEMO
 
 //#define TITLE_LOGO_ONLY
 

@@ -3,3 +3,5 @@ Source/pdex.so
 FactoryFarming.pdx/
 build/
 *.zip
+FactoryFarmingTechDemo.pdx/
+*.bak
