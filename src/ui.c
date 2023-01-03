@@ -717,6 +717,10 @@ void showTutorialMsg(enum kUITutorialStage _stage) {
     tutN = _stage;
     ofN = kTutFinishedTwo;
   }
+  #ifdef DEMO
+  tutN = 1;
+  ofN = 1;
+  #endif
   snprintf(text, 128, "--- Tutorial Stage %i/%i ---", tutN, ofN);
   int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, 128, kASCIIEncoding, 0);
   pd->graphics->drawText(text, 128, kASCIIEncoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
@@ -2209,7 +2213,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
       switch (_n) {
         case 0: return "-- The First Automated Harvest --";
         case 1: return "Sweet, but that was a lot of manual labor... Let's";
-        case 2: return "use an Automatic Harvester instead! Buy one from";
+        case 2: return "use an automatic harvester instead! Buy one from";
         case 3: return "the shop and build it where some carrot plants are";
         case 4: return "within its harvest catchment area.";
           
