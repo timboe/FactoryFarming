@@ -47,6 +47,10 @@ LCDBitmap* getMenuBacking(void);
 
 LCDBitmap* getRetirementNoBitmap(uint8_t _zoom);
 
+#ifdef DEMO
+LCDBitmap* getDemoSplash(void)
+#endif
+
 // Short-form versions too
 #define SID(X, Y) ((SHEET16_SIZE_X * Y) + X)
 #define SPRITE16_ID(X, Y) ((SHEET16_SIZE_X * Y) + X)

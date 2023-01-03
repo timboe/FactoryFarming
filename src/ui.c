@@ -49,6 +49,11 @@ LCDBitmap* m_UIBitmapGen = NULL;
 
 // Title Screen
 LCDSprite* m_UISpriteSplash = NULL;
+#ifdef DEMO
+LCDSprite* m_UISpriteDemo = NULL;
+#endif
+LCDSprite* m_UISpriteTitleVersion = NULL;
+LCDBitmap* m_UIBitmapTitleVersion = NULL;
 LCDSprite* m_UISpriteTitleSelected = NULL;
 int16_t m_UITitleOffset = 0;
 int16_t m_UITitleSelected = 0;
@@ -610,8 +615,15 @@ void addUIToSpriteList() {
     return;
   } else if (m_mode == kTitles) {
     pd->sprite->addSprite(m_UISpriteSplash);
+    pd->sprite->addSprite(m_UISpriteTitleVersion);
+    #ifdef DEMO
+    pd->sprite->addSprite(m_UISpriteDemo);
+    #endif
     pd->sprite->addSprite(m_UISpriteTitleSelected);
     for (int32_t i = 0; i < 3; ++i) {
+      #ifdef DEMO
+      if (i != 1) continue;
+      #endif
       if (hasSaveData(i)) pd->sprite->addSprite(m_UISpriteTitleCont[i]);
       else  pd->sprite->addSprite(m_UISpriteTitleNew[i]);
     }
@@ -1739,6 +1751,30 @@ void initiUI() {
   pd->sprite->setIgnoresDrawOffset(m_UISpriteSplash, 1);  
   pd->sprite->moveTo(m_UISpriteSplash, DEVICE_PIX_X/2, DEVICE_PIX_Y/2);
 
+  #ifdef DEMO
+  PDRect demoBound = {.x = 0, .y = 0, .width = 167, .height = 108};
+  m_UISpriteDemo = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteDemo, deviceBound);
+  pd->sprite->setImage(m_UISpriteDemo, getDemoSplash(), kBitmapUnflipped);
+  pd->sprite->setZIndex(m_UISpriteDemo, Z_INDEX_UI_T);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteDemo, 1);  
+  pd->sprite->moveTo(m_UISpriteDemo, DEVICE_PIX_X - 167/2 - 8, 108/2 + 8);
+  #endif
+
+  m_UIBitmapTitleVersion = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*1, kColorWhite);
+  pd->graphics->pushContext(m_UIBitmapTitleVersion);
+  setRoobert10();
+  int32_t width = pd->graphics->getTextWidth(getRoobert10(), VERSION, 5, kASCIIEncoding, 0);
+  pd->graphics->drawText(VERSION, 5, kASCIIEncoding, TILE_PIX - width/2, 0);
+  pd->graphics->popContext();
+  m_UISpriteTitleVersion = pd->sprite->newSprite();
+  PDRect vBound = {.x = 0, .y = 0, .width = TILE_PIX*2, .height = TILE_PIX*1};
+  pd->sprite->setBounds(m_UISpriteTitleVersion, buttonBound);
+  pd->sprite->setImage(m_UISpriteTitleVersion, m_UIBitmapTitleVersion, kBitmapUnflipped);
+  pd->sprite->setZIndex(m_UISpriteTitleVersion, Z_INDEX_UI_T);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteTitleVersion, 1);
+  pd->sprite->moveTo(m_UISpriteTitleVersion, 6*TILE_PIX, TILE_PIX/2);
+
   m_UISpriteTitleSelected = pd->sprite->newSprite();
   pd->sprite->setBounds(m_UISpriteTitleSelected, buttonBound);
   pd->sprite->setImage(m_UISpriteTitleSelected, getTitleSelectedBitmap(), kBitmapUnflipped);
@@ -1778,7 +1814,11 @@ void initiUI() {
     pd->graphics->pushContext(m_UIBitmapTitleCont[i]);
     roundedRect(0, TILE_PIX*7, TILE_PIX*1, TILE_PIX/2, kColorBlack);
     pd->graphics->setDrawMode(kDrawModeFillWhite);
+    #ifdef DEMO
+    snprintf(text, 32, "Load Demo");
+    #else
     snprintf(text, 32, "%s: Continue", getWorldLetter(i));
+    #endif
     len = strlen(text);
     width = pd->graphics->getTextWidth(getRoobert10(), text, len, kASCIIEncoding, 0);
     pd->graphics->drawText(text, len, kASCIIEncoding, (7*TILE_PIX)/2 - width/2, 0);
@@ -2085,6 +2125,18 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
   switch (_stage) {
     case kTutWelcomeBuySeeds:;
       switch (_n) {
+        #ifdef DEMO
+        case 0: return "-- Factory Farming Tech Demo --";
+        case 1: return "You're free to look around this example factory.";
+        case 2: return "You will find facilities up to Tech Level 3.";
+        case 3: return "The full game goes up to Tech Level 7.";
+        case 4: return "Building and Saving are disabled in the demo.";
+
+        case 5: return "";
+        case 6: return "";
+        case 7: return "";
+        case 8: return "";
+        #else
         case 0: return "-- The Initial Seed Purchase --";
         case 1: return "Welcome to Factory Farming! There's money to be";
         case 2: return "made, and it won't make itself! So let's get started by";
@@ -2095,6 +2147,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 6: return "Hold Ⓑ to run.  Go to the shop and press Ⓐ.";
         case 7: return "Buy 10 carrot seeds from the shop with Ⓐ.";
         case 8: return "Press Ⓑ to exit the shop.";
+        #endif
       }
     case kTutSeeObjective:;
       switch (_n) {
@@ -2203,17 +2256,10 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
     case kTutFinishedOne:
       switch (_n) {
         case 0: return "-- Go Forth And Consume --";
-        #ifdef DEMO
-        case 1: return "Excellent! You now know all the basics of exploiting";
-        case 2: return "the world for profit. The demo ends here with the";
-        case 3: return "Vitamin Factory. If you buy the whole game you can";
-        case 4: return "copy your save file over to continue from here!";
-        #else
         case 1: return "Excellent! You now know all the basics of exploiting";
         case 2: return "the world for profit. As your bank account swells,";
         case 3: return "more crops, factories, and other items will unlock.";
         case 4: return "Use them to maximize profit, maximize efficiency.";
-        #endif
           
         case 5: return " ";
         case 6: return " ";

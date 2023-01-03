@@ -208,3 +208,5 @@
 #define MAX_RECURSION 128
 
 #define SSHOT_PIXELS_PER_FRAME 16384
+
+#define VERSION "v1.1"

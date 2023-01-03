@@ -29,6 +29,10 @@ LCDBitmap* m_splash;
 
 LCDBitmap* m_menuBacking;
 
+#ifdef DEMO
+LCDBitmap* m_demo;
+#endif
+
 LCDBitmap* m_truck[ZOOM_LEVELS];
 
 LCDFont* m_fontRoobert24;
@@ -172,6 +176,12 @@ LCDBitmap* getMenuBacking() {
   return m_menuBacking;
 }
 
+#ifdef DEMO
+LCDBitmap* getDemoSplash() {
+  return m_demo;
+}
+#endif
+
 void setCooperHewitt12() {
   pd->graphics->setFont(m_fontCooperHewitt12);
 }
@@ -245,6 +255,9 @@ void initSprite() {
   m_splash = loadImageAtPath("images/splash");
   m_menuBacking = loadImageAtPath("images/backing");
   m_retirementNo[1] = loadImageAtPath("images/cross9x9");
+  #ifdef DEMO
+  m_demo = loadImageAtPath("images/tech");
+  #endif
 
   m_truck[1] = loadImageAtPath("images/truck");
 
