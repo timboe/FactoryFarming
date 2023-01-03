@@ -373,6 +373,10 @@ void synchronousSave() {
 }
 
 bool doSave(bool _synchronous) {
+  #ifdef DEMO
+  return true;
+  #endif
+
   uint8_t pretty = 0;
   #ifdef DEV
   pretty = 1;

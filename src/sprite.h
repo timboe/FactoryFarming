@@ -48,7 +48,7 @@ LCDBitmap* getMenuBacking(void);
 LCDBitmap* getRetirementNoBitmap(uint8_t _zoom);
 
 #ifdef DEMO
-LCDBitmap* getDemoSplash(void)
+LCDBitmap* getDemoSplash(void);
 #endif
 
 // Short-form versions too

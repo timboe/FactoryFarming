@@ -281,11 +281,14 @@ void clickHandleTitles(uint32_t _buttonPressed) {
     }
   } else if (kButtonB == _buttonPressed) {
     sfx(kSfxNo);
-  } else if (kButtonLeft == _buttonPressed) {
+  }
+  #ifndef DEMO
+  else if (kButtonLeft == _buttonPressed) {
     modTitleCursor(false);
   } else if (kButtonRight == _buttonPressed) {
     modTitleCursor(true);
   }
+  #endif
 }
 
 void clickHandleMenuMain(uint32_t _buttonPressed) {
@@ -555,6 +558,9 @@ void rotateHandleSettings(float _rotation) {
 
 
 void rotateHandleTitles(float _rotation) {
+  #ifdef DEMO
+  return;
+  #endif
   static float rot = 0.0f;
   rot += _rotation;
   if (rot > UI_ROTATE_ACTION) {

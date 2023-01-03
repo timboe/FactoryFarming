@@ -322,6 +322,9 @@ void reset(bool _resetThePlayer) {
 
 void populateMenuTitle() {
   pd->system->removeAllMenuItems();
+  #ifdef DEMO
+  return;
+  #endif
   pd->system->addMenuItem("delete save 1", menuOptionsCallbackDelete, (void*)0);
   pd->system->addMenuItem("delete save 2", menuOptionsCallbackDelete, (void*)1);
   pd->system->addMenuItem("delete save 3", menuOptionsCallbackDelete, (void*)2);
@@ -329,8 +332,10 @@ void populateMenuTitle() {
 
 void populateMenuGame() {
   pd->system->removeAllMenuItems();
+  #ifndef DEMO
   pd->system->addMenuItem("load", menuOptionsCallbackLoad, NULL);
   pd->system->addMenuItem("save", menuOptionsCallbackSave, NULL);
+  #endif
   pd->system->addMenuItem("menu", menuOptionsCallbackMenu, NULL);
 }
 

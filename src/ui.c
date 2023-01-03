@@ -1535,7 +1535,11 @@ void resetUI() {
   drawUITop(NULL, kDrawModeCopy);
   m_UITitleOffset = UI_TITLE_OFFSET;
   m_UITopOffset = 0;
+  #ifdef DEMO
+  m_UITitleSelected = 1;
+  #else
   m_UITitleSelected = 0;
+  #endif
   if (m_UISpriteTop) {
     pd->sprite->moveTo(m_UISpriteTop, SCREEN_PIX_X/2, TILE_PIX - TOP_TITLE_OFFSET + 1 );
   }

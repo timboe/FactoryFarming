@@ -22,6 +22,22 @@ bool doPickAtLocation(struct Location_t* _loc);
 void doInventoryClick() {
   const enum kUICat selectedCat = getUIContentCategory();
   const uint16_t selectedID =  getUIContentID();
+
+  #ifdef DEMO
+  switch (selectedCat) {
+    case kUICatTool: switch(selectedID) {
+      case kToolPickup:; return setGameMode(kPickMode);
+      case kToolInspect:; return setGameMode(kInspectMode);
+      case kToolDestroy:; return setGameMode(kDestroyMode);
+      case kNToolTypes:; break;
+    } break;
+    case kUICatCargo: return setGameMode(kPlaceMode); 
+    default: break;
+  }
+  sfx(kSfxNo);
+  return;
+  #endif
+
   switch (selectedCat) {
     case kUICatTool: switch(selectedID) {
       case kToolPickup:; return setGameMode(kPickMode);
@@ -309,6 +325,10 @@ bool doPickAtLocation(struct Location_t* _loc) {
 
 
 void doDestroy() {
+  #ifdef DEMO
+  sfx(kSfxNo);
+  return;
+  #endif
   bool update = false;
   int32_t min = 0, max = 0;
   switch (getRadius()) {

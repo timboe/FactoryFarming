@@ -10,6 +10,11 @@ void doPurchace() {
   const int32_t selectedPrice = getPrice(selectedCat, selectedID);
   const uint8_t multiplier = getBuySellMultiplier();
 
+  #ifdef DEMO
+  sfx(kSfxNo);
+  return;
+  #endif
+
   if (modMoney(-selectedPrice * multiplier)) {
     UIDirtyMain();
     sfx(kSfxBuy);
@@ -64,6 +69,9 @@ void populateInfoBuy(bool _visible) {
 
   // AFFORD
   bool canAfford = (p->m_money >= selectedPrice * multiplier || p->m_infiniteMoney);
+  #ifdef DEMO
+  canAfford = false;
+  #endif
   pd->sprite->setVisible(getCannotAffordSprite(), !canAfford && _visible);
 
   // INFO
