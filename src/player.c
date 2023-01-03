@@ -595,7 +595,7 @@ void serialisePlayer(struct json_encoder* je) {
   je->addTableMember(je, "player", 6);
   je->startTable(je);
   je->addTableMember(je, "sf", 2); // Save format
-  je->writeInt(je, SAVE_FORMAT);
+  je->writeInt(je, CURRENT_SAVE_FORMAT);
   je->addTableMember(je, "x", 1);
   je->writeInt(je, (int) m_player.m_pix_x);
   je->addTableMember(je, "y", 1);

@@ -316,7 +316,7 @@ void scanSlots() {
         pd->system->error("Scan world: Unable to determine save version for save file %i", m_save);
         m_foundSaveData[m_save] = false;
         m_worldExists[m_save][ss] = false;
-      } else if (m_worldVersions[m_save][ss] != SAVE_FORMAT) {
+      } else if (m_worldVersions[m_save][ss] < EARLIEST_SUPPORTED_SAVE_FORMAT) {
         #ifdef DEV
         pd->system->logToConsole("Scan world: OLD WORLD DETECTED! Version %i != %i."
           " ACTION: Delete everything and start again", m_worldVersions[m_save][ss], SAVE_FORMAT);
@@ -439,7 +439,7 @@ bool doSave(bool _synchronous) {
     m_je.startTable(&m_je);
 
     m_je.addTableMember(&m_je, "sf", 2);
-    m_je.writeInt(&m_je, SAVE_FORMAT);
+    m_je.writeInt(&m_je, CURRENT_SAVE_FORMAT);
 
   } else if (m_actionProgress == 3) {
     serialiseCargo(&m_je);
