@@ -159,6 +159,8 @@ void toggleZoom() {
 }
 
 void postChangeZoom(bool _sfx) {
+  uint8_t prevZoom = m_zoom == 1 ? 2 : 1;
+  updateCameraWithZoom(prevZoom, m_zoom);
   movePlayer(/*forceUpdate*/ true);
   updateRenderList();
   updateBlueprint(/*beep*/ false);

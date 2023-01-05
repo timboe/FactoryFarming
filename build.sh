@@ -1,3 +1,6 @@
+rm -r FactoryFarming.pdx
+rm -r FactoryFarmingTechDemo.pdx
+
 sed 's|FactoryFarming.pdx|FactoryFarmingTechDemo.pdx|g' Makefile  --in-place=.bak
 sed 's|//#define DEMO|#define DEMO|g' src/constants.h --in-place=.bak
 sed 's|imagePath=titles|imagePath=demo|g' Source/pdxinfo --in-place=.bak

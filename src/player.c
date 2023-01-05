@@ -173,11 +173,8 @@ void setPlayerPosition(uint16_t _x, uint16_t _y, bool _updateCurrentLocation) {
   m_player.m_camera_pix_x = m_player.m_pix_x - cOffX;
   m_player.m_camera_pix_y = m_player.m_pix_y - cOffY;
   if (_updateCurrentLocation) {
-    m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
-    m_currentChunk = getChunk(m_player.m_pix_x / CHUNK_PIX_X, m_player.m_pix_y / CHUNK_PIX_Y);
-    uint8_t zoom = getZoom();
-    //m_offX = -(m_player.m_pix_x*zoom - (SCREEN_PIX_X/2));
-    //m_offY = -(m_player.m_pix_y*zoom - (SCREEN_PIX_Y/2));
+    m_currentLocation = getLocation(m_player.m_camera_pix_x / TILE_PIX, m_player.m_camera_pix_y / TILE_PIX);
+    m_currentChunk = getChunk(m_player.m_camera_pix_x / CHUNK_PIX_X, m_player.m_camera_pix_y / CHUNK_PIX_Y);
   }
 }
 
@@ -202,6 +199,16 @@ void flipCamera() {
   m_player.m_camera_pix_y += 2 * (m_player.m_pix_y - m_player.m_camera_pix_y);
 }
 
+void updateCameraWithZoom(uint8_t _prevZoom, uint8_t _newZoom) {
+  const float scalingFactor = _prevZoom / (float)_newZoom;
+  const float cOffX = (m_player.m_camera_pix_x - m_player.m_pix_x) * scalingFactor;
+  const float cOffY = (m_player.m_camera_pix_y - m_player.m_pix_y) * scalingFactor; 
+  m_player.m_camera_pix_x = m_player.m_pix_x + cOffX;
+  m_player.m_camera_pix_y = m_player.m_pix_y + cOffY;
+  // Set a consistant sprite frame too
+  pd->sprite->setImage(m_player.m_sprite[_newZoom], getSprite18_byidx(m_player.m_animID, _newZoom), kBitmapUnflipped);
+}
+
 bool movePlayer(bool _forceUpdate) {
 
   // Note: This may set the zoom
@@ -220,7 +227,7 @@ bool movePlayer(bool _forceUpdate) {
   // Do conveyor movement
   static uint8_t convNoise = 0;
   int8_t convMotion = getAndReduceFollowConveyor();
-  if (convMotion > 0) { // Make this just "if (convMotion)" to allow backwards travel too
+  if (m_player.m_enableCrankConveyor &&  convMotion > 0) { // Make this just "if (convMotion)" to allow backwards travel too
     if (m_currentLocation && m_currentLocation->m_building && m_currentLocation->m_building->m_type == kConveyor) {
       enum kDir direction;
       if (++convNoise % 8 == 0) {
@@ -241,13 +248,24 @@ bool movePlayer(bool _forceUpdate) {
         case WE: x = m_player.m_pix_x + dist; y = m_player.m_pix_y; m_facing = 1; break;
         case kDirN: break;
       }
-      if (x < 0) x += TOT_WORLD_PIX_X;
-      else if (x >= TOT_WORLD_PIX_X) x -= TOT_WORLD_PIX_X;
-      if (y < 0) y += TOT_WORLD_PIX_Y;
-      else if (y >= TOT_WORLD_PIX_Y) y -= TOT_WORLD_PIX_Y;
+      if (x < 0) {
+        flipCamera();
+        x += TOT_WORLD_PIX_X;
+      } else if (x >= TOT_WORLD_PIX_X) {
+        flipCamera();
+        x -= TOT_WORLD_PIX_X;
+      }
+      if (y < 0) {
+        flipCamera();
+        y += TOT_WORLD_PIX_Y;
+      } else if (y >= TOT_WORLD_PIX_Y) {
+        flipCamera();
+        y -= TOT_WORLD_PIX_Y;
+      }
       setPlayerPosition(x, y, /*update current location = */ false);
       uint8_t i_n = direction == WE ? 5 : 0;
-      pd->sprite->setImage(m_player.m_sprite[zoom], getSprite18(i_n, m_facing, zoom), kBitmapUnflipped);
+      m_player.m_animID = SPRITE18_ID(i_n, m_facing);
+      pd->sprite->setImage(m_player.m_sprite[zoom], getSprite18_byidx(m_player.m_animID, zoom), kBitmapUnflipped);
     }
   }
 
@@ -286,26 +304,30 @@ bool movePlayer(bool _forceUpdate) {
   m_player.m_vX = (m_player.m_vX + diffX) * fric;
   m_player.m_vY = (m_player.m_vY + diffY) * fric;
 
-  bool moving = false;
+  static uint16_t movingTicksX = 0, movingTicksY = 0;
   if ((float)(fabs(m_player.m_vX) + fabs(m_player.m_vY)) > 0.1f) {
-    moving = true;
+    if (m_player.m_vX) ++movingTicksX;
+    if (m_player.m_vY) ++movingTicksY;
     if (fabs(m_player.m_vX) > fabs(m_player.m_vY)) {
       m_facing = (m_player.m_vX > 0 ? 1 : 0);
     } else {
       m_facing = (m_player.m_vY > 0 ? 3 : 2);
     }
   }
+  if (!diffX) movingTicksX = 0;
+  if (!diffY) movingTicksY = 0;
 
   goalX += m_player.m_vX;
   goalY += m_player.m_vY; 
 
-  if (moving || _forceUpdate) {
+  if (movingTicksX || movingTicksY || _forceUpdate) {
     if (++m_stepCounter * acc > PLAYER_ANIM_DELAY || m_facing != m_wasFacing || m_inWater != m_wasInWater) {
       m_animFrame = (m_animFrame + 1) % PLAYER_ANIM_FRAMES;
       m_stepCounter = 0;
       const uint16_t animY = m_inWater ? m_facing + 4 : m_facing;
       if (m_animFrame % 3 == 0 && m_player.m_enableSteps) sfx( (m_inWater ? kFootstepWater : kFootstepDefault) + rand() % N_FOOTSTEPS);
-      pd->sprite->setImage(m_player.m_sprite[zoom], getSprite18(m_animFrame, animY, zoom), kBitmapUnflipped);
+      m_player.m_animID = SPRITE18_ID(m_animFrame, animY);
+      pd->sprite->setImage(m_player.m_sprite[zoom], getSprite18_byidx(m_player.m_animID, zoom), kBitmapUnflipped);
     }
     m_wasFacing = m_facing;
     m_wasInWater = m_inWater;
@@ -331,27 +353,72 @@ bool movePlayer(bool _forceUpdate) {
     setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y + TOT_WORLD_PIX_Y, /*update current location = */ false);
   }
 
-  const static int16_t MOVE_THRESHOLD_X = (SCREEN_PIX_X * 0.8f) - (SCREEN_PIX_X/2); 
-  if (m_player.m_pix_x - m_player.m_camera_pix_x > MOVE_THRESHOLD_X / zoom) {
-    m_player.m_camera_pix_x = m_player.m_pix_x - (MOVE_THRESHOLD_X / zoom); 
-  } else if (m_player.m_pix_x - m_player.m_camera_pix_x < -(MOVE_THRESHOLD_X / zoom)) {
-    m_player.m_camera_pix_x = m_player.m_pix_x + (MOVE_THRESHOLD_X / zoom);
-  }
 
-  const static int16_t MOVE_THRESHOLD_Y = (SCREEN_PIX_Y * 0.8f) - (SCREEN_PIX_Y/2); 
-  if (m_player.m_pix_y - m_player.m_camera_pix_y > MOVE_THRESHOLD_Y / zoom) {
-    m_player.m_camera_pix_y = m_player.m_pix_y - (MOVE_THRESHOLD_Y / zoom); 
-  } else if (m_player.m_pix_y - m_player.m_camera_pix_y < -(MOVE_THRESHOLD_Y / zoom)) {
-    m_player.m_camera_pix_y = m_player.m_pix_y + (MOVE_THRESHOLD_Y / zoom);
+  if (m_player.m_enableCentreCamera) {
+
+    m_player.m_camera_pix_x = m_player.m_pix_x;
+    m_player.m_camera_pix_y = m_player.m_pix_y;
+
+  } else {
+
+    float shrinkFractionX = 1.0f - (movingTicksX / (float)(SCROLL_LOCATION_MODIFICATION_TIME));
+    float shrinkFractionY = 1.0f - (movingTicksY / (float)(SCROLL_LOCATION_MODIFICATION_TIME));
+
+    if (shrinkFractionX < 0.0f) shrinkFractionX = 0.0f;
+    if (shrinkFractionY < 0.0f) shrinkFractionY = 0.0f;
+
+    if (!diffY) {
+      shrinkFractionY = 1.0f;
+    }
+    if (!diffX) {
+      shrinkFractionX = 1.0f;
+    }
+
+    bool didScroll = false;
+
+    const static int16_t MOVE_THRESHOLD_X = (SCREEN_PIX_X * 0.8f) - (SCREEN_PIX_X/2); 
+    const int16_t sideThreshold = (int16_t) roundf(MOVE_THRESHOLD_X * shrinkFractionX);
+    if (m_player.m_pix_x - m_player.m_camera_pix_x > sideThreshold / zoom) {
+      m_player.m_camera_pix_x = m_player.m_pix_x - (sideThreshold / zoom);
+      didScroll = true;
+    } else if (m_player.m_pix_x - m_player.m_camera_pix_x < -(sideThreshold / zoom)) {
+      didScroll = true;
+      m_player.m_camera_pix_x = m_player.m_pix_x + (sideThreshold / zoom);
+    }
+    if (!didScroll) {
+      movingTicksX = 0;
+    }
+
+    didScroll = false;
+    const static int16_t MOVE_THRESHOLD_Y = (SCREEN_PIX_Y * 0.8f) - (SCREEN_PIX_Y/2);
+    const int16_t topThreshold = (int16_t) roundf(MOVE_THRESHOLD_Y * shrinkFractionY);
+    const static int16_t MOVE_THRESHOLD_Y_REDUCED = (SCREEN_PIX_Y * 0.6f) - (SCREEN_PIX_Y/2);
+    const int16_t bottomThreshold = (int16_t) roundf((m_player.m_enableTutorial < TUTORIAL_FINISHED || getGameMode() == kInspectMode ? MOVE_THRESHOLD_Y_REDUCED : MOVE_THRESHOLD_Y) * shrinkFractionY);
+    if (m_player.m_pix_y - m_player.m_camera_pix_y > bottomThreshold / zoom) {
+      didScroll = true;
+      m_player.m_camera_pix_y = m_player.m_pix_y - (bottomThreshold / zoom); 
+    } else if (m_player.m_pix_y - m_player.m_camera_pix_y < -(topThreshold / zoom)) {
+      didScroll = true;
+      m_player.m_camera_pix_y = m_player.m_pix_y + (topThreshold / zoom);
+    }
+    if (!didScroll) {
+      movingTicksY = 0;
+    }
+
   }
 
   // Check chunk change
-  uint16_t chunkX = m_player.m_camera_pix_x / (CHUNK_PIX_X);
-  uint16_t chunkY = m_player.m_camera_pix_y / (CHUNK_PIX_Y);
+  int16_t effX = m_player.m_camera_pix_x; // Get effective (wrapped one way) camera coordinate, not letting it go -ve
+  int16_t effY = m_player.m_camera_pix_y; 
+  if (m_player.m_camera_pix_x < 0) effX += TOT_WORLD_PIX_X;
+  if (m_player.m_camera_pix_y < 0) effY += TOT_WORLD_PIX_Y;
+
+  int16_t chunkX = (effX / (CHUNK_PIX_X)) % WORLD_CHUNKS_X;
+  int16_t chunkY = (effY / (CHUNK_PIX_Y)) % WORLD_CHUNKS_Y;
 
   // Subchunk change
-  uint8_t subChunkX = m_player.m_camera_pix_x / (CHUNK_PIX_X/2) % 2;
-  uint8_t subChunkY = m_player.m_camera_pix_y / (CHUNK_PIX_Y/2) % 2;
+  int16_t subChunkX = effX / (CHUNK_PIX_X/2) % 2;
+  int16_t subChunkY = effY / (CHUNK_PIX_Y/2) % 2;
   enum kChunkQuad quadrant = NW;
   if (subChunkX && subChunkY) {
     quadrant = SE;
@@ -533,6 +600,7 @@ void resetPlayer() {
   m_player.m_playTime = 0;
   m_player.m_tutorialProgress = 0; // Note: not tutorial _stage_ (this is in m_enableTutorial)
   m_player.m_infiniteMoney = false;
+  m_player.m_animID = 0;
   m_player.m_pix_x = 0;
   m_player.m_pix_y = 0;
   m_player.m_camera_pix_x = 0;
@@ -585,6 +653,8 @@ void setDefaultPlayerSettings() {
   m_player.m_enableExtractorOutlines = 1;
   m_player.m_enableSteps = 1;
   m_player.m_enableZoomWhenMove = 0;
+  m_player.m_enableCrankConveyor = 1; 
+  m_player.m_enableCentreCamera = 0;
 }
 
 void initPlayer() {
@@ -643,6 +713,11 @@ void serialisePlayer(struct json_encoder* je) {
   je->writeInt(je, m_player.m_enableSteps);
   je->addTableMember(je, "setz", 4);
   je->writeInt(je, m_player.m_enableZoomWhenMove);
+  je->addTableMember(je, "setr", 4);
+  je->writeInt(je, m_player.m_enableCrankConveyor);
+  je->addTableMember(je, "setn", 4);
+  je->writeInt(je, m_player.m_enableCentreCamera);
+  
   
   je->addTableMember(je, "cargos", 6);
   je->startArray(je);
@@ -785,6 +860,10 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_player.m_enableSteps = json_intValue(_value); 
   } else if (strcmp(_key, "setz") == 0) {
     m_player.m_enableZoomWhenMove = json_intValue(_value); 
+  } else if (strcmp(_key, "setr") == 0) {
+    m_player.m_enableCrankConveyor = json_intValue(_value); 
+  } else if (strcmp(_key, "setn") == 0) {
+    m_player.m_enableCentreCamera = json_intValue(_value); 
   } else if (strcmp(_key, "seta") == 0) {
     m_player.m_enableAutosave = json_intValue(_value); 
     m_deserialiseArrayID = 0; // Note "one behind"
@@ -870,16 +949,20 @@ void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_valu
   #endif
 
   // SCHEMA EVOLUTION - V4 to V5 (v1.0 to v1.1)
+  // Might need to correct the building unlock progression due to new unlocks being added
+  // Need to set defaults for new options parameters
   if (m_player.m_saveFormat == V1p0_SAVE_FORMAT) {
     m_player.m_saveFormat = V1p1_SAVE_FORMAT;
     const uint32_t prevUnlockedTo = m_player.m_buildingsUnlockedTo; 
-    if (prevUnlockedTo >= 65) { // Dessert Factory from 1.0
+    if (prevUnlockedTo >= 65) { // Dessert Factory from 1.0. Need to account for 2x Overflow, Rotavator & FacUp
       m_player.m_buildingsUnlockedTo += 4;
-    } else if (prevUnlockedTo >= 46) { // Conveyor Grease from 1.0
+    } else if (prevUnlockedTo >= 46) { // Conveyor Grease from 1.0. Need to account for 2x Overflow & FacUp
       m_player.m_buildingsUnlockedTo += 3;
-    } else if (prevUnlockedTo >= 26) { // Sign from 1.0
+    } else if (prevUnlockedTo >= 26) { // Sign from 1.0. Need to account for 2x Overflow.
       m_player.m_buildingsUnlockedTo += 2;
     }
+    m_player.m_enableCrankConveyor = 1; 
+    m_player.m_enableCentreCamera = 0;
     pd->system->logToConsole("-- Performed player schema evolution from v%i to v%i, UnlockedTo:%i -> %i", V1p0_SAVE_FORMAT, V1p1_SAVE_FORMAT, prevUnlockedTo, m_player.m_buildingsUnlockedTo);
   }
 

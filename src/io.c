@@ -10,6 +10,7 @@
 #include "sound.h"
 #include "sshot.h"
 #include "buildings/special.h"
+#include "buildings/factory.h"
 
 uint8_t m_save = 0;
 
@@ -594,10 +595,19 @@ bool doLoad() {
   } else if (m_actionProgress == 5) {
 
     // SCHEMA EVOLUTION - V4 to V5 (v1.0 to v1.1)
+    // Factories now save their production time internally. Need to compute this for all existing factories.
     if (m_worldVersions[m_save][m_slot] == V1p0_SAVE_FORMAT) {
       m_worldVersions[m_save][m_slot] = V1p1_SAVE_FORMAT;
-      // Nothing to do
-      pd->system->logToConsole("-- Performed world schema evolution from v%i to v%i (Save:%i, World:%i)", V1p0_SAVE_FORMAT, V1p1_SAVE_FORMAT, m_save, m_slot);
+      uint16_t nFacsUpdated = 0;
+      for (uint16_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
+        struct Building_t* b = buildingManagerGetByIndex(i);
+        if (!b) continue;
+        if (b->m_type != kFactory) continue;
+        ++nFacsUpdated;
+        updateFactoryUpgrade(b);
+      } 
+      pd->system->logToConsole("-- Performed world schema evolution from v%i to v%i (Save:%i, World:%i), updated %i factories", 
+        V1p0_SAVE_FORMAT, V1p1_SAVE_FORMAT, m_save, m_slot, nFacsUpdated);
     }
 
 

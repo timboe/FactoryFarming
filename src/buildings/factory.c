@@ -156,7 +156,15 @@ void updateFactoryUpgrade(struct Building_t* _building) {
     nModules += locationHasUpgradeModule(b_x - 2, y);
   }
 
-  prodTime -= (TICKS_PER_SEC/2) * nModules;
+  int8_t saving = 0;
+  if (nModules == 1) {
+    saving = (TICKS_PER_SEC/2);
+  } else if (nModules == 2) {
+    saving = (3*(TICKS_PER_SEC)/4);
+  } else if (nModules >= 3) {
+    saving = TICKS_PER_SEC;
+  }
+  prodTime -= saving;
 
   if (prodTime < TICKS_PER_SEC/2) {
     prodTime = TICKS_PER_SEC/2;

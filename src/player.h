@@ -79,6 +79,8 @@ struct Player_t{
   uint8_t m_enableExtractorOutlines;
   uint8_t m_enableSteps;
   uint8_t m_enableZoomWhenMove;
+  uint8_t m_enableCrankConveyor;
+  uint8_t m_enableCentreCamera;
 
   // Transient   
   LCDSprite* m_sprite[ZOOM_LEVELS]; // Index 0 not used - OWNED
@@ -92,6 +94,7 @@ struct Player_t{
   float m_vX;
   float m_vY;
   uint8_t m_infiniteMoney;
+  uint16_t m_animID;
 };
 
 struct Player_t* getPlayer(void);
@@ -145,6 +148,8 @@ void initPlayer(void);
 void resetPlayer(void);
 
 void setPlayerVisible(bool _visible);
+
+void updateCameraWithZoom(uint8_t _prevZoom, uint8_t _newZoom);
 
 void setDefaultPlayerSettings(void);
 

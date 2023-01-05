@@ -333,12 +333,18 @@ void drawUIInspectUtility(struct Building_t* _building) {
 
   } else if (ust == kFactoryUpgrade) {
 
-    snprintf(text, 128, "Reduces production time by 0.5 seconds in any");
+    snprintf(text, 128, "Reduces production time in any factory");
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "factory immediately N, S, E or W of the module.");
+    snprintf(text, 128, "immediately N, S, E or W of the module.");
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "Minimum production time: 0.5 seconds.");
+    snprintf(text, 128, "1 Module: -0.5s");
     pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 128, "2 Modules: -0.75s");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*10, TUT_Y_SPACING*(y) - TUT_Y_SHFT);
+    snprintf(text, 128, "3 Modules: -1s");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 128, "4+ modules: No extra bonus");
+    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*10, TUT_Y_SPACING*(y) - TUT_Y_SHFT);
 
   } else if (ust == kWell) {
 
