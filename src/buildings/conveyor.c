@@ -14,12 +14,115 @@ void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, boo
 
 bool recursiveGetIsAbleToMove(struct Location_t* _nextLoc, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom);
 
+bool anyOutputInDir(struct Building_t* _building, enum kDir _dir);
+
 #define CONV_SPEED 0
 #define CONV_X 1
 #define CONV_Y 2
 #define CONV_HIDE 3
 
 /// ///
+
+bool anyOutputInDir(struct Building_t* _building, enum kDir _dir) {
+  if (!_building) return false;
+  if (_building->m_type == kConveyor) {
+    for (uint8_t i = 0; i < 4; ++i) {
+      if (_building->m_nextDir[i] == _dir) {
+        return true;
+      }
+    }
+  } else if (producesOutputCargoOnAdjacentTile(_building->m_type, _building->m_subType)) {
+    if (_building->m_dir == _dir) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void conveyorUpdateSprite(struct Building_t* _building) {
+  // Update sprites of "corner" pieces
+  if (_building->m_type != kConveyor) return;
+  if (_building->m_subType.conveyor != kBelt) return;
+
+  struct Location_t* above;
+  struct Location_t* below;
+  struct Location_t* left;
+  struct Location_t* right;
+  getBuildingNeighbors(_building, 1, &above, &below, &left, &right);
+
+  // we require exactly one input to this tile
+  bool specialCornerArrangement = true;
+  uint8_t nIn = 0;
+  struct Location_t* pointsToMe = NULL;
+  if (anyOutputInDir(below->m_building, SN)) {
+    ++nIn;
+    pointsToMe = below;
+    if (_building->m_nextDir[0] == SN) specialCornerArrangement = false;
+  } 
+  if (anyOutputInDir(left->m_building, WE)) {
+    ++nIn;
+    pointsToMe = left;
+    if (_building->m_nextDir[0] == WE) specialCornerArrangement = false;
+  }
+  if (anyOutputInDir(above->m_building, NS)) {
+    ++nIn;
+    pointsToMe = above;
+    if (_building->m_nextDir[0] == NS) specialCornerArrangement = false;
+  } 
+  if (anyOutputInDir(right->m_building, EW)) {
+    ++nIn;
+    pointsToMe = right;
+    if (_building->m_nextDir[0] == EW) specialCornerArrangement = false;
+  } 
+
+  if (nIn != 1) specialCornerArrangement = false;
+
+  if (specialCornerArrangement) { 
+    bool evenIn = false;
+    // Check which way I point
+    switch (_building->m_nextDir[0]) {
+      case SN: evenIn = (left  == pointsToMe); break;
+      case NS: evenIn = (right == pointsToMe); break;
+      case WE: evenIn = (above == pointsToMe); break;
+      case EW: evenIn = (below == pointsToMe); break;
+      case kDirN: break;
+    }
+    uint16_t sID = 0;
+    switch (_building->m_nextDir[0]) {
+      case EW: sID = evenIn ? SID(8,3) : SID(13,3); break;
+      case WE: sID = evenIn ? SID(12,3) : SID(9,3); break;
+      case NS: sID = evenIn ? SID(14,3) : SID(11,3); break;
+      case SN: sID = evenIn ? SID(10,3) : SID(15,3); break;
+      case kDirN: break;
+    }
+    for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+      _building->m_image[zoom] = getSprite16_byidx(sID, zoom);
+    }
+  } else {
+    for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+      _building->m_image[zoom] = getSprite16(CDesc[kBelt].spriteX, CDesc[kBelt].spriteY + _building->m_dir, zoom);
+    }
+  }
+
+}
+
+void checkConveyorSpritesAroundLoc(struct Location_t* _loc) {
+  if (_loc->m_building && _loc->m_building->m_type == kConveyor) conveyorUpdateSprite(_loc->m_building);
+  //
+  struct Location_t* l = getLocation(_loc->m_x + 1, _loc->m_y);
+  if (l->m_building && l->m_building->m_type == kConveyor) conveyorUpdateSprite(l->m_building);
+  //
+  l = getLocation(_loc->m_x - 1, _loc->m_y);
+  if (l->m_building && l->m_building->m_type == kConveyor) conveyorUpdateSprite(l->m_building);
+  //
+  l = getLocation(_loc->m_x, _loc->m_y + 1);
+  if (l->m_building && l->m_building->m_type == kConveyor) conveyorUpdateSprite(l->m_building);
+  //
+  l = getLocation(_loc->m_x, _loc->m_y - 1);
+  if (l->m_building && l->m_building->m_type == kConveyor) conveyorUpdateSprite(l->m_building);
+}
+
+
 
 void conveyorLocationUpdate(struct Building_t* _building, uint8_t _zoom) {
   const int8_t x = (int8_t) _building->m_stored[CONV_X];
@@ -270,6 +373,10 @@ void assignNeighborsConveyor(struct Building_t* _building) {
     getBuildingNeighbors(_building, TUNNEL_HOPS, &above, &below, &left, &right);
   } else {
     getBuildingNeighbors(_building, 1, &above, &below, &left, &right);
+  }
+
+  for (uint8_t i = 0; i < 4; ++i) {
+    _building->m_nextDir[i] = kDirN;
   }
 
   switch (getConveyorDirection(bst, _building->m_dir, 0)) {

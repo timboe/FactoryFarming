@@ -185,7 +185,7 @@ struct Cargo_t* cargoManagerNewCargo(enum kCargoType _type) {
     for (uint32_t i = start; i < stop; ++i) {
       if (m_cargos[i].m_type == kNoCargo) {
         ++m_nCargo;
-        ++m_cargoSearchLocation;
+        m_cargoSearchLocation = i+1;
         m_cargos[i].m_type = _type;
         return &(m_cargos[i]);
       }

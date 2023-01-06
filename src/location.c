@@ -9,6 +9,7 @@
 #include "buildings/special.h"
 #include "buildings/factory.h"
 #include "buildings/utility.h"
+#include "buildings/conveyor.h"
 
 struct Location_t* m_locations = NULL;
 
@@ -49,16 +50,12 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
     const union kSubType bst = _loc->m_building->m_subType;
 
     bool wideRedraw = false;
-    bool checkFactoryUpgrades = false;
     if (bt == kUtility && bst.utility == kWell) {
       // Special - well
       pauseMusic();
       setTile( getTile_idx(_loc->m_x, _loc->m_y), _loc->m_building->m_mode.mode16 ); // Undo before destroying
       doWetnessAroundLoc(_loc);
       wideRedraw = true;
-    } else if (bt == kUtility && bst.utility == kFactoryUpgrade) {
-      // Special - factory upgrade
-      checkFactoryUpgrades = true;
     } else if (bt == kUtility && bst.utility == kRotavator) {
       // Special - rotavator
       destroyRotavator(_loc);
@@ -92,7 +89,7 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
       }
     }
 
-    const bool isPathOrFenceOrRotavator = bt == kUtility && (bst.utility == kPath || bst.utility == kFence || bst.utility == kRotavator);
+    const bool needs3x3 = needs3x3Redraw(bt, bst);
 
     chunkRemoveBuildingRender(_loc->m_chunk, _loc->m_building);
     chunkRemoveBuildingUpdate(_loc->m_chunk, _loc->m_building);
@@ -101,7 +98,7 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
     if (wideRedraw) {
       renderChunkBackgroundImageAround(_loc->m_chunk);
       resumeMusic();
-    } else if (ilb || isPathOrFenceOrRotavator) {
+    } else if (needs3x3) {
       renderChunkBackgroundImageAround3x3(_loc->m_chunk, _loc);
     } else {
       renderChunkBackgroundImage(_loc->m_chunk);
@@ -110,8 +107,14 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
     _loc->m_building = NULL;
     _loc->m_notOwned = false;
 
-    if (checkFactoryUpgrades) {
+    // special - factory upgrade
+    if (bt == kUtility && bst.utility == kFactoryUpgrade) {
       checkUpdateFactoryUpgradeAroundLoc(_loc);
+    }
+
+    // special - conveyor connections
+    if (bt == kConveyor) {
+      checkConveyorSpritesAroundLoc(_loc);
     }
 
   }

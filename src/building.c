@@ -177,7 +177,7 @@ struct Building_t* buildingManagerNewBuilding(enum kBuildingType _asType) {
       if (m_buildings[i].m_type == kNoBuilding) {
         ++m_nBuildings;
         ++(m_nByType[_asType]);
-        ++m_buildingSearchLocation;
+        m_buildingSearchLocation = i+1;;
         m_buildings[i].m_type = _asType;
         return &(m_buildings[i]);
       }
@@ -226,6 +226,25 @@ void getBuildingNeighbors(struct Building_t* _building, int8_t _offset, struct L
 bool isLargeBuilding(enum kBuildingType _type, union kSubType _subType) {
   return _type >= kExtractor || (_type >= kUtility && _subType.utility == kRetirement);
 }
+
+bool needs3x3Redraw(enum kBuildingType _type, union kSubType _subType) {
+  if (isLargeBuilding(_type, _subType)) return true;
+  if (_type == kConveyor) return true;
+  if (_type == kUtility && _subType.utility == kPath) return true;
+  if (_type == kUtility && _subType.utility == kRotavator) return true;
+  if (_type == kUtility && _subType.utility == kFence) return true;
+  return false;
+}
+
+bool producesOutputCargoOnAdjacentTile(enum kBuildingType _type, union kSubType _subType) {
+  if (_type == kConveyor) return true;
+  if (_type == kExtractor) return true;
+  if (_type == kFactory) return true;
+  // if (_type == kSpecial && _subType.special == kImportBox); return true; // TODO - needed?
+  if (_type == kUtility && _subType.utility == kBuffferBox) return true;
+  return false;
+}
+
 
 bool isInvertedBuilding(struct Building_t* _building) {
   bool invert = (_building->m_type == kFactory && FDesc[ _building->m_subType.factory ].invert);
@@ -277,6 +296,8 @@ bool buildingHasUpdateFunction(enum kBuildingType _type, union kSubType _subType
   if (_type == kUtility && _subType.utility == kSign) return false;
   if (_type == kUtility && _subType.utility == kRetirement) return false;
   if (_type == kUtility && _subType.utility == kFence) return false;
+  if (_type == kUtility && _subType.utility == kFactoryUpgrade) return false;
+  if (_type == kUtility && _subType.utility == kRotavator) return false;
   if (_type == kSpecial && _subType.special == kShop) return false;
   return true;
 }
@@ -384,7 +405,12 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     wideRedraw = true;
   }
 
-  const bool isPathOrFenceOrRotavator = _type == kUtility && (_subType.utility == kPath || _subType.utility == kFence || _subType.utility == kRotavator);
+  // special - conveyor connections
+  if (_type == kConveyor) {
+    checkConveyorSpritesAroundLoc(_loc);
+  }
+
+  const bool needs3x3 = needs3x3Redraw(_type, _subType);
 
   // The Special objects get added during gen - don't redraw for these
   if (_type != kSpecial) {
@@ -393,7 +419,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
     if (wideRedraw) {
       renderChunkBackgroundImageAround(_loc->m_chunk);
       if (gm != kTitles) resumeMusic();
-    } else if (ilb || isPathOrFenceOrRotavator) {
+    } else if (needs3x3) {
       renderChunkBackgroundImageAround3x3(_loc->m_chunk, _loc);
     } else {
       renderChunkBackgroundImage(_loc->m_chunk);

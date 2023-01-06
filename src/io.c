@@ -11,6 +11,7 @@
 #include "sshot.h"
 #include "buildings/special.h"
 #include "buildings/factory.h"
+#include "buildings/conveyor.h"
 
 uint8_t m_save = 0;
 
@@ -613,6 +614,11 @@ bool doLoad() {
 
     // Things which need to run post-load
     setGameMode(kWanderMode);
+
+    // need to refresh conveyor sprite connections
+    for (uint16_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
+      conveyorUpdateSprite(buildingManagerGetByIndex(i));
+    } 
 
     addObstacles();
     doWetness(/*for titles = */ false);

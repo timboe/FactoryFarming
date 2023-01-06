@@ -173,6 +173,10 @@ bool isLargeBuilding(enum kBuildingType _type, union kSubType _subType);
 
 bool isInvertedBuilding(struct Building_t* _building);
 
+bool needs3x3Redraw(enum kBuildingType _type, union kSubType _subType);
+
+bool producesOutputCargoOnAdjacentTile(enum kBuildingType _type, union kSubType _subType);
+
 void buildingManagerFreeBuilding(struct Building_t* _buildings);
 
 bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _type, union kSubType _subType);
