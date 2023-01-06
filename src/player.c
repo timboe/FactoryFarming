@@ -339,18 +339,18 @@ bool movePlayer(bool _forceUpdate) {
 
   if (m_player.m_pix_x > TOT_WORLD_PIX_X) {
     flipCamera();
-    setPlayerPosition(m_player.m_pix_x - TOT_WORLD_PIX_X, m_player.m_pix_y, /*update current location = */ false);
+    setPlayerPosition(m_player.m_pix_x - TOT_WORLD_PIX_X, m_player.m_pix_y, /*update current location = */ true);
   } else if (m_player.m_pix_x < 0) {
     flipCamera();
-    setPlayerPosition(m_player.m_pix_x + TOT_WORLD_PIX_X, m_player.m_pix_y, /*update current location = */ false);
+    setPlayerPosition(m_player.m_pix_x + TOT_WORLD_PIX_X, m_player.m_pix_y, /*update current location = */ true);
   }
 
   if (m_player.m_pix_y > TOT_WORLD_PIX_Y) {
     flipCamera();
-    setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y - TOT_WORLD_PIX_Y, /*update current location = */ false);
+    setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y - TOT_WORLD_PIX_Y, /*update current location = */ true);
   } else if (m_player.m_pix_y < 0) {
     flipCamera();
-    setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y + TOT_WORLD_PIX_Y, /*update current location = */ false);
+    setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y + TOT_WORLD_PIX_Y, /*update current location = */ true);
   }
 
 
