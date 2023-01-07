@@ -39,7 +39,9 @@ void updatePlayerPosition(void);
 
 void playerSpriteSetup(void);
 
-void flipCamera(void);
+struct Chunk_t* computeCurrentChunk(void);
+
+enum kChunkQuad computeCurrentQuadrant(void);
 
 /// ///
 
@@ -170,11 +172,14 @@ void setPlayerPosition(uint16_t _x, uint16_t _y, bool _updateCurrentLocation) {
   pd->sprite->moveTo(m_player.m_sprite[2], _x * 2, _y * 2);
   updatePlayerPosition();
   // reset camera
-  m_player.m_camera_pix_x = m_player.m_pix_x - cOffX;
-  m_player.m_camera_pix_y = m_player.m_pix_y - cOffY;
+  m_player.m_camera_pix_x = m_player.m_pix_x + cOffX;
+  m_player.m_camera_pix_y = m_player.m_pix_y + cOffY;
   if (_updateCurrentLocation) {
-    m_currentLocation = getLocation(m_player.m_camera_pix_x / TILE_PIX, m_player.m_camera_pix_y / TILE_PIX);
-    m_currentChunk = getChunk(m_player.m_camera_pix_x / CHUNK_PIX_X, m_player.m_camera_pix_y / CHUNK_PIX_Y);
+    m_currentChunk = computeCurrentChunk();
+    m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
+    if (!IOOperationInProgress()) {
+      updateRenderList();
+    }
   }
 }
 
@@ -194,11 +199,6 @@ void updatePlayerPosition() {
   //pd->system->logToConsole("P@ %f %f", m_player.m_pix_x , m_player.m_pix_y);
 }
 
-void flipCamera() {
-  m_player.m_camera_pix_x += 2 * (m_player.m_pix_x - m_player.m_camera_pix_x);
-  m_player.m_camera_pix_y += 2 * (m_player.m_pix_y - m_player.m_camera_pix_y);
-}
-
 void updateCameraWithZoom(uint8_t _prevZoom, uint8_t _newZoom) {
   const float scalingFactor = _prevZoom / (float)_newZoom;
   const float cOffX = (m_player.m_camera_pix_x - m_player.m_pix_x) * scalingFactor;
@@ -209,7 +209,39 @@ void updateCameraWithZoom(uint8_t _prevZoom, uint8_t _newZoom) {
   pd->sprite->setImage(m_player.m_sprite[_newZoom], getSprite18_byidx(m_player.m_animID, _newZoom), kBitmapUnflipped);
 }
 
-bool movePlayer(bool _forceUpdate) {
+struct Chunk_t* computeCurrentChunk() {
+  int16_t effX = m_player.m_camera_pix_x; // Get effective (wrapped one way) camera coordinate, not letting it go -ve
+  int16_t effY = m_player.m_camera_pix_y; 
+  if (m_player.m_camera_pix_x < 0) effX += TOT_WORLD_PIX_X;
+  if (m_player.m_camera_pix_y < 0) effY += TOT_WORLD_PIX_Y;
+
+  int16_t chunkX = (effX / (CHUNK_PIX_X)) % WORLD_CHUNKS_X;
+  int16_t chunkY = (effY / (CHUNK_PIX_Y)) % WORLD_CHUNKS_Y;
+
+  return getChunk(chunkX, chunkY);
+}
+
+enum kChunkQuad computeCurrentQuadrant() {
+  int16_t effX = m_player.m_camera_pix_x; // Get effective (wrapped one way) camera coordinate, not letting it go -ve
+  int16_t effY = m_player.m_camera_pix_y; 
+  if (m_player.m_camera_pix_x < 0) effX += TOT_WORLD_PIX_X;
+  if (m_player.m_camera_pix_y < 0) effY += TOT_WORLD_PIX_Y;
+
+  int16_t subChunkX = effX / (CHUNK_PIX_X/2) % 2;
+  int16_t subChunkY = effY / (CHUNK_PIX_Y/2) % 2;
+  enum kChunkQuad quadrant = NW;
+  if (subChunkX && subChunkY) {
+    quadrant = SE;
+  } else if (subChunkX) {
+    quadrant = NE;
+  } else if (subChunkY) {
+    quadrant = SW;
+  }
+
+  return quadrant;
+}
+
+void movePlayer(bool _forceUpdate) {
 
   // Note: This may set the zoom
   if (m_player.m_enableZoomWhenMove && !_forceUpdate) {
@@ -249,17 +281,13 @@ bool movePlayer(bool _forceUpdate) {
         case kDirN: break;
       }
       if (x < 0) {
-        flipCamera();
         x += TOT_WORLD_PIX_X;
       } else if (x >= TOT_WORLD_PIX_X) {
-        flipCamera();
         x -= TOT_WORLD_PIX_X;
       }
       if (y < 0) {
-        flipCamera();
         y += TOT_WORLD_PIX_Y;
       } else if (y >= TOT_WORLD_PIX_Y) {
-        flipCamera();
         y -= TOT_WORLD_PIX_Y;
       }
       setPlayerPosition(x, y, /*update current location = */ false);
@@ -338,21 +366,16 @@ bool movePlayer(bool _forceUpdate) {
   movePlayerPosition(goalX, goalY);
 
   if (m_player.m_pix_x > TOT_WORLD_PIX_X) {
-    flipCamera();
     setPlayerPosition(m_player.m_pix_x - TOT_WORLD_PIX_X, m_player.m_pix_y, /*update current location = */ true);
   } else if (m_player.m_pix_x < 0) {
-    flipCamera();
     setPlayerPosition(m_player.m_pix_x + TOT_WORLD_PIX_X, m_player.m_pix_y, /*update current location = */ true);
   }
 
   if (m_player.m_pix_y > TOT_WORLD_PIX_Y) {
-    flipCamera();
     setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y - TOT_WORLD_PIX_Y, /*update current location = */ true);
   } else if (m_player.m_pix_y < 0) {
-    flipCamera();
     setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y + TOT_WORLD_PIX_Y, /*update current location = */ true);
   }
-
 
   if (m_player.m_enableCentreCamera) {
 
@@ -408,30 +431,13 @@ bool movePlayer(bool _forceUpdate) {
   }
 
   // Check chunk change
-  int16_t effX = m_player.m_camera_pix_x; // Get effective (wrapped one way) camera coordinate, not letting it go -ve
-  int16_t effY = m_player.m_camera_pix_y; 
-  if (m_player.m_camera_pix_x < 0) effX += TOT_WORLD_PIX_X;
-  if (m_player.m_camera_pix_y < 0) effY += TOT_WORLD_PIX_Y;
+  struct Chunk_t* cameraChunk = computeCurrentChunk();
+  enum kChunkQuad cameraQuad = computeCurrentQuadrant();
 
-  int16_t chunkX = (effX / (CHUNK_PIX_X)) % WORLD_CHUNKS_X;
-  int16_t chunkY = (effY / (CHUNK_PIX_Y)) % WORLD_CHUNKS_Y;
-
-  // Subchunk change
-  int16_t subChunkX = effX / (CHUNK_PIX_X/2) % 2;
-  int16_t subChunkY = effY / (CHUNK_PIX_Y/2) % 2;
-  enum kChunkQuad quadrant = NW;
-  if (subChunkX && subChunkY) {
-    quadrant = SE;
-  } else if (subChunkX) {
-    quadrant = NE;
-  } else if (subChunkY) {
-    quadrant = SW;
-  }
-
-  bool chunkChange = (chunkX != m_currentChunk->m_x || chunkY != m_currentChunk->m_y);
-  if (chunkChange || m_quadrant != quadrant) {
-    m_currentChunk = getChunk(chunkX, chunkY); // TODO this can still go out-of-bounds (how?), ideally should be able to use getChunk_noCheck here
-    m_quadrant = quadrant;
+  bool chunkChange = (cameraChunk != m_currentChunk);
+  if (chunkChange || cameraQuad != m_quadrant) {
+    m_currentChunk = cameraChunk;
+    m_quadrant = cameraQuad;
     if (zoom == 2 || chunkChange) { // When zoomed out, only need to call when actually changing chunks
       #ifdef DEV
       pd->system->logToConsole("CHUNKCHANGE %u %u (%u %u)", chunkX, chunkY, subChunkX, subChunkY);
@@ -472,7 +478,6 @@ bool movePlayer(bool _forceUpdate) {
     m_forceTorus = false;
   }
 
-  return true;
 }
 
 bool modMoney(int32_t _amount) {

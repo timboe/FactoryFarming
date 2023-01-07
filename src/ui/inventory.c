@@ -190,9 +190,11 @@ void doPlace() {
       break;
     case kUICatCargo: 
       if (placeLocation->m_building && placeLocation->m_building->m_type == kUtility && placeLocation->m_building->m_subType.utility == kSign) {
-        placeLocation->m_building->m_mode.mode16 = selectedID;
-        sfx(kSfxA);
-        renderChunkBackgroundImage(placeLocation->m_chunk);
+        if (placeLocation->m_building->m_mode.mode16 != selectedID) {
+          placeLocation->m_building->m_mode.mode16 = selectedID;
+          sfx(kSfxA);
+          renderChunkBackgroundImage(placeLocation->m_chunk);
+        }
       } else {
         placed = newCargo(placeLocation, selectedID, /*add to display*/ true); 
       }
