@@ -47,6 +47,7 @@ void updateMusic(bool _isTitle) {
     }
     pd->sound->fileplayer->play(m_music[0], 1);
     m_trackPlaying = 0;
+    updateMusicVol();
   } else {
     struct Player_t* p = getPlayer();
     const bool musicOn = (p->m_soundSettings & 1);
@@ -54,6 +55,7 @@ void updateMusic(bool _isTitle) {
       if (m_trackPlaying == -1) {
         pd->sound->fileplayer->play(m_music[0], 1);
         m_trackPlaying = 0;
+        updateMusicVol();
       } else {
         // music is already playing
       }
@@ -70,7 +72,6 @@ void updateMusic(bool _isTitle) {
       }
     }
   }
-  updateMusicVol();
 }
 
 void chooseMusic(int8_t _id) {
@@ -101,6 +102,7 @@ void musicStopped(SoundSource* _c) {
   }
   pd->sound->fileplayer->play(m_music[next], 1);
   m_trackPlaying = next;
+  updateMusicVol();
 }
 
 void updateSfx() {

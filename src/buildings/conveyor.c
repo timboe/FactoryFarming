@@ -14,7 +14,7 @@ void conveyorSetLocation(struct Building_t* _building, enum kDir _direction, boo
 
 bool recursiveGetIsAbleToMove(struct Location_t* _nextLoc, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom);
 
-bool anyOutputInDir(struct Building_t* _building, enum kDir _dir);
+bool anyOutputInDir(struct Location_t* _loc, enum kDir _dir);
 
 #define CONV_SPEED 0
 #define CONV_X 1
@@ -23,15 +23,34 @@ bool anyOutputInDir(struct Building_t* _building, enum kDir _dir);
 
 /// ///
 
-bool anyOutputInDir(struct Building_t* _building, enum kDir _dir) {
+bool anyOutputInDir(struct Location_t* _loc, enum kDir _dir) {
+  struct Building_t* _building = _loc->m_building;
   if (!_building) return false;
   if (_building->m_type == kConveyor) {
+    if (_building->m_subType.conveyor == kTunnelIn) return false;
     for (uint8_t i = 0; i < 4; ++i) {
       if (_building->m_nextDir[i] == _dir) {
         return true;
       }
     }
   } else if (producesOutputCargoOnAdjacentTile(_building->m_type, _building->m_subType)) {
+    if (isLargeBuilding(_building->m_type, _building->m_subType)) {
+      // We have been given one of 8 non-owned tiles surrounding the building.
+      // We need to check that going from the building centere in the given direction _dir gives us _loc
+      // if we are to consider this tile any further
+      struct Location_t* buildingCentreLoc = _building->m_location;
+      struct Location_t* walkOne = NULL;
+      switch (_dir) {
+        case SN: walkOne = getLocation(buildingCentreLoc->m_x, buildingCentreLoc->m_y - 1); break;
+        case NS: walkOne = getLocation(buildingCentreLoc->m_x, buildingCentreLoc->m_y + 1); break;
+        case WE: walkOne = getLocation(buildingCentreLoc->m_x + 1, buildingCentreLoc->m_y); break;
+        case EW: walkOne = getLocation(buildingCentreLoc->m_x - 1, buildingCentreLoc->m_y); break;
+        default: return false;
+      }
+      if (walkOne != _loc) {
+        return false; // Not the tile which acts like an incoming conveyor from this large building
+      }
+    }
     if (_building->m_dir == _dir) {
       return true;
     }
@@ -54,27 +73,29 @@ void conveyorUpdateSprite(struct Building_t* _building) {
   bool specialCornerArrangement = true;
   uint8_t nIn = 0;
   struct Location_t* pointsToMe = NULL;
-  if (anyOutputInDir(below->m_building, SN)) {
+  if (anyOutputInDir(below, SN)) {
     ++nIn;
     pointsToMe = below;
-    if (_building->m_nextDir[0] == SN) specialCornerArrangement = false;
+    // No corner tile if I output in a stright line (or send the cargo straight back, which would be very stange)
+    if (_building->m_nextDir[0] == SN || _building->m_nextDir[0] == NS) specialCornerArrangement = false;
   } 
-  if (anyOutputInDir(left->m_building, WE)) {
+  if (anyOutputInDir(left, WE)) {
     ++nIn;
     pointsToMe = left;
-    if (_building->m_nextDir[0] == WE) specialCornerArrangement = false;
+    if (_building->m_nextDir[0] == WE || _building->m_nextDir[0] == EW) specialCornerArrangement = false;
   }
-  if (anyOutputInDir(above->m_building, NS)) {
+  if (anyOutputInDir(above, NS)) {
     ++nIn;
     pointsToMe = above;
-    if (_building->m_nextDir[0] == NS) specialCornerArrangement = false;
+    if (_building->m_nextDir[0] == NS || _building->m_nextDir[0] == SN) specialCornerArrangement = false;
   } 
-  if (anyOutputInDir(right->m_building, EW)) {
+  if (anyOutputInDir(right, EW)) {
     ++nIn;
     pointsToMe = right;
-    if (_building->m_nextDir[0] == EW) specialCornerArrangement = false;
+    if (_building->m_nextDir[0] == EW || _building->m_nextDir[0] == WE) specialCornerArrangement = false;
   } 
 
+  // No corner tile if more than one tile output onto this tile (or if none do)
   if (nIn != 1) specialCornerArrangement = false;
 
   if (specialCornerArrangement) { 
@@ -89,8 +110,8 @@ void conveyorUpdateSprite(struct Building_t* _building) {
     }
     uint16_t sID = 0;
     switch (_building->m_nextDir[0]) {
-      case EW: sID = evenIn ? SID(8,3) : SID(13,3); break;
-      case WE: sID = evenIn ? SID(12,3) : SID(9,3); break;
+      case EW: sID = evenIn ? SID(8,3)  : SID(13,3); break;
+      case WE: sID = evenIn ? SID(12,3) : SID(9,3);  break;
       case NS: sID = evenIn ? SID(14,3) : SID(11,3); break;
       case SN: sID = evenIn ? SID(10,3) : SID(15,3); break;
       case kDirN: break;
@@ -109,16 +130,22 @@ void conveyorUpdateSprite(struct Building_t* _building) {
 void checkConveyorSpritesAroundLoc(struct Location_t* _loc) {
   if (_loc->m_building && _loc->m_building->m_type == kConveyor) conveyorUpdateSprite(_loc->m_building);
   //
-  struct Location_t* l = getLocation(_loc->m_x + 1, _loc->m_y);
+  int8_t distance = 1;
+  if (_loc->m_building && (_loc->m_building->m_type == kFactory || _loc->m_building->m_type == kExtractor)) {
+    distance = 2;
+  }
+  //
+  struct Location_t* l = NULL;
+  l = getLocation(_loc->m_x + distance, _loc->m_y);
   if (l->m_building && l->m_building->m_type == kConveyor) conveyorUpdateSprite(l->m_building);
   //
-  l = getLocation(_loc->m_x - 1, _loc->m_y);
+  l = getLocation(_loc->m_x - distance, _loc->m_y);
   if (l->m_building && l->m_building->m_type == kConveyor) conveyorUpdateSprite(l->m_building);
   //
-  l = getLocation(_loc->m_x, _loc->m_y + 1);
+  l = getLocation(_loc->m_x, _loc->m_y + distance);
   if (l->m_building && l->m_building->m_type == kConveyor) conveyorUpdateSprite(l->m_building);
   //
-  l = getLocation(_loc->m_x, _loc->m_y - 1);
+  l = getLocation(_loc->m_x, _loc->m_y - distance);
   if (l->m_building && l->m_building->m_type == kConveyor) conveyorUpdateSprite(l->m_building);
 }
 

@@ -113,7 +113,7 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
     }
 
     // special - conveyor connections
-    if (bt == kConveyor) {
+   if (producesOutputCargoOnAdjacentTile(bt, bst)) {
       checkConveyorSpritesAroundLoc(_loc);
     }
 

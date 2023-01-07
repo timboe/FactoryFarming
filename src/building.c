@@ -406,7 +406,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
   }
 
   // special - conveyor connections
-  if (_type == kConveyor) {
+  if (producesOutputCargoOnAdjacentTile(_type, _subType)) {
     checkConveyorSpritesAroundLoc(_loc);
   }
 
