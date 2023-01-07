@@ -132,7 +132,7 @@ float pointDist(int32_t _x, int32_t _y, int32_t _x1, int32_t _y1, int32_t _x2, i
 
   int32_t dx = _x - xx;
   int32_t dy = _y - yy;
-  return sqrt(dx * dx + dy * dy);
+  return sqrtf(dx * dx + dy * dy);
 }
 
 void renderChunkBackgroundImageAround(struct Chunk_t* _chunk) {
@@ -470,7 +470,7 @@ void addBiome(uint8_t _size, int32_t _offX, int32_t _offY, uint16_t _imgStart) {
     y1 = r + rand() % (TOT_TILES_Y/2 - 2*r);
     x2 = r + rand() % (TOT_TILES_X/2 - 2*r);
     y2 = r + rand() % (TOT_TILES_Y/2 - 2*r);
-    if (sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) ) > tooClose) break;
+    if (sqrtf( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) ) > tooClose) break;
   }
   for (int32_t x = _offX; x < TOT_TILES_X/2 + _offX; ++x) {
     for (int32_t y = _offY; y < TOT_TILES_Y/2 + _offY; ++y) {
