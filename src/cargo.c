@@ -4,6 +4,7 @@
 #include "render.h"
 #include "building.h"
 #include "input.h"
+#include "ui.h"
 #include "buildings/conveyor.h"
 
 #define DIS UINT32_MAX
@@ -264,7 +265,7 @@ bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addToDisplay
   struct Chunk_t* chunk = _loc->m_chunk;
   chunkAddCargo(chunk, cargo);
 
-  if (_addToDisplay) pd->sprite->addSprite(cargo->m_sprite[getZoom()]);
+  if (_addToDisplay && getGameMode() != kMenuCredits) pd->sprite->addSprite(cargo->m_sprite[getZoom()]);
   return true;
 }
 

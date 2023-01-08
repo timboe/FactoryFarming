@@ -41,7 +41,7 @@ bool m_hasImported = false; // tutorial only
 #define EXTERNAL_SALES_SECONDS 2
 #define EXTERNAL_SALES_SEC_IN_TICKS (EXTERNAL_SALES_SECONDS*TICKS_PER_SEC)
 
-void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tickLength);
+void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID);
 
 void exportUpdateFn(struct Building_t* _building);
 
@@ -152,12 +152,15 @@ void warpUpdateFn() {
 }
 
 
-void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tickLength) {
+void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID) {
+  // We allow this part to run multiple times in a single tick (via recursion)
+
+  struct Player_t* p = getPlayer();
   for (int32_t x = _building->m_location->m_x - 1; x < _building->m_location->m_x + 2; ++x) {
     for (int32_t y = _building->m_location->m_y - 1; y < _building->m_location->m_y + 2; ++y) {
       struct Location_t* loc = getLocation_noCheck(x, y); // Will never straddle the world boundary
       if (loc->m_cargo) {
-        getPlayer()->m_soldCargo[ loc->m_cargo->m_type ]++; // Statistics
+        p->m_soldCargo[ loc->m_cargo->m_type ]++; // Statistics
         const uint16_t price = CargoDesc[loc->m_cargo->m_type].price;
         modMoney( price );
 
@@ -182,6 +185,11 @@ void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tickLength) {
     }
   }
 
+  // We don't allow the follow parts to run more than once in a single tick
+  if (_building->m_tickProcessed == _tickID) return;
+  _building->m_tickProcessed = _tickID;
+  ++m_recursionCount;
+
   // Process external sales
   _building->m_progress += _tickLength;
   if (_building->m_progress >= EXTERNAL_SALES_SEC_IN_TICKS) {
@@ -189,7 +197,6 @@ void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tickLength) {
     const float totInputSales = getOtherWorldCargoSales() * EXTERNAL_SALES_SECONDS;
     modMoney( totInputSales ); // Rounds down
   } 
-
 
   // Process exporting of sales data (and exports data, though m_exportItemCountA/B are only incremented by the Exports update fn)
   m_exportTimer += _tickLength;
@@ -209,12 +216,10 @@ void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tickLength) {
 }
 
 void specialUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
-  if (_building->m_tickProcessed == _tickID) return;
-  _building->m_tickProcessed = _tickID;
-  ++m_recursionCount;
+  // Note: Handling of recursive calls left up to the individual cases
 
   switch (_building->m_subType.special) {
-    case kSellBox:; return sellBoxUpdateFn(_building, _tickLength);
+    case kSellBox:; return sellBoxUpdateFn(_building, _tickLength, _tickID);
     case kExportBox:; return exportUpdateFn(_building);
     case kImportBox:; return importUpdateFn(_building, _tickLength, _tickID, _zoom);
     case kWarp: return warpUpdateFn();
@@ -323,6 +328,8 @@ bool hasExported() {
 }
 
 void exportUpdateFn(struct Building_t* _building) {
+  // Note: We allow this to be called multiple times in a single tick (via recursion)
+
   if (_building->m_dir != SN) return;
 
   // Pickup items 
@@ -357,6 +364,11 @@ bool hasImported() {
 
 void importUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
   if (_building->m_dir != SN) return;
+
+  // Only once per tick
+  if (_building->m_tickProcessed == _tickID) return;
+  _building->m_tickProcessed = _tickID;
+  ++m_recursionCount;
 
   struct Location_t* loc = NULL;
 

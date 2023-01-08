@@ -41,8 +41,9 @@ void setChunkSpriteOffsets(struct Chunk_t* _c, int16_t _x, int16_t _y) {
   // Move the background
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     PDRect bound = {.x = 0, .y = 0, .width = CHUNK_PIX_X*zoom, .height = CHUNK_PIX_Y*zoom};
-    // This should always be present
-    pd->sprite->moveTo(_c->m_bkgSprite[zoom], (CHUNK_PIX_X*_c->m_x + CHUNK_PIX_X/2.0 + _x)*zoom, (CHUNK_PIX_Y*_c->m_y + CHUNK_PIX_Y/2.0 + _y)*zoom);
+    if (_c->m_bkgSprite[zoom]) {
+      pd->sprite->moveTo(_c->m_bkgSprite[zoom], (CHUNK_PIX_X*_c->m_x + CHUNK_PIX_X/2.0 + _x)*zoom, (CHUNK_PIX_Y*_c->m_y + CHUNK_PIX_Y/2.0 + _y)*zoom);
+    }
   }
   // Set the offset to all locations such that any other moveTo calls can also apply the correct offset
   for (uint32_t x = TILES_PER_CHUNK_X * _c->m_x; x < TILES_PER_CHUNK_X * (_c->m_x + 1); ++x) {
@@ -59,10 +60,33 @@ void setChunkSpriteOffsets(struct Chunk_t* _c, int16_t _x, int16_t _y) {
             (TILE_PIX*loc->m_y + loc->m_pix_off_y + TILE_PIX/2.0)*zoom);
         }
       }
+
+      // Delete this?
+
+      // Apply the offset to any buildings which have animated or large collision sprites. Utility is included due to fences
+      if (loc->m_building) {
+        if (loc->m_building->m_type >= kUtility) {
+          for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+            // TODO report, this crashes
+            //pd->sprite->moveTo(loc->m_building->m_sprite[zoom], 
+            //  (loc->m_building->m_pix_x + loc->m_pix_off_x - EXTRACTOR_PIX/2)*zoom, 
+            //  (loc->m_building->m_pix_y + loc->m_pix_off_y - EXTRACTOR_PIX/2)*zoom);
+          }
+        } else {
+          for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+            // if (loc->m_building->m_sprite[zoom]) {
+              // pd->sprite->moveTo(loc->m_building->m_sprite[zoom], 
+                // (loc->m_building->m_pix_x + loc->m_pix_off_x) * zoom, 
+                // (loc->m_building->m_pix_y + loc->m_pix_off_y) * zoom);
+            // }
+          }
+        }
+      }
+
+      //
+
     }
   }
-
-  // TODO move all building collision sprites
 
 }
 

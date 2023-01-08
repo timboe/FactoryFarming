@@ -35,13 +35,15 @@ bool m_forceTorus = true;
 
 void movePlayerPosition(float _goalX, float _goalY);
 
-void updatePlayerPosition(void);
+void updatePlayerPosition(uint8_t _zoom);
 
 void playerSpriteSetup(void);
 
 struct Chunk_t* computeCurrentChunk(void);
 
 enum kChunkQuad computeCurrentQuadrant(void);
+
+void checkTorus(void);
 
 /// ///
 
@@ -166,18 +168,20 @@ struct Location_t* getPlayerLocation() {
 
 void setPlayerPosition(uint16_t _x, uint16_t _y, bool _updateCurrentLocation) {
   // keep track of camera offset and preserve it
-  const float cOffX = m_player.m_camera_pix_x - m_player.m_pix_x;
-  const float cOffY = m_player.m_camera_pix_y - m_player.m_pix_y; 
+  const int16_t cOffX = m_player.m_camera_pix_x - m_player.m_pix_x;
+  const int16_t cOffY = m_player.m_camera_pix_y - m_player.m_pix_y; 
   pd->sprite->moveTo(m_player.m_sprite[1], _x, _y); // Note: Hard coded two zoom levels
   pd->sprite->moveTo(m_player.m_sprite[2], _x * 2, _y * 2);
-  updatePlayerPosition();
+  updatePlayerPosition(getZoom());
   // reset camera
-  m_player.m_camera_pix_x = m_player.m_pix_x + cOffX;
-  m_player.m_camera_pix_y = m_player.m_pix_y + cOffY;
+  m_player.m_camera_pix_x = (int16_t)m_player.m_pix_x + cOffX;
+  m_player.m_camera_pix_y = (int16_t)m_player.m_pix_y + cOffY;
   if (_updateCurrentLocation) {
     m_currentChunk = computeCurrentChunk();
     m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
+    checkTorus();
     if (!IOOperationInProgress()) {
+      pd->system->logToConsole("CHUNKCHANGE (set) C:%i %i (%i)", m_currentChunk->m_x, m_currentChunk->m_y, m_quadrant);
       updateRenderList();
     }
   }
@@ -188,14 +192,13 @@ void movePlayerPosition(float _goalX, float _goalY) {
   uint8_t zoom = getZoom();
   SpriteCollisionInfo* collInfo = pd->sprite->moveWithCollisions(m_player.m_sprite[zoom], _goalX * zoom, _goalY * zoom, &(m_player.m_pix_x), &(m_player.m_pix_y), &len);
   if (len) pd->system->realloc(collInfo, 0); // Free
-  updatePlayerPosition();
+  updatePlayerPosition(zoom);
 }
 
-void updatePlayerPosition() {
-  uint8_t zoom = getZoom();
-  pd->sprite->getPosition(m_player.m_sprite[zoom], &(m_player.m_pix_x), &(m_player.m_pix_y));
-  m_player.m_pix_x = m_player.m_pix_x / zoom;
-  m_player.m_pix_y = m_player.m_pix_y / zoom;
+void updatePlayerPosition(uint8_t _zoom) {
+  pd->sprite->getPosition(m_player.m_sprite[_zoom], &(m_player.m_pix_x), &(m_player.m_pix_y));
+  m_player.m_pix_x = m_player.m_pix_x / _zoom;
+  m_player.m_pix_y = m_player.m_pix_y / _zoom;
   //pd->system->logToConsole("P@ %f %f", m_player.m_pix_x , m_player.m_pix_y);
 }
 
@@ -239,6 +242,31 @@ enum kChunkQuad computeCurrentQuadrant() {
   }
 
   return quadrant;
+}
+
+void checkTorus() {
+  // Torus splitting
+  bool torusChanged = false;
+  if (m_top && m_player.m_pix_y > TOT_WORLD_PIX_Y/2) {
+    m_top = false;
+    torusChanged = true;
+  } else if (!m_top && m_player.m_pix_y <= TOT_WORLD_PIX_Y/2) {
+    m_top = true;
+    torusChanged = true;
+  }
+
+  if (m_left && m_player.m_pix_x > TOT_WORLD_PIX_X/2) {
+    m_left = false;
+    torusChanged = true;
+  } else if (!m_left && m_player.m_pix_x <= TOT_WORLD_PIX_X/2) {
+    m_left = true;
+    torusChanged = true;
+  }
+
+  if (torusChanged || m_forceTorus) {
+    chunkShiftTorus(m_top, m_left);
+    m_forceTorus = false;
+  }
 }
 
 void movePlayer(bool _forceUpdate) {
@@ -365,16 +393,17 @@ void movePlayer(bool _forceUpdate) {
 
   movePlayerPosition(goalX, goalY);
 
+  // Don#t need to update position as the code below will pick up on this
   if (m_player.m_pix_x > TOT_WORLD_PIX_X) {
-    setPlayerPosition(m_player.m_pix_x - TOT_WORLD_PIX_X, m_player.m_pix_y, /*update current location = */ true);
+    setPlayerPosition(m_player.m_pix_x - TOT_WORLD_PIX_X, m_player.m_pix_y, /*update current location = */ false);
   } else if (m_player.m_pix_x < 0) {
-    setPlayerPosition(m_player.m_pix_x + TOT_WORLD_PIX_X, m_player.m_pix_y, /*update current location = */ true);
+    setPlayerPosition(m_player.m_pix_x + TOT_WORLD_PIX_X, m_player.m_pix_y, /*update current location = */ false);
   }
 
   if (m_player.m_pix_y > TOT_WORLD_PIX_Y) {
-    setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y - TOT_WORLD_PIX_Y, /*update current location = */ true);
+    setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y - TOT_WORLD_PIX_Y, /*update current location = */ false);
   } else if (m_player.m_pix_y < 0) {
-    setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y + TOT_WORLD_PIX_Y, /*update current location = */ true);
+    setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y + TOT_WORLD_PIX_Y, /*update current location = */ false);
   }
 
   if (m_player.m_enableCentreCamera) {
@@ -434,14 +463,16 @@ void movePlayer(bool _forceUpdate) {
   struct Chunk_t* cameraChunk = computeCurrentChunk();
   enum kChunkQuad cameraQuad = computeCurrentQuadrant();
 
+  checkTorus();
+
   bool chunkChange = (cameraChunk != m_currentChunk);
   if (chunkChange || cameraQuad != m_quadrant) {
     m_currentChunk = cameraChunk;
     m_quadrant = cameraQuad;
     if (zoom == 2 || chunkChange) { // When zoomed out, only need to call when actually changing chunks
-      #ifdef DEV
-      pd->system->logToConsole("CHUNKCHANGE %u %u (%u %u)", chunkX, chunkY, subChunkX, subChunkY);
-      #endif
+      //#ifdef DEV
+      pd->system->logToConsole("CHUNKCHANGE (move) %u %u (%u)", m_currentChunk->m_x, m_currentChunk->m_y, m_quadrant);
+      //#endif
       updateRenderList();
     }
   }
@@ -453,29 +484,6 @@ void movePlayer(bool _forceUpdate) {
     int32_t bpX = (TILE_PIX*m_currentLocation->m_x + TILE_PIX/2.0) * zoom, bpY = (TILE_PIX*m_currentLocation->m_y  + TILE_PIX/2.0) * zoom;
     pd->sprite->moveTo(m_player.m_blueprint[zoom], bpX, bpY);
     pd->sprite->moveTo(m_player.m_blueprintRadius[zoom], bpX, bpY);
-  }
-
-  // Torus splitting
-  bool torusChanged = false;
-  if (m_top && m_player.m_pix_y > TOT_WORLD_PIX_Y/2) {
-    m_top = false;
-    torusChanged = true;
-  } else if (!m_top && m_player.m_pix_y <= TOT_WORLD_PIX_Y/2) {
-    m_top = true;
-    torusChanged = true;
-  }
-
-  if (m_left && m_player.m_pix_x > TOT_WORLD_PIX_X/2) {
-    m_left = false;
-    torusChanged = true;
-  } else if (!m_left && m_player.m_pix_x <= TOT_WORLD_PIX_X/2) {
-    m_left = true;
-    torusChanged = true;
-  }
-
-  if (torusChanged || m_forceTorus) {
-    chunkShiftTorus(m_top, m_left);
-    m_forceTorus = false;
   }
 
 }
@@ -635,7 +643,6 @@ void resetPlayer() {
   m_deserialiseXPlayer = 0;
   m_deserialiseYPlayer = 0;
   m_deserialiseArrayID = -1;
-  m_forceTorus = true;
 }
 
 void setPlayerVisible(bool _visible) {

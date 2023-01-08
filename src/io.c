@@ -235,6 +235,7 @@ bool doNewWorld() {
       // Starting a new game, set the default settings
       setDefaultPlayerSettings();
       showTutorialMsg(getTutorialStage());
+      forceTorus();
     }
 
     setPlotCursorToWorld(getSlot());
@@ -630,6 +631,8 @@ bool doLoad() {
     updateMusic(/*isTitle=*/ false);
 
     populateMenuGame();
+
+    forceTorus();
 
     // Finished
     #ifdef SLOW_LOAD

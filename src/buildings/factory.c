@@ -12,28 +12,9 @@ int8_t locationHasUpgradeModule(int32_t _x, int32_t _y);
 /// ///
 
 void factoryUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _tickID, uint8_t _zoom) {
-  if (_building->m_tickProcessed == _tickID) return;
-  _building->m_tickProcessed = _tickID;
-  ++m_recursionCount;
 
+  // Picking up - note we do this BEFORE checking for recursive exit. I.e. we can pick up (if called recursively) multiple times on a single tick
   const enum kFactorySubType fst = _building->m_subType.factory;
-  // Production
-  if (_building->m_stored[0] < 255 /*out*/ &&
-    _building->m_stored[1] && 
-    (FDesc[fst].in2 == kNoCargo || _building->m_stored[2]) &&
-    (FDesc[fst].in3 == kNoCargo || _building->m_stored[3]) &&
-    (FDesc[fst].in4 == kNoCargo || _building->m_stored[4]) &&
-    (FDesc[fst].in5 == kNoCargo || _building->m_stored[5])) 
-  {
-    _building->m_progress += _tickLength;
-    if (_building->m_progress >= _building->m_mode.mode16) {
-      _building->m_progress -= _building->m_mode.mode16;
-      ++_building->m_stored[0];
-      for (int32_t i = 1; i < 6; ++i) if (_building->m_stored[i]) --_building->m_stored[i];
-    }
-  }
-
-  // Picking up
   for (int32_t x = -1; x < 2; ++x) {
     for (int32_t y = -1; y < 2; ++y) {
       struct Location_t* loc = getLocation(_building->m_location->m_x + x, _building->m_location->m_y + y);
@@ -56,6 +37,27 @@ void factoryUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t 
           clearLocation(loc, /*clearCargo*/ true, /*clearBuilding*/ false);
         }
       }
+    }
+  }
+
+  // Check for recursive call - the following is once per tick only
+  if (_building->m_tickProcessed == _tickID) return;
+  _building->m_tickProcessed = _tickID;
+  ++m_recursionCount;
+
+  // Production
+  if (_building->m_stored[0] < 255 /*out*/ &&
+    _building->m_stored[1] && 
+    (FDesc[fst].in2 == kNoCargo || _building->m_stored[2]) &&
+    (FDesc[fst].in3 == kNoCargo || _building->m_stored[3]) &&
+    (FDesc[fst].in4 == kNoCargo || _building->m_stored[4]) &&
+    (FDesc[fst].in5 == kNoCargo || _building->m_stored[5])) 
+  {
+    _building->m_progress += _tickLength;
+    if (_building->m_progress >= _building->m_mode.mode16) {
+      _building->m_progress -= _building->m_mode.mode16;
+      ++_building->m_stored[0];
+      for (int32_t i = 1; i < 6; ++i) if (_building->m_stored[i]) --_building->m_stored[i];
     }
   }
 

@@ -315,9 +315,7 @@ void reset(bool _resetThePlayer) {
   if (_resetThePlayer) {
     resetPlayer();
     resetUI();
-  }
-  forceTorus();
-  
+  }  
 }
 
 void populateMenuTitle() {
