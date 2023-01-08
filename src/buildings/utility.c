@@ -90,21 +90,33 @@ void buildRotavator(struct Location_t* _loc) {
     rotavatorCheckSet(getTile(_loc->m_x + 1, _loc->m_y - 1), &_loc->m_building->m_mode.mode8[1]);
 }
 
-void rotavatorCheckRevert(struct Tile_t* _t, uint8_t _stored) {
+void rotavatorCheckRevert(int16_t _x, int16_t _y, uint8_t _stored) {
+  struct Tile_t* t = getTile(_x, _y);
+  // Don't revert if made landfil in the meantime
+  if (_t->m_tile == UDesc[kLandfill].sprite) {
+    return;
+  }
+  // If a well was built here, then update the well to know what the original tile was
+  struct Location_t* loc = getLocation(_x, _y);
+  if (loc->m_building && loc->m_building->m_type == kUtility && loc->m_building->m_subType.utility == kWell) {
+    loc->m_building->m_mode.mode16 = _stored;
+    return;
+  }
+  // Regular 
   if (_stored != 255) {
-    setTile_ptr(_t, _stored);
+    setTile_ptr(t, _stored);
   }
 }
 
 void destroyRotavator(struct Location_t* _loc) {
-    rotavatorCheckRevert(getTile(_loc->m_x - 1, _loc->m_y + 1), _loc->m_building->m_stored[0]);
-    rotavatorCheckRevert(getTile(_loc->m_x    , _loc->m_y + 1), _loc->m_building->m_stored[1]);
-    rotavatorCheckRevert(getTile(_loc->m_x + 1, _loc->m_y + 1), _loc->m_building->m_stored[2]);
-    rotavatorCheckRevert(getTile(_loc->m_x - 1, _loc->m_y    ), _loc->m_building->m_stored[3]);
-    rotavatorCheckRevert(getTile(_loc->m_x + 1, _loc->m_y    ), _loc->m_building->m_stored[4]);
-    rotavatorCheckRevert(getTile(_loc->m_x - 1, _loc->m_y - 1), _loc->m_building->m_stored[5]);
-    rotavatorCheckRevert(getTile(_loc->m_x    , _loc->m_y - 1), _loc->m_building->m_mode.mode8[0]);
-    rotavatorCheckRevert(getTile(_loc->m_x + 1, _loc->m_y - 1), _loc->m_building->m_mode.mode8[1]);
+    rotavatorCheckRevert(_loc->m_x - 1, _loc->m_y + 1, _loc->m_building->m_stored[0]);
+    rotavatorCheckRevert(_loc->m_x    , _loc->m_y + 1, _loc->m_building->m_stored[1]);
+    rotavatorCheckRevert(_loc->m_x + 1, _loc->m_y + 1, _loc->m_building->m_stored[2]);
+    rotavatorCheckRevert(_loc->m_x - 1, _loc->m_y    , _loc->m_building->m_stored[3]);
+    rotavatorCheckRevert(_loc->m_x + 1, _loc->m_y    , _loc->m_building->m_stored[4]);
+    rotavatorCheckRevert(_loc->m_x - 1, _loc->m_y - 1, _loc->m_building->m_stored[5]);
+    rotavatorCheckRevert(_loc->m_x    , _loc->m_y - 1, _loc->m_building->m_mode.mode8[0]);
+    rotavatorCheckRevert(_loc->m_x + 1, _loc->m_y - 1, _loc->m_building->m_mode.mode8[1]);
 }
 
 bool doPlaceRetirement(struct Location_t* _loc) {

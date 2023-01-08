@@ -35,11 +35,15 @@ bool m_forceTorus = true;
 
 void movePlayerPosition(float _goalX, float _goalY);
 
-void updatePlayerPosition(void);
+void updatePlayerPosition(uint8_t _zoom);
 
 void playerSpriteSetup(void);
 
-void flipCamera(void);
+struct Chunk_t* computeCurrentChunk(void);
+
+enum kChunkQuad computeCurrentQuadrant(void);
+
+void checkTorus(void);
 
 /// ///
 
@@ -164,17 +168,22 @@ struct Location_t* getPlayerLocation() {
 
 void setPlayerPosition(uint16_t _x, uint16_t _y, bool _updateCurrentLocation) {
   // keep track of camera offset and preserve it
-  const float cOffX = m_player.m_camera_pix_x - m_player.m_pix_x;
-  const float cOffY = m_player.m_camera_pix_y - m_player.m_pix_y; 
+  const int16_t cOffX = m_player.m_camera_pix_x - m_player.m_pix_x;
+  const int16_t cOffY = m_player.m_camera_pix_y - m_player.m_pix_y; 
   pd->sprite->moveTo(m_player.m_sprite[1], _x, _y); // Note: Hard coded two zoom levels
   pd->sprite->moveTo(m_player.m_sprite[2], _x * 2, _y * 2);
-  updatePlayerPosition();
+  updatePlayerPosition(getZoom());
   // reset camera
-  m_player.m_camera_pix_x = m_player.m_pix_x - cOffX;
-  m_player.m_camera_pix_y = m_player.m_pix_y - cOffY;
+  m_player.m_camera_pix_x = (int16_t)m_player.m_pix_x + cOffX;
+  m_player.m_camera_pix_y = (int16_t)m_player.m_pix_y + cOffY;
   if (_updateCurrentLocation) {
-    m_currentLocation = getLocation(m_player.m_camera_pix_x / TILE_PIX, m_player.m_camera_pix_y / TILE_PIX);
-    m_currentChunk = getChunk(m_player.m_camera_pix_x / CHUNK_PIX_X, m_player.m_camera_pix_y / CHUNK_PIX_Y);
+    m_currentChunk = computeCurrentChunk();
+    m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
+    // DON'T setTorus here (not 100% why, but it breaks building hitboxes)
+    pd->system->logToConsole("CHUNKCHANGE (set) C:%i %i (%i)", m_currentChunk->m_x, m_currentChunk->m_y, m_quadrant);
+    if (!IOOperationInProgress()) {
+      updateRenderList();
+    }
   }
 }
 
@@ -183,20 +192,14 @@ void movePlayerPosition(float _goalX, float _goalY) {
   uint8_t zoom = getZoom();
   SpriteCollisionInfo* collInfo = pd->sprite->moveWithCollisions(m_player.m_sprite[zoom], _goalX * zoom, _goalY * zoom, &(m_player.m_pix_x), &(m_player.m_pix_y), &len);
   if (len) pd->system->realloc(collInfo, 0); // Free
-  updatePlayerPosition();
+  updatePlayerPosition(zoom);
 }
 
-void updatePlayerPosition() {
-  uint8_t zoom = getZoom();
-  pd->sprite->getPosition(m_player.m_sprite[zoom], &(m_player.m_pix_x), &(m_player.m_pix_y));
-  m_player.m_pix_x = m_player.m_pix_x / zoom;
-  m_player.m_pix_y = m_player.m_pix_y / zoom;
+void updatePlayerPosition(uint8_t _zoom) {
+  pd->sprite->getPosition(m_player.m_sprite[_zoom], &(m_player.m_pix_x), &(m_player.m_pix_y));
+  m_player.m_pix_x = m_player.m_pix_x / _zoom;
+  m_player.m_pix_y = m_player.m_pix_y / _zoom;
   //pd->system->logToConsole("P@ %f %f", m_player.m_pix_x , m_player.m_pix_y);
-}
-
-void flipCamera() {
-  m_player.m_camera_pix_x += 2 * (m_player.m_pix_x - m_player.m_camera_pix_x);
-  m_player.m_camera_pix_y += 2 * (m_player.m_pix_y - m_player.m_camera_pix_y);
 }
 
 void updateCameraWithZoom(uint8_t _prevZoom, uint8_t _newZoom) {
@@ -209,7 +212,64 @@ void updateCameraWithZoom(uint8_t _prevZoom, uint8_t _newZoom) {
   pd->sprite->setImage(m_player.m_sprite[_newZoom], getSprite18_byidx(m_player.m_animID, _newZoom), kBitmapUnflipped);
 }
 
-bool movePlayer(bool _forceUpdate) {
+struct Chunk_t* computeCurrentChunk() {
+  int16_t effX = m_player.m_camera_pix_x; // Get effective (wrapped one way) camera coordinate, not letting it go -ve
+  int16_t effY = m_player.m_camera_pix_y; 
+  if (m_player.m_camera_pix_x < 0) effX += TOT_WORLD_PIX_X;
+  if (m_player.m_camera_pix_y < 0) effY += TOT_WORLD_PIX_Y;
+
+  int16_t chunkX = (effX / (CHUNK_PIX_X)) % WORLD_CHUNKS_X;
+  int16_t chunkY = (effY / (CHUNK_PIX_Y)) % WORLD_CHUNKS_Y;
+
+  return getChunk(chunkX, chunkY);
+}
+
+enum kChunkQuad computeCurrentQuadrant() {
+  int16_t effX = m_player.m_camera_pix_x; // Get effective (wrapped one way) camera coordinate, not letting it go -ve
+  int16_t effY = m_player.m_camera_pix_y; 
+  if (m_player.m_camera_pix_x < 0) effX += TOT_WORLD_PIX_X;
+  if (m_player.m_camera_pix_y < 0) effY += TOT_WORLD_PIX_Y;
+
+  int16_t subChunkX = effX / (CHUNK_PIX_X/2) % 2;
+  int16_t subChunkY = effY / (CHUNK_PIX_Y/2) % 2;
+  enum kChunkQuad quadrant = NW;
+  if (subChunkX && subChunkY) {
+    quadrant = SE;
+  } else if (subChunkX) {
+    quadrant = NE;
+  } else if (subChunkY) {
+    quadrant = SW;
+  }
+
+  return quadrant;
+}
+
+void checkTorus() {
+  // Torus splitting
+  bool torusChanged = false;
+  if (m_top && m_player.m_pix_y > TOT_WORLD_PIX_Y/2) {
+    m_top = false;
+    torusChanged = true;
+  } else if (!m_top && m_player.m_pix_y <= TOT_WORLD_PIX_Y/2) {
+    m_top = true;
+    torusChanged = true;
+  }
+
+  if (m_left && m_player.m_pix_x > TOT_WORLD_PIX_X/2) {
+    m_left = false;
+    torusChanged = true;
+  } else if (!m_left && m_player.m_pix_x <= TOT_WORLD_PIX_X/2) {
+    m_left = true;
+    torusChanged = true;
+  }
+
+  if (torusChanged || m_forceTorus) {
+    chunkShiftTorus(m_top, m_left);
+    m_forceTorus = false;
+  }
+}
+
+void movePlayer(bool _forceUpdate) {
 
   // Note: This may set the zoom
   if (m_player.m_enableZoomWhenMove && !_forceUpdate) {
@@ -249,17 +309,13 @@ bool movePlayer(bool _forceUpdate) {
         case kDirN: break;
       }
       if (x < 0) {
-        flipCamera();
         x += TOT_WORLD_PIX_X;
       } else if (x >= TOT_WORLD_PIX_X) {
-        flipCamera();
         x -= TOT_WORLD_PIX_X;
       }
       if (y < 0) {
-        flipCamera();
         y += TOT_WORLD_PIX_Y;
       } else if (y >= TOT_WORLD_PIX_Y) {
-        flipCamera();
         y -= TOT_WORLD_PIX_Y;
       }
       setPlayerPosition(x, y, /*update current location = */ false);
@@ -337,22 +393,18 @@ bool movePlayer(bool _forceUpdate) {
 
   movePlayerPosition(goalX, goalY);
 
+  // Don#t need to update position as the code below will pick up on this
   if (m_player.m_pix_x > TOT_WORLD_PIX_X) {
-    flipCamera();
-    setPlayerPosition(m_player.m_pix_x - TOT_WORLD_PIX_X, m_player.m_pix_y, /*update current location = */ true);
+    setPlayerPosition(m_player.m_pix_x - TOT_WORLD_PIX_X, m_player.m_pix_y, /*update current location = */ false);
   } else if (m_player.m_pix_x < 0) {
-    flipCamera();
-    setPlayerPosition(m_player.m_pix_x + TOT_WORLD_PIX_X, m_player.m_pix_y, /*update current location = */ true);
+    setPlayerPosition(m_player.m_pix_x + TOT_WORLD_PIX_X, m_player.m_pix_y, /*update current location = */ false);
   }
 
   if (m_player.m_pix_y > TOT_WORLD_PIX_Y) {
-    flipCamera();
-    setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y - TOT_WORLD_PIX_Y, /*update current location = */ true);
+    setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y - TOT_WORLD_PIX_Y, /*update current location = */ false);
   } else if (m_player.m_pix_y < 0) {
-    flipCamera();
-    setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y + TOT_WORLD_PIX_Y, /*update current location = */ true);
+    setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y + TOT_WORLD_PIX_Y, /*update current location = */ false);
   }
-
 
   if (m_player.m_enableCentreCamera) {
 
@@ -392,8 +444,13 @@ bool movePlayer(bool _forceUpdate) {
     didScroll = false;
     const static int16_t MOVE_THRESHOLD_Y = (SCREEN_PIX_Y * 0.8f) - (SCREEN_PIX_Y/2);
     const int16_t topThreshold = (int16_t) roundf(MOVE_THRESHOLD_Y * shrinkFractionY);
-    const static int16_t MOVE_THRESHOLD_Y_REDUCED = (SCREEN_PIX_Y * 0.6f) - (SCREEN_PIX_Y/2);
+    const static int16_t MOVE_THRESHOLD_Y_REDUCED = (SCREEN_PIX_Y * 0.6f) - (SCREEN_PIX_Y/2);    
+    #ifdef DEMO
     const int16_t bottomThreshold = (int16_t) roundf((m_player.m_enableTutorial < TUTORIAL_FINISHED || getGameMode() == kInspectMode ? MOVE_THRESHOLD_Y_REDUCED : MOVE_THRESHOLD_Y) * shrinkFractionY);
+    #else
+    const int16_t bottomThreshold = MOVE_THRESHOLD_Y * shrinkFractionY;
+    #endif
+
     if (m_player.m_pix_y - m_player.m_camera_pix_y > bottomThreshold / zoom) {
       didScroll = true;
       m_player.m_camera_pix_y = m_player.m_pix_y - (bottomThreshold / zoom); 
@@ -408,34 +465,19 @@ bool movePlayer(bool _forceUpdate) {
   }
 
   // Check chunk change
-  int16_t effX = m_player.m_camera_pix_x; // Get effective (wrapped one way) camera coordinate, not letting it go -ve
-  int16_t effY = m_player.m_camera_pix_y; 
-  if (m_player.m_camera_pix_x < 0) effX += TOT_WORLD_PIX_X;
-  if (m_player.m_camera_pix_y < 0) effY += TOT_WORLD_PIX_Y;
+  struct Chunk_t* cameraChunk = computeCurrentChunk();
+  enum kChunkQuad cameraQuad = computeCurrentQuadrant();
 
-  int16_t chunkX = (effX / (CHUNK_PIX_X)) % WORLD_CHUNKS_X;
-  int16_t chunkY = (effY / (CHUNK_PIX_Y)) % WORLD_CHUNKS_Y;
+  checkTorus();
 
-  // Subchunk change
-  int16_t subChunkX = effX / (CHUNK_PIX_X/2) % 2;
-  int16_t subChunkY = effY / (CHUNK_PIX_Y/2) % 2;
-  enum kChunkQuad quadrant = NW;
-  if (subChunkX && subChunkY) {
-    quadrant = SE;
-  } else if (subChunkX) {
-    quadrant = NE;
-  } else if (subChunkY) {
-    quadrant = SW;
-  }
-
-  bool chunkChange = (chunkX != m_currentChunk->m_x || chunkY != m_currentChunk->m_y);
-  if (chunkChange || m_quadrant != quadrant) {
-    m_currentChunk = getChunk(chunkX, chunkY); // TODO this can still go out-of-bounds (how?), ideally should be able to use getChunk_noCheck here
-    m_quadrant = quadrant;
+  bool chunkChange = (cameraChunk != m_currentChunk);
+  if (chunkChange || cameraQuad != m_quadrant) {
+    m_currentChunk = cameraChunk;
+    m_quadrant = cameraQuad;
     if (zoom == 2 || chunkChange) { // When zoomed out, only need to call when actually changing chunks
-      #ifdef DEV
-      pd->system->logToConsole("CHUNKCHANGE %u %u (%u %u)", chunkX, chunkY, subChunkX, subChunkY);
-      #endif
+      //#ifdef DEV
+      pd->system->logToConsole("CHUNKCHANGE (move) %u %u (%u)", m_currentChunk->m_x, m_currentChunk->m_y, m_quadrant);
+      //#endif
       updateRenderList();
     }
   }
@@ -449,30 +491,6 @@ bool movePlayer(bool _forceUpdate) {
     pd->sprite->moveTo(m_player.m_blueprintRadius[zoom], bpX, bpY);
   }
 
-  // Torus splitting
-  bool torusChanged = false;
-  if (m_top && m_player.m_pix_y > TOT_WORLD_PIX_Y/2) {
-    m_top = false;
-    torusChanged = true;
-  } else if (!m_top && m_player.m_pix_y <= TOT_WORLD_PIX_Y/2) {
-    m_top = true;
-    torusChanged = true;
-  }
-
-  if (m_left && m_player.m_pix_x > TOT_WORLD_PIX_X/2) {
-    m_left = false;
-    torusChanged = true;
-  } else if (!m_left && m_player.m_pix_x <= TOT_WORLD_PIX_X/2) {
-    m_left = true;
-    torusChanged = true;
-  }
-
-  if (torusChanged || m_forceTorus) {
-    chunkShiftTorus(m_top, m_left);
-    m_forceTorus = false;
-  }
-
-  return true;
 }
 
 bool modMoney(int32_t _amount) {
@@ -630,7 +648,6 @@ void resetPlayer() {
   m_deserialiseXPlayer = 0;
   m_deserialiseYPlayer = 0;
   m_deserialiseArrayID = -1;
-  m_forceTorus = true;
 }
 
 void setPlayerVisible(bool _visible) {
@@ -946,6 +963,19 @@ void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_valu
   #ifdef DEV
   pd->system->logToConsole("-- Player decoded to (%i, %i), current location (%i, %i), money:%i, unlock:%i", 
     (int32_t)m_player.m_pix_x, (int32_t)m_player.m_pix_y, m_currentLocation->m_x, m_currentLocation->m_y, m_player.m_money, m_player.m_buildingsUnlockedTo);
+  #endif
+
+  #ifdef DEMO
+  m_player.m_money = 0;
+  m_player.m_moneyCumulative = 0;
+  m_player.m_moneyHighWaterMark = 0;
+  m_player.m_buildingsUnlockedTo = getCactusUnlock(); // cactus
+  for (int32_t i = 0; i < kNCargoType; ++i) if (m_player.m_carryCargo[i]) m_player.m_carryCargo[i] = rand() % 10;
+  for (int32_t i = 0; i < kNConvSubTypes; ++i) if (m_player.m_carryConveyor[i]) m_player.m_carryConveyor[i] = rand() % 10;
+  for (int32_t i = 0; i < kNUtilitySubTypes; ++i) if (m_player.m_carryUtility[i]) m_player.m_carryUtility[i] = (i >= kWell ? 0 : rand() % 10);
+  for (int32_t i = 0; i < kNPlantSubTypes; ++i) if (m_player.m_carryPlant[i]) m_player.m_carryPlant[i] = rand() % 10;
+  for (int32_t i = 0; i < kNExtractorSubTypes; ++i) if (m_player.m_carryExtractor[i]) m_player.m_carryExtractor[i] = rand() % 10;
+  for (int32_t i = 0; i < kNFactorySubTypes; ++i) if (m_player.m_carryFactory[i]) m_player.m_carryFactory[i] = rand() % 10;
   #endif
 
   // SCHEMA EVOLUTION - V4 to V5 (v1.0 to v1.1)
