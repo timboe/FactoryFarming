@@ -21,7 +21,7 @@ void buildingSetupRetirement(struct Building_t* _building);
 
 void rotavatorCheckSet(struct Tile_t* _t, uint8_t* _stored);
 
-void rotavatorCheckRevert(struct Tile_t* _t, uint8_t _stored);
+void rotavatorCheckRevert(int16_t _x, int16_t _y, uint8_t _stored);
 
 /// ///
 
@@ -93,7 +93,7 @@ void buildRotavator(struct Location_t* _loc) {
 void rotavatorCheckRevert(int16_t _x, int16_t _y, uint8_t _stored) {
   struct Tile_t* t = getTile(_x, _y);
   // Don't revert if made landfil in the meantime
-  if (_t->m_tile == UDesc[kLandfill].sprite) {
+  if (t->m_tile == UDesc[kLandfill].sprite) {
     return;
   }
   // If a well was built here, then update the well to know what the original tile was
