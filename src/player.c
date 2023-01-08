@@ -179,9 +179,9 @@ void setPlayerPosition(uint16_t _x, uint16_t _y, bool _updateCurrentLocation) {
   if (_updateCurrentLocation) {
     m_currentChunk = computeCurrentChunk();
     m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
-    checkTorus();
+    // DON'T setTorus here (not 100% why, but it breaks building hitboxes)
+    pd->system->logToConsole("CHUNKCHANGE (set) C:%i %i (%i)", m_currentChunk->m_x, m_currentChunk->m_y, m_quadrant);
     if (!IOOperationInProgress()) {
-      pd->system->logToConsole("CHUNKCHANGE (set) C:%i %i (%i)", m_currentChunk->m_x, m_currentChunk->m_y, m_quadrant);
       updateRenderList();
     }
   }

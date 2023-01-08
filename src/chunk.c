@@ -132,9 +132,9 @@ void chunkShiftTorus(bool _top, bool _left) {
 
   chunkResetTorus();
 
-  #ifdef DEV
+  //#ifdef DEV
   pd->system->logToConsole("Shift Torus TOP:%i LEFT:%i", (int)_top, (int)_left);
-  #endif
+  //#endif
 
   for (int32_t x = 1; x < WORLD_CHUNKS_X - 1; ++x) {
     struct Chunk_t* top = getChunk_noCheck(x, 0);
