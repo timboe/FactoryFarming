@@ -629,6 +629,7 @@ bool doLoad() {
     // Update audio settings
     updateSfx();
     updateMusic(/*isTitle=*/ false);
+    updateMusicVol();
 
     populateMenuGame();
 

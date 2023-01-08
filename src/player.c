@@ -444,8 +444,13 @@ void movePlayer(bool _forceUpdate) {
     didScroll = false;
     const static int16_t MOVE_THRESHOLD_Y = (SCREEN_PIX_Y * 0.8f) - (SCREEN_PIX_Y/2);
     const int16_t topThreshold = (int16_t) roundf(MOVE_THRESHOLD_Y * shrinkFractionY);
-    const static int16_t MOVE_THRESHOLD_Y_REDUCED = (SCREEN_PIX_Y * 0.6f) - (SCREEN_PIX_Y/2);
+    const static int16_t MOVE_THRESHOLD_Y_REDUCED = (SCREEN_PIX_Y * 0.6f) - (SCREEN_PIX_Y/2);    
+    #ifdef DEMO
     const int16_t bottomThreshold = (int16_t) roundf((m_player.m_enableTutorial < TUTORIAL_FINISHED || getGameMode() == kInspectMode ? MOVE_THRESHOLD_Y_REDUCED : MOVE_THRESHOLD_Y) * shrinkFractionY);
+    #else
+    const int16_t bottomThreshold = MOVE_THRESHOLD_Y * shrinkFractionY;
+    #endif
+
     if (m_player.m_pix_y - m_player.m_camera_pix_y > bottomThreshold / zoom) {
       didScroll = true;
       m_player.m_camera_pix_y = m_player.m_pix_y - (bottomThreshold / zoom); 
@@ -958,6 +963,19 @@ void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_valu
   #ifdef DEV
   pd->system->logToConsole("-- Player decoded to (%i, %i), current location (%i, %i), money:%i, unlock:%i", 
     (int32_t)m_player.m_pix_x, (int32_t)m_player.m_pix_y, m_currentLocation->m_x, m_currentLocation->m_y, m_player.m_money, m_player.m_buildingsUnlockedTo);
+  #endif
+
+  #ifdef DEMO
+  m_player.m_money = 0;
+  m_player.m_moneyCumulative = 0;
+  m_player.m_moneyHighWaterMark = 0;
+  m_player.m_buildingsUnlockedTo = getCactusUnlock(); // cactus
+  for (int32_t i = 0; i < kNCargoType; ++i) if (m_player.m_carryCargo[i]) m_player.m_carryCargo[i] = rand() % 10;
+  for (int32_t i = 0; i < kNConvSubTypes; ++i) if (m_player.m_carryConveyor[i]) m_player.m_carryConveyor[i] = rand() % 10;
+  for (int32_t i = 0; i < kNUtilitySubTypes; ++i) if (m_player.m_carryUtility[i]) m_player.m_carryUtility[i] = (i >= kWell ? 0 : rand() % 10);
+  for (int32_t i = 0; i < kNPlantSubTypes; ++i) if (m_player.m_carryPlant[i]) m_player.m_carryPlant[i] = rand() % 10;
+  for (int32_t i = 0; i < kNExtractorSubTypes; ++i) if (m_player.m_carryExtractor[i]) m_player.m_carryExtractor[i] = rand() % 10;
+  for (int32_t i = 0; i < kNFactorySubTypes; ++i) if (m_player.m_carryFactory[i]) m_player.m_carryFactory[i] = rand() % 10;
   #endif
 
   // SCHEMA EVOLUTION - V4 to V5 (v1.0 to v1.1)

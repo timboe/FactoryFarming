@@ -565,6 +565,12 @@ void deserialiseValueBuilding(json_decoder* jd, const char* _key, json_value _va
 void* deserialiseStructDoneBuilding(json_decoder* jd, const char* _name, json_value_type _type) {
   struct Building_t* building = &(m_buildings[m_deserialiseIndexBuilding]);
 
+  #ifdef DEMO
+  if (building->m_type == kSpecial && (building->m_subType.special == kWarp || building->m_subType.special == kImportBox || building->m_subType.special == kExportBox)) {
+    building->m_dir = EW; // Camo
+  }
+  #endif
+
   assignNeighbors(building);
   buildingSetup(building);
   assignUpdate(building);

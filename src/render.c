@@ -51,7 +51,12 @@ void render() {
 
   } else {
 
-    pd->sprite->drawSprites();
+    // Still update on UI update frames to prevent tearing of UI
+    if (getFrameCount() % FAR_TICK_FREQUENCY == 0) {
+      pd->sprite->updateAndDrawSprites();
+    } else {
+      pd->sprite->drawSprites();
+    }
 
   }
 

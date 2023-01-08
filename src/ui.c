@@ -429,9 +429,11 @@ void updateUI(int _fc) {
       }
     }
     // Unlock new worlds
+    #ifndef DEMO
     if (getImportBox()->m_dir != SN && m_mode == kWanderMode && getPlayer()->m_buildingsUnlockedTo >= getCactusUnlock()) {
       unlockOtherWorlds();
     }
+    #endif
   }
 
   if (m_mode == kWanderMode) {
@@ -443,7 +445,7 @@ void updateUI(int _fc) {
         else if (!ic && distanceFromWarp() < ACTIVATE_DISTANCE) drawUITop("Plots Depot", kDrawModeCopy);
         else if (!ic && distanceFromOut() < ACTIVATE_DISTANCE) drawUITop("Exports Depot", kDrawModeCopy); // Or Deliveries TODO
         else if (!ic && distanceFromIn() < ACTIVATE_DISTANCE) drawUITop("Imports Depot", kDrawModeCopy); // Or Shipping TODO
-        else if (distanceFromRetirement() < ACTIVATE_DISTANCE) drawUITop("Credits", kDrawModeCopy);
+        else if (getSlot() == WORLD_SAVE_SLOTS-1 && distanceFromRetirement() < ACTIVATE_DISTANCE) drawUITop("Credits", kDrawModeCopy);
       }
     } else {
       if (distanceFromBuy() >= ACTIVATE_DISTANCE && 

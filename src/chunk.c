@@ -74,11 +74,12 @@ void setChunkSpriteOffsets(struct Chunk_t* _c, int16_t _x, int16_t _y) {
           }
         } else {
           for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
-            // if (loc->m_building->m_sprite[zoom]) {
-              // pd->sprite->moveTo(loc->m_building->m_sprite[zoom], 
-                // (loc->m_building->m_pix_x + loc->m_pix_off_x) * zoom, 
-                // (loc->m_building->m_pix_y + loc->m_pix_off_y) * zoom);
-            // }
+            // Note this is needed for animated conveyors
+            if (loc->m_building->m_sprite[zoom]) {
+              pd->sprite->moveTo(loc->m_building->m_sprite[zoom], 
+                (loc->m_building->m_pix_x + loc->m_pix_off_x) * zoom, 
+                (loc->m_building->m_pix_y + loc->m_pix_off_y) * zoom);
+            }
           }
         }
       }
@@ -117,7 +118,8 @@ void chunkResetTorus() {
     setChunkPairSpriteOffsets(bottom, bottom_next, 0, 0);
   }
 
-  for (int32_t y = 0; y < WORLD_CHUNKS_Y; ++y) {
+  // Don't need to re-do the ones the x-loop already did
+  for (int32_t y = 2; y < WORLD_CHUNKS_Y-2; ++y) {
     struct Chunk_t* left = getChunk_noCheck(0, y);
     struct Chunk_t* left_next = getChunk_noCheck(1, y);
     struct Chunk_t* right = getChunk_noCheck(WORLD_CHUNKS_X-1, y);
