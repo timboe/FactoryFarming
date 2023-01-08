@@ -180,7 +180,9 @@ void setPlayerPosition(uint16_t _x, uint16_t _y, bool _updateCurrentLocation) {
     m_currentChunk = computeCurrentChunk();
     m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
     // DON'T setTorus here (not 100% why, but it breaks building hitboxes)
+    #ifdef DEV
     pd->system->logToConsole("CHUNKCHANGE (set) C:%i %i (%i)", m_currentChunk->m_x, m_currentChunk->m_y, m_quadrant);
+    #endif
     if (!IOOperationInProgress()) {
       updateRenderList();
     }
@@ -475,9 +477,9 @@ void movePlayer(bool _forceUpdate) {
     m_currentChunk = cameraChunk;
     m_quadrant = cameraQuad;
     if (zoom == 2 || chunkChange) { // When zoomed out, only need to call when actually changing chunks
-      //#ifdef DEV
+      #ifdef DEV
       pd->system->logToConsole("CHUNKCHANGE (move) %u %u (%u)", m_currentChunk->m_x, m_currentChunk->m_y, m_quadrant);
-      //#endif
+      #endif
       updateRenderList();
     }
   }
@@ -970,6 +972,7 @@ void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_valu
   m_player.m_moneyCumulative = 0;
   m_player.m_moneyHighWaterMark = 0;
   m_player.m_buildingsUnlockedTo = getCactusUnlock(); // cactus
+  m_player.m_enableTutorial = 0;
   for (int32_t i = 0; i < kNCargoType; ++i) if (m_player.m_carryCargo[i]) m_player.m_carryCargo[i] = rand() % 10;
   for (int32_t i = 0; i < kNConvSubTypes; ++i) if (m_player.m_carryConveyor[i]) m_player.m_carryConveyor[i] = rand() % 10;
   for (int32_t i = 0; i < kNUtilitySubTypes; ++i) if (m_player.m_carryUtility[i]) m_player.m_carryUtility[i] = (i >= kWell ? 0 : rand() % 10);
