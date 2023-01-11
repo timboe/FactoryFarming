@@ -394,13 +394,13 @@ void updateUI(int _fc) {
   if ((m_mode >= kMenuBuy) && flash) {
     // Flashing cursor
     UIDirtyMain();
-  } else if ((m_mode == kPlaceMode || m_mode == kBuildMode || m_mode == kPlantMode) && flash) {
+  } else if (flash && (m_mode == kPlaceMode || m_mode == kBuildMode || m_mode == kPlantMode)) {
     // Flashing blueprint 
     const bool flashOn = _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4; 
     updateBlueprint(!flashOn);
     pd->sprite->setVisible(getPlayer()->m_blueprint[getZoom()], flashOn);
   }
-  if (_fc % FAR_TICK_FREQUENCY == 0) {
+  if ((_fc + TICK_OFFSET_SPRITELIST) % FAR_TICK_FREQUENCY == 0) {
     // Update bottom ticker
     UIDirtyBottom();
     UIDirtyRight();
