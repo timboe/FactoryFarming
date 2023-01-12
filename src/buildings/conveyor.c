@@ -75,28 +75,47 @@ void conveyorUpdateSprite(struct Building_t* _building) {
   struct Location_t* pointsToMe = NULL;
   if (anyOutputInDir(below, SN)) {
     ++nIn;
+    // pd->system->logToConsole("BelowIn");
     pointsToMe = below;
     // No corner tile if I output in a stright line (or send the cargo straight back, which would be very stange)
-    if (_building->m_nextDir[0] == SN || _building->m_nextDir[0] == NS) specialCornerArrangement = false;
+    if (_building->m_nextDir[0] == SN || _building->m_nextDir[0] == NS) {
+      // pd->system->logToConsole("\\-> veto");
+      specialCornerArrangement = false;
+    }
   } 
   if (anyOutputInDir(left, WE)) {
     ++nIn;
+    // pd->system->logToConsole("LeftIn");
     pointsToMe = left;
-    if (_building->m_nextDir[0] == WE || _building->m_nextDir[0] == EW) specialCornerArrangement = false;
+    if (_building->m_nextDir[0] == WE || _building->m_nextDir[0] == EW) {
+      // pd->system->logToConsole("\\-> veto");
+      specialCornerArrangement = false;
+    }
   }
   if (anyOutputInDir(above, NS)) {
+    // pd->system->logToConsole("AboveIn");
     ++nIn;
     pointsToMe = above;
-    if (_building->m_nextDir[0] == NS || _building->m_nextDir[0] == SN) specialCornerArrangement = false;
+    if (_building->m_nextDir[0] == NS || _building->m_nextDir[0] == SN) {
+      // pd->system->logToConsole("\\-> veto");
+      specialCornerArrangement = false;
+    }
   } 
   if (anyOutputInDir(right, EW)) {
+    // pd->system->logToConsole("RightIn");
     ++nIn;
     pointsToMe = right;
-    if (_building->m_nextDir[0] == EW || _building->m_nextDir[0] == WE) specialCornerArrangement = false;
+    if (_building->m_nextDir[0] == EW || _building->m_nextDir[0] == WE) {
+      // pd->system->logToConsole("\\-> veto");
+      specialCornerArrangement = false;
+    }
   } 
 
   // No corner tile if more than one tile output onto this tile (or if none do)
-  if (nIn != 1) specialCornerArrangement = false;
+  if (nIn != 1) {
+    // pd->system->logToConsole("nIn != 1, veto");
+    specialCornerArrangement = false;
+  }
 
   if (specialCornerArrangement) { 
     bool evenIn = false;
@@ -116,6 +135,7 @@ void conveyorUpdateSprite(struct Building_t* _building) {
       case SN: sID = evenIn ? SID(10,3) : SID(15,3); break;
       case kDirN: break;
     }
+    // pd->system->logToConsole("even:%i sID:%i", evenIn, sID);
     for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
       _building->m_image[zoom] = getSprite16_byidx(sID, zoom);
     }
@@ -134,19 +154,32 @@ void checkConveyorSpritesAroundLoc(struct Location_t* _loc) {
   if (_loc->m_building && (_loc->m_building->m_type == kFactory || _loc->m_building->m_type == kExtractor)) {
     distance = 2;
   }
+  // pd->system->logToConsole("d is %i", distance);
   //
   struct Location_t* l = NULL;
   l = getLocation(_loc->m_x + distance, _loc->m_y);
-  if (l->m_building && l->m_building->m_type == kConveyor) conveyorUpdateSprite(l->m_building);
+  if (l->m_building && l->m_building->m_type == kConveyor) {  
+    // pd->system->logToConsole("A");
+    conveyorUpdateSprite(l->m_building);
+  }
   //
   l = getLocation(_loc->m_x - distance, _loc->m_y);
-  if (l->m_building && l->m_building->m_type == kConveyor) conveyorUpdateSprite(l->m_building);
+  if (l->m_building && l->m_building->m_type == kConveyor) {
+    // pd->system->logToConsole("B");
+    conveyorUpdateSprite(l->m_building);
+  }
   //
   l = getLocation(_loc->m_x, _loc->m_y + distance);
-  if (l->m_building && l->m_building->m_type == kConveyor) conveyorUpdateSprite(l->m_building);
+  if (l->m_building && l->m_building->m_type == kConveyor) { 
+    // pd->system->logToConsole("C"); 
+    conveyorUpdateSprite(l->m_building);
+  }
   //
   l = getLocation(_loc->m_x, _loc->m_y - distance);
-  if (l->m_building && l->m_building->m_type == kConveyor) conveyorUpdateSprite(l->m_building);
+  if (l->m_building && l->m_building->m_type == kConveyor) {
+    // pd->system->logToConsole("D");
+    conveyorUpdateSprite(l->m_building);
+  }
 }
 
 

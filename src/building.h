@@ -3,18 +3,6 @@
 #include "cargo.h"
 #include "generate.h"
 
-// All 48*48 should come after kExtractor
-enum kBuildingType {
-  kNoBuilding, 
-  kConveyor, 
-  kPlant, 
-  kUtility, 
-  kExtractor, // Only large buildings from here on
-  kFactory, 
-  kSpecial, 
-  kNBuildingTypes
-};
-
 ///
 
 #include "blists.h"
@@ -81,16 +69,6 @@ struct FactoryDescriptor_t {
 extern struct FactoryDescriptor_t FDesc[];
 
 ///
-
-union kSubType {
-  enum kConvSubType conveyor;
-  enum kPlantSubType plant;
-  enum kUtilitySubType utility;
-  enum kExtractorSubType extractor;
-  enum kFactorySubType factory;
-  enum kSpecialSubType special; 
-  uint32_t raw;
-};
 
 union kMode {
   uint16_t mode16;

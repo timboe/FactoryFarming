@@ -1,6 +1,8 @@
 #pragma once
 #include "game.h"
 #include "chunk.h"
+#include "blists.h"
+
 
 struct Tile_t {
   // Persistent
@@ -68,7 +70,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk);
 
 void renderChunkBackgroundImageAround(struct Chunk_t* _chunk);
 
-void renderChunkBackgroundImageAround3x3(struct Chunk_t* _chunk, struct Location_t* _loc);
+void renderChunkBackgroundImageAround3x3(struct Chunk_t* _chunk, struct Location_t* _loc, enum kBuildingType _type, union kSubType _subType);
 
 void setChunkBackgrounds(bool _forTitles);
 
