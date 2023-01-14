@@ -180,7 +180,9 @@ void setPlayerPosition(uint16_t _x, uint16_t _y, bool _updateCurrentLocation) {
     m_currentChunk = computeCurrentChunk();
     m_currentLocation = getLocation(m_player.m_pix_x / TILE_PIX, m_player.m_pix_y / TILE_PIX);
     // DON'T setTorus here (not 100% why, but it breaks building hitboxes)
+    #ifdef DEV
     pd->system->logToConsole("CHUNKCHANGE (set) C:%i %i (%i)", m_currentChunk->m_x, m_currentChunk->m_y, m_quadrant);
+    #endif
     if (!IOOperationInProgress()) {
       updateRenderList();
     }
@@ -428,7 +430,7 @@ void movePlayer(bool _forceUpdate) {
 
     bool didScroll = false;
 
-    const static int16_t MOVE_THRESHOLD_X = (SCREEN_PIX_X * 0.8f) - (SCREEN_PIX_X/2); 
+    const static int16_t MOVE_THRESHOLD_X = (SCREEN_PIX_X * SCROLL_EDGE) - (SCREEN_PIX_X/2); 
     const int16_t sideThreshold = (int16_t) roundf(MOVE_THRESHOLD_X * shrinkFractionX);
     if (m_player.m_pix_x - m_player.m_camera_pix_x > sideThreshold / zoom) {
       m_player.m_camera_pix_x = m_player.m_pix_x - (sideThreshold / zoom);
@@ -442,7 +444,7 @@ void movePlayer(bool _forceUpdate) {
     }
 
     didScroll = false;
-    const static int16_t MOVE_THRESHOLD_Y = (SCREEN_PIX_Y * 0.8f) - (SCREEN_PIX_Y/2);
+    const static int16_t MOVE_THRESHOLD_Y = (SCREEN_PIX_Y * SCROLL_EDGE) - (SCREEN_PIX_Y/2);
     const int16_t topThreshold = (int16_t) roundf(MOVE_THRESHOLD_Y * shrinkFractionY);
     const static int16_t MOVE_THRESHOLD_Y_REDUCED = (SCREEN_PIX_Y * 0.6f) - (SCREEN_PIX_Y/2);    
     #ifdef DEMO
@@ -475,9 +477,9 @@ void movePlayer(bool _forceUpdate) {
     m_currentChunk = cameraChunk;
     m_quadrant = cameraQuad;
     if (zoom == 2 || chunkChange) { // When zoomed out, only need to call when actually changing chunks
-      //#ifdef DEV
+      #ifdef DEV
       pd->system->logToConsole("CHUNKCHANGE (move) %u %u (%u)", m_currentChunk->m_x, m_currentChunk->m_y, m_quadrant);
-      //#endif
+      #endif
       updateRenderList();
     }
   }
@@ -621,8 +623,6 @@ void resetPlayer() {
   m_player.m_animID = 0;
   m_player.m_pix_x = 0;
   m_player.m_pix_y = 0;
-  m_player.m_camera_pix_x = 0;
-  m_player.m_camera_pix_y = 0;
   if (m_player.m_enableTutorial != TUTORIAL_DISABLED) m_player.m_enableTutorial = 0;
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_carryCargo[i] = 0;
   for (int32_t i = 0; i < kNConvSubTypes; ++i) m_player.m_carryConveyor[i] = 0;
@@ -640,7 +640,8 @@ void resetPlayer() {
     }
   }
   setPlayerPosition((TOT_WORLD_PIX_X/2) + SCREEN_PIX_X/4, (TOT_WORLD_PIX_Y/2) + (3*SCREEN_PIX_Y)/4, /*update current location = */ true);
-  m_currentChunk = getChunk_noCheck(0,0);
+  m_player.m_camera_pix_x = m_player.m_pix_x;
+  m_player.m_camera_pix_y = m_player.m_pix_y;
   m_facing = 0;
   m_wasFacing = 0;
   m_stepCounter = 0;
@@ -959,6 +960,8 @@ void deserialiseArrayValuePlayer(json_decoder* jd, int _pos, json_value _value) 
 
 void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_value_type _type) {
   setPlayerPosition(m_player.m_pix_x, m_player.m_pix_y, /*update current location = */ true);
+  m_player.m_camera_pix_x = m_player.m_pix_x;
+  m_player.m_camera_pix_y = m_player.m_pix_y;
 
   #ifdef DEV
   pd->system->logToConsole("-- Player decoded to (%i, %i), current location (%i, %i), money:%i, unlock:%i", 
@@ -970,9 +973,10 @@ void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_valu
   m_player.m_moneyCumulative = 0;
   m_player.m_moneyHighWaterMark = 0;
   m_player.m_buildingsUnlockedTo = getCactusUnlock(); // cactus
+  m_player.m_enableTutorial = 0;
   for (int32_t i = 0; i < kNCargoType; ++i) if (m_player.m_carryCargo[i]) m_player.m_carryCargo[i] = rand() % 10;
   for (int32_t i = 0; i < kNConvSubTypes; ++i) if (m_player.m_carryConveyor[i]) m_player.m_carryConveyor[i] = rand() % 10;
-  for (int32_t i = 0; i < kNUtilitySubTypes; ++i) if (m_player.m_carryUtility[i]) m_player.m_carryUtility[i] = (i >= kWell ? 0 : rand() % 10);
+  for (int32_t i = 0; i < kNUtilitySubTypes; ++i) if (m_player.m_carryUtility[i]) m_player.m_carryUtility[i] = (i >= kStorageBox ? 0 : rand() % 10);
   for (int32_t i = 0; i < kNPlantSubTypes; ++i) if (m_player.m_carryPlant[i]) m_player.m_carryPlant[i] = rand() % 10;
   for (int32_t i = 0; i < kNExtractorSubTypes; ++i) if (m_player.m_carryExtractor[i]) m_player.m_carryExtractor[i] = rand() % 10;
   for (int32_t i = 0; i < kNFactorySubTypes; ++i) if (m_player.m_carryFactory[i]) m_player.m_carryFactory[i] = rand() % 10;

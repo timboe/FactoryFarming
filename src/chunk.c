@@ -39,7 +39,7 @@ struct Chunk_t* getChunk_noCheck(const int32_t _x, const int32_t _y) {
 
 void setChunkSpriteOffsets(struct Chunk_t* _c, int16_t _x, int16_t _y) {
   // Move the background
-  for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+  for (int32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     PDRect bound = {.x = 0, .y = 0, .width = CHUNK_PIX_X*zoom, .height = CHUNK_PIX_Y*zoom};
     if (_c->m_bkgSprite[zoom]) {
       pd->sprite->moveTo(_c->m_bkgSprite[zoom], (CHUNK_PIX_X*_c->m_x + CHUNK_PIX_X/2.0 + _x)*zoom, (CHUNK_PIX_Y*_c->m_y + CHUNK_PIX_Y/2.0 + _y)*zoom);
@@ -53,7 +53,7 @@ void setChunkSpriteOffsets(struct Chunk_t* _c, int16_t _x, int16_t _y) {
       loc->m_pix_off_y = _y; 
       // Apply the offset to any cargo we come across on the ground
       if (loc->m_cargo) {
-        for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+        for (int32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
           // Cargo should always have a sprite
           pd->sprite->moveTo(loc->m_cargo->m_sprite[zoom], 
             (TILE_PIX*loc->m_x + loc->m_pix_off_x + TILE_PIX/2.0)*zoom, 
@@ -61,19 +61,17 @@ void setChunkSpriteOffsets(struct Chunk_t* _c, int16_t _x, int16_t _y) {
         }
       }
 
-      // Delete this?
-
       // Apply the offset to any buildings which have animated or large collision sprites. Utility is included due to fences
       if (loc->m_building) {
         if (loc->m_building->m_type >= kUtility) {
-          for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+          for (int32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
             // TODO report, this crashes
             //pd->sprite->moveTo(loc->m_building->m_sprite[zoom], 
             //  (loc->m_building->m_pix_x + loc->m_pix_off_x - EXTRACTOR_PIX/2)*zoom, 
             //  (loc->m_building->m_pix_y + loc->m_pix_off_y - EXTRACTOR_PIX/2)*zoom);
           }
         } else {
-          for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
+          for (int32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
             // Note this is needed for animated conveyors
             if (loc->m_building->m_sprite[zoom]) {
               pd->sprite->moveTo(loc->m_building->m_sprite[zoom], 
@@ -134,9 +132,9 @@ void chunkShiftTorus(bool _top, bool _left) {
 
   chunkResetTorus();
 
-  //#ifdef DEV
+  #ifdef DEV
   pd->system->logToConsole("Shift Torus TOP:%i LEFT:%i", (int)_top, (int)_left);
-  //#endif
+  #endif
 
   for (int32_t x = 1; x < WORLD_CHUNKS_X - 1; ++x) {
     struct Chunk_t* top = getChunk_noCheck(x, 0);

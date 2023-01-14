@@ -1,5 +1,6 @@
 #pragma once
 
+
 enum kConvSubType{
   kBelt, 
   kSplitL, 
@@ -159,6 +160,28 @@ enum kSpecialSubType{
   kImportBox, 
   kWarp, 
   kNSpecialSubTypes
+};
+
+union kSubType {
+  enum kConvSubType conveyor;
+  enum kPlantSubType plant;
+  enum kUtilitySubType utility;
+  enum kExtractorSubType extractor;
+  enum kFactorySubType factory;
+  enum kSpecialSubType special; 
+  uint32_t raw;
+};
+
+// All 48*48 should come after kExtractor
+enum kBuildingType {
+  kNoBuilding, 
+  kConveyor, 
+  kPlant, 
+  kUtility, 
+  kExtractor, // Only large buildings from here on
+  kFactory, 
+  kSpecial, 
+  kNBuildingTypes
 };
 
 #define FINAL_UNLOCK_TYPE kFactory

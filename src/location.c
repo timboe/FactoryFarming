@@ -95,15 +95,6 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
     chunkRemoveBuildingUpdate(_loc->m_chunk, _loc->m_building);
     buildingManagerFreeBuilding(_loc->m_building);
 
-    if (wideRedraw) {
-      renderChunkBackgroundImageAround(_loc->m_chunk);
-      resumeMusic();
-    } else if (needs3x3) {
-      renderChunkBackgroundImageAround3x3(_loc->m_chunk, _loc);
-    } else {
-      renderChunkBackgroundImage(_loc->m_chunk);
-    }
-
     _loc->m_building = NULL;
     _loc->m_notOwned = false;
 
@@ -113,8 +104,17 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
     }
 
     // special - conveyor connections
-   if (producesOutputCargoOnAdjacentTile(bt, bst)) {
+    if (producesOutputCargoOnAdjacentTile(bt, bst)) {
       checkConveyorSpritesAroundLoc(_loc);
+    }
+
+    if (wideRedraw) {
+      renderChunkBackgroundImageAround(_loc->m_chunk);
+      resumeMusic();
+    } else if (needs3x3) {
+      renderChunkBackgroundImageAround3x3(_loc->m_chunk, _loc, bt, bst);
+    } else {
+      renderChunkBackgroundImage(_loc->m_chunk);
     }
 
   }

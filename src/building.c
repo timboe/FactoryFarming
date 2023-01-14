@@ -420,7 +420,7 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
       renderChunkBackgroundImageAround(_loc->m_chunk);
       if (gm != kTitles) resumeMusic();
     } else if (needs3x3) {
-      renderChunkBackgroundImageAround3x3(_loc->m_chunk, _loc);
+      renderChunkBackgroundImageAround3x3(_loc->m_chunk, _loc, _type, _subType);
     } else {
       renderChunkBackgroundImage(_loc->m_chunk);
     }

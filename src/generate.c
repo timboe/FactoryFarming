@@ -147,13 +147,12 @@ void renderChunkBackgroundImageAround(struct Chunk_t* _chunk) {
   }
 }
 
-void renderChunkBackgroundImageAround3x3(struct Chunk_t* _chunk, struct Location_t* _loc) {
+void renderChunkBackgroundImageAround3x3(struct Chunk_t* _chunk, struct Location_t* _loc, enum kBuildingType _type, union kSubType _subType) {
   const bool left = _loc->m_x % TILES_PER_CHUNK_X == 0;
   const bool right = _loc->m_x % TILES_PER_CHUNK_X == TILES_PER_CHUNK_X-1;
   const bool top = _loc->m_y % TILES_PER_CHUNK_Y == 0;
   const bool bot = _loc->m_y % TILES_PER_CHUNK_Y == TILES_PER_CHUNK_Y-1;
-  struct Building_t* b = _loc->m_building;
-  const bool cornerVeto = (b->m_type == kUtility && (b->m_subType.utility == kPath || b->m_subType.utility == kSign));
+  const bool cornerVeto = (_type == kUtility && (_subType.utility == kPath || _subType.utility == kSign));
   for (int32_t x = -1; x < 2; ++x) {
     for (int32_t y = -1; y < 2; ++y) {
       if (x == -1 && y == -1) {

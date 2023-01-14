@@ -14,8 +14,8 @@ struct Location_t{
   LCDSprite* m_obstacle; // Non-owning. Any obstacle sprite (only a reference to zoom level 1 is kept) 
   // Populated at RESET
   struct Chunk_t* m_chunk;
-  uint16_t m_x; // In location coords
-  uint16_t m_y;
+  int16_t m_x; // In location coords
+  int16_t m_y;
   int16_t m_pix_off_x; // Pixel offset
   int16_t m_pix_off_y; // Pixel offset
 };

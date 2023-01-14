@@ -147,11 +147,7 @@ void tickFar() {
   return;
   #endif
 
-  if((m_frameCount + 3) % FAR_TICK_FREQUENCY == 0) { // +3 to put this out-of-sync with tickNear() and tickFar()
-    updateRenderList();
-  }
-
-  if((m_frameCount + 1) % FAR_TICK_FREQUENCY) { // +1 to put this out-of-sync with tickNear()
+  if((m_frameCount + TICK_OFFSET_LARGETICK) % FAR_TICK_FREQUENCY) { 
     return;
   }
 
@@ -242,6 +238,10 @@ int gameLoop(void* _data) {
   tickNear();
   tickFar();
 
+  if((m_frameCount + TICK_OFFSET_SPRITELIST) % SCREENUPDATE_TICK_FREQUENCY == 0) {
+    updateRenderList();
+  }
+
   if (gm == kTitles) updateUITitles(m_frameCount);
   else updateUI(m_frameCount);
 
@@ -250,6 +250,7 @@ int gameLoop(void* _data) {
   struct Player_t* p = getPlayer(); 
   ++p->m_playTime;
 
+  #ifndef DEMO
   if (p->m_enableAutosave) {
     if (++m_autoSaveTimer > p->m_enableAutosave*60*TICK_FREQUENCY && gm == kWanderMode ) {
       m_autoSaveTimer = 0;
@@ -260,6 +261,7 @@ int gameLoop(void* _data) {
       #endif
     }
   }
+  #endif
 
   return 1;
 }
