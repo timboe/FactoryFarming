@@ -20,7 +20,7 @@ Build up an expansive industrial complex by *growing, harvesting, refining* and 
   - Speed upgrade.
 - **6 crop harvesters** & other nature-exploiters used to extract raw resources from the earth.
 - **35 different factories** in which to refine and manufacture a vast array of different end-products.
-- **11 unlockable utility items**. Storage chests, paths, placeable signs, and more.
+- **13 unlockable utility items**. Storage chests, paths, placeable signs, and more.
 - **In-game tutorial**, guiding your through the setup of your first factory.
 - **Crank controls!** Crank to zoom, to rotate, to resize and to follow conveyors (non-crank alternatives provided too). 
 - **Two zoom levels**, get a close-up view of your factory.
