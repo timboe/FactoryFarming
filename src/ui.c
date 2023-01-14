@@ -2280,7 +2280,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
     case kTutNewPlots:
       switch (_n) {
         case 0: return "-- But I Don't Have The Soil For That! --";
-        case 1: return "Problem, the cactus plant you just unlocked wants";
+        case 1: return "Problem. The cactus plant you just unlocked wants";
         case 2: return "sandy soil, but there isn't any here. Expansion time!";
         case 3: return "Visit the plots depot (next to sales) and buy a new";
         case 4: return "plot of land to develop.";
@@ -2319,7 +2319,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
     case kTutFinishedTwo:
       switch (_n) {
         case 0: return "-- Imports & Exports & Plots --";
-        case 1: return "Wonderful! Continue to buy more lots in order to";
+        case 1: return "Wonderful! Continue to buy more plots in order to";
         case 2: return "access new soil types and to expand the factory.";
         case 3: return "Use the export and import depots to move cargo";
         case 4: return "between plots, and continue to maximize efficiency!";
