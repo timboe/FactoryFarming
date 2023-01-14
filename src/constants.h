@@ -134,6 +134,8 @@
 
 // Fraction of the screen to trigger scrolling
 #define SCROLL_EDGE 0.9f
+#define SCROLL_EDGE_TOP_BOT 0.8f
+#define SCROLL_EDGE_BOT_TUT 0.6f
 
 #define Z_INDEX_UI_RIGHT 32765
 #define Z_INDEX_UI_BOTTOM 32766

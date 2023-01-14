@@ -444,9 +444,9 @@ void movePlayer(bool _forceUpdate) {
     }
 
     didScroll = false;
-    const static int16_t MOVE_THRESHOLD_Y = (SCREEN_PIX_Y * SCROLL_EDGE) - (SCREEN_PIX_Y/2);
+    const static int16_t MOVE_THRESHOLD_Y = (SCREEN_PIX_Y * SCROLL_EDGE_TOP_BOT) - (SCREEN_PIX_Y/2);
     const int16_t topThreshold = (int16_t) roundf(MOVE_THRESHOLD_Y * shrinkFractionY);
-    const static int16_t MOVE_THRESHOLD_Y_REDUCED = (SCREEN_PIX_Y * 0.6f) - (SCREEN_PIX_Y/2);    
+    const static int16_t MOVE_THRESHOLD_Y_REDUCED = (SCREEN_PIX_Y * SCROLL_EDGE_BOT_TUT) - (SCREEN_PIX_Y/2);    
     #ifdef DEMO
     const int16_t bottomThreshold = MOVE_THRESHOLD_Y * shrinkFractionY;
     #else

@@ -1,5 +1,6 @@
 #include "utility.h"
 #include "extractor.h"
+#include "plant.h"
 #include "../location.h"
 #include "../sprite.h"
 #include "../generate.h"
@@ -19,7 +20,7 @@ void bufferUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _
 
 void buildingSetupRetirement(struct Building_t* _building);
 
-void rotavatorCheckSet(struct Tile_t* _t, uint8_t* _stored);
+void rotavatorCheckSet(int16_t _x, int16_t _y, uint8_t* _stored);
 
 void rotavatorCheckRevert(int16_t _x, int16_t _y, uint8_t _stored);
 
@@ -70,24 +71,30 @@ void utilityUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t 
   }
 }
 
-void rotavatorCheckSet(struct Tile_t* _t, uint8_t* _stored) {
-  if (!isSoilTile(_t) || isGroundTypeTile_ptr(_t, kLoamyGround)) {
+void rotavatorCheckSet(int16_t _x, int16_t _y, uint8_t* _stored) {
+  struct Tile_t* t = getTile(_x, _y);
+  if (!isSoilTile(t) || isGroundTypeTile_ptr(t, kLoamyGround)) {
     *_stored = 255;
   } else {
-    *_stored = _t->m_tile;
-    setTile_ptr(_t, (FLOOR_VARIETIES * kLoamyGround) + rand() % FLOOR_VARIETIES);
+    *_stored = t->m_tile;
+    setTile_ptr(t, (FLOOR_VARIETIES * kLoamyGround) + rand() % FLOOR_VARIETIES);
+    // Update any plant?
+    struct Location_t* loc = getLocation(_x, _y);
+    if (loc->m_building && loc->m_building->m_type == kPlant) {
+      resetGrowTimer(loc->m_building);
+    }
   }
 }
 
 void buildRotavator(struct Location_t* _loc) {
-    rotavatorCheckSet(getTile(_loc->m_x - 1, _loc->m_y + 1), &_loc->m_building->m_stored[0]);
-    rotavatorCheckSet(getTile(_loc->m_x    , _loc->m_y + 1), &_loc->m_building->m_stored[1]);
-    rotavatorCheckSet(getTile(_loc->m_x + 1, _loc->m_y + 1), &_loc->m_building->m_stored[2]);
-    rotavatorCheckSet(getTile(_loc->m_x - 1, _loc->m_y    ), &_loc->m_building->m_stored[3]);
-    rotavatorCheckSet(getTile(_loc->m_x + 1, _loc->m_y    ), &_loc->m_building->m_stored[4]);
-    rotavatorCheckSet(getTile(_loc->m_x - 1, _loc->m_y - 1), &_loc->m_building->m_stored[5]);
-    rotavatorCheckSet(getTile(_loc->m_x    , _loc->m_y - 1), &_loc->m_building->m_mode.mode8[0]);
-    rotavatorCheckSet(getTile(_loc->m_x + 1, _loc->m_y - 1), &_loc->m_building->m_mode.mode8[1]);
+    rotavatorCheckSet(_loc->m_x - 1, _loc->m_y + 1, &_loc->m_building->m_stored[0]);
+    rotavatorCheckSet(_loc->m_x    , _loc->m_y + 1, &_loc->m_building->m_stored[1]);
+    rotavatorCheckSet(_loc->m_x + 1, _loc->m_y + 1, &_loc->m_building->m_stored[2]);
+    rotavatorCheckSet(_loc->m_x - 1, _loc->m_y    , &_loc->m_building->m_stored[3]);
+    rotavatorCheckSet(_loc->m_x + 1, _loc->m_y    , &_loc->m_building->m_stored[4]);
+    rotavatorCheckSet(_loc->m_x - 1, _loc->m_y - 1, &_loc->m_building->m_stored[5]);
+    rotavatorCheckSet(_loc->m_x    , _loc->m_y - 1, &_loc->m_building->m_mode.mode8[0]);
+    rotavatorCheckSet(_loc->m_x + 1, _loc->m_y - 1, &_loc->m_building->m_mode.mode8[1]);
 }
 
 void rotavatorCheckRevert(int16_t _x, int16_t _y, uint8_t _stored) {
@@ -105,6 +112,10 @@ void rotavatorCheckRevert(int16_t _x, int16_t _y, uint8_t _stored) {
   // Regular 
   if (_stored != 255) {
     setTile_ptr(t, _stored);
+  }
+  // Update any plant?
+  if (loc->m_building && loc->m_building->m_type == kPlant) {
+    resetGrowTimer(loc->m_building);
   }
 }
 

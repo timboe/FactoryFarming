@@ -22,8 +22,8 @@ void plantTrySpawnCargo(struct Building_t* _building, uint8_t _tickLength) {
 
   newCargo(loc, PDesc[_building->m_subType.plant].out, _tickLength == NEAR_TICK_AMOUNT);
 
-  _building->m_progress = getGrowdownTimer(_building, true);
-  
+  resetGrowTimer(_building);
+    
   ++_building->m_mode.mode16;
   // If _building->m_mode.mode16 >= N_CROPS_BEFORE_FARMLAND or 2*N_CROPS_BEFORE_FARMLAND then we
   // render the soil differently. But it is too expensive to do this here.
@@ -32,6 +32,10 @@ void plantTrySpawnCargo(struct Building_t* _building, uint8_t _tickLength) {
   if (_building->m_mode.mode16 == 1) {
     renderChunkBackgroundImage(loc->m_chunk);
   }
+}
+
+void resetGrowTimer(struct Building_t* _building) {
+  _building->m_progress = getGrowdownTimer(_building, true);
 }
 
 uint16_t getGrowdownTimer(struct Building_t* _building, bool _smear) {
@@ -111,7 +115,7 @@ void buildingSetupPlant(struct Building_t* _building) {
   clearLocation(_building->m_location, /*cargo*/ true, /*building*/ false);
 
   if (_building->m_progress <= 0) {
-    _building->m_progress = getGrowdownTimer(_building, true);
+    resetGrowTimer(_building);
   }
 }
 

@@ -19,3 +19,5 @@ uint16_t getPlantSmilieSprite(int8_t _value);
 int8_t getWaterBonus(enum kGroundWetness _likes, enum kGroundWetness _has);
 
 int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has);
+
+void resetGrowTimer(struct Building_t* _building);
