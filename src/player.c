@@ -448,7 +448,7 @@ void movePlayer(bool _forceUpdate) {
     const int16_t topThreshold = (int16_t) roundf(MOVE_THRESHOLD_Y * shrinkFractionY);
     const static int16_t MOVE_THRESHOLD_Y_REDUCED = (SCREEN_PIX_Y * SCROLL_EDGE_BOT_TUT) - (SCREEN_PIX_Y/2);    
     #ifdef DEMO
-    const int16_t bottomThreshold = MOVE_THRESHOLD_Y * shrinkFractionY;
+    const int16_t bottomThreshold = (int16_t) roundf((getGameMode() == kInspectMode ? MOVE_THRESHOLD_Y_REDUCED : MOVE_THRESHOLD_Y) * shrinkFractionY);
     #else
     const int16_t bottomThreshold = (int16_t) roundf((m_player.m_enableTutorial < TUTORIAL_FINISHED || getGameMode() == kInspectMode ? MOVE_THRESHOLD_Y_REDUCED : MOVE_THRESHOLD_Y) * shrinkFractionY);
     #endif

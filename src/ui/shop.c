@@ -63,10 +63,7 @@ void populateInfoBuy(bool _visible) {
   const uint8_t multiplier = getBuySellMultiplier();
 
   // AFFORD
-  bool canAfford = (p->m_money >= selectedPrice * multiplier || p->m_infiniteMoney);
-  #ifdef DEMO
-  canAfford = false;
-  #endif
+  const bool canAfford = (p->m_money >= selectedPrice * multiplier || p->m_infiniteMoney);
   pd->sprite->setVisible(getCannotAffordSprite(), !canAfford && _visible);
 
   // INFO
