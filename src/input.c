@@ -624,7 +624,15 @@ void clickHandlerReplacement() {
 
   switch (gm) {
     case kWanderMode: case kPlantMode: rotateHandleWander(pd->system->getCrankChange()); break;
-    case kBuildMode: case kPlaceMode: rotateHandlePlacement(pd->system->getCrankChange()); break;
+    case kBuildMode: case kPlaceMode:; 
+      const enum kUICat selectedCat = getUIContentCategory();
+      const uint16_t selectedID =  getUIContentID();
+      if (selectedCat == kUICatUtility && (selectedID == kObstructionRemover || selectedID == kConveyorGrease)) {
+        rotateHandlePick(pd->system->getCrankChange());
+      } else {
+        rotateHandlePlacement(pd->system->getCrankChange());
+      }
+      break;
     case kPickMode: case kDestroyMode: rotateHandlePick(pd->system->getCrankChange()); break;
     case kMenuCredits: rotateHandleCredits(pd->system->getCrankChange()); break;
     case kMenuBuy: case kMenuSell: rotateHandleMultiplier(pd->system->getCrankChange()); break; 

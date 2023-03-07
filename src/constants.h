@@ -89,7 +89,7 @@
 #define SHEET48_SIZE_Y 8
 #define SHEET48_SIZE (SHEET48_SIZE_X*SHEET48_SIZE_Y)
 
-#define TOT_CARGO_OR_BUILDINGS 8192
+
 
 // Number of available floor sprites
 #define FLOOR_TYPES 6
@@ -124,6 +124,9 @@
 #define TOT_TILES_X (TILES_PER_CHUNK_X*WORLD_CHUNKS_X)
 #define TOT_TILES_Y (TILES_PER_CHUNK_Y*WORLD_CHUNKS_Y)
 #define TOT_TILES (TOT_TILES_X*TOT_TILES_Y)
+
+#define CARGO_LIMIT 8192
+#define BUILDING_LIMIT TOT_TILES
 
 // Player acceleration and friction
 #define PLAYER_A 3.5f
@@ -219,7 +222,7 @@
 
 #define SSHOT_PIXELS_PER_FRAME 16384
 
-#define VERSION "v1.1"
+#define VERSION "v1.2"
 
 #define TICK_OFFSET_LARGETICK 5
 #define TICK_OFFSET_SPRITELIST 9

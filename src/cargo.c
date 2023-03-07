@@ -84,7 +84,7 @@ struct CargoDescriptor_t CargoDesc[] = {
   {.subType = kSpareCargo15, .price = DIS, .multi = 1.0f, .UIIcon = SID(0,0)},
 };
 
-const int32_t SIZE_CARGO = TOT_CARGO_OR_BUILDINGS * sizeof(struct Cargo_t);
+const int32_t SIZE_CARGO = CARGO_LIMIT * sizeof(struct Cargo_t);
 
 uint16_t m_nCargo = 0;
 
@@ -182,7 +182,7 @@ bool canBePlacedCargo(struct Location_t* loc) {
 struct Cargo_t* cargoManagerNewCargo(enum kCargoType _type) {
   for (uint8_t try = 0; try < 2; ++try) {
     const uint32_t start = (try == 0 ? m_cargoSearchLocation : 0);
-    const uint32_t stop  = (try == 0 ? TOT_CARGO_OR_BUILDINGS : m_cargoSearchLocation);
+    const uint32_t stop  = (try == 0 ? CARGO_LIMIT : m_cargoSearchLocation);
     for (uint32_t i = start; i < stop; ++i) {
       if (m_cargos[i].m_type == kNoCargo) {
         ++m_nCargo;
@@ -270,14 +270,14 @@ bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addToDisplay
 }
 
 void resetCargo() {
-  for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
+  for (uint32_t i = 0; i < CARGO_LIMIT; ++i) {
     for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
       if (m_cargos[i].m_sprite[zoom]) pd->sprite->freeSprite(m_cargos[i].m_sprite[zoom]);
     }
   }
   memset(m_cargos, 0, SIZE_CARGO);
 
-  for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
+  for (uint32_t i = 0; i < CARGO_LIMIT; ++i) {
     m_cargos[i].m_index = i;
     /////
     #ifdef AGGRESSIVE_ALLOCATE_CARGO_SPRITES
@@ -307,7 +307,7 @@ void serialiseCargo(struct json_encoder* je) {
   je->addTableMember(je, "cargo", 5);
   je->startArray(je);
 
-  for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
+  for (uint32_t i = 0; i < CARGO_LIMIT; ++i) {
     if (m_cargos[i].m_type == kNoCargo) {
       continue;
     }

@@ -601,7 +601,7 @@ bool doLoad() {
     if (m_worldVersions[m_save][m_slot] == V1p0_SAVE_FORMAT) {
       m_worldVersions[m_save][m_slot] = V1p1_SAVE_FORMAT;
       uint16_t nFacsUpdated = 0;
-      for (uint16_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
+      for (uint16_t i = 0; i < BUILDING_LIMIT; ++i) {
         struct Building_t* b = buildingManagerGetByIndex(i);
         if (!b) continue;
         if (b->m_type != kFactory) continue;
@@ -617,7 +617,7 @@ bool doLoad() {
     setGameMode(kWanderMode);
 
     // need to refresh conveyor sprite connections
-    for (uint16_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
+    for (uint16_t i = 0; i < BUILDING_LIMIT; ++i) {
       conveyorUpdateSprite(buildingManagerGetByIndex(i));
     } 
 

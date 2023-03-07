@@ -14,7 +14,7 @@
 #include "buildings/factory.h"
 #include "buildings/utility.h"
 
-const int32_t SIZE_BUILDING = TOT_CARGO_OR_BUILDINGS * sizeof(struct Building_t);
+const int32_t SIZE_BUILDING = BUILDING_LIMIT * sizeof(struct Building_t);
 
 uint16_t m_nBuildings = 0;
 
@@ -172,7 +172,7 @@ uint16_t getNByType(enum kBuildingType _type) {
 struct Building_t* buildingManagerNewBuilding(enum kBuildingType _asType) {
   for (uint8_t try = 0; try < 2; ++try) {
     const uint32_t start = (try == 0 ? m_buildingSearchLocation : 0);
-    const uint32_t stop  = (try == 0 ? TOT_CARGO_OR_BUILDINGS : m_buildingSearchLocation);
+    const uint32_t stop  = (try == 0 ? BUILDING_LIMIT : m_buildingSearchLocation);
     for (uint32_t i = start; i < stop; ++i) {
       if (m_buildings[i].m_type == kNoBuilding) {
         ++m_nBuildings;
@@ -208,7 +208,7 @@ void buildingManagerFreeBuilding(struct Building_t* _building) {
 }
 
 void growAtAll(uint16_t _maxTicks) {
-  for (uint32_t b = 0; b < TOT_CARGO_OR_BUILDINGS; ++b) {
+  for (uint32_t b = 0; b < BUILDING_LIMIT; ++b) {
     if (m_buildings[b].m_type == kPlant) m_buildings[b].m_progress = rand() % _maxTicks;
   }
 }
@@ -433,17 +433,17 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
 }
 
 void resetBuilding() {
-  for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
+  for (uint32_t i = 0; i < BUILDING_LIMIT; ++i) {
     for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
       if (m_buildings[i].m_sprite[zoom]) pd->sprite->freeSprite(m_buildings[i].m_sprite[zoom]);
     }
   }
   memset(m_buildings, 0, SIZE_BUILDING);
-  for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
+  for (uint32_t i = 0; i < BUILDING_LIMIT; ++i) {
     m_buildings[i].m_index = i;
   }
   // Max alocate?
-//  for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
+//  for (uint32_t i = 0; i < BUILDING_LIMIT; ++i) {
 //    for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
 //    m_buildings[i].m_sprite[zoom] = pd->sprite->newSprite();
 //    }
@@ -466,7 +466,7 @@ void serialiseBuilding(struct json_encoder* je) {
   je->addTableMember(je, "building", 8);
   je->startArray(je);
 
-  for (uint32_t i = 0; i < TOT_CARGO_OR_BUILDINGS; ++i) {
+  for (uint32_t i = 0; i < BUILDING_LIMIT; ++i) {
     if (m_buildings[i].m_type == kNoBuilding) {
       continue;
     }

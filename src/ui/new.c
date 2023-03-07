@@ -107,7 +107,7 @@ const char* getNewText() {
       case kWell: return "Place to dampen the surrounding soil";
       case kStorageBox: return "Stores up to 3 different types of cargo";
       case kBuffferBox: return "Like the storage box, but also self-empties";
-      case kFactoryUpgrade: return "Place adjacent to factories to reduce production time."; // New to v1.1
+      case kFactoryUpgrade: return "Place next to factories, speeds up production"; // New to v1.1
       case kConveyorGrease: return "Upgrades conveyor speed from x1 to x2";
       case kObstructionRemover: return "Clears obstructed ground, can then be built on";
       case kLandfill: return "Fills in water. Can be built on, but not planted on.";
