@@ -269,6 +269,7 @@ void cheatUnlock() {
       getPlayer()->m_buildingsUnlockedTo = 0;
     }
     sfx(kSfxUnlock);
+    counter = 0;
   }
 }
 
