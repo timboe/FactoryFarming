@@ -9,6 +9,8 @@
 // Directions
 enum kDir{SN, WE, NS, EW, kDirN};
 
+enum kCurrentHoliday{kNoHoliday, kEaster, kChristmas};
+
 extern PlaydateAPI* pd;
 
 void setPDPtr(PlaydateAPI* _p);
@@ -40,6 +42,8 @@ void populateMenuGame(void);
 void initGame(void);
 
 uint16_t getCactusUnlock(void);
+
+enum kCurrentHoliday getCurrentHoliday(void);
 
 int32_t getNUnlocks(void);
 

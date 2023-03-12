@@ -61,7 +61,16 @@ uint16_t pixToLoc(uint16_t _pix) {
   return (_pix - TILE_PIX/2) / TILE_PIX;
 }
 
-
+enum kCurrentHoliday getCurrentHoliday() {
+  struct PDDateTime current;
+  pd->system->convertEpochToDateTime(pd->system->getSecondsSinceEpoch(NULL), &current);
+  if (current.month == 12) {
+    return kChristmas;
+  } else if ((current.month == 3 && current.day >= 22) || (current.month == 4 && current.day <= 24)) {
+    return kEaster;
+  }
+  return kNoHoliday;
+}
 
 void tickNear() {
   #ifdef ONLY_SLOW_TICKS
@@ -344,6 +353,12 @@ uint16_t getCactusUnlock() {
 }
 
 void initGame() {
+
+  // Make seasonal adjustments
+  const enum kCurrentHoliday currentHoliday = getCurrentHoliday();
+  if (currentHoliday == kEaster) {
+    CDesc[kChocolate].UIIcon = SID(9,25); // Switch chocolate bar for egg
+  }
 
   // Populate unlock ordering
   int32_t i = -1;
