@@ -357,7 +357,7 @@ void initGame() {
   // Make seasonal adjustments
   const enum kCurrentHoliday currentHoliday = getCurrentHoliday();
   if (currentHoliday == kEaster) {
-    CDesc[kChocolate].UIIcon = SID(9,25); // Switch chocolate bar for egg
+    CargoDesc[kChocolate].UIIcon = SID(9,25); // Switch chocolate bar for egg
   }
 
   // Populate unlock ordering

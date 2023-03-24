@@ -30,6 +30,8 @@
 
 //#define ALLOW_ROTATED_MENU_ICONS
 
+//#define HIDE_UI
+
 #define ALWAYS_FPS false
 
 #define PRETEND_ZOOMED_IN false

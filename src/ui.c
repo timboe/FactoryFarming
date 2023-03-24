@@ -607,6 +607,10 @@ void addUIToSpriteList() {
   return;
   #endif
 
+  #ifdef HIDE_UI
+  return;
+  #endif
+
   struct Player_t* p = getPlayer();
 
   if (m_mode == kMenuCredits) {
