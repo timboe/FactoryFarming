@@ -41,6 +41,12 @@ LCDFont* m_fontRoobert10;
 
 LCDFont* m_fontCooperHewitt12;
 
+LCDFont* m_fontNotoBold;
+
+LCDFont* m_fontNotoThin;
+
+LCDFont* m_fontNotoLarge;
+
 LCDBitmap* loadImageAtPath(const char* _path);
 
 LCDBitmapTable* loadImageTableAtPath(const char* _path);
@@ -183,27 +189,27 @@ LCDBitmap* getDemoSplash() {
 #endif
 
 void setCooperHewitt12() {
-  pd->graphics->setFont(m_fontCooperHewitt12);
+  pd->graphics->setFont(getCooperHewitt12());
 }
 
 void setRoobert10() {
-  pd->graphics->setFont(m_fontRoobert10);
+  pd->graphics->setFont(getRoobert10());
 }
 
 void setRoobert24() {
-  pd->graphics->setFont(m_fontRoobert24);
+  pd->graphics->setFont(getRoobert24());
 }
 
 LCDFont* getRoobert24() {
-  return m_fontRoobert24;
+  return getLanguage() == kEN ? m_fontRoobert24 : m_fontNotoLarge;
 }
 
 LCDFont* getRoobert10(void) {
-  return m_fontRoobert10;
+  return getLanguage() == kEN ? m_fontRoobert10 : m_fontNotoBold;
 }
 
 LCDFont* getCooperHewitt12(void) {
-  return m_fontCooperHewitt12;
+  return getLanguage() == kEN ? m_fontCooperHewitt12 : m_fontNotoThin;
 }
 
 void populateResizedSprites() {
@@ -271,6 +277,10 @@ void initSprite() {
   m_fontRoobert24 = loadFontAtPath("fonts/Roobert-24-Medium");
   m_fontRoobert10 = loadFontAtPath("fonts/Roobert-10-Bold");
   m_fontCooperHewitt12  = loadFontAtPath("fonts/CooperHewitt-Light");
+
+  m_fontNotoThin = loadFontAtPath("fonts/Thin12");
+  m_fontNotoBold = loadFontAtPath("fonts/Bold12");
+  m_fontNotoLarge  = loadFontAtPath("fonts/Bold24");
   pd->graphics->setFont(m_fontRoobert24);
 
 }

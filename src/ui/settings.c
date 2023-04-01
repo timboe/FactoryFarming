@@ -67,18 +67,18 @@ LCDBitmap* getPauseImage() {
   const enum kNewReturnStatus nrs = checkHasNewToShow(p);
   if (nrs == kNewNoUnlockedAll) {
 
-    snprintf(textA, 128, "Everything is");
-    snprintf(textB, 128, "UNLOCKED!");
-    snprintf(textC, 128, "Thanks for playing");
-    snprintf(textD, 128, "FACTORY FARMING!");
+    snprintf(textA, 128, "%s", tr(kTRPauseFin0));
+    snprintf(textB, 128, "%s", tr(kTRPauseFin1));
+    snprintf(textC, 128, "%s", tr(kTRPauseFin2));
+    snprintf(textD, 128, "%s", tr(kTRPauseFin3));
     sA = getSprite16(3, 19, 1);
     sB = getSprite16(3, 19, 1);
 
   } else if (nrs == kNewYes) {
 
-    snprintf(textA, 128, "Visit:");
-    snprintf(textB, 128, "The Shop");
-    snprintf(textC, 128, "To unlock the next:");
+    snprintf(textA, 128, "%s", tr(kTRPauseUnlock0));
+    snprintf(textB, 128, "%s", tr(kTRPauseUnlock1));
+    snprintf(textC, 128, "%s", tr(kTRPauseUnlock2));
     sA = getSprite16(11, 14, 1);
 
     const uint32_t nextLevel = p->m_buildingsUnlockedTo + 1;
@@ -90,8 +90,8 @@ LCDBitmap* getPauseImage() {
 
   } else if (nrs == kNewNoNeedsFarming) {
 
-    snprintf(textA, 128, "Sell a total of:");
-    snprintf(textC, 128, "To unlock the next:");
+    snprintf(textA, 128, "%s", tr(kTRPauseSell0));
+    snprintf(textC, 128, "%s", tr(kTRPauseSell1));
 
     const uint32_t nextLevel = p->m_buildingsUnlockedTo + 1;
     const enum kCargoType cargo = UnlockDecs[ nextLevel ].ofCargo;
@@ -112,14 +112,14 @@ LCDBitmap* getPauseImage() {
     snprintf(textD, 128, "%s", toStringHeader(nextBuildingUICat, /*plural*/ false));
     sB = getSprite16(11, 13, 1);
 
-    snprintf(textE, 128, "Sold so far: %i", haveSold);
+    snprintf(textE, 128, tr(kTRPauseSell2), haveSold);
   
   } else if (nrs == kNewNoNeedsTutorial) {
 
-    snprintf(textA, 128, "Continue");
-    snprintf(textB, 128, "The Tutorial");
-    snprintf(textC, 128, "To unlock the next");
-    snprintf(textD, 128, "Building");
+    snprintf(textA, 128, "%s", tr(kTRPauseTut0));
+    snprintf(textB, 128, "%s", tr(kTRPauseTut1));
+    snprintf(textC, 128, "%s", tr(kTRPauseTut2));
+    snprintf(textD, 128, "%s", tr(kTRPauseTut3));
     sA = getSprite16(13, 13, 1);
     sB = getSprite16(11, 13, 1);
 
@@ -128,29 +128,29 @@ LCDBitmap* getPauseImage() {
 
   length = strlen(textA);
   width = pd->graphics->getTextWidth(getRoobert10(), textA, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textA, 128, kASCIIEncoding, CENTRE - width/2, 0*Y_SPACE+OFFS);
+  pd->graphics->drawText(textA, 128, kUTF8Encoding, CENTRE - width/2, 0*Y_SPACE+OFFS);
 
   length = strlen(textB);
   width = pd->graphics->getTextWidth(getRoobert10(), textB, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textB, 128, kASCIIEncoding, CENTRE - width/2, 1*Y_SPACE+OFFS);
+  pd->graphics->drawText(textB, 128, kUTF8Encoding, CENTRE - width/2, 1*Y_SPACE+OFFS);
 
   pd->graphics->drawBitmap(sA, X_START, 1*Y_SPACE+OFFS, kBitmapUnflipped);
   pd->graphics->drawBitmap(sA, X_END,   1*Y_SPACE+OFFS, flip);
 
   length = strlen(textC);
   width = pd->graphics->getTextWidth(getRoobert10(), textC, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textC, 128, kASCIIEncoding, CENTRE - width/2, 2*Y_SPACE+OFFS);
+  pd->graphics->drawText(textC, 128, kUTF8Encoding, CENTRE - width/2, 2*Y_SPACE+OFFS);
 
   pd->graphics->drawBitmap(sB, X_START, 3*Y_SPACE+OFFS, kBitmapUnflipped);
   pd->graphics->drawBitmap(sB, X_END,   3*Y_SPACE+OFFS, kBitmapUnflipped);
 
   length = strlen(textD);
   width = pd->graphics->getTextWidth(getRoobert10(), textD, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textD, 128, kASCIIEncoding, CENTRE - width/2, 3*Y_SPACE+OFFS);
+  pd->graphics->drawText(textD, 128, kUTF8Encoding, CENTRE - width/2, 3*Y_SPACE+OFFS);
 
   length = strlen(textE);
   width = pd->graphics->getTextWidth(getRoobert10(), textE, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textE, 128, kASCIIEncoding, CENTRE - width/2, 4*Y_SPACE+OFFS);
+  pd->graphics->drawText(textE, 128, kUTF8Encoding, CENTRE - width/2, 4*Y_SPACE+OFFS);
 
   pd->graphics->drawLine(X_START + TILE_PIX, 2*Y_SPACE+OFFS - TILE_PIX/2, X_END, 2*Y_SPACE+OFFS - TILE_PIX/2, 2, kColorBlack);
   pd->graphics->drawLine(X_START + TILE_PIX, 4*Y_SPACE+OFFS - TILE_PIX/2, X_END, 4*Y_SPACE+OFFS - TILE_PIX/2, 2, kColorBlack);
@@ -162,10 +162,10 @@ LCDBitmap* getPauseImage() {
   roundedRect(TILE_PIX/4, DEVICE_PIX_X/2 - TILE_PIX, 2*TILE_PIX, TILE_PIX, kColorWhite);
   pd->graphics->setDrawOffset(0, 0);
   
-  snprintf(textA, 128, "SAVE BEFORE EXITING!");
+  snprintf(textA, 128, "%s", tr(kTRPauseSave));
   length = strlen(textA);
   width = pd->graphics->getTextWidth(getRoobert10(), textA, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textA, 128, kASCIIEncoding, CENTRE - width/2, 6*Y_SPACE);
+  pd->graphics->drawText(textA, 128, kUTF8Encoding, CENTRE - width/2, 6*Y_SPACE);
 
   //
 
@@ -174,23 +174,23 @@ LCDBitmap* getPauseImage() {
   roundedRect(TILE_PIX/4, DEVICE_PIX_X/2 - TILE_PIX, 3*TILE_PIX, TILE_PIX, kColorWhite);
   pd->graphics->setDrawOffset(0, 0);
 
-  snprintf(textA, 128, "Total Play Time:");
+  snprintf(textA, 128, "%s", tr(kTRPauseTotTime));
   length = strlen(textA);
   width = pd->graphics->getTextWidth(getRoobert10(), textA, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textA, 128, kASCIIEncoding, CENTRE - width/2, 8*Y_SPACE-OFFS);
+  pd->graphics->drawText(textA, 128, kUTF8Encoding, CENTRE - width/2, 8*Y_SPACE-OFFS);
 
   const uint32_t pt = p->m_playTime / TICK_FREQUENCY;
   playTime(textA, pt);
   length = strlen(textA);
   width = pd->graphics->getTextWidth(getRoobert10(), textA, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textA, 128, kASCIIEncoding, CENTRE - width/2, 9*Y_SPACE-OFFS - TILE_PIX/4);
+  pd->graphics->drawText(textA, 128, kUTF8Encoding, CENTRE - width/2, 9*Y_SPACE-OFFS - TILE_PIX/4);
 
   pd->graphics->popContext();
   return m_pause;
 }
 
 char* playTime(char* _buf128, uint32_t _playTime) {
-  snprintf(_buf128, 128, "%ih:%im:%is", (int) _playTime/3600, (int) (_playTime%3600)/60, (int) (_playTime%3600)%60);
+  snprintf(_buf128, 128, tr(kTRPauseTotTimeDisplay), (int) _playTime/3600, (int) (_playTime%3600)/60, (int) (_playTime%3600)%60);
   return _buf128;
 }
 
@@ -225,11 +225,11 @@ void addText(char* _t) {
 void autosave(uint32_t _time) {
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   switch (_time) {
-    case 0: pd->graphics->drawText("OFF", 8, kUTF8Encoding, TILE_PIX*15, 0); break;
-    case 5: pd->graphics->drawText("5m", 8, kUTF8Encoding, TILE_PIX*15, 0); break;
-    case 10: pd->graphics->drawText("10m", 8, kUTF8Encoding, TILE_PIX*15, 0); break;
-    case 15: pd->graphics->drawText("15m", 8, kUTF8Encoding, TILE_PIX*15, 0); break;
-    case 30: pd->graphics->drawText("30m", 8, kUTF8Encoding, TILE_PIX*15, 0); break;
+    case 0: pd->graphics->drawText(tr(kTRSettingsMusicOff), 8, kUTF8Encoding, TILE_PIX*15, 0); break;
+    case 5: pd->graphics->drawText(tr(kTRSettingsMusic5m), 8, kUTF8Encoding, TILE_PIX*15, 0); break;
+    case 10: pd->graphics->drawText(tr(kTRSettingsMusic10m), 8, kUTF8Encoding, TILE_PIX*15, 0); break;
+    case 15: pd->graphics->drawText(tr(kTRSettingsMusic15m), 8, kUTF8Encoding, TILE_PIX*15, 0); break;
+    case 30: pd->graphics->drawText(tr(kTRSettingsMusic30m), 8, kUTF8Encoding, TILE_PIX*15, 0); break;
   }
 }
 
@@ -379,7 +379,7 @@ void redrawSettingsMenuLine(LCDBitmap* _bitmap, int32_t _line) {
     pd->graphics->drawText(text, length, kUTF8Encoding, TILE_PIX*9 - width/2, 0);
 
   } else {
-    pd->graphics->drawText("..........................................................................", 75, kASCIIEncoding, TILE_PIX, 0);
+    pd->graphics->drawText("..........................................................................", 75, kUTF8Encoding, TILE_PIX, 0);
     const char* text = getLine(_line);
     length = strlen(text);
     width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
@@ -436,98 +436,7 @@ bool isTitle(int32_t _line) {
 }
 
 const char* getLine(int32_t _line) {
-  switch (_line) {
-    case 0: return "--- Sound Settings ---";
-    case 1: return "Music";
-    case 2: return "Music Volume";
-    case 3: return "Sound Effects";
-    case 4: return "Footsteps";
-    //
-    case 5: return "--- Game Settings ---";
-    case 6: return "Screen Shake";
-    case 7: return "Tutorial Enabled";
-    case 8: return "Conveyor Animation";
-    case 9: return "Show Harvester Outlines";
-    case 10: return "Enable Crank-on-Conveyor";
-    case 11: return "Centre Camera on Player";
-    case 12: return "Auto Zoom-In When Moving";
-    case 13: return "Auto Save Time";
-    case 14: return "Auto Pickup on Deconstruct";
-    case 15: return "Auto Apply Conveyor Grease";
-    case 16: return "Show Debug Information";
-    //
-    case 17: return "--- Exit Game ---";
-    case 18: return "Save & Exit to Title";
-    case 19: return "Exit to Title WITHOUT Saving";
-    //
-    case 20: return "--- Screenshot ---";
-    case 21: return "Take Screenshot of Plot";
-    //
-    case 22: return "--- Controls ---";
-    case 23: return "Inventory/Select/Interact: Ⓐ";
-    case 24: return "Back/Cancel: Ⓑ";
-    case 25: return "Walk: ✛";
-    case 26: return "Run: Hold Ⓑ + ✛";
-    case 27: return "Zoom in/out: 🎣 or Hold Ⓐ + ⬇️";
-    case 28: return "Rotate: 🎣 or Hold Ⓑ + ⬆️/➡️/⬇️/⬅️";
-    case 29: return "Resize: 🎣 or Hold Ⓑ + ⬆️/⬇️";
-    case 30: return "Quick Pickup Mode: Hold Ⓐ + ⬅️";
-    case 31: return "Quick Inspect Mode: Hold Ⓐ + ⬆️";
-    case 32: return "Quick Deconstruct Mode: Hold Ⓐ + ➡️";
-    //
-    case 33: return "--- Credits ---";
-    case 34: return "Factory Farming by Tim Martin";
-    //
-    case 35: return "-- Music --";
-    case 36: return "♬ Dr Tikov: 1985";
-    case 37: return "♬ BoxCat Games: B-3";
-    case 38: return "♬ Eric Skiff: We're the Resistors";
-    case 39: return "♬ RoccoW: Sweet Self Satisfaction";
-    case 40: return "♬ RoccoW: Weeklybeats 2014 #4";
-    case 41: return "♬ Soft & Furious: Horizon Ending";
-    //
-    case 42: return "-- Art --";
-    case 43: return "Kenney: 1-Bit Pack";
-    case 44: return "VectorPixelStar: 1-Bit Patterns";
-    case 45: return "Josehzz: Farming Crops";
-    case 46: return "ScratchIO: Farming Set";
-    case 47: return "Varkalandar: Isometric Rocks";
-    case 48: return "Withthelove: Character Sprites";
-    case 49: return "DinosoftLab: New (NounProject)";
-    //
-    case 50: return "-- Fonts --";
-    case 51: return "Chester Jenkins: Cooper Hewitt";
-    case 52: return "Martin Vacha: Roobert";
-    case 53: return "Mediengestaltung: Messing Lettern";
-    case 54: return "Mediengestaltung: Coventry Garden";
-    //
-    case 55: return "-- Sound Effects --";
-    case 56: return "sfxr.me";
-    //
-    case 57: return "-- Statistics --";
-    case 58: return "Play Time:";
-    case 59: return "Total Money Earned:";
-    case 60: return "Most Money Held:";
-    case 61: return "Total Cargo Sold:";
-    case 62: return "Total Cargo Imported:";
-    case 63: return "Total Buildings in this Plot:";
-    case 64: return "Total Cargo in this Plot:";
-    //
-    case 65: return " ";
-    case 66: return "© Tim Martin 2022";
-    case 67: return "Factory Farming is an MIT";
-    case 68: return "Licensed Open Source Project";
-    case 69: return "github.com/timboe/FactoryFarming";
-    //
-    case 70: return " ";
-    case 71: return "Thank you for playing!";
-    case 72: return "And for your support of niche";
-    case 73: return "Indy game dev projects :)";
-    //
-    case 74: return " ";
-    case 75: return "Keep on Maximizing Profit,";
-    case 76: return "Maximizing Efficiency.";
-    // can currently go to 120
-  }
-  return "???";
+  if (_line > 76) return " "; 
+  return tr(kTRSettings0 + _line);
+  // can currently go to 120
 }

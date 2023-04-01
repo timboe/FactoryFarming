@@ -69,40 +69,62 @@ void populateInfoWarp(bool _visible) {
 
   // INFO
   LCDBitmap* infoBitmap = getInfoBitmap();
-  static char textA[128] = " ";
-  static char textB[128] = " ";
+  static char textA[256] = " ";
+  static char textB[256] = " ";
   setRoobert10();
   pd->graphics->clearBitmap(infoBitmap, kColorClear);
   pd->graphics->pushContext(infoBitmap);
   roundedRect(1, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorBlack);
   roundedRect(3, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorWhite);
   if (selectedOwned) {
-    snprintf(textA, 128, "Plot Location: %s", getWorldName(selectedID, /*mask*/ false));
+    strcpy(textA, tr(kTRWarpLocations));
+    strcat(textA, cspace());
+    strcat(textA, getWorldName(selectedID, /*mask*/ false));
+    //snprintf(textA, 256, tr(kTRWarpLocations), getWorldName(selectedID, /*mask*/ false));
     if (selectedID < FLOOR_TYPES) {
-      snprintf(textB, 128, "Soils: %s, %s, %s", 
-        toStringSoil(getWorldGround(selectedID, 0)),
-        toStringSoil(getWorldGround(selectedID, 1)),
-        toStringSoil(getWorldGround(selectedID, 2)));
+      strcpy(textB, tr(kTRWarpSoil));
+      strcat(textB, cspace());
+      strcat(textB, toStringSoil(getWorldGround(selectedID, 0)));
+      strcat(textB, Cspace());
+      strcat(textB, toStringSoil(getWorldGround(selectedID, 1)));
+      strcat(textB, Cspace());
+      strcat(textB, toStringSoil(getWorldGround(selectedID, 2)));
+      //snprintf(textB, 256, tr(kTRWarpSoil0), 
+      //  toStringSoil(getWorldGround(selectedID, 0)),
+      //  toStringSoil(getWorldGround(selectedID, 1)),
+      //  toStringSoil(getWorldGround(selectedID, 2)));
     } else if (selectedID == kWaterWorld) {
-      snprintf(textB, 128, "Soils: Water, %s", toStringSoil(getWorldGround(kClayWorld, 0)));
+      strcpy(textB, tr(kTRWarpSoil));
+      strcat(textB, cspace());
+      strcat(textB, tr(kTRWater));
+      strcat(textB, Cspace());
+      strcat(textB, toStringSoil(getWorldGround(kClayWorld, 0)));
+      //snprintf(textB, 256, tr(kTRWarpSoil1), toStringSoil(getWorldGround(kClayWorld, 0)));
     } else if (selectedID == kTranquilWorld) {
-      snprintf(textB, 128, "Soils: %s", toStringSoil(getWorldGround(kLoamWoarld, 0)));
+      strcpy(textB, tr(kTRWarpSoil));
+      strcat(textB, cspace());
+      strcat(textB, toStringSoil(getWorldGround(kLoamWoarld, 0)));
+      //snprintf(textB, 256, tr(kTRWarpSoil2), toStringSoil(getWorldGround(kLoamWoarld, 0)));
     }
   } else { 
-    snprintf(textA, 128, "Plot Location: %s", getWorldName(selectedID, /*mask*/ true));
+    snprintf(textA, 256, tr(kTRWarpLocations), getWorldName(selectedID, /*mask*/ true));
 
     char textM[32] = "";
     snprintf_c(textM, 32, selectedPriceOrAmount);
-    snprintf(textB, 128, "Price:       %s", textM);
+
+    strcpy(textB, tr(kTRShopPrice));
+    strcat(textB, c5space());
+    strcat(textB, textM);
+    //snprintf(textB, 256, tr(kTRWarpPrice), textM);
     if (WDesc[selectedID].unlock == kNoCargo) { // buy for gold
-      pd->graphics->drawBitmap(getSprite16(2, 16, 1), 3*TILE_PIX + TILE_PIX/2, TILE_PIX - 2, kBitmapUnflipped);
+      pd->graphics->drawBitmap(getSprite16(2, 16, 1), 1*TILE_PIX + trLen(kTRShopPrice), TILE_PIX - 2, kBitmapUnflipped); // Coin
     } else {
-      pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[WDesc[selectedID].unlock].UIIcon , 1), 3*TILE_PIX + TILE_PIX/2, TILE_PIX - 2, kBitmapUnflipped);
+      pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[WDesc[selectedID].unlock].UIIcon , 1), 1*TILE_PIX + trLen(kTRShopPrice), TILE_PIX - 2, kBitmapUnflipped);
     }
   }
   pd->graphics->setDrawMode(kDrawModeFillBlack);
-  pd->graphics->drawText(textA, 128, kASCIIEncoding, 1*TILE_PIX, +2);
-  pd->graphics->drawText(textB, 128, kASCIIEncoding, 1*TILE_PIX, TILE_PIX - 2);
+  pd->graphics->drawText(textA, 256, kUTF8Encoding, 1*TILE_PIX, +2);
+  pd->graphics->drawText(textB, 256, kUTF8Encoding, 1*TILE_PIX, TILE_PIX - 2);
   pd->graphics->setDrawMode(kDrawModeCopy);
 
   pd->graphics->popContext();

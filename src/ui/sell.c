@@ -55,16 +55,24 @@ void populateInfoSell() {
   roundedRect(1, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorBlack);
   roundedRect(3, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorWhite);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
-  snprintf(textA, 128, "Sell %s", toStringCargoByType(selectedID, /*plural=*/false));
-  snprintf(textB, 128, "Inventory: %i", selectedOwned);
+
+  strcpy(textA, tr(kTRSell));
+  strcat(textA, space());
+  strcat(textA, toStringCargoByType(selectedID, /*plural=*/false));
+  //snprintf(textA, 128, tr(kTRSell0), toStringCargoByType(selectedID, /*plural=*/false));
+  snprintf(textB, 128, tr(kTRInventory), selectedOwned);
   char textM[32] = "";
   snprintf_c(textM, 32, selectedPrice * toSell);
-  snprintf(textC, 128, "Value:      %s", textM);
-  pd->graphics->drawText(textA, 128, kASCIIEncoding, 1*TILE_PIX, +2);
-  pd->graphics->drawText(textB, 128, kASCIIEncoding, 1*TILE_PIX, TILE_PIX - 2);
-  pd->graphics->drawText(textC, 128, kASCIIEncoding, 9*TILE_PIX, TILE_PIX - 2);
+  //snprintf(textC, 128, tr(kTRSell2), textM);
+  strcpy(textC, tr(kTRUIInventoryValue));
+  strcat(textC, c5space());
+  strcat(textC, textM);
+
+  pd->graphics->drawText(textA, 128, kUTF8Encoding, 1*TILE_PIX, +2);
+  pd->graphics->drawText(textB, 128, kUTF8Encoding, 1*TILE_PIX, TILE_PIX - 2);
+  pd->graphics->drawText(textC, 128, kUTF8Encoding, 9*TILE_PIX, TILE_PIX - 2);
   pd->graphics->setDrawMode(kDrawModeCopy);
-  pd->graphics->drawBitmap(getSprite16(2, 16, 1), 11*TILE_PIX + TILE_PIX/2, TILE_PIX - 2, kBitmapUnflipped);
+  pd->graphics->drawBitmap(getSprite16(2, 16, 1), 9*TILE_PIX + trLen(kTRUIInventoryValue), TILE_PIX - 2, kBitmapUnflipped); // Coin
   pd->graphics->popContext();
 }
 

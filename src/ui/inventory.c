@@ -402,6 +402,10 @@ void populateContentInventory(void) {
   }
 }
 
+const char* A(void) { return "AAA"; }
+
+const char* B(void) { return "BBB"; }
+
 void populateInfoInventory() {
   const enum kUICat selectedCat = getUIContentCategory();
   const enum kBuildingType selectedCatType = getCatBuildingSubType(selectedCat);
@@ -429,57 +433,108 @@ void populateInfoInventory() {
       toStringToolInfo(selectedID)); break;
     case kUICatPlant:; 
       if (selectedID == kSeaweedPlant || selectedID == kSeaCucumberPlant) {
-        snprintf(textA, 128, "Plant %s (%s)",
-          toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
-          toStringSoil(PDesc[selectedID].soil)); 
+        strcpy(textA, tr(kTRUIInventoryPlant));
+        strcat(textA, space());
+        strcat(textA, toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false));
+        strcat(textA, space());
+        strcat(textA, lb());
+        strcat(textA, toStringSoil(PDesc[selectedID].soil));
+        strcat(textA, rb());
+        //snprintf(textA, 128, tr(kTRUIInventoryPlant0),
+        //  toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
+        //  toStringSoil(PDesc[selectedID].soil)); 
       } else {
-        snprintf(textA, 128, "Plant %s (%s %s)",
-          toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
-          toStringWetness(PDesc[selectedID].wetness),
-          toStringSoil(PDesc[selectedID].soil)); 
+        strcpy(textA, tr(kTRUIInventoryPlant));
+        strcat(textA, space());
+        strcat(textA, toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false));
+        strcat(textA, space());
+        strcat(textA, lb());
+        strcat(textA, toStringWetness(PDesc[selectedID].wetness));
+        strcat(textA, space());
+        strcat(textA, toStringSoil(PDesc[selectedID].soil));
+        strcat(textA, rb());
+        //snprintf(textA, 128, tr(kTRUIInventoryPlant1),
+        //  toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
+        //  toStringWetness(PDesc[selectedID].wetness),
+        //  toStringSoil(PDesc[selectedID].soil)); 
       }
       break;
     case kUICatConv:; 
-      snprintf(textA, 128, "Place %s", toStringBuilding(selectedCatType, (union kSubType) {.conveyor = selectedID}, false)); 
+      strcpy(textA, tr(kTRUIInventoryPlace));
+      strcat(textA, space());
+      strcat(textA, toStringBuilding(selectedCatType, (union kSubType) {.conveyor = selectedID}, false));
+      //snprintf(textA, 128, tr(kTRUIInventoryPlace), toStringBuilding(selectedCatType, (union kSubType) {.conveyor = selectedID}, false)); 
       break;
     case kUICatExtractor:; 
-      snprintf(textA, 128, "Build %s", toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false));
+      /// xxx
+      strcpy(textA, tr(kTRUIInventoryBuild));
+      strcat(textA, space());
+      strcat(textA, toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false));
+      pd->system->logToConsole("LEN: %i", strlen(tr(kTRUIInventoryBuild)));
+      pd->system->logToConsole("STR: %s", tr(kTRUIInventoryBuild));
+      pd->system->logToConsole("STR: %s", toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false));
+      pd->system->logToConsole(tr(kTRUIInventoryBuild), "X");
+      //snprintf(textA, 128, "%s=%s", tr(kTRUIInventoryBuild), toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false));
       break;
     case kUICatFactory:; 
-      snprintf(textA, 128, "Build %s", toStringBuilding(selectedCatType, (union kSubType) {.factory = selectedID}, false));
+      strcpy(textA, tr(kTRUIInventoryBuild));
+      strcat(textA, space());
+      strcat(textA, toStringBuilding(selectedCatType, (union kSubType) {.factory = selectedID}, false));
+      //snprintf(textA, 128, tr(kTRUIInventoryBuild), toStringBuilding(selectedCatType, (union kSubType) {.factory = selectedID}, false));
       break;
     case kUICatUtility:;
-      snprintf(textA, 128, "Place %s", toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false));
+      strcpy(textA, tr(kTRUIInventoryPlace));
+      strcat(textA, space());
+      strcat(textA, toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false));
+      //snprintf(textA, 128, tr(kTRUIInventoryPlace), toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false));
       break;
-    case kUICatCargo:; 
-      snprintf(textA, 128, "Place %s", toStringCargoByType(selectedID, /*plural=*/false));
+    case kUICatCargo:;
+      strcpy(textA, tr(kTRUIInventoryPlace));
+      strcat(textA, space());
+      strcat(textA, toStringCargoByType(selectedID, /*plural=*/false));
+      //snprintf(textA, 128, tr(kTRUIInventoryPlace), toStringCargoByType(selectedID, /*plural=*/false));
       break;
     case kUICatWarp:; break;
     case kUICatImportN: case kUICatImportE: case kUICatImportS: case kUICatImportW: break; 
     case kNUICats:; break;
   }
-  if (selectedCat != kUICatTool) snprintf(textB, 128, "Inventory: %i", selectedOwned);
+  if (selectedCat != kUICatTool) snprintf(textB, 128, tr(kTRInventory), selectedOwned);
   snprintf(textC, 2, " ");
   int32_t cOff = 0;
   if (selectedCat == kUICatCargo) {
     char textM[32] = "";
     snprintf_c(textM, 32, selectedPrice);
-    snprintf(textC, 128, "Value:      %s", textM);
+    strcpy(textC, tr(kTRUIInventoryValue));
+    strcat(textC, c5space());
+    strcat(textC, textM);
+    //snprintf(textC, 128, tr(kTRUIInventoryValue), textM);
   } else if (selectedCat == kUICatExtractor) {
-    if (selectedID == kChalkQuarry) snprintf(textC, 128, "Build on %s", toStringSoil(kChalkyGround));
-    else if (selectedID == kPump) snprintf(textC, 128, "Build on Water");
-    else if (selectedID == kSaltMine) snprintf(textC, 128, "Build on %s", toStringSoil(kPeatyGround));
+    if (selectedID == kChalkQuarry) {
+      strcpy(textA, tr(kTRUIInventoryBuildOn));
+      strcat(textA, space());
+      strcat(textA, toStringSoil(kChalkyGround));
+      //snprintf(textC, 128, tr(kTRUIInventoryBuildOn), toStringSoil(kChalkyGround));
+    } else if (selectedID == kPump) {
+      snprintf(textC, 128, "%s", tr(kTRUIInventoryBuildOnWater));
+    } else if (selectedID == kSaltMine) {
+      strcpy(textA, tr(kTRUIInventoryBuildOn));
+      strcat(textA, space());
+      strcat(textA, toStringSoil(kPeatyGround));
+      //snprintf(textC, 128, tr(kTRUIInventoryBuildOn), toStringSoil(kPeatyGround));
+    }
   } else if (selectedCat == kUICatPlant) {
-    if (selectedID == kSeaweedPlant) snprintf(textC, 128, "Sow on Water");
-    else if (selectedID == kSeaCucumberPlant) snprintf(textC, 128, "Place in the Ocean");
+    if (selectedID == kSeaweedPlant) snprintf(textC, 128, "%s", tr(kTRUIInventorySowOnWater));
+    else if (selectedID == kSeaCucumberPlant) snprintf(textC, 128, "%s", tr(kTRUIInventoryPlaceInOcean));
   } else if (selectedCat == kUICatUtility) {
-    if (selectedID == kLandfill) snprintf(textC, 128, "Cannot be removed");
-    if (selectedID == kRetirement) { snprintf(textC, 128, "Build on Tranquil Plains"); cOff = TILE_PIX; }
+    if (selectedID == kLandfill) snprintf(textC, 128, "%s", tr(kTRUIInventoryCannotRemove));
+    if (selectedID == kRetirement) { snprintf(textC, 128, "%s", tr(kTRUIInventoryBuildOnPlains)); cOff = TILE_PIX; }
   }
-  pd->graphics->drawText(textA, 128, kASCIIEncoding, 1*TILE_PIX, +2);
-  pd->graphics->drawText(textB, 128, kASCIIEncoding, 1*TILE_PIX, TILE_PIX - 2);
-  pd->graphics->drawText(textC, 128, kASCIIEncoding, 9*TILE_PIX - cOff, TILE_PIX - 2);
+  pd->graphics->drawText(textA, 128, kUTF8Encoding, 1*TILE_PIX, +2);
+  pd->graphics->drawText(textB, 128, kUTF8Encoding, 1*TILE_PIX, TILE_PIX - 2);
+  pd->graphics->drawText(textC, 128, kUTF8Encoding, 9*TILE_PIX - cOff, TILE_PIX - 2);
   pd->graphics->setDrawMode(kDrawModeCopy); // Draw coin
-  if (selectedCat == kUICatCargo) pd->graphics->drawBitmap(getSprite16(2, 16, 1), 11*TILE_PIX + TILE_PIX/2, TILE_PIX - 2, kBitmapUnflipped);
+  if (selectedCat == kUICatCargo) { 
+    pd->graphics->drawBitmap(getSprite16(2, 16, 1), 9*TILE_PIX + trLen(kTRUIInventoryValue), TILE_PIX - 2, kBitmapUnflipped);
+  }
   pd->graphics->popContext();
 }

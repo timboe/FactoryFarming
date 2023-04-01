@@ -1,0 +1,771 @@
+Belt
+Conveyor Belt
+I' Splitter
+Conveyor Belt 'I' Splitter
+L' Splitter
+Conveyor Belt 'L' Splitter
+T' Splitter
+Conveyor Belt 'T' Splitter
+I' Filter
+Conveyor Belt 'I' Filter
+L' Filter
+Conveyor Belt 'L' Filter
+Tunnel
+Conveyor Belt Tunnel
+I' Overflow
+Conveyor Belt 'I' Overflow
+L' Overflow
+Conveyor Belt 'L' Overflow
+Carrot Plant
+Carrot Seeds
+Sunflower Plant
+Sunflower Seeds
+Potato Plant
+Seed Potato
+Apple Tree
+Apple Sapling
+Corn Plant
+Corn Seeds
+Seaweed Plant
+Seaweed Spores
+Wheat Plant
+Wheat Seeds
+Cactus Plant
+Cactus Seeds
+Lime Tree
+Lime Sapling
+Strawberry Plant
+Strawberry Seeds
+Bamboo Plant
+Bamboo Sapling
+Coffee Plant
+Coffee Seeds
+Cocoa Plant
+Cocoa Seeds
+Sea Cucumber Farm
+Sea Cucumber Trap
+Rose Plant
+Rose Seeds
+Path
+Sign
+Trash Bin
+Well
+Storage Box
+Buffer Box
+Factory Upgrade Module
+Conveyor Grease
+Obstruction Remover
+Landfill
+Rotavator
+Retirement Cottage
+Fence
+Harvester 7x7
+Automatic Harvester (7x7)
+Water Pump
+Chalk Quarry
+Salt Mine
+Harvester 9x9
+Automatic Harvester (9x9)
+CO2 Extractor
+Vitamin Factory
+Vegetable Oil Factory
+Potato Chip Factory
+Ethanol Factory
+Hard Cider Factory
+Abattoir
+Hydrogen Factory
+Hydrogenated Oil Factory
+Corn Dog Factory
+Beer Brewery
+Tequila Factory
+High Fructose Corn Syrup Factory
+Gelatin Factory
+Jello Factory
+Jello-Shots Factory
+Emulsifiers Factory
+Ice Cream Factory
+Battery Chicken Farm
+Protein Powder Factory
+Chocolate Factory
+Meat Pie Factory
+Monosodium Glutamate Factory
+TV-Dinner Factory
+Chocolate Cake Factory
+Caffeine Powder Factory
+Energy Drink Factory
+Rave Juice Factory
+Perk Pills Factory
+Packaging Manufacturer
+Dessert Factory
+Catering Pack Factory
+Foo Young Meal Factory
+Party Pack Factory
+Parfume Factory
+Miracle Powder Factory
+Turkish Delight Factory
+The Shop
+Sales Depot
+Cargo Exports Depot
+Cargo Imports Depot
+Plot Depot
+A Suspicious Rock
+Carrots
+Carrot
+Chalks
+Chalk
+Vitamins
+Vitamins
+Potatoes
+Potato
+Sunflowers
+Sunflower
+Vegetable Oils
+Vegetable Oil
+Salt
+Salt
+Chips
+Chips
+Apples
+Apple
+Water
+Water
+Ethanol
+Ethanol
+Hard Ciders
+Hard Cider
+Corns
+Corn
+Seaweeds
+Seaweed
+Meat
+Meat
+Hydrogen
+Hydrogen
+H. Oils
+H. Oil
+Corn Dogs
+Corn Dog
+Wheat
+Wheat
+Beers
+Beer
+Cacti
+Cactus
+Tequilas
+Tequila
+Limes
+Lime
+H.F.C.S.
+H.F.C.S.
+Gelatin
+Gelatin
+Jello
+Jello
+Jello-Shots
+Jello-Shot
+Strawberries
+Strawberry
+Emulsifiers
+Emulsifier
+Ice Creams
+Ice Cream
+Eggs
+Egg
+Protein Powders
+Protein Powder
+Coco Beans
+Coco Bean
+Chocolate
+Chocolate
+Meat Pies
+Meat Pie
+M.S.G.
+M.S.G.
+TV-Dinners
+TV-Dinner
+Cakes
+Cake
+Coffee Beans
+Coffee Bean
+CO2
+CO2
+Caffeine
+Caffeine
+Energy Drinks
+Energy Drink
+Rave Juices
+Rave Juice
+Perk Pills
+Perk Pills
+Bamboos
+Bamboo
+Packaging
+Packaging
+Desserts
+Dessert
+Catering Kits
+Catering Kit
+Foo Young
+Foo Young
+Party Packs
+Party Pack
+Sea Cucumbers
+Sea Cucumber
+Parfume
+Parfume
+Miracle Powder
+Miracle Powder
+Roses
+Rose
+Turkish Delight
+Turkish Delight
+Main Menu
+delete save 1
+delete save 2
+delete save 3
+load
+save
+menu
+Water
+Wet
+Moist
+Dry
+Silty Soil
+Chalky Soil
+Peaty Soil
+Sandy Soil
+Clay Soil
+Loamy Soil
+Soil
+Paved Ground
+Obstructed Ground
+Lake
+River
+Ocean
+??? ?????????
+The Grasslands
+??? ????? ???????
+The Stony Plateau
+??? ????? ??????
+The Boggy Hollow
+??? ??????
+The Desert
+??? ???????
+The Estuary
+??? ??????? ?????
+The Fertile Hills
+??? ????? ??? ?????
+The Tidal Mud Flats
+??? ???????? ??????
+The Tranquil Plains
+Pickup Cargo Mode
+Inspection Mode
+Deconstruction Mode
+Grabs nearby cargo, empties buildings
+See details about the current tile
+Deconstructs everything in the area
+The Shop
+Sales Depot
+Plots Depot
+Exports Depot
+Imports Depot
+Credits
+--- Tutorial Stage %i/%i ---
+N
+E
+S
+W
+W, E
+N, S
+N, E
+E, S
+S, W
+W, N
+W, N, E
+N, E, S
+E, S, W
+S, W, N
+Obstructed ground cannot be built on.
+Maybe you will be able to clear it later on?
+Place Mode
+Plant Mode
+Build Mode
+Pickup Mode
+Inventory
+Inspect
+Deconstruction
+New Crop!
+New Conveyor!
+New Harvester!
+New Factory!
+New Utility!
+Tools
+Tool
+Crops
+Crop
+Conveyors
+Conveyor
+Harvesters
+Harvester
+Factories
+Factory
+Utilities
+Utility
+Cargo
+Cargo
+Plot Locations
+Plot Locations
+Import (North)
+Import (North)
+Import (East)
+Import (East)
+Import (South)
+Import (South)
+Import (West)
+Import (West)
+SAVING
+GENERATING
+LOADING
+%i: New Game
+Load Demo
+%i: Continue
+-- Factory Farming Tech Demo --
+You're free to look around this example factory.
+You will find facilities up to Tech Level 3.
+The full game goes up to Tech Level 7.
+Building and Saving are disabled in the demo.
+-- The Initial Seed Purchase --
+Welcome to Factory Farming! There's money to be
+made, and it won't make itself! So let's get started by
+visiting the shop with Ⓐ and buying some carrot seeds
+The compass (right) will always point to the shop.
+Move with the D-Pad, ✛. Zoom in & out with 🎣.
+Hold Ⓑ to run.  Go to the shop and press Ⓐ."
+Buy 10 carrot seeds from the shop with Ⓐ.
+Press Ⓑ to exit the shop.
+-- The Next Objective --
+Your current objective is to sell at least
+10 carrots. You can check what your current objective
+is at any time by pressing the Menu button.
+Do this now.
+Press the Menu button to see your current objective.
+From here you can also save and load the game, and
+open the main menu with game settings etc.
+--
+-- The First Crops --
+Good, carrots will grow well in the silty soil near to the
+shop. Pay attention to the soil & water each plant likes.
+Find a good nearby spot, open your inventory
+with Ⓐ, select the seeds, and plant 10 carrots.
+Find a nearby area of silty soil, preferably moist.
+Press Ⓐ to enter your inventory, select the carrot
+seeds and press Ⓐ again. Plant 10 carrot seeds on
+empty patches of silty soil, then press Ⓑ.
+-- The First Harvest --
+Great, crops normally take some time to yield produce,
+but let's speed up these carrot plants. Press Ⓐ, choose
+Pickup Cargo Mode' and harvest 10 grown carrots.
+You can pickup any cargo in the world, or in buildings.
+Go to where you planted your carrot seeds.
+Press Ⓐ to enter your inventory, select 'Pickup
+Cargo Mode'. Press or hold Ⓐ when moving, pickup 10
+grown carrots. Use the 🎣 to change the pickup area.
+-- The First Sale --
+Nice, you know what we can do with cargo like those
+fresh carrots? Sell them for a profit! Visit the sales
+depot (next to the shop) and press Ⓐ to access the
+sales menu. Sell 10 carrots to continue.
+Go to the sales depot (next to the shop).
+Press or hold Ⓐ to sell at least 10 carrots.
+Change the amount sold with each press of Ⓐ by
+turning the 🎣, or hold Ⓑ and press ⬆️ or ⬇️.
+-- The First Automated Harvest --
+Sweet, but that was a lot of manual labor... Let's
+use an automatic harvester instead! Buy one from
+the shop and build it where some carrot plants are
+within its harvest catchment area.
+Go to the the shop, buy an automatic harvester.
+Press Ⓐ and choose this from your inventory.
+Place the harvester such that it located on empty
+soil, and carrot plants are within its harvest range.
+-- The First Cargo Line --
+Good, We're harvesting carrots. But we need to get them
+to the sales depot. We need conveyor belts! Buy around
+50 from the shop and lay the path to move & sell
+the carrots. Rotate belt pieces with 🎣 or Ⓑ + ✛.
+Go to the the shop, buy around 50 conveyor belts.
+Press Ⓐ and choose these from your inventory.
+Make a chain of belts from the automatic harvester to
+sales. Rotate belts with 🎣, or hold Ⓑ and press ✛.
+-- Mining The Earth --
+OK. But not all exploitable resources are grown.
+Some are dug up, or pumped out. Let's build a chalk
+quarry next. Buy one from the shop and build it on
+chalky soil. There should be some to the north.
+Go to the the shop, buy a chalk quarry.
+Press Ⓐ and choose this from your inventory.
+Go north from the shop and look for chalky soil.
+Place the quarry on at least one chalky soil tile.
+-- Manufacturing Value --
+Nice. We can finally set up a full production line!
+Buy a vitamin factory from the shop, supply it with
+both chalk and carrots, and transport the vitamins
+to the sales depot for a much bigger profit!
+Go to the the shop, buy a vitamin factory.
+Place it in a good spot. Use conveyor belts to
+supply it with carrots and chalk. Use a more belts
+to transport the vitamins to the sales depot.
+-- Go Forth And Consume --
+Excellent! You now know all the basics of exploiting
+the world for profit. As your bank account swells,
+more crops, factories, and other items will unlock.
+Use them to maximize profit, maximize efficiency.
+-- But I Don't Have The Soil For That! --
+Problem. The cactus plant you just unlocked wants
+sandy soil, but there isn't any here. Expansion time!
+Visit the plots depot (next to sales) and buy a new
+plot of land to develop.
+The plots depot, exports depot and
+imports depot are all now unlocked.
+Visit the plots depot to the right of sales.
+Buy a new plot of land to expand the factory.
+-- A New Horizon --
+Welcome to you new plot of land! More room for your
+manufacturing empire to grow. Instead of selling cargo,
+you can also move it between plots. Use belts to feed
+cargo in to the exports depot in any of your plots.
+Export some cargo by moving it via belts into the
+exports depot (to the right of the plot depot) on
+any plot. The export rate of each cargo type is
+averaged over the previous two minutes.
+-- Accessing The Goods --
+Now that you're exporting cargo, let's look at imports too.
+Go to a different plot and visit the imports depot,
+you can import up to four cargo per plot.
+Try setting up an import now.
+Import some cargo in a different plot via the imports
+depot (right of the exports depot). N, S, E, W
+imports can be individually chosen. You cannot export a
+cargo type which is being imported to the same plot.
+-- Imports & Exports & Plots --
+Wonderful! Continue to buy more plots in order to
+access new soil types and to expand the factory.
+Use the export and import depots to move cargo
+between plots, and continue to maximize efficiency!
+North
+East
+South
+West
+Speed Multiplier
+Filter not yet set.
+Pass cargo through to set the filter.
+Filters On
+Next Transit
+Hopper %i/3
+Out
+Ingredients:
+Glycerin
+Beta
+Carotene
+Soy
+Lecithin
+Calcium
+Carbonate
+Stabilizers
+Preservatives
+Artificial
+Flavorings
+Distilled
+Vegetable
+Alcohol
+Apple
+Juice
+Coloring
+Animal Feed:
+Hormones
+Steroids
+Process: 
+Electrolysis
+of
+Colorant
+Sunset
+Orange
+Hydrogenated
+Oil
+Hop
+Agave
+High
+Fructose
+Corn
+Syrup
+Anticaking
+Agents
+Antibiotics
+Dewormer
+Insecticides
+Gluten
+Sodium
+Monosodium
+Glutamate
+Requirements: 
+Solvent
+Titanium
+Dioxide
+Bleach
+Fruit
+Pack Content: 
+Box
+Formaldehyde
+Starch
+Prod. Time: %ss
+Time Remaining: %ss
+In %i
+Likes
+Has
+Cannot Grow Here!
+Grow Time: %is
+Harvest to grow
+Time Remaining: %is
+Spend money to buy new Crops, Conveyors,
+Extractors, Factories, and Utility items.
+--
+--
+Sell Cargo from your inventory, or use
+Conveyors to automate the sales.
+Receive money for every sold item.
+
+View available plots of land.
+Buy new plots to expand your factory.
+Move between your owned plots.
+--
+Export Cargo for use in other plots.
+Exports are averaged over 60s - 120s.
+You cannot Export any Cargo which is also being
+Imported into this plot.
+Import Cargo from other plots. You can select an
+import for each of the 4 cardinal directions.
+Imports occur every 10s, the amount imported
+depends on the total number of importers.
+A large boulder blocks the ground here.
+Maybe it will become important later on?
+--
+--
+Movement speed is enhanced on the path.
+A charming fence.
+Your cozy little retirement cottage.
+Place a cargo here to display it on the sign.
+Sign for
+Permanently erases unwanted cargo.
+Drop the unwanted cargo, or use conveyors
+Converts the 8 surrounding tiles to loamy soil.
+Removing the rotavator will revert these tiles
+to their previous soil type.
+Reduces production time in any factory
+immediately N, S, E or W of the module.
+1 Module: -0.5s
+2 Modules: -0.75s
+3 Modules: -1s
+4+ modules: No extra bonus
+Creates a surrounding area of wet and moist soil.
+Compartment %i/3
+Exporting
+This Plot: %s/s
+All Plots: %s/s
+Import of
+Importers: %i
+Imported: %s/s
+Plant
+Place
+Build
+Inventory: %i
+Value
+Build on
+Build on Water
+Sow on Water
+Place in the Ocean
+Cannot be removed
+Build on Tranquil Plains
+Moves cargo North, South, East or West
+Splits incoming cargo 2 ways (180 degrees)
+Splits incoming cargo 2 ways (90 degrees)
+Splits incoming cargo 3 ways
+Overflow used when main exit is blocked
+Filters on the first cargo to pass over
+Moves cargo underground for 1 tile
+Plant to grow carrots
+Plant to harvest sunflowers
+Plant to grow potatoes
+Plant to grow apples
+Plant to grow corn
+Seaweed grows in lakes
+Plant to grow wheat
+Plant to grow cacti
+Plant to grow limes
+Plant to grow strawberries
+Plant to grow coco beans
+Plant to grow coffee beans
+Plant to grow bamboo stalks
+Place in the ocean to farm sea cucumbers
+Tend to these Roses in your retirement.
+Movement speed is enhanced while on a path
+Displays a cargo of your choosing
+Cargo placed here will be destroyed
+Place to dampen the surrounding soil
+Stores up to 3 different types of cargo
+Like the storage box, but also self-empties
+Place next to factories, speeds up production
+Upgrades conveyor speed from x1 to x2
+Clears obstructed ground, can then be built on
+Fills in water. Can be built on, but not planted on.
+Turns nearby land into loamy soil.
+A relaxing space to enjoy your amassed wealth.
+A charming wooden fence.
+Collects cargo, can hold three different types
+Must be built on water. Produced water buckets
+Must be built on chalky soil. Produces chalk
+Must be built on peaty soil. Produces salt
+Collects cargo, can hold three different types
+Liquefies carbon dioxide right out of the air
+Manufactures low-grade vitamin pills
+Crush vegetable oil from sunflowers
+Manufactures potato chips. A fried favorite!
+Brew & distill pure alcohol
+Mix up some cheap hard 'cider'
+Feed goes in, 'meat' comes out
+Splits water and captures the hydrogen
+Hydrogenates oil to prevent spoiling
+Crunchy and meaty
+Produces something which resembles beer
+At least it has some agave in it
+So very, very, sweet...
+Used to set a variety of liquids
+A wobbly favorite
+An interesting mix of flavors
+Stops things from separating out
+It's dairy free! Is that a good thing?
+Corn goes in, eggs come out
+Maximum bulk, minimum fuss
+It's mostly sugar...
+What's for dinner? Meat pie!
+Makes everything taste better
+A meal for one, served in a tray
+Extracts the caffeine from coffee beans
+Caffeine high & sugar rush all-in-one
+This stuff should probably be illegal...
+Will keep you awake far too long
+Chocolatey, soft, and an infinite shelf life
+Sweet tooth?
+Scaling up with custom packaging
+Packaged catering kits, great markup
+Gelatinous, and dehydrating
+Everything a good party needs
+Fancy stuff
+What can't it cure?! (Anything...)
+A delectable delicacy
+Sell
+Everything is
+UNLOCKED!
+Thanks for playing
+FACTORY FARMING!
+Visit:
+The Shop
+To unlock the next:
+Sell a total of:
+To unlock the next:
+Sold so far: %i
+Continue
+The Tutorial
+To unlock the next
+Building
+SAVE BEFORE EXITING!
+Total Play Time:
+%ih:%im:%is
+OFF
+5m
+10m
+15m
+30m
+--- Sound Settings ---
+Music
+Music Volume
+Sound Effects
+Footsteps
+--- Game Settings ---
+Screen Shake
+Tutorial Enabled
+Conveyor Animation
+Show Harvester Outlines
+Enable Crank-on-Conveyor
+Centre Camera on Player
+Auto Zoom-In When Moving
+Auto Save Time
+Auto Pickup on Deconstruct
+Auto Apply Conveyor Grease
+Show Debug Information
+--- Exit Game ---
+Save & Exit to Title
+Exit to Title WITHOUT Saving
+--- Screenshot ---
+Take Screenshot of Plot
+--- Controls ---
+Inventory/Select/Interact: Ⓐ
+Back/Cancel: Ⓑ
+Walk: ✛
+Run: Hold Ⓑ + ✛
+Zoom in/out: 🎣 or Hold Ⓐ + ⬇️
+Rotate: 🎣 or Hold Ⓑ + ⬆️/➡️/⬇️/⬅️
+Resize: 🎣 or Hold Ⓑ + ⬆️/⬇️
+Quick Pickup Mode: Hold Ⓐ + ⬅️
+Quick Inspect Mode: Hold Ⓐ + ⬆️
+Quick Deconstruct Mode: Hold Ⓐ + ➡️
+--- Credits ---
+Factory Farming by Tim Martin
+-- Music --
+♬ Dr Tikov: 1985
+♬ BoxCat Games: B-3
+♬ Eric Skiff: We're the Resistors
+♬ RoccoW: Sweet Self Satisfaction
+♬ RoccoW: Weeklybeats 2014 #4
+♬ Soft & Furious: Horizon Ending
+-- Art --
+Kenney: 1-Bit Pack
+VectorPixelStar: 1-Bit Patterns
+Josehzz: Farming Crops
+ScratchIO: Farming Set
+Varkalandar: Isometric Rocks
+Withthelove: Character Sprites
+DinosoftLab: New (NounProject)
+-- Fonts --
+Chester Jenkins: Cooper Hewitt
+Martin Vacha: Roobert
+Mediengestaltung: Messing Lettern
+Mediengestaltung: Coventry Garden
+-- Sound Effects --
+sfxr.me
+-- Statistics --
+Play Time:
+Total Money Earned:
+Most Money Held:
+Total Cargo Sold:
+Total Cargo Imported:
+Total Buildings in this Plot:
+Total Cargo in this Plot:
+--
+© Tim Martin 2022
+Factory Farming is an MIT
+Licensed Open Source Project
+github.com/timboe/FactoryFarming
+--
+Thank you for playing!
+And for your support of niche
+Indy game dev projects :)
+--
+Keep on Maximizing Profit,
+Maximizing Efficiency.
+Buy
+Price
+Plot Location
+Soils
+Factory
+Farming
+"Factory Farming"

@@ -8,6 +8,7 @@
 #include "sound.h"
 #include "cargo.h"
 #include "location.h"
+#include "localisation.h"
 #include "chunk.h"
 #include "player.h"
 #include "ui.h"
@@ -20,6 +21,7 @@ __declspec(dllexport)
 #endif
 
 static void init(void) {
+  initLocalisation();
   initSprite();
   initWorld();
   initCargo();

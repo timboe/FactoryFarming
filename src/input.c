@@ -291,6 +291,11 @@ void clickHandleTitles(uint32_t _buttonPressed) {
     modTitleCursor(true);
   }
   #endif
+  if (kButtonUp == _buttonPressed) {
+    modLanguage(false);
+  } else if (kButtonDown == _buttonPressed) {
+    modLanguage(true);
+  }
 }
 
 void clickHandleMenuMain(uint32_t _buttonPressed) {

@@ -86,6 +86,8 @@ void UIDirtyMain(void);
 
 void updateUI(int _fc);
 
+void updateLangUI(void);
+
 void updateUITitles(int _fc);
 
 void updateUICredits(int _fc);

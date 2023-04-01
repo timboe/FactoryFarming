@@ -67,33 +67,33 @@ bool checkShowNew() {
 const char* getNewText() {
   switch(m_nextBuilding) {
     case kConveyor: switch (m_nextSubType.conveyor) {
-      case kBelt: return "Moves cargo North, South, East or West";
-      case kSplitI: return  "Splits incoming cargo 2 ways (180 degrees)";
-      case kSplitL: return "Splits incoming cargo 2 ways (90 degrees)";
-      case kSplitT: return "Splits incoming cargo 3 ways";
-      case kOverflowI: case kOverflowL: return "Overflow used when main exit is blocked";
-      case kFilterI: case kFilterL: return "Filters on the first cargo to pass over";
-      case kTunnelIn: case kTunnelOut: return "Moves cargo underground for 1 tile";
+      case kBelt: return tr(kTRNewBelt);
+      case kSplitI: return  tr(kTRNewSplit2_180);
+      case kSplitL: return tr(kTRNewSplit2_90);
+      case kSplitT: return tr(kTRNewSplit3);
+      case kOverflowI: case kOverflowL: return tr(kTRNewOverflow);
+      case kFilterI: case kFilterL: return tr(kTRNewFilter);
+      case kTunnelIn: case kTunnelOut: return tr(kTRNewTunnel);
       case kSpareConv0: case kSpareConv1: case kSpareConv4: case kSpareConv5:
       case kSpareConv6: case kSpareConv7:
       case kNConvSubTypes:;
     }
     case kPlant: switch (m_nextSubType.plant) {
-      case kCarrotPlant: return "Plant to grow carrots";
-      case kSunflowerPlant: return "Plant to harvest sunflowers";
-      case kPotatoPlant: return "Plant to grow potatoes";
-      case kAppleTree: return "Plant to grow apples";
-      case kCornPlant: return "Plant to grow corn";
-      case kSeaweedPlant: return  "Seaweed grows in lakes";
-      case kWheatPlant: return "Plant to grow wheat";
-      case kCactusPlant: return "Plant to grow cacti";
-      case kLimeTree: return "Plant to grow limes";
-      case kStrawberryPlant:  return "Plant to grow strawberries";  
-      case kCocoaPlant: return "Plant to grow coco beans";
-      case kCoffeePlant: return "Plant to grow coffee beans";
-      case kBambooPlant: return "Plant to grow bamboo stalks";
-      case kSeaCucumberPlant: return "Place in the ocean to farm sea cucumbers";
-      case kRosePlant: return "Tend to these Roses in your retirement.";
+      case kCarrotPlant: return tr(kTRNewCarrotPlant);
+      case kSunflowerPlant: return tr(kTRNewSunflowerPlant);
+      case kPotatoPlant: return tr(kTRNewPotatoPlant);
+      case kAppleTree: return tr(kTRNewAppleTree);
+      case kCornPlant: return tr(kTRNewCornPlant);
+      case kSeaweedPlant: return  tr(kTRNewSeaweedPlant);
+      case kWheatPlant: return tr(kTRNewWheatPlant);
+      case kCactusPlant: return tr(kTRNewCactusPlant);
+      case kLimeTree: return tr(kTRNewLimeTree);
+      case kStrawberryPlant:  return tr(kTRNewStrawberryPlant);  
+      case kCocoaPlant: return tr(kTRNewCocoaPlant);
+      case kCoffeePlant: return tr(kTRNewCoffeePlant);
+      case kBambooPlant: return tr(kTRNewBambooPlant);
+      case kSeaCucumberPlant: return tr(kTRNewSeaCucumberPlant);
+      case kRosePlant: return tr(kTRNewRosePlant);
       case kSparePlant0: case kSparePlant1: case kSparePlant2: case kSparePlant3:
       case kSparePlant4: case kSparePlant5: case kSparePlant6: case kSparePlant7: 
       case kSparePlant8: case kSparePlant9: case kSparePlant10: case kSparePlant11:
@@ -101,71 +101,71 @@ const char* getNewText() {
       case kNPlantSubTypes:;
     }
     case kUtility: switch (m_nextSubType.utility) {
-      case kPath: return "Movement speed is enhanced while on a path";
-      case kSign: return "Displays a cargo of your choosing";
-      case kBin: return "Cargo placed here will be destroyed";
-      case kWell: return "Place to dampen the surrounding soil";
-      case kStorageBox: return "Stores up to 3 different types of cargo";
-      case kBuffferBox: return "Like the storage box, but also self-empties";
-      case kFactoryUpgrade: return "Place next to factories, speeds up production"; // New to v1.1
-      case kConveyorGrease: return "Upgrades conveyor speed from x1 to x2";
-      case kObstructionRemover: return "Clears obstructed ground, can then be built on";
-      case kLandfill: return "Fills in water. Can be built on, but not planted on.";
-      case kRotavator: return "Turns nearby land into loamy soil."; // New to v1.1 
-      case kRetirement: return "A relaxing space to enjoy your amassed wealth.";
-      case kFence: return "A charming wooden fence.";
+      case kPath: return tr(kTRNewPath);
+      case kSign: return tr(kTRNewSign);
+      case kBin: return tr(kTRNewBin);
+      case kWell: return tr(kTRNewWell);
+      case kStorageBox: return tr(kTRNewStorageBox);
+      case kBuffferBox: return tr(kTRNewBuffferBox);
+      case kFactoryUpgrade: return tr(kTRNewFactoryUpgrade); // New to v1.1
+      case kConveyorGrease: return tr(kTRNewConveyorGrease);
+      case kObstructionRemover: return tr(kTRNewObstructionRemover);
+      case kLandfill: return tr(kTRNewLandfill);
+      case kRotavator: return tr(kTRNewRotavator); // New to v1.1 
+      case kRetirement: return tr(kTRNewRetirement);
+      case kFence: return tr(kTRNewFence);
       case kSpareUtil0: case kSpareUtil1: case kSpareUtil3:
       case kSpareUtil5: case kSpareUtil6: case kSpareUtil7: 
       case kNUtilitySubTypes:;
     }
     case kExtractor: switch (m_nextSubType.extractor) {
-      case kCropHarvesterSmall: return "Collects cargo, can hold three different types";
-      case kPump: return "Must be built on water. Produced water buckets";
-      case kChalkQuarry: return "Must be built on chalky soil. Produces chalk";
-      case kSaltMine: return "Must be built on peaty soil. Produces salt";
-      case kCropHarvesterLarge: return "Collects cargo, can hold three different types";
-      case kCO2Extractor: return "Liquefies carbon dioxide right out of the air";
+      case kCropHarvesterSmall: return tr(kTRNewCropHarvesterSmall);
+      case kPump: return tr(kTRNewPump);
+      case kChalkQuarry: return tr(kTRNewChalkQuarry);
+      case kSaltMine: return tr(kTRNewSaltMine);
+      case kCropHarvesterLarge: return tr(kTRNewCropHarvesterLarge);
+      case kCO2Extractor: return tr(kTRNewCO2Extractor);
       case kSpareExtractor0: case kSpareExtractor1: case kSpareExtractor2: case kSpareExtractor3:
       case kSpareExtractor4: case kSpareExtractor5: case kSpareExtractor6: case kSpareExtractor7:
       case kNExtractorSubTypes:;
     }
     case kFactory: switch (m_nextSubType.factory) {
-      case kVitiminFac: return "Manufactures low-grade vitamin pills";
-      case kVegOilFac: return "Crush vegetable oil from sunflowers";
-      case kCrispsFac: return "Manufactures potato chips. A fried favorite!";
-      case kEthanolFac: return "Brew & distill pure alcohol"; 
-      case kHardCiderFac: return "Mix up some cheap hard 'cider'"; 
-      case kAbattoir: return "Feed goes in, 'meat' comes out";
-      case kHydrogenFac: return "Splits water and captures the hydrogen";
-      case kHOILFac: return "Hydrogenates oil to prevent spoiling";
-      case kCornDogFac: return "Crunchy and meaty";
-      case kBeerFac: return "Produces something which resembles beer";
-      case kTequilaFac: return "At least it has some agave in it";
-      case kHFCSFac: return "So very, very, sweet...";
-      case kGelatinFac: return "Used to set a variety of liquids";
-      case kJellyFac: return "A wobbly favorite";
-      case kJelloShotFac: return "An interesting mix of flavors";
-      case kEmulsifierFac: return "Stops things from separating out";
-      case kIceCreamFac: return "It's dairy free! Is that a good thing?";
-      case kBatteryFarm: return "Corn goes in, eggs come out";
-      case kProteinFac: return "Maximum bulk, minimum fuss";
-      case kChocolateFac: return "It's mostly sugar...";
-      case kPieFac: return "What's for dinner? Meat pie!";
-      case kMSGFac: return "Makes everything taste better";
-      case kTVDinnerFac: return "A meal for one, served in a tray";
-      case kCaffeineFac: return "Extracts the caffeine from coffee beans";
-      case kEnergyDrinkFac: return "Caffeine high & sugar rush all-in-one";
-      case kRaveJuiceFac: return "This stuff should probably be illegal...";
-      case kPerkPillFac: return "Will keep you awake far too long";
-      case kCakeFac: return "Chocolatey, soft, and an infinite shelf life";
-      case kDessertFac: return "Sweet tooth?";
-      case kPackagingFac: return "Scaling up with custom packaging";
-      case kCateringKitFac: return "Packaged catering kits, great markup";
-      case kChineseReayMealFac: return "Gelatinous, and dehydrating";
-      case kPartyPackFac: return "Everything a good party needs";
-      case kParfumeFac: return "Fancy stuff";
-      case kMiraclePowderFac: return "What can't it cure?! (Anything...)";
-      case kTurkishDelightFac: return "A delectable delicacy";
+      case kVitiminFac: return tr(kTRNewVitiminFac);
+      case kVegOilFac: return tr(kTRNewVegOilFac);
+      case kCrispsFac: return tr(kTRNewCrispsFac);
+      case kEthanolFac: return tr(kTRNewEthanolFac); 
+      case kHardCiderFac: return tr(kTRNewHardCiderFac); 
+      case kAbattoir: return tr(kTRNewAbattoir);
+      case kHydrogenFac: return tr(kTRNewHydrogenFac);
+      case kHOILFac: return tr(kTRNewHOILFac);
+      case kCornDogFac: return tr(kTRNewCornDogFac);
+      case kBeerFac: return tr(kTRNewBeerFac);
+      case kTequilaFac: return tr(kTRNewTequilaFac);
+      case kHFCSFac: return tr(kTRNewHFCSFac);
+      case kGelatinFac: return tr(kTRNewGelatinFac);
+      case kJellyFac: return tr(kTRNewJellyFac);
+      case kJelloShotFac: return tr(kTRNewJelloShotFac);
+      case kEmulsifierFac: return tr(kTRNewEmulsifierFac);
+      case kIceCreamFac: return tr(kTRNewIceCreamFac);
+      case kBatteryFarm: return tr(kTRNewBatteryFarm);
+      case kProteinFac: return tr(kTRNewProteinFac);
+      case kChocolateFac: return tr(kTRNewChocolateFac);
+      case kPieFac: return tr(kTRNewPieFac);
+      case kMSGFac: return tr(kTRNewMSGFac);
+      case kTVDinnerFac: return tr(kTRNewTVDinnerFac);
+      case kCaffeineFac: return tr(kTRNewCaffeineFac);
+      case kEnergyDrinkFac: return tr(kTRNewEnergyDrinkFac);
+      case kRaveJuiceFac: return tr(kTRNewRaveJuiceFac);
+      case kPerkPillFac: return tr(kTRNewPerkPillFac);
+      case kCakeFac: return tr(kTRNewCakeFac);
+      case kDessertFac: return tr(kTRNewDessertFac);
+      case kPackagingFac: return tr(kTRNewPackagingFac);
+      case kCateringKitFac: return tr(kTRNewCateringKitFac);
+      case kChineseReayMealFac: return tr(kTRNewChineseReayMealFac);
+      case kPartyPackFac: return tr(kTRNewPartyPackFac);
+      case kParfumeFac: return tr(kTRNewParfumeFac);
+      case kMiraclePowderFac: return tr(kTRNewMiraclePowderFac);
+      case kTurkishDelightFac: return tr(kTRNewTurkishDelightFac);
       case kSpareFac0: case kSpareFac1: case kSpareFac2: case kSpareFac3:
       case kSpareFac4: case kSpareFac5: case kSpareFac6: case kSpareFac7: 
       case kSpareFac8: case kSpareFac9: case kSpareFac10: case kSpareFac11:

@@ -30,13 +30,18 @@ void populateInfoExport() {
   pd->graphics->pushContext(infoBitmap);
   roundedRect(1, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorBlack);
   roundedRect(3, TILE_PIX*18, TILE_PIX*2, TILE_PIX/2, kColorWhite);
-  snprintf(textA, 128, "Exporting: %s", toStringCargoByType(selectedID, /*plural=*/true));
-  snprintf(textB, 128, "This Plot: %s/s", ftos(getThisWorldCargoExport(selectedID), 16, strFloat));
-  snprintf(textC, 128, "All Plots: %s/s", ftos(getTotalCargoExport(selectedID), 16, strFloat));
+
+  strcpy(textA, tr(kTRUIExportExporting));
+  strcat(textA, cspace());
+  strcat(textA, toStringCargoByType(selectedID, /*plural=*/true));
+  //snprintf(textA, 128, tr(kTRUIExportExporting), toStringCargoByType(selectedID, /*plural=*/true));
+  
+  snprintf(textB, 128, tr(kTRUIExportThisPlot), ftos(getThisWorldCargoExport(selectedID), 16, strFloat));
+  snprintf(textC, 128, tr(kTRUIExportAllPlots), ftos(getTotalCargoExport(selectedID), 16, strFloat));
   pd->graphics->setDrawMode(kDrawModeFillBlack);
-  pd->graphics->drawText(textA, 128, kASCIIEncoding, 1*TILE_PIX, +2);
-  pd->graphics->drawText(textB, 128, kASCIIEncoding, 1*TILE_PIX, TILE_PIX - 2);
-  pd->graphics->drawText(textC, 128, kASCIIEncoding, 9*TILE_PIX, TILE_PIX - 2);
+  pd->graphics->drawText(textA, 128, kUTF8Encoding, 1*TILE_PIX, +2);
+  pd->graphics->drawText(textB, 128, kUTF8Encoding, 1*TILE_PIX, TILE_PIX - 2);
+  pd->graphics->drawText(textC, 128, kUTF8Encoding, 9*TILE_PIX, TILE_PIX - 2);
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->popContext();
   

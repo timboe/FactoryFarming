@@ -61,6 +61,13 @@ LCDSprite* m_UISpriteTitleNew[3] = {NULL};
 LCDSprite* m_UISpriteTitleCont[3] = {NULL};
 LCDBitmap* m_UIBitmapTitleNew[3] = {NULL};
 LCDBitmap* m_UIBitmapTitleCont[3] = {NULL};
+//
+LCDSprite* m_UISpriteTitleFac = {NULL};
+LCDSprite* m_UISpriteTitleFarm = {NULL};
+LCDSprite* m_UISpriteTitleFacFarm = {NULL};
+LCDBitmap* m_UIBitmapTitleFac = {NULL};
+LCDBitmap* m_UIBitmapTitleFarm = {NULL};
+LCDBitmap* m_UIBitmapTitleFacFarm = {NULL};
 
 LCDSprite* m_UISpriteTop = NULL;
 LCDBitmap* m_UIBitmapTop = NULL;
@@ -209,11 +216,11 @@ void addSaveLoadProgressSprite(int32_t _doneX, int32_t _ofY) {
   char text[128];
   snprintf(text, 128, "%i/%i", (int)_doneX, (int)_ofY);
   setRoobert10();
-  int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, 128, kASCIIEncoding, 0);
+  int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, 128, kUTF8Encoding, 0);
   pd->graphics->clearBitmap(m_UIBitmapSaveLoadProgress, kColorClear);
   pd->graphics->pushContext(m_UIBitmapSaveLoadProgress);
   pd->graphics->setDrawMode(kDrawModeFillWhite);
-  pd->graphics->drawText(text, 128, kASCIIEncoding, (TILE_PIX*6-width)/2, 0);
+  pd->graphics->drawText(text, 128, kUTF8Encoding, (TILE_PIX*6-width)/2, 0);
   pd->graphics->popContext();
   pd->sprite->addSprite(m_UISpriteSaveLoadProgress);
 }
@@ -355,6 +362,9 @@ void updateUITitles(int _fc) {
   pd->sprite->setVisible(m_UISpriteSplash, 1);
   const int32_t o = round( TILE_PIX/2 * fabs( sin( 0.1f * _fc ) ) );
   pd->sprite->moveTo(m_UISpriteSplash, DEVICE_PIX_X/2, DEVICE_PIX_Y/2 - o - TILE_PIX );
+  pd->sprite->moveTo(m_UISpriteTitleFac, DEVICE_PIX_X/4, TILE_PIX*4 - o);
+  pd->sprite->moveTo(m_UISpriteTitleFarm, (3*DEVICE_PIX_X)/4, TILE_PIX*10  - o);
+
   pd->sprite->setVisible(m_UISpriteTitleSelected, 0);
   for (int32_t i = 0; i < 3; ++i) {
     pd->sprite->setVisible(m_UISpriteTitleNew[i], 0);
@@ -367,11 +377,21 @@ void updateUITitles(int _fc) {
   pd->sprite->moveTo(m_UISpriteTitleSelected, 
     m_UITitleSelected*TILE_PIX*7 + (7*TILE_PIX)/2 + (m_UITitleSelected+1)*TILE_PIX, 
     DEVICE_PIX_Y + TILE_PIX/2 - (UI_TITLE_OFFSET - m_UITitleOffset)*2);
+
   if (m_UITitleOffset) {
     --m_UITitleOffset;
     pd->sprite->moveTo(m_UISpriteSplash,
       DEVICE_PIX_X/2,
       DEVICE_PIX_Y/2 - (UI_TITLE_OFFSET - m_UITitleOffset) );
+    pd->sprite->moveTo(m_UISpriteTitleFac,
+      DEVICE_PIX_X/4,
+      TILE_PIX*4 + 8 - (UI_TITLE_OFFSET - m_UITitleOffset));
+    pd->sprite->moveTo(m_UISpriteTitleFarm,
+      (3*DEVICE_PIX_X)/4,
+      TILE_PIX*10 + 8 - (UI_TITLE_OFFSET - m_UITitleOffset));
+    pd->sprite->moveTo(m_UISpriteTitleFacFarm,
+      DEVICE_PIX_X/2,
+      TILE_PIX*13 + TILE_PIX/2 - (UI_TITLE_OFFSET - m_UITitleOffset));
     for (int32_t i = 0; i < 3; ++i) {
       pd->sprite->moveTo(m_UISpriteTitleNew[i], 
         i*TILE_PIX*7 + (7*TILE_PIX)/2 + (i+1)*TILE_PIX, 
@@ -382,7 +402,15 @@ void updateUITitles(int _fc) {
     }
   } else {
     const int32_t offset = round( TILE_PIX/2 * fabs( sin( 0.1f * _fc ) ) );
-    pd->sprite->moveTo(m_UISpriteSplash, DEVICE_PIX_X/2, DEVICE_PIX_Y/2 - offset - (3*TILE_PIX)/4 );
+    pd->sprite->moveTo(m_UISpriteSplash,
+      DEVICE_PIX_X/2,
+      DEVICE_PIX_Y/2 - offset - (3*TILE_PIX)/4 );
+    pd->sprite->moveTo(m_UISpriteTitleFac,
+      DEVICE_PIX_X/4,
+      TILE_PIX*4 - offset);
+    pd->sprite->moveTo(m_UISpriteTitleFarm,
+      (3*DEVICE_PIX_X)/4,
+      TILE_PIX*10 - offset);
   }
 }
 
@@ -440,12 +468,12 @@ void updateUI(int _fc) {
     if (!m_UITopVisible) {
       if (_fc % (TICK_FREQUENCY/2) == 0) {
         const bool ic = isCamouflaged();
-        if      (distanceFromBuy()  < ACTIVATE_DISTANCE) drawUITop("The Shop", kDrawModeCopy);
-        else if (distanceFromSell() < ACTIVATE_DISTANCE) drawUITop("Sales Depot", kDrawModeCopy);
-        else if (!ic && distanceFromWarp() < ACTIVATE_DISTANCE) drawUITop("Plots Depot", kDrawModeCopy);
-        else if (!ic && distanceFromOut() < ACTIVATE_DISTANCE) drawUITop("Exports Depot", kDrawModeCopy); // Or Deliveries TODO
-        else if (!ic && distanceFromIn() < ACTIVATE_DISTANCE) drawUITop("Imports Depot", kDrawModeCopy); // Or Shipping TODO
-        else if (getSlot() == WORLD_SAVE_SLOTS-1 && distanceFromRetirement() < ACTIVATE_DISTANCE) drawUITop("Credits", kDrawModeCopy);
+        if      (distanceFromBuy()  < ACTIVATE_DISTANCE) drawUITop(tr(kTRTopShop), kDrawModeCopy);
+        else if (distanceFromSell() < ACTIVATE_DISTANCE) drawUITop(tr(kTRTopSales), kDrawModeCopy);
+        else if (!ic && distanceFromWarp() < ACTIVATE_DISTANCE) drawUITop(tr(kTRTopWarp), kDrawModeCopy);
+        else if (!ic && distanceFromOut() < ACTIVATE_DISTANCE) drawUITop(tr(kTRTopExports), kDrawModeCopy); // Or Deliveries TODO
+        else if (!ic && distanceFromIn() < ACTIVATE_DISTANCE) drawUITop(tr(kTRTopImports), kDrawModeCopy); // Or Shipping TODO
+        else if (getSlot() == WORLD_SAVE_SLOTS-1 && distanceFromRetirement() < ACTIVATE_DISTANCE) drawUITop(tr(kTRTopCredits), kDrawModeCopy);
       }
     } else {
       if (distanceFromBuy() >= ACTIVATE_DISTANCE && 
@@ -622,6 +650,9 @@ void addUIToSpriteList() {
   } else if (m_mode == kTitles) {
     pd->sprite->addSprite(m_UISpriteSplash);
     pd->sprite->addSprite(m_UISpriteTitleVersion);
+    pd->sprite->addSprite(m_UISpriteTitleFac);
+    pd->sprite->addSprite(m_UISpriteTitleFarm);
+    pd->sprite->addSprite(m_UISpriteTitleFacFarm);
     #ifdef DEMO
     pd->sprite->addSprite(m_UISpriteDemo);
     #endif
@@ -727,9 +758,9 @@ void showTutorialMsg(enum kUITutorialStage _stage) {
   tutN = 1;
   ofN = 1;
   #endif
-  snprintf(text, 128, "--- Tutorial Stage %i/%i ---", tutN, ofN);
-  int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, 128, kASCIIEncoding, 0);
-  pd->graphics->drawText(text, 128, kASCIIEncoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  snprintf(text, 128, tr(kTRTutStage), tutN, ofN);
+  int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, 128, kUTF8Encoding, 0);
+  pd->graphics->drawText(text, 128, kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   pd->graphics->setDrawMode(kDrawModeCopy);
   for (int32_t l = 0; l < 5; ++l) {
     const char* txt = toStringTutorial(_stage, l);
@@ -774,41 +805,41 @@ bool checkReturnDismissTutorialMsg() {
 const char* getRotationAsString(enum kUICat _cat, int16_t _selectedID, uint16_t _rotation) {
   if (_cat != kUICatConv) {
     switch (_rotation) {
-      case 0: return "N";
-      case 1: return "E";
-      case 2: return "S";
-      case 3: return "W";
+      case 0: return tr(kTRN);
+      case 1: return tr(kTRE);
+      case 2: return tr(kTRS);
+      case 3: return tr(kTRW);
     }
   }
 
   switch (_selectedID) {
     case kBelt: case kTunnelIn: case kTunnelOut:
       switch (_rotation) {
-        case 0: return "N";
-        case 1: return "E";
-        case 2: return "S";
-        case 3: return "W";
+        case 0: return tr(kTRN);
+        case 1: return tr(kTRE);
+        case 2: return tr(kTRS);
+        case 3: return tr(kTRW);
       }
     case kSplitI: case kFilterI: case kOverflowI:
       switch (_rotation) {
-        case 0: return "W, E";
-        case 1: return "N, S";
-        case 2: return "W, E";
-        case 3: return "N, S";
+        case 0: return tr(kTRWE);
+        case 1: return tr(kTRNS);
+        case 2: return tr(kTRWE);
+        case 3: return tr(kTRNS);
       }
     case kSplitL: case kFilterL: case kOverflowL:
       switch (_rotation) {
-        case 0: return "N, E";
-        case 1: return "E, S";
-        case 2: return "S, W";
-        case 3: return "W, N";
+        case 0: return tr(kTRNE);
+        case 1: return tr(kTRES);
+        case 2: return tr(kTRSW);
+        case 3: return tr(kTRSW);
       }
     case kSplitT:
       switch (_rotation) {
-        case 0: return "W, N, E";
-        case 1: return "N, E, S";
-        case 2: return "E, S, W";
-        case 3: return "S, W, N";
+        case 0: return tr(kTRWNE);
+        case 1: return tr(kTRNES);
+        case 2: return tr(kTRESW);
+        case 3: return tr(kTRSWN);
       }
     default: return "!";
   }
@@ -828,7 +859,8 @@ void renderTutorialInspectRect(bool _bothSides) {
 void drawUIInspect() {
   // Tutorial sprite is used for inspection too
   pd->sprite->setVisible(m_UISpriteTutorialMain, 1);
-  static char text[128];
+  static char text[256];
+  static char textB[128];
   uint8_t y = 0;
   pd->graphics->pushContext(m_UIBitmapTutorialMain);
   renderTutorialInspectRect(false);
@@ -842,33 +874,45 @@ void drawUIInspect() {
   struct Tile_t* t = getTile_fromLocation(loc);
   if (isWaterTile(loc->m_x, loc->m_y)) {
     if (loc->m_cargo) {
-      snprintf(text, 128, "(%i, %i)  %s, %s",
-        loc->m_x, loc->m_y, toStringSoil((enum kGroundType) t->m_groundType), toStringCargoByType(loc->m_cargo->m_type, /*plural=*/false));
+      strcpy(textB, toStringSoil((enum kGroundType) t->m_groundType));
+      strcat(textB, Cspace());
+      strcat(textB, toStringCargoByType(loc->m_cargo->m_type, /*plural=*/false));
+
+      snprintf(text, 256, "(%i, %i)  %s", loc->m_x, loc->m_y, textB);
     } else {
-      snprintf(text, 128, "(%i, %i)  %s",
-        loc->m_x, loc->m_y, toStringSoil((enum kGroundType) t->m_groundType));
+      strcpy(textB, toStringSoil((enum kGroundType) t->m_groundType));
+
+      snprintf(text, 256, "(%i, %i)  %s", loc->m_x, loc->m_y, textB);
     }
   } else {
     if (loc->m_cargo) {
-      snprintf(text, 128, "(%i, %i)  %s %s, %s",
-        loc->m_x, loc->m_y, toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType) t->m_groundType), toStringCargoByType(loc->m_cargo->m_type, /*plural=*/false));
+      strcpy(textB, toStringWetness(getWetness(t->m_wetness)));
+      strcat(textB, space());
+      strcat(textB, toStringSoil((enum kGroundType) t->m_groundType));
+      strcat(textB, Cspace());
+      strcat(textB, toStringCargoByType(loc->m_cargo->m_type, /*plural=*/false));
+
+      snprintf(text, 256, "(%i, %i)  %s", loc->m_x, loc->m_y, textB);
     } else {
-      snprintf(text, 128, "(%i, %i)  %s %s",
-        loc->m_x, loc->m_y, toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType)t->m_groundType));
+      strcpy(textB, toStringWetness(getWetness(t->m_wetness)));
+      strcat(textB, space());
+      strcat(textB, toStringSoil((enum kGroundType) t->m_groundType));
+
+      snprintf(text, 256, "(%i, %i)  %s", loc->m_x, loc->m_y, textB);
     }
   }
 
 
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   setRoobert10();
-  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   if (getTile_fromLocation(loc)->m_groundType == kObstructedGround) {
     ++y;
-    snprintf(text, 128, "Obstructed ground cannot be built on.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "Maybe you will be able to clear it later on?");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRObstructedGroundHelp1));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRObstructedGroundHelp2));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   }
   
   if (loc->m_building) {
@@ -890,22 +934,22 @@ void drawUIInspect() {
 void drawUIBottom() {
   if (m_mode == kInspectMode) return drawUIInspect();
 
-  static char text[128];
+  static char text[256];
   setRoobert10();
 
   if (getPlayer()->m_enableDebug) {
     struct Player_t* p = getPlayer();
-    snprintf(text, 128, "SL:%u, NT:%u, FT:%u, B:%u, C:%u, P:(%i,%i)", 
+    snprintf(text, 256, "SL:%u, NT:%u, FT:%u, B:%u, C:%u, P:(%i,%i)", 
       pd->sprite->getSpriteCount(), getNearTickCount(), getFarTickCount(), getNBuildings(), getNCargo(), (int)p->m_pix_x, (int)p->m_pix_y );
     pd->graphics->pushContext(m_UIBitmapDev);
     pd->graphics->fillRect(0, 0, DEVICE_PIX_X, TILE_PIX, kColorClear);
     pd->graphics->setDrawMode(kDrawModeFillBlack);
-    pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX + 1, 0);
-    pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX, +1);
-    pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX - 1, 0);
-    pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX, -1);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, 2*TILE_PIX + 1, 0);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, 2*TILE_PIX, +1);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, 2*TILE_PIX - 1, 0);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, 2*TILE_PIX, -1);
     pd->graphics->setDrawMode(kDrawModeFillWhite);
-    pd->graphics->drawText(text, 128, kASCIIEncoding, 2*TILE_PIX, 0);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, 2*TILE_PIX, 0);
     pd->graphics->popContext();
   }
 
@@ -918,38 +962,77 @@ void drawUIBottom() {
   if (isWaterTile(loc->m_x, loc->m_y)) {
 
     if (loc->m_building && loc->m_cargo) {
-      snprintf(text, 128, "%s, %s, %s", 
-        toStringSoil((enum kGroundType)t->m_groundType), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo, /*plural=*/false));
+      strcpy(text, toStringSoil((enum kGroundType)t->m_groundType));
+      strcat(text, Cspace());
+      strcat(text, toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
+      strcat(text, Cspace());
+      strcat(text, toStringCargo(loc->m_cargo, /*plural=*/false));
+
+      //snprintf(text, 256, "%s, %s, %s", 
+      //  toStringSoil((enum kGroundType)t->m_groundType), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo, /*plural=*/false));
     } else if (loc->m_building) {
-      snprintf(text, 128, "%s, %s", 
-        toStringSoil((enum kGroundType)t->m_groundType), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
+      strcpy(text, toStringSoil((enum kGroundType)t->m_groundType));
+      strcat(text, Cspace());
+      strcat(text, toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
+
+      //snprintf(text, 256, "%s, %s", 
+      //  toStringSoil((enum kGroundType)t->m_groundType), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
     } else if (loc->m_cargo) {
-      snprintf(text, 128, "%s, %s", 
-        toStringSoil((enum kGroundType)t->m_groundType), toStringCargo(loc->m_cargo, /*plural=*/false));
+      strcpy(text, toStringSoil((enum kGroundType)t->m_groundType));
+      strcat(text, Cspace());
+      strcat(text, toStringCargo(loc->m_cargo, /*plural=*/false));
+
+      //snprintf(text, 256, "%s, %s", 
+      //  toStringSoil((enum kGroundType)t->m_groundType), toStringCargo(loc->m_cargo, /*plural=*/false));
     } else {
-      snprintf(text, 128, "%s", 
-        toStringSoil((enum kGroundType)t->m_groundType));
+      strcpy(text, toStringSoil((enum kGroundType)t->m_groundType));
+
+      //snprintf(text, 256, "%s", 
+      //  toStringSoil((enum kGroundType)t->m_groundType));
     }
 
   } else {
 
     if (loc->m_building && loc->m_cargo) {
-      snprintf(text, 128, "%s %s, %s, %s", 
-        toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType)t->m_groundType), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo, /*plural=*/false));
+      strcpy(text, toStringWetness(getWetness(t->m_wetness)));
+      strcat(text, space());
+      strcat(text, toStringSoil((enum kGroundType)t->m_groundType));
+      strcat(text, Cspace());
+      strcat(text, toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
+      strcat(text, Cspace());
+      strcat(text, toStringCargo(loc->m_cargo, /*plural=*/false));
+
+      //snprintf(text, 256, "%s %s, %s, %s", 
+      //  toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType)t->m_groundType), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo, /*plural=*/false));
     } else if (loc->m_building) {
-      snprintf(text, 128, "%s %s, %s", 
-        toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType)t->m_groundType), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
+      strcpy(text, toStringWetness(getWetness(t->m_wetness)));
+      strcat(text, space());
+      strcat(text, toStringSoil((enum kGroundType)t->m_groundType));
+      strcat(text, Cspace());
+      strcat(text, toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
+
+      //snprintf(text, 256, "%s %s, %s", 
+      //  toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType)t->m_groundType), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
     } else if (loc->m_cargo) {
-      snprintf(text, 128, "%s %s, %s", 
-        toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType)t->m_groundType), toStringCargo(loc->m_cargo, /*plural=*/false));
+      strcpy(text, toStringWetness(getWetness(t->m_wetness)));
+      strcat(text, space());
+      strcat(text, toStringSoil((enum kGroundType)t->m_groundType));
+      strcat(text, Cspace());
+      strcat(text, toStringCargo(loc->m_cargo, /*plural=*/false));
+
+      //snprintf(text, 256, "%s %s, %s", 
+      //  toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType)t->m_groundType), toStringCargo(loc->m_cargo, /*plural=*/false));
     } else {
-      snprintf(text, 128, "%s %s", 
-        toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType)t->m_groundType));
+      strcpy(text, toStringWetness(getWetness(t->m_wetness)));
+      strcat(text, space());
+      strcat(text, toStringSoil((enum kGroundType)t->m_groundType));
+      //snprintf(text, 128, "%s %s", 
+      //  toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType)t->m_groundType));
     }
 
   } 
 
-  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX/2, 0);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX/2, 0);
   pd->graphics->popContext();
 }
 
@@ -963,7 +1046,7 @@ void drawUIRight() {
     char textM[32] = "";
     snprintf_c(textM, 32, getPlayer()->m_money);
     setRoobert10();
-    pd->graphics->drawText(textM, 32, kASCIIEncoding, 2*TILE_PIX, 0);
+    pd->graphics->drawText(textM, 32, kUTF8Encoding, 2*TILE_PIX, 0);
   }
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16(2, 16, 1), TILE_PIX/2, 0, kBitmapUnflipped); // Coin
@@ -983,7 +1066,7 @@ void drawUIRight() {
     }
     pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), DEVICE_PIX_Y/2 + TILE_PIX, -1, kBitmapUnflipped);
     pd->graphics->setDrawMode(kDrawModeFillWhite);
-    pd->graphics->drawText(text, 16, kASCIIEncoding, DEVICE_PIX_Y/2 + 3*TILE_PIX, 0);
+    pd->graphics->drawText(text, 16, kUTF8Encoding, DEVICE_PIX_Y/2 + 3*TILE_PIX, 0);
     pd->graphics->setDrawMode(kDrawModeCopy);
   } else { // Compass
     #define PI 3.141592654f
@@ -1017,7 +1100,7 @@ void drawUIRight() {
     pd->graphics->setDrawMode(kDrawModeFillWhite);
     char text[16] = "";
     snprintf(text, 16, "x%u", (unsigned) m_buySellMultiplier[m_mode]);
-    pd->graphics->drawText(text, 16, kASCIIEncoding, DEVICE_PIX_Y/2 + 3*TILE_PIX, 0);
+    pd->graphics->drawText(text, 16, kUTF8Encoding, DEVICE_PIX_Y/2 + 3*TILE_PIX, 0);
     pd->graphics->setDrawMode(kDrawModeCopy);
   }
 
@@ -1041,8 +1124,8 @@ void drawUITop(const char* _text, LCDBitmapDrawMode _mode) {
   pd->graphics->drawLine(TILE_PIX, TILE_PIX, SCREEN_PIX_X/2 - TILE_PIX + TILE_PIX*4, TILE_PIX, TILE_PIX*2, kColorBlack);
   pd->graphics->setDrawMode(kDrawModeFillWhite);
   setRoobert24();
-  int32_t len = pd->graphics->getTextWidth(getRoobert24(), _text, 16, kASCIIEncoding, 0);
-  pd->graphics->drawText(_text, 16, kASCIIEncoding, (SCREEN_PIX_X/2 + TILE_PIX*4 - len)/2, 0);
+  int32_t len = pd->graphics->getTextWidth(getRoobert24(), _text, 16, kUTF8Encoding, 0);
+  pd->graphics->drawText(_text, 16, kUTF8Encoding, (SCREEN_PIX_X/2 + TILE_PIX*4 - len)/2, 0);
   pd->graphics->popContext();
 }
 
@@ -1469,30 +1552,30 @@ void renderNewUI() {
 
   const char* t0 = toStringBuilding(newBuildingType, (union kSubType) {.raw = newID}, false);
   int16_t len0 = strlen(t0);
-  int32_t width0 = pd->graphics->getTextWidth(getRoobert10(), t0, len0, kASCIIEncoding, 0);
+  int32_t width0 = pd->graphics->getTextWidth(getRoobert10(), t0, len0, kUTF8Encoding, 0);
 
   const char* t1 = getNewText();
   int16_t len1 = strlen(t1);
-  int32_t width1 = pd->graphics->getTextWidth(getRoobert10(), t1, len1, kASCIIEncoding, 0);
+  int32_t width1 = pd->graphics->getTextWidth(getRoobert10(), t1, len1, kUTF8Encoding, 0);
 
   pd->graphics->setDrawMode(kDrawModeFillWhite);
   //
-  pd->graphics->drawText(t0, len0, kASCIIEncoding, TILE_PIX*10 - width0/2 + 1, 0);
-  pd->graphics->drawText(t1, len1, kASCIIEncoding, TILE_PIX*10 - width1/2 + 1, TILE_PIX);
+  pd->graphics->drawText(t0, len0, kUTF8Encoding, TILE_PIX*10 - width0/2 + 1, 0);
+  pd->graphics->drawText(t1, len1, kUTF8Encoding, TILE_PIX*10 - width1/2 + 1, TILE_PIX);
   //
-  pd->graphics->drawText(t0, len0, kASCIIEncoding, TILE_PIX*10 - width0/2 - 1, 0);
-  pd->graphics->drawText(t1, len1, kASCIIEncoding, TILE_PIX*10 - width1/2 - 1, TILE_PIX);
+  pd->graphics->drawText(t0, len0, kUTF8Encoding, TILE_PIX*10 - width0/2 - 1, 0);
+  pd->graphics->drawText(t1, len1, kUTF8Encoding, TILE_PIX*10 - width1/2 - 1, TILE_PIX);
   //
-  pd->graphics->drawText(t0, len0, kASCIIEncoding, TILE_PIX*10 - width0/2, 1);
-  pd->graphics->drawText(t1, len1, kASCIIEncoding, TILE_PIX*10 - width1/2, TILE_PIX + 1);
+  pd->graphics->drawText(t0, len0, kUTF8Encoding, TILE_PIX*10 - width0/2, 1);
+  pd->graphics->drawText(t1, len1, kUTF8Encoding, TILE_PIX*10 - width1/2, TILE_PIX + 1);
   //
-  pd->graphics->drawText(t0, len0, kASCIIEncoding, TILE_PIX*10 - width0/2, -1);
-  pd->graphics->drawText(t1, len1, kASCIIEncoding, TILE_PIX*10 - width1/2, TILE_PIX- 1);
+  pd->graphics->drawText(t0, len0, kUTF8Encoding, TILE_PIX*10 - width0/2, -1);
+  pd->graphics->drawText(t1, len1, kUTF8Encoding, TILE_PIX*10 - width1/2, TILE_PIX- 1);
   //
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   //
-  pd->graphics->drawText(t0, len0, kASCIIEncoding, TILE_PIX*10 - width0/2, 0);
-  pd->graphics->drawText(t1, len1, kASCIIEncoding, TILE_PIX*10 - width1/2, TILE_PIX);
+  pd->graphics->drawText(t0, len0, kUTF8Encoding, TILE_PIX*10 - width0/2, 0);
+  pd->graphics->drawText(t1, len1, kUTF8Encoding, TILE_PIX*10 - width1/2, TILE_PIX);
   //
   pd->graphics->setDrawMode(kDrawModeCopy);
 
@@ -1509,19 +1592,19 @@ void setGameMode(enum kGameMode _mode) {
   }
 
   if (_mode == kPlaceMode) {
-    drawUITop("Place Mode", kDrawModeCopy);
+    drawUITop(tr(kTRPlaceMode), kDrawModeCopy);
   } else if (_mode == kPlantMode) {
-    drawUITop("Plant Mode", kDrawModeCopy);
+    drawUITop(tr(kTRPlantMode), kDrawModeCopy);
   } else if (_mode == kBuildMode) {
-    drawUITop("Build Mode", kDrawModeCopy);
+    drawUITop(tr(kTRBuildMode), kDrawModeCopy);
   } else if (_mode == kPickMode) {
-    drawUITop("Pickup Mode", kDrawModeCopy);
+    drawUITop(tr(kTRPickupMode), kDrawModeCopy);
   } else if (_mode == kMenuPlayer) {
-    drawUITop("Inventory", kDrawModeCopy);
+    drawUITop(tr(kTRInventoryMode), kDrawModeCopy);
   } else if (_mode == kInspectMode) {
-    drawUITop("Inspect", kDrawModeCopy);
+    drawUITop(tr(kTRInspectMode), kDrawModeCopy);
   } else if (_mode == kDestroyMode) {
-    drawUITop("Deconstruction", kDrawModeCopy);
+    drawUITop(tr(kTRDestroyMode), kDrawModeCopy);
   } else if (_mode >= kMenuBuy) {
     setBuySellMultiplier(1);
   } else drawUITop(NULL, kDrawModeCopy);
@@ -1569,11 +1652,11 @@ void roundedRect(uint16_t _o, uint16_t _w, uint16_t _h, uint16_t _r, LCDColor _c
 
 const char* newBannerText(enum kUICat _c) {
   switch (_c) {
-    case kUICatPlant: return "New Crop!";
-    case kUICatConv: return "New Conveyor!";
-    case kUICatExtractor: return "New Harvester!";
-    case kUICatFactory: return "New Factory!";
-    case kUICatUtility: return "New Utility!";
+    case kUICatPlant: return tr(kTRNewCrop);
+    case kUICatConv: return tr(kTRNewConveyor);
+    case kUICatExtractor: return tr(kTRNewExtractor);
+    case kUICatFactory: return tr(kTRNewFactory);
+    case kUICatUtility: return tr(kTRNewUtility);
     default: break;
   }
   return "?";
@@ -1581,29 +1664,185 @@ const char* newBannerText(enum kUICat _c) {
 
 const char* toStringHeader(enum kUICat _c, bool _plural) {
   switch (_c) {
-    case kUICatTool: return _plural ? "Tools" : "Tool";
-    case kUICatPlant: return _plural ? "Crops" : "Crop";
-    case kUICatConv: return _plural ? "Conveyors" : "Conveyor";
-    case kUICatExtractor: return _plural ? "Harvesters" : "Harvester";
-    case kUICatFactory: return _plural ? "Factories" : "Factory";
-    case kUICatUtility: return _plural ? "Utilities" : "Utility";
-    case kUICatCargo: return "Cargo";
-    case kUICatWarp: return "Plot Locations";
-    case kUICatImportN: return "Import (North)"; 
-    case kUICatImportE: return "Import (East)";
-    case kUICatImportS: return "Import (South)";
-    case kUICatImportW: return "Import (West)";
+    case kUICatTool: return _plural ? tr(kTRUICatToolPlural) : tr(kTRUICatTool);
+    case kUICatPlant: return _plural ? tr(kTRUICatPlantPlural) : tr(kTRUICatPlant);
+    case kUICatConv: return _plural ? tr(kTRUICatConvPlural) : tr(kTRUICatConv);
+    case kUICatExtractor: return _plural ? tr(kTRUICatExtractorPlural) : tr(kTRUICatExtractor);
+    case kUICatFactory: return _plural ? tr(kTRUICatFactoryPlural) : tr(kTRUICatFactory);
+    case kUICatUtility: return _plural ? tr(kTRUICatUtilityPlural) : tr(kTRUICatUtility);
+    case kUICatCargo: return _plural ? tr(kTRUICatCargoPlural) : tr(kTRUICatCargo);
+    case kUICatWarp: return _plural ? tr(kTRUICatWarpPlural) : tr(kTRUICatWarp);
+    case kUICatImportN: return _plural ? tr(kTRUICatImportNPlural) : tr(kTRUICatImportN); 
+    case kUICatImportE: return _plural ? tr(kTRUICatImportEPlural) : tr(kTRUICatImportE);
+    case kUICatImportS: return _plural ? tr(kTRUICatImportSPlural) : tr(kTRUICatImportS);
+    case kUICatImportW: return _plural ? tr(kTRUICatImportWPlural) : tr(kTRUICatImportW);
     default: break;
   }
   return "?";
 }
 
-const char* getWorldLetter(int8_t _i) {
-  switch(_i) {
-    case 0: return "1";
-    case 1: return "2";
+void updateLangUI() {
+  if (!m_UIBitmapSave) return;
+
+  for (enum kUICat c = 0; c < kNUICats; ++c) {
+    pd->graphics->pushContext(m_UIBitmapHeaders[c]);
+    roundedRect(1, TILE_PIX*18, TILE_PIX*2, TILE_PIX, kColorBlack);
+    pd->graphics->setDrawMode(kDrawModeFillWhite);
+    setRoobert24();
+    pd->graphics->drawText(toStringHeader(c, /*plural*/ true), 32, kUTF8Encoding, TILE_PIX, 0);
+    pd->graphics->popContext();
   }
-  return "3";
+
+  pd->graphics->pushContext(m_UIBitmapSave);
+  pd->graphics->setLineCapStyle(kLineCapStyleRound);
+  pd->graphics->drawLine(TILE_PIX, TILE_PIX, DEVICE_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorWhite);
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+  setRoobert24();
+  int32_t tlen = pd->graphics->getTextWidth(getRoobert24(), tr(kTRSaving), strlen(tr(kTRSaving)), kUTF8Encoding, 0);
+  pd->graphics->drawText(tr(kTRSaving), strlen(tr(kTRSaving)), kUTF8Encoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
+  pd->graphics->popContext();
+
+  pd->graphics->pushContext(m_UIBitmapGen);
+  pd->graphics->setLineCapStyle(kLineCapStyleRound);
+  pd->graphics->drawLine(TILE_PIX, TILE_PIX, DEVICE_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorWhite);
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+  setRoobert24();
+  tlen = pd->graphics->getTextWidth(getRoobert24(), tr(kTRGenerating), strlen(tr(kTRGenerating)), kUTF8Encoding, 0);
+  pd->graphics->drawText(tr(kTRGenerating), strlen(tr(kTRGenerating)), kUTF8Encoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
+  pd->graphics->popContext();
+
+  pd->graphics->pushContext(m_UIBitmapLoad);
+  pd->graphics->setLineCapStyle(kLineCapStyleRound);
+  pd->graphics->drawLine(TILE_PIX, TILE_PIX, DEVICE_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorWhite);
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+  setRoobert24();
+  tlen = pd->graphics->getTextWidth(getRoobert24(), tr(kTRLoading), strlen(tr(kTRLoading)), kUTF8Encoding, 0);
+  pd->graphics->drawText(tr(kTRLoading), strlen(tr(kTRLoading)), kUTF8Encoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
+  pd->graphics->popContext();
+  pd->graphics->setDrawMode(kDrawModeCopy);
+
+  pd->graphics->clearBitmap(m_UIBitmapTitleFac, kColorClear);
+  pd->graphics->pushContext(m_UIBitmapTitleFac);
+  pd->graphics->setDrawMode(kDrawModeFillWhite);
+  setRoobert24();
+  tlen = pd->graphics->getTextWidth(getRoobert24(), tr(kTRFactory), strlen(tr(kTRFactory)), kUTF8Encoding, 0) - TILE_PIX*4;
+  pd->graphics->drawText(tr(kTRFactory), strlen(tr(kTRFactory)), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 + 2, +2);
+  pd->graphics->drawText(tr(kTRFactory), strlen(tr(kTRFactory)), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 + 2, -2);
+  pd->graphics->drawText(tr(kTRFactory), strlen(tr(kTRFactory)), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 - 2, +2);
+  pd->graphics->drawText(tr(kTRFactory), strlen(tr(kTRFactory)), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 - 2, -2);  
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+  pd->graphics->drawText(tr(kTRFactory), strlen(tr(kTRFactory)), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2, 0);
+  pd->graphics->popContext();
+  pd->graphics->setDrawMode(kDrawModeCopy);
+
+  pd->graphics->clearBitmap(m_UIBitmapTitleFarm, kColorClear);
+  pd->graphics->pushContext(m_UIBitmapTitleFarm);
+  pd->graphics->setDrawMode(kDrawModeFillWhite);
+  setRoobert24();
+  tlen = pd->graphics->getTextWidth(getRoobert24(), tr(kTRFarming), strlen(tr(kTRFarming)), kUTF8Encoding, 0) + TILE_PIX*4;
+  pd->graphics->drawText(tr(kTRFarming), strlen(tr(kTRFarming)), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 + 2, +2);
+  pd->graphics->drawText(tr(kTRFarming), strlen(tr(kTRFarming)), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 + 2, -2);
+  pd->graphics->drawText(tr(kTRFarming), strlen(tr(kTRFarming)), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 - 2, +2);
+  pd->graphics->drawText(tr(kTRFarming), strlen(tr(kTRFarming)), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 - 2, -2);
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+  pd->graphics->drawText(tr(kTRFarming), strlen(tr(kTRFarming)), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2, 0);
+  pd->graphics->popContext();
+  pd->graphics->setDrawMode(kDrawModeCopy);
+
+  pd->graphics->clearBitmap(m_UIBitmapTitleFacFarm, kColorClear);
+  pd->graphics->pushContext(m_UIBitmapTitleFacFarm);
+  pd->graphics->setDrawMode(kDrawModeFillWhite);
+  setRoobert10();
+  tlen = pd->graphics->getTextWidth(getRoobert10(), tr(kTRFactoryFarming), strlen(tr(kTRFactoryFarming)), kUTF8Encoding, 0);
+  pd->graphics->drawText(tr(kTRFactoryFarming), strlen(tr(kTRFactoryFarming)), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 + 2, +2);
+  pd->graphics->drawText(tr(kTRFactoryFarming), strlen(tr(kTRFactoryFarming)), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 + 2, -2);
+  pd->graphics->drawText(tr(kTRFactoryFarming), strlen(tr(kTRFactoryFarming)), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 - 2, +2);
+  pd->graphics->drawText(tr(kTRFactoryFarming), strlen(tr(kTRFactoryFarming)), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 - 2, -2);
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+  pd->graphics->drawText(tr(kTRFactoryFarming), strlen(tr(kTRFactoryFarming)), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2, 0);
+  pd->graphics->popContext();
+  pd->graphics->setDrawMode(kDrawModeCopy);
+
+  const bool isEng = (getLanguage() == kEN);
+  pd->sprite->setVisible(m_UISpriteTitleFac, !isEng);
+  pd->sprite->setVisible(m_UISpriteTitleFarm, !isEng);
+  pd->sprite->setVisible(m_UISpriteTitleFacFarm, !isEng);
+
+  setRoobert10();
+  for (int32_t i = 0; i < 3; ++i) {
+    pd->graphics->pushContext(m_UIBitmapTitleNew[i]);
+    roundedRect(0, TILE_PIX*7, TILE_PIX*1, TILE_PIX/2, kColorBlack);
+    pd->graphics->setDrawMode(kDrawModeFillWhite);
+    char text[32];
+    snprintf(text, 32, tr(kTRNewGame), i+1);
+    int16_t len = strlen(text);
+    int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, len, kUTF8Encoding, 0);
+    pd->graphics->drawText(text, len, kUTF8Encoding, (7*TILE_PIX)/2 - width/2, 0);
+    pd->graphics->setDrawMode(kDrawModeCopy);
+    pd->graphics->popContext();
+
+    pd->graphics->pushContext(m_UIBitmapTitleCont[i]);
+    roundedRect(0, TILE_PIX*7, TILE_PIX*1, TILE_PIX/2, kColorBlack);
+    pd->graphics->setDrawMode(kDrawModeFillWhite);
+    #ifdef DEMO
+    snprintf(text, 32, "%s", tr(kTRLoadDemo));
+    #else
+    snprintf(text, 32, tr(kTRContinue), i+1);
+    #endif
+    len = strlen(text);
+    width = pd->graphics->getTextWidth(getRoobert10(), text, len, kUTF8Encoding, 0);
+    pd->graphics->drawText(text, len, kUTF8Encoding, (7*TILE_PIX)/2 - width/2, 0);
+    pd->graphics->setDrawMode(kDrawModeCopy);
+    pd->graphics->popContext();
+  }
+
+
+  // Populate Ingredients
+
+  #define ING_X_START 6
+  #define ING_Y_START 6
+  #define ING_ROW_SIZE 12
+  #define ING_ROW_MAX (INGREDIENTS_WIDTH - (ING_X_START*2))
+  uint8_t textSize = pd->graphics->getFontHeight(getRoobert10());
+  for (enum kFactorySubType fac = 0; fac < kNFactorySubTypes; ++fac) {
+    pd->graphics->clearBitmap(m_UIBitmapIngredients[fac], kColorWhite);
+    pd->graphics->pushContext(m_UIBitmapIngredients[fac]);
+    pd->graphics->drawRect(0, 0, INGREDIENTS_WIDTH, INGREDIENTS_HEIGHT, kColorBlack);
+    pd->graphics->drawRect(3, 3, INGREDIENTS_WIDTH-6, INGREDIENTS_HEIGHT-6, kColorBlack);
+    pd->graphics->drawRect(4, 4, INGREDIENTS_WIDTH-8, INGREDIENTS_HEIGHT-8, kColorBlack);
+    pd->graphics->setDrawMode(kDrawModeFillBlack);
+    setRoobert10();
+    int16_t cur_x = ING_X_START;
+    int16_t cur_y = ING_Y_START;
+    uint16_t w = 0;
+    while (true) {
+      bool isFlavourText;
+      const char* str = toStringIngredients(fac, w++, &isFlavourText);
+      const bool isSpace = strcmp(str, " ") == 0;
+      const bool isComma = strcmp(str, ",") == 0; 
+      if (strcmp(str, "FIN") == 0) {
+        break;
+      } else if (strcmp(str, "LB") == 0) {
+        cur_y += textSize;
+        cur_x = ING_X_START;
+      } else {
+        isFlavourText ? setCooperHewitt12() : setRoobert10();
+        int16_t len = strlen(str);
+        int32_t width = pd->graphics->getTextWidth(isFlavourText ? getCooperHewitt12() : getRoobert10(), str, len, kUTF8Encoding, 0);
+        if (cur_x + width > ING_ROW_MAX && !isComma && cur_y != ING_Y_START) { // Never split on comma
+          cur_y += textSize;
+          cur_x = ING_X_START;
+          if (isSpace) {
+            continue; // We skip a space after a new line
+          }
+        }
+        pd->graphics->drawText(str, len, kUTF8Encoding, cur_x, cur_y);
+        cur_x += width;
+      }
+    }
+    pd->graphics->popContext();
+  }
+
 }
 
 void initiUI() {
@@ -1634,7 +1873,7 @@ void initiUI() {
   m_UIBitmapRightRotated = pd->graphics->newBitmap(DEVICE_PIX_Y, TILE_PIX, kColorBlack);
 
   PDRect boundTopA = {.x = 0, .y = 0, .width = SCREEN_PIX_X/2 + TILE_PIX*4, .height = TILE_PIX*2};
-  PDRect boundTopB = {.x = 0, .y = 0, .width = SCREEN_PIX_X/2, .height = TILE_PIX*2};
+  PDRect boundTopB = {.x = 0, .y = 0, .width = DEVICE_PIX_X/2, .height = TILE_PIX*2};
   PDRect boundSpriteSave = {.x = 0, .y = 0, .width = TILE_PIX*6, .height = TILE_PIX};
 
   PDRect boundSpriteBacking = {.x = 0, .y = 0, .width = SCREEN_PIX_X, .height = SCREEN_PIX_Y};
@@ -1667,15 +1906,6 @@ void initiUI() {
   pd->sprite->setIgnoresDrawOffset(m_UISpriteSaveLoadProgress, 1);
   pd->sprite->setVisible(m_UISpriteSaveLoadProgress, 1);
 
-  pd->graphics->pushContext(m_UIBitmapSave);
-  pd->graphics->setLineCapStyle(kLineCapStyleRound);
-  pd->graphics->drawLine(TILE_PIX, TILE_PIX, DEVICE_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorWhite);
-  pd->graphics->setDrawMode(kDrawModeFillBlack);
-  setRoobert24();
-  int32_t tlen = pd->graphics->getTextWidth(getRoobert24(), "SAVING", 16, kASCIIEncoding, 0);
-  pd->graphics->drawText("SAVING", 16, kASCIIEncoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
-  pd->graphics->popContext();
-
   pd->sprite->setBounds(m_UISpriteGen, boundTopB);
   pd->sprite->setImage(m_UISpriteGen, m_UIBitmapGen, kBitmapUnflipped);
   pd->sprite->moveTo(m_UISpriteGen, DEVICE_PIX_X/2, DEVICE_PIX_Y/2);
@@ -1683,31 +1913,12 @@ void initiUI() {
   pd->sprite->setIgnoresDrawOffset(m_UISpriteGen, 1);
   pd->sprite->setVisible(m_UISpriteGen, 1);
 
-  pd->graphics->pushContext(m_UIBitmapGen);
-  pd->graphics->setLineCapStyle(kLineCapStyleRound);
-  pd->graphics->drawLine(TILE_PIX, TILE_PIX, DEVICE_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorWhite);
-  pd->graphics->setDrawMode(kDrawModeFillBlack);
-  setRoobert24();
-  tlen = pd->graphics->getTextWidth(getRoobert24(), "GENERATING", 16, kASCIIEncoding, 0);
-  pd->graphics->drawText("GENERATING", 16, kASCIIEncoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
-  pd->graphics->popContext();
-
   pd->sprite->setBounds(m_UISpriteLoad, boundTopB);
   pd->sprite->setImage(m_UISpriteLoad, m_UIBitmapLoad, kBitmapUnflipped);
   pd->sprite->moveTo(m_UISpriteLoad, DEVICE_PIX_X/2, DEVICE_PIX_Y/2);
   pd->sprite->setZIndex(m_UISpriteLoad, Z_INDEX_UI_TT);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteLoad, 1);
   pd->sprite->setVisible(m_UISpriteLoad, 1);
-
-  pd->graphics->pushContext(m_UIBitmapLoad);
-  pd->graphics->setLineCapStyle(kLineCapStyleRound);
-  pd->graphics->drawLine(TILE_PIX, TILE_PIX, DEVICE_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorWhite);
-  pd->graphics->setDrawMode(kDrawModeFillBlack);
-  setRoobert24();
-  tlen = pd->graphics->getTextWidth(getRoobert24(), "LOADING", 16, kASCIIEncoding, 0);
-  pd->graphics->drawText("LOADING", 16, kASCIIEncoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
-  pd->graphics->popContext();
-  pd->graphics->setDrawMode(kDrawModeCopy);
 
   PDRect boundBottom = {.x = 0, .y = 0, .width = DEVICE_PIX_X, .height = TILE_PIX};
   pd->sprite->setBounds(m_UISpriteBottom, boundBottom);
@@ -1778,8 +1989,8 @@ void initiUI() {
   m_UIBitmapTitleVersion = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX*1, kColorWhite);
   pd->graphics->pushContext(m_UIBitmapTitleVersion);
   setRoobert10();
-  int32_t width = pd->graphics->getTextWidth(getRoobert10(), VERSION, 5, kASCIIEncoding, 0);
-  pd->graphics->drawText(VERSION, 5, kASCIIEncoding, TILE_PIX - width/2, 0);
+  int32_t width = pd->graphics->getTextWidth(getRoobert10(), VERSION, 5, kUTF8Encoding, 0);
+  pd->graphics->drawText(VERSION, 5, kUTF8Encoding, TILE_PIX - width/2, 0);
   pd->graphics->popContext();
   m_UISpriteTitleVersion = pd->sprite->newSprite();
   PDRect vBound = {.x = 0, .y = 0, .width = TILE_PIX*2, .height = TILE_PIX*1};
@@ -1813,32 +2024,34 @@ void initiUI() {
     pd->sprite->setZIndex(m_UISpriteTitleCont[i], Z_INDEX_UI_M);
     pd->sprite->setIgnoresDrawOffset(m_UISpriteTitleCont[i], 1);  
     pd->sprite->moveTo(m_UISpriteTitleCont[i], i*TILE_PIX*7 + (7*TILE_PIX)/2 + (i+1)*TILE_PIX, DEVICE_PIX_Y - TILE_PIX/2);
-
-    pd->graphics->pushContext(m_UIBitmapTitleNew[i]);
-    roundedRect(0, TILE_PIX*7, TILE_PIX*1, TILE_PIX/2, kColorBlack);
-    pd->graphics->setDrawMode(kDrawModeFillWhite);
-    char text[32];
-    snprintf(text, 32, "%s: New Game", getWorldLetter(i));
-    int16_t len = strlen(text);
-    int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, len, kASCIIEncoding, 0);
-    pd->graphics->drawText(text, len, kASCIIEncoding, (7*TILE_PIX)/2 - width/2, 0);
-    pd->graphics->setDrawMode(kDrawModeCopy);
-    pd->graphics->popContext();
-
-    pd->graphics->pushContext(m_UIBitmapTitleCont[i]);
-    roundedRect(0, TILE_PIX*7, TILE_PIX*1, TILE_PIX/2, kColorBlack);
-    pd->graphics->setDrawMode(kDrawModeFillWhite);
-    #ifdef DEMO
-    snprintf(text, 32, "Load Demo");
-    #else
-    snprintf(text, 32, "%s: Continue", getWorldLetter(i));
-    #endif
-    len = strlen(text);
-    width = pd->graphics->getTextWidth(getRoobert10(), text, len, kASCIIEncoding, 0);
-    pd->graphics->drawText(text, len, kASCIIEncoding, (7*TILE_PIX)/2 - width/2, 0);
-    pd->graphics->setDrawMode(kDrawModeCopy);
-    pd->graphics->popContext();
   }
+
+  PDRect boundFF = {.x = 0, .y = 0, .width = DEVICE_PIX_X, .height = TILE_PIX*3};
+  PDRect boundFF2 = {.x = 0, .y = 0, .width = DEVICE_PIX_X, .height = TILE_PIX*2};
+
+  m_UIBitmapTitleFac = pd->graphics->newBitmap(DEVICE_PIX_X, TILE_PIX*3, kColorClear);
+  m_UISpriteTitleFac = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteTitleFac, boundFF);
+  pd->sprite->setImage(m_UISpriteTitleFac, m_UIBitmapTitleFac, kBitmapUnflipped);
+  pd->sprite->setZIndex(m_UISpriteTitleFac, Z_INDEX_UI_T);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteTitleFac, 1);  
+  pd->sprite->moveTo(m_UISpriteTitleFac, DEVICE_PIX_X/2, TILE_PIX*3);
+
+  m_UIBitmapTitleFarm = pd->graphics->newBitmap(DEVICE_PIX_X, TILE_PIX*4, kColorClear);
+  m_UISpriteTitleFarm = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteTitleFarm, boundFF);
+  pd->sprite->setImage(m_UISpriteTitleFarm, m_UIBitmapTitleFarm, kBitmapUnflipped);
+  pd->sprite->setZIndex(m_UISpriteTitleFarm, Z_INDEX_UI_T);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteTitleFarm, 1);  
+  pd->sprite->moveTo(m_UISpriteTitleFarm, DEVICE_PIX_X/2, TILE_PIX*10);
+
+  m_UIBitmapTitleFacFarm = pd->graphics->newBitmap(DEVICE_PIX_X, TILE_PIX*2, kColorClear);
+  m_UISpriteTitleFacFarm = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteTitleFacFarm, boundFF2);
+  pd->sprite->setImage(m_UISpriteTitleFacFarm, m_UIBitmapTitleFacFarm, kBitmapUnflipped);
+  pd->sprite->setZIndex(m_UISpriteTitleFacFarm, Z_INDEX_UI_T);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteTitleFacFarm, 1);  
+  pd->sprite->moveTo(m_UISpriteTitleFacFarm, DEVICE_PIX_X/2, TILE_PIX*13 + TILE_PIX/2);
 
   // Main Menu
 
@@ -1869,8 +2082,8 @@ void initiUI() {
     pd->graphics->setDrawMode(kDrawModeFillWhite);
     const char* t = newBannerText(i);
     int16_t len = strlen(t);
-    int32_t width = pd->graphics->getTextWidth(getRoobert24(), t, len, kASCIIEncoding, 0);
-    pd->graphics->drawText(t, len, kASCIIEncoding, TILE_PIX*10 - width/2, 0);
+    int32_t width = pd->graphics->getTextWidth(getRoobert24(), t, len, kUTF8Encoding, 0);
+    pd->graphics->drawText(t, len, kUTF8Encoding, TILE_PIX*10 - width/2, 0);
     pd->graphics->setDrawMode(kDrawModeCopy);
     pd->graphics->popContext();
   }
@@ -2011,12 +2224,6 @@ void initiUI() {
 
   for (enum kUICat c = 0; c < kNUICats; ++c) {
     m_UIBitmapHeaders[c] = pd->graphics->newBitmap(TILE_PIX*18, TILE_PIX*2, kColorClear);
-    pd->graphics->pushContext(m_UIBitmapHeaders[c]);
-    roundedRect(1, TILE_PIX*18, TILE_PIX*2, TILE_PIX, kColorBlack);
-    pd->graphics->setDrawMode(kDrawModeFillWhite);
-    pd->graphics->drawText(toStringHeader(c, /*plural*/ true), 32, kASCIIEncoding, TILE_PIX, 0);
-    pd->graphics->popContext();
-
     m_UISpriteHeaders[c] = pd->sprite->newSprite();
     pd->sprite->setBounds(m_UISpriteHeaders[c], cBound);
     pd->sprite->setImage(m_UISpriteHeaders[c], m_UIBitmapHeaders[c], kBitmapUnflipped);
@@ -2090,44 +2297,11 @@ void initiUI() {
   pd->sprite->setZIndex(m_UISpriteIngredients, Z_INDEX_UI_TT);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteIngredients, 1);
 
-  #define ING_X_START 6
-  #define ING_Y_START 6
-  #define ING_ROW_SIZE 12
-  #define ING_ROW_MAX (INGREDIENTS_WIDTH - (ING_X_START*2))
-  uint8_t textSize = pd->graphics->getFontHeight(getRoobert10());
   for (enum kFactorySubType fac = 0; fac < kNFactorySubTypes; ++fac) {
     m_UIBitmapIngredients[fac] = pd->graphics->newBitmap(INGREDIENTS_WIDTH, INGREDIENTS_HEIGHT, kColorWhite);
-    pd->graphics->pushContext(m_UIBitmapIngredients[fac]);
-    pd->graphics->drawRect(0, 0, INGREDIENTS_WIDTH, INGREDIENTS_HEIGHT, kColorBlack);
-    pd->graphics->drawRect(3, 3, INGREDIENTS_WIDTH-6, INGREDIENTS_HEIGHT-6, kColorBlack);
-    pd->graphics->drawRect(4, 4, INGREDIENTS_WIDTH-8, INGREDIENTS_HEIGHT-8, kColorBlack);
-    pd->graphics->setDrawMode(kDrawModeFillBlack);
-    setRoobert10();
-    int16_t cur_x = ING_X_START;
-    int16_t cur_y = ING_Y_START;
-    uint16_t w = 0;
-    while (true) {
-      bool isFlavourText;
-      const char* str = toStringIngredients(fac, w++, &isFlavourText);
-      if (strcmp(str, "FIN") == 0) {
-        break;
-      } else if (strcmp(str, "LB") == 0) {
-        cur_y += textSize;
-        cur_x = ING_X_START;
-      } else {
-        isFlavourText ? setCooperHewitt12() : setRoobert10();
-        int16_t len = strlen(str);
-        int32_t width = pd->graphics->getTextWidth(isFlavourText ? getCooperHewitt12() : getRoobert10(), str, len, kASCIIEncoding, 0);
-        if (cur_x + width > ING_ROW_MAX) {
-          cur_y += textSize;
-          cur_x = ING_X_START;
-        }
-        pd->graphics->drawText(str, len, kASCIIEncoding, cur_x, cur_y);
-        cur_x += width;
-      }
-    }
-    pd->graphics->popContext();
   }
+
+  updateLangUI();
 
   UIDirtyBottom();
   UIDirtyRight();
@@ -2140,140 +2314,140 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
     case kTutWelcomeBuySeeds:;
       switch (_n) {
         #ifdef DEMO
-        case 0: return "-- Factory Farming Tech Demo --";
-        case 1: return "You're free to look around this example factory.";
-        case 2: return "You will find facilities up to Tech Level 3.";
-        case 3: return "The full game goes up to Tech Level 7.";
-        case 4: return "Building and Saving are disabled in the demo.";
+        case 0: return tr(kTRTutDemo0);
+        case 1: return tr(kTRTutDemo1);
+        case 2: return tr(kTRTutDemo2);
+        case 3: return tr(kTRTutDemo3);
+        case 4: return tr(kTRTutDemo4);
 
         case 5: return "";
         case 6: return "";
         case 7: return "";
         case 8: return "";
         #else
-        case 0: return "-- The Initial Seed Purchase --";
-        case 1: return "Welcome to Factory Farming! There's money to be";
-        case 2: return "made, and it won't make itself! So let's get started by";
-        case 3: return "visiting the shop with Ⓐ and buying some carrot seeds";
-        case 4: return "The compass (right) will always point to the shop.";
+        case 0: return tr(kTRTut0_0);
+        case 1: return tr(kTRTut0_1);
+        case 2: return tr(kTRTut0_2);
+        case 3: return tr(kTRTut0_3);
+        case 4: return tr(kTRTut0_4);
 
-        case 5: return "Move with the D-Pad, ✛. Zoom in & out with 🎣.";
-        case 6: return "Hold Ⓑ to run.  Go to the shop and press Ⓐ.";
-        case 7: return "Buy 10 carrot seeds from the shop with Ⓐ.";
-        case 8: return "Press Ⓑ to exit the shop.";
+        case 5: return tr(kTRTut0_5);
+        case 6: return tr(kTRTut0_6);
+        case 7: return tr(kTRTut0_7);
+        case 8: return tr(kTRTut0_8);
         #endif
       }
     case kTutSeeObjective:;
       switch (_n) {
-        case 0: return "-- The Next Objective --";
-        case 1: return "Your current objective is to sell at least";
-        case 2: return "10 carrots. You can check what your current objective";
-        case 3: return "is at any time by pressing the Menu button.";
-        case 4: return "Do this now.";
+        case 0: return tr(kTRTut1_0);
+        case 1: return tr(kTRTut1_1);
+        case 2: return tr(kTRTut1_2);
+        case 3: return tr(kTRTut1_3);
+        case 4: return tr(kTRTut1_4);
           
-        case 5: return "Press the Menu button to see your current objective.";
-        case 6: return "From here you can also save and load the game, and";
-        case 7: return "open the main menu with game settings etc.";
-        case 8: return "";
+        case 5: return tr(kTRTut1_5);
+        case 6: return tr(kTRTut1_6);
+        case 7: return tr(kTRTut1_7);
+        case 8: return tr(kTRTut1_8);
       }
     case kTutPlantCarrots:;
       switch (_n) {
-        case 0: return "-- The First Crops --";
-        case 1: return "Good, carrots will grow well in the silty soil near to the";
-        case 2: return "shop. Pay attention to the soil & water each plant likes.";
-        case 3: return "Find a good nearby spot, open your inventory";
-        case 4: return "with Ⓐ, select the seeds, and plant 10 carrots.";
+        case 0: return tr(kTRTut2_0);
+        case 1: return tr(kTRTut2_1);
+        case 2: return tr(kTRTut2_2);
+        case 3: return tr(kTRTut2_3);
+        case 4: return tr(kTRTut2_4);
           
-        case 5: return "Find a nearby area of silty soil, preferably moist.";
-        case 6: return "Press Ⓐ to enter your inventory, select the carrot";
-        case 7: return "seeds and press Ⓐ again. Plant 10 carrot seeds on";
-        case 8: return "empty patches of silty soil, then press Ⓑ.";
+        case 5: return tr(kTRTut2_5);
+        case 6: return tr(kTRTut2_6);
+        case 7: return tr(kTRTut2_7);
+        case 8: return tr(kTRTut2_8);
       }
     case kTutGetCarrots:;
       switch (_n) {
-        case 0: return "-- The First Harvest --";
-        case 1: return "Great, crops normally take some time to yield produce,";
-        case 2: return "but let's speed up these carrot plants. Press Ⓐ, choose";
-        case 3: return "'Pickup Cargo Mode' and harvest 10 grown carrots.";
-        case 4: return "You can pickup any cargo in the world, or in buildings.";
+        case 0: return tr(kTRTut3_0);
+        case 1: return tr(kTRTut3_1);
+        case 2: return tr(kTRTut3_2);
+        case 3: return tr(kTRTut3_3);
+        case 4: return tr(kTRTut3_4);
           
-        case 5: return "Go to where you planted your carrot seeds. ";
-        case 6: return "Press Ⓐ to enter your inventory, select 'Pickup";
-        case 7: return "Cargo Mode'. Press or hold Ⓐ when moving, pickup 10";
-        case 8: return "grown carrots. Use the 🎣 to change the pickup area. ";
+        case 5: return tr(kTRTut3_5);
+        case 6: return tr(kTRTut3_6);
+        case 7: return tr(kTRTut3_7);
+        case 8: return tr(kTRTut3_8);
       }
     case kTutSellCarrots:;
       switch (_n) {
-        case 0: return "-- The First Sale --";
-        case 1: return "Nice, you know what we can do with cargo like those";
-        case 2: return "fresh carrots? Sell them for a profit! Visit the sales";
-        case 3: return "depot (next to the shop) and press Ⓐ to access the";
-        case 4: return "sales menu. Sell 10 carrots to continue.";
+        case 0: return tr(kTRTut4_0);
+        case 1: return tr(kTRTut4_1);
+        case 2: return tr(kTRTut4_2);
+        case 3: return tr(kTRTut4_3);
+        case 4: return tr(kTRTut4_4);
           
-        case 5: return "Go to the sales depot (next to the shop). ";
-        case 6: return "Press or hold Ⓐ to sell at least 10 carrots.";
-        case 7: return "Change the amount sold with each press of Ⓐ by";
-        case 8: return "turning the 🎣, or hold Ⓑ and press ⬆️ or ⬇️.";
+        case 5: return tr(kTRTut4_5);
+        case 6: return tr(kTRTut4_6);
+        case 7: return tr(kTRTut4_7);
+        case 8: return tr(kTRTut4_8);
       }
     case kTutBuildHarvester:;
       switch (_n) {
-        case 0: return "-- The First Automated Harvest --";
-        case 1: return "Sweet, but that was a lot of manual labor... Let's";
-        case 2: return "use an automatic harvester instead! Buy one from";
-        case 3: return "the shop and build it where some carrot plants are";
-        case 4: return "within its harvest catchment area.";
+        case 0: return tr(kTRTut5_0);
+        case 1: return tr(kTRTut5_1);
+        case 2: return tr(kTRTut5_2);
+        case 3: return tr(kTRTut5_3);
+        case 4: return tr(kTRTut5_4);
           
-        case 5: return "Go to the the shop, buy an automatic harvester.";
-        case 6: return "Press Ⓐ and choose this from your inventory.";
-        case 7: return "Place the harvester such that it located on empty";
-        case 8: return "soil, and carrot plants are within its harvest range.";
+        case 5: return tr(kTRTut5_5);
+        case 6: return tr(kTRTut5_6);
+        case 7: return tr(kTRTut5_7);
+        case 8: return tr(kTRTut5_8);
       }
     case kTutBuildConveyor:;
       switch (_n) {
-        case 0: return "-- The First Cargo Line --";
-        case 1: return "Good, We're harvesting carrots. But we need to get them";
-        case 2: return "to the sales depot. We need conveyor belts! Buy around";
-        case 3: return "50 from the shop and lay the path to move & sell";
-        case 4: return "the carrots. Rotate belt pieces with 🎣 or Ⓑ + ✛.";
+        case 0: return tr(kTRTut6_0);
+        case 1: return tr(kTRTut6_1);
+        case 2: return tr(kTRTut6_2);
+        case 3: return tr(kTRTut6_3);
+        case 4: return tr(kTRTut6_4);
           
-        case 5: return "Go to the the shop, buy around 50 conveyor belts.";
-        case 6: return "Press Ⓐ and choose these from your inventory.";
-        case 7: return "Make a chain of belts from the automatic harvester to";
-        case 8: return "sales. Rotate belts with 🎣, or hold Ⓑ and press ✛.";
+        case 5: return tr(kTRTut6_5);
+        case 6: return tr(kTRTut6_6);
+        case 7: return tr(kTRTut6_7);
+        case 8: return tr(kTRTut6_8);
       }
     case kTutBuildQuarry:
       switch (_n) {
-        case 0: return "-- Mining The Earth --";
-        case 1: return "OK. But not all exploitable resources are grown.";
-        case 2: return "Some are dug up, or pumped out. Let's build a chalk";
-        case 3: return "quarry next. Buy one from the shop and build it on";
-        case 4: return "chalky soil. There should be some to the north.";
+        case 0: return tr(kTRTut7_0);
+        case 1: return tr(kTRTut7_1);
+        case 2: return tr(kTRTut7_2);
+        case 3: return tr(kTRTut7_3);
+        case 4: return tr(kTRTut7_4);
           
-        case 5: return "Go to the the shop, buy a chalk quarry.";
-        case 6: return "Press Ⓐ and choose this from your inventory.";
-        case 7: return "Go north from the shop and look for chalky soil.";
-        case 8: return "Place the quarry on at least one chalky soil tile.";
+        case 5: return tr(kTRTut7_5);
+        case 6: return tr(kTRTut7_6);
+        case 7: return tr(kTRTut7_7);
+        case 8: return tr(kTRTut7_8);
       }
     case kTutBuildVitamin:
       switch (_n) {
-        case 0: return "-- Manufacturing Value --";
-        case 1: return "Nice. We can finally set up a full production line!";
-        case 2: return "Buy a vitamin factory from the shop, supply it with";
-        case 3: return "both chalk and carrots, and transport the vitamins";
-        case 4: return "to the sales depot for a much bigger profit!";
+        case 0: return tr(kTRTut8_0);
+        case 1: return tr(kTRTut8_1);
+        case 2: return tr(kTRTut8_2);
+        case 3: return tr(kTRTut8_3);
+        case 4: return tr(kTRTut8_4);
           
-        case 5: return "Go to the the shop, buy a vitamin factory.";
-        case 6: return "Place it in a good spot. Use conveyor belts to";
-        case 7: return "supply it with carrots and chalk. Use a more belts";
-        case 8: return "to transport the vitamins to the sales depot.";
+        case 5: return tr(kTRTut8_5);
+        case 6: return tr(kTRTut8_6);
+        case 7: return tr(kTRTut8_7);
+        case 8: return tr(kTRTut8_8);
       }
     case kTutFinishedOne:
       switch (_n) {
-        case 0: return "-- Go Forth And Consume --";
-        case 1: return "Excellent! You now know all the basics of exploiting";
-        case 2: return "the world for profit. As your bank account swells,";
-        case 3: return "more crops, factories, and other items will unlock.";
-        case 4: return "Use them to maximize profit, maximize efficiency.";
+        case 0: return tr(kTRTut9_0);
+        case 1: return tr(kTRTut9_1);
+        case 2: return tr(kTRTut9_2);
+        case 3: return tr(kTRTut9_3);
+        case 4: return tr(kTRTut9_4);
           
         case 5: return " ";
         case 6: return " ";
@@ -2283,50 +2457,50 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
       ///
     case kTutNewPlots:
       switch (_n) {
-        case 0: return "-- But I Don't Have The Soil For That! --";
-        case 1: return "Problem. The cactus plant you just unlocked wants";
-        case 2: return "sandy soil, but there isn't any here. Expansion time!";
-        case 3: return "Visit the plots depot (next to sales) and buy a new";
-        case 4: return "plot of land to develop.";
+        case 0: return tr(kTRTut10_0);
+        case 1: return tr(kTRTut10_1);
+        case 2: return tr(kTRTut10_2);
+        case 3: return tr(kTRTut10_3);
+        case 4: return tr(kTRTut10_4);
           
-        case 5: return "The plots depot, exports depot and";
-        case 6: return "imports depot are all now unlocked.";
-        case 7: return "Visit the plots depot to the right of sales.";  
-        case 8: return "Buy a new plot of land to expand the factory.";
+        case 5: return tr(kTRTut10_5);
+        case 6: return tr(kTRTut10_6);
+        case 7: return tr(kTRTut10_7);  
+        case 8: return tr(kTRTut10_8);
       }
     case kTutExports:
       switch (_n) {
-        case 0: return "-- A New Horizon --";
-        case 1: return "Welcome to you new plot of land! More room for your";
-        case 2: return "manufacturing empire to grow. Instead of selling cargo,";
-        case 3: return "you can also move it between plots. Use belts to feed";
-        case 4: return "cargo in to the exports depot in any of your plots.";
+        case 0: return tr(kTRTut11_0);
+        case 1: return tr(kTRTut11_1);
+        case 2: return tr(kTRTut11_2);
+        case 3: return tr(kTRTut11_3);
+        case 4: return tr(kTRTut11_4);
           
-        case 5: return "Export some cargo by moving it via belts into the";
-        case 6: return "exports depot (to the right of the plot depot) on";
-        case 7: return "any plot. The export rate of each cargo type is";
-        case 8: return "averaged over the previous two minutes.";
+        case 5: return tr(kTRTut11_5);
+        case 6: return tr(kTRTut11_6);
+        case 7: return tr(kTRTut11_7);
+        case 8: return tr(kTRTut11_8);
       }
     case kTutImports:
       switch (_n) {
-        case 0: return "-- Accessing The Goods --";
-        case 1: return "Now that you're exporting cargo, let's look at imports too.";
-        case 2: return "Go to a different plot and visit the imports depot,";
-        case 3: return "you can import up to four cargo per plot.";
-        case 4: return "Try setting up an import now.";
+        case 0: return tr(kTRTut12_0);
+        case 1: return tr(kTRTut12_1);
+        case 2: return tr(kTRTut12_2);
+        case 3: return tr(kTRTut12_3);
+        case 4: return tr(kTRTut12_4);
           
-        case 5: return "Import some cargo in a different plot via the imports";
-        case 6: return "depot (right of the exports depot). N, S, E, W";
-        case 7: return "imports can be individually chosen. You cannot export a";
-        case 8: return "cargo type which is being imported to the same plot.";
+        case 5: return tr(kTRTut12_5);
+        case 6: return tr(kTRTut12_6);
+        case 7: return tr(kTRTut12_7);
+        case 8: return tr(kTRTut12_8);
       }
     case kTutFinishedTwo:
       switch (_n) {
-        case 0: return "-- Imports & Exports & Plots --";
-        case 1: return "Wonderful! Continue to buy more plots in order to";
-        case 2: return "access new soil types and to expand the factory.";
-        case 3: return "Use the export and import depots to move cargo";
-        case 4: return "between plots, and continue to maximize efficiency!";
+        case 0: return tr(kTRTut13_0);
+        case 1: return tr(kTRTut13_1);
+        case 2: return tr(kTRTut13_2);
+        case 3: return tr(kTRTut13_3);
+        case 4: return tr(kTRTut13_4);
           
         case 5: return " ";
         case 6: return " ";

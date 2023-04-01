@@ -49,18 +49,18 @@ void checkTorus(void);
 
 const char* toStringTool(enum kToolType _type) {
   switch(_type) {
-    case kToolPickup: return "Pickup Cargo Mode";
-    case kToolInspect: return "Inspection Mode";
-    case kToolDestroy: return "Deconstruction Mode";
+    case kToolPickup: return tr(kTRPick);
+    case kToolInspect: return tr(kTRInspect);
+    case kToolDestroy: return tr(kTRDestroy);
     default: return "Tool???";
   }
 }
 
 const char* toStringToolInfo(enum kToolType _type) {
   switch(_type) {
-    case kToolPickup: return "Grabs nearby cargo, empties buildings";
-    case kToolInspect: return "See details about the current tile";
-    case kToolDestroy: return "Deconstructs everything in the area";
+    case kToolPickup: return tr(kTRPickHelp);
+    case kToolInspect: return tr(kTRInspectHelp);
+    case kToolDestroy: return tr(kTRDestroyHelp);
     default: return "Tool???";
   }
 }

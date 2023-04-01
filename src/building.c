@@ -41,35 +41,35 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
   switch(_type) {
     case kNoBuilding: return "NoBuilding";
     case kConveyor: switch (_subType.conveyor) {
-      case kBelt: return _inworld ? "Belt" : "Conveyor Belt";
-      case kSplitI: return _inworld ? "'I' Splitter": "Conveyor Belt 'I' Splitter";
-      case kSplitL: return _inworld ? "'L' Splitter" : "Conveyor Belt 'L' Splitter";
-      case kSplitT: return _inworld ? "'T' Splitter" : "Conveyor Belt 'T' Splitter";
-      case kFilterI: return _inworld ? "'I' Filter" : "Conveyor Belt 'I' Filter";
-      case kFilterL: return _inworld ? "'L' Filter" : "Conveyor Belt 'L' Filter";
-      case kTunnelIn: case kTunnelOut: return _inworld ? "Tunnel" : "Conveyor Belt Tunnel";
-      case kOverflowI: return _inworld ? "'I' Overflow" : "Conveyor Belt 'I' Overflow";
-      case kOverflowL: return _inworld ? "'L' Overflow" : "Conveyor Belt 'L' Overflow";
+      case kBelt: return _inworld ? tr(kTRBeltShort) : tr(kTRBeltLong);
+      case kSplitI: return _inworld ? tr(kTRSpltIShort) : tr(kTRSplitILong);
+      case kSplitL: return _inworld ? tr(kTRSplitLShort) : tr(kTRSplitLLong);
+      case kSplitT: return _inworld ? tr(kTRSplitTShort) : tr(kTRSplitTLong);
+      case kFilterI: return _inworld ? tr(kTRFilterIShort) : tr(kTRFilterILong);
+      case kFilterL: return _inworld ? tr(kTRFilterLShort) : tr(kTRFilterLLong);
+      case kTunnelIn: case kTunnelOut: return _inworld ? tr(kTRTunnelShort) : tr(kTRTunnelLong);
+      case kOverflowI: return _inworld ? tr(kTROverflowIShort) : tr(kTROverflowILong);
+      case kOverflowL: return _inworld ? tr(kTROverflowLShort) : tr(kTROverflowLLong);
       case kSpareConv0: case kSpareConv1: case kSpareConv4: case kSpareConv5:
       case kSpareConv6: case kSpareConv7: 
       case kNConvSubTypes: return "C_PLACEHOLDER";
     }
     case kPlant: switch (_subType.plant) {
-      case kCarrotPlant: return _inworld ? "Carrot Plant" : "Carrot Seeds";
-      case kSunflowerPlant: return _inworld ? "Sunflower Plant" : "Sunflower Seeds";
-      case kPotatoPlant: return _inworld ? "Potato Plant" : "Seed Potato";
-      case kAppleTree: return _inworld ? "Apple Tree" : "Apple Sapling";
-      case kCornPlant: return _inworld ? "Corn Plant" : "Corn Seeds";
-      case kSeaweedPlant: return _inworld ? "Seaweed Plant" : "Seaweed Spores";
-      case kWheatPlant: return _inworld ? "Wheat Plant" : "Wheat Seeds";
-      case kCactusPlant: return _inworld ? "Cactus Plant" : "Cactus Seeds";
-      case kLimeTree: return _inworld ? "Lime Tree" : "Lime Sapling";
-      case kStrawberryPlant: return _inworld ? "Strawberry Plant" : "Strawberry Seeds";
-      case kBambooPlant: return _inworld ? "Bamboo Plant" : "Bamboo Sapling";
-      case kCoffeePlant: return _inworld ? "Coffee Plant" : "Coffee Seeds";
-      case kCocoaPlant: return _inworld ? "Cocoa Plant" : "Cocoa Seeds";
-      case kSeaCucumberPlant: return _inworld ? "Sea Cucumber Farm" : "Sea Cucumber Trap";
-      case kRosePlant: return _inworld ? "Rose Plant" : "Rose Seeds";
+      case kCarrotPlant: return _inworld ? tr(kTRCarrotPWorld) : tr(kTRCarrotP);
+      case kSunflowerPlant: return _inworld ? tr(kTRSunflowerPWorld) : tr(kTRSunflowerP);
+      case kPotatoPlant: return _inworld ? tr(kTRPotatoPWorld) : tr(kTRPotatoP);
+      case kAppleTree: return _inworld ? tr(kTRApplePWorld) : tr(kTRAppleP);
+      case kCornPlant: return _inworld ? tr(kTRCornPWorld) : tr(kTRCornP);
+      case kSeaweedPlant: return _inworld ? tr(kTRSeaweedPWorld) : tr(kTRSeaweedP);
+      case kWheatPlant: return _inworld ? tr(kTRWheetPWorld) : tr(kTRWheetP);
+      case kCactusPlant: return _inworld ? tr(kTRCactusPWorld) : tr(kTRCactusP);
+      case kLimeTree: return _inworld ? tr(kTRLimePWorld) : tr(kTRLimeP);
+      case kStrawberryPlant: return _inworld ? tr(kTRStrawberryPWorld) : tr(kTRStrawberryP);
+      case kBambooPlant: return _inworld ? tr(kTRBambooPWorld) : tr(kTRBambooP);
+      case kCoffeePlant: return _inworld ? tr(kTRCoffeePWorld) : tr(kTRCoffeeP);
+      case kCocoaPlant: return _inworld ? tr(kTRCocoaPWorld) : tr(kTRCocoaP);
+      case kSeaCucumberPlant: return _inworld ? tr(kTRSeaCucumberPWorld) : tr(kTRSeaCucumberP);
+      case kRosePlant: return _inworld ? tr(kTRRosePWorld) : tr(kTRRoseP);
       case kSparePlant0: case kSparePlant1: case kSparePlant2: case kSparePlant3:
       case kSparePlant4: case kSparePlant5: case kSparePlant6: case kSparePlant7: 
       case kSparePlant8: case kSparePlant9: case kSparePlant10: case kSparePlant11:
@@ -77,71 +77,71 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kNPlantSubTypes: return "P_PLACEHOLDER";
     }
     case kUtility: switch (_subType.utility) {
-      case kPath: return "Path";
-      case kSign: return "Sign";
-      case kBin: return "Trash Bin";
-      case kWell: return "Well";
-      case kStorageBox: return "Storage Box";
-      case kBuffferBox: return "Buffer Box";
-      case kFactoryUpgrade: return "Factory Upgrade Module";
-      case kConveyorGrease: return "Conveyor Grease";
-      case kObstructionRemover: return "Obstruction Remover";
-      case kLandfill: return "Landfill";
-      case kRotavator: return "Rotavator";
-      case kRetirement: return "Retirement Cottage";
-      case kFence: return "Fence"; 
+      case kPath: return tr(kTRPath);
+      case kSign: return tr(kTRSign);
+      case kBin: return tr(kTRBin);
+      case kWell: return tr(kTRWell);
+      case kStorageBox: return tr(kTRStorageBox);
+      case kBuffferBox: return tr(kTRBufferBox);
+      case kFactoryUpgrade: return tr(kTRFactoryUpgrade);
+      case kConveyorGrease: return tr(kTRConveyorGrease);
+      case kObstructionRemover: return tr(kTRObstructionRemover);
+      case kLandfill: return tr(kTRLandfill);
+      case kRotavator: return tr(kTRRotavator);
+      case kRetirement: return tr(kTRRetiremmentCottage);
+      case kFence: return tr(kTRFence); 
       case kSpareUtil0: case kSpareUtil1: case kSpareUtil3:
       case kSpareUtil5: case kSpareUtil6: case kSpareUtil7: 
       case kNUtilitySubTypes: return "U_PLACEHOLDER";
     }
     case kExtractor: switch (_subType.extractor) {
-      case kCropHarvesterSmall: return _inworld ? "Harvester 7x7" : "Automatic Harvester (7x7)";
-      case kPump: return "Water Pump";
-      case kChalkQuarry: return "Chalk Quarry";
-      case kSaltMine: return "Salt Mine";
-      case kCropHarvesterLarge: return _inworld ? "Harvester 9x9 " : "Automatic Harvester (9x9)";
-      case kCO2Extractor: return "CO2 Extractor";
+      case kCropHarvesterSmall: return _inworld ? tr(kTRHarvesterSmallShort) : tr(kTRHarvesterSmallLong);
+      case kPump: return tr(kTRPump);
+      case kChalkQuarry: return tr(kTRChalkQuarry);
+      case kSaltMine: return tr(kTRSaltMine);
+      case kCropHarvesterLarge: return _inworld ? tr(kTRHarvesterLargeShort) : tr(kTRHarvesterLargeLong);
+      case kCO2Extractor: return tr(kTRCO2Extractor);
       case kSpareExtractor0: case kSpareExtractor1: case kSpareExtractor2: case kSpareExtractor3:
       case kSpareExtractor4: case kSpareExtractor5: case kSpareExtractor6: case kSpareExtractor7: 
       case kNExtractorSubTypes: return "E_PLACEHOLDER";
     }
     case kFactory: switch (_subType.factory) {
-      case kVitiminFac: return "Vitamin Factory";
-      case kVegOilFac: return "Vegetable Oil Factory";
-      case kCrispsFac: return "Potato Chip Factory";
-      case kEthanolFac: return "Ethanol Factory";
-      case kHardCiderFac: return "Hard Cider Factory";
-      case kAbattoir: return "Abattoir";
-      case kHydrogenFac: return "Hydrogen Factory";
-      case kHOILFac: return "Hydrogenated Oil Factory";
-      case kCornDogFac: return "Corn Dog Factory";
-      case kBeerFac: return "Beer Brewery";
-      case kTequilaFac: return "Tequila Factory";
-      case kHFCSFac: return "High Fructose Corn Syrup Factory";
-      case kGelatinFac: return "Gelatin Factory";
-      case kJellyFac: return "Jello Factory";
-      case kJelloShotFac: return "Jello-Shots Factory";
-      case kEmulsifierFac: return "Emulsifiers Factory";
-      case kIceCreamFac: return "Ice Cream Factory"; 
-      case kBatteryFarm: return "Battery Chicken Farm";
-      case kProteinFac: return "Protein Powder Factory";
-      case kChocolateFac: return "Chocolate Factory"; 
-      case kPieFac: return "Meat Pie Factory";
-      case kMSGFac: return "Monosodium Glutamate Factory";
-      case kTVDinnerFac: return "TV-Dinner Factory";
-      case kCakeFac: return "Chocolate Cake Factory"; 
-      case kCaffeineFac: return "Caffeine Powder Factory";
-      case kEnergyDrinkFac: return "Energy Drink Factory";
-      case kRaveJuiceFac: return "Rave Juice Factory";
-      case kPerkPillFac: return "Perk Pills Factory";
-      case kPackagingFac: return "Packaging Manufacturer";
-      case kDessertFac: return "Dessert Factory";
-      case kCateringKitFac: return "Catering Pack Factory";
-      case kChineseReayMealFac: return "Foo Young Meal Factory";
-      case kPartyPackFac: return "Party Pack Factory";
-      case kParfumeFac: return "Parfume Factory";
-      case kMiraclePowderFac: return "Miracle Powder Factory";
-      case kTurkishDelightFac: return "Turkish Delight Factory";
+      case kVitiminFac: return tr(kTRFacVitamin);
+      case kVegOilFac: return tr(kTRFacVegOil);
+      case kCrispsFac: return tr(kTRFacCrisps);
+      case kEthanolFac: return tr(kTRFacEthanol);
+      case kHardCiderFac: return tr(kTRFacHardCider);
+      case kAbattoir: return tr(kTRFacAbattoir);
+      case kHydrogenFac: return tr(kTRFacHydrogen);
+      case kHOILFac: return tr(kTRFacHOil);
+      case kCornDogFac: return tr(kTRFacCornDog);
+      case kBeerFac: return tr(kTRFacBeer);
+      case kTequilaFac: return tr(kTRFacTequila);
+      case kHFCSFac: return tr(kTRFacHFCS);
+      case kGelatinFac: return tr(kTRFacGelatin);
+      case kJellyFac: return tr(kTRFacJelly);
+      case kJelloShotFac: return tr(kTRFacJelloShot);
+      case kEmulsifierFac: return tr(kTRFacEmulsifiers);
+      case kIceCreamFac: return tr(kTRFacIceCream); 
+      case kBatteryFarm: return tr(kTRFacBatteryFarm);
+      case kProteinFac: return tr(kTRFacProtein);
+      case kChocolateFac: return tr(kTRFacChocolate); 
+      case kPieFac: return tr(kTRFacPie);
+      case kMSGFac: return tr(kTRFacMSG);
+      case kTVDinnerFac: return tr(kTRFacTVDinner);
+      case kCakeFac: return tr(kTRFacCake); 
+      case kCaffeineFac: return tr(kTRFacCaffeine);
+      case kEnergyDrinkFac: return tr(kTRFacEnergyDrink);
+      case kRaveJuiceFac: return tr(kTRFacRaveJuice);
+      case kPerkPillFac: return tr(kTRFacPerkPill);
+      case kPackagingFac: return tr(kTRFacPackaging);
+      case kDessertFac: return tr(kTRFacDessert);
+      case kCateringKitFac: return tr(kTRFacCateringKit);
+      case kChineseReayMealFac: return tr(kTRFacChineseReadyMeal);
+      case kPartyPackFac: return tr(kTRFacPartyPack);
+      case kParfumeFac: return tr(kTRFacParfume);
+      case kMiraclePowderFac: return tr(kTRFacMiraclePowder);
+      case kTurkishDelightFac: return tr(kTRFacTurkishDelight);
       case kSpareFac0: case kSpareFac1: case kSpareFac2: case kSpareFac3:
       case kSpareFac4: case kSpareFac5: case kSpareFac6: case kSpareFac7: 
       case kSpareFac8: case kSpareFac9: case kSpareFac10: case kSpareFac11:
@@ -149,11 +149,11 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kNFactorySubTypes: return "F_PLACEHOLDER";
     }
     case kSpecial: switch (_subType.special) {
-      case kShop: return "The Shop";
-      case kSellBox: return "Sales Depot";
-      case kExportBox: return isCamouflaged() ? "A Suspicious Rock" : "Cargo Exports Depot";
-      case kImportBox: return isCamouflaged() ? "A Suspicious Rock" : "Cargo Imports Depot";
-      case kWarp: return isCamouflaged() ? "A Suspicious Rock" : "Plot Depot";
+      case kShop: return tr(kTRShop);
+      case kSellBox: return tr(kTRSales);
+      case kExportBox: return isCamouflaged() ? tr(kTRSus) : tr(kTRExports);
+      case kImportBox: return isCamouflaged() ? tr(kTRSus) : tr(kTRImports);
+      case kWarp: return isCamouflaged() ? tr(kTRSus) : tr(kTRWarp);
       case kNSpecialSubTypes: return "S_PLACEHOLDER";
     }
     case kNBuildingTypes:;

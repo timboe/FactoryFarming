@@ -5,6 +5,7 @@
 
 #include "pd_api.h"
 #include "constants.h"
+#include "localisation.h"
 
 // Directions
 enum kDir{SN, WE, NS, EW, kDirN};
@@ -50,3 +51,15 @@ int32_t getNUnlocks(void);
 void reset(bool _resetThePlayer);
 
 char* ftos(float _value, int16_t _size, char* _dest);
+
+const char* space(void);
+
+const char* cspace(void); // colon
+
+const char* Cspace(void); // Comma
+
+const char* c5space(void);
+
+const char* lb(void);
+
+const char* rb(void);

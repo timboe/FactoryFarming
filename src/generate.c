@@ -310,7 +310,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
     pd->graphics->drawRect(0, 0, CHUNK_PIX_X, CHUNK_PIX_Y, kColorBlack);
     static char text[16];
     snprintf(text, 16, "(%u,%u)", _chunk->m_x, _chunk->m_y);
-    pd->graphics->drawText(text, 16, kASCIIEncoding, TILE_PIX, TILE_PIX);
+    pd->graphics->drawText(text, 16, kUTF8Encoding, TILE_PIX, TILE_PIX);
   }
 
   // Shift from Sprite to Bitmap draw coords
@@ -594,26 +594,26 @@ enum kGroundType getGroundType(uint8_t _tile) {
 
 const char* toStringWetness(enum kGroundWetness _wetness) {
   switch (_wetness) {
-    case kWater: return "Water";
-    case kWet: return "Wet";
-    case kMoist: return "Moist";
-    default: return "Dry";
+    case kWater: return tr(kTRWater);
+    case kWet: return tr(kTRWet);
+    case kMoist: return tr(kTRMoist);
+    default: return tr(kTRDry);
   }
 }
 
 const char* toStringSoil(enum kGroundType _type) {
   switch (_type) {
-    case kSiltyGround: return "Silty Soil";
-    case kChalkyGround: return "Chalky Soil";
-    case kPeatyGround: return "Peaty Soil";
-    case kSandyGround: return "Sandy Soil";
-    case kClayGround: return "Clay Soil";
-    case kLoamyGround: return "Loamy Soil";
-    case kPavedGround: return "Paved Ground";
-    case kObstructedGround: return "Obstructed Ground";
-    case kLake: return "Lake";
-    case kRiver: return "River";
-    case kOcean: return "Ocean";
+    case kSiltyGround: return tr(kTRSiltyGround);
+    case kChalkyGround: return tr(kTRChalkyGround);
+    case kPeatyGround: return tr(kTRPeatyGround);
+    case kSandyGround: return tr(kTRSandyGround);
+    case kClayGround: return tr(kTRClayGround);
+    case kLoamyGround: return tr(kTRLoamyGround);
+    case kPavedGround: return tr(kTRPavedGround);
+    case kObstructedGround: return tr(kTRObstructedGround);
+    case kLake: return tr(kTRLake);
+    case kRiver: return tr(kTRRiver);
+    case kOcean: return tr(kTROcean);
     case kNGroundTypes: return "UNKNOWN Soil";
   }
   return "UNKNOWN Soil";
@@ -621,14 +621,14 @@ const char* toStringSoil(enum kGroundType _type) {
 
 const char* getWorldName(enum kWorldType _type, bool _mask) {
   switch (_type) {
-    case kSiltWorld: return _mask ? "??? ?????????" : "The Grasslands"; // Main: Silt
-    case kChalkWorld: return _mask ? "??? ????? ???????" : "The Stony Plateau"; // Main: Chalk
-    case kPeatWorld: return _mask ? "??? ????? ??????" : "The Boggy Hollow"; // Main: Peat
-    case kSandWorld: return _mask ? "??? ??????" : "The Desert"; // Main: Sand
-    case kClayWorld: return _mask ? "??? ???????" :"The Estuary"; // Main: Clay
-    case kLoamWoarld: return _mask ? "??? ??????? ?????" :"The Fertile Hills"; // Main: Loamy
-    case kWaterWorld: return _mask ? "??? ????? ??? ?????" :"The Tidal Mud Flats"; // Special, Main: Water
-    case kTranquilWorld: return _mask ? "??? ???????? ??????" :"The Tranquil Plains"; // Special, all Loamy - Empty
+    case kSiltWorld: return _mask ? tr(kTRSiltWorldMask) : tr(kTRSiltWorld); // Main: Silt
+    case kChalkWorld: return _mask ? tr(kTRChalkWorldMask) : tr(kTRChalkWorld); // Main: Chalk
+    case kPeatWorld: return _mask ? tr(kTRPeatWorldMask) : tr(kTRPeatWorld); // Main: Peat
+    case kSandWorld: return _mask ? tr(kTRSandWorldMask) : tr(kTRSandWorld); // Main: Sand
+    case kClayWorld: return _mask ? tr(kTRClayWorldMask) : tr(kTRClayWorld); // Main: Clay
+    case kLoamWoarld: return _mask ? tr(kTRLoamWoarldMask) : tr(kTRLoamWoarld); // Main: Loamy
+    case kWaterWorld: return _mask ? tr(kTRWaterWorldMask) : tr(kTRWaterWorld); // Special, Main: Water
+    case kTranquilWorld: return _mask ? tr(kTRTranquilWorldMask) : tr(kTRTranquilWorld); // Special, all Loamy - Empty
     case kNWorldTypes: return "UNKNOWN World";
   }
   return "UNKNOWN World";

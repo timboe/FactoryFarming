@@ -310,7 +310,7 @@ void menuOptionsCallbackMenu(void* blank) {
   pd->system->logToConsole("menuOptionsCallbackMenu");
   #endif
   checkReturnDismissTutorialMsg();
-  drawUITop("Main Menu", kDrawModeCopy);
+  drawUITop(tr(kTRMainMenu), kDrawModeCopy);
   redrawAllSettingsMenuLines();
   setGameMode(kMenuSettings);
 }
@@ -334,18 +334,18 @@ void populateMenuTitle() {
   #ifdef DEMO
   return;
   #endif
-  pd->system->addMenuItem("delete save 1", menuOptionsCallbackDelete, (void*)0);
-  pd->system->addMenuItem("delete save 2", menuOptionsCallbackDelete, (void*)1);
-  pd->system->addMenuItem("delete save 3", menuOptionsCallbackDelete, (void*)2);
+  pd->system->addMenuItem(tr(kTRDeleteSave1), menuOptionsCallbackDelete, (void*)0);
+  pd->system->addMenuItem(tr(kTRDeleteSave2), menuOptionsCallbackDelete, (void*)1);
+  pd->system->addMenuItem(tr(kTRDeleteSave3), menuOptionsCallbackDelete, (void*)2);
 }
 
 void populateMenuGame() {
   pd->system->removeAllMenuItems();
   #ifndef DEMO
-  pd->system->addMenuItem("load", menuOptionsCallbackLoad, NULL);
-  pd->system->addMenuItem("save", menuOptionsCallbackSave, NULL);
+  pd->system->addMenuItem(tr(kTRLoad), menuOptionsCallbackLoad, NULL);
+  pd->system->addMenuItem(tr(kTRSave), menuOptionsCallbackSave, NULL);
   #endif
-  pd->system->addMenuItem("menu", menuOptionsCallbackMenu, NULL);
+  pd->system->addMenuItem(tr(kTRMenu), menuOptionsCallbackMenu, NULL);
 }
 
 uint16_t getCactusUnlock() {
@@ -510,3 +510,15 @@ char* ftos(float _value, int16_t _size, char* _dest) {
   snprintf (_dest, _size, "%s%d.%s", tmpSign, tmpInt1, truncStr);
   return _dest;
 }
+
+const char* space(void) { return " "; }
+
+const char* Cspace(void) { return ", "; }
+
+const char* cspace(void) { return ": "; }
+
+const char* c5space(void) { return ":      "; }
+
+const char* lb(void) { return "("; }
+
+const char* rb(void) { return ")"; }

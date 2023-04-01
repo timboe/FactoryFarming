@@ -1,0 +1,771 @@
+Ceinture
+Tapis roulant
+Je 'Splitter
+Tapis roulant 'i' séparateur
+L 'séparateur
+Tapis roulant 'L' Splitter
+T 'séparateur
+Tapis roulant 't' séparateur
+Je vais filtrer
+Filtre de tapis roulant 'I'
+L 'filtre
+Filtre à tapis roulant 'L'
+Tunnel
+Tunnel de courroie de tapis roulant
+Je déborde
+Tapis roulant 'i' débordement
+L 'débordement
+Tapis roulant 'l' débordement
+Usine de carotte
+Graines de carotte
+Plante de tournesol
+Graines de tournesol
+Plante de pomme de terre
+Pomme de terre de graines
+Pommier
+Jeune arbre aux pommes
+Usine de maïs
+Graines de maïs
+Plante d'algues
+Spores d'algues
+Plante de blé
+Graines de blé
+Plante de cactus
+Graines de cactus
+Tilleul
+Jeune chaux
+Fraise
+Graines de fraise
+Bambou
+Jeune arbre en bambou
+Usine de café
+Graines de café
+Cacao
+Graines de cacao
+Ferme de concombre de mer
+Piège à concombre de mer
+Rose
+Graines de rose
+Chemin
+Signe
+Poubelle
+Bien
+Boîte de rangement
+Tampon
+Module de mise à niveau d'usine
+Graisse de tapis roulant
+Dissolvant d'obstruction
+Décharge
+Rotavateur
+Cottage de retraite
+Clôture
+Harvester 7x7
+Révecteur automatique (7x7)
+Pompe à eau
+Carrière de craie
+Mine de sel
+Harvester 9x9
+Révecteur automatique (9x9)
+Extracteur de CO2
+Usine de vitamines
+Usine d'huile végétale
+Usine de croustilles
+Usine d'éthanol
+Usine de cidre dur
+Abattoir
+Usine d'hydrogène
+Usine d'huile hydrogénée
+Usine de chiens de maïs
+Brasserie de bière
+Usine de tequila
+Usine de sirop de maïs à forte fructose
+Usine de gélatine
+Usine de jello
+Usine de jello-shots
+Usine des émulsifiants
+Glaçons
+Batterie de poulet à batterie
+Usine de poudre de protéines
+Chocolaterie
+Usine de tarte à la viande
+Usine de glutamate de monosodium
+Usine de dinner de télévision
+Usine de gâteaux au chocolat
+Usine de poudre de caféine
+Usine de boissons énergisantes
+Usine de jus de rave
+Usine de pilules de perk
+Fabricant d'emballages
+Usine de dessert
+Usine de pack de restauration
+Foo Young Meal Factory
+Fêtard
+Usine de carflumes
+Miracle Powder Factory
+Usine turque de délice
+La boutique
+Dépôt de vente
+Dépôt d'exportation de fret
+Dépôt d'importations de fret
+Dépôt de tracé
+Un rocher suspect
+Carottes
+Carotte
+Craie
+Craie
+Vitamines
+Vitamines
+Patates
+Pomme de terre
+Tournesols
+Tournesol
+Les huiles végétales
+Huile végétale
+Sel
+Sel
+Puces
+Puces
+Pommes
+Pomme
+Eau
+Eau
+Éthanol
+Éthanol
+Cidres durs
+Cidre dur
+Cors
+Maïs
+Algues
+Algue
+Viande
+Viande
+Hydrogène
+Hydrogène
+Huiles H.
+Huile
+Pogo
+Chien de maïs
+Blé
+Blé
+Bières
+Bière
+Cactus
+Cactus
+Tequilas
+Tequila
+Citrons verts
+Chaux
+H.F.C.S.
+H.F.C.S.
+Gélatine
+Gélatine
+Jello
+Jello
+Jello
+Jello-shot
+Des fraises
+Fraise
+Émulsifiant
+Émulsifiant
+Glaces
+Glace
+Œufs
+Œuf
+Poudres de protéines
+Poudre de protéine
+Coco grains
+Coco grain
+Chocolat
+Chocolat
+Tartes à la viande
+Tourte à la viande
+M.S.G.
+M.S.G.
+Téléviseurs
+Canal de télévision
+Gâteaux
+Gâteau
+Grains de café
+Grain de café
+CO2
+CO2
+Caféine
+Caféine
+Boissons énergisantes
+Boisson énergisante
+Jus de rave
+Jus rave
+Pilules de perk
+Pilules de perk
+Bambous
+Bambou
+Emballage
+Emballage
+Desserts
+Dessert
+Kits de restauration
+Kit de restauration
+Foo jeune
+Foo jeune
+Packs de fête
+Pack de fête
+Concombres de mer
+Concombre de mer
+Pur
+Pur
+Poudre miracle
+Poudre miracle
+Des roses
+Rose
+Délice turc
+Délice turc
+Menu principal
+Supprimer la sauvegarde 1
+Supprimer Save 2
+Supprimer la sauvegarde 3
+charger
+sauvegarder
+menu
+Eau
+Humide
+Humide
+Sec
+Sol silencieux
+Terre crayeuse
+Sol tourbillon
+Sol sableux
+Sol argileux
+Terre limoneuse
+Sol
+Sol pavé
+Sol obstrué
+Lac
+Rivière
+Océan
+??? ???????
+Les Prairies
+?? ???????? ???????????
+Le Plateau Caillouteux
+?? ????? ??????????
+Le Creux Marécageux
+?? ??????
+Le Désert
+?????????
+L'estuaire
+??? ???????? ????????
+Les Collines Fertiles
+??? ???????? ?? ?????
+Les Vasières De Marée
+??? ??????? ???????????
+Les Plaines Tranquilles
+Mode de cargaison de ramassage
+Mode d'inspection
+Mode de déconstruction
+Attrape la cargaison à proximité, vide les bâtiments
+Voir les détails sur la tuile actuelle
+Déconstruit tout dans la région
+La boutique
+Dépôt de vente
+Dépôt de parcelles
+Exportation Depot
+Imports Depot
+Crédits
+--- Étape du didacticiel %i/%i ---
+N
+E
+S
+O
+O, E
+N, S
+N, E
+E, S
+S, O
+O, N
+O, N, E
+N, E, S
+E, S, O
+S, O, N
+Le sol obstrué ne peut pas être construit.
+Peut-être pourrez-vous l'effacer plus tard?
+Mode de placement
+Mode végétal
+Mode de construction
+Mode de ramassage
+Inventaire
+Inspecter
+Déconstruction
+Nouvelle récolte!
+Nouveau convoyeur!
+Nouveau moissonneuse!
+Nouvelle usine!
+Nouvel utilitaire!
+Outils
+Outil
+Cultures
+Culture
+Convoyeurs
+Convoyeur
+Récolteurs
+Intervaincu
+Des usines
+Usine
+Services publics
+Utilitaire
+Cargaison
+Cargaison
+Emplacements de l'intrigue
+Emplacements de l'intrigue
+Importation (Nord)
+Importation (Nord)
+Importation (Est)
+Importation (Est)
+Importation (Sud)
+Importation (Sud)
+Importation (Ouest)
+Importation (Ouest)
+ÉCONOMIE
+GÉNÉRATEUR
+CHARGEMENT
+%i: Nouveau jeu
+Démo de chargement
+%i: Continue
+- Démo technologique de l'agriculture industrielle -
+Vous êtes libre de regarder autour de cet exemple d'usine.
+Vous trouverez des installations au niveau technologique 3.
+Le jeu complet monte au niveau technologique 7.
+La construction et l'économie sont désactivées dans la démo.
+- l'achat initial de graines -
+Bienvenue à l'agriculture industrielle! Il y a de l'argent à être
+Fabriqué, et il ne se fait pas! Alors commençons par
+Visiter la boutique avec ⓐ et acheter des graines de carotte
+La boussole (à droite) pointera toujours vers la boutique.
+Déplacez-vous avec le D-Pad, ✛. Zoomer et sortir avec 🎣.
+Tenir ⓑ pour courir. Allez à la boutique et appuyez sur ⓐ. "
+Achetez 10 graines de carotte dans la boutique avec ⓐ.
+Appuyez sur ⓑ pour quitter la boutique.
+- l'objectif suivant -
+Votre objectif actuel est de vendre au moins
+10 carottes. Vous pouvez vérifier quel est votre objectif actuel
+est à tout moment en appuyant sur le bouton du menu.
+Faites cela maintenant.
+Appuyez sur le bouton Menu pour voir votre objectif actuel.
+De là, vous pouvez également enregistrer et charger le jeu, et
+Ouvrez le menu principal avec les paramètres du jeu, etc.
+--
+- les premières cultures -
+Bon, les carottes se développent bien dans le sol limoneux près de
+boutique. Faites attention au sol et à l'eau que chaque plante aime.
+Trouvez un bon endroit à proximité, ouvrez votre inventaire
+Avec ⓐ, sélectionnez les graines et plantez 10 carottes.
+Trouvez une zone voisine de sol limoneux, de préférence humide.
+Appuyez sur ⓐ pour entrer votre inventaire, sélectionnez la carotte
+Graines et appuyez à nouveau ⓐ. Plantez 10 graines de carotte sur
+Porches vides de sol limoneuse, puis appuyez sur ⓑ.
+- la première récolte -
+Super, les cultures prennent normalement le temps de produire des produits,
+Mais accélérons ces plantes de carottes. Appuyez sur ⓐ, choisissez
+Mode de cargaison de ramassage »et récolter 10 carottes cultivées.
+Vous pouvez ramasser n'importe quelle cargaison dans le monde ou dans les bâtiments.
+Allez là où vous avez planté vos graines de carotte.
+Appuyez sur ⓐ pour saisir votre inventaire, sélectionnez 'ramasser
+Mode cargo '. Appuyez ou maintenez ⓐ Lorsque vous bougez, ramassez 10
+carottes cultivées. Utilisez le 🎣 pour modifier la zone de ramassage.
+- la première vente -
+Bien, tu sais ce que nous pouvons faire avec des cargaisons comme celles
+carottes fraîches? Vendez-les à profit! Visiter les ventes
+dépôt (à côté de la boutique) et appuyez sur ⓐ pour accéder au
+menu de vente. Vendez 10 carottes pour continuer.
+Allez au dépôt de vente (à côté de la boutique).
+Appuyez ou maintenez ⓐ pour vendre au moins 10 carottes.
+Modifier le montant vendu à chaque presse de ⓐ par
+tourner le 🎣 ou maintenir ⓑ et appuyer sur ⬆️ ou ⬇️.
+- la première récolte automatisée -
+Doux, mais c'était beaucoup de travail manuel ... allons
+Utilisez plutôt une récolteuse automatique! En acheter un à
+la boutique et la construire là où sont certaines plantes carottes
+Dans son bassin versant de récolte.
+Allez à la boutique, achetez une moissonneuse automatique.
+Appuyez sur ⓐ et choisissez-le dans votre inventaire.
+Placer la moissonneuse de telle sorte qu'il soit situé sur vide
+Les plantes du sol et des carottes se trouvent dans sa plage de récolte.
+- la première ligne de chargement -
+Bon, nous récoltons des carottes. Mais nous devons les obtenir
+au dépôt de vente. Nous avons besoin de ceintures de convoyeur! Acheter
+50 de la boutique et jetez le chemin de déplacer et de vendre
+les carottes. Faites tourner les morceaux de ceinture avec 🎣 ou ⓑ + ✛.
+Allez à la boutique, achetez environ 50 ceintures de convoyeurs.
+Appuyez sur ⓐ et choisissez-les dans votre inventaire.
+Faire une chaîne de ceintures de la moissonneuse automatique à
+ventes. Faites tourner les ceintures avec 🎣 ou maintenez ⓑ et appuyez sur ✛.
+- miner la terre -
+D'ACCORD. Mais toutes les ressources exploitables ne sont pas cultivées.
+Certains sont déterrés ou pompés. Construisons une craie
+carrière ensuite. En acheter un dans la boutique et construire sur
+sol crayeux. Il devrait y en avoir au nord.
+Allez à la boutique, achetez une carrière à la craie.
+Appuyez sur ⓐ et choisissez-le dans votre inventaire.
+Allez vers le nord de la boutique et cherchez un sol crayeux.
+Placer la carrière sur au moins une tuile de sol crayeuse.
+- valeur de fabrication -
+Bon. Nous pouvons enfin mettre en place une chaîne de production complète!
+Achetez une usine de vitamines à la boutique, fournissez-le
+à la fois la craie et les carottes, et transportent les vitamines
+au dépôt de vente pour un profit beaucoup plus important!
+Allez à la boutique, achetez une usine de vitamines.
+Placez-le dans un bon endroit. Utilisez des ceintures de convoyeur pour
+fournissez-le de carottes et de craie. Utilisez plus de ceintures
+Pour transporter les vitamines vers le dépôt de vente.
+- allez de l'avant et consomment -
+Excellent! Vous connaissez maintenant toutes les bases de l'exploitation
+le monde à profit. Alors que votre compte bancaire gonfle,
+Plus de cultures, d'usines et d'autres articles se débloqueront.
+Utilisez-les pour maximiser le profit, maximiser l'efficacité.
+- mais je n'ai pas le sol pour ça! -
+Problème. La plante de cactus que vous venez de déverrouiller veut
+sol sableux, mais il n'y en a pas ici. Temps d'extension!
+Visitez le dépôt Plots (à côté des ventes) et achetez un nouveau
+Terrain à développer.
+Le dépôt de parcelles, exporte le dépôt et
+Les importations du dépôt sont désormais déverrouillées.
+Visitez le dépôt des parcelles à droite des ventes.
+Achetez un nouveau terrain pour agrandir l'usine.
+- un nouvel horizon -
+Bienvenue à votre nouvelle parcelle de terrain! Plus de place pour votre
+Empire de fabrication pour se développer. Au lieu de vendre du fret,
+Vous pouvez également le déplacer entre les parcelles. Utilisez les ceintures pour nourrir
+Cargo dans le dépôt d'exportations dans l'un de vos parcelles.
+Exporter de la cargaison en le déplaçant via les ceintures dans le
+Exportation Depot (à droite du dépôt de tracé) sur
+n'importe quel tracé. Le taux d'exportation de chaque type de cargaison est
+En moyenne au cours des deux minutes précédentes.
+- accéder aux marchandises -
+Maintenant que vous exportez le fret, regardons également les importations.
+Accédez à un autre complot et visitez le dépôt d'importations,
+Vous pouvez importer jusqu'à quatre cargaisons par parcelle.
+Essayez de configurer une importation maintenant.
+Importer de la cargaison dans un tracé différent via les importations
+Dépôt (droit du dépôt d'exportations). N, s, e, w
+Les importations peuvent être choisies individuellement. Vous ne pouvez pas exporter un
+Type de cargaison qui est importé sur le même tracé.
+- importations et exportations et tracés -
+Merveilleux! Continuer à acheter plus de parcelles afin de
+accéder à de nouveaux types de sols et pour étendre l'usine.
+Utilisez les dépôts d'exportation et d'importation pour déplacer la cargaison
+entre les parcelles et continuer à maximiser l'efficacité!
+Nord
+Est
+Sud
+Ouest
+Multiplicateur de vitesse
+Filtre pas encore défini.
+Passez la cargaison pour régler le filtre.
+Filtre
+Transit suivant
+Trémie %i/3
+Dehors
+Ingrédients:
+glycérine
+Bêta
+Carotène
+Soja
+Lécithine
+Calcium
+Carbonate
+Stabilisateurs
+Conservateurs
+Artificiel
+Arômes
+Distillé
+Légume
+Alcool
+Pomme
+Jus
+Coloration
+L'alimentation animale:
+Les hormones
+Stéroïdes
+Processus:
+Électrolyse
+de
+Colorant
+Coucher de soleil
+Orange
+Hydrogéné
+Huile
+Houblon
+Agave
+Haut
+Fructose
+Maïs
+Sirop
+Anticaking
+Agents
+Antibiotiques
+Vertige
+Insecticides
+Gluten
+Sodium
+Monosodium
+Glutamate
+Exigences:
+Solvant
+Titane
+Dioxyde
+Eau de Javel
+Fruit
+Contenu de l'emballage:
+Boîte
+Formaldéhyde
+Amidon
+Temps de Prod.: %ss
+Temps Restant: %ss
+En %i
+Aime
+A
+Je ne peux pas grandir ici!
+Temps de Croissance: %is
+Récolte pour pousser
+Temps Restant: %is
+Dépenser de l'argent pour acheter de nouvelles cultures, convoyeurs,
+Extracteurs, usines et articles de services publics.
+--
+--
+Vendre la cargaison de votre inventaire ou utiliser
+Les convoyeurs automatisent les ventes.
+Recevez de l'argent pour chaque article vendu.
+
+Voir les parcelles de terrain disponibles.
+Achetez de nouvelles parcelles pour agrandir votre usine.
+Déplacez-vous entre vos parcelles possédées.
+--
+Exporter la cargaison pour une utilisation dans d'autres parcelles.
+Les exportations sont en moyenne de plus de 60 s à 120.
+Vous ne pouvez pas exporter de cargaison qui est également
+Importé dans ce tracé.
+Importez du fret des autres parcelles. Vous pouvez sélectionner un
+importation pour chacune des 4 directions cardinales.
+Les importations se produisent toutes les 10 ans, le montant importé
+Cela dépend du nombre total d'importateurs.
+Un grand rocher bloque le sol ici.
+Peut-être que cela deviendra important plus tard?
+--
+--
+La vitesse de déplacement est améliorée sur le chemin.
+Une clôture charmante.
+Votre petit chalet de retraite confortable.
+Placez une cargaison ici pour l'afficher sur le panneau.
+Signer
+Efface définitivement le fret indésirable.
+Déposez la cargaison indésirable ou utilisez des convoyeurs
+Convertit les 8 carreaux environnants en sol limoneux.
+Le retrait du rotavateur reviendra ces carreaux
+à leur type de sol précédent.
+Réduit le temps de production dans n'importe quelle usine
+Immédiatement n, S, E ou W du module.
+1 module: -0,5s
+2 modules: -0,75s
+3 modules: -1s
+4+ modules: pas de bonus supplémentaire
+Crée une zone environnante de sol humide et humide.
+Compartiment %i/3
+Exportation
+Ce Terrain: %s/s
+Tous les Terrains: %s/s
+Importation de
+Importateurs: %i
+Importé: %s/s
+Usine
+Lieu
+Construire
+Inventaire: %i
+Valeur
+Construire
+Se construire sur l'eau
+Semer sur l'eau
+Place dans l'océan
+Ne peut pas être supprimé
+S'appuyer sur les plaines tranquilles
+Déplace la cargaison au nord, au sud, à l'est ou à l'ouest
+Réplade les cargaisons entrantes 2 façons (180 degrés)
+Répartisse les cargaisons entrantes 2 façons (90 degrés)
+Divise les cargaisons entrantes 3 façons
+Débordement utilisé lorsque la sortie principale est bloquée
+Filtre sur la première cargaison pour passer
+Déplace la cargaison sous terre pour 1 tuile
+Plantez pour faire pousser des carottes
+Plante à récolter des tournesols
+Plantez pour cultiver les pommes de terre
+Planter pour faire pousser des pommes
+Planter pour faire pousser du maïs
+Les algues poussent dans les lacs
+Planter pour faire pousser du blé
+Planter pour faire pousser des cactus
+Planter pour faire pousser des limes
+Plantez-vous pour faire pousser des fraises
+Plantez pour faire pousser des grains de coco
+Planter pour faire pousser des grains de café
+Planter pour faire pousser des tiges de bambou
+Place dans l'océan pour les concombres de la mer de la ferme
+Tendez-vous à ces roses à votre retraite.
+La vitesse de déplacement est améliorée sur un chemin
+Affiche une cargaison de votre choix
+La cargaison placée ici sera détruite
+Place pour atténuer le sol environnant
+Stocke jusqu'à 3 types de cargaison différents
+Comme la boîte de stockage, mais aussi les auto-sévères
+Placer à côté des usines, accélère la production
+Améliore la vitesse du convoyeur de x1 à x2
+Efface le sol obstrué, peut ensuite être construit sur
+Remplit l'eau. Peut être construit sur, mais pas planté.
+Transforme les terres à proximité en sol limoneux.
+Un espace relaxant pour profiter de votre richesse amassée.
+Une charmante clôture en bois.
+Recueille la cargaison, peut contenir trois types différents
+Doit être construit sur l'eau. Podets d'eau produits
+Doit être construit sur un sol crayeux. Produit de la craie
+Doit être construit sur un sol tourbillon. Produit du sel
+Recueille la cargaison, peut contenir trois types différents
+Liquéfie le dioxyde de carbone directement de l'air
+Fabrique des pilules de vitamines de bas niveau
+Écraser l'huile végétale des tournesols
+Fabrique des croustilles. Un favori frit!
+Brew & Distill Pure Alcool
+Mélangez un «cidre» dur bon marché
+L'alimentation entre, la «viande» sort
+Divise l'eau et capture l'hydrogène
+Hydrogéne de l'huile pour éviter de se gâter
+Croquant et charnu
+Produit quelque chose qui ressemble à de la bière
+Au moins, il y a un peu d'agave
+Tellement, très, doux ...
+Utilisé pour définir une variété de liquides
+Un favori bancal
+Un mélange intéressant de saveurs
+Empêche les choses de se séparer
+C'est sans produits laitiers! Est-ce une bonne chose?
+Le maïs entre, les œufs sortent
+Masse maximale, tracts minimum
+C'est surtout du sucre ...
+Qu'y a-t-il pour le dîner? Tourte à la viande!
+Rend tout meilleur goût
+Un repas pour un, servi dans un plateau
+Extrait la caféine des grains de café
+Cafeine High & Sugar Rush tout-en-un
+Ce truc devrait probablement être illégal ...
+Vous gardera éveillé beaucoup trop longtemps
+Chocolaté, doux et une durée de conservation infinie
+Gourmand?
+Échec avec des emballages personnalisés
+Kits de restauration emballés, grande balisage
+Gélatineux et déshydratant
+Tout ce dont une bonne fête a besoin
+Trucs de fantaisie
+Qu'est-ce que ça ne peut pas guérir ?! (Quoi que ce soit...)
+Une délicatesse délicieuse
+Vendre
+Tout est
+Déverrouillé!
+Merci d'avoir joué
+L'ÉLEVAGE INDUSTRIEL!
+Visite:
+La boutique
+Pour déverrouiller le suivant:
+Vendre un total de:
+Pour déverrouiller le suivant:
+Vendu jusqu'à présent: %i
+Continuer
+Le tutoriel
+Pour déverrouiller le prochain
+Bâtiment
+Enregistrez avant de sortir!
+Temps de jeu total:
+%ih:%im:%is
+ÉTEINTE
+5m
+10m
+15m
+30m
+--- Paramètres sonores ---
+Musique
+Volume de la musique
+Effets sonores
+trace de pas
+--- Paramètres de jeu ---
+Secouer
+Tutoriel activé
+Animation de convoyeur
+Montrer les contours de la moissonneuse
+Activer la manivelle
+Caméra centrale sur le joueur
+Zoomez automatiquement lors du déménagement
+Temps de sauvegarde automatique
+Ramassage automatique sur déconstruct
+Auto appliquer la graisse de convoyeur
+Afficher les informations de débogage
+--- Quitter le jeu ---
+Enregistrer et sortir sur le titre
+Sortir au titre sans économiser
+--- Capture d'écran ---
+Prendre une capture d'écran de l'intrigue
+--- Contrôles ---
+Inventaire / SELECT / INTERACT: ⓐ
+Retour / Annuler: ⓑ
+Marche: ✛
+Courir: tenir ⓑ + ✛
+Zoomer / out: 🎣 ou tenir ⓐ + ⬇️
+Tourner: 🎣 ou maintenir ⓑ + ⬆️ / ➡️ / ⬇️ / ⬅️
+Redimensionner: 🎣 ou maintenir ⓑ + ⬆️ / ⬇️
+Mode de ramassage rapide: maintenez ⓐ + ⬅️
+Mode d'inspection rapide: maintenez ⓐ + ⬆️
+Mode déconstruit rapide: maintenez ⓐ + ➡️
+--- Crédits ---
+Élevage d'usine par Tim Martin
+-- Musique --
+♬ Dr Tikov: 1985
+♬ BoxCAT Games: B-3
+♬ Eric Skiff: Nous sommes les résistances
+♬ Roccow: Douce satisfaction de soi
+♬ Roccow: WeeklyBeats 2014 # 4
+♬ Soft & Furious: Horizon Fin
+-- Art --
+Kenney: pack 1 bits
+VectorPixelStar: Modèles 1 bits
+Josehzz: cultures agricoles
+SCRACKIO: Ensemble d'agriculture
+Varkalandar: Roches isométriques
+Avec Thelove: Sprites de personnage
+DinosoftLab: Nouveau (Nounproject)
+- polices -
+Chester Jenkins: Cooper Hewitt
+Martin Vacha: Roobert
+Mediengestaltung: Messing Lettern
+Mediengestaltung: Coventry Garden
+-- Effets sonores --
+sfxr.me
+-- Statistiques --
+Récréation:
+Total d'argent gagné:
+La plupart des fonds détenaient:
+Cargo total vendu:
+Cargo total importé:
+Total des bâtiments de cette intrigue:
+Cargo total dans ce complot:
+--
+© Tim Martin 2022
+L'agriculture industrielle est un MIT
+Projet open source agréé
+github.com/timboe/factoryfarming
+--
+Merci d'avoir joué!
+Et pour votre soutien à Niche
+Indy Game Dev Projects :)
+--
+Continuez à maximiser le profit,
+Maximiser l'efficacité.
+Acheter
+Prix
+Emplacement du terrain
+Sols
+Usine
+Agriculture
+"L'élevage industriel"

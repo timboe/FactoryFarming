@@ -301,91 +301,117 @@ int16_t distanceFromRetirement() {
 void drawUIInspectUtility(struct Building_t* _building) {
   const enum kUtilitySubType ust = _building->m_subType.utility;
 
-  static char text[128];
+  static char text[256];
   uint8_t y = 1;
 
   if (ust == kBuffferBox) {
-    snprintf(text, 128, "%s (%s)", 
-      toStringBuilding(_building->m_type, _building->m_subType, false), 
-      getRotationAsString(kUICatConv, kBelt, _building->m_dir) );
+    strcpy(text, toStringBuilding(_building->m_type, _building->m_subType, false));
+    strcat(text, space());
+    strcat(text, lb());
+    strcat(text, getRotationAsString(kUICatConv, kBelt, _building->m_dir) );
+    strcat(text, rb());
+
+    //snprintf(text, 256, "%s (%s)", 
+    //  toStringBuilding(_building->m_type, _building->m_subType, false), 
+    //  getRotationAsString(kUICatConv, kBelt, _building->m_dir) );
   } else {
-    snprintf(text, 128, "%s", toStringBuilding(_building->m_type, _building->m_subType, false));
+
+    strcpy(text, toStringBuilding(_building->m_type, _building->m_subType, false));
+
+    //snprintf(text, 256, "%s", toStringBuilding(_building->m_type, _building->m_subType, false));
   }
-  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   if (ust == kPath) {
 
-    snprintf(text, 128, "Movement speed is enhanced on the path.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRUtilityPath));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   } else if (ust == kFence) {
 
-    snprintf(text, 128, "A charming fence.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRUtilityFence));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   } else if (ust == kRetirement) {
 
-    snprintf(text, 128, "Your cozy little retirement cottage.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRUtilityRetirement));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   
   } else if (ust == kSign) {
 
-    snprintf(text, 128, "Place a cargo here to display it on the sign.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRUtilitySign0));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
     if (_building->m_mode.mode16) {
-      snprintf(text, 128, "Sign for: %s", toStringCargoByType( _building->m_mode.mode16, /*plural=*/true ) );
-      pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+      strcpy(text, tr(kTRUtilitySign1));
+      strcat(text, cspace());
+      strcat(text, toStringCargoByType( _building->m_mode.mode16, /*plural=*/true ));
+      //snprintf(text, 256, tr(kTRUtilitySign1), toStringCargoByType( _building->m_mode.mode16, /*plural=*/true ) );
+      pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
     }
 
   } else if (ust == kBin) {
 
-    snprintf(text, 128, "Permanently erases unwanted cargo.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "Drop the unwanted cargo, or use conveyors");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRUtilityBin0));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRUtilityBin1));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   } else if (ust == kRotavator) {
 
-    snprintf(text, 128, "Converts the 8 surrounding tiles to loamy soil.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "Removing the rotavator will revert these tiles");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "to their previous soil type.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRUtilityRotavator0));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRUtilityRotavator1));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRUtilityRotavator2));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   } else if (ust == kFactoryUpgrade) {
 
-    snprintf(text, 128, "Reduces production time in any factory");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "immediately N, S, E or W of the module.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "1 Module: -0.5s");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "2 Modules: -0.75s");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*10, TUT_Y_SPACING*(y) - TUT_Y_SHFT);
-    snprintf(text, 128, "3 Modules: -1s");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "4+ modules: No extra bonus");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*10, TUT_Y_SPACING*(y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRUtilityFactoryUpgrade0));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRUtilityFactoryUpgrade1));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRUtilityFactoryUpgrade2));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRUtilityFactoryUpgrade3));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*10, TUT_Y_SPACING*(y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRUtilityFactoryUpgrade4));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRUtilityFactoryUpgrade5));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*10, TUT_Y_SPACING*(y) - TUT_Y_SHFT);
 
   } else if (ust == kWell) {
 
-    snprintf(text, 128, "Creates a surrounding area of wet and moist soil.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRUtilityWell));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   } else if (ust == kBuffferBox || ust == kStorageBox) {
 
     for (int32_t compartment = 0; compartment < 3; ++compartment) {
       if (!_building->m_stored[compartment]) continue;
 
-      snprintf(text, 128, "Compartment %i/3:       %s (%i)", 
-        (int)compartment+1, 
-        toStringCargoByType( _building->m_stored[(MAX_STORE/2) + compartment], /*plural=*/(_building->m_stored[compartment] != 1) ), 
-        _building->m_stored[compartment]);
-      pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+      static char num[16] = "";
+      snprintf(num, 16, "%i", _building->m_stored[compartment]);
+
+      snprintf(text, 256, tr(kTRUtilityStorage), (int)compartment+1);
+      strcat(text, c5space());
+      strcat(text, toStringCargoByType( _building->m_stored[(MAX_STORE/2) + compartment], /*plural=*/(_building->m_stored[compartment] != 1)));
+      strcat(text, space());
+      strcat(text, lb());
+      strcat(text, num);
+      strcat(text, rb());
+      //snprintf(text, 256, tr(kTRUtilityStorage), 
+      //  (int)compartment+1, 
+      //  toStringCargoByType( _building->m_stored[(MAX_STORE/2) + compartment], /*plural=*/(_building->m_stored[compartment] != 1) ), 
+      //  _building->m_stored[compartment]);
+
+      pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
       pd->graphics->setDrawMode(kDrawModeCopy);
-      pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ _building->m_stored[(MAX_STORE/2) + compartment] ].UIIcon, 1), TILE_PIX*10, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+      pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ _building->m_stored[(MAX_STORE/2) + compartment] ].UIIcon, 1),
+        TILE_PIX*2 + trLen(kTRUtilityStorage),
+        TUT_Y_SPACING*y - TUT_Y_SHFT,
+        kBitmapUnflipped);
       pd->graphics->setDrawMode(kDrawModeFillBlack);
     }
 

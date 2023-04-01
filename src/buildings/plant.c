@@ -322,10 +322,13 @@ void drawUIInspectPlant(struct Building_t* _building) {
 
   const enum kPlantSubType pst = _building->m_subType.plant;
 
-  static char text[128];
+  static char text[256];
   uint8_t y = 1;
-  snprintf(text, 128, "%s", toStringBuilding(_building->m_type, _building->m_subType, true));
-  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
+  strcpy(text, toStringBuilding(_building->m_type, _building->m_subType, false));
+  //snprintf(text, 256, "%s", toStringBuilding(_building->m_type, _building->m_subType, true));
+  
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   const struct Tile_t* t = getTile_fromLocation( _building->m_location );
   const int8_t gb = getGroundBonus( PDesc[pst].soil, (enum kGroundType) t->m_groundType );
@@ -334,32 +337,48 @@ void drawUIInspectPlant(struct Building_t* _building) {
 
   const bool isWater = isWaterTile(_building->m_location->m_x, _building->m_location->m_y);
 
-  snprintf(text, 128, "Likes: %s", toStringSoil( PDesc[pst].soil ) );
-  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  strcpy(text, tr(kTRPlantLikes));
+  strcat(text, cspace());
+  strcat(text, toStringSoil( PDesc[pst].soil ));
+  //snprintf(text, 256, tr(kTRPlantLikesSoil), toStringSoil( PDesc[pst].soil ) );
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
-  snprintf(text, 128, "Has: %s", toStringSoil( (enum kGroundType) t->m_groundType) ); 
-  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
+  strcpy(text, tr(kTRPlantHas));
+  strcat(text, cspace());
+  strcat(text, toStringSoil( (enum kGroundType) t->m_groundType));
+  //snprintf(text, 256, tr(kTRPlantHasSoil), toStringSoil( (enum kGroundType) t->m_groundType) ); 
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
 
-  snprintf(text, 128, "Likes: %s %s", toStringWetness( PDesc[pst].wetness ), (isWater ? " " : "Soil") ); 
-  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  strcpy(text, tr(kTRPlantLikes));
+  strcat(text, cspace());
+  strcat(text, toStringWetness( PDesc[pst].wetness ));
+  strcat(text, space());
+  strcat(text, (isWater ? " " : tr(kTRSoil)));
+  //snprintf(text, 256, tr(kTRPlantLikesWater), toStringWetness( PDesc[pst].wetness ), (isWater ? " " : "Soil") ); 
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
-  snprintf(text, 128, "Has: %s %s", toStringWetness( getWetness(t->m_wetness) ), (isWater ? " " : "Soil") ); 
-  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
+  strcpy(text, tr(kTRPlantHas));
+  strcat(text, cspace());
+  strcat(text, toStringWetness( getWetness(t->m_wetness) ));
+  strcat(text, space());
+  strcat(text, (isWater ? " " : tr(kTRSoil)));
+  //snprintf(text, 256, tr(kTRPlantHasWater), toStringWetness( getWetness(t->m_wetness) ), (isWater ? " " : "Soil") ); 
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
 
   if (_building->m_progress > INT16_MAX/2) {
-    snprintf(text, 128, "Cannot Grow Here"); 
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, " "); 
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRPlantCannotGrow)); 
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, " "); 
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   } else {
-    snprintf(text, 128, "Grow Time: %is", growTime / TICKS_PER_SEC); 
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, tr(kTRPlantGrowTime), growTime / TICKS_PER_SEC); 
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
     if (_building->m_location->m_cargo != NULL) {
-      snprintf(text, 128, "Harvest to grow"); 
+      snprintf(text, 256, "%s", tr(kTRPlantHarvest)); 
     } else {
-      snprintf(text, 128, "Time Remaining: %is", _building->m_progress / TICKS_PER_SEC); 
+      snprintf(text, 256, tr(kTRPlantTimeLeft), _building->m_progress / TICKS_PER_SEC); 
     }
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   }
 
   pd->graphics->setDrawMode(kDrawModeCopy);

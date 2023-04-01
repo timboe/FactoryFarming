@@ -553,38 +553,57 @@ void buildingSetupConveyor(struct Building_t* _building) {
 
 const char* getTransitText(int8_t _d) {
   switch (_d) {
-    case N: return "North";
-    case E: return "East";
-    case S: return "South";
-    case W: return "West";
+    case N: return tr(kTRConvTransitN);
+    case E: return tr(kTRConvTransitE);
+    case S: return tr(kTRConvTransitS);
+    case W: return tr(kTRConvTransitW);
   }
   return "????";
 }
 
 void drawUIInspectConveyor(struct Building_t* _building) {
-  static char text[128];
+  static char text[256];
   uint8_t y = 1;
-  snprintf(text, 128, "%s (%s)", 
-    toStringBuilding(_building->m_type, _building->m_subType, false), 
-    getRotationAsString(kUICatConv, _building->m_subType.conveyor, _building->m_dir) );
-  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  strcpy(text, toStringBuilding(_building->m_type, _building->m_subType, false));
+  strcat(text, space());
+  strcat(text, lb());
+  strcat(text, getRotationAsString(kUICatConv, _building->m_subType.conveyor, _building->m_dir) );
+  strcat(text, rb());
 
-  snprintf(text, 128, "Speed Multiplier: %s", _building->m_stored[0] == 1 ? "x1" : "x2");
-  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  //snprintf(text, 256, "%s (%s)", 
+  //  toStringBuilding(_building->m_type, _building->m_subType, false), 
+  //  getRotationAsString(kUICatConv, _building->m_subType.conveyor, _building->m_dir) );
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
+  strcpy(text, tr(kTRConvSpeed));
+  strcat(text, cspace());
+  strcat(text, _building->m_stored[0] == 1 ? "x1" : "x2");
+  //snprintf(text, 128, tr(kTRConvSpeed), _building->m_stored[0] == 1 ? "x1" : "x2");
+
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   if (_building->m_subType.conveyor >= kFilterL) {
     if (_building->m_mode.mode16 == kNoCargo) {
-      snprintf(text, 128, "Filter not yet set.");
-      pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-      snprintf(text, 128, "Pass cargo through to set the filter.");
-      pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+      snprintf(text, 256, "%s", tr(kTRConvNoFilter0));
+      pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+      snprintf(text, 256, "%s", tr(kTRConvNoFilter1));
+      pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
     } else {
-      snprintf(text, 128, "Filters On:      %s", toStringCargoByType(_building->m_mode.mode16, /*plural=*/true));
-      pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
+      strcpy(text, tr(kTRConvFilter));
+      strcat(text, c5space());
+      strcat(text, toStringCargoByType(_building->m_mode.mode16, /*plural=*/true));
+      //snprintf(text, 256, tr(kTRConvFilter), toStringCargoByType(_building->m_mode.mode16, /*plural=*/true));
+      pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
       pd->graphics->setDrawMode(kDrawModeCopy);
-      pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[ _building->m_mode.mode16 ].UIIcon, 1), TILE_PIX*6 + 4, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+      pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[ _building->m_mode.mode16 ].UIIcon, 1), TILE_PIX*2 + trLen(kTRConvFilter), TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
     }
   } else {
-    snprintf(text, 128, "Next Transit: %s", getTransitText( getConveyorDirection(_building->m_subType.conveyor, _building->m_dir, _building->m_mode.mode16) ));
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    strcpy(text, tr(kTRConvNextTransit));
+    strcat(text, cspace());
+    strcat(text, getTransitText( getConveyorDirection(_building->m_subType.conveyor, _building->m_dir, _building->m_mode.mode16) ));
+    //snprintf(text, 256, 
+    //  tr(kTRConvNextTransit),
+    //  getTransitText( getConveyorDirection(_building->m_subType.conveyor, _building->m_dir, _building->m_mode.mode16) ));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   }
 }

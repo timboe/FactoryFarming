@@ -609,69 +609,79 @@ void resetExportAndSales() {
 void drawUIInspectSpecial(struct Building_t* _building) {
   const enum kSpecialSubType sst = _building->m_subType.special;
 
-  static char text[128];
+  static char text[256];
   uint8_t y = 1;
-  snprintf(text, 128, "%s", toStringBuilding(_building->m_type, _building->m_subType, false));
-  pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+
+  strcpy(text, toStringBuilding(_building->m_type, _building->m_subType, false));
+  //snprintf(text, 256, "%s", toStringBuilding(_building->m_type, _building->m_subType, false));
+
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   if (sst == kShop) {
 
-    snprintf(text, 128, "Spend money to buy new Crops, Conveyors,");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "Extractors, Factories, and Utility items.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialShop0));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialShop1));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialShop2));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialShop3));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   } else if (sst == kSellBox) {
 
-    snprintf(text, 128, "Sell Cargo from your inventory, or use");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "Conveyors to automate the sales.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "Receive money for every sold item.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialSales0));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialSales1));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialSales2));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialSales3));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   } else if (sst == kWarp && _building->m_dir == SN) {
 
-    snprintf(text, 128, "View available plots of land.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "Buy new plots to expand your factory.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "Move between your owned plots.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialWarp0));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialWarp1));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialWarp2));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialWarp3));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
     
   } else if (sst == kExportBox && _building->m_dir == SN) {
 
-    snprintf(text, 128, "Export Cargo for use in other plots.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "Exports are averaged over 60s - 120s.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "You cannot Export any Cargo which is also being");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "Imported into this plot.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialExport0));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialExport1));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialExport2));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialExport3));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   } else if (sst == kImportBox && _building->m_dir == SN) {
 
-    snprintf(text, 128, "Import Cargo from other plots. You can select an");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "import for each of the 4 cardinal directions.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "Imports occur every 10s, the amount imported");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "depends on the total number of importers.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialImport0));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialImport1));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialImport2));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialImport3));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
 
   } else {
 
-    snprintf(text, 128, "A large boulder blocks the ground here.");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, "Maybe it will become important later on?");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, " ");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    snprintf(text, 128, " ");
-    pd->graphics->drawText(text, 128, kASCIIEncoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-
+    snprintf(text, 256, "%s", tr(kTRSpecialRock0));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialRock1));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialRock2));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    snprintf(text, 256, "%s", tr(kTRSpecialRock3));
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
   }
 
 }
