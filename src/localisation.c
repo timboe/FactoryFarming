@@ -5,18 +5,15 @@
 // 128 kb buffer to hold game strings, should be plenty
 #define BUFFER_LENGTH (1024 * 128)
 
-#define TEMP_BUFFER 128
+#define TEMP_BUFFER 256
 
 char* m_strings;
 
-char* m_tempBuffer0;
-char* m_tempBuffer1;
-char* m_tempBuffer2;
-char* m_tempBuffer3;
+char* m_tempBuffer;
 
 enum kLanguage m_language = kEN;
 
-size_t m_offsets[kNTR];
+uint16_t m_offsets[kNTR + 1]; // +1 due to end of last string
 
 const char* getLangFileStr(const enum kLanguage _l);
 
@@ -49,22 +46,13 @@ void modLanguage(const bool _forward) {
 }
 
 const char* tr(const enum kTR _tr) {
-  char* tb = NULL;
-  static size_t c = 0;
-  //pd->system->logToConsole("use buf %i", c);
-  switch (c) {
-    case 0: tb = m_tempBuffer0;
-    case 1: tb = m_tempBuffer1;
-    case 2: tb = m_tempBuffer2;
-    case 3: tb = m_tempBuffer3;
-  }
-  memset(tb, 0, TEMP_BUFFER);
+  memset(m_tempBuffer, 0, TEMP_BUFFER);
   const size_t start = m_offsets[_tr];
   const size_t stop = m_offsets[_tr + 1];
   const size_t bytes = stop - start - 1; // -1 to avoid the new line character
-  memcpy(tb, &m_strings[start], bytes);
-  c = (c + 1) % 4;
-  return tb;
+  //if (_tr == kTRFactoryFarming) pd->system->logToConsole("-> REQ FF: s-1:%i s:%i s+1:%i b:%i", m_offsets[_tr-1], m_offsets[_tr], m_offsets[_tr+1], bytes);
+  memcpy(m_tempBuffer, &m_strings[start], bytes);
+  return m_tempBuffer;
 }
 
 const char* getLangFileStr(const enum kLanguage _l) {
@@ -78,10 +66,7 @@ const char* getLangFileStr(const enum kLanguage _l) {
 
 void initLocalisation() {
   m_strings = pd->system->realloc(NULL, BUFFER_LENGTH);
-  m_tempBuffer0 = pd->system->realloc(NULL, 128);
-  m_tempBuffer1 = pd->system->realloc(NULL, 128);
-  m_tempBuffer2 = pd->system->realloc(NULL, 128);
-  m_tempBuffer3 = pd->system->realloc(NULL, 128);
+  m_tempBuffer = pd->system->realloc(NULL, TEMP_BUFFER);
   #ifdef DEV
   pd->system->logToConsole("malloc: for localisation %i kb", BUFFER_LENGTH/1024);
   #endif
@@ -90,11 +75,12 @@ void initLocalisation() {
 
 void resetLocalisation(const enum kLanguage _l) {
   memset(m_strings, 0, BUFFER_LENGTH);
-  memset(m_offsets, 0, kNTR * sizeof(size_t));
+  memset(m_offsets, 0, (kNTR + 1) * sizeof(uint16_t));
   SDFile* f = pd->file->open(getLangFileStr(_l), kFileRead);
   const size_t bytes = pd->file->read(f, (void*)m_strings, BUFFER_LENGTH);
   pd->file->close(f);
   f = NULL;
+
 
   // Hunt for new line characters
   size_t word = 1; // word 0 starts at index 0
@@ -103,6 +89,10 @@ void resetLocalisation(const enum kLanguage _l) {
   	  m_offsets[word++] = c+1;
   	} 
   }
+
+  #ifdef DEV
+  pd->system->logToConsole("resetLocalisation: read %i kb, %i words (expecting %i)", bytes/1024, word, kNTR);
+  #endif
 
   updateLangUI();
 

@@ -351,7 +351,7 @@ Do this now.
 Press the Menu button to see your current objective.
 From here you can also save and load the game, and
 open the main menu with game settings etc.
---
+     
 -- The First Crops --
 Good, carrots will grow well in the silty soil near to the
 shop. Pay attention to the soil & water each plant likes.
@@ -528,16 +528,16 @@ Harvest to grow
 Time Remaining: %is
 Spend money to buy new Crops, Conveyors,
 Extractors, Factories, and Utility items.
---
---
+     
+     
 Sell Cargo from your inventory, or use
 Conveyors to automate the sales.
 Receive money for every sold item.
-
+     
 View available plots of land.
 Buy new plots to expand your factory.
 Move between your owned plots.
---
+     
 Export Cargo for use in other plots.
 Exports are averaged over 60s - 120s.
 You cannot Export any Cargo which is also being
@@ -548,8 +548,8 @@ Imports occur every 10s, the amount imported
 depends on the total number of importers.
 A large boulder blocks the ground here.
 Maybe it will become important later on?
---
---
+     
+     
 Movement speed is enhanced on the path.
 A charming fence.
 Your cozy little retirement cottage.
@@ -769,3 +769,4 @@ Soils
 Factory
 Farming
 "Factory Farming"
+--

@@ -25,12 +25,16 @@ void setPrices() {
     CargoDesc[ PDesc[i].out ].price = CargoDesc[ PDesc[i-skip].out ].price * CargoDesc[ PDesc[i].out ].multi;
 
     #ifdef DEV
+    char textA[64] = " ";
+    char textB[64] = " ";
+    strcpy(textA, toStringBuilding(kPlant, (union kSubType) {.plant = i}, false) );
+    strcpy(textB, toStringCargoByType(PDesc[i].out, false) );
     pd->system->logToConsole("Plant: %s will cost %i * %.2f = %i, its output %s will cost %i * %.2f = %i",
-      toStringBuilding(kPlant, (union kSubType) {.plant = i}, false),
+      textA,
       PDesc[i-skip].price,
       (double) PDesc[i].multi,
       PDesc[i].price,
-      toStringCargoByType(PDesc[i].out, false),
+      textB,
       CargoDesc[ PDesc[i-skip].out ].price,
       (double) CargoDesc[ PDesc[i].out ].multi,
       CargoDesc[ PDesc[i].out ].price);
@@ -72,20 +76,26 @@ void setPrices() {
       }
     }
 
+    char textA[64] = " ";
+    char textB[64] = " ";
+    char textC[64] = " ";
+    strcpy(textA, toStringBuilding(kFactory, (union kSubType) {.factory = i}, false) );
+    strcpy(textB, toStringCargoByType(FDesc[i].out, false) );
+    strcpy(textC, toStringCargoByType(unlockedWith, false) );
     pd->system->logToConsole("Factory: %s will cost %i * %.2f = %i, its output %s will cost %i * %.2f = %i. "
       "Need to sell %i of %s to unlock, and to sell %.2f at %i each to afford",
-      toStringBuilding(kFactory, (union kSubType) {.factory = i}, false),
+      textA,
       FDesc[i-skip].price,
       (double) FDesc[i].multi,
       FDesc[i].price,
       //
-      toStringCargoByType(FDesc[i].out, false),
+      textB,
       inputsPrice,
       (double) CargoDesc[ FDesc[i].out ].multi,
       CargoDesc[ FDesc[i].out ].price,
       //
       unlockAmount,
-      toStringCargoByType(unlockedWith, false),
+      textC,
       (double) FDesc[i].price / CargoDesc[ unlockedWith ].price,
       CargoDesc[ unlockedWith ].price
     );

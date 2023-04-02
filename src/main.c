@@ -47,9 +47,9 @@ static void deinit(void) {
 int eventHandler(PlaydateAPI* playdate, PDSystemEvent event, uint32_t arg) {
   switch (event) {
     case kEventInit:;
-      #ifdef DEV
-      playdate->system->logToConsole("EH: init");
-      #endif
+      //#ifdef DEV
+      playdate->system->logToConsole("EH: init %s", VERSION);
+      //#endif
       setPDPtr(playdate);
       init();
       playdate->display->setRefreshRate(TICK_FREQUENCY);

@@ -16,7 +16,7 @@ Je déborde
 Tapis roulant 'i' débordement
 L 'débordement
 Tapis roulant 'l' débordement
-Usine de carotte
+Plante de carotte
 Graines de carotte
 Plante de tournesol
 Graines de tournesol
@@ -90,7 +90,7 @@ Chocolaterie
 Usine de tarte à la viande
 Usine de glutamate de monosodium
 Usine de dinner de télévision
-Usine de gâteaux au chocolat
+Usine de gâteau au chocolat
 Usine de poudre de caféine
 Usine de boissons énergisantes
 Usine de jus de rave
@@ -205,8 +205,8 @@ Desserts
 Dessert
 Kits de restauration
 Kit de restauration
-Foo jeune
-Foo jeune
+Foo Young
+Foo Young
 Packs de fête
 Pack de fête
 Concombres de mer
@@ -220,14 +220,14 @@ Rose
 Délice turc
 Délice turc
 Menu principal
-Supprimer la sauvegarde 1
-Supprimer Save 2
-Supprimer la sauvegarde 3
+effacer la sauveg. 1
+effacer la sauveg. 2
+effacer la sauveg. 3
 charger
 sauvegarder
 menu
 Eau
-Humide
+Détrempé
 Humide
 Sec
 Sol silencieux
@@ -270,7 +270,7 @@ Dépôt de parcelles
 Exportation Depot
 Imports Depot
 Crédits
---- Étape du didacticiel %i/%i ---
+--- Étape Du Didacticiel %i/%i ---
 N
 E
 S
@@ -327,9 +327,9 @@ Importation (Ouest)
 GÉNÉRATEUR
 CHARGEMENT
 %i: Nouveau jeu
-Démo de chargement
+Charger la Démo
 %i: Continue
-- Démo technologique de l'agriculture industrielle -
+- Démo Technologique de 'Usine Agriculture' -
 Vous êtes libre de regarder autour de cet exemple d'usine.
 Vous trouverez des installations au niveau technologique 3.
 Le jeu complet monte au niveau technologique 7.
@@ -351,7 +351,7 @@ Faites cela maintenant.
 Appuyez sur le bouton Menu pour voir votre objectif actuel.
 De là, vous pouvez également enregistrer et charger le jeu, et
 Ouvrez le menu principal avec les paramètres du jeu, etc.
---
+     
 - les premières cultures -
 Bon, les carottes se développent bien dans le sol limoneux près de
 boutique. Faites attention au sol et à l'eau que chaque plante aime.
@@ -522,22 +522,22 @@ Temps Restant: %ss
 En %i
 Aime
 A
-Je ne peux pas grandir ici!
+Ne peut pas grandir ici!
 Temps de Croissance: %is
 Récolte pour pousser
 Temps Restant: %is
 Dépenser de l'argent pour acheter de nouvelles cultures, convoyeurs,
 Extracteurs, usines et articles de services publics.
---
---
+     
+     
 Vendre la cargaison de votre inventaire ou utiliser
 Les convoyeurs automatisent les ventes.
 Recevez de l'argent pour chaque article vendu.
-
+     
 Voir les parcelles de terrain disponibles.
 Achetez de nouvelles parcelles pour agrandir votre usine.
 Déplacez-vous entre vos parcelles possédées.
---
+     
 Exporter la cargaison pour une utilisation dans d'autres parcelles.
 Les exportations sont en moyenne de plus de 60 s à 120.
 Vous ne pouvez pas exporter de cargaison qui est également
@@ -548,8 +548,8 @@ Les importations se produisent toutes les 10 ans, le montant importé
 Cela dépend du nombre total d'importateurs.
 Un grand rocher bloque le sol ici.
 Peut-être que cela deviendra important plus tard?
---
---
+     
+     
 La vitesse de déplacement est améliorée sur le chemin.
 Une clôture charmante.
 Votre petit chalet de retraite confortable.
@@ -666,7 +666,7 @@ Vendre
 Tout est
 Déverrouillé!
 Merci d'avoir joué
-L'ÉLEVAGE INDUSTRIEL!
+USINE AGRICULTURE'!
 Visite:
 La boutique
 Pour déverrouiller le suivant:
@@ -708,7 +708,7 @@ Sortir au titre sans économiser
 --- Capture d'écran ---
 Prendre une capture d'écran de l'intrigue
 --- Contrôles ---
-Inventaire / SELECT / INTERACT: ⓐ
+Inventaire / sélection / interaction: ⓐ
 Retour / Annuler: ⓑ
 Marche: ✛
 Courir: tenir ⓑ + ✛
@@ -769,3 +769,4 @@ Sols
 Usine
 Agriculture
 "L'élevage industriel"
+--

@@ -1,5 +1,5 @@
 
-#define DEV
+//#define DEV
 
 //#define SSHOT_ON_AUTOSAVE
 
@@ -224,7 +224,7 @@
 
 #define SSHOT_PIXELS_PER_FRAME 16384
 
-#define VERSION "v1.3"
+#define VERSION "v1.3b"
 
 #define TICK_OFFSET_LARGETICK 5
 #define TICK_OFFSET_SPRITELIST 9
