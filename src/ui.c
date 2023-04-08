@@ -65,9 +65,11 @@ LCDBitmap* m_UIBitmapTitleCont[3] = {NULL};
 LCDSprite* m_UISpriteTitleFac = NULL;
 LCDSprite* m_UISpriteTitleFarm = NULL;
 LCDSprite* m_UISpriteTitleFacFarm = NULL;
+LCDSprite* m_UISpriteTitleLang = NULL;
 LCDBitmap* m_UIBitmapTitleFac = NULL;
 LCDBitmap* m_UIBitmapTitleFarm = NULL;
 LCDBitmap* m_UIBitmapTitleFacFarm = NULL;
+LCDBitmap* m_UIBitmapTitleLang = NULL;
 
 LCDSprite* m_UISpriteTop = NULL;
 LCDBitmap* m_UIBitmapTop = NULL;
@@ -220,7 +222,7 @@ void addSaveLoadProgressSprite(int32_t _doneX, int32_t _ofY) {
   pd->graphics->clearBitmap(m_UIBitmapSaveLoadProgress, kColorClear);
   pd->graphics->pushContext(m_UIBitmapSaveLoadProgress);
   pd->graphics->setDrawMode(kDrawModeFillWhite);
-  pd->graphics->drawText(text, 128, kUTF8Encoding, (TILE_PIX*6-width)/2, 0);
+  pd->graphics->drawText(text, 128, kUTF8Encoding, (TILE_PIX*6-width)/2, tY());
   pd->graphics->popContext();
   pd->sprite->addSprite(m_UISpriteSaveLoadProgress);
 }
@@ -363,7 +365,7 @@ void updateUITitles(int _fc) {
   const int32_t o = round( TILE_PIX/2 * fabs( sin( 0.1f * _fc ) ) );
   pd->sprite->moveTo(m_UISpriteSplash, DEVICE_PIX_X/2, DEVICE_PIX_Y/2 - o - TILE_PIX );
   pd->sprite->moveTo(m_UISpriteTitleFac, DEVICE_PIX_X/4, TILE_PIX*4 - o);
-  pd->sprite->moveTo(m_UISpriteTitleFarm, (3*DEVICE_PIX_X)/4, TILE_PIX*10  - o);
+  pd->sprite->moveTo(m_UISpriteTitleFarm, (3*DEVICE_PIX_X)/4 - TILE_PIX*2, TILE_PIX*10  - o);
 
   pd->sprite->setVisible(m_UISpriteTitleSelected, 0);
   for (int32_t i = 0; i < 3; ++i) {
@@ -373,6 +375,7 @@ void updateUITitles(int _fc) {
   return;
   #endif
 
+  pd->sprite->setVisible(m_UISpriteTitleLang, !m_UITitleOffset);
   pd->sprite->setVisible(m_UISpriteTitleSelected, _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
   pd->sprite->moveTo(m_UISpriteTitleSelected, 
     m_UITitleSelected*TILE_PIX*7 + (7*TILE_PIX)/2 + (m_UITitleSelected+1)*TILE_PIX, 
@@ -387,7 +390,7 @@ void updateUITitles(int _fc) {
       DEVICE_PIX_X/4,
       TILE_PIX*4 + 8 - (UI_TITLE_OFFSET - m_UITitleOffset));
     pd->sprite->moveTo(m_UISpriteTitleFarm,
-      (3*DEVICE_PIX_X)/4,
+      (3*DEVICE_PIX_X)/4 - TILE_PIX*2,
       TILE_PIX*10 + 8 - (UI_TITLE_OFFSET - m_UITitleOffset));
     pd->sprite->moveTo(m_UISpriteTitleFacFarm,
       DEVICE_PIX_X/2,
@@ -409,7 +412,7 @@ void updateUITitles(int _fc) {
       DEVICE_PIX_X/4,
       TILE_PIX*4 - offset);
     pd->sprite->moveTo(m_UISpriteTitleFarm,
-      (3*DEVICE_PIX_X)/4,
+      (3*DEVICE_PIX_X)/4 - TILE_PIX*2,
       TILE_PIX*10 - offset);
   }
 }
@@ -653,6 +656,7 @@ void addUIToSpriteList() {
     pd->sprite->addSprite(m_UISpriteTitleFac);
     pd->sprite->addSprite(m_UISpriteTitleFarm);
     pd->sprite->addSprite(m_UISpriteTitleFacFarm);
+    pd->sprite->addSprite(m_UISpriteTitleLang);
     #ifdef DEMO
     pd->sprite->addSprite(m_UISpriteDemo);
     #endif
@@ -760,12 +764,12 @@ void showTutorialMsg(enum kUITutorialStage _stage) {
   #endif
   snprintf(text, 128, tr(kTRTutStage), tutN, ofN);
   int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, 128, kUTF8Encoding, 0);
-  pd->graphics->drawText(text, 128, kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 128, kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
   for (int32_t l = 0; l < 5; ++l) {
     const char* txt = toStringTutorial(_stage, l);
     width = pd->graphics->getTextWidth(getRoobert10(), txt, strlen(txt), kUTF8Encoding, 0);
-    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
   }
   pd->graphics->popContext();
 
@@ -778,12 +782,12 @@ void showTutorialMsg(enum kUITutorialStage _stage) {
     // We have the right hand border here, so offset to the left a little more
     width += TILE_PIX/2;
     pd->graphics->setDrawMode(kDrawModeFillWhite);
-    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2 + 1, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
-    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - TUT_Y_SHFT + 1);
-    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2 - 1, TUT_Y_SPACING*(y) - TUT_Y_SHFT);
-    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - TUT_Y_SHFT - 1);
+    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2 + 1, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
+    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - TUT_Y_SHFT + 1 +tY());
+    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2 - 1, TUT_Y_SPACING*(y) - TUT_Y_SHFT +tY());
+    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - TUT_Y_SHFT - 1 +tY());
     pd->graphics->setDrawMode(kDrawModeCopy);
-    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - TUT_Y_SHFT);
+    pd->graphics->drawText(txt, strlen(txt), kUTF8Encoding, (TUTORIAL_WIDTH-width)/2, TUT_Y_SPACING*(y) - TUT_Y_SHFT +tY());
   }
   pd->graphics->popContext();
   pd->graphics->setDrawMode(kDrawModeCopy);
@@ -905,14 +909,14 @@ void drawUIInspect() {
 
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   setRoobert10();
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
 
   if (getTile_fromLocation(loc)->m_groundType == kObstructedGround) {
     ++y;
     snprintf(text, 256, "%s", tr(kTRObstructedGroundHelp1));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
     snprintf(text, 256, "%s", tr(kTRObstructedGroundHelp2));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
   }
   
   if (loc->m_building) {
@@ -944,12 +948,12 @@ void drawUIBottom() {
     pd->graphics->pushContext(m_UIBitmapDev);
     pd->graphics->fillRect(0, 0, DEVICE_PIX_X, TILE_PIX, kColorClear);
     pd->graphics->setDrawMode(kDrawModeFillBlack);
-    pd->graphics->drawText(text, 256, kUTF8Encoding, 2*TILE_PIX + 1, 0);
-    pd->graphics->drawText(text, 256, kUTF8Encoding, 2*TILE_PIX, +1);
-    pd->graphics->drawText(text, 256, kUTF8Encoding, 2*TILE_PIX - 1, 0);
-    pd->graphics->drawText(text, 256, kUTF8Encoding, 2*TILE_PIX, -1);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, 2*TILE_PIX + 1, tY());
+    pd->graphics->drawText(text, 256, kUTF8Encoding, 2*TILE_PIX, +1 +tY());
+    pd->graphics->drawText(text, 256, kUTF8Encoding, 2*TILE_PIX - 1, tY());
+    pd->graphics->drawText(text, 256, kUTF8Encoding, 2*TILE_PIX, -1 +tY());
     pd->graphics->setDrawMode(kDrawModeFillWhite);
-    pd->graphics->drawText(text, 256, kUTF8Encoding, 2*TILE_PIX, 0);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, 2*TILE_PIX, tY());
     pd->graphics->popContext();
   }
 
@@ -1032,7 +1036,7 @@ void drawUIBottom() {
 
   } 
 
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX/2, 0);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX/2, tY());
   pd->graphics->popContext();
 }
 
@@ -1046,7 +1050,7 @@ void drawUIRight() {
     char textM[32] = "";
     snprintf_c(textM, 32, getPlayer()->m_money);
     setRoobert10();
-    pd->graphics->drawText(textM, 32, kUTF8Encoding, 2*TILE_PIX, 0);
+    pd->graphics->drawText(textM, 32, kUTF8Encoding, 2*TILE_PIX, tY());
   }
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16(2, 16, 1), TILE_PIX/2, 0, kBitmapUnflipped); // Coin
@@ -1066,7 +1070,7 @@ void drawUIRight() {
     }
     pd->graphics->drawBitmap(getSprite16_byidx(spriteID, 1), DEVICE_PIX_Y/2 + TILE_PIX, -1, kBitmapUnflipped);
     pd->graphics->setDrawMode(kDrawModeFillWhite);
-    pd->graphics->drawText(text, 16, kUTF8Encoding, DEVICE_PIX_Y/2 + 3*TILE_PIX, 0);
+    pd->graphics->drawText(text, 16, kUTF8Encoding, DEVICE_PIX_Y/2 + 3*TILE_PIX, tY());
     pd->graphics->setDrawMode(kDrawModeCopy);
   } else { // Compass
     #define PI 3.141592654f
@@ -1100,7 +1104,7 @@ void drawUIRight() {
     pd->graphics->setDrawMode(kDrawModeFillWhite);
     char text[16] = "";
     snprintf(text, 16, "x%u", (unsigned) m_buySellMultiplier[m_mode]);
-    pd->graphics->drawText(text, 16, kUTF8Encoding, DEVICE_PIX_Y/2 + 3*TILE_PIX, 0);
+    pd->graphics->drawText(text, 16, kUTF8Encoding, DEVICE_PIX_Y/2 + 3*TILE_PIX, tY());
     pd->graphics->setDrawMode(kDrawModeCopy);
   }
 
@@ -1125,7 +1129,7 @@ void drawUITop(const char* _text, LCDBitmapDrawMode _mode) {
   pd->graphics->setDrawMode(kDrawModeFillWhite);
   setRoobert24();
   int32_t len = pd->graphics->getTextWidth(getRoobert24(), _text, 16, kUTF8Encoding, 0);
-  pd->graphics->drawText(_text, 16, kUTF8Encoding, (SCREEN_PIX_X/2 + TILE_PIX*4 - len)/2, 0);
+  pd->graphics->drawText(_text, 16, kUTF8Encoding, (SCREEN_PIX_X/2 + TILE_PIX*4 - len)/2, tY()*2);
   pd->graphics->popContext();
 }
 
@@ -1560,22 +1564,22 @@ void renderNewUI() {
 
   pd->graphics->setDrawMode(kDrawModeFillWhite);
   //
-  pd->graphics->drawText(t0, len0, kUTF8Encoding, TILE_PIX*10 - width0/2 + 1, 0);
-  pd->graphics->drawText(t1, len1, kUTF8Encoding, TILE_PIX*10 - width1/2 + 1, TILE_PIX);
+  pd->graphics->drawText(t0, len0, kUTF8Encoding, TILE_PIX*10 - width0/2 + 1, tY());
+  pd->graphics->drawText(t1, len1, kUTF8Encoding, TILE_PIX*10 - width1/2 + 1, TILE_PIX +tY());
   //
-  pd->graphics->drawText(t0, len0, kUTF8Encoding, TILE_PIX*10 - width0/2 - 1, 0);
-  pd->graphics->drawText(t1, len1, kUTF8Encoding, TILE_PIX*10 - width1/2 - 1, TILE_PIX);
+  pd->graphics->drawText(t0, len0, kUTF8Encoding, TILE_PIX*10 - width0/2 - 1, tY());
+  pd->graphics->drawText(t1, len1, kUTF8Encoding, TILE_PIX*10 - width1/2 - 1, TILE_PIX +tY());
   //
-  pd->graphics->drawText(t0, len0, kUTF8Encoding, TILE_PIX*10 - width0/2, 1);
-  pd->graphics->drawText(t1, len1, kUTF8Encoding, TILE_PIX*10 - width1/2, TILE_PIX + 1);
+  pd->graphics->drawText(t0, len0, kUTF8Encoding, TILE_PIX*10 - width0/2, 1 +tY());
+  pd->graphics->drawText(t1, len1, kUTF8Encoding, TILE_PIX*10 - width1/2, TILE_PIX + 1 +tY());
   //
-  pd->graphics->drawText(t0, len0, kUTF8Encoding, TILE_PIX*10 - width0/2, -1);
-  pd->graphics->drawText(t1, len1, kUTF8Encoding, TILE_PIX*10 - width1/2, TILE_PIX- 1);
+  pd->graphics->drawText(t0, len0, kUTF8Encoding, TILE_PIX*10 - width0/2, -1 +tY());
+  pd->graphics->drawText(t1, len1, kUTF8Encoding, TILE_PIX*10 - width1/2, TILE_PIX- 1 +tY());
   //
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   //
-  pd->graphics->drawText(t0, len0, kUTF8Encoding, TILE_PIX*10 - width0/2, 0);
-  pd->graphics->drawText(t1, len1, kUTF8Encoding, TILE_PIX*10 - width1/2, TILE_PIX);
+  pd->graphics->drawText(t0, len0, kUTF8Encoding, TILE_PIX*10 - width0/2, tY());
+  pd->graphics->drawText(t1, len1, kUTF8Encoding, TILE_PIX*10 - width1/2, TILE_PIX +tY());
   //
   pd->graphics->setDrawMode(kDrawModeCopy);
 
@@ -1689,85 +1693,85 @@ void updateLangUI() {
     roundedRect(1, TILE_PIX*18, TILE_PIX*2, TILE_PIX, kColorBlack);
     pd->graphics->setDrawMode(kDrawModeFillWhite);
     setRoobert24();
-    pd->graphics->drawText(toStringHeader(c, /*plural*/ true), 32, kUTF8Encoding, TILE_PIX, 0);
+    pd->graphics->drawText(toStringHeader(c, /*plural*/ true), 32, kUTF8Encoding, TILE_PIX, tY()*2);
     pd->graphics->popContext();
   }
 
-  static char trText[256] = " ";
+  const char* trText = NULL;
 
-  strcpy(trText, tr(kTRSaving));
+  trText = tr(kTRSaving);
   pd->graphics->pushContext(m_UIBitmapSave);
   pd->graphics->setLineCapStyle(kLineCapStyleRound);
   pd->graphics->drawLine(TILE_PIX, TILE_PIX, DEVICE_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorWhite);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   setRoobert24();
   int32_t tlen = pd->graphics->getTextWidth(getRoobert24(), trText, strlen(trText), kUTF8Encoding, 0);
-  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
+  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X/2 - tlen)/2, tY()*2);
   pd->graphics->popContext();
 
-  strcpy(trText, tr(kTRGenerating));
+  trText = tr(kTRGenerating);
   pd->graphics->pushContext(m_UIBitmapGen);
   pd->graphics->setLineCapStyle(kLineCapStyleRound);
   pd->graphics->drawLine(TILE_PIX, TILE_PIX, DEVICE_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorWhite);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   setRoobert24();
   tlen = pd->graphics->getTextWidth(getRoobert24(), trText, strlen(trText), kUTF8Encoding, 0);
-  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
+  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X/2 - tlen)/2, tY()*2);
   pd->graphics->popContext();
 
-  strcpy(trText, tr(kTRLoading));
+  trText = tr(kTRLoading);
   pd->graphics->pushContext(m_UIBitmapLoad);
   pd->graphics->setLineCapStyle(kLineCapStyleRound);
   pd->graphics->drawLine(TILE_PIX, TILE_PIX, DEVICE_PIX_X/2 - TILE_PIX, TILE_PIX, TILE_PIX*2, kColorWhite);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   setRoobert24();
   tlen = pd->graphics->getTextWidth(getRoobert24(), trText, strlen(trText), kUTF8Encoding, 0);
-  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X/2 - tlen)/2, 0);
+  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X/2 - tlen)/2, tY()*2);
   pd->graphics->popContext();
   pd->graphics->setDrawMode(kDrawModeCopy);
 
-  strcpy(trText, tr(kTRFactory));
+  trText = tr(kTRFactory);
   pd->graphics->clearBitmap(m_UIBitmapTitleFac, kColorClear);
   pd->graphics->pushContext(m_UIBitmapTitleFac);
   pd->graphics->setDrawMode(kDrawModeFillWhite);
   setRoobert24();
   tlen = pd->graphics->getTextWidth(getRoobert24(), trText, strlen(trText), kUTF8Encoding, 0) - TILE_PIX*4;
-  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 + 2, +2);
-  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 + 2, -2);
-  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 - 2, +2);
-  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 - 2, -2);  
+  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 + 2, +2 +tY()*2);
+  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 + 2, -2 +tY()*2);
+  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 - 2, +2 +tY()*2);
+  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 - 2, -2 +tY()*2);  
   pd->graphics->setDrawMode(kDrawModeFillBlack);
-  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2, 0);
+  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2, tY()*2);
   pd->graphics->popContext();
   pd->graphics->setDrawMode(kDrawModeCopy);
 
-  strcpy(trText, tr(kTRFarming));
+  trText = tr(kTRFarming);
   pd->graphics->clearBitmap(m_UIBitmapTitleFarm, kColorClear);
   pd->graphics->pushContext(m_UIBitmapTitleFarm);
   pd->graphics->setDrawMode(kDrawModeFillWhite);
   setRoobert24();
   tlen = pd->graphics->getTextWidth(getRoobert24(), trText, strlen(trText), kUTF8Encoding, 0) + TILE_PIX*4;
-  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 + 2, +2);
-  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 + 2, -2);
-  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 - 2, +2);
-  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 - 2, -2);
+  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 + 2, +2 +tY()*2);
+  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 + 2, -2 +tY()*2);
+  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 - 2, +2 +tY()*2);
+  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 - 2, -2 +tY()*2);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
-  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2, 0);
+  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2, tY()*2);
   pd->graphics->popContext();
   pd->graphics->setDrawMode(kDrawModeCopy);
 
-  strcpy(trText, tr(kTRFactoryFarming));
+  trText = tr(kTRFactoryFarming);
   pd->graphics->clearBitmap(m_UIBitmapTitleFacFarm, kColorClear);
   pd->graphics->pushContext(m_UIBitmapTitleFacFarm);
   pd->graphics->setDrawMode(kDrawModeFillWhite);
   setRoobert10();
   tlen = pd->graphics->getTextWidth(getRoobert10(), trText, strlen(trText), kUTF8Encoding, 0);
-  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 + 2, +2);
-  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 + 2, -2);
-  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 - 2, +2);
-  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 - 2, -2);
+  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 + 1, +1 +tY());
+  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 + 1, -1 +tY());
+  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 - 1, +1 +tY());
+  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2 - 1, -1 +tY());
   pd->graphics->setDrawMode(kDrawModeFillBlack);
-  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2, 0);
+  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, (DEVICE_PIX_X - tlen)/2, tY());
   pd->graphics->popContext();
   pd->graphics->setDrawMode(kDrawModeCopy);
 
@@ -1780,7 +1784,7 @@ void updateLangUI() {
     const char* t = newBannerText(i);
     int16_t len = strlen(t);
     int32_t width = pd->graphics->getTextWidth(getRoobert24(), t, len, kUTF8Encoding, 0);
-    pd->graphics->drawText(t, len, kUTF8Encoding, TILE_PIX*10 - width/2, 0);
+    pd->graphics->drawText(t, len, kUTF8Encoding, TILE_PIX*10 - width/2, tY()*2);
     pd->graphics->setDrawMode(kDrawModeCopy);
     pd->graphics->popContext();
   }
@@ -1800,11 +1804,11 @@ void updateLangUI() {
     roundedRect(0, TILE_PIX*7, TILE_PIX*1, TILE_PIX/2, kColorBlack);
     pd->graphics->setDrawMode(kDrawModeFillWhite);
     char buttonText[64];
-    strcpy(trText, tr(kTRNewGame));
+    trText = tr(kTRNewGame);
     snprintf(buttonText, 64, trText, i+1);
     int16_t len = strlen(buttonText);
     int32_t width = pd->graphics->getTextWidth(getRoobert10(), buttonText, len, kUTF8Encoding, 0);
-    pd->graphics->drawText(buttonText, len, kUTF8Encoding, (7*TILE_PIX)/2 - width/2, 0);
+    pd->graphics->drawText(buttonText, len, kUTF8Encoding, (7*TILE_PIX)/2 - width/2, tY());
     pd->graphics->setDrawMode(kDrawModeCopy);
     pd->graphics->popContext();
 
@@ -1814,16 +1818,25 @@ void updateLangUI() {
     #ifdef DEMO
     strcpy(buttonText, tr(kTRLoadDemo));
     #else
-    strcpy(trText, tr(kTRContinue));
+    trText = tr(kTRContinue);
     snprintf(buttonText, 64, trText, i+1);
     #endif
     len = strlen(buttonText);
     width = pd->graphics->getTextWidth(getRoobert10(), buttonText, len, kUTF8Encoding, 0);
-    pd->graphics->drawText(buttonText, len, kUTF8Encoding, (7*TILE_PIX)/2 - width/2, 0);
+    pd->graphics->drawText(buttonText, len, kUTF8Encoding, (7*TILE_PIX)/2 - width/2, tY());
     pd->graphics->setDrawMode(kDrawModeCopy);
     pd->graphics->popContext();
   }
 
+  setRoobert10();
+  pd->graphics->clearBitmap(m_UIBitmapTitleLang, kColorBlack);
+  pd->graphics->pushContext(m_UIBitmapTitleLang);
+  pd->graphics->fillRect(1, 1, TILE_PIX*2 - 2, TILE_PIX - 2, kColorWhite);
+  pd->graphics->setDrawMode(kDrawModeFillBlack);
+  trText = tr(kTRLang);
+  tlen = pd->graphics->getTextWidth(getRoobert10(), trText, strlen(trText), kUTF8Encoding, 0);
+  pd->graphics->drawText(trText, strlen(trText), kUTF8Encoding, TILE_PIX - tlen/2, tY() + 1);
+  pd->graphics->popContext();
 
   // Populate Ingredients
 
@@ -1864,7 +1877,7 @@ void updateLangUI() {
             continue; // We skip a space after a new line
           }
         }
-        pd->graphics->drawText(str, len, kUTF8Encoding, cur_x, cur_y);
+        pd->graphics->drawText(str, len, kUTF8Encoding, cur_x, cur_y +tY());
         cur_x += width;
       }
     }
@@ -2018,7 +2031,7 @@ void initiUI() {
   pd->graphics->pushContext(m_UIBitmapTitleVersion);
   setRoobert10();
   int32_t width = pd->graphics->getTextWidth(getRoobert10(), VERSION, 5, kUTF8Encoding, 0);
-  pd->graphics->drawText(VERSION, 5, kUTF8Encoding, TILE_PIX - width/2, 0);
+  pd->graphics->drawText(VERSION, 5, kUTF8Encoding, TILE_PIX - width/2, tY());
   pd->graphics->popContext();
   m_UISpriteTitleVersion = pd->sprite->newSprite();
   PDRect vBound = {.x = 0, .y = 0, .width = TILE_PIX*2, .height = TILE_PIX*1};
@@ -2071,7 +2084,7 @@ void initiUI() {
   pd->sprite->setImage(m_UISpriteTitleFarm, m_UIBitmapTitleFarm, kBitmapUnflipped);
   pd->sprite->setZIndex(m_UISpriteTitleFarm, Z_INDEX_UI_T);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteTitleFarm, 1);  
-  pd->sprite->moveTo(m_UISpriteTitleFarm, DEVICE_PIX_X/2, TILE_PIX*10);
+  pd->sprite->moveTo(m_UISpriteTitleFarm, DEVICE_PIX_X/2 - TILE_PIX*2, TILE_PIX*10);
 
   m_UIBitmapTitleFacFarm = pd->graphics->newBitmap(DEVICE_PIX_X, TILE_PIX*2, kColorClear);
   m_UISpriteTitleFacFarm = pd->sprite->newSprite();
@@ -2080,6 +2093,16 @@ void initiUI() {
   pd->sprite->setZIndex(m_UISpriteTitleFacFarm, Z_INDEX_UI_T);
   pd->sprite->setIgnoresDrawOffset(m_UISpriteTitleFacFarm, 1);  
   pd->sprite->moveTo(m_UISpriteTitleFacFarm, DEVICE_PIX_X/2, TILE_PIX*13 + TILE_PIX/2);
+
+  PDRect boundL = {.x = 0, .y = 0, .width = TILE_PIX*2, .height = TILE_PIX};
+  m_UIBitmapTitleLang = pd->graphics->newBitmap(TILE_PIX*2, TILE_PIX, kColorBlack);
+  m_UISpriteTitleLang = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_UISpriteTitleLang, boundL);
+  pd->sprite->setImage(m_UISpriteTitleLang, m_UIBitmapTitleLang, kBitmapUnflipped);
+  pd->sprite->setZIndex(m_UISpriteTitleLang, Z_INDEX_UI_T);
+  pd->sprite->setIgnoresDrawOffset(m_UISpriteTitleLang, 1);  
+  pd->sprite->moveTo(m_UISpriteTitleLang, TILE_PIX*3 + TILE_PIX/2, TILE_PIX*8);
+  pd->sprite->setVisible(m_UISpriteTitleLang, false);
 
   // Main Menu
 

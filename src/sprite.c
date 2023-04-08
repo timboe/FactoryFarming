@@ -278,9 +278,9 @@ void initSprite() {
   m_fontRoobert10 = loadFontAtPath("fonts/Roobert-10-Bold");
   m_fontCooperHewitt12  = loadFontAtPath("fonts/CooperHewitt-Light");
 
-  m_fontNotoThin = loadFontAtPath("fonts/Thin12");
-  m_fontNotoBold = loadFontAtPath("fonts/Bold12");
-  m_fontNotoLarge  = loadFontAtPath("fonts/Bold24");
+  m_fontNotoThin = loadFontAtPath("fonts/NotoSans-Light-10");
+  m_fontNotoBold = loadFontAtPath("fonts/NotoSans-Bold-10");
+  m_fontNotoLarge  = loadFontAtPath("fonts/NotoSans-Medium-24");
   pd->graphics->setFont(m_fontRoobert24);
 
 }

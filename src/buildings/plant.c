@@ -328,7 +328,7 @@ void drawUIInspectPlant(struct Building_t* _building) {
   strcpy(text, toStringBuilding(_building->m_type, _building->m_subType, false));
   //snprintf(text, 256, "%s", toStringBuilding(_building->m_type, _building->m_subType, true));
   
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
 
   const struct Tile_t* t = getTile_fromLocation( _building->m_location );
   const int8_t gb = getGroundBonus( PDesc[pst].soil, (enum kGroundType) t->m_groundType );
@@ -341,13 +341,13 @@ void drawUIInspectPlant(struct Building_t* _building) {
   strcat(text, cspace());
   strcat(text, toStringSoil( PDesc[pst].soil ));
   //snprintf(text, 256, tr(kTRPlantLikesSoil), toStringSoil( PDesc[pst].soil ) );
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
 
   strcpy(text, tr(kTRPlantHas));
   strcat(text, cspace());
   strcat(text, toStringSoil( (enum kGroundType) t->m_groundType));
   //snprintf(text, 256, tr(kTRPlantHasSoil), toStringSoil( (enum kGroundType) t->m_groundType) ); 
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT +tY());
 
   strcpy(text, tr(kTRPlantLikes));
   strcat(text, cspace());
@@ -355,7 +355,7 @@ void drawUIInspectPlant(struct Building_t* _building) {
   strcat(text, space());
   strcat(text, (isWater ? " " : tr(kTRSoil)));
   //snprintf(text, 256, tr(kTRPlantLikesWater), toStringWetness( PDesc[pst].wetness ), (isWater ? " " : "Soil") ); 
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
 
   strcpy(text, tr(kTRPlantHas));
   strcat(text, cspace());
@@ -363,22 +363,22 @@ void drawUIInspectPlant(struct Building_t* _building) {
   strcat(text, space());
   strcat(text, (isWater ? " " : tr(kTRSoil)));
   //snprintf(text, 256, tr(kTRPlantHasWater), toStringWetness( getWetness(t->m_wetness) ), (isWater ? " " : "Soil") ); 
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT +tY());
 
   if (_building->m_progress > INT16_MAX/2) {
     snprintf(text, 256, "%s", tr(kTRPlantCannotGrow)); 
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
     snprintf(text, 256, " "); 
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
   } else {
     snprintf(text, 256, tr(kTRPlantGrowTime), growTime / TICKS_PER_SEC); 
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
     if (_building->m_location->m_cargo != NULL) {
       snprintf(text, 256, "%s", tr(kTRPlantHarvest)); 
     } else {
       snprintf(text, 256, tr(kTRPlantTimeLeft), _building->m_progress / TICKS_PER_SEC); 
     }
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
   }
 
   pd->graphics->setDrawMode(kDrawModeCopy);

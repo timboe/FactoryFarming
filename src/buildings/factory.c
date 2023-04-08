@@ -244,9 +244,9 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 8: *_isFlavour = false; return toStringCargoByType(kSalt, /*plural=*/ false);
         case 9: return ",";
         case 10: return " ";
-        case 11: return tr(kTRFacFlavArtificial);
+        case 11: return tr(kTRFacFlavArtificialFlav0);
         case 12: return " ";
-        case 13: return tr(kTRFacFlavFlavorings);
+        case 13: return tr(kTRFacFlavArtificialFlav1);
       }
       break;
     case kEthanolFac:
@@ -279,9 +279,9 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 9: *_isFlavour = false; return toStringCargoByType(kEthanol, /*plural=*/ false);
         case 10: return ",";
         case 11: return " ";
-        case 12: return tr(kTRFacFlavArtificial);
+        case 12: return tr(kTRFacFlavArtificialColoring0);
         case 13: return " ";
-        case 14: return tr(kTRFacFlavColoring);
+        case 14: return tr(kTRFacFlavArtificialColoring1);
         case 15: return ",";
         case 16: return " ";
         case 17: return tr(kTRFacFlavStabilizers);
@@ -332,9 +332,9 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 8: return tr(kTRFacFlavStabilizers);
         case 9: return ",";
         case 10: return " ";
-        case 11: return tr(kTRFacFlavArtificial);
+        case 11: return tr(kTRFacFlavArtificialColoring0);
         case 12: return " ";
-        case 13: return tr(kTRFacFlavColorant);
+        case 13: return tr(kTRFacFlavArtificialColoring1);
         case 14: return " ";
         case 15: snprintf(compound, 64, "(%s", tr(kTRFacFlavSunset)); return compound;
         case 16: return " ";
@@ -348,11 +348,11 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 2: *_isFlavour = false; return toStringCargoByType(kCorn, /*plural=*/ false);
         case 3: return ",";
         case 4: return " ";
-        case 5: return tr(kTRFacFlavHydrogenated);
+        case 5: return tr(kTRFacFlavHydrogenatedOil0);
         case 6: return " ";
         case 7: return tr(kTRFacFlavVegetable);
         case 8: return " ";
-        case 9: return tr(kTRFacFlavOil);
+        case 9: return tr(kTRFacFlavHydrogenatedOil1);
         case 10: return " ";
         case 11: *_isFlavour = false; snprintf(compound, 64, "(%s)", toStringCargoByType(kHOil, /*plural=*/ false)); return compound;
         case 12: return ",";
@@ -375,9 +375,9 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 8: *_isFlavour = false; return toStringCargoByType(kEthanol, /*plural=*/ false);
         case 9: return ",";
         case 10: return " ";
-        case 11: return tr(kTRFacFlavHop);
+        case 11: return tr(kTRFacFlavHopOil0);
         case 12: return " ";
-        case 13: return tr(kTRFacFlavOil);
+        case 13: return tr(kTRFacFlavHopOil1);
       }
       break;
     case kTequilaFac:
@@ -395,9 +395,9 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 10: *_isFlavour = false; return toStringCargoByType(kEthanol, /*plural=*/ false);
         case 11: return ",";
         case 12: return " ";
-        case 13: return tr(kTRFacFlavArtificial);
+        case 13: return tr(kTRFacFlavArtificialFlav0);
         case 14: return " ";
-        case 15: return tr(kTRFacFlavFlavorings);
+        case 15: return tr(kTRFacFlavArtificialFlav1);
       }
       break;
     case kHFCSFac:
@@ -447,9 +447,9 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 16: *_isFlavour = false; return toStringCargoByType(kLime, /*plural=*/ false);
         case 17: return ",";
         case 18: return " ";
-        case 19: return tr(kTRFacFlavArtificial);
+        case 19: return tr(kTRFacFlavArtificialColoring0);
         case 20: return " ";
-        case 21: return tr(kTRFacFlavColoring);
+        case 21: return tr(kTRFacFlavArtificialColoring1);
       }
       break;
     case kJelloShotFac:
@@ -465,9 +465,9 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 8: return tr(kTRFacFlavStabilizers);
         case 9: return ",";
         case 10: return " ";
-        case 11: return tr(kTRFacFlavArtificial);
+        case 11: return tr(kTRFacFlavArtificialFlav0);
         case 12: return " ";
-        case 13: return tr(kTRFacFlavFlavorings);
+        case 13: return tr(kTRFacFlavArtificialFlav1);
       }
       break;
     case kEmulsifierFac:
@@ -503,11 +503,11 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 10: *_isFlavour = false; snprintf(compound, 64, "(%s)", toStringCargoByType(kHFCS, /*plural=*/ false)); return compound;
         case 11: return ",";
         case 12: return " ";
-        case 13: return tr(kTRFacFlavHydrogenated);
+        case 13: return tr(kTRFacFlavHydrogenatedOil0);
         case 14: return " ";
         case 15: return tr(kTRFacFlavVegetable);
         case 16: return " ";
-        case 17: return tr(kTRFacFlavOil);
+        case 17: return tr(kTRFacFlavHydrogenatedOil1);
         case 18: return " ";
         case 19: *_isFlavour = false; snprintf(compound, 64, "(%s)", toStringCargoByType(kHOil, /*plural=*/ false)); return compound;
         case 20: return ",";
@@ -576,11 +576,11 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 10: *_isFlavour = false; snprintf(compound, 64, "(%s)", toStringCargoByType(kHFCS, /*plural=*/ false)); return compound;
         case 11: return ",";
         case 12: return " ";
-        case 13: return tr(kTRFacFlavHydrogenated);
+        case 13: return tr(kTRFacFlavHydrogenatedOil0);
         case 14: return " ";
         case 15: return tr(kTRFacFlavVegetable);
         case 16: return " ";
-        case 17: return tr(kTRFacFlavOil);
+        case 17: return tr(kTRFacFlavHydrogenatedOil1);
         case 18: return " ";
         case 19: *_isFlavour = false; snprintf(compound, 64, "(%s)", toStringCargoByType(kHOil, /*plural=*/ false)); return compound;
         case 20: return ",";
@@ -607,16 +607,16 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 14: return tr(kTRFacFlavPreservatives);
         case 15: return ",";
         case 16: return " ";
-        case 17: return tr(kTRFacFlavArtificial);
+        case 17: return tr(kTRFacFlavArtificialFlav0);
         case 18: return " ";
-        case 19: return tr(kTRFacFlavFlavorings);
+        case 19: return tr(kTRFacFlavArtificialFlav1);
       }
       break;
     case kMSGFac:
       switch (_n) {
         case 0: *_isFlavour = false; return tr(kTRFacFlavIngredients);
         case 1: return "LB";
-        case 2: return tr(kTRFacFlavGluten);
+        case 2: return tr(kTRFacFlavGlutamicAcid);
         case 3: return " ";
         case 4: *_isFlavour = false; snprintf(compound, 64, "(%s)", toStringCargoByType(kWheat, /*plural=*/ false)); return compound;
         case 5: return ",";
@@ -636,9 +636,9 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 5: *_isFlavour = false; return toStringCargoByType(kMeatPie, /*plural=*/ false);
         case 6: return ",";
         case 7: return " ";
-        case 8: return tr(kTRFacFlavMonosodium);
+        case 8: return tr(kTRFacFlavMSG0);
         case 9: return " ";
-        case 10: return tr(kTRFacFlavGlutamate);
+        case 10: return tr(kTRFacFlavMSG1);
         case 11: return " ";
         case 12: *_isFlavour = false; snprintf(compound, 64, "(%s)", toStringCargoByType(kMSG, /*plural=*/ false)); return compound;
         case 13: return ",";
@@ -709,9 +709,9 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 19: *_isFlavour = false; return toStringCargoByType(kLime, /*plural=*/ false);
         case 20: return ",";
         case 21: return " ";
-        case 22: return tr(kTRFacFlavArtificial);
+        case 22: return tr(kTRFacFlavArtificialFlav0);
         case 23: return " ";
-        case 24: return tr(kTRFacFlavFlavorings);
+        case 24: return tr(kTRFacFlavArtificialFlav1);
       }
       break;
     case kRaveJuiceFac:
@@ -806,9 +806,9 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 8: *_isFlavour = false; return toStringCargoByType(kBamboo, /*plural=*/ false);
         case 9: return ",";
         case 10: return " ";
-        case 11: return tr(kTRFacFlavMonosodium);
+        case 11: return tr(kTRFacFlavMSG0);
         case 12: return " ";
-        case 13: return tr(kTRFacFlavGlutamate);
+        case 13: return tr(kTRFacFlavMSG1);
         case 14: return " ";
         case 15: *_isFlavour = false; snprintf(compound, 64, "(%s)", toStringCargoByType(kMSG, /*plural=*/ false)); return compound;
         case 16: return ",";
@@ -816,9 +816,9 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 18: return tr(kTRFacFlavPreservatives);
         case 19: return ",";
         case 20: return " ";
-        case 21: return tr(kTRFacFlavArtificial);
+        case 21: return tr(kTRFacFlavArtificialFlav0);
         case 22: return " ";
-        case 23: return tr(kTRFacFlavFlavorings);
+        case 23: return tr(kTRFacFlavArtificialFlav1);
       }
       break;
     case kPartyPackFac:
@@ -925,13 +925,13 @@ void drawUIInspectFactory(struct Building_t* _building) {
   //  toStringBuilding(_building->m_type, _building->m_subType, false),
   //  getRotationAsString(kUICatFactory, _building->m_subType.factory, _building->m_dir));
   
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
 
   snprintf(text, 256, tr(kTRFacProdTime), ftos(_building->m_mode.mode16 / (float)TICKS_PER_SEC, 16, strFloat));
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*6 - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*6 - TUT_Y_SHFT +tY());
 
   snprintf(text, 256, tr(kTRFacTimeRemaining), ftos((_building->m_mode.mode16 -_building->m_progress) / (float)TICKS_PER_SEC, 16, strFloat));
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*13, TUT_Y_SPACING*6 - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*13, TUT_Y_SPACING*6 - TUT_Y_SHFT +tY());
 
   size_t S = 0;
 
@@ -942,7 +942,7 @@ void drawUIInspectFactory(struct Building_t* _building) {
   strcat(text, strTrunc);
   strcat(text, strNum);
   //snprintf(text, 256, tr(kTRFacOut), STR_PRINT_LEN, toStringCargoByType( FDesc[fst].out, /*plural=*/(_building->m_stored[0] != 1) ), _building->m_stored[0]);
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].out ].UIIcon, 1), TILE_PIX*2 + trLen(kTROut), TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
@@ -955,7 +955,7 @@ void drawUIInspectFactory(struct Building_t* _building) {
   strcat(text, strTrunc);
   strcat(text, strNum);
   //snprintf(text, 256, tr(kTRFacIn1), STR_PRINT_LEN, toStringCargoByType( FDesc[fst].in1, /*plural=*/(_building->m_stored[1] != 1) ), _building->m_stored[1]);
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in1 ].UIIcon, 1), TILE_PIX*13 + trLen(kTRFacIn), TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
@@ -970,7 +970,7 @@ void drawUIInspectFactory(struct Building_t* _building) {
   strcat(text, strTrunc);
   strcat(text, strNum);
   //snprintf(text, 256, tr(kTRFacIn2), STR_PRINT_LEN, toStringCargoByType( FDesc[fst].in2, /*plural=*/(_building->m_stored[2] != 1) ), _building->m_stored[2]);
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in2 ].UIIcon, 1), TILE_PIX*2 + trLen(kTRFacIn), TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
@@ -985,7 +985,7 @@ void drawUIInspectFactory(struct Building_t* _building) {
   strcat(text, strTrunc);
   strcat(text, strNum);
   //snprintf(text, 256, tr(kTRFacIn3), STR_PRINT_LEN, toStringCargoByType( FDesc[fst].in3, /*plural=*/(_building->m_stored[3] != 1) ), _building->m_stored[3]);
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in3 ].UIIcon, 1), TILE_PIX*13 + trLen(kTRFacIn), TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
@@ -1000,7 +1000,7 @@ void drawUIInspectFactory(struct Building_t* _building) {
   strcat(text, strTrunc);
   strcat(text, strNum);
   //snprintf(text, 256, tr(kTRFacIn4), STR_PRINT_LEN, toStringCargoByType( FDesc[fst].in4, /*plural=*/(_building->m_stored[4] != 1) ), _building->m_stored[4]);
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in4 ].UIIcon, 1), TILE_PIX*2 + trLen(kTRFacIn), TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
@@ -1015,7 +1015,7 @@ void drawUIInspectFactory(struct Building_t* _building) {
   strcat(text, strTrunc);
   strcat(text, strNum);
   //snprintf(text, 256, tr(kTRFacIn5), STR_PRINT_LEN, toStringCargoByType( FDesc[fst].in5, /*plural=*/(_building->m_stored[5] != 1) ), _building->m_stored[5]);
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in5 ].UIIcon, 1), TILE_PIX*13 + trLen(kTRFacIn), TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
   pd->graphics->setDrawMode(kDrawModeFillBlack);

@@ -198,7 +198,7 @@ void drawUIInspectExtractor(struct Building_t* _building) {
   //snprintf(text, 256, "%s (%s)",
   //  toStringBuilding(_building->m_type, _building->m_subType, false),
   //  getRotationAsString(kUICatExtractor, _building->m_subType.extractor, _building->m_dir));
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
 
   if (est == kCropHarvesterSmall || est == kCropHarvesterLarge) {
 
@@ -220,7 +220,7 @@ void drawUIInspectExtractor(struct Building_t* _building) {
       //  toStringCargoByType( _building->m_stored[(MAX_STORE/2) + hopper], /*plural=*/(_building->m_stored[hopper] != 1) ), 
       //  _building->m_stored[hopper]);
 
-      pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+      pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
       pd->graphics->setDrawMode(kDrawModeCopy);
       pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ _building->m_stored[(MAX_STORE/2) + hopper] ].UIIcon, 1),
         TILE_PIX*2 + trLen(kTRExtractorHopper),
@@ -235,7 +235,7 @@ void drawUIInspectExtractor(struct Building_t* _building) {
     strcat(text, c5space());
     strcat(text, toStringCargoByType( EDesc[est].out, /*plural=*/true ));
     //snprintf(text, 256, tr(kTROut), toStringCargoByType( EDesc[est].out, /*plural=*/true ));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
     pd->graphics->setDrawMode(kDrawModeCopy);
     pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ EDesc[est].out ].UIIcon, 1), TILE_PIX*2 + trLen(kTROut), TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
     pd->graphics->setDrawMode(kDrawModeFillBlack);

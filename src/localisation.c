@@ -23,9 +23,14 @@ enum kLanguage getLanguage(void) {
   return m_language;
 }
 
-#define TEX_LEN_ADDITIONAL 2
+int16_t tY(void) {
+  return m_language == kEN ? 0 : -6;
+}
+
+#define TEX_LEN_ADD_NOTO 6
+#define TEX_LEN_ADD_ROOB 4
 size_t trLen(const enum kTR _tr) {
-  return TEX_LEN_ADDITIONAL + pd->graphics->getTextWidth(getRoobert10(), tr(_tr), strlen(tr(_tr)), kUTF8Encoding, 0);
+  return (m_language == kEN ? TEX_LEN_ADD_ROOB : TEX_LEN_ADD_NOTO) + pd->graphics->getTextWidth(getRoobert10(), tr(_tr), strlen(tr(_tr)), kUTF8Encoding, 0);
 }
 
 void modLanguage(const bool _forward) {

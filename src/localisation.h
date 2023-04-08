@@ -9,6 +9,8 @@ void resetLocalisation(const enum kLanguage _l);
 
 void modLanguage(const bool _forward);
 
+int16_t tY(void);
+
 enum kLanguage getLanguage(void);
 
 enum kTR{
@@ -487,26 +489,28 @@ enum kTR{
   kTRFacFlavCarbonate,
   kTRFacFlavStabilizers,
   kTRFacFlavPreservatives,
-  kTRFacFlavArtificial,
-  kTRFacFlavFlavorings,
+  kTRFacFlavArtificialFlav0,
+  kTRFacFlavArtificialFlav1,
   kTRFacFlavDistilled,
   kTRFacFlavVegetable,
   kTRFacFlavAlcohol,
   kTRFacFlavApple,
   kTRFacFlavJuice,
-  kTRFacFlavColoring,
+  kTRFacFlavArtificialColoring0,
+  kTRFacFlavArtificialColoring1,
   kTRFacFlavAnimalFeed,
   kTRFacFlavHormones,
   kTRFacFlavSteroids,
   kTRFacFlavProcess,
   kTRFacFlavElectrolysis,
   kTRFacFlavOf,
-  kTRFacFlavColorant,
+  kTRFacFlavTheWater,
   kTRFacFlavSunset,
   kTRFacFlavOrange,
-  kTRFacFlavHydrogenated,
-  kTRFacFlavOil,
-  kTRFacFlavHop,
+  kTRFacFlavHydrogenatedOil0,
+  kTRFacFlavHydrogenatedOil1,
+  kTRFacFlavHopOil0,
+  kTRFacFlavHopOil1,
   kTRFacFlavAgave,
   kTRFacFlavHigh,
   kTRFacFlavFructose,
@@ -517,10 +521,10 @@ enum kTR{
   kTRFacFlavAntibiotics,
   kTRFacFlavDewormer,
   kTRFacFlavInsecticides,
-  kTRFacFlavGluten,
+  kTRFacFlavGlutamicAcid,
   kTRFacFlavSodium,
-  kTRFacFlavMonosodium,
-  kTRFacFlavGlutamate,
+  kTRFacFlavMSG0,
+  kTRFacFlavMSG1,
   kTRFacFlavRequirements,
   kTRFacFlavSolvent,
   kTRFacFlavTitanium,
@@ -783,6 +787,7 @@ enum kTR{
   kTRFactory,
   kTRFarming,
   kTRFactoryFarming,
+  kTRLang,
   kNTR
 };
 

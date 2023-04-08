@@ -123,8 +123,8 @@ void populateInfoWarp(bool _visible) {
     }
   }
   pd->graphics->setDrawMode(kDrawModeFillBlack);
-  pd->graphics->drawText(textA, 256, kUTF8Encoding, 1*TILE_PIX, +2);
-  pd->graphics->drawText(textB, 256, kUTF8Encoding, 1*TILE_PIX, TILE_PIX - 2);
+  pd->graphics->drawText(textA, 256, kUTF8Encoding, 1*TILE_PIX, +2 +tY());
+  pd->graphics->drawText(textB, 256, kUTF8Encoding, 1*TILE_PIX, TILE_PIX - 2 +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
 
   pd->graphics->popContext();

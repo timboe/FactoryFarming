@@ -331,8 +331,8 @@ Load Demo
 %i: Continue
 -- Factory Farming Tech Demo --
 You're free to look around this example factory.
-You will find facilities up to Tech Level 3.
-The full game goes up to Tech Level 7.
+You will find facilities up to Tech Tier 3.
+The full game goes up to Tech Tier 7.
 Building and Saving are disabled in the demo.
 -- The Initial Seed Purchase --
 Welcome to Factory Farming! There's money to be
@@ -340,7 +340,7 @@ made, and it won't make itself! So let's get started by
 visiting the shop with Ⓐ and buying some carrot seeds
 The compass (right) will always point to the shop.
 Move with the D-Pad, ✛. Zoom in & out with 🎣.
-Hold Ⓑ to run.  Go to the shop and press Ⓐ."
+Hold Ⓑ to run.  Go to the shop and press Ⓐ.
 Buy 10 carrot seeds from the shop with Ⓐ.
 Press Ⓑ to exit the shop.
 -- The Next Objective --
@@ -480,6 +480,7 @@ Vegetable
 Alcohol
 Apple
 Juice
+Artificial
 Coloring
 Animal Feed:
 Hormones
@@ -487,12 +488,13 @@ Steroids
 Process: 
 Electrolysis
 of
-Colorant
+water
 Sunset
 Orange
 Hydrogenated
 Oil
 Hop
+Oil
 Agave
 High
 Fructose
@@ -503,7 +505,7 @@ Agents
 Antibiotics
 Dewormer
 Insecticides
-Gluten
+Glutamic acid
 Sodium
 Monosodium
 Glutamate
@@ -538,11 +540,11 @@ View available plots of land.
 Buy new plots to expand your factory.
 Move between your owned plots.
      
-Export Cargo for use in other plots.
+Export cargo for use in other plots.
 Exports are averaged over 60s - 120s.
-You cannot Export any Cargo which is also being
-Imported into this plot.
-Import Cargo from other plots. You can select an
+You cannot export any cargo which is also being
+imported into this plot.
+Import cargo from other plots. You can select an
 import for each of the 4 cardinal directions.
 Imports occur every 10s, the amount imported
 depends on the total number of importers.
@@ -564,8 +566,8 @@ Reduces production time in any factory
 immediately N, S, E or W of the module.
 1 Module: -0.5s
 2 Modules: -0.75s
-3 Modules: -1s
-4+ modules: No extra bonus
+3+ Modules: -1s
+    
 Creates a surrounding area of wet and moist soil.
 Compartment %i/3
 Exporting
@@ -615,13 +617,13 @@ Stores up to 3 different types of cargo
 Like the storage box, but also self-empties
 Place next to factories, speeds up production
 Upgrades conveyor speed from x1 to x2
-Clears obstructed ground, can then be built on
+Clears obstructed ground, which can then be built on
 Fills in water. Can be built on, but not planted on.
 Turns nearby land into loamy soil.
 A relaxing space to enjoy your amassed wealth.
 A charming wooden fence.
 Collects cargo, can hold three different types
-Must be built on water. Produced water buckets
+Must be built on water. Produces water buckets
 Must be built on chalky soil. Produces chalk
 Must be built on peaty soil. Produces salt
 Collects cargo, can hold three different types
@@ -758,7 +760,7 @@ github.com/timboe/FactoryFarming
 --
 Thank you for playing!
 And for your support of niche
-Indy game dev projects :)
+Indie game dev projects :)
 --
 Keep on Maximizing Profit,
 Maximizing Efficiency.
@@ -769,4 +771,5 @@ Soils
 Factory
 Farming
 "Factory Farming"
+EN
 --

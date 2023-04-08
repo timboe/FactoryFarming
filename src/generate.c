@@ -310,7 +310,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
     pd->graphics->drawRect(0, 0, CHUNK_PIX_X, CHUNK_PIX_Y, kColorBlack);
     static char text[16];
     snprintf(text, 16, "(%u,%u)", _chunk->m_x, _chunk->m_y);
-    pd->graphics->drawText(text, 16, kUTF8Encoding, TILE_PIX, TILE_PIX);
+    pd->graphics->drawText(text, 16, kUTF8Encoding, TILE_PIX, TILE_PIX +tY()*2);
   }
 
   // Shift from Sprite to Bitmap draw coords

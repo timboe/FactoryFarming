@@ -320,71 +320,71 @@ void drawUIInspectUtility(struct Building_t* _building) {
 
     //snprintf(text, 256, "%s", toStringBuilding(_building->m_type, _building->m_subType, false));
   }
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
 
   if (ust == kPath) {
 
     snprintf(text, 256, "%s", tr(kTRUtilityPath));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
 
   } else if (ust == kFence) {
 
     snprintf(text, 256, "%s", tr(kTRUtilityFence));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
 
   } else if (ust == kRetirement) {
 
     snprintf(text, 256, "%s", tr(kTRUtilityRetirement));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
   
   } else if (ust == kSign) {
 
     snprintf(text, 256, "%s", tr(kTRUtilitySign0));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
 
     if (_building->m_mode.mode16) {
       strcpy(text, tr(kTRUtilitySign1));
       strcat(text, cspace());
       strcat(text, toStringCargoByType( _building->m_mode.mode16, /*plural=*/true ));
       //snprintf(text, 256, tr(kTRUtilitySign1), toStringCargoByType( _building->m_mode.mode16, /*plural=*/true ) );
-      pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+      pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
     }
 
   } else if (ust == kBin) {
 
     snprintf(text, 256, "%s", tr(kTRUtilityBin0));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
     snprintf(text, 256, "%s", tr(kTRUtilityBin1));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
 
   } else if (ust == kRotavator) {
 
     snprintf(text, 256, "%s", tr(kTRUtilityRotavator0));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
     snprintf(text, 256, "%s", tr(kTRUtilityRotavator1));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
     snprintf(text, 256, "%s", tr(kTRUtilityRotavator2));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
 
   } else if (ust == kFactoryUpgrade) {
 
     snprintf(text, 256, "%s", tr(kTRUtilityFactoryUpgrade0));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
     snprintf(text, 256, "%s", tr(kTRUtilityFactoryUpgrade1));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
     snprintf(text, 256, "%s", tr(kTRUtilityFactoryUpgrade2));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
     snprintf(text, 256, "%s", tr(kTRUtilityFactoryUpgrade3));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*10, TUT_Y_SPACING*(y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*10, TUT_Y_SPACING*(y) - TUT_Y_SHFT +tY());
     snprintf(text, 256, "%s", tr(kTRUtilityFactoryUpgrade4));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
     snprintf(text, 256, "%s", tr(kTRUtilityFactoryUpgrade5));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*10, TUT_Y_SPACING*(y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*10, TUT_Y_SPACING*(y) - TUT_Y_SHFT +tY());
 
   } else if (ust == kWell) {
 
     snprintf(text, 256, "%s", tr(kTRUtilityWell));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
 
   } else if (ust == kBuffferBox || ust == kStorageBox) {
 
@@ -406,7 +406,7 @@ void drawUIInspectUtility(struct Building_t* _building) {
       //  toStringCargoByType( _building->m_stored[(MAX_STORE/2) + compartment], /*plural=*/(_building->m_stored[compartment] != 1) ), 
       //  _building->m_stored[compartment]);
 
-      pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT);
+      pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
       pd->graphics->setDrawMode(kDrawModeCopy);
       pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ _building->m_stored[(MAX_STORE/2) + compartment] ].UIIcon, 1),
         TILE_PIX*2 + trLen(kTRUtilityStorage),

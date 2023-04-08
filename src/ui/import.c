@@ -108,9 +108,9 @@ void populateInfoImport() {
   snprintf(textC, 128, tr(kTRUIImported), ftos(importPerConsumer, 16, strFloat));
 
   pd->graphics->setDrawMode(kDrawModeFillBlack);
-  pd->graphics->drawText(textA, 128, kUTF8Encoding, 1*TILE_PIX, +2);
-  pd->graphics->drawText(textB, 128, kUTF8Encoding, 1*TILE_PIX, TILE_PIX - 2);
-  pd->graphics->drawText(textC, 128, kUTF8Encoding, 9*TILE_PIX, TILE_PIX - 2);
+  pd->graphics->drawText(textA, 128, kUTF8Encoding, 1*TILE_PIX, +2 +tY());
+  pd->graphics->drawText(textB, 128, kUTF8Encoding, 1*TILE_PIX, TILE_PIX - 2 +tY());
+  pd->graphics->drawText(textC, 128, kUTF8Encoding, 9*TILE_PIX, TILE_PIX - 2 +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->popContext();
 }

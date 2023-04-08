@@ -145,9 +145,9 @@ void populateInfoBuy(bool _visible) {
   strcat(textC, textM);
   //snprintf(textC, 128, tr(kTRShopPrice), textM);
 
-  pd->graphics->drawText(textA, 128, kUTF8Encoding, 1*TILE_PIX, +2);
-  pd->graphics->drawText(textB, 128, kUTF8Encoding, 1*TILE_PIX, TILE_PIX - 2);
-  pd->graphics->drawText(textC, 128, kUTF8Encoding, 9*TILE_PIX, TILE_PIX - 2);
+  pd->graphics->drawText(textA, 128, kUTF8Encoding, 1*TILE_PIX, +2 +tY());
+  pd->graphics->drawText(textB, 128, kUTF8Encoding, 1*TILE_PIX, TILE_PIX - 2 +tY());
+  pd->graphics->drawText(textC, 128, kUTF8Encoding, 9*TILE_PIX, TILE_PIX - 2 +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16(2, 16, 1), 9*TILE_PIX + trLen(kTRShopPrice), TILE_PIX - 2, kBitmapUnflipped); // Coin
   pd->graphics->popContext();

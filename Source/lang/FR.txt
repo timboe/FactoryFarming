@@ -1,114 +1,114 @@
-Ceinture
-Tapis roulant
-Je 'Splitter
-Tapis roulant 'i' séparateur
-L 'séparateur
-Tapis roulant 'L' Splitter
-T 'séparateur
-Tapis roulant 't' séparateur
-Je vais filtrer
-Filtre de tapis roulant 'I'
-L 'filtre
-Filtre à tapis roulant 'L'
+Bande
+Bande Transporteuse 
+I' Séparateur 
+Bande Transporteuse 'I' Séparateur 
+L' Séparateur 
+Bande Transporteuse 'L' Séparateur 
+T' Séparateur 
+Bande Transporteuse 'T' 'séparateur
+Filtre 'I'
+Filtre de Bande Transporteuse 'I'
+Filtre 'L'
+Filtre de Bande Transporteuse 'L'
 Tunnel
-Tunnel de courroie de tapis roulant
-Je déborde
-Tapis roulant 'i' débordement
-L 'débordement
-Tapis roulant 'l' débordement
-Plante de carotte
-Graines de carotte
-Plante de tournesol
-Graines de tournesol
-Plante de pomme de terre
-Pomme de terre de graines
+Tunnel à Bande Transporteuse
+Débordement 'I'
+Débordement de la Bande Transporteuse 'I'
+Débordement 'L'
+Débordement de la Bande Transporteuse 'L'
+Plante de Carotte
+Gra. de Carotte
+Plante de Tournesol
+Gra. de Tournesol
+Plante de Pomme de Terre
+Pomme de Terre de gra.
 Pommier
-Jeune arbre aux pommes
-Usine de maïs
-Graines de maïs
-Plante d'algues
-Spores d'algues
-Plante de blé
-Graines de blé
-Plante de cactus
-Graines de cactus
+Jeune Pomme
+Plant de Maïs
+Gra. de Maïs
+Plante d'Algues
+Spores d'Algues
+Plante de Blé
+Gra. de Blé
+Plante de Cactus
+Gra. de Cactus
 Tilleul
-Jeune chaux
-Fraise
-Graines de fraise
+Jeune Chaux
+Plante de Fraise
+Gra. de Fraise
 Bambou
-Jeune arbre en bambou
-Usine de café
-Graines de café
-Cacao
-Graines de cacao
-Ferme de concombre de mer
-Piège à concombre de mer
-Rose
-Graines de rose
+Jeune Bambou
+Plante de Café
+Gra. de café
+Plante de Cacao
+Gra. de Cacao
+Ferme d'Holothuries
+Piège à Concombre de Mer
+Rosier
+Gra. de Rose
 Chemin
-Signe
+Panneau
 Poubelle
-Bien
-Boîte de rangement
-Tampon
-Module de mise à niveau d'usine
-Graisse de tapis roulant
-Dissolvant d'obstruction
+Puits
+Boîte de Rangement
+Boîte Tampon
+Puce de Mise à Niveau d'Usine
+Graisse de Bande Transporteuse
+Déboucheur
 Décharge
-Rotavateur
-Cottage de retraite
-Clôture
-Harvester 7x7
-Révecteur automatique (7x7)
-Pompe à eau
-Carrière de craie
-Mine de sel
-Harvester 9x9
-Révecteur automatique (9x9)
+Motoculteur
+Maison de Retraite
+Palissade 
+Moissonneuse (7x7)
+Moissonneuse Automatique (7x7)
+Pompe à Eau
+Carrière de Craie
+Mine de Sel
+Moissonneuse (9x9)
+Moissonneuse Automatique (9x9)
 Extracteur de CO2
-Usine de vitamines
-Usine d'huile végétale
-Usine de croustilles
-Usine d'éthanol
-Usine de cidre dur
+Usine de Vitamines
+Usine d'Huile Végétale
+Usine de Croustilles
+Usine d'Éthanol
+Usine de Cidre
 Abattoir
-Usine d'hydrogène
-Usine d'huile hydrogénée
-Usine de chiens de maïs
-Brasserie de bière
-Usine de tequila
-Usine de sirop de maïs à forte fructose
-Usine de gélatine
-Usine de jello
-Usine de jello-shots
-Usine des émulsifiants
-Glaçons
-Batterie de poulet à batterie
-Usine de poudre de protéines
+Usine d'Hydrogène
+Usine d'Huile Hydrogénée
+Usine de Chiens de Maïs
+Brasserie de Bière
+Usine de Tequila
+Usine de Sirop de Maïs à Forte Fructose
+Usine de Gélatine
+Usine de Gelée
+Usine de Coups de Gelée
+Usine des Émulsifiants
+Fabrique de Crème Glacée
+Élevage de Poulets en Batterie
+Usine de Poudre de Protéines
 Chocolaterie
-Usine de tarte à la viande
-Usine de glutamate de monosodium
-Usine de dinner de télévision
-Usine de gâteau au chocolat
-Usine de poudre de caféine
-Usine de boissons énergisantes
-Usine de jus de rave
-Usine de pilules de perk
-Fabricant d'emballages
-Usine de dessert
-Usine de pack de restauration
-Foo Young Meal Factory
-Fêtard
-Usine de carflumes
-Miracle Powder Factory
-Usine turque de délice
-La boutique
-Dépôt de vente
-Dépôt d'exportation de fret
-Dépôt d'importations de fret
-Dépôt de tracé
-Un rocher suspect
+Usine de Tarte à la Viande
+Usine de Glutamate de Monosodium
+Usine de Dinner de Télévision
+Usine de Gâteaux au Chocolat
+Usine de Poudre de Caféine
+Usine de Boissons Énergisantes
+Usine de 'Jus de Rave'
+Usine de Pilules Guilleret
+Fabricant d'Emballages
+Usine de Dessert
+Usine de Forfait Traiteur
+Usine de Foo Young
+Usine de Trousse de Fête
+Usine de Parfum
+Usine de Poudre de Miracle
+Usine Turque de Délice
+La Boutique
+Dépôt de Vente
+Dépôt d'Exportation
+Dépôt d'Importations
+Dépôt de Terrains
+Un Rocher Suspect
 Carottes
 Carotte
 Craie
@@ -119,21 +119,21 @@ Patates
 Pomme de terre
 Tournesols
 Tournesol
-Les huiles végétales
-Huile végétale
+Les Huiles Végétales
+Huile Végétale
 Sel
 Sel
-Puces
-Puces
+Croustilles
+Croustilles
 Pommes
 Pomme
 Eau
 Eau
 Éthanol
 Éthanol
-Cidres durs
-Cidre dur
-Cors
+Cidres
+Cidre
+Maïs
 Maïs
 Algues
 Algue
@@ -142,9 +142,9 @@ Viande
 Hydrogène
 Hydrogène
 Huiles H.
-Huile
-Pogo
-Chien de maïs
+Huile H.
+Chiens de Maïs
+Chien de Maïs
 Blé
 Blé
 Bières
@@ -153,17 +153,17 @@ Cactus
 Cactus
 Tequilas
 Tequila
-Citrons verts
-Chaux
-H.F.C.S.
-H.F.C.S.
+Citrons Verts
+Citron Vert
+S.M.F.F.
+S.M.F.F.
 Gélatine
 Gélatine
-Jello
-Jello
-Jello
-Jello-shot
-Des fraises
+Gelées
+Gelée
+Coups de Gelée
+Coup de Gelée
+Des Fraises
 Fraise
 Émulsifiant
 Émulsifiant
@@ -171,74 +171,74 @@ Glaces
 Glace
 Œufs
 Œuf
-Poudres de protéines
-Poudre de protéine
-Coco grains
-Coco grain
+Poudres de Protéines
+Poudre de Protéine
+Coco Grains
+Coco Grain
 Chocolat
 Chocolat
-Tartes à la viande
-Tourte à la viande
-M.S.G.
-M.S.G.
-Téléviseurs
-Canal de télévision
+Tartes à la Viande
+Tourte à la Viande
+G.M.S.
+G.M.S.
+Dîners Télévisé
+Dîner Télévisé
 Gâteaux
 Gâteau
-Grains de café
-Grain de café
+Grains de Café
+Grain de Café
 CO2
 CO2
 Caféine
 Caféine
-Boissons énergisantes
-Boisson énergisante
-Jus de rave
-Jus rave
-Pilules de perk
-Pilules de perk
+Boissons Énergisantes
+Boisson Énergisante
+Juses Rave'
+Jus Rave'
+Pilules Guilleret
+Pilules Guilleret
 Bambous
 Bambou
 Emballage
 Emballage
 Desserts
 Dessert
-Kits de restauration
-Kit de restauration
+Forfaits Traiteur
+Forfait Traiteur
 Foo Young
 Foo Young
-Packs de fête
-Pack de fête
-Concombres de mer
-Concombre de mer
-Pur
-Pur
-Poudre miracle
-Poudre miracle
-Des roses
+Trousses de Fête
+Trousse de Fête
+Concombres de Mer
+Concombre de Mer
+Parfums
+Parfum
+Poudres de Miracle
+Poudre de Miracle
+Des Roses
 Rose
-Délice turc
-Délice turc
-Menu principal
+Délice Turc
+Délice Turc
+Menu Principal
 effacer la sauveg. 1
 effacer la sauveg. 2
 effacer la sauveg. 3
 charger
 sauvegarder
-menu
+Menu
 Eau
 Détrempé
 Humide
 Sec
-Sol silencieux
-Terre crayeuse
-Sol tourbillon
-Sol sableux
-Sol argileux
-Terre limoneuse
+Sol Vase
+Sol Calcaire
+Sol Tourbeux
+Sol Sableux
+Sol Argileux
+Sol Limoneux
 Sol
-Sol pavé
-Sol obstrué
+Sol Pavé
+Sol Obstrué
 Lac
 Rivière
 Océan
@@ -264,11 +264,11 @@ Mode de déconstruction
 Attrape la cargaison à proximité, vide les bâtiments
 Voir les détails sur la tuile actuelle
 Déconstruit tout dans la région
-La boutique
-Dépôt de vente
-Dépôt de parcelles
-Exportation Depot
-Imports Depot
+La Boutique
+Dépôt de Vente
+Dépôt de Terrains
+Exportations
+Importations
 Crédits
 --- Étape Du Didacticiel %i/%i ---
 N
@@ -287,34 +287,34 @@ E, S, O
 S, O, N
 Le sol obstrué ne peut pas être construit.
 Peut-être pourrez-vous l'effacer plus tard?
-Mode de placement
-Mode végétal
-Mode de construction
-Mode de ramassage
+Mode Placement
+Mode Plantation
+Mode de Construction
+Mode de Ramassage
 Inventaire
 Inspecter
 Déconstruction
-Nouvelle récolte!
-Nouveau convoyeur!
-Nouveau moissonneuse!
-Nouvelle usine!
-Nouvel utilitaire!
+Nouvelle Récolte!
+Nouvaue Bande Transporteuse!
+Nouveau Moissonneuse!
+Nouvelle Usine!
+Nouvel Utilitaire!
 Outils
 Outil
-Cultures
-Culture
-Convoyeurs
-Convoyeur
-Récolteurs
-Intervaincu
-Des usines
+Végétaux
+Végétau
+Transporteuses
+Transporteuse
+Moissonneuses
+Moissonneuse
+Usines
 Usine
-Services publics
+Utilitaires
 Utilitaire
+Cargaisons
 Cargaison
-Cargaison
-Emplacements de l'intrigue
-Emplacements de l'intrigue
+Emplacements des terrains
+Emplacements des terrains
 Importation (Nord)
 Importation (Nord)
 Importation (Est)
@@ -323,7 +323,7 @@ Importation (Sud)
 Importation (Sud)
 Importation (Ouest)
 Importation (Ouest)
-ÉCONOMIE
+SAUVER
 GÉNÉRATEUR
 CHARGEMENT
 %i: Nouveau jeu
@@ -331,32 +331,32 @@ Charger la Démo
 %i: Continue
 - Démo Technologique de 'Usine Agriculture' -
 Vous êtes libre de regarder autour de cet exemple d'usine.
-Vous trouverez des installations au niveau technologique 3.
-Le jeu complet monte au niveau technologique 7.
-La construction et l'économie sont désactivées dans la démo.
-- l'achat initial de graines -
-Bienvenue à l'agriculture industrielle! Il y a de l'argent à être
-Fabriqué, et il ne se fait pas! Alors commençons par
-Visiter la boutique avec ⓐ et acheter des graines de carotte
-La boussole (à droite) pointera toujours vers la boutique.
-Déplacez-vous avec le D-Pad, ✛. Zoomer et sortir avec 🎣.
-Tenir ⓑ pour courir. Allez à la boutique et appuyez sur ⓐ. "
-Achetez 10 graines de carotte dans la boutique avec ⓐ.
-Appuyez sur ⓑ pour quitter la boutique.
-- l'objectif suivant -
-Votre objectif actuel est de vendre au moins
-10 carottes. Vous pouvez vérifier quel est votre objectif actuel
-est à tout moment en appuyant sur le bouton du menu.
-Faites cela maintenant.
+Vous trouverez des installations jusqu'au niveau technologique 3.
+Le jeu complet va jusqu'au niveau technologique 7.
+La construction et la sauvegarde sont désactivées dans la démo.
+- l'achat Initial de Graines -
+Bienvenue à l'agriculture industrielle ! Il y a de l'argent
+à gagner fait, et ça ne se fera pas tout seul!
+Alors commençons par visiter la boutique avec Ⓐ et acheter
+des graines de carottes. La boussole (à droite) pointera toujours vers le magasin
+La boussole (à droite) pointera toujours vers le magasin
+Déplacez-vous avec le D-Pad, ✛. Zoomez et dézoomez avec 🎣.
+Maintenez Ⓑ pour courir. Allez au magasin et appuyez sur Ⓐ.
+Achetez 10 graines de carottes au magasin avec Ⓐ
+- L'Objectif Suivant -
+Votre objectif actuel est de vendre au moins 10 carottes.
+Vous pouvez vérifier quel est votre objectif actuel à tout
+moment en appuyant sur le bouton Menu.
+Faites-le maintenant.
 Appuyez sur le bouton Menu pour voir votre objectif actuel.
-De là, vous pouvez également enregistrer et charger le jeu, et
-Ouvrez le menu principal avec les paramètres du jeu, etc.
+De là, vous pouvez également enregistrer et charger le jeu,
+et ouvrir le menu principal avec les paramètres du jeu, etc.
      
-- les premières cultures -
-Bon, les carottes se développent bien dans le sol limoneux près de
-boutique. Faites attention au sol et à l'eau que chaque plante aime.
+- La Première Récolte -
+Bon, les carottes pousseront bien dans le sol en terre près du magasin.
+Faites attention au sol et à l'eau que chaque plante aime.
 Trouvez un bon endroit à proximité, ouvrez votre inventaire
-Avec ⓐ, sélectionnez les graines et plantez 10 carottes.
+avec Ⓐ, sélectionnez les graines et plantez 10 carottes.
 Trouvez une zone voisine de sol limoneux, de préférence humide.
 Appuyez sur ⓐ pour entrer votre inventaire, sélectionnez la carotte
 Graines et appuyez à nouveau ⓐ. Plantez 10 graines de carotte sur
@@ -456,61 +456,63 @@ Nord
 Est
 Sud
 Ouest
-Multiplicateur de vitesse
+Multiplicateur de Vitesse
 Filtre pas encore défini.
 Passez la cargaison pour régler le filtre.
 Filtre
-Transit suivant
+Transit Suivant
 Trémie %i/3
-Dehors
+Sortie
 Ingrédients:
 glycérine
 Bêta
 Carotène
 Soja
 Lécithine
-Calcium
 Carbonate
-Stabilisateurs
+de Calcium
+Stabilisants
 Conservateurs
-Artificiel
 Arômes
-Distillé
-Légume
+Artificiels
 Alcool
+Végétal
+Distillé
 Pomme
 Jus
-Coloration
+Colorant
+Artificiel
 L'alimentation animale:
-Les hormones
+Hormones
 Stéroïdes
 Processus:
 Électrolyse
 de
-Colorant
-Coucher de soleil
+l'eau
+Sunset
 Orange
-Hydrogéné
 Huile
+Hydrogénée
+Huile de
 Houblon
 Agave
-Haut
-Fructose
-Maïs
 Sirop
-Anticaking
-Agents
+de Maïs
+à Forte
+Fructose
+Antiagglomérants
+ 
 Antibiotiques
-Vertige
+Vermifuge
 Insecticides
-Gluten
+Acide Glutamique
 Sodium
-Monosodium
-Glutamate
+Glutimate
+Monosodique
 Exigences:
 Solvant
-Titane
 Dioxyde
+de Titane
 Eau de Javel
 Fruit
 Contenu de l'emballage:
@@ -526,47 +528,47 @@ Ne peut pas grandir ici!
 Temps de Croissance: %is
 Récolte pour pousser
 Temps Restant: %is
-Dépenser de l'argent pour acheter de nouvelles cultures, convoyeurs,
-Extracteurs, usines et articles de services publics.
+Dépenser de l'argent pour acheter de nouvelles cultures, transporteuses,
+moissonneuses, usines et articles de services publics.
      
      
-Vendre la cargaison de votre inventaire ou utiliser
-Les convoyeurs automatisent les ventes.
-Recevez de l'argent pour chaque article vendu.
+Vendez des marchandises à partir de votre inventaire
+ou utilisez des transporteuses pour automatiser les
+ventes. Recevez de l'argent pour chaque article vendu.
      
-Voir les parcelles de terrain disponibles.
-Achetez de nouvelles parcelles pour agrandir votre usine.
+Voir les terrains disponibles.
+Acheter de nouvelles parcelles pour agrandir votre usine.
 Déplacez-vous entre vos parcelles possédées.
      
-Exporter la cargaison pour une utilisation dans d'autres parcelles.
-Les exportations sont en moyenne de plus de 60 s à 120.
-Vous ne pouvez pas exporter de cargaison qui est également
-Importé dans ce tracé.
-Importez du fret des autres parcelles. Vous pouvez sélectionner un
-importation pour chacune des 4 directions cardinales.
-Les importations se produisent toutes les 10 ans, le montant importé
-Cela dépend du nombre total d'importateurs.
+Exporter la cargaison pour l'utiliser dans d'autres
+parcelles. Les exportations sont en moyenne sur 60s
+- 120s. Vous ne pouvez pas exporter de cargaison qui
+est également importée dans cette parcelle.
+Importez des cargaisons d'autres parcelles. Vous pouvez 
+sélectionner une importation pour chacune des 4 directions
+cardinales. Les importations ont lieu toutes les 10 secondes,
+la quantité importée dépend du nombre total d'importateurs.
 Un grand rocher bloque le sol ici.
 Peut-être que cela deviendra important plus tard?
      
      
-La vitesse de déplacement est améliorée sur le chemin.
+La vitesse de déplacement est améliorée sur l'allée.
 Une clôture charmante.
-Votre petit chalet de retraite confortable.
-Placez une cargaison ici pour l'afficher sur le panneau.
-Signer
-Efface définitivement le fret indésirable.
-Déposez la cargaison indésirable ou utilisez des convoyeurs
+Votre petit maison de retraite confortable.
+Placez une cargaison ici pour l'afficher sur le signer.
+Signer pour
+Effacer définitivement le cargaison indésirable.
+Déposez la cargaison indésirable ou utilisez des transporteuses
 Convertit les 8 carreaux environnants en sol limoneux.
-Le retrait du rotavateur reviendra ces carreaux
+Le retrait du rotavator reviendra des carreaux
 à leur type de sol précédent.
-Réduit le temps de production dans n'importe quelle usine
-Immédiatement n, S, E ou W du module.
+Réduit le temps de production dans n'importe quelle
+usine immédiatement N, S, E ou O du module.
 1 module: -0,5s
 2 modules: -0,75s
-3 modules: -1s
-4+ modules: pas de bonus supplémentaire
-Crée une zone environnante de sol humide et humide.
+3+ modules: -1s
+    
+Crée une zone environnante de sol détrempé et sol humide.
 Compartiment %i/3
 Exportation
 Ce Terrain: %s/s
@@ -574,20 +576,20 @@ Tous les Terrains: %s/s
 Importation de
 Importateurs: %i
 Importé: %s/s
-Usine
-Lieu
+Plantation
+Placement
 Construire
 Inventaire: %i
 Valeur
-Construire
-Se construire sur l'eau
+Construire sur
+Construire sur l'eau
 Semer sur l'eau
-Place dans l'océan
+Placer dans l'océan
 Ne peut pas être supprimé
-S'appuyer sur les plaines tranquilles
+Construire sur les plaines tranquilles
 Déplace la cargaison au nord, au sud, à l'est ou à l'ouest
 Réplade les cargaisons entrantes 2 façons (180 degrés)
-Répartisse les cargaisons entrantes 2 façons (90 degrés)
+Réplalle la cargaison entrante 2 façons (90 degrés)
 Divise les cargaisons entrantes 3 façons
 Débordement utilisé lorsque la sortie principale est bloquée
 Filtre sur la première cargaison pour passer
@@ -600,40 +602,40 @@ Planter pour faire pousser du maïs
 Les algues poussent dans les lacs
 Planter pour faire pousser du blé
 Planter pour faire pousser des cactus
-Planter pour faire pousser des limes
-Plantez-vous pour faire pousser des fraises
-Plantez pour faire pousser des grains de coco
+Planter pour faire pousser des citrons vert
+Planter pour faire pousser des fraises
+Planter pour faire pousser les fèves de cacao
 Planter pour faire pousser des grains de café
 Planter pour faire pousser des tiges de bambou
-Place dans l'océan pour les concombres de la mer de la ferme
-Tendez-vous à ces roses à votre retraite.
+Lieu dans l'océan pour cultiver des concombres de mer
+Occupez-vous de ces roses pendant votre retraite.
 La vitesse de déplacement est améliorée sur un chemin
 Affiche une cargaison de votre choix
 La cargaison placée ici sera détruite
-Place pour atténuer le sol environnant
+Endroit pour humidifier le sol environnant
 Stocke jusqu'à 3 types de cargaison différents
-Comme la boîte de stockage, mais aussi les auto-sévères
+Comme la boîte de rangement, mais se vide aussi tout seul
 Placer à côté des usines, accélère la production
-Améliore la vitesse du convoyeur de x1 à x2
-Efface le sol obstrué, peut ensuite être construit sur
-Remplit l'eau. Peut être construit sur, mais pas planté.
+Améliore la vitesse du transporteuses de x1 à x2
+Dégage les terrains obstrués, qui peuvent ensuite être construits
+Récupérer la terre de l'eau. Peut être construit, mais pas planté.
 Transforme les terres à proximité en sol limoneux.
 Un espace relaxant pour profiter de votre richesse amassée.
 Une charmante clôture en bois.
 Recueille la cargaison, peut contenir trois types différents
-Doit être construit sur l'eau. Podets d'eau produits
+Doit être construit sur l'eau. Produit des seaux d'eau
 Doit être construit sur un sol crayeux. Produit de la craie
-Doit être construit sur un sol tourbillon. Produit du sel
+Doit être construit sur un sol tourbeux. Produit du sel
 Recueille la cargaison, peut contenir trois types différents
 Liquéfie le dioxyde de carbone directement de l'air
 Fabrique des pilules de vitamines de bas niveau
 Écraser l'huile végétale des tournesols
 Fabrique des croustilles. Un favori frit!
-Brew & Distill Pure Alcool
-Mélangez un «cidre» dur bon marché
-L'alimentation entre, la «viande» sort
+Brasser et distiller de l'alcool pur
+Mélangez un "cidre" bon marché
+La nourriture entre, la "viande" sort
 Divise l'eau et capture l'hydrogène
-Hydrogéne de l'huile pour éviter de se gâter
+Hydrogéne l'huile pour éviter qu'elle ne se gâte
 Croquant et charnu
 Produit quelque chose qui ressemble à de la bière
 Au moins, il y a un peu d'agave
@@ -644,19 +646,19 @@ Un mélange intéressant de saveurs
 Empêche les choses de se séparer
 C'est sans produits laitiers! Est-ce une bonne chose?
 Le maïs entre, les œufs sortent
-Masse maximale, tracts minimum
-C'est surtout du sucre ...
+Masse maximale, tracas minimum
+Ç'est surtout du sucre ...
 Qu'y a-t-il pour le dîner? Tourte à la viande!
 Rend tout meilleur goût
 Un repas pour un, servi dans un plateau
 Extrait la caféine des grains de café
-Cafeine High & Sugar Rush tout-en-un
+Un high de caféine et une ruée vers le sucre tout-en-un
 Ce truc devrait probablement être illégal ...
 Vous gardera éveillé beaucoup trop longtemps
 Chocolaté, doux et une durée de conservation infinie
 Gourmand?
-Échec avec des emballages personnalisés
-Kits de restauration emballés, grande balisage
+Devenir professionnel avec un emballage personnalisé
+Forfait traiteur, grande balisage
 Gélatineux et déshydratant
 Tout ce dont une bonne fête a besoin
 Trucs de fantaisie
@@ -677,7 +679,7 @@ Continuer
 Le tutoriel
 Pour déverrouiller le prochain
 Bâtiment
-Enregistrez avant de sortir!
+ENREGISTRER AVANT DE SORTI!
 Temps de jeu total:
 %ih:%im:%is
 ÉTEINTE
@@ -685,80 +687,80 @@ Temps de jeu total:
 10m
 15m
 30m
---- Paramètres sonores ---
+--- Paramètres Sonores ---
 Musique
-Volume de la musique
-Effets sonores
-trace de pas
---- Paramètres de jeu ---
-Secouer
+Volume de la Musique
+Effets Sonores
+Bruits de Pas
+--- Paramètres de Jeu ---
+Bougé d'écran
 Tutoriel activé
-Animation de convoyeur
-Montrer les contours de la moissonneuse
-Activer la manivelle
+Animation de transporteuse
+Contours de la moissonneuse
+Manivelle sur transporteuse
 Caméra centrale sur le joueur
-Zoomez automatiquement lors du déménagement
+Zoomer automatiquement lors du déménagement
 Temps de sauvegarde automatique
 Ramassage automatique sur déconstruct
-Auto appliquer la graisse de convoyeur
+Auto appliquer la graisse de transporteuse
 Afficher les informations de débogage
---- Quitter le jeu ---
-Enregistrer et sortir sur le titre
-Sortir au titre sans économiser
---- Capture d'écran ---
+--- Quitter le Jeu ---
+Sauver et sortir au titre
+Sortir au titre sans sauver 
+--- Capture d'Écran ---
 Prendre une capture d'écran de l'intrigue
 --- Contrôles ---
-Inventaire / sélection / interaction: ⓐ
-Retour / Annuler: ⓑ
-Marche: ✛
-Courir: tenir ⓑ + ✛
-Zoomer / out: 🎣 ou tenir ⓐ + ⬇️
-Tourner: 🎣 ou maintenir ⓑ + ⬆️ / ➡️ / ⬇️ / ⬅️
-Redimensionner: 🎣 ou maintenir ⓑ + ⬆️ / ⬇️
-Mode de ramassage rapide: maintenez ⓐ + ⬅️
-Mode d'inspection rapide: maintenez ⓐ + ⬆️
-Mode déconstruit rapide: maintenez ⓐ + ➡️
+Inventaire/Sélectionner/Interagir : Ⓐ
+Retour/Annuler : Ⓑ
+Marche : ✛
+Courir: maintenez  Ⓑ + ✛
+Zoom avant/arrière: 🎣 ou maintenez Ⓐ + ⬇️
+Tourner: 🎣 ou Maintenir Ⓑ + ⬆️/➡️/⬇️/⬅️
+Redimensionner: 🎣 ou maintenir Ⓑ + ⬆️/⬇️
+Mode de ramassage rapide: maintenez Ⓐ + ⬅️
+Mode d'inspection rapide: maintenez Ⓐ + ⬆️
+Mode de déconstruction rapide: maintenez Ⓐ + ➡️
 --- Crédits ---
-Élevage d'usine par Tim Martin
+L'élevage Industriel par Tim Martin
 -- Musique --
 ♬ Dr Tikov: 1985
-♬ BoxCAT Games: B-3
-♬ Eric Skiff: Nous sommes les résistances
-♬ Roccow: Douce satisfaction de soi
-♬ Roccow: WeeklyBeats 2014 # 4
-♬ Soft & Furious: Horizon Fin
+♬ BoxCat Games: B-3
+♬ Eric Skiff: We're the Resistors
+♬ RoccoW: Sweet Self Satisfaction
+♬ RoccoW: Weeklybeats 2014 #4
+♬ Soft & Furious: Horizon Ending
 -- Art --
-Kenney: pack 1 bits
-VectorPixelStar: Modèles 1 bits
-Josehzz: cultures agricoles
-SCRACKIO: Ensemble d'agriculture
-Varkalandar: Roches isométriques
-Avec Thelove: Sprites de personnage
-DinosoftLab: Nouveau (Nounproject)
-- polices -
+Kenney: 1-Bit Pack
+VectorPixelStar: 1-Bit Patterns
+Josehzz: Farming Crops
+ScratchIO: Farming Set
+Varkalandar: Isometric Rocks
+Withthelove: Character Sprites
+DinosoftLab: New (NounProject)
+-- Polices --
 Chester Jenkins: Cooper Hewitt
 Martin Vacha: Roobert
 Mediengestaltung: Messing Lettern
 Mediengestaltung: Coventry Garden
--- Effets sonores --
+-- Effets Sonores --
 sfxr.me
 -- Statistiques --
 Récréation:
 Total d'argent gagné:
-La plupart des fonds détenaient:
-Cargo total vendu:
-Cargo total importé:
-Total des bâtiments de cette intrigue:
-Cargo total dans ce complot:
+Le plus d'argent détenu :
+Cargaison totale vendue :
+Cargaison total importé:
+Total des bâtiments de cette terrain:
+Cargaison total dans ce terrain:
 --
 © Tim Martin 2022
-L'agriculture industrielle est un MIT
-Projet open source agréé
+L'élevage Industriel est un MIT
+projet open source agréé
 github.com/timboe/factoryfarming
 --
 Merci d'avoir joué!
-Et pour votre soutien à Niche
-Indy Game Dev Projects :)
+Et pour votre soutien aux projets de développement
+de jeux indépendants de niche :)
 --
 Continuez à maximiser le profit,
 Maximiser l'efficacité.
@@ -769,4 +771,5 @@ Sols
 Usine
 Agriculture
 "L'élevage industriel"
+FR
 --

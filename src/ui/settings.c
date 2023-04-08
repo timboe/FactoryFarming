@@ -128,29 +128,29 @@ LCDBitmap* getPauseImage() {
 
   length = strlen(textA);
   width = pd->graphics->getTextWidth(getRoobert10(), textA, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textA, 128, kUTF8Encoding, CENTRE - width/2, 0*Y_SPACE+OFFS);
+  pd->graphics->drawText(textA, 128, kUTF8Encoding, CENTRE - width/2, 0*Y_SPACE+OFFS +tY());
 
   length = strlen(textB);
   width = pd->graphics->getTextWidth(getRoobert10(), textB, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textB, 128, kUTF8Encoding, CENTRE - width/2, 1*Y_SPACE+OFFS);
+  pd->graphics->drawText(textB, 128, kUTF8Encoding, CENTRE - width/2, 1*Y_SPACE+OFFS +tY());
 
   pd->graphics->drawBitmap(sA, X_START, 1*Y_SPACE+OFFS, kBitmapUnflipped);
   pd->graphics->drawBitmap(sA, X_END,   1*Y_SPACE+OFFS, flip);
 
   length = strlen(textC);
   width = pd->graphics->getTextWidth(getRoobert10(), textC, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textC, 128, kUTF8Encoding, CENTRE - width/2, 2*Y_SPACE+OFFS);
+  pd->graphics->drawText(textC, 128, kUTF8Encoding, CENTRE - width/2, 2*Y_SPACE+OFFS +tY());
 
   pd->graphics->drawBitmap(sB, X_START, 3*Y_SPACE+OFFS, kBitmapUnflipped);
   pd->graphics->drawBitmap(sB, X_END,   3*Y_SPACE+OFFS, kBitmapUnflipped);
 
   length = strlen(textD);
   width = pd->graphics->getTextWidth(getRoobert10(), textD, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textD, 128, kUTF8Encoding, CENTRE - width/2, 3*Y_SPACE+OFFS);
+  pd->graphics->drawText(textD, 128, kUTF8Encoding, CENTRE - width/2, 3*Y_SPACE+OFFS +tY());
 
   length = strlen(textE);
   width = pd->graphics->getTextWidth(getRoobert10(), textE, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textE, 128, kUTF8Encoding, CENTRE - width/2, 4*Y_SPACE+OFFS);
+  pd->graphics->drawText(textE, 128, kUTF8Encoding, CENTRE - width/2, 4*Y_SPACE+OFFS +tY());
 
   pd->graphics->drawLine(X_START + TILE_PIX, 2*Y_SPACE+OFFS - TILE_PIX/2, X_END, 2*Y_SPACE+OFFS - TILE_PIX/2, 2, kColorBlack);
   pd->graphics->drawLine(X_START + TILE_PIX, 4*Y_SPACE+OFFS - TILE_PIX/2, X_END, 4*Y_SPACE+OFFS - TILE_PIX/2, 2, kColorBlack);
@@ -165,7 +165,7 @@ LCDBitmap* getPauseImage() {
   snprintf(textA, 128, "%s", tr(kTRPauseSave));
   length = strlen(textA);
   width = pd->graphics->getTextWidth(getRoobert10(), textA, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textA, 128, kUTF8Encoding, CENTRE - width/2, 6*Y_SPACE);
+  pd->graphics->drawText(textA, 128, kUTF8Encoding, CENTRE - width/2, 6*Y_SPACE +tY());
 
   //
 
@@ -177,13 +177,13 @@ LCDBitmap* getPauseImage() {
   snprintf(textA, 128, "%s", tr(kTRPauseTotTime));
   length = strlen(textA);
   width = pd->graphics->getTextWidth(getRoobert10(), textA, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textA, 128, kUTF8Encoding, CENTRE - width/2, 8*Y_SPACE-OFFS);
+  pd->graphics->drawText(textA, 128, kUTF8Encoding, CENTRE - width/2, 8*Y_SPACE-OFFS +tY());
 
   const uint32_t pt = p->m_playTime / TICK_FREQUENCY;
   playTime(textA, pt);
   length = strlen(textA);
   width = pd->graphics->getTextWidth(getRoobert10(), textA, length, kUTF8Encoding, 0);
-  pd->graphics->drawText(textA, 128, kUTF8Encoding, CENTRE - width/2, 9*Y_SPACE-OFFS - TILE_PIX/4);
+  pd->graphics->drawText(textA, 128, kUTF8Encoding, CENTRE - width/2, 9*Y_SPACE-OFFS - TILE_PIX/4 +tY());
 
   pd->graphics->popContext();
   return m_pause;
@@ -211,7 +211,7 @@ void addNumber(int32_t _n) {
   int32_t width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->fillRect(TILE_PIX*16 - width - TILE_PIX/4, 0, TILE_PIX + width + TILE_PIX/4, TILE_PIX, kColorWhite);
-  pd->graphics->drawText(text, length, kUTF8Encoding, TILE_PIX*16 - width, 0);
+  pd->graphics->drawText(text, length, kUTF8Encoding, TILE_PIX*16 - width, tY());
 }
 
 void addText(char* _t) {
@@ -219,27 +219,27 @@ void addText(char* _t) {
   int32_t width = pd->graphics->getTextWidth(getRoobert10(), _t, length, kUTF8Encoding, 0);
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->fillRect(TILE_PIX*16 - width - TILE_PIX/4, 0, TILE_PIX + width + TILE_PIX/4, TILE_PIX, kColorWhite);
-  pd->graphics->drawText(_t, length, kUTF8Encoding, TILE_PIX*16 - width, 0);
+  pd->graphics->drawText(_t, length, kUTF8Encoding, TILE_PIX*16 - width, tY());
 }
 
 void autosave(uint32_t _time) {
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   switch (_time) {
-    case 0: pd->graphics->drawText(tr(kTRSettingsMusicOff), 8, kUTF8Encoding, TILE_PIX*15, 0); break;
-    case 5: pd->graphics->drawText(tr(kTRSettingsMusic5m), 8, kUTF8Encoding, TILE_PIX*15, 0); break;
-    case 10: pd->graphics->drawText(tr(kTRSettingsMusic10m), 8, kUTF8Encoding, TILE_PIX*15, 0); break;
-    case 15: pd->graphics->drawText(tr(kTRSettingsMusic15m), 8, kUTF8Encoding, TILE_PIX*15, 0); break;
-    case 30: pd->graphics->drawText(tr(kTRSettingsMusic30m), 8, kUTF8Encoding, TILE_PIX*15, 0); break;
+    case 0: pd->graphics->drawText(tr(kTRSettingsMusicOff), 8, kUTF8Encoding, TILE_PIX*15, tY()); break;
+    case 5: pd->graphics->drawText(tr(kTRSettingsMusic5m), 8, kUTF8Encoding, TILE_PIX*15, tY()); break;
+    case 10: pd->graphics->drawText(tr(kTRSettingsMusic10m), 8, kUTF8Encoding, TILE_PIX*15, tY()); break;
+    case 15: pd->graphics->drawText(tr(kTRSettingsMusic15m), 8, kUTF8Encoding, TILE_PIX*15, tY()); break;
+    case 30: pd->graphics->drawText(tr(kTRSettingsMusic30m), 8, kUTF8Encoding, TILE_PIX*15, tY()); break;
   }
 }
 
 void musicvol(uint32_t _vol) {
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   switch (_vol) {
-    case 100: case 0: pd->graphics->drawText("100%", 8, kUTF8Encoding, TILE_PIX*15, 0); break;
-    case 75: pd->graphics->drawText("75%", 8, kUTF8Encoding, TILE_PIX*15, 0); break;
-    case 50: pd->graphics->drawText("50%", 8, kUTF8Encoding, TILE_PIX*15, 0); break;
-    case 25: pd->graphics->drawText("25%", 8, kUTF8Encoding, TILE_PIX*15, 0); break;
+    case 100: case 0: pd->graphics->drawText("100%", 8, kUTF8Encoding, TILE_PIX*15, tY()); break;
+    case 75: pd->graphics->drawText("75%", 8, kUTF8Encoding, TILE_PIX*15, tY()); break;
+    case 50: pd->graphics->drawText("50%", 8, kUTF8Encoding, TILE_PIX*15, tY()); break;
+    case 25: pd->graphics->drawText("25%", 8, kUTF8Encoding, TILE_PIX*15, tY()); break;
   }
   updateMusicVol();
 }
@@ -376,15 +376,15 @@ void redrawSettingsMenuLine(LCDBitmap* _bitmap, int32_t _line) {
     const char* text = getLine(_line);
     length = strlen(text);
     width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
-    pd->graphics->drawText(text, length, kUTF8Encoding, TILE_PIX*9 - width/2, 0);
+    pd->graphics->drawText(text, length, kUTF8Encoding, TILE_PIX*9 - width/2, tY());
 
   } else {
-    pd->graphics->drawText("..........................................................................", 75, kUTF8Encoding, TILE_PIX, 0);
+    pd->graphics->drawText("..........................................................................", 75, kUTF8Encoding, TILE_PIX, tY());
     const char* text = getLine(_line);
     length = strlen(text);
     width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
     pd->graphics->fillRect(0, 0, TILE_PIX + width + TILE_PIX/4, TILE_PIX, kColorWhite);
-    pd->graphics->drawText(text, length, kUTF8Encoding, TILE_PIX, 0);
+    pd->graphics->drawText(text, length, kUTF8Encoding, TILE_PIX, tY());
   }
 
   struct Player_t* p = getPlayer();
