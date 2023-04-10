@@ -605,6 +605,5 @@ void drawUIInspectConveyor(struct Building_t* _building) {
     //  tr(kTRConvNextTransit),
     //  getTransitText( getConveyorDirection(_building->m_subType.conveyor, _building->m_dir, _building->m_mode.mode16) ));
     pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
   }
 }

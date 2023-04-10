@@ -29,6 +29,8 @@ LCDBitmap* m_splash;
 
 LCDBitmap* m_menuBacking;
 
+LCDBitmap* m_langArrow;
+
 #ifdef DEMO
 LCDBitmap* m_demo;
 #endif
@@ -182,6 +184,10 @@ LCDBitmap* getMenuBacking() {
   return m_menuBacking;
 }
 
+LCDBitmap* getLangArrowSprite() {
+  return m_langArrow;
+}
+
 #ifdef DEMO
 LCDBitmap* getDemoSplash() {
   return m_demo;
@@ -261,6 +267,7 @@ void initSprite() {
   m_splash = loadImageAtPath("images/splash");
   m_menuBacking = loadImageAtPath("images/backing");
   m_retirementNo[1] = loadImageAtPath("images/cross9x9");
+  m_langArrow = loadImageAtPath("images/langArrow");
   #ifdef DEMO
   m_demo = loadImageAtPath("images/tech");
   #endif

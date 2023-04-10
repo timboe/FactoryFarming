@@ -17,18 +17,23 @@ uint16_t m_offsets[kNTR + 1]; // +1 due to end of last string
 
 const char* getLangFileStr(const enum kLanguage _l);
 
+enum kLanguage fileToLang(const uint8_t _buf);
+
+#define LANG_SAVE "lang"
+
 /// ///
 
 enum kLanguage getLanguage(void) {
   return m_language;
 }
 
+// Y offset for Noto font sizes
 int16_t tY(void) {
   return m_language == kEN ? 0 : -6;
 }
 
-#define TEX_LEN_ADD_NOTO 6
-#define TEX_LEN_ADD_ROOB 4
+#define TEX_LEN_ADD_NOTO 0
+#define TEX_LEN_ADD_ROOB 5
 size_t trLen(const enum kTR _tr) {
   return (m_language == kEN ? TEX_LEN_ADD_ROOB : TEX_LEN_ADD_NOTO) + pd->graphics->getTextWidth(getRoobert10(), tr(_tr), strlen(tr(_tr)), kUTF8Encoding, 0);
 }
@@ -47,6 +52,10 @@ void modLanguage(const bool _forward) {
       --m_language;
     }
   }
+  SDFile* file = pd->file->open(LANG_SAVE, kFileWrite);
+  pd->file->write(file, (void*) &m_language, 1);
+  pd->file->close(file);
+
   resetLocalisation(m_language);
 }
 
@@ -62,12 +71,20 @@ const char* tr(const enum kTR _tr) {
 
 const char* getLangFileStr(const enum kLanguage _l) {
   switch (_l) {
-  	case kFR: return "lang/FR.txt";
-  	case kRU: return "lang/RU.txt";
-  	default: return "lang/EN.txt";
+    case kFR: return "lang/FR.txt";
+    case kRU: return "lang/RU.txt";
+    case kDE: return "lang/DE.txt";
+    case kES: return "lang/ES.txt";
+    default: return "lang/EN.txt";
   }
 }
 
+enum kLanguage fileToLang(const uint8_t _buf) {
+  if (_buf >= kNLanguage) {
+    return kEN;
+  }
+  return (enum kLanguage) _buf;
+}
 
 void initLocalisation() {
   m_strings = pd->system->realloc(NULL, BUFFER_LENGTH);
@@ -75,6 +92,16 @@ void initLocalisation() {
   #ifdef DEV
   pd->system->logToConsole("malloc: for localisation %i kb", BUFFER_LENGTH/1024);
   #endif
+  SDFile* file = pd->file->open(LANG_SAVE, kFileReadData);
+  if (file) {
+    uint8_t buf;
+    int32_t status = pd->file->read(file, (void*) &buf, 1);
+    if (status == 1) {
+      m_language = fileToLang(buf);
+      pd->system->logToConsole("got saved languate: %i", buf);
+    }
+    pd->file->close(file);
+  }
   resetLocalisation(m_language);
 }
 
@@ -85,7 +112,6 @@ void resetLocalisation(const enum kLanguage _l) {
   const size_t bytes = pd->file->read(f, (void*)m_strings, BUFFER_LENGTH);
   pd->file->close(f);
   f = NULL;
-
 
   // Hunt for new line characters
   size_t word = 1; // word 0 starts at index 0

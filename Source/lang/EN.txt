@@ -59,12 +59,12 @@ Landfill
 Rotavator
 Retirement Cottage
 Fence
-Harvester 7x7
+Harvester (7x7)
 Automatic Harvester (7x7)
 Water Pump
 Chalk Quarry
 Salt Mine
-Harvester 9x9
+Harvester (9x9)
 Automatic Harvester (9x9)
 CO2 Extractor
 Vitamin Factory
@@ -133,7 +133,7 @@ Ethanol
 Ethanol
 Hard Ciders
 Hard Cider
-Corns
+Corn
 Corn
 Seaweeds
 Seaweed
@@ -515,6 +515,7 @@ Titanium
 Dioxide
 Bleach
 Fruit
+Syrup
 Pack Content: 
 Box
 Formaldehyde
@@ -533,7 +534,7 @@ Extractors, Factories, and Utility items.
      
      
 Sell Cargo from your inventory, or use
-Conveyors to automate the sales.
+conveyors to automate the sales.
 Receive money for every sold item.
      
 View available plots of land.
@@ -558,7 +559,7 @@ Your cozy little retirement cottage.
 Place a cargo here to display it on the sign.
 Sign for
 Permanently erases unwanted cargo.
-Drop the unwanted cargo, or use conveyors
+Drop the unwanted cargo, or use conveyors.
 Converts the 8 surrounding tiles to loamy soil.
 Removing the rotavator will revert these tiles
 to their previous soil type.
@@ -608,7 +609,7 @@ Plant to grow coco beans
 Plant to grow coffee beans
 Plant to grow bamboo stalks
 Place in the ocean to farm sea cucumbers
-Tend to these Roses in your retirement.
+Tend to these roses in your retirement
 Movement speed is enhanced while on a path
 Displays a cargo of your choosing
 Cargo placed here will be destroyed
@@ -752,16 +753,16 @@ Total Cargo Sold:
 Total Cargo Imported:
 Total Buildings in this Plot:
 Total Cargo in this Plot:
---
+     
 © Tim Martin 2022
 Factory Farming is an MIT
 Licensed Open Source Project
 github.com/timboe/FactoryFarming
---
+     
 Thank you for playing!
 And for your support of niche
 Indie game dev projects :)
---
+     
 Keep on Maximizing Profit,
 Maximizing Efficiency.
 Buy

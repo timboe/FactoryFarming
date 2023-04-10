@@ -653,7 +653,7 @@ void drawUIInspectSpecial(struct Building_t* _building) {
   } else if (sst == kExportBox && _building->m_dir == SN) {
 
     snprintf(text, 256, "%s", tr(kTRSpecialExport0));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY() +tY());
+    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
     snprintf(text, 256, "%s", tr(kTRSpecialExport1));
     pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
     snprintf(text, 256, "%s", tr(kTRSpecialExport2));

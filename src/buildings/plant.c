@@ -323,6 +323,7 @@ void drawUIInspectPlant(struct Building_t* _building) {
   const enum kPlantSubType pst = _building->m_subType.plant;
 
   static char text[256];
+  const char* trTxt = NULL;
   uint8_t y = 1;
 
   strcpy(text, toStringBuilding(_building->m_type, _building->m_subType, false));
@@ -366,17 +367,21 @@ void drawUIInspectPlant(struct Building_t* _building) {
   pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT +tY());
 
   if (_building->m_progress > INT16_MAX/2) {
-    snprintf(text, 256, "%s", tr(kTRPlantCannotGrow)); 
+    trTxt = tr(kTRPlantCannotGrow);
+    snprintf(text, 256, "%s", trTxt); 
     pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
     snprintf(text, 256, " "); 
     pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
   } else {
-    snprintf(text, 256, tr(kTRPlantGrowTime), growTime / TICKS_PER_SEC); 
+    trTxt = tr(kTRPlantGrowTime);
+    snprintf(text, 256, trTxt, growTime / TICKS_PER_SEC); 
     pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
     if (_building->m_location->m_cargo != NULL) {
-      snprintf(text, 256, "%s", tr(kTRPlantHarvest)); 
+      trTxt = tr(kTRPlantHarvest);
+      snprintf(text, 256, "%s", trTxt); 
     } else {
-      snprintf(text, 256, tr(kTRPlantTimeLeft), _building->m_progress / TICKS_PER_SEC); 
+      trTxt = tr(kTRPlantTimeLeft);
+      snprintf(text, 256, trTxt, _building->m_progress / TICKS_PER_SEC); 
     }
     pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
   }

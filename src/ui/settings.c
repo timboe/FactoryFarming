@@ -225,11 +225,11 @@ void addText(char* _t) {
 void autosave(uint32_t _time) {
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   switch (_time) {
-    case 0: pd->graphics->drawText(tr(kTRSettingsMusicOff), 8, kUTF8Encoding, TILE_PIX*15, tY()); break;
-    case 5: pd->graphics->drawText(tr(kTRSettingsMusic5m), 8, kUTF8Encoding, TILE_PIX*15, tY()); break;
-    case 10: pd->graphics->drawText(tr(kTRSettingsMusic10m), 8, kUTF8Encoding, TILE_PIX*15, tY()); break;
-    case 15: pd->graphics->drawText(tr(kTRSettingsMusic15m), 8, kUTF8Encoding, TILE_PIX*15, tY()); break;
-    case 30: pd->graphics->drawText(tr(kTRSettingsMusic30m), 8, kUTF8Encoding, TILE_PIX*15, tY()); break;
+    case 0: pd->graphics->drawText(tr(kTRSettingsAutosaveOff), 8, kUTF8Encoding, TILE_PIX*15, tY()); break;
+    case 5: pd->graphics->drawText(tr(kTRSettingsAutosave5m), 8, kUTF8Encoding, TILE_PIX*15, tY()); break;
+    case 10: pd->graphics->drawText(tr(kTRSettingsAutosave10m), 8, kUTF8Encoding, TILE_PIX*15, tY()); break;
+    case 15: pd->graphics->drawText(tr(kTRSettingsAutosave15m), 8, kUTF8Encoding, TILE_PIX*15, tY()); break;
+    case 30: pd->graphics->drawText(tr(kTRSettingsAutosave30m), 8, kUTF8Encoding, TILE_PIX*15, tY()); break;
   }
 }
 

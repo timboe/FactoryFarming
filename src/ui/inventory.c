@@ -510,16 +510,16 @@ void populateInfoInventory() {
     //snprintf(textC, 128, tr(kTRUIInventoryValue), textM);
   } else if (selectedCat == kUICatExtractor) {
     if (selectedID == kChalkQuarry) {
-      strcpy(textA, tr(kTRUIInventoryBuildOn));
-      strcat(textA, space());
-      strcat(textA, toStringSoil(kChalkyGround));
+      strcpy(textC, tr(kTRUIInventoryBuildOn));
+      strcat(textC, space());
+      strcat(textC, toStringSoil(kChalkyGround));
       //snprintf(textC, 128, tr(kTRUIInventoryBuildOn), toStringSoil(kChalkyGround));
     } else if (selectedID == kPump) {
       snprintf(textC, 128, "%s", tr(kTRUIInventoryBuildOnWater));
     } else if (selectedID == kSaltMine) {
-      strcpy(textA, tr(kTRUIInventoryBuildOn));
-      strcat(textA, space());
-      strcat(textA, toStringSoil(kPeatyGround));
+      strcpy(textC, tr(kTRUIInventoryBuildOn));
+      strcat(textC, space());
+      strcat(textC, toStringSoil(kPeatyGround));
       //snprintf(textC, 128, tr(kTRUIInventoryBuildOn), toStringSoil(kPeatyGround));
     }
   } else if (selectedCat == kUICatPlant) {
@@ -531,7 +531,7 @@ void populateInfoInventory() {
   }
   pd->graphics->drawText(textA, 128, kUTF8Encoding, 1*TILE_PIX, +2 +tY());
   pd->graphics->drawText(textB, 128, kUTF8Encoding, 1*TILE_PIX, TILE_PIX - 2 +tY());
-  pd->graphics->drawText(textC, 128, kUTF8Encoding, 9*TILE_PIX - cOff, TILE_PIX - 2 +tY());
+  pd->graphics->drawText(textC, 128, kUTF8Encoding, 8*TILE_PIX - cOff, TILE_PIX - 2 +tY());
   pd->graphics->setDrawMode(kDrawModeCopy); // Draw coin
   if (selectedCat == kUICatCargo) { 
     pd->graphics->drawBitmap(getSprite16(2, 16, 1), 9*TILE_PIX + trLen(kTRUIInventoryValue), TILE_PIX - 2, kBitmapUnflipped);

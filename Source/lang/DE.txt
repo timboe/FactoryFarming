@@ -1,0 +1,776 @@
+Band
+Förderband
+'I' Splitter
+Förderband 'I' Splitter
+'L' Splitter
+Förderband 'L' Splitter
+'T' Splitter
+Förderband 'T' Splitter
+'I' Filter
+Förderband 'I' Filter
+'L' Filter
+Förderband 'L' Filter
+Tunnel
+Förderbandtunnel
+'I' Überlauf
+Förderband 'I' Überlauf
+'L' Überlauf
+Förderband 'L' Überlauf
+Karottenanlage
+Karottensamen
+Sonnenblumenpflanze
+Sonnenbl. Kerne
+Kartoffelpflanze
+Samen Kartoffel
+Apfelbaum
+Apfelbäumchen
+Maispflanze
+Maissamen
+Seetangpflanze
+Seetangsporen
+Weizensamen
+Weizensamen
+Kaktuspflanze
+Kaktussamen
+Zitronenbaum
+Zitr. Baum Setzling
+Erdbeerpflanze
+Erdbeersamen
+Bambusanlage
+Bambus-Setzling
+Kaffeepflanze
+Kaffeesamen
+Kakaopflanze
+Kakaosamen
+Meeresgurkenfarm
+Meeresgurkenfalle
+Rosenpflanze
+Rosensamen
+Weg
+Schild
+Tonne
+Brunnen
+Aufbewahrungskiste
+Pufferbox
+Werkseitiges Upgrade-Modul
+Förderbandfett
+Obstruktionsentferner
+Deponie
+Rotavator
+Ruhestandshütte
+Zaun
+Mähdrescher (7x7)
+Automatischer Mähdrescher (7x7)
+Wasserpumpe
+Kreide Steinbruch
+Salzbergwerk
+Mähdrescher (9x9)
+Automatischer Mähdrescher (9x9)
+CO2-Extraktor
+Vitaminfabrik
+Pflanzenölfabrik
+Kartoffelchipfabrik
+Ethanolfabrik
+Apfelweinfabrik
+Schlachthof
+Wasserstofffabrik
+Hydrierte Ölfabrik
+Maishundfabrik
+Bierbrauerei
+Tequilafabrik
+Maissirupfabrik mit Hoher Fructose
+Gelatinefabrik
+Geleefabrik
+Geleeshotsfabrik
+Emulgatorenfabrik
+Eiscremefabrik
+Batterie Hühnerfarm
+Proteinpulverfabrik
+Schokoladenfabrik
+Fleischpastetenfaktor
+Monosodium Glutamatfabrik
+TV-Dinner-Fabrik
+Schokoladenkuchenfabrik
+Koffeinpulverfabrik
+Energiegetränkfabrik
+'Rave Saft' Fabrik
+Munterpillenfabrik
+Verpackungshersteller
+Dessertfabrik
+Lebensmittelkitfabrik
+Foo Young-Fabrik
+Partypaketfabrik
+Parfümfabrik
+Wunderpulverfabrik
+Türkische Freudenfabrik
+Das Geschäft
+Verkaufsdepot
+Depot für Frachtexportiert
+Depot für Frachtimporte
+Depot für Grundstück
+Ein verdächtiger Stein
+Möhren
+Karotte
+Kreide
+Kreide
+Vitamine
+Vitamine
+Kartoffeln
+Kartoffel
+Sonnenblumen
+Sonnenblume
+Pflanzenöle
+Pflanzenöl
+Salz
+Salz
+Chips
+Chips
+Apfel
+Apfel
+Wasser
+Wasser
+Ethanol
+Ethanol
+Apfelweine
+Apfelwein
+Mais
+Mais
+Seetang
+Seetang
+Fleisch
+Fleisch
+Wasserstoff
+Wasserstoff
+H. Öle
+H. Öl
+Maishunde
+Maishund
+Weizen
+Weizen
+Biere
+Bier
+Kakteen
+Kaktus
+Tequilas
+Tequila
+Limetten
+Limette
+M.H.F.Z.
+M.H.F.Z.
+Gelatine
+Gelatine
+Gelees
+Gelee
+Gelee-Shots
+Gelee-Shots
+Erdbeeren
+Erdbeere
+Emulgatoren
+Emulgator
+Eiscreme
+Eiscreme
+Eier
+Ei
+Proteinpulver
+Proteinpulver
+Kakaobohnen
+Kakaobohne
+Schokolade
+Schokolade
+Fleischpasteten
+Fleischpastete
+M.N.D.
+M.N.D.
+Fertiggericht
+Fertiggericht
+Kuchen
+Kuchen
+Kaffeebohnen
+Kaffeebohne
+CO2
+CO2
+Koffein
+Koffein
+Energiegetränken
+Energiegetränk
+'Ravesäften'
+'Ravesaft'
+Munterpillen
+Munterpillen
+Bambus
+Bambus
+Verpackung
+Verpackung
+Nachspeisen
+Nachspeisen
+Lebensmittelkit
+Lebensmittelkitf
+Foo Young
+Foo Young
+Partypaket
+Partypaket
+Seegurken
+Seegurke
+Parfums
+Parfüm
+Wunderpulveren
+Wunderpulver
+Rosen
+Rose
+Türkisches Entzücken
+Türkisches Entzücken
+Hauptmenü
+spielstand löschen 1
+spielstand löschen 2
+spielstand löschen 3
+spiel laden
+speichern
+spielmenu
+Wasser
+Nass
+Feucht
+Trocken
+Dreck
+Kalkartig
+Torf
+Sandiger
+Tonerde
+Lehmiger
+Boden
+Gepflasterter
+Versperrter Untergrund
+See
+Fluss
+Ozean
+??? ????????
+Die Grasland
+??? ??????? ???????
+Das Steinige Plateau
+??? ???????? ?????
+Die Sumpfige Mulde
+??? ?????
+Die Wüste
+??? ???????
+Die Mündung
+??? ?????????? ?????
+Die Fruchtbaren Hügel
+??? ??????????
+Das Wattenmeer
+??? ??????? ??????
+Die Ruhigen Ebenen
+Fracht Abholen
+Inspektionsmodus
+Dekonstruktionsmodus
+Greift fracht in der nähe, leert gebäude
+Siehe details zur aktuellen plättchen
+Dekonstruiert alles in der gegend
+Das Geschäft
+Verkaufsdepot
+Grundstücke
+Exporte
+Importe
+Kredite
+--- Tutorial Stufe %i/%i ---
+N
+O
+S
+W
+W, O
+N, S
+N, O
+O, S
+S, W
+W, N
+W, N, O
+N, O, S
+O, S, W
+S, W, N
+Versperrtes gelände kann nicht bebaut werden.
+Vielleicht kannst du es später löschen?
+Platzmodus
+Pflanzenmodus
+Baumodus
+Abholmodus
+Inventar
+Inspektionsmodus
+Dekonstruktion
+Neue Ernte!
+Neues Förderband!
+Neue Auszieher!
+Neue Fabrik!
+Neues Dienstprogramm!
+Werkzeug
+Werkzeug
+Pflanzen
+Pflanzen
+Förderbänder
+Förderband
+Auszieher
+Auszieher
+Fabriken
+Fabrik
+Dienstprogramme
+Dienstprogramm
+Fracht
+Fracht
+Handlungsorte
+Handlungsorte
+Import (Norden)
+Import (Norden)
+Import (Ost)
+Import (Ost)
+Import (Süd)
+Import (Süd)
+Import (West)
+Import (West)
+SPAREN
+ERSTELLEN
+GELADEN
+%i: Neues Spiel
+Laden Sie Demo
+%i Weiterspielen
+-- Tech-Demo der Industrielandwirtschaft --
+Sie können sich in dieser Beispielfabrik umsehen.
+Sie finden Einrichtungen bis zu Tech Tier 3.
+Das volle Spiel geht auf Tech Tier 7.
+Bauen und Einsparungen sind in der Demo deaktiviert.
+-Der anfängliche Kauf von Saatgut-
+Willkommen bei Factory Farming! Es gibt Geld zu sein
+gemacht, und es wird sich nicht machen! Also lass uns vorbeikommen
+Besuchen Sie den Laden mit ⓐ und kaufen Sie einige Karottensamen
+Der Kompass (rechts) zeigt immer auf den Laden.
+Bewegen Sie sich mit dem D-Pad, ✛. Zoomen Sie mit 🎣.
+Halten Sie ⓑ zum Laufen. Gehen Sie in den Laden und drücken Sie ⓐ.
+Kaufen Sie 10 Karottensamen aus dem Laden mit ⓐ.
+Drücken Sie ⓑ, um den Laden zu verlassen.
+-Das nächste Ziel-
+Ihr aktuelles Ziel ist es, zumindest zu verkaufen
+10 Karotten. Sie können überprüfen, was Ihr aktuelles Ziel ist
+wird jederzeit durch Drücken der Menü -Taste.
+Mach das jetzt.
+Drücken Sie die Menü -Taste, um Ihr aktuelles Ziel anzuzeigen.
+Von hier aus können Sie auch das Spiel speichern und laden, und
+Öffnen Sie das Hauptmenü mit Spieleinstellungen usw.
+     
+-Die ersten Ernten-
+Gut, Karotten wachsen gut im schlammigen Boden in der Nähe des
+Geschäft. Achten Sie auf den Boden und Wasser, das jede Pflanze mag.
+Finden Sie einen guten Ort in der Nähe, öffnen Sie Ihr Inventar
+Wählen Sie mit ⓐ die Samen und pflanzen Sie 10 Karotten.
+Finden Sie eine nahe gelegene Fläche mit schlammigem Boden, vorzugsweise feucht.
+Drücken Sie ⓐ ⓐ, um Ihr Inventar einzugeben. Wählen Sie die Karotte aus
+Samen und drücken Sie erneut ⓐ. Pflanzen Sie 10 Karottensamen auf
+leere Flecken aus schlammigem Boden, dann drücken Sie ⓑ.
+-Die erste Ernte-
+Großartige Pflanzen brauchen normalerweise einige Zeit, um Produkte zu ergeben,
+Aber lassen Sie uns diese Karottenpflanzen beschleunigen. Drücken Sie ⓐ, wählen Sie
+Pickup Frachtmodus 'und Ernte 10 angebaute Karotten.
+Sie können jede Fracht der Welt oder in Gebäuden abholen.
+Gehen Sie dorthin, wo Sie Ihre Karottensamen gepflanzt haben.
+Drücken Sie ⓐ ⓐ, um Ihr Inventar einzugeben, und wählen Sie 'Abholung
+Frachtmodus '. Drücken Sie oder halten Sie ⓐ beim Umzug, Pickup 10
+Erwachsene Karotten. Verwenden Sie das 🎣, um den Abholbereich zu ändern.
+-Der erste Verkauf-
+Schön, Sie wissen, was wir mit Fracht wie diesen machen können
+Frische Karotten? Verkaufen Sie sie mit Gewinn! Besuchen Sie den Verkauf
+Depot (neben dem Laden) und drücken Sie ⓐ, um auf die zuzugreifen
+Verkaufsmenü. Verkaufe 10 Karotten, um fortzufahren.
+Gehen Sie zum Vertriebsdepot (neben dem Laden).
+Drücken Sie oder halten Sie ⓐ, um mindestens 10 Karotten zu verkaufen.
+Ändern Sie den mit jeder Presse von ⓐ verkauften Betrag durch
+Drehen Sie das 🎣 oder halten Sie ⓑ und drücken Sie ⬆️ oder ⬇️.
+-Die erste automatisierte Ernte-
+Süß, aber das war eine Menge manueller Arbeit ... lass uns
+Verwenden Sie stattdessen einen automatischen Mischertöne! Kaufen Sie einen von
+Der Laden und bauen Sie es dort, wo einige Karottenpflanzen sind
+Innerhalb seines Ernte -Einzugsgebiets.
+Gehen Sie in den Laden, kaufen Sie einen automatischen Mischmittel.
+Drücken Sie ⓐ und wählen Sie dies aus Ihrem Inventar aus.
+Legen Sie den Harvester so, dass er sich auf leer befindet
+Boden- und Karottenpflanzen liegen in seinem Erntebereich.
+-Die erste Frachtlinie-
+Gut, wir ernten Karotten. Aber wir müssen sie bekommen
+zum Vertriebsdepot. Wir brauchen Förderbänder! Umkaufen
+50 aus dem Laden und legen Sie den Weg, um sich zu bewegen und zu verkaufen
+die Karotten. Drehen Sie Gürtelstücke mit 🎣 oder ⓑ + ✛.
+Gehen Sie in den Laden, kaufen Sie rund 50 Förderbande.
+Drücken Sie ⓐ und wählen Sie diese aus Ihrem Inventar aus.
+Machen Sie eine Kette von Gürtel vom automatischen Mischtätiger bis
+Verkauf. Drehen Sie die Gürtel mit 🎣 oder halten Sie ⓑ und drücken Sie ✛.
+-Bergbau der Erde-
+OK. Aber nicht alle ausnutzbaren Ressourcen werden angebaut.
+Einige werden ausgegraben oder ausgepumpt. Lassen Sie uns eine Kreide bauen
+Steinbruch als nächstes. Kaufen Sie eine im Laden und bauen Sie es auf
+kalkhaltiger Boden. Es sollte einige im Norden geben.
+Gehen Sie in den Laden, kaufen Sie einen Kreide Steinbruch.
+Drücken Sie ⓐ und wählen Sie dies aus Ihrem Inventar aus.
+Gehen Sie aus dem Laden nach Norden und suchen Sie nach kalkhaltigen Boden.
+Legen Sie den Steinbruch auf mindestens einer kalkhaltigen Bodenfliese.
+-Fertigungswert-
+Hübsch. Wir können endlich eine vollständige Produktionslinie einrichten!
+Kaufen Sie eine Vitaminfabrik aus dem Laden, liefern Sie sie mit
+Sowohl Kreide als auch Karotten und transportieren die Vitamine
+zum Vertriebsdepot für einen viel größeren Gewinn!
+Gehen Sie in den Laden, kaufen Sie eine Vitamin -Fabrik.
+Platzieren Sie es an einen guten Ort. Verwenden Sie Förderbande, um
+Versorgen Sie es mit Karotten und Kreide. Verwenden Sie mehr Gürtel
+Um die Vitamine zum Vertriebsdepot zu transportieren.
+-Geh raus und verbrauch--
+Exzellent! Sie kennen jetzt alle Grundlagen der Ausbeutung
+die Welt für Gewinn. Wenn Ihr Bankkonto schwillt,
+Weitere Pflanzen, Fabriken und andere Artikel werden freigeschaltet.
+Verwenden Sie sie, um den Gewinn zu maximieren und die Effizienz zu maximieren.
+- aber ich habe nicht den Boden dafür! -
+Problem. Die Kaktuspflanze, die Sie gerade entsperrt haben
+Sander Boden, aber hier gibt es keine. Erweiterungszeit!
+Besuchen Sie das Plots Depot (neben dem Verkauf) und kaufen Sie eine neue
+Grundstück zu entwickeln.
+Das Diagramm Depot, exportiert Depot und
+Imports Depot werden jetzt alle freigeschaltet.
+Besuchen Sie das Handlungsdepot rechts vom Verkauf.
+Kaufen Sie ein neues Grundstück, um die Fabrik zu erweitern.
+-Ein neuer Horizont-
+Willkommen bei Ihnen neues Landschiff! Mehr Platz für Ihre
+Fertigungsimperium zum Wachstum. Anstatt Fracht zu verkaufen,
+Sie können es auch zwischen Diagrammen bewegen. Verwenden Sie die Gürtel, um zu füttern
+Front in das Exportdepot in einer Ihrer Handlungen.
+Exportieren Sie etwas Fracht, indem Sie sie über Gürtel in die verschieben
+exportiert Depot (rechts vom Grundstücksdepot) auf
+jede Handlung. Die Exportrate jedes Frachttyps ist
+gemittelt in den letzten zwei Minuten.
+-Zugriff auf die Ware--
+Nachdem Sie Fracht exportieren, schauen wir uns auch die Importe an.
+Gehen Sie zu einem anderen Grundstück und besuchen Sie das Importdepot,
+Sie können bis zu vier Fracht pro Grundstück importieren.
+Versuchen Sie jetzt einen Import einrichten.
+Importieren Sie etwas Fracht in einem anderen Grundstück über die Importe
+Depot (Recht des Exportdepots). N, s, e, w
+Importe können einzeln ausgewählt werden. Sie können nicht exportieren a
+Frachttyp, der in das gleiche Grundstück importiert wird.
+-- Importe & Exporte & Grundstück --
+Wunderbar! Kaufen Sie weiterhin mehr Handlungen, um zu
+Zugang zu neuen Bodentypen und um die Fabrik zu erweitern.
+Verwenden Sie die Export- und Importdepots, um die Fracht zu bewegen
+zwischen den Diagrammen und maximieren Sie weiterhin die Effizienz!
+Norden
+Ost
+Süd
+West
+Geschwindigkeitsmultiplikator
+Filter noch nicht gesetzt.
+Führen Sie ein Frachtstück durch, um den Filter einzustellen.
+Filter auf
+Nächster Transit
+Trichter %i/3
+Raus
+Zutaten:
+Glycerin
+Beta
+Carotin
+Soja
+Lecithin
+Kalziumkarbonat
+ 
+Stabilisatoren
+Konservierungsstoffe
+Künstliche
+Aromen
+Destilliert
+Gemüse
+Alkohol
+Apfel
+Saft
+Künstliche
+Farbstoffe
+Tierfutter:
+Hormone
+Steroide
+Verfahren:
+Elektrolyse
+von
+Wasser
+Sonnenuntergang
+Orange
+Hydriertes
+Öl
+Hopfenöl
+ 
+Agave
+Maissirup
+mit
+Hohem
+Fruchtzuckergehalt
+Antibackmittel
+ 
+Antibiotika
+Entwormer
+Insektizide
+Glutaminsäure
+Natrium
+Mononatriumglutamat
+ 
+Anforderungen:
+Lösungsmittel
+Titandioxid
+ 
+Bleichen
+Fruchtsirup
+
+Packinhalte:
+Kasten
+Formaldehyd
+Stärke
+Produktionszeit: %ss
+Verbleibende Zeit: %ss
+Im %i
+Mag
+Hat
+Kann hier nicht wachsen!
+Wachstumszeit: %is
+Ernte zu wachsen
+Verbleibende Zeit: %is
+Geld ausgeben, um neue Pflanzen zu kaufen, Förderer,
+Auszieher, Fabriken und Nutzenartikel.
+     
+     
+Verkaufen Sie Fracht aus Ihrem Inventar oder verwenden Sie
+Förderer, um den Umsatz zu automatisieren.
+Erhalten Sie Geld für jeden verkauften Artikel.
+     
+Ansicht verfügbare Grundstücke.
+Kaufen Sie neue Handlungen, um Ihre Fabrik zu erweitern.
+Bewegen Sie sich zwischen Ihren eigenen Handlungen.
+     
+Ladung für die Verwendung in anderen grundstück exportieren.
+Die Exporte werden über die 60er bis 120er Jahre gemittelt.
+Sie können keine Fracht exportieren, die ebenfalls ist
+in diese Handlung importiert.
+Ladung aus anderen Handlungen importieren. Sie können eine auswählen
+Importieren Sie für jede der 4 Kardinalanweisungen.
+Importe treten alle 10 Sekunden vor, die Menge importiert
+hängt von der Gesamtzahl der Importeure ab.
+Ein großer Felsbrocken blockiert hier den Boden.
+Vielleicht wird es später wichtig?
+     
+     
+Die Bewegungsgeschwindigkeit wird auf dem Pfad verbessert.
+Ein charmanter Zaun.
+Ihr gemütliches kleines Ruhestandshütte.
+Legen Sie hier eine Fracht, um sie auf dem Schild anzuzeigen.
+Unterschreibe für
+Löscht dauerhaft unerwünschte fracht.
+Lassen sie die unerwünschte fracht fallen oder verwenden sie förderer
+Konvertiert die 8 umliegenden Fliesen in lehmigen Boden.
+Durch Entfernen des Rotavators wird diese Fliesen zurückgeführt
+zu ihrem vorherigen Bodentyp.
+Reduziert die Produktionszeit in jeder Fabrik
+Sofort N, S, E oder W des Moduls.
+1 Modul: -0,5s
+2 Module: -0,75s
+3+ Module: -1s
+     
+Erzeugt eine umgebung mit nassem und feuchtem boden.
+Abteil %i/3
+Exportieren
+Hier: %s/s
+Alle: %s/s
+Einfuhr von:
+Importeure: %i
+Importiert: %s/s
+Setzen
+Setzen
+Bauen
+Inventar: %i
+Wert
+Bauen auf
+Auf wasser bauen
+Auf wasser säen
+Platz in den ozean
+Kann nicht entfernen
+Auf ruhigen Ebenen Bauen
+Bewegt fracht nach Norden, Süd, Osten oder Westen
+Spaltet eingehende fracht 2 wege (180 Grad)
+Spaltet eingehender fracht 2 wege (90 Grad)
+Spaltet eingehender fracht 3 wege
+Überlauf verwendet, wenn der hauptausgang blockiert ist
+Filtert auf die erste fracht, die übergeht
+Bewegt fracht unter der erde für 1 plättchen
+Pflanze, um karotten anzubauen
+Pflanze, um sonnenblumen zu ernten
+Pflanze, um kartoffeln anzubauen
+Pflanze, um Äpfel anzubauen
+Pflanze, um mais anzubauen
+Seetang wachsen in Seen
+Pflanze, um weizen anzubauen
+Pflanze, um kakteen zu züchten
+Pflanze, um limetten zu züchten
+Pflanze, um erdbeeren anzubauen
+Pflanze, um kokosbohnen anzubauen
+Pflanze, um kaffeebohnen anzubauen
+Pflanze, um bambusstiele zu züchten
+Im ozean platzieren, um seegurken zu züchten
+Kümmere dich in deinem ruhestand um diese rosen
+Die Bewegungsgeschwindigkeit wird auf einem pfad erhöht
+Zeigt eine fracht ihrer wahl an
+Hier platzierte fracht wird zerstört
+Ort, um den umgebenden boden zu befeuchten
+Speichert bis zu 3 verschiedene arten von fracht
+Wie die lagerbox, aber auch selbstleerend
+Platz neben Fabriken, beschleunigt die produktion
+Erhöht die förderbandgeschwindigkeit von x1 auf x2
+Beseitigt blockierten boden, auf dem dann gebaut werden kann
+Füllt Wasser ein. kann bebaut, aber nicht bepflanzt werden.
+Verwandelt benachbarte plättchen in lehmige erde.
+Genießen sie ihren angesammelten reichtum.
+Ein charmanter holzzaun.
+Sammelt fracht, kann drei verschiedene arten halten
+Muss auf wasser gebaut werden. Produziert wasser eimer
+Muss auf kalkhaltigem boden gebaut werden. Produziert kreide
+Muss auf torfboden gebaut werden. Erzeugt salz
+Sammelt fracht, kann drei verschiedene arten halten
+Verflüssiges kohlendioxid direkt aus der luft
+Erstellt minderwertige vitaminpillen
+Gemüseöl aus sonnenblumen zerquetschen
+Erstellt kartoffelchips. Ein gebratener favorit!
+Brauen und destillieren sie reinen alkohol
+Mischen Sie etwas billige apfelwein
+Futter geht hinein, "fleisch" kommt raus
+Spaltet wasser und fängt den wasserstoff ein
+Hydriert öl, um verderben zu verhindern
+Knusprig und fleischig
+Produziert etwas, das bier ähnelt
+Zumindest hat es etwas agave darin
+So sehr, sehr, süß ...
+Zum Abbinden von flüssigkeiten
+Ein wackeliger favorit
+Eine interessante mischung aus aromen
+Verhindert, dass die dinge sich trennen
+Es ist milchfrei! Ist das eine gute sache?
+Mais geht hinein, eier kommen heraus
+Maximale masse, minimale aufregung
+Es ist meistens zucker...
+Was gibt es zum abendessen? Fleischpastete!
+Lässt alles besser schmecken
+Eine mahlzeit für einen, serviert in einem tablett
+Extrahiert das koffein aus kaffeebohnen
+Koffein High & Sugar Rush All-in-One
+Dieses zeug sollte wahrscheinlich illegal sein...
+Wird sie viel zu lange wach halten
+Schokoladig, weich und eine unendliche haltbarkeit
+Naschkatze?
+Jetzt mit individueller Verpackung
+Verpacktes Lebensmittel Kit, tolles markup
+Gallertartig und dehydrierend
+Alles, was eine gute party braucht
+Schickes zeug
+Was kann es nicht heilen?! (Irgendetwas...)
+Eine köstliche delikatesse
+Verkaufen
+Alles ist
+Freigeschaltet!
+Danke fürs Spielen
+INDUSTRIELANDWIRTSCHAFT!
+Besuchen:
+Das geschäft
+Um das nächste freizuschalten:
+Verkaufen insgesamt:
+Um das nächste freizuschalten:
+Bisher verkauft: %i
+Weitermachen
+Das Tutorial
+Das nächste freischalten
+Gebäude
+VOR BEENDEN SPEICHERN!
+Gesamtspielzeit:
+%is:%im:%is
+AUS
+5m
+10m
+15m
+20m
+--- Soundeinstellungen ----
+Musik
+Musiklautstärke
+Soundeffekte
+Schrittgeräusche
+--- Spieleinstellungen ---
+Bildschirmschütteln
+Tutorial aktiviert
+Förderband-Animation
+Harvester-Umrisse
+Förderbandkurbel
+Mittelkamera auf Player
+Automatisches zoom beim bewegen
+Automatische spielspeicherung
+Automatische abholung auf dekonstruktion
+Fett automatisch verwenden
+Debug-Informationen anzeigen
+--- Spiel Verlassen ---
+Speichern und beenden sie zum titel
+Beenden Sie zum titel ohne speichern
+--- Bildschirmfoto ---
+Machen sie einen screenshot der grundstück
+--- Kontrollen ---
+Inventar/Select/Interact: Ⓐ
+Zurück/Abbrechen: Ⓑ
+Walk: ✛
+Lauf: Halten Sie Ⓑ + ✛
+Zoom ein-/aus: 🎣 oder halten Ⓐ + ⬇️
+Drehen sie: 🎣 oder halten sie Ⓑ + ⬆️/➡️/⬇️/⬅️
+Größen sie: 🎣 oder halten sie Ⓑ + ⬆️/⬇️
+Schneller abholmodus: halten sie Ⓐ + ⬅️
+Schneller inspectmodus: halten sie Ⓐ + ⬆️
+Schneller dekonstruktmodus: halten sie Ⓐ + ➡️
+--- Credits ---
+Industrielandwirtschaft von Tim Martin
+-- Musik --
+♬ Dr Tikov: 1985
+♬ BoxCat Games: B-3
+♬ Eric Skiff: We're the Resistors
+♬ RoccoW: Sweet Self Satisfaction
+♬ RoccoW: Weeklybeats 2014 #4
+♬ Soft & Furious: Horizon Ending
+-- Kunst --
+Kenney: 1-Bit Pack
+VectorPixelStar: 1-Bit Patterns
+Josehzz: Farming Crops
+ScratchIO: Farming Set
+Varkalandar: Isometric Rocks
+Withthelove: Character Sprites
+DinosoftLab: New (NounProject)
+-- Schriftarten --
+Chester Jenkins: Cooper Hewitt
+Martin Vacha: Roobert
+Mediengestaltung: Messing Lettern
+Mediengestaltung: Coventry Garden
+-- Soundeffekte --
+sfxr.me
+-- Statistiken --
+Spielzeit:
+Gesamtgeld verdient:
+Das meiste Geld gehalten:
+Gesamtfracht verkauft:
+Gesamtfracht importiert:
+Gesamtgebäude in diesem grundstück:
+Gesamtfracht in diesem grundstück:
+     
+© Tim Martin 2022
+Industrielandwirtschaft ist ein MIT
+lizenziertes Open-Source-Projekt
+github.com/timboe/factoryFarming
+     
+Danke für das Spiel! Und für deine
+Unterstützung von Nischen-
+Indie-Spielentwicklungsprojekten :)
+     
+Machen Sie weiter, maximieren Sie den
+Gewinn, maximieren Sie die Effizienz.
+Kauf
+Preis
+Landlage
+Boden
+Fabrik
+Landwirtschaft
+"Industrielandwirtschaft"
+DE
+--

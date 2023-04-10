@@ -1,0 +1,776 @@
+Cinta 
+Cinta Transportadora
+'I' Divisor
+Divisor de Cinta Transportadora 'I'
+'L' Divisor
+Divisor de Cinta Transportadora 'L'
+'T' Divisor
+Divisor de Cinta Transportadora 'T'
+'I' Filtro
+Filtro de Cinta Transportadora 'I'
+'L' Filtro
+Filtro de Cinta Transportadora 'L'
+Túnel
+Túnel de Cinta Transportadora
+'I' Desbordamiento
+Desbordamiento de Cinta Transp. 'I'
+'L' Desbordamiento
+Desbordamiento de Cinta Transp. 'L'
+Planta de Zanahoria
+Sem. de Zanahoria
+Planta de Girasol
+Sem. de Girasol
+Planta de Papa
+Papa de Semillas
+Árbol de Manzana
+Ret. de Manzano
+Planta de Maíz
+Sem. de Maíz
+Planta de Algas
+Esporas de Algas
+Planta de Trigo
+Sem. de Trigo
+Planta de Cactus
+Sem. de Cactus
+Limero
+Pim. de Limero
+Planta de Fresa
+Sem. de Fresa
+Planta de Bambú
+Ret. de Bambú
+Planta de Café
+Sem. de Café
+Planta de Cacao
+Sem. de Cacao
+Granja de Pepino de Mar
+Trampa de Pepino de Mar
+Planta de Rosas
+Sem. de Rosa
+Camino
+Letrero
+Basura
+Pozo
+Caja de Almacenaje
+Caja de Búfer
+Módulo de Actualización de Fábrica
+Grasa Transportadora
+Removedor de Obstrucciones
+Vertedero
+Motocultor
+Cabaña de Jubilación
+Cerca 
+Cosechadora (7x7)
+Cosechador Automático (7x7)
+Bomba de Agua
+Cantera de Chack
+Mina de Sal
+Cosechadora (9x9)
+Cosechador Automático (9x9)
+Extractor de CO2
+Fábrica de Vitaminas
+Fábrica de Aceite Vegetal
+Fábrica de Papas Fritas
+Fábrica de Etanol
+Fábrica de Sidra
+Matadero
+Fábrica de Hidrógeno
+Fábrica de Petróleo Hidrogenado
+Fábrica de Perros de Maíz
+Cervecería de Cerveza
+Fábrica de Tequila
+Fábrica de Jar. de Maíz de Alto Fructosa
+Fábrica de Gelatina
+Fábrica de Jalea
+Fábrica de Chupitos de Jalea
+Fábrica de Emulsionantes
+Fábrica de Helados
+Granja de Pollos en Batería
+Fábrica de Proteínas en Polvo
+Fabrica de Chocolate
+Fábrica de Pasteles de Carne
+Fábrica de Glutamato de Monosódico
+Fábrica de Cena de Televisión
+Fábrica de Pastel de Chocolate
+Fábrica de Polvo de Cafeína
+Fábrica de Bebidas Energéticas
+Fábrica de 'Jugo de Rave'
+Fábrica de Píldoras de Despierto
+Fabricante de Envases
+Fábrica de Postres
+Fábrica de Paquetes de Alimentos
+Fábrica de Foo Young
+Fábrica de Paquete de Fiestas
+Fábrica de Perfumes
+Fábrica de Polvo de Milagro
+Fábrica de Deleite Turco
+La Tienda
+Depósito de Ventas
+Depósito de Exportación de Carga
+Depósito de Importaciones de Carga
+Depósito Trama
+Una Roca Sospechosa
+Zanahorias
+Zanahoria
+Tiza
+Tiza
+Vitaminas
+Vitaminas
+Papas
+Papa
+Girasoles
+Girasol
+Aceites Vegetales
+Aceite Vegetal
+Sal
+Sal
+Papas Fritas
+Papas Fritas
+Manzanas
+Manzana
+Agua
+Agua
+Etanol
+Etanol
+Sidras
+Sidra
+Maíz
+Maíz
+Algas
+Algas
+Carne
+Carne
+Hidrógeno
+Hidrógeno
+Aceite H.
+Aceite H.
+Perros de Maíz
+Perro de Maíz
+Trigo
+Trigo
+Cervezas
+Cerveza
+Cactus
+Cactus
+Tequilas
+Tequila
+Limas
+Lima
+J.M.A.F.
+J.M.A.F.
+Gelatina
+Gelatina
+Jaleas
+Jalea
+Chupitos de Jalea
+Chupitos de Jalea
+Fresas
+Fresa
+Emulsionantes
+Emulsionante
+Helados
+Helado
+Huevos
+Huevo
+Proteína en Polvo
+Proteína en Polvo
+Granos de Cacaos
+Grano de Cacao
+Chocolate
+Chocolate
+Pasteles de Carnes
+Pastel de Carne
+G.M.S.
+G.M.S.
+Cenas de Televisión
+Cena de Televisión
+Pastels
+Pastel
+Granos de Café
+Grano de Café
+CO2
+CO2
+Cafeína
+Cafeína
+Bebidas Energéticas
+Bebida Energética
+'Jugos de Raves'
+'Jugo de Rave'
+Píldoras de Despierto
+Píldoras de Despierto
+Bambú
+Bambú
+Embalaje
+Embalaje
+Postres
+Postre
+Paquetes de Alimentos
+Paquete de Alimento
+Foo Young
+Foo Young
+Paquetes de Fiestas
+Paquete de Fiesta
+Pepinos de Mar
+Pepino de mar
+Perfumes
+Perfume
+Polvos Milagrosos
+Polvo Milagroso
+Rosas
+Rosa
+Delicia Turca
+Delicia Turca
+Menú Principal
+eliminar guardar 1
+eliminar guardar 2
+eliminar guardar 3
+carga
+guarda
+menu
+Agua
+Mojado
+Húmedo
+Seco
+Limoso
+Calcáreo
+Turba
+Arenoso
+Barro
+Arcilloso
+Suelo
+Pavimentado
+Tierra Obstruido
+Lago
+Río
+Océano
+??? ??????????
+Los Pastizales
+?? ?????? ?????????
+La Meseta Pedregosa
+?? ????? ?????????
+El Hueco Pantanoso
+?? ????????
+El Desierto
+?? ????????
+El Estuario
+??? ??????? ????????
+Las Colinas Fértiles
+??? ????????
+Las Marismas
+??? ???????? ??????????
+Las Llanuras Tranquilas
+Modo de Recogida de Carga
+Modo de Inspección
+Modo de Deconstrucción
+Agarra la carga cercana, vacía los edificios
+Ver detalles sobre el mosaico actual
+Deconstruye todo en el área
+La Tienda
+Ventas
+Tierra
+Exportaciones
+Importaciones
+Créditos
+--- Tutorial Etapa %i/%i ---
+N
+E
+S
+O
+O, E
+N, S
+N, E
+E, S
+S, O
+O, N
+O, N, E
+N, E, S
+E, S, O
+S, O, N
+El terreno obstruido no se puede construir.
+¿Tal vez puedas borrarlo más tarde?
+Colocación
+Plantando
+Construcción
+Recoger
+Inventario
+Inspeccionar
+Deconstrucción
+¡Nueva Planta!
+¡Nuevo Transportador!
+¡Nuevo Extractor!
+¡Nueva Fábrica!
+Nueva Utilidad!
+Herramientas
+Herramienta
+Cultivos
+Cultivo
+Transportadores
+Transportador
+Extractores
+Extractor
+Fábricas
+Fábrica
+Utilidades
+Utilidad
+Carga
+Carga
+Parcelas
+Parcelas
+Importación (Norte)
+Importación (Norte)
+Importación (Este)
+Importación (Este)
+Importación (Sur)
+Importación (Sur)
+Importación (Oeste)
+Importación (Oeste)
+SALVANDO
+GENERANDO
+CARGANDO
+%i: Nuevo Juego
+Cargar Demostración
+%i Continua
+-demostración de tecnología agrícola de fábrica-
+Eres libre de mirar alrededor de esta fábrica de ejemplo.
+Encontrará instalaciones hasta Tech Tier 3.
+El juego completo sube a Tech Tier 7.
+La construcción y el ahorro están deshabilitadas en la demostración.
+-La compra inicial de semillas-
+¡Bienvenido a la agricultura de fábrica! Hay dinero para ser
+¡Hecho, y no se hará a sí mismo! Así que comencemos
+Visitar la tienda con ⓐ y comprar algunas semillas de zanahoria
+La brújula (derecha) siempre señalará la tienda.
+Muévete con el D-Pad, ✛. Zoom en 🎣 🎣 🎣 🎣 🎣.
+Sostenga ⓑ para correr. Ve a la tienda y presiona ⓐ.
+Compre 10 semillas de zanahoria en la tienda con ⓐ.
+Presione ⓑ para salir de la tienda.
+-El siguiente objetivo-
+Su objetivo actual es vender al menos
+10 zanahorias. Puede verificar cuál es su objetivo actual
+es en cualquier momento presionando el botón de menú.
+Hacer esto ahora.
+Presione el botón Menú para ver su objetivo actual.
+Desde aquí también puedes guardar y cargar el juego, y
+Abra el menú principal con la configuración del juego, etc.
+#VALUE!
+-Los primeros cultivos-
+Bueno, las zanahorias crecerán bien en el suelo limoso cerca del
+comercio. Presta atención al suelo y al agua que le gusta a cada planta.
+Encuentra un buen lugar cercano, abre tu inventario
+Con ⓐ, seleccione las semillas y plante 10 zanahorias.
+Encuentre un área cercana de suelo limoso, preferiblemente húmedo.
+Presione ⓐ Para ingresar su inventario, seleccione la zanahoria
+semillas y presionar ⓐ de nuevo. Planta 10 semillas de zanahoria en
+parches vacíos de tierra limosa, luego presione ⓑ.
+-La primera cosecha-
+Genial, los cultivos normalmente toman algo de tiempo para producir productos,
+Pero aceleremos estas plantas de zanahoria. Presione ⓐ, elija
+Modo de carga de recolección 'y cosecha 10 zanahorias cultivadas.
+Puede recoger cualquier carga del mundo o en edificios.
+Vaya a donde plantó sus semillas de zanahoria.
+Presione ⓐ Para ingresar su inventario, seleccione 'Pickup
+Modo de carga '. Mantenga presionada ⓐ Al moverse, recogida 10
+zanahorias cultivadas. Use el 🎣 para cambiar el área de recogida.
+-La primera venta-
+Bien, sabes lo que podemos hacer con la carga como esos
+zanahorias frescas? ¡Véndelos para obtener ganancias! Visite las ventas
+depósito (al lado de la tienda) y presione ⓐ para acceder al
+menú de ventas. Vender 10 zanahorias para continuar.
+Vaya al depósito de ventas (al lado de la tienda).
+Mantenga presionada ⓐ para vender al menos 10 zanahorias.
+Cambiar la cantidad vendida con cada prensa de ⓐ por
+girando el 🎣, o mantenga presionada ⓑ y presione ⬆️ o ⬇️.
+-La primera cosecha automatizada-
+Dulce, pero eso fue mucho trabajo manual ...
+¡Use una cosechadora automática en su lugar! Comprar uno de
+la tienda y construirlo donde están algunas plantas de zanahoria
+Dentro de su área de captación de cosecha.
+Vaya a la tienda, compre una cosechadora automática.
+Presione ⓐ y elija esto desde su inventario.
+Coloque la cosechadora de tal manera que esté ubicado en vacío
+El suelo y las plantas de zanahoria están dentro de su rango de cosecha.
+-La primera línea de carga-
+Bien, estamos cosechando zanahorias. Pero necesitamos conseguirlos
+al depósito de ventas. ¡Necesitamos cintas transportadoras! Comprar
+50 de la tienda y pon el camino para moverse y vender
+las zanahorias. Gire las piezas de la correa con 🎣 o ⓑ + ✛.
+Vaya a la tienda, compre alrededor de 50 cintas transportadoras.
+Presione ⓐ y elija estos desde su inventario.
+Hacer una cadena de cinturones desde la cosechadora automática hasta
+ventas. Gire las correas con 🎣 o mantenga presionada ⓑ y presione ✛.
+-Minar la tierra-
+DE ACUERDO. Pero no se cultivan todos los recursos explotables.
+Algunos están desenterrados o bombeados. Construyamos una tiza
+Cantera siguiente. Compre uno en la tienda y construyalo en
+Suelo calcáreo. Debería haber algunos en el norte.
+Vaya a la tienda, compre una cantera de tiza.
+Presione ⓐ y elija esto desde su inventario.
+Ve al norte desde la tienda y busca tierra calcárea.
+Coloque la cantera en al menos un baldosas de tierra calcárea.
+-Valor de fabricación-
+Lindo. ¡Finalmente podemos configurar una línea de producción completa!
+Compre una fábrica de vitamínas en la tienda, suministre su
+Tanto tiza como zanahorias, y transportan las vitaminas
+¡Al depósito de ventas para obtener una ganancia mucho mayor!
+Vaya a la tienda, compre una fábrica de vitaminas.
+Colóquelo en un buen lugar. Use cintas transportadoras para
+suministrarlo con zanahorias y tiza. Use más cinturones
+Para transportar las vitaminas al depósito de ventas.
+-Sal y consume-
+¡Excelente! Ahora conoces todos los conceptos básicos de explotar
+el mundo con fines de lucro. A medida que su cuenta bancaria se hincha,
+Más cultivos, fábricas y otros artículos se desbloquearán.
+Úselos para maximizar las ganancias, maximizar la eficiencia.
+- ¡Pero no tengo el suelo para eso! -
+Problema. La planta de cactus que acabas de desbloquear quieres
+Suelo arenoso, pero no hay ninguno aquí. ¡Tiempo de expansión!
+Visite el depósito de trotos (al lado de las ventas) y compre un nuevo
+Parcela de tierra para desarrollar.
+El depósito de los gráficos, exportaciones de depósito y
+Imports Depot ahora se desbloquean.
+Visite el depósito de tramas a la derecha de las ventas.
+Compre una nueva parcela de tierra para expandir la fábrica.
+-Un nuevo horizonte-
+¡Bienvenido a ti, nueva trama de tierra! Más espacio para tu
+Imperio de fabricación para crecer. En lugar de vender carga,
+También puede moverlo entre tramas. Use cinturones para alimentar
+Cargo en el depósito de exportaciones en cualquiera de sus parcelas.
+Exportar algo de carga moviéndola a través de cinturones en el
+Exports Depot (a la derecha del depósito de la parcela) en
+cualquier trama. La tasa de exportación de cada tipo de carga es
+promediado durante los dos minutos anteriores.
+-Acceder a los bienes-
+Ahora que estás exportando carga, veamos las importaciones también.
+Vaya a una trama diferente y visite el depósito de importaciones,
+Puede importar hasta cuatro carga por parcela.
+Intente configurar una importación ahora.
+Importar algo de carga en una trama diferente a través de las importaciones
+depósito (derecho del depósito de exportaciones). N, S, E, W
+Las importaciones se pueden elegir individualmente. No puedes exportar un
+Tipo de carga que se importa a la misma trama.
+-Importaciones y exportaciones y parcelas-
+¡Maravilloso! Continuar comprando más parcelas para
+Acceda a nuevos tipos de suelo y para expandir la fábrica.
+Use los depósitos de exportación e importación para mover la carga
+Entre parcelas, ¡y continúe maximizando la eficiencia!
+Norte
+Este
+Sur
+Oeste
+Multiplicador de velocidad
+Filtrar aún no configurado.
+Pase la carga para configurar el filtro.
+Filtros
+Siguiente Tránsito
+Tolva %i/3
+Fuera
+Ingredientes:
+Glicerina
+Betacaroteno
+ 
+Soja
+Lecitina
+Carbonato
+de Calcio
+Estabilizadores
+Conservantes
+Sabores
+Artificiales
+Alcohol
+Aegetal
+Destilado
+Jugo
+de Manzana
+Artificial
+Colorante
+Alimentación animal
+Hormonas
+Esteroides
+Proceso:
+Electrólisis
+de
+Agua
+Puesta de
+Sol Naranja
+Aceite
+Hidrogenado
+Aceite
+de Lúpulo
+Agave
+Jarabe
+de Maíz
+con Alta
+Fructuosa
+Agentes
+Antiaglomerantes
+Antibióticos
+Desparasitante
+Insecticidas
+Ácido Glutamico
+Sodio
+Glutamato
+Monosódico
+Requisitos:
+Solvente
+Dióxido
+de Titanio
+Lejía
+Jarabe
+de Frutas
+Contenido de Paquete:
+Caja
+Formaldehído
+Almidón
+Tiempo de Producción: %ss
+Tiempo Restante: %ss
+En %i
+Gusta
+Tiene
+¡No puedo crecer aquí!
+Tiempo de crecer: %is
+Cosecha para crecer
+Tiempo restante: %is
+Gaste dinero para comprar nuevos cultivos,
+transportadores, extractores,
+fábricas y artículos de utilidad.
+     
+Venda carga desde su inventario o use
+transportadores para automatizar las ventas.
+Recibe dinero por cada artículo vendido.
+     
+Ver terrenos disponibles. 
+Compra nuevas parcelas para ampliar tu fábrica. 
+Muévase entre las parcelas de su propiedad.
+     
+Carga de exportación para uso en otras parcelas.
+Las exportaciones tienen un promedio de 60 a 120 años.
+No puede exportar ninguna carga que también
+se importe a esta parcela.
+Carga de importación de otras parcelas. Puede seleccionar
+una importación para cada uno de los 4 puntos cardinales.
+ Las importaciones ocurren cada 10s, la cantidad importada 
+depende del número total de importadores.
+Una gran roca bloquea el suelo aquí.
+¿Quizás se volverá importante más adelante?
+     
+     
+La velocidad de movimiento se mejora en el camino.
+Una cerca encantadora.
+Tu acogedora cabaña de jubilación.
+Coloque una carga aquí para mostrarla en el letrero.
+Letrero para
+Borra permanentemente la carga no deseada.
+Deje caer la carga no deseada o use transportadores.
+Convierte las 8 baldosas circundantes en tierra arcillosa.
+Al quitar el rotavator, estas baldosas 
+volverán a su tipo de suelo anterior.
+Reduce el tiempo de producción en cualquier fábrica
+inmediatamente al N, S, E o O del módulo.
+1 Módulo: -0.5s
+2 Módulos: -0.75s
+3+ Módulos: -1s
+ 
+Crea un área circundante de suelo húmedo y de mojado.
+Compartimento %i/3
+Exportador
+Esta: %s/s
+Todas: %s/s
+Importación de
+Importadores: %i
+Importado: %s/s
+Planta
+Lugar
+Lugar
+Inventario: %i
+Valor
+Lugar Sobre
+Lugar Sobre el Agua
+Sembrar en el Agua
+Lugar en el Océano
+No se Puede Quitar
+Lugar Sobre Llan. Tranq.
+Mueve la carga norte, sur, este o oeste
+Divide la carga entrante de 2 maneras (180 grados)
+Divide la carga entrante de 2 maneras (90 grados)
+Divide la carga entrante de 3 maneras
+Solo se desborda cuando está bloqueado
+Filtros en la primera carga en pasar
+Mueve la carga subterránea por 1 mosaico
+Planta para cultivar zanahorias
+Planta para cosechar girasoles
+Planta para cultivar papas
+Planta para cultivar manzanas
+Planta para cultivar maíz
+Algas crece en lagos
+Planta para cultivar trigo
+Planta para cultivar cactus
+Planta para cultivar limas
+Planta para cultivar fresas
+Planta para cultivar grano de cacao
+Planta para cultivar granos de café
+Planta para cultivar tallos de bambú
+Lugar en el océano para cultivar pepinos de mar
+Cuida estas rosas en tu jubilación
+Se mejora la velocidad en el camino
+Muestra una carga de su elección
+La carga colocada aquí será destruida
+Lugar para humedecer el suelo circundante.
+Tiendas de hasta 3 tipos diferentes de carga
+Una caja de almacenamiento de vaciado
+Coloque junto a las fábricas, acelera la producción
+Actualiza la velocidad del transportador de x1 a x2
+Obstáculos despejados (luego se pueden construir)
+Recuperar la tierra. Para construir, no para plantar.
+Convierte la tierra cercana en suelo arcilloso.
+Un espacio relajante para disfrutar de su riqueza.
+Una encantadora cerca de madera.
+Recoge carga, tiene tres tipos
+Debe construirse sobre el agua. Bombea agua
+Debe construirse en suelo calcáreo. Produce tiza
+Debe construirse sobre suelo turbero. Produce sal
+Recoge carga, tiene tres tipos
+Licua el dióxido de carbono del aire
+Fabrica píldoras de vitaminas de bajo grado
+Aplastar el aceite vegetal de los girasoles
+Fabrica papas fritas. ¡Un favorito frito!
+Elaborar y destilar alcohol puro
+Mezclar un poco de 'sidra'
+El alimento entra, la 'carne' sale
+Divide el agua y captura el hidrógeno
+Hidrogena el aceite para evitar el malcriado
+Crujiente y carnoso
+Produce algo que se asemeja a la cerveza
+¡Al menos tiene algo de agave!
+Muy, muy, dulce...
+Utilizado para establecer una variedad de líquidos
+Un favorito tambaleante
+Una mezcla interesante de sabores
+Evita que las cosas se separen
+¡Es libre de lácteos! ¿Eso es algo bueno?
+El maíz entra, los huevos salen
+Máximo masa, mínimo de alboroto
+Es sobre todo azúcar...
+¿Que hay para cenar? ¡Pastel de Carne!
+Hace que todo tenga un sabor mejor
+Una comida para uno, servida en una bandeja
+Extrae la cafeína de los granos de café
+Un subidón de cafeína y de azúcar todo en uno
+Esto probablemente debería ser ilegal...
+Te mantendrá despierto por mucho tiempo
+Chocolate, suave y una vida útil infinita
+¿Goloso?
+Ahora con embalaje individual
+Comidas empaquetadas, gran margen de beneficio
+Gelatinoso y deshidratante
+Todo lo que necesita una buena fiesta
+Cosas lujosas
+¿Qué no puede curar? (Cualquier cosa...)
+Una deliciosa delicadeza
+Vender
+Todo es
+¡Desbloqueado!
+Gracias por jugar
+¡LA CRÍA INTENSIVA!
+Visita:
+La tienda
+Para desbloquear el siguiente:
+Vender un total de:
+Para desbloquear el siguiente:
+Vendido hasta ahora: %i
+Continuar
+El tutorial
+Para desbloquear el siguiente
+Edificio
+¡GUARDE ANTES DE SALIR!
+Tiempo de juego total:
+%ih:%im:%is
+SIN
+5m
+10m
+15m
+30m
+--- Ajustes de Sonido ---
+Música
+Volumen de la Música
+Efectos de Sonido
+Sonidos de Pasos
+--- Configuraciones de Juego ---
+Batido de pantalla
+Tutorial habilitado
+Animación transportadora
+Contornos de la cosechadora
+Manivela en transportador
+Centrar la cámara en el jugador
+Zoom automático al moverse
+Juego de guardado automático
+Recogida automática en la decon.
+Auto aplicar grasa transportadora
+Mostrar información de depuración
+--- Salir del Juego ---
+Guardar y salir al título
+Salir al título sin guardar
+--- Captura de Pantalla ---
+Tome la captura de pantalla de la trama
+--- Controles ---
+Inventario/Seleccionar/Interact: ⓐ
+Volver/Cancelar: ⓑ
+Caminar: ✛
+Correr: sostener ⓑ + ✛
+Acercar/afuera: 🎣 o Sostener ⓐ + ⬇️
+Rotar: 🎣 o Sostener ⓑ + ⬆️/➡️/⬇️/⬅️
+Cambiar el tamaño: 🎣 o Sostener ⓑ + ⬆️/⬇️
+Modo de recogida rápida: Sostener ⓐ + ⬅️
+Modo de inspección rápida: Sostener ⓐ + ⬆️
+Modo de deconstrucción rápida: Sostener ⓐ + ➡️
+--- Créditos ---
+La cría intensiva de Tim Martin
+-- Música --
+♬ Dr Tikov: 1985
+♬ BoxCat Games: B-3
+♬ Eric Skiff: We're the Resistors
+♬ RoccoW: Sweet Self Satisfaction
+♬ RoccoW: Weeklybeats 2014 #4
+♬ Soft & Furious: Horizon Ending
+-- Arte --
+Kenney: 1-Bit Pack
+VectorPixelStar: 1-Bit Patterns
+Josehzz: Farming Crops
+ScratchIO: Farming Set
+Varkalandar: Isometric Rocks
+Withthelove: Character Sprites
+DinosoftLab: New (NounProject)
+-- Fuentes --
+Chester Jenkins: Cooper Hewitt
+Martin Vacha: Roobert
+Mediengestaltung: Messing Lettern
+Mediengestaltung: Coventry Garden
+-- Efectos de Sonido --
+sfxr.me
+-- Estadísticas --
+Tiempo de juego:
+Total de dinero ganado:
+La mayoría de los dinero retenido:
+Cargo total vendida:
+Cargo total importada:
+Edificios totales en esta trama:
+Cargo total en esta trama:
+     
+© Tim Martin 2022
+La cría intensiva es un proyecto de
+código abierto con licencia del MIT
+github.com/timboe/factoryfarming
+     
+¡Gracias por jugar! Y por su apoyo
+a los proyectos de desarrollo de juegos
+independientes de nicho :)
+     
+Siga maximizando las ganancias,
+Maximización de la eficiencia.
+Obtén
+Precio
+Parcelas de tierra
+Suelos
+Fábrica
+Agricultura
+"La Cría Intensiva"
+ES
+--
