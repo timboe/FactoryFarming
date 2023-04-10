@@ -362,7 +362,7 @@ Drücken Sie ⓐ ⓐ, um Ihr Inventar einzugeben. Wählen Sie die Karotte aus
 Samen und drücken Sie erneut ⓐ. Pflanzen Sie 10 Karottensamen auf
 leere Flecken aus schlammigem Boden, dann drücken Sie ⓑ.
 -Die erste Ernte-
-Großartige Pflanzen brauchen normalerweise einige Zeit, um Produkte zu ergeben,
+Großartige Pflanzen brauchen normalerweise einige Zeit, um Erzeugnisse zu erhalten.
 Aber lassen Sie uns diese Karottenpflanzen beschleunigen. Drücken Sie ⓐ, wählen Sie
 Pickup Frachtmodus 'und Ernte 10 angebaute Karotten.
 Sie können jede Fracht der Welt oder in Gebäuden abholen.
@@ -451,7 +451,7 @@ Frachttyp, der in das gleiche Grundstück importiert wird.
 Wunderbar! Kaufen Sie weiterhin mehr Handlungen, um zu
 Zugang zu neuen Bodentypen und um die Fabrik zu erweitern.
 Verwenden Sie die Export- und Importdepots, um die Fracht zu bewegen
-zwischen den Diagrammen und maximieren Sie weiterhin die Effizienz!
+zwischen den Diagrammen und maximieren Sie die Effizienz weiterhin!
 Norden
 Ost
 Süd
@@ -556,12 +556,12 @@ Vielleicht wird es später wichtig?
 Die Bewegungsgeschwindigkeit wird auf dem Pfad verbessert.
 Ein charmanter Zaun.
 Ihr gemütliches kleines Ruhestandshütte.
-Legen Sie hier eine Fracht, um sie auf dem Schild anzuzeigen.
+Stellen Sie hier eine Ladung, um sie auf dem Schild anzuzeigen.
 Unterschreibe für
 Löscht dauerhaft unerwünschte fracht.
 Lassen sie die unerwünschte fracht fallen oder verwenden sie förderer
 Konvertiert die 8 umliegenden Fliesen in lehmigen Boden.
-Durch Entfernen des Rotavators wird diese Fliesen zurückgeführt
+Durch das Entfernen des Rotavators werden diese Fliesen zurückkehren
 zu ihrem vorherigen Bodentyp.
 Reduziert die Produktionszeit in jeder Fabrik
 Sofort N, S, E oder W des Moduls.
@@ -574,7 +574,7 @@ Abteil %i/3
 Exportieren
 Hier: %s/s
 Alle: %s/s
-Einfuhr von:
+Einfuhr von
 Importeure: %i
 Importiert: %s/s
 Setzen
@@ -588,11 +588,11 @@ Auf wasser säen
 Platz in den ozean
 Kann nicht entfernen
 Auf ruhigen Ebenen Bauen
-Bewegt fracht nach Norden, Süd, Osten oder Westen
+Bewegt fracht nach Norden, Süden, Osten, Westen
 Spaltet eingehende fracht 2 wege (180 Grad)
 Spaltet eingehender fracht 2 wege (90 Grad)
 Spaltet eingehender fracht 3 wege
-Überlauf verwendet, wenn der hauptausgang blockiert ist
+Läuft nur bei obstruktion über
 Filtert auf die erste fracht, die übergeht
 Bewegt fracht unter der erde für 1 plättchen
 Pflanze, um karotten anzubauen
@@ -610,7 +610,7 @@ Pflanze, um kaffeebohnen anzubauen
 Pflanze, um bambusstiele zu züchten
 Im ozean platzieren, um seegurken zu züchten
 Kümmere dich in deinem ruhestand um diese rosen
-Die Bewegungsgeschwindigkeit wird auf einem pfad erhöht
+Bewegen sie sich schneller auf einem pfad
 Zeigt eine fracht ihrer wahl an
 Hier platzierte fracht wird zerstört
 Ort, um den umgebenden boden zu befeuchten
@@ -618,14 +618,14 @@ Speichert bis zu 3 verschiedene arten von fracht
 Wie die lagerbox, aber auch selbstleerend
 Platz neben Fabriken, beschleunigt die produktion
 Erhöht die förderbandgeschwindigkeit von x1 auf x2
-Beseitigt blockierten boden, auf dem dann gebaut werden kann
-Füllt Wasser ein. kann bebaut, aber nicht bepflanzt werden.
-Verwandelt benachbarte plättchen in lehmige erde.
-Genießen sie ihren angesammelten reichtum.
-Ein charmanter holzzaun.
-Sammelt fracht, kann drei verschiedene arten halten
-Muss auf wasser gebaut werden. Produziert wasser eimer
-Muss auf kalkhaltigem boden gebaut werden. Produziert kreide
+Hindernisse beseitigen (kann dann bebaut werden)
+Stellt land wieder her. Bauen, nicht pflanzen
+Verwandelt benachbarte plättchen in lehmige erde
+Genießen sie ihren angesammelten reichtum
+Ein charmanter holzzaun
+Sammelt fracht, kann drei arten aufnehmen
+Muss auf wasser gebaut werden. Pumpt wasser
+Auf kalkhaltigem boden bauen. Produziert kreide
 Muss auf torfboden gebaut werden. Erzeugt salz
 Sammelt fracht, kann drei verschiedene arten halten
 Verflüssiges kohlendioxid direkt aus der luft
@@ -653,13 +653,13 @@ Was gibt es zum abendessen? Fleischpastete!
 Lässt alles besser schmecken
 Eine mahlzeit für einen, serviert in einem tablett
 Extrahiert das koffein aus kaffeebohnen
-Koffein High & Sugar Rush All-in-One
+Koffein-high und zuckerrausch, alles in einem
 Dieses zeug sollte wahrscheinlich illegal sein...
 Wird sie viel zu lange wach halten
 Schokoladig, weich und eine unendliche haltbarkeit
 Naschkatze?
-Jetzt mit individueller Verpackung
-Verpacktes Lebensmittel Kit, tolles markup
+Jetzt mit individueller verpackung
+Verpacktes lebensmittel kit, tolles markup
 Gallertartig und dehydrierend
 Alles, was eine gute party braucht
 Schickes zeug
@@ -669,7 +669,7 @@ Verkaufen
 Alles ist
 Freigeschaltet!
 Danke fürs Spielen
-INDUSTRIELANDWIRTSCHAFT!
+INDUS. LANDWIRTSCHAFT!
 Besuchen:
 Das geschäft
 Um das nächste freizuschalten:

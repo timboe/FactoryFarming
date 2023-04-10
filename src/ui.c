@@ -376,6 +376,10 @@ void updateUITitles(int _fc) {
   return;
   #endif
 
+  // Disable for now
+  pd->sprite->setVisible(m_UISpriteTitleFac, false);
+  pd->sprite->setVisible(m_UISpriteTitleFarm, false);
+
   pd->sprite->setVisible(m_UISpriteTitleLang, !m_UITitleOffset);
   pd->sprite->setVisible(m_UISpriteTitleLangArrow, _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
   pd->sprite->setVisible(m_UISpriteTitleSelected, _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
