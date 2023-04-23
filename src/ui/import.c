@@ -102,14 +102,13 @@ void populateInfoImport() {
   strcpy(textA, tr(kTRUIImportOf));
   strcat(textA, cspace());
   strcat(textA, toStringCargoByType(selectedID, /*plural=*/true));
-  //snprintf(textA, 128, tr(kTRUIImportOf), toStringCargoByType(selectedID, /*plural=*/true));
   
   snprintf(textB, 128, tr(kTRUIImporters), totConsumers);
   snprintf(textC, 128, tr(kTRUIImported), ftos(importPerConsumer, 16, strFloat));
 
   pd->graphics->setDrawMode(kDrawModeFillBlack);
-  pd->graphics->drawText(textA, 128, kUTF8Encoding, 1*TILE_PIX, +2 +tY());
-  pd->graphics->drawText(textB, 128, kUTF8Encoding, 1*TILE_PIX, TILE_PIX - 2 +tY());
+  pd->graphics->drawText(textA, 128, kUTF8Encoding, TILE_PIX/2, +2 +tY());
+  pd->graphics->drawText(textB, 128, kUTF8Encoding, TILE_PIX/2, TILE_PIX - 2 +tY());
   pd->graphics->drawText(textC, 128, kUTF8Encoding, 9*TILE_PIX, TILE_PIX - 2 +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->popContext();

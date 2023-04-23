@@ -62,7 +62,7 @@ Cerca
 Cosechadora (7x7)
 Cosechador Automático (7x7)
 Bomba de Agua
-Cantera de Chack
+Cantera de Tiza
 Mina de Sal
 Cosechadora (9x9)
 Cosechador Automático (9x9)
@@ -220,9 +220,9 @@ Rosa
 Delicia Turca
 Delicia Turca
 Menú Principal
-eliminar guardar 1
-eliminar guardar 2
-eliminar guardar 3
+eliminar 1
+eliminar 2
+eliminar 3
 carga
 guarda
 menu
@@ -327,131 +327,131 @@ SALVANDO
 GENERANDO
 CARGANDO
 %i: Nuevo Juego
-Cargar Demostración
+Carga la Demo
 %i Continua
--demostración de tecnología agrícola de fábrica-
-Eres libre de mirar alrededor de esta fábrica de ejemplo.
-Encontrará instalaciones hasta Tech Tier 3.
-El juego completo sube a Tech Tier 7.
-La construcción y el ahorro están deshabilitadas en la demostración.
--La compra inicial de semillas-
-¡Bienvenido a la agricultura de fábrica! Hay dinero para ser
-¡Hecho, y no se hará a sí mismo! Así que comencemos
-Visitar la tienda con ⓐ y comprar algunas semillas de zanahoria
-La brújula (derecha) siempre señalará la tienda.
-Muévete con el D-Pad, ✛. Zoom en 🎣 🎣 🎣 🎣 🎣.
-Sostenga ⓑ para correr. Ve a la tienda y presiona ⓐ.
-Compre 10 semillas de zanahoria en la tienda con ⓐ.
-Presione ⓑ para salir de la tienda.
--El siguiente objetivo-
-Su objetivo actual es vender al menos
-10 zanahorias. Puede verificar cuál es su objetivo actual
-es en cualquier momento presionando el botón de menú.
+-- Demostración de 'Factory Farming' --
+Eres libre de mirar alrededor de esta fábrica de 
+ejemplo. Encontrará instalaciones hasta Tech Tier 3. El 
+juego completo sube a Tech Tier 7. La construcción y
+el ahorro están deshabilitadas en la demostración.
+-- La Compra Inicial de Semillas --
+¡Bienvenido a La Agricultura Intensiva! Hay dinero para
+ser hecho, y no se hará solo! Comienza visitando la 
+tienda con Ⓐ y compra 10 semillas de zanahoria.
+La brújula (derecha) apunta a la tienda.
+Muévete con el D-Pad, ✛. Acercar y alejar con 🎣.
+Mantén pulsado Ⓑ para correr. Ve a la tienda y 
+presiona Ⓐ. Compra 10 semillas de zanahoria en la 
+tienda con Ⓐ. Presiona Ⓑ para salir de la tienda.
+-- El Siguiente Objetivo --
+Tu objetivo actual es vender al menos 10 zanahorias. 
+Puedes comprobar cuál es tu objetivo actual en 
+cualquier momento pulsando el botón menú.
 Hacer esto ahora.
-Presione el botón Menú para ver su objetivo actual.
-Desde aquí también puedes guardar y cargar el juego, y
-Abra el menú principal con la configuración del juego, etc.
-#VALUE!
--Los primeros cultivos-
-Bueno, las zanahorias crecerán bien en el suelo limoso cerca del
-comercio. Presta atención al suelo y al agua que le gusta a cada planta.
-Encuentra un buen lugar cercano, abre tu inventario
-Con ⓐ, seleccione las semillas y plante 10 zanahorias.
-Encuentre un área cercana de suelo limoso, preferiblemente húmedo.
-Presione ⓐ Para ingresar su inventario, seleccione la zanahoria
-semillas y presionar ⓐ de nuevo. Planta 10 semillas de zanahoria en
-parches vacíos de tierra limosa, luego presione ⓑ.
--La primera cosecha-
-Genial, los cultivos normalmente toman algo de tiempo para producir productos,
-Pero aceleremos estas plantas de zanahoria. Presione ⓐ, elija
-Modo de carga de recolección 'y cosecha 10 zanahorias cultivadas.
-Puede recoger cualquier carga del mundo o en edificios.
-Vaya a donde plantó sus semillas de zanahoria.
-Presione ⓐ Para ingresar su inventario, seleccione 'Pickup
-Modo de carga '. Mantenga presionada ⓐ Al moverse, recogida 10
-zanahorias cultivadas. Use el 🎣 para cambiar el área de recogida.
--La primera venta-
-Bien, sabes lo que podemos hacer con la carga como esos
-zanahorias frescas? ¡Véndelos para obtener ganancias! Visite las ventas
-depósito (al lado de la tienda) y presione ⓐ para acceder al
-menú de ventas. Vender 10 zanahorias para continuar.
-Vaya al depósito de ventas (al lado de la tienda).
-Mantenga presionada ⓐ para vender al menos 10 zanahorias.
-Cambiar la cantidad vendida con cada prensa de ⓐ por
-girando el 🎣, o mantenga presionada ⓑ y presione ⬆️ o ⬇️.
--La primera cosecha automatizada-
-Dulce, pero eso fue mucho trabajo manual ...
-¡Use una cosechadora automática en su lugar! Comprar uno de
-la tienda y construirlo donde están algunas plantas de zanahoria
-Dentro de su área de captación de cosecha.
-Vaya a la tienda, compre una cosechadora automática.
-Presione ⓐ y elija esto desde su inventario.
-Coloque la cosechadora de tal manera que esté ubicado en vacío
-El suelo y las plantas de zanahoria están dentro de su rango de cosecha.
--La primera línea de carga-
-Bien, estamos cosechando zanahorias. Pero necesitamos conseguirlos
-al depósito de ventas. ¡Necesitamos cintas transportadoras! Comprar
-50 de la tienda y pon el camino para moverse y vender
-las zanahorias. Gire las piezas de la correa con 🎣 o ⓑ + ✛.
-Vaya a la tienda, compre alrededor de 50 cintas transportadoras.
-Presione ⓐ y elija estos desde su inventario.
-Hacer una cadena de cinturones desde la cosechadora automática hasta
-ventas. Gire las correas con 🎣 o mantenga presionada ⓑ y presione ✛.
--Minar la tierra-
-DE ACUERDO. Pero no se cultivan todos los recursos explotables.
-Algunos están desenterrados o bombeados. Construyamos una tiza
-Cantera siguiente. Compre uno en la tienda y construyalo en
-Suelo calcáreo. Debería haber algunos en el norte.
-Vaya a la tienda, compre una cantera de tiza.
-Presione ⓐ y elija esto desde su inventario.
-Ve al norte desde la tienda y busca tierra calcárea.
-Coloque la cantera en al menos un baldosas de tierra calcárea.
--Valor de fabricación-
-Lindo. ¡Finalmente podemos configurar una línea de producción completa!
-Compre una fábrica de vitamínas en la tienda, suministre su
-Tanto tiza como zanahorias, y transportan las vitaminas
-¡Al depósito de ventas para obtener una ganancia mucho mayor!
-Vaya a la tienda, compre una fábrica de vitaminas.
-Colóquelo en un buen lugar. Use cintas transportadoras para
-suministrarlo con zanahorias y tiza. Use más cinturones
-Para transportar las vitaminas al depósito de ventas.
--Sal y consume-
-¡Excelente! Ahora conoces todos los conceptos básicos de explotar
-el mundo con fines de lucro. A medida que su cuenta bancaria se hincha,
-Más cultivos, fábricas y otros artículos se desbloquearán.
-Úselos para maximizar las ganancias, maximizar la eficiencia.
-- ¡Pero no tengo el suelo para eso! -
-Problema. La planta de cactus que acabas de desbloquear quieres
-Suelo arenoso, pero no hay ninguno aquí. ¡Tiempo de expansión!
-Visite el depósito de trotos (al lado de las ventas) y compre un nuevo
-Parcela de tierra para desarrollar.
-El depósito de los gráficos, exportaciones de depósito y
-Imports Depot ahora se desbloquean.
-Visite el depósito de tramas a la derecha de las ventas.
-Compre una nueva parcela de tierra para expandir la fábrica.
--Un nuevo horizonte-
-¡Bienvenido a ti, nueva trama de tierra! Más espacio para tu
-Imperio de fabricación para crecer. En lugar de vender carga,
-También puede moverlo entre tramas. Use cinturones para alimentar
-Cargo en el depósito de exportaciones en cualquiera de sus parcelas.
-Exportar algo de carga moviéndola a través de cinturones en el
-Exports Depot (a la derecha del depósito de la parcela) en
-cualquier trama. La tasa de exportación de cada tipo de carga es
-promediado durante los dos minutos anteriores.
--Acceder a los bienes-
-Ahora que estás exportando carga, veamos las importaciones también.
-Vaya a una trama diferente y visite el depósito de importaciones,
-Puede importar hasta cuatro carga por parcela.
-Intente configurar una importación ahora.
-Importar algo de carga en una trama diferente a través de las importaciones
-depósito (derecho del depósito de exportaciones). N, S, E, W
-Las importaciones se pueden elegir individualmente. No puedes exportar un
-Tipo de carga que se importa a la misma trama.
--Importaciones y exportaciones y parcelas-
-¡Maravilloso! Continuar comprando más parcelas para
-Acceda a nuevos tipos de suelo y para expandir la fábrica.
-Use los depósitos de exportación e importación para mover la carga
-Entre parcelas, ¡y continúe maximizando la eficiencia!
+Presiona el botón de menú para ver tu objetivo 
+actual. Desde aquí también puedes guardar y cargar
+el juego, y abre el menú principal con la configuración
+del juego, etc.
+-- Los Primeros Cultivos --
+Las zanahorias crecerán bien en el suelo limoso cerca
+de la tienda. Preste atención a la tierra y el agua que 
+le gusta a cada planta. Abre tu inventario con Ⓐ, 
+selecciona las semillas y planta 10 zanahorias.
+Encuentre un área cercana de suelo limoso, pref-
+eriblemente húmedo. Presiona Ⓐ para ingresar a tu 
+inventario, selecciona las semillas de zanahoria y pres- 
+iona Ⓐ nuevamente. Planta 10 semillas de zanahoria.
+-- La Primera Cosecha --
+Genial, aceleremos estas plantas de zanahoria. 
+Presiona Ⓐ, elige el modo de recogida de carga y 
+cosecha 10 zanahorias. Puede recoger cualquier 
+carga en el mundo o en edificios.
+Presione Ⓐ para ingresar a su inventario, seleccione 
+el modo de recogida de carga. Mantén presionado Ⓐ
+cuando te muevas, recoge 10 zanahorias cultivadas. 
+Usa el 🎣 para cambiar el área de recogida.
+-- La Primera Venta --
+¿Sabes lo que podemos hacer con cargamentos
+como esas zanahorias frescas? ¡Véndelos para
+obtener una ganancia! Visite el depósito de ventas y
+presione Ⓐ. Vende 10 zanahorias para continuar.
+Ve al depósito de ventas (junto a la tienda). Mantén 
+presionado Ⓐ para vender al menos 10 zanahorias. 
+Cambia la cantidad vendida con cada pulsación de Ⓐ
+girando 🎣, o mantén pulsado Ⓑ y pulsa ⬆️ o ⬇️.
+-- La Primera Cosecha Automatizada --
+Pero eso fue mucho trabajo manual... 
+¡Automaticemos! Compra una cosechadora en la 
+tienda y constrúyela cerca de algunas plantas de 
+zanahoria.
+Ve a la tienda, compra una cosechadora automática. 
+Presiona Ⓐ y elige esto de tu inventario. Coloque la 
+cosechadora donde las plantas de zanahoria estén 
+dentro de su rango de cosecha.
+-- La Primera Línea de Carga --
+Bien, estamos cosechando zanahorias. Pero tenemos
+que llevarlos a las ventas. ¡Necesitamos cintas trans-
+portadoras! Compra 50 y coloca un camino para trans-
+portar las zanahorias. Gire los cinturones con 🎣 o Ⓑ+✛.
+Ve a la tienda, compra 50 cintas transportadoras. 
+Haga una cadena de cintas desde la cosechadora 
+automática hasta las ventas. Gire los cintas con 🎣,
+o mantenga presionada Ⓑ y presione ✛.
+-- Minar la Tierra --
+Pero no todos los recursos explotables se cultivan.
+A continuación, construyamos una cantera de tiza. 
+Compra uno en la tienda y constrúyelo en suelo 
+calcáreo. Debería haber algunos al norte.
+Ve a la tienda, compra una cantera de tiza. Presiona 
+Ⓐ y elige esto de tu inventario. Ve hacia el norte 
+desde la tienda y busca tierra calcárea. Coloque la 
+cantera en al menos una loseta de suelo calcáreo.
+-- Valor de Fabricación --
+¡Ahora podemos configurar una línea de producción 
+completa! ¡Compre una fábrica de vitaminas, 
+suministre tiza y zanahorias y transporte las vitaminas
+al depósito de ventas para obtener ganancias!
+Ve a la tienda, compra una fábrica de vitaminas.
+Utilice cintas transportadoras para suministrarle 
+zanahorias y tiza. Use más cinturones para 
+transportar las vitaminas al depósito de ventas.
+-- Sal y Consume --
+Ahora conoce todos los conceptos básicos para explotar 
+el mundo con fines de lucro. A medida que aumente
+su cuenta bancaria, se desbloquearán más cultivos y
+fábricas. ¡Úselos para maximizar las ganancias!
+-- ¡Pero No Tengo el Suelo Para Eso! --
+Problema. La planta de cactus que acabas de 
+desbloquear quiere tierra arenosa, pero no hay 
+ninguna aquí. ¡Tiempo de expansión! Visite el depósito
+de tierra y compre un nuevo terreno para desarrollar.
+Las tierra, el depósito de exportaciones e 
+importaciones ahora están desbloqueados. Visite el
+depósito de tierra (a la derecha de las ventas).
+Compra un nuevo terreno para ampliar la fábrica.
+-- Un Nuevo Horizonte --
+¡Bienvenido a tu nuevo terreno! En lugar de vender 
+carga, también puede moverla entre tierras. Utilice 
+cintas para alimentar la carga al depósito de
+exportaciones en cualquiera de sus parcelas.
+Exporte la carga moviéndola al depósito de 
+exportaciones. La tasa de exportación de cada tipo
+de carga se promedia durante los
+ dos minutos anteriores.
+-- Acceder a Los Bienes --
+Importemos también. Vaya a una parcela diferente y
+visite el depósito de importaciones, puede importar
+hasta cuatro cargas por parcela. Intente configurar 
+una importación ahora.
+Importe algo de carga en un terreno diferente. Las
+importaciones N, S, E, O se pueden elegir
+individualmente. No puede exportar un tipo de carga
+que se está importando a la misma terreno.
+-- Importaciones y Exportaciones y Terreno --
+¡Maravilloso! Continúe comprando más terreno para
+acceder a nuevos tipos de suelo y ampliar la fábrica. 
+Utilice la exportación y las importaciones para mover 
+la carga, ¡continúe maximizando la eficiencia!
 Norte
 Este
 Sur
@@ -480,8 +480,8 @@ Aegetal
 Destilado
 Jugo
 de Manzana
-Artificial
-Colorante
+Colorantes
+Artificiales
 Alimentación animal
 Hormonas
 Esteroides
@@ -520,7 +520,7 @@ Contenido de Paquete:
 Caja
 Formaldehído
 Almidón
-Tiempo de Producción: %ss
+Tiempo de Prod.: %ss
 Tiempo Restante: %ss
 En %i
 Gusta
@@ -541,14 +541,14 @@ Ver terrenos disponibles.
 Compra nuevas parcelas para ampliar tu fábrica. 
 Muévase entre las parcelas de su propiedad.
      
-Carga de exportación para uso en otras parcelas.
+Carga de exportación para uso en otras tierra.
 Las exportaciones tienen un promedio de 60 a 120 años.
 No puede exportar ninguna carga que también
 se importe a esta parcela.
-Carga de importación de otras parcelas. Puede seleccionar
-una importación para cada uno de los 4 puntos cardinales.
- Las importaciones ocurren cada 10s, la cantidad importada 
-depende del número total de importadores.
+Importación de carga de otras tierras. Una
+importación para cada uno de los 4 puntos
+cardinales. La cantidad importada depende del
+número total de importadores.
 Una gran roca bloquea el suelo aquí.
 ¿Quizás se volverá importante más adelante?
      
@@ -560,8 +560,8 @@ Coloque una carga aquí para mostrarla en el letrero.
 Letrero para
 Borra permanentemente la carga no deseada.
 Deje caer la carga no deseada o use transportadores.
-Convierte las 8 baldosas circundantes en tierra arcillosa.
-Al quitar el rotavator, estas baldosas 
+Convierte las 8 baldosas circundantes en tierra
+arcillosa. Al quitar el rotavator, estas baldosas 
 volverán a su tipo de suelo anterior.
 Reduce el tiempo de producción en cualquier fábrica
 inmediatamente al N, S, E o O del módulo.
@@ -613,16 +613,16 @@ Cuida estas rosas en tu jubilación
 Se mejora la velocidad en el camino
 Muestra una carga de su elección
 La carga colocada aquí será destruida
-Lugar para humedecer el suelo circundante.
+Lugar para humedecer el suelo circundante
 Tiendas de hasta 3 tipos diferentes de carga
 Una caja de almacenamiento de vaciado
 Coloque junto a las fábricas, acelera la producción
 Actualiza la velocidad del transportador de x1 a x2
 Obstáculos despejados (luego se pueden construir)
-Recuperar la tierra. Para construir, no para plantar.
-Convierte la tierra cercana en suelo arcilloso.
-Un espacio relajante para disfrutar de su riqueza.
-Una encantadora cerca de madera.
+Recuperar la tierra. Para construir, no para plantar
+Convierte la tierra cercana en suelo arcilloso
+Un espacio relajante para disfrutar de su riqueza
+Una encantadora cerca de madera
 Recoge carga, tiene tres tipos
 Debe construirse sobre el agua. Bombea agua
 Debe construirse en suelo calcáreo. Produce tiza
@@ -669,16 +669,14 @@ Vender
 Todo es
 ¡Desbloqueado!
 Gracias por jugar
-¡LA CRÍA INTENSIVA!
+¡LA AGRI. INTENSIVA!
 Visita:
 La tienda
-Para desbloquear el siguiente:
+Para desbloquear:
 Vender un total de:
-Para desbloquear el siguiente:
 Vendido hasta ahora: %i
 Continuar
 El tutorial
-Para desbloquear el siguiente
 Edificio
 ¡GUARDE ANTES DE SALIR!
 Tiempo de juego total:
@@ -704,25 +702,26 @@ Zoom automático al moverse
 Juego de guardado automático
 Recogida automática en la decon.
 Auto aplicar grasa transportadora
-Mostrar información de depuración
+Información de depuración
 --- Salir del Juego ---
 Guardar y salir al título
 Salir al título sin guardar
 --- Captura de Pantalla ---
-Tome la captura de pantalla de la trama
+Tomar captura de pantalla completa
 --- Controles ---
-Inventario/Seleccionar/Interact: ⓐ
-Volver/Cancelar: ⓑ
+Inventario/Seleccionar/Interact: Ⓐ
+Volver/Cancelar: Ⓑ
 Caminar: ✛
-Correr: sostener ⓑ + ✛
-Acercar/afuera: 🎣 o Sostener ⓐ + ⬇️
-Rotar: 🎣 o Sostener ⓑ + ⬆️/➡️/⬇️/⬅️
-Cambiar el tamaño: 🎣 o Sostener ⓑ + ⬆️/⬇️
-Modo de recogida rápida: Sostener ⓐ + ⬅️
-Modo de inspección rápida: Sostener ⓐ + ⬆️
-Modo de deconstrucción rápida: Sostener ⓐ + ➡️
+Correr: sostener Ⓑ + ✛
+Acercar/afuera: 🎣 o Sost. Ⓐ + ⬇️
+Rotar: 🎣 o Sost. Ⓑ + ⬆️/➡️/⬇️/⬅️
+Cambiar el tamaño: 🎣 o Sost. Ⓑ + ⬆️/⬇️
+Modo de recogida: Sost. Ⓐ + ⬅️
+Modo de inspección: Sost. Ⓐ + ⬆️
+Modo de deconstrucción: Sost. Ⓐ + ➡️
 --- Créditos ---
-La cría intensiva de Tim Martin
+Factory Farming de Tim Martin
+Traducciones de Eugene Zakharov
 -- Música --
 ♬ Dr Tikov: 1985
 ♬ BoxCat Games: B-3
@@ -743,6 +742,7 @@ Chester Jenkins: Cooper Hewitt
 Martin Vacha: Roobert
 Mediengestaltung: Messing Lettern
 Mediengestaltung: Coventry Garden
+Noto Sans
 -- Efectos de Sonido --
 sfxr.me
 -- Estadísticas --
@@ -755,7 +755,7 @@ Edificios totales en esta trama:
 Cargo total en esta trama:
      
 © Tim Martin 2022
-La cría intensiva es un proyecto de
+La agricultura intensiva es un proyecto de
 código abierto con licencia del MIT
 github.com/timboe/factoryfarming
      
@@ -771,6 +771,6 @@ Parcelas de tierra
 Suelos
 Fábrica
 Agricultura
-"La Cría Intensiva"
+La Agricultura Intensiva
 ES
 --

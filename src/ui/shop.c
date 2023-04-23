@@ -87,10 +87,6 @@ void populateInfoBuy(bool _visible) {
         strcat(textA, lb());
         strcat(textA, toStringSoil( PDesc[selectedID].soil ));
         strcat(textA, rb());
-
-        //snprintf(textA, 128, tr(kTRShopBuy),
-        //  toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
-        //  toStringSoil( PDesc[selectedID].soil )); 
       } else {
         strcpy(textA, tr(kTRShopBuy));
         strcat(textA, space());
@@ -101,36 +97,27 @@ void populateInfoBuy(bool _visible) {
         strcat(textA, space());
         strcat(textA, toStringSoil( PDesc[selectedID].soil ));
         strcat(textA, rb());
-
-        //snprintf(textA, 128, tr(kTRShopBuy),
-        //  toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
-        //  toStringWetness( PDesc[selectedID].wetness ),
-        //  toStringSoil( PDesc[selectedID].soil )); 
       }
       break;
     case kConveyor:;
       strcpy(textA, tr(kTRShopBuy));
       strcat(textA, space());
       strcat(textA, toStringBuilding(selectedCatType, (union kSubType) {.conveyor = selectedID}, false));
-      //snprintf(textA, 128, tr(kTRShop2), toStringBuilding(selectedCatType, (union kSubType) {.conveyor = selectedID}, false)); 
       break;
     case kExtractor:; 
       strcpy(textA, tr(kTRShopBuy));
       strcat(textA, space());
       strcat(textA, toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false));
-      //snprintf(textA, 128, tr(kTRShop2), toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false)); 
       break;
     case kFactory:; 
       strcpy(textA, tr(kTRShopBuy));
       strcat(textA, space());
       strcat(textA, toStringBuilding(selectedCatType, (union kSubType) {.factory = selectedID}, false));
-      //snprintf(textA, 128, tr(kTRShop2), toStringBuilding(selectedCatType, (union kSubType) {.factory = selectedID}, false));
       break;
     case kUtility:; 
       strcpy(textA, tr(kTRShopBuy));
       strcat(textA, space());
       strcat(textA, toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false));
-      //snprintf(textA, 128, tr(kTRShop2), toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false));
       break;
     case kSpecial:; case kNoBuilding:; case kNBuildingTypes:; break;
   }
@@ -143,10 +130,9 @@ void populateInfoBuy(bool _visible) {
   strcpy(textC, tr(kTRShopPrice));
   strcat(textC, c5space());
   strcat(textC, textM);
-  //snprintf(textC, 128, tr(kTRShopPrice), textM);
 
-  pd->graphics->drawText(textA, 128, kUTF8Encoding, 1*TILE_PIX, +2 +tY());
-  pd->graphics->drawText(textB, 128, kUTF8Encoding, 1*TILE_PIX, TILE_PIX - 2 +tY());
+  pd->graphics->drawText(textA, 128, kUTF8Encoding, TILE_PIX/2, +2 +tY());
+  pd->graphics->drawText(textB, 128, kUTF8Encoding, TILE_PIX/2, TILE_PIX - 2 +tY());
   pd->graphics->drawText(textC, 128, kUTF8Encoding, 9*TILE_PIX, TILE_PIX - 2 +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16(2, 16, 1), 9*TILE_PIX + trLen(kTRShopPrice), TILE_PIX - 2, kBitmapUnflipped); // Coin

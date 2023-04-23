@@ -440,9 +440,6 @@ void populateInfoInventory() {
         strcat(textA, lb());
         strcat(textA, toStringSoil(PDesc[selectedID].soil));
         strcat(textA, rb());
-        //snprintf(textA, 128, tr(kTRUIInventoryPlant0),
-        //  toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
-        //  toStringSoil(PDesc[selectedID].soil)); 
       } else {
         strcpy(textA, tr(kTRUIInventoryPlant));
         strcat(textA, space());
@@ -453,10 +450,6 @@ void populateInfoInventory() {
         strcat(textA, space());
         strcat(textA, toStringSoil(PDesc[selectedID].soil));
         strcat(textA, rb());
-        //snprintf(textA, 128, tr(kTRUIInventoryPlant1),
-        //  toStringBuilding(selectedCatType, (union kSubType) {.plant = selectedID}, false),
-        //  toStringWetness(PDesc[selectedID].wetness),
-        //  toStringSoil(PDesc[selectedID].soil)); 
       }
       break;
     case kUICatConv:; 
@@ -470,29 +463,21 @@ void populateInfoInventory() {
       strcpy(textA, tr(kTRUIInventoryBuild));
       strcat(textA, space());
       strcat(textA, toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false));
-      pd->system->logToConsole("LEN: %i", strlen(tr(kTRUIInventoryBuild)));
-      pd->system->logToConsole("STR: %s", tr(kTRUIInventoryBuild));
-      pd->system->logToConsole("STR: %s", toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false));
-      pd->system->logToConsole(tr(kTRUIInventoryBuild), "X");
-      //snprintf(textA, 128, "%s=%s", tr(kTRUIInventoryBuild), toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false));
       break;
     case kUICatFactory:; 
       strcpy(textA, tr(kTRUIInventoryBuild));
       strcat(textA, space());
       strcat(textA, toStringBuilding(selectedCatType, (union kSubType) {.factory = selectedID}, false));
-      //snprintf(textA, 128, tr(kTRUIInventoryBuild), toStringBuilding(selectedCatType, (union kSubType) {.factory = selectedID}, false));
       break;
     case kUICatUtility:;
       strcpy(textA, tr(kTRUIInventoryPlace));
       strcat(textA, space());
       strcat(textA, toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false));
-      //snprintf(textA, 128, tr(kTRUIInventoryPlace), toStringBuilding(selectedCatType, (union kSubType) {.utility = selectedID}, false));
       break;
     case kUICatCargo:;
       strcpy(textA, tr(kTRUIInventoryPlace));
       strcat(textA, space());
       strcat(textA, toStringCargoByType(selectedID, /*plural=*/false));
-      //snprintf(textA, 128, tr(kTRUIInventoryPlace), toStringCargoByType(selectedID, /*plural=*/false));
       break;
     case kUICatWarp:; break;
     case kUICatImportN: case kUICatImportE: case kUICatImportS: case kUICatImportW: break; 
@@ -507,20 +492,17 @@ void populateInfoInventory() {
     strcpy(textC, tr(kTRUIInventoryValue));
     strcat(textC, c5space());
     strcat(textC, textM);
-    //snprintf(textC, 128, tr(kTRUIInventoryValue), textM);
   } else if (selectedCat == kUICatExtractor) {
     if (selectedID == kChalkQuarry) {
       strcpy(textC, tr(kTRUIInventoryBuildOn));
       strcat(textC, space());
       strcat(textC, toStringSoil(kChalkyGround));
-      //snprintf(textC, 128, tr(kTRUIInventoryBuildOn), toStringSoil(kChalkyGround));
     } else if (selectedID == kPump) {
       snprintf(textC, 128, "%s", tr(kTRUIInventoryBuildOnWater));
     } else if (selectedID == kSaltMine) {
       strcpy(textC, tr(kTRUIInventoryBuildOn));
       strcat(textC, space());
       strcat(textC, toStringSoil(kPeatyGround));
-      //snprintf(textC, 128, tr(kTRUIInventoryBuildOn), toStringSoil(kPeatyGround));
     }
   } else if (selectedCat == kUICatPlant) {
     if (selectedID == kSeaweedPlant) snprintf(textC, 128, "%s", tr(kTRUIInventorySowOnWater));
@@ -529,8 +511,8 @@ void populateInfoInventory() {
     if (selectedID == kLandfill) snprintf(textC, 128, "%s", tr(kTRUIInventoryCannotRemove));
     if (selectedID == kRetirement) { snprintf(textC, 128, "%s", tr(kTRUIInventoryBuildOnPlains)); cOff = TILE_PIX; }
   }
-  pd->graphics->drawText(textA, 128, kUTF8Encoding, 1*TILE_PIX, +2 +tY());
-  pd->graphics->drawText(textB, 128, kUTF8Encoding, 1*TILE_PIX, TILE_PIX - 2 +tY());
+  pd->graphics->drawText(textA, 128, kUTF8Encoding, TILE_PIX/2, +2 +tY());
+  pd->graphics->drawText(textB, 128, kUTF8Encoding, TILE_PIX/2, TILE_PIX - 2 +tY());
   pd->graphics->drawText(textC, 128, kUTF8Encoding, 8*TILE_PIX - cOff, TILE_PIX - 2 +tY());
   pd->graphics->setDrawMode(kDrawModeCopy); // Draw coin
   if (selectedCat == kUICatCargo) { 

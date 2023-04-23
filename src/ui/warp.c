@@ -80,7 +80,6 @@ void populateInfoWarp(bool _visible) {
     strcpy(textA, tr(kTRWarpLocations));
     strcat(textA, cspace());
     strcat(textA, getWorldName(selectedID, /*mask*/ false));
-    //snprintf(textA, 256, tr(kTRWarpLocations), getWorldName(selectedID, /*mask*/ false));
     if (selectedID < FLOOR_TYPES) {
       strcpy(textB, tr(kTRWarpSoil));
       strcat(textB, cspace());
@@ -89,25 +88,21 @@ void populateInfoWarp(bool _visible) {
       strcat(textB, toStringSoil(getWorldGround(selectedID, 1)));
       strcat(textB, Cspace());
       strcat(textB, toStringSoil(getWorldGround(selectedID, 2)));
-      //snprintf(textB, 256, tr(kTRWarpSoil0), 
-      //  toStringSoil(getWorldGround(selectedID, 0)),
-      //  toStringSoil(getWorldGround(selectedID, 1)),
-      //  toStringSoil(getWorldGround(selectedID, 2)));
     } else if (selectedID == kWaterWorld) {
       strcpy(textB, tr(kTRWarpSoil));
       strcat(textB, cspace());
       strcat(textB, tr(kTRWater));
       strcat(textB, Cspace());
       strcat(textB, toStringSoil(getWorldGround(kClayWorld, 0)));
-      //snprintf(textB, 256, tr(kTRWarpSoil1), toStringSoil(getWorldGround(kClayWorld, 0)));
     } else if (selectedID == kTranquilWorld) {
       strcpy(textB, tr(kTRWarpSoil));
       strcat(textB, cspace());
       strcat(textB, toStringSoil(getWorldGround(kLoamWoarld, 0)));
-      //snprintf(textB, 256, tr(kTRWarpSoil2), toStringSoil(getWorldGround(kLoamWoarld, 0)));
     }
-  } else { 
-    snprintf(textA, 256, tr(kTRWarpLocations), getWorldName(selectedID, /*mask*/ true));
+  } else {
+    strcpy(textA, tr(kTRWarpLocations));
+    strcat(textA, cspace());
+    strcat(textA, getWorldName(selectedID, /*mask*/ true));
 
     char textM[32] = "";
     snprintf_c(textM, 32, selectedPriceOrAmount);
@@ -115,16 +110,15 @@ void populateInfoWarp(bool _visible) {
     strcpy(textB, tr(kTRShopPrice));
     strcat(textB, c5space());
     strcat(textB, textM);
-    //snprintf(textB, 256, tr(kTRWarpPrice), textM);
     if (WDesc[selectedID].unlock == kNoCargo) { // buy for gold
-      pd->graphics->drawBitmap(getSprite16(2, 16, 1), 1*TILE_PIX + trLen(kTRShopPrice), TILE_PIX - 2, kBitmapUnflipped); // Coin
+      pd->graphics->drawBitmap(getSprite16(2, 16, 1), TILE_PIX/2 + trLen(kTRShopPrice), TILE_PIX - 2, kBitmapUnflipped); // Coin
     } else {
-      pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[WDesc[selectedID].unlock].UIIcon , 1), 1*TILE_PIX + trLen(kTRShopPrice), TILE_PIX - 2, kBitmapUnflipped);
+      pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[WDesc[selectedID].unlock].UIIcon , 1), TILE_PIX/2 + trLen(kTRShopPrice), TILE_PIX - 2, kBitmapUnflipped);
     }
   }
   pd->graphics->setDrawMode(kDrawModeFillBlack);
-  pd->graphics->drawText(textA, 256, kUTF8Encoding, 1*TILE_PIX, +2 +tY());
-  pd->graphics->drawText(textB, 256, kUTF8Encoding, 1*TILE_PIX, TILE_PIX - 2 +tY());
+  pd->graphics->drawText(textA, 256, kUTF8Encoding, TILE_PIX/2, +2 +tY());
+  pd->graphics->drawText(textB, 256, kUTF8Encoding, TILE_PIX/2, TILE_PIX - 2 +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
 
   pd->graphics->popContext();

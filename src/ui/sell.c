@@ -59,17 +59,15 @@ void populateInfoSell() {
   strcpy(textA, tr(kTRSell));
   strcat(textA, space());
   strcat(textA, toStringCargoByType(selectedID, /*plural=*/false));
-  //snprintf(textA, 128, tr(kTRSell0), toStringCargoByType(selectedID, /*plural=*/false));
   snprintf(textB, 128, tr(kTRInventory), selectedOwned);
   char textM[32] = "";
   snprintf_c(textM, 32, selectedPrice * toSell);
-  //snprintf(textC, 128, tr(kTRSell2), textM);
   strcpy(textC, tr(kTRUIInventoryValue));
   strcat(textC, c5space());
   strcat(textC, textM);
 
-  pd->graphics->drawText(textA, 128, kUTF8Encoding, 1*TILE_PIX, +2 +tY());
-  pd->graphics->drawText(textB, 128, kUTF8Encoding, 1*TILE_PIX, TILE_PIX - 2 +tY());
+  pd->graphics->drawText(textA, 128, kUTF8Encoding, TILE_PIX/2, +2 +tY());
+  pd->graphics->drawText(textB, 128, kUTF8Encoding, TILE_PIX/2, TILE_PIX - 2 +tY());
   pd->graphics->drawText(textC, 128, kUTF8Encoding, 9*TILE_PIX, TILE_PIX - 2 +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->drawBitmap(getSprite16(2, 16, 1), 9*TILE_PIX + trLen(kTRUIInventoryValue), TILE_PIX - 2, kBitmapUnflipped); // Coin

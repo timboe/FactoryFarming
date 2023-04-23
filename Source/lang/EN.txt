@@ -1,20 +1,20 @@
 Belt
 Conveyor Belt
-I' Splitter
+'I' Splitter
 Conveyor Belt 'I' Splitter
-L' Splitter
+'L' Splitter
 Conveyor Belt 'L' Splitter
-T' Splitter
+'T' Splitter
 Conveyor Belt 'T' Splitter
-I' Filter
+'I' Filter
 Conveyor Belt 'I' Filter
-L' Filter
+'L' Filter
 Conveyor Belt 'L' Filter
 Tunnel
 Conveyor Belt Tunnel
-I' Overflow
+'I' Overflow
 Conveyor Belt 'I' Overflow
-L' Overflow
+'L' Overflow
 Conveyor Belt 'L' Overflow
 Carrot Plant
 Carrot Seeds
@@ -389,7 +389,7 @@ Press Ⓐ and choose this from your inventory.
 Place the harvester such that it located on empty
 soil, and carrot plants are within its harvest range.
 -- The First Cargo Line --
-Good, We're harvesting carrots. But we need to get them
+Good, we're harvesting carrots. But we need to get them
 to the sales depot. We need conveyor belts! Buy around
 50 from the shop and lay the path to move & sell
 the carrots. Rotate belt pieces with 🎣 or Ⓑ + ✛.
@@ -413,7 +413,7 @@ both chalk and carrots, and transport the vitamins
 to the sales depot for a much bigger profit!
 Go to the the shop, buy a vitamin factory.
 Place it in a good spot. Use conveyor belts to
-supply it with carrots and chalk. Use a more belts
+supply it with carrots and chalk. Use more belts
 to transport the vitamins to the sales depot.
 -- Go Forth And Consume --
 Excellent! You now know all the basics of exploiting
@@ -619,10 +619,10 @@ Like the storage box, but also self-empties
 Place next to factories, speeds up production
 Upgrades conveyor speed from x1 to x2
 Clears obstructed ground, which can then be built on
-Fills in water. Can be built on, but not planted on.
-Turns nearby land into loamy soil.
-A relaxing space to enjoy your amassed wealth.
-A charming wooden fence.
+Fills in water. Can be built on, but not planted on
+Turns nearby land into loamy soil
+A relaxing space to enjoy your amassed wealth
+A charming wooden fence
 Collects cargo, can hold three different types
 Must be built on water. Produces water buckets
 Must be built on chalky soil. Produces chalk
@@ -674,11 +674,9 @@ Visit:
 The Shop
 To unlock the next:
 Sell a total of:
-To unlock the next:
 Sold so far: %i
 Continue
 The Tutorial
-To unlock the next
 Building
 SAVE BEFORE EXITING!
 Total Play Time:
@@ -723,6 +721,7 @@ Quick Inspect Mode: Hold Ⓐ + ⬆️
 Quick Deconstruct Mode: Hold Ⓐ + ➡️
 --- Credits ---
 Factory Farming by Tim Martin
+Translations by Eugene Zakharov
 -- Music --
 ♬ Dr Tikov: 1985
 ♬ BoxCat Games: B-3
@@ -743,6 +742,7 @@ Chester Jenkins: Cooper Hewitt
 Martin Vacha: Roobert
 Mediengestaltung: Messing Lettern
 Mediengestaltung: Coventry Garden
+Noto Sans
 -- Sound Effects --
 sfxr.me
 -- Statistics --

@@ -432,10 +432,10 @@ void movePlayer(bool _forceUpdate) {
 
     const static int16_t MOVE_THRESHOLD_X = (SCREEN_PIX_X * SCROLL_EDGE) - (SCREEN_PIX_X/2); 
     const int16_t sideThreshold = (int16_t) roundf(MOVE_THRESHOLD_X * shrinkFractionX);
-    if (m_player.m_pix_x - m_player.m_camera_pix_x > sideThreshold / zoom) {
+    if (m_player.m_pix_x - m_player.m_camera_pix_x > sideThreshold / zoom && diffX > 0) {
       m_player.m_camera_pix_x = m_player.m_pix_x - (sideThreshold / zoom);
       didScroll = true;
-    } else if (m_player.m_pix_x - m_player.m_camera_pix_x < -(sideThreshold / zoom)) {
+    } else if (m_player.m_pix_x - m_player.m_camera_pix_x < -(sideThreshold / zoom) && diffX < 0) {
       didScroll = true;
       m_player.m_camera_pix_x = m_player.m_pix_x + (sideThreshold / zoom);
     }
@@ -453,10 +453,10 @@ void movePlayer(bool _forceUpdate) {
     const int16_t bottomThreshold = (int16_t) roundf((m_player.m_enableTutorial < TUTORIAL_FINISHED || getGameMode() == kInspectMode ? MOVE_THRESHOLD_Y_REDUCED : MOVE_THRESHOLD_Y) * shrinkFractionY);
     #endif
 
-    if (m_player.m_pix_y - m_player.m_camera_pix_y > bottomThreshold / zoom) {
+    if (m_player.m_pix_y - m_player.m_camera_pix_y > bottomThreshold / zoom && diffY > 0) {
       didScroll = true;
       m_player.m_camera_pix_y = m_player.m_pix_y - (bottomThreshold / zoom); 
-    } else if (m_player.m_pix_y - m_player.m_camera_pix_y < -(topThreshold / zoom)) {
+    } else if (m_player.m_pix_y - m_player.m_camera_pix_y < -(topThreshold / zoom) && diffY < 0) {
       didScroll = true;
       m_player.m_camera_pix_y = m_player.m_pix_y + (topThreshold / zoom);
     }

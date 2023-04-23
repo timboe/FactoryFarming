@@ -376,10 +376,6 @@ void updateUITitles(int _fc) {
   return;
   #endif
 
-  // Disable for now
-  pd->sprite->setVisible(m_UISpriteTitleFac, false);
-  pd->sprite->setVisible(m_UISpriteTitleFarm, false);
-
   pd->sprite->setVisible(m_UISpriteTitleLang, !m_UITitleOffset);
   pd->sprite->setVisible(m_UISpriteTitleLangArrow, _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
   pd->sprite->setVisible(m_UISpriteTitleSelected, _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
@@ -923,9 +919,9 @@ void drawUIInspect() {
   if (getTile_fromLocation(loc)->m_groundType == kObstructedGround) {
     ++y;
     snprintf(text, 256, "%s", tr(kTRObstructedGroundHelp1));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
+    pd->graphics->drawText(text, 256, kUTF8Encoding, 3*TILE_PIX/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
     snprintf(text, 256, "%s", tr(kTRObstructedGroundHelp2));
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
+    pd->graphics->drawText(text, 256, kUTF8Encoding, 3*TILE_PIX/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
   }
   
   if (loc->m_building) {
@@ -980,28 +976,16 @@ void drawUIBottom() {
       strcat(text, toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
       strcat(text, Cspace());
       strcat(text, toStringCargo(loc->m_cargo, /*plural=*/false));
-
-      //snprintf(text, 256, "%s, %s, %s", 
-      //  toStringSoil((enum kGroundType)t->m_groundType), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo, /*plural=*/false));
     } else if (loc->m_building) {
       strcpy(text, toStringSoil((enum kGroundType)t->m_groundType));
       strcat(text, Cspace());
       strcat(text, toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
-
-      //snprintf(text, 256, "%s, %s", 
-      //  toStringSoil((enum kGroundType)t->m_groundType), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
     } else if (loc->m_cargo) {
       strcpy(text, toStringSoil((enum kGroundType)t->m_groundType));
       strcat(text, Cspace());
       strcat(text, toStringCargo(loc->m_cargo, /*plural=*/false));
-
-      //snprintf(text, 256, "%s, %s", 
-      //  toStringSoil((enum kGroundType)t->m_groundType), toStringCargo(loc->m_cargo, /*plural=*/false));
     } else {
       strcpy(text, toStringSoil((enum kGroundType)t->m_groundType));
-
-      //snprintf(text, 256, "%s", 
-      //  toStringSoil((enum kGroundType)t->m_groundType));
     }
 
   } else {
@@ -1014,33 +998,22 @@ void drawUIBottom() {
       strcat(text, toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
       strcat(text, Cspace());
       strcat(text, toStringCargo(loc->m_cargo, /*plural=*/false));
-
-      //snprintf(text, 256, "%s %s, %s, %s", 
-      //  toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType)t->m_groundType), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true), toStringCargo(loc->m_cargo, /*plural=*/false));
     } else if (loc->m_building) {
       strcpy(text, toStringWetness(getWetness(t->m_wetness)));
       strcat(text, space());
       strcat(text, toStringSoil((enum kGroundType)t->m_groundType));
       strcat(text, Cspace());
       strcat(text, toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
-
-      //snprintf(text, 256, "%s %s, %s", 
-      //  toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType)t->m_groundType), toStringBuilding(loc->m_building->m_type, loc->m_building->m_subType, true));
     } else if (loc->m_cargo) {
       strcpy(text, toStringWetness(getWetness(t->m_wetness)));
       strcat(text, space());
       strcat(text, toStringSoil((enum kGroundType)t->m_groundType));
       strcat(text, Cspace());
       strcat(text, toStringCargo(loc->m_cargo, /*plural=*/false));
-
-      //snprintf(text, 256, "%s %s, %s", 
-      //  toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType)t->m_groundType), toStringCargo(loc->m_cargo, /*plural=*/false));
     } else {
       strcpy(text, toStringWetness(getWetness(t->m_wetness)));
       strcat(text, space());
       strcat(text, toStringSoil((enum kGroundType)t->m_groundType));
-      //snprintf(text, 128, "%s %s", 
-      //  toStringWetness(getWetness(t->m_wetness)), toStringSoil((enum kGroundType)t->m_groundType));
     }
 
   } 
@@ -1807,6 +1780,10 @@ void updateLangUI() {
   pd->sprite->setVisible(m_UISpriteTitleFac, !isEng);
   pd->sprite->setVisible(m_UISpriteTitleFarm, !isEng);
   pd->sprite->setVisible(m_UISpriteTitleFacFarm, !isEng);
+
+  // Disable for now
+  pd->sprite->setVisible(m_UISpriteTitleFac, false);
+  pd->sprite->setVisible(m_UISpriteTitleFarm, false);
 
   setRoobert10();
   for (int32_t i = 0; i < 3; ++i) {

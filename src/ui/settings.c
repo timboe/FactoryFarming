@@ -78,7 +78,7 @@ LCDBitmap* getPauseImage() {
 
     snprintf(textA, 128, "%s", tr(kTRPauseUnlock0));
     snprintf(textB, 128, "%s", tr(kTRPauseUnlock1));
-    snprintf(textC, 128, "%s", tr(kTRPauseUnlock2));
+    snprintf(textC, 128, "%s", tr(kTRPauseUnlockTheNext));
     sA = getSprite16(11, 14, 1);
 
     const uint32_t nextLevel = p->m_buildingsUnlockedTo + 1;
@@ -91,7 +91,7 @@ LCDBitmap* getPauseImage() {
   } else if (nrs == kNewNoNeedsFarming) {
 
     snprintf(textA, 128, "%s", tr(kTRPauseSell0));
-    snprintf(textC, 128, "%s", tr(kTRPauseSell1));
+    snprintf(textC, 128, "%s", tr(kTRPauseUnlockTheNext));
 
     const uint32_t nextLevel = p->m_buildingsUnlockedTo + 1;
     const enum kCargoType cargo = UnlockDecs[ nextLevel ].ofCargo;
@@ -118,7 +118,7 @@ LCDBitmap* getPauseImage() {
 
     snprintf(textA, 128, "%s", tr(kTRPauseTut0));
     snprintf(textB, 128, "%s", tr(kTRPauseTut1));
-    snprintf(textC, 128, "%s", tr(kTRPauseTut2));
+    snprintf(textC, 128, "%s", tr(kTRPauseUnlockTheNext));
     snprintf(textD, 128, "%s", tr(kTRPauseTut3));
     sA = getSprite16(13, 13, 1);
     sB = getSprite16(11, 13, 1);
@@ -336,14 +336,14 @@ void doSettings(bool _forward) {
     case 28: cheatMoney(); break;
     case 29: cheatUnlock(); break;
     //
-    case 36: chooseMusic(0); break;
-    case 37: chooseMusic(1); break;
-    case 38: chooseMusic(4); break;
-    case 39: chooseMusic(3); break;
-    case 40: chooseMusic(2); break;
-    case 41: chooseMusic(5); break;
+    case 37: chooseMusic(0); break;
+    case 38: chooseMusic(1); break;
+    case 39: chooseMusic(4); break;
+    case 40: chooseMusic(3); break;
+    case 41: chooseMusic(2); break;
+    case 42: chooseMusic(5); break;
     //
-    case 56: sfx(rand() % kNSFX); return; // Do not also play kSfxA
+    case 58: sfx(rand() % kNSFX); return; // Do not also play kSfxA
   }
   redrawSettingsMenuLine(getSettingsMenuUIBitmap(selectedID), selectedID);
   sfx(kSfxA);
@@ -352,8 +352,8 @@ void doSettings(bool _forward) {
 // NOTE: There are defs in constants.h which might need updating too
 #define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_START 0
 #define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_STOP 17
-#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_START 58
-#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_STOP 65
+#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_START 60
+#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_STOP 67
 
 void redrawAllSettingsMenuLines() {
   for (int32_t i = MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_START; i < MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_STOP; ++i) {
@@ -379,7 +379,11 @@ void redrawSettingsMenuLine(LCDBitmap* _bitmap, int32_t _line) {
     pd->graphics->drawText(text, length, kUTF8Encoding, TILE_PIX*9 - width/2, tY());
 
   } else {
-    pd->graphics->drawText("..........................................................................", 75, kUTF8Encoding, TILE_PIX, tY());
+    if (getLanguage() == kEN) {
+      pd->graphics->drawText("..........................................................................", 75, kUTF8Encoding, TILE_PIX, tY());
+    } else {
+      pd->graphics->drawText("......................................................", 55, kUTF8Encoding, TILE_PIX, tY());
+    }
     const char* text = getLine(_line);
     length = strlen(text);
     width = pd->graphics->getTextWidth(getRoobert10(), text, length, kUTF8Encoding, 0);
@@ -407,13 +411,13 @@ void redrawSettingsMenuLine(LCDBitmap* _bitmap, int32_t _line) {
     case 15: p->m_autoUseConveyorBooster ? checked() : unchecked(); break;
     case 16: p->m_enableDebug ? checked() : unchecked(); break;
     // 
-    case 58: addText(playTime(buf, p->m_playTime / TICK_FREQUENCY)); break;
-    case 59: addNumber(p->m_moneyCumulative); break;
-    case 60: addNumber(p->m_moneyHighWaterMark); break;
-    case 61: addNumber(getTotalSoldCargo()); break;
-    case 62: addNumber(getTotalImportedCargo()); break;
-    case 63: addNumber(getNBuildings()); break;
-    case 64: addNumber(getNCargo()); break;
+    case 60: addText(playTime(buf, p->m_playTime / TICK_FREQUENCY)); break;
+    case 61: addNumber(p->m_moneyCumulative); break;
+    case 62: addNumber(p->m_moneyHighWaterMark); break;
+    case 63: addNumber(getTotalSoldCargo()); break;
+    case 64: addNumber(getTotalImportedCargo()); break;
+    case 65: addNumber(getNBuildings()); break;
+    case 66: addNumber(getNCargo()); break;
   }
 
   pd->graphics->popContext();
@@ -430,7 +434,8 @@ void populateInfoSettingsMenu() {
 
 bool isTitle(int32_t _line) {
   switch (_line) {
-    case 0: case 5: case 17: case 20: case 22: case 33: case 35: case 42: case 50: case 55: case 57: case 65: case 70: case 74: return true;
+    case 0: case 5: case 17: case 20: case 22: case 33: case 36: 
+    case 43: case 51: case 57: case 59: case 67: case 72: case 76: return true;
   }
   return false;
 }

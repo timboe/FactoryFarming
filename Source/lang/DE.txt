@@ -220,9 +220,9 @@ Rose
 Türkisches Entzücken
 Türkisches Entzücken
 Hauptmenü
-spielstand löschen 1
-spielstand löschen 2
-spielstand löschen 3
+loschen 1
+loschen 2
+loschen 3
 spiel laden
 speichern
 spielmenu
@@ -329,136 +329,136 @@ GELADEN
 %i: Neues Spiel
 Laden Sie Demo
 %i Weiterspielen
--- Tech-Demo der Industrielandwirtschaft --
-Sie können sich in dieser Beispielfabrik umsehen.
-Sie finden Einrichtungen bis zu Tech Tier 3.
-Das volle Spiel geht auf Tech Tier 7.
-Bauen und Einsparungen sind in der Demo deaktiviert.
--Der anfängliche Kauf von Saatgut-
-Willkommen bei Factory Farming! Es gibt Geld zu sein
-gemacht, und es wird sich nicht machen! Also lass uns vorbeikommen
-Besuchen Sie den Laden mit ⓐ und kaufen Sie einige Karottensamen
-Der Kompass (rechts) zeigt immer auf den Laden.
-Bewegen Sie sich mit dem D-Pad, ✛. Zoomen Sie mit 🎣.
-Halten Sie ⓑ zum Laufen. Gehen Sie in den Laden und drücken Sie ⓐ.
-Kaufen Sie 10 Karottensamen aus dem Laden mit ⓐ.
-Drücken Sie ⓑ, um den Laden zu verlassen.
--Das nächste Ziel-
-Ihr aktuelles Ziel ist es, zumindest zu verkaufen
-10 Karotten. Sie können überprüfen, was Ihr aktuelles Ziel ist
-wird jederzeit durch Drücken der Menü -Taste.
+-- Tech-Demo der Industrie Landwirtschaft --
+Sie können sich in dieser beispielfabrik umsehen.
+Sie finden einrichtungen bis zu Tech Tier 3. Das volle
+spiel geht auf Tech Tier 7. Bauen und einsparungen
+sind in der demo deaktiviert.
+-- Der Anfängliche Kauf von Saatgut --
+Willkommen bei Factory Farming! Es gibt geld zu sein
+gemacht, und es wird sich nicht machen! Besuchen
+sie den laden und kaufen sie 10 karottensamen.
+Der kompass (rechts) zeigt immer auf den laden.
+Bewegen sie sich mit dem D-Pad, ✛. Zoomen sie mit 
+🎣. Halten sie Ⓑ zum laufen. Gehen sie in den laden
+und drücken sie Ⓐ. Kaufen sie 10 karottensamen aus
+dem laden mit Ⓐ. 
+-- Das Nächste Ziel --
+Ihr aktuelles ziel ist es, zumindest zu verkaufen
+10 karotten. Sie können überprüfen, was ihr aktuelles 
+ziel ist wird jederzeit durch drücken der menü-taste.
 Mach das jetzt.
-Drücken Sie die Menü -Taste, um Ihr aktuelles Ziel anzuzeigen.
-Von hier aus können Sie auch das Spiel speichern und laden, und
-Öffnen Sie das Hauptmenü mit Spieleinstellungen usw.
-     
--Die ersten Ernten-
-Gut, Karotten wachsen gut im schlammigen Boden in der Nähe des
-Geschäft. Achten Sie auf den Boden und Wasser, das jede Pflanze mag.
-Finden Sie einen guten Ort in der Nähe, öffnen Sie Ihr Inventar
-Wählen Sie mit ⓐ die Samen und pflanzen Sie 10 Karotten.
-Finden Sie eine nahe gelegene Fläche mit schlammigem Boden, vorzugsweise feucht.
-Drücken Sie ⓐ ⓐ, um Ihr Inventar einzugeben. Wählen Sie die Karotte aus
-Samen und drücken Sie erneut ⓐ. Pflanzen Sie 10 Karottensamen auf
-leere Flecken aus schlammigem Boden, dann drücken Sie ⓑ.
--Die erste Ernte-
-Großartige Pflanzen brauchen normalerweise einige Zeit, um Erzeugnisse zu erhalten.
-Aber lassen Sie uns diese Karottenpflanzen beschleunigen. Drücken Sie ⓐ, wählen Sie
-Pickup Frachtmodus 'und Ernte 10 angebaute Karotten.
-Sie können jede Fracht der Welt oder in Gebäuden abholen.
-Gehen Sie dorthin, wo Sie Ihre Karottensamen gepflanzt haben.
-Drücken Sie ⓐ ⓐ, um Ihr Inventar einzugeben, und wählen Sie 'Abholung
-Frachtmodus '. Drücken Sie oder halten Sie ⓐ beim Umzug, Pickup 10
-Erwachsene Karotten. Verwenden Sie das 🎣, um den Abholbereich zu ändern.
--Der erste Verkauf-
-Schön, Sie wissen, was wir mit Fracht wie diesen machen können
-Frische Karotten? Verkaufen Sie sie mit Gewinn! Besuchen Sie den Verkauf
-Depot (neben dem Laden) und drücken Sie ⓐ, um auf die zuzugreifen
-Verkaufsmenü. Verkaufe 10 Karotten, um fortzufahren.
-Gehen Sie zum Vertriebsdepot (neben dem Laden).
-Drücken Sie oder halten Sie ⓐ, um mindestens 10 Karotten zu verkaufen.
-Ändern Sie den mit jeder Presse von ⓐ verkauften Betrag durch
-Drehen Sie das 🎣 oder halten Sie ⓑ und drücken Sie ⬆️ oder ⬇️.
--Die erste automatisierte Ernte-
-Süß, aber das war eine Menge manueller Arbeit ... lass uns
-Verwenden Sie stattdessen einen automatischen Mischertöne! Kaufen Sie einen von
-Der Laden und bauen Sie es dort, wo einige Karottenpflanzen sind
-Innerhalb seines Ernte -Einzugsgebiets.
-Gehen Sie in den Laden, kaufen Sie einen automatischen Mischmittel.
-Drücken Sie ⓐ und wählen Sie dies aus Ihrem Inventar aus.
-Legen Sie den Harvester so, dass er sich auf leer befindet
-Boden- und Karottenpflanzen liegen in seinem Erntebereich.
--Die erste Frachtlinie-
-Gut, wir ernten Karotten. Aber wir müssen sie bekommen
-zum Vertriebsdepot. Wir brauchen Förderbänder! Umkaufen
-50 aus dem Laden und legen Sie den Weg, um sich zu bewegen und zu verkaufen
-die Karotten. Drehen Sie Gürtelstücke mit 🎣 oder ⓑ + ✛.
-Gehen Sie in den Laden, kaufen Sie rund 50 Förderbande.
-Drücken Sie ⓐ und wählen Sie diese aus Ihrem Inventar aus.
-Machen Sie eine Kette von Gürtel vom automatischen Mischtätiger bis
-Verkauf. Drehen Sie die Gürtel mit 🎣 oder halten Sie ⓑ und drücken Sie ✛.
--Bergbau der Erde-
-OK. Aber nicht alle ausnutzbaren Ressourcen werden angebaut.
-Einige werden ausgegraben oder ausgepumpt. Lassen Sie uns eine Kreide bauen
-Steinbruch als nächstes. Kaufen Sie eine im Laden und bauen Sie es auf
-kalkhaltiger Boden. Es sollte einige im Norden geben.
-Gehen Sie in den Laden, kaufen Sie einen Kreide Steinbruch.
-Drücken Sie ⓐ und wählen Sie dies aus Ihrem Inventar aus.
-Gehen Sie aus dem Laden nach Norden und suchen Sie nach kalkhaltigen Boden.
-Legen Sie den Steinbruch auf mindestens einer kalkhaltigen Bodenfliese.
--Fertigungswert-
-Hübsch. Wir können endlich eine vollständige Produktionslinie einrichten!
-Kaufen Sie eine Vitaminfabrik aus dem Laden, liefern Sie sie mit
-Sowohl Kreide als auch Karotten und transportieren die Vitamine
-zum Vertriebsdepot für einen viel größeren Gewinn!
-Gehen Sie in den Laden, kaufen Sie eine Vitamin -Fabrik.
-Platzieren Sie es an einen guten Ort. Verwenden Sie Förderbande, um
-Versorgen Sie es mit Karotten und Kreide. Verwenden Sie mehr Gürtel
-Um die Vitamine zum Vertriebsdepot zu transportieren.
--Geh raus und verbrauch--
-Exzellent! Sie kennen jetzt alle Grundlagen der Ausbeutung
-die Welt für Gewinn. Wenn Ihr Bankkonto schwillt,
-Weitere Pflanzen, Fabriken und andere Artikel werden freigeschaltet.
-Verwenden Sie sie, um den Gewinn zu maximieren und die Effizienz zu maximieren.
-- aber ich habe nicht den Boden dafür! -
-Problem. Die Kaktuspflanze, die Sie gerade entsperrt haben
-Sander Boden, aber hier gibt es keine. Erweiterungszeit!
-Besuchen Sie das Plots Depot (neben dem Verkauf) und kaufen Sie eine neue
-Grundstück zu entwickeln.
-Das Diagramm Depot, exportiert Depot und
-Imports Depot werden jetzt alle freigeschaltet.
-Besuchen Sie das Handlungsdepot rechts vom Verkauf.
-Kaufen Sie ein neues Grundstück, um die Fabrik zu erweitern.
--Ein neuer Horizont-
-Willkommen bei Ihnen neues Landschiff! Mehr Platz für Ihre
-Fertigungsimperium zum Wachstum. Anstatt Fracht zu verkaufen,
-Sie können es auch zwischen Diagrammen bewegen. Verwenden Sie die Gürtel, um zu füttern
-Front in das Exportdepot in einer Ihrer Handlungen.
-Exportieren Sie etwas Fracht, indem Sie sie über Gürtel in die verschieben
-exportiert Depot (rechts vom Grundstücksdepot) auf
-jede Handlung. Die Exportrate jedes Frachttyps ist
-gemittelt in den letzten zwei Minuten.
--Zugriff auf die Ware--
-Nachdem Sie Fracht exportieren, schauen wir uns auch die Importe an.
-Gehen Sie zu einem anderen Grundstück und besuchen Sie das Importdepot,
-Sie können bis zu vier Fracht pro Grundstück importieren.
-Versuchen Sie jetzt einen Import einrichten.
-Importieren Sie etwas Fracht in einem anderen Grundstück über die Importe
-Depot (Recht des Exportdepots). N, s, e, w
-Importe können einzeln ausgewählt werden. Sie können nicht exportieren a
-Frachttyp, der in das gleiche Grundstück importiert wird.
--- Importe & Exporte & Grundstück --
-Wunderbar! Kaufen Sie weiterhin mehr Handlungen, um zu
-Zugang zu neuen Bodentypen und um die Fabrik zu erweitern.
-Verwenden Sie die Export- und Importdepots, um die Fracht zu bewegen
-zwischen den Diagrammen und maximieren Sie die Effizienz weiterhin!
+Drücken sie die menü-taste, um ihr aktuelles ziel 
+anzuzeigen. Von hier aus können sie auch das spiel 
+speichern und laden, und öffnen sie das hauptmenü 
+mit spieleinstellungen usw.
+-- Das Erste Wachstum --
+Guten, karotten wachsen gut im dreck boden in der
+nähe des geschäft. Achten Sse auf den boden und
+wasser, das jede pflanze mag. Wählen sie mit Ⓐ die
+samen und pflanzen sie 10 karotten.
+Finden sie eine nahe gelegene fläche mit dreck 
+boden, vorzugsweise feucht. Wählen sie die 
+karottensamen und drücken sie Ⓐ. Pflanzen sie 10 
+karottensamen auf leere flecken aus dreck boden.
+-- Die Erste Ernte --
+Großartige. Lassen sie uns diese karottenpflanzen 
+beschleunigen. Drücken sie Ⓐ, wählen sie abholmodus
+und ernte 10 angebaute karotten. Sie können
+jede fracht der welt oder in gebäuden abholen.
+Drücken sie  Ⓐ, um ihr inventar einzugeben, und 
+wählen sie abholmodus. Drücken sie oder halten sie
+Ⓐ beim umzug, abholen 10 karotten. Verwenden sie 
+das 🎣, um den abholbereich zu ändern.
+-Der Erste Verkauf-
+Sie wissen, was wir mit fracht wie diesen machen 
+können frische karotten? Verkaufen sie sie mit 
+gewinn! Besuchen sie den verkaufsdepot (neben das
+geschäft). Verkaufe 10 karotten, um fortzufahren.
+Gehen ie zum verkaufsdepot (neben das geschäft).
+Drücken sie oder halten sie Ⓐ, um mindestens 10
+karotten zu verkaufen. Ändern sie verkauften betrag
+durch drehen sie das 🎣 oder halten sie Ⓑ + ⬆️ od. ⬇️.
+-- Die Erste Automatisierte Ernte --
+Süß, aber das war eine menge manueller arbeit... 
+Lassen sie uns automatisieren! Kaufen sie einen von 
+das geschäft und bauen sie es dort, wo es einige
+karottenpflanzen in der nähe gibt
+Gehen sie in das geschäft, kaufen sie einen
+automatischer mähdrescher. Setze sie den
+mähdrescher so, dass er sich auf leer befindet boden,
+und karottenpflanzen sind in der nähe.
+--- Die Erste Frachtlinie --
+Gut, wir ernten karotten. Aber wir müssen sie 
+bekommen zum verkaufsdepot. Wir brauchen 
+förderbänder! Umkaufen 50 aus das geschäft und 
+setze sie den weg, um die karotten zu verkaufen.
+Gehen sie in das geschäft, kaufen sie rund 50 
+Förderbande. Machen Sie eine kette von bande vom 
+mähdrescher bis verkaufsdepot. Drehen sie die 
+bande mit 🎣 oder halten Sie ⓑ und drücken sie ✛.
+-- Bergbau der Erde --
+OK. Aber nicht alle aus nutzbaren ressourcen werden
+angebaut. Lass uns bauen uns eine kreide steinbruch
+als nächstes. Bauen sie es auf kalkartig boden.
+Es sollte einige im norden geben.
+Gehen sie in das geschäft, kaufen sie einen kreide
+steinbruch. Gehen sie aus dem laden nach norden
+und suchen sie nach kalkartig boden. Baue den 
+steinbruch auf kalkartig boden.
+-- Wert Machen --
+Wir können endlich eine vollständige produktionslinie
+einrichten! Kaufen sie eine vitaminfabrik aus das 
+geschäft. Versorge es mit kreide und karotten und
+transportieren die vitamine zum verkaufsdepot.
+Gehen Sie in das geschäft, kaufen Sie eine
+vitaminfabrik. Verwenden sie förderbänder, um es 
+mit karotten und kreide zu versorgen. Verkaufen sie 
+die vitamine mit mehr förderbändern.
+-- Geh Haus und Verbrauch --
+Exzellent! Sie kennen jetzt alle grundlagen der 
+ausbeutung die welt für gewinn. Weitere pflanzen 
+und fabriken werden freigeschaltet. Verwenden sie 
+sie, um gewinne und effizienz zu maximieren.
+-- Aber Ich Habe Nicht den Boden Dafür! --
+Problem. Die kaktuspflanze, die sie gerade entsperrt 
+braucht sander boden, aber hier gibt es keine. 
+Erweiterungszeit! Besuchen sie das grundstücke depot
+und kaufen sie neues land, um es zu entwickeln.
+Das depot für grundstück, für frachtimporte und für 
+frachtexportiert werden jetzt alle freigeschaltet.
+Besuchen sie das depot für grundstück. Kaufens sie 
+ein neues grundstück, um die fabrik zu erweitern.
+-- Ein Neuer Horizont --
+Willkommen bei ihnen neues grundstück! Mehr platz 
+für Ihre fertigung imperium zum wachstum.
+Sie können fracht zwischen grundstück bewegen.
+Lade fracht in ein exportdepot ein.
+Exportieren sie fracht, indem sie sie in das 
+exportdepot bringen. Die exportrate jeder frachtart
+wird über die letzten zwei minuten gemittelt.
+   
+-- Zugriff auf die Ware --
+Nun zum import. Gehen Sie zu einem anderen 
+grundstück und besuchen sie das importdepot. Sie 
+können bis zu vier fracht pro grundstück importieren.
+Versuchen sie jetzt, einen import einzurichten.
+Importieren sie fracht in einem anderen grundstück
+über das importdepot. N, S, O, W importe können 
+individuell ausgewählt werden. Sie können keine fracht
+exportieren, die in denselben grunds. importiert wird.
+-- Importe und Exporte und Grundstück --
+Wunderbar! Kaufen sie weiterhin mehr grundstück, 
+um zu neuen bodentypen und um die fabrik zu 
+erweitern. Verwenden sie die export- und 
+importdepots und maximieren sie effizienz!
 Norden
 Ost
 Süd
 West
 Geschwindigkeitsmultiplikator
 Filter noch nicht gesetzt.
-Führen Sie ein Frachtstück durch, um den Filter einzustellen.
+Fracht passieren, um den filter einzustellen.
 Filter auf
 Nächster Transit
 Trichter %i/3
@@ -527,49 +527,49 @@ Mag
 Hat
 Kann hier nicht wachsen!
 Wachstumszeit: %is
-Ernte zu wachsen
+Ernte um zu wachsen
 Verbleibende Zeit: %is
-Geld ausgeben, um neue Pflanzen zu kaufen, Förderer,
-Auszieher, Fabriken und Nutzenartikel.
+Geld ausgeben, um neue pflanzen zu kaufen, förderer,
+auszieher, fabriken und nutzenartikel.
      
      
-Verkaufen Sie Fracht aus Ihrem Inventar oder verwenden Sie
-Förderer, um den Umsatz zu automatisieren.
-Erhalten Sie Geld für jeden verkauften Artikel.
+Verkaufen sie fracht aus ihrem inventar oder 
+verwenden sie förderer, um den umsatz zu
+automatisieren. Erhalten sie geld für jeden 
+verkauften artikel.
+Ansicht verfügbare Grundstücke. Kaufen sie neue
+handlungen, um ihre fabrik zu erweitern.
+Bewegen sie sich zwischen ihren eigenen handlungen.
      
-Ansicht verfügbare Grundstücke.
-Kaufen Sie neue Handlungen, um Ihre Fabrik zu erweitern.
-Bewegen Sie sich zwischen Ihren eigenen Handlungen.
-     
-Ladung für die Verwendung in anderen grundstück exportieren.
-Die Exporte werden über die 60er bis 120er Jahre gemittelt.
-Sie können keine Fracht exportieren, die ebenfalls ist
-in diese Handlung importiert.
-Ladung aus anderen Handlungen importieren. Sie können eine auswählen
-Importieren Sie für jede der 4 Kardinalanweisungen.
-Importe treten alle 10 Sekunden vor, die Menge importiert
-hängt von der Gesamtzahl der Importeure ab.
-Ein großer Felsbrocken blockiert hier den Boden.
+Ladung für die verwendung in anderen grundstück 
+exportieren. Die exporte werden über die 60s bis 120s
+Jahre gemittelt. Sie können keine fracht exportieren, 
+die ebenfalls ist in diese handlung importiert.
+Ladung aus anderen handlungen importieren. Sie
+können eine auswählen importieren sie für jede der 4
+kardinalanweisungen. Importe erfolgen alle 10s.
+Die import. menge hängt von der anzahl der import. ab.
+Ein großer felsbrocken blockiert hier den boden.
 Vielleicht wird es später wichtig?
      
      
-Die Bewegungsgeschwindigkeit wird auf dem Pfad verbessert.
-Ein charmanter Zaun.
-Ihr gemütliches kleines Ruhestandshütte.
-Stellen Sie hier eine Ladung, um sie auf dem Schild anzuzeigen.
+Bewegen sie sich schneller auf dem pfad
+Ein charmanter zaun.
+Ihr gemütliches kleines ruhestandshütte.
+Platzieren sie fracht, um sie anzuzeigen.
 Unterschreibe für
 Löscht dauerhaft unerwünschte fracht.
-Lassen sie die unerwünschte fracht fallen oder verwenden sie förderer
-Konvertiert die 8 umliegenden Fliesen in lehmigen Boden.
-Durch das Entfernen des Rotavators werden diese Fliesen zurückkehren
-zu ihrem vorherigen Bodentyp.
-Reduziert die Produktionszeit in jeder Fabrik
-Sofort N, S, E oder W des Moduls.
+Lassen sie die unerwünschte fracht fallen.
+Konvertiert die 8 umliegenden fliesen in lehmigen
+boden. Entferne die bodenfräse, um das land 
+wiederherzustellen.
+Reduziert die produktionszeit in jeder fabrik
+Sofort N, S, O oder W des moduls.
 1 Modul: -0,5s
 2 Module: -0,75s
 3+ Module: -1s
      
-Erzeugt eine umgebung mit nassem und feuchtem boden.
+Schafft nassen und feuchten boden.
 Abteil %i/3
 Exportieren
 Hier: %s/s
@@ -598,7 +598,7 @@ Bewegt fracht unter der erde für 1 plättchen
 Pflanze, um karotten anzubauen
 Pflanze, um sonnenblumen zu ernten
 Pflanze, um kartoffeln anzubauen
-Pflanze, um Äpfel anzubauen
+Pflanze, um äpfel anzubauen
 Pflanze, um mais anzubauen
 Seetang wachsen in Seen
 Pflanze, um weizen anzubauen
@@ -616,7 +616,7 @@ Hier platzierte fracht wird zerstört
 Ort, um den umgebenden boden zu befeuchten
 Speichert bis zu 3 verschiedene arten von fracht
 Wie die lagerbox, aber auch selbstleerend
-Platz neben Fabriken, beschleunigt die produktion
+Platz neben fabriken, beschleunigt die produktion
 Erhöht die förderbandgeschwindigkeit von x1 auf x2
 Hindernisse beseitigen (kann dann bebaut werden)
 Stellt land wieder her. Bauen, nicht pflanzen
@@ -627,13 +627,13 @@ Sammelt fracht, kann drei arten aufnehmen
 Muss auf wasser gebaut werden. Pumpt wasser
 Auf kalkhaltigem boden bauen. Produziert kreide
 Muss auf torfboden gebaut werden. Erzeugt salz
-Sammelt fracht, kann drei verschiedene arten halten
+Sammelt fracht, kann drei arten aufnehmen
 Verflüssiges kohlendioxid direkt aus der luft
 Erstellt minderwertige vitaminpillen
 Gemüseöl aus sonnenblumen zerquetschen
 Erstellt kartoffelchips. Ein gebratener favorit!
 Brauen und destillieren sie reinen alkohol
-Mischen Sie etwas billige apfelwein
+Mischen sie etwas billige apfelwein
 Futter geht hinein, "fleisch" kommt raus
 Spaltet wasser und fängt den wasserstoff ein
 Hydriert öl, um verderben zu verhindern
@@ -641,7 +641,7 @@ Knusprig und fleischig
 Produziert etwas, das bier ähnelt
 Zumindest hat es etwas agave darin
 So sehr, sehr, süß ...
-Zum Abbinden von flüssigkeiten
+Zum abbinden von flüssigkeiten
 Ein wackeliger favorit
 Eine interessante mischung aus aromen
 Verhindert, dass die dinge sich trennen
@@ -669,16 +669,14 @@ Verkaufen
 Alles ist
 Freigeschaltet!
 Danke fürs Spielen
-INDUS. LANDWIRTSCHAFT!
+INDUSTRIE L.D.W.!
 Besuchen:
 Das geschäft
-Um das nächste freizuschalten:
+Das nächste freischalten:
 Verkaufen insgesamt:
-Um das nächste freizuschalten:
 Bisher verkauft: %i
 Weitermachen
 Das Tutorial
-Das nächste freischalten
 Gebäude
 VOR BEENDEN SPEICHERN!
 Gesamtspielzeit:
@@ -702,27 +700,28 @@ Förderbandkurbel
 Mittelkamera auf Player
 Automatisches zoom beim bewegen
 Automatische spielspeicherung
-Automatische abholung auf dekonstruktion
+Automatische abholung beim abbau
 Fett automatisch verwenden
 Debug-Informationen anzeigen
 --- Spiel Verlassen ---
-Speichern und beenden sie zum titel
-Beenden Sie zum titel ohne speichern
+Spiel speichern und beenden
+Spiel verlassen ohne zu speichern
 --- Bildschirmfoto ---
-Machen sie einen screenshot der grundstück
+Vollständigen bildschirmfoto machen
 --- Kontrollen ---
 Inventar/Select/Interact: Ⓐ
 Zurück/Abbrechen: Ⓑ
 Walk: ✛
 Lauf: Halten Sie Ⓑ + ✛
-Zoom ein-/aus: 🎣 oder halten Ⓐ + ⬇️
-Drehen sie: 🎣 oder halten sie Ⓑ + ⬆️/➡️/⬇️/⬅️
-Größen sie: 🎣 oder halten sie Ⓑ + ⬆️/⬇️
-Schneller abholmodus: halten sie Ⓐ + ⬅️
-Schneller inspectmodus: halten sie Ⓐ + ⬆️
-Schneller dekonstruktmodus: halten sie Ⓐ + ➡️
+Zoom ein-/aus: 🎣 od. hal. Ⓐ + ⬇️
+Drehen sie: 🎣 od. hal. Ⓑ + ⬆️/➡️/⬇️/⬅️
+Größen sie: 🎣 od. hal. Ⓑ + ⬆️/⬇️
+Abholmodus: hal. sie Ⓐ + ⬅️
+Inspectmodus: hal. sie Ⓐ + ⬆️
+Dekonstruktmodus: hal. sie Ⓐ + ➡️
 --- Credits ---
-Industrielandwirtschaft von Tim Martin
+Factory Farming von Tim Martin
+Übersetzungen von Eugene Zakharov
 -- Musik --
 ♬ Dr Tikov: 1985
 ♬ BoxCat Games: B-3
@@ -743,6 +742,7 @@ Chester Jenkins: Cooper Hewitt
 Martin Vacha: Roobert
 Mediengestaltung: Messing Lettern
 Mediengestaltung: Coventry Garden
+Noto Sans
 -- Soundeffekte --
 sfxr.me
 -- Statistiken --
@@ -771,6 +771,6 @@ Landlage
 Boden
 Fabrik
 Landwirtschaft
-"Industrielandwirtschaft"
+Industrielandwirtschaft
 DE
 --

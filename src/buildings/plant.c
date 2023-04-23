@@ -317,7 +317,7 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
 }
 
 void drawUIInspectPlant(struct Building_t* _building) {
-  pd->graphics->drawLine(SCREEN_PIX_X/2, TUT_Y_SPACING*3 - 4, SCREEN_PIX_X/2, TUT_Y_SPACING*7 - 4, 1, kColorBlack);
+  pd->graphics->drawLine(SCREEN_PIX_X/2, TUT_Y_SPACING*3 - 4, SCREEN_PIX_X/2, TUT_Y_SPACING*5 - 4, 1, kColorBlack);
   pd->graphics->drawLine(TILE_PIX*21,    TUT_Y_SPACING*3 - 4, TILE_PIX*21,    TUT_Y_SPACING*7 - 4, 1, kColorBlack);
 
   const enum kPlantSubType pst = _building->m_subType.plant;
@@ -327,9 +327,8 @@ void drawUIInspectPlant(struct Building_t* _building) {
   uint8_t y = 1;
 
   strcpy(text, toStringBuilding(_building->m_type, _building->m_subType, false));
-  //snprintf(text, 256, "%s", toStringBuilding(_building->m_type, _building->m_subType, true));
   
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*3, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
+  pd->graphics->drawText(text, 256, kUTF8Encoding, 3*TILE_PIX, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
 
   const struct Tile_t* t = getTile_fromLocation( _building->m_location );
   const int8_t gb = getGroundBonus( PDesc[pst].soil, (enum kGroundType) t->m_groundType );
@@ -342,13 +341,13 @@ void drawUIInspectPlant(struct Building_t* _building) {
   strcat(text, cspace());
   strcat(text, toStringSoil( PDesc[pst].soil ));
   //snprintf(text, 256, tr(kTRPlantLikesSoil), toStringSoil( PDesc[pst].soil ) );
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
+  pd->graphics->drawText(text, 256, kUTF8Encoding, 3*TILE_PIX/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
 
   strcpy(text, tr(kTRPlantHas));
   strcat(text, cspace());
   strcat(text, toStringSoil( (enum kGroundType) t->m_groundType));
   //snprintf(text, 256, tr(kTRPlantHasSoil), toStringSoil( (enum kGroundType) t->m_groundType) ); 
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT +tY());
+  pd->graphics->drawText(text, 256, kUTF8Encoding, 25*TILE_PIX/2, TUT_Y_SPACING*y - TUT_Y_SHFT +tY());
 
   strcpy(text, tr(kTRPlantLikes));
   strcat(text, cspace());
@@ -356,7 +355,7 @@ void drawUIInspectPlant(struct Building_t* _building) {
   strcat(text, space());
   strcat(text, (isWater ? " " : tr(kTRSoil)));
   //snprintf(text, 256, tr(kTRPlantLikesWater), toStringWetness( PDesc[pst].wetness ), (isWater ? " " : "Soil") ); 
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
+  pd->graphics->drawText(text, 256, kUTF8Encoding, 3*TILE_PIX/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
 
   strcpy(text, tr(kTRPlantHas));
   strcat(text, cspace());
@@ -364,18 +363,18 @@ void drawUIInspectPlant(struct Building_t* _building) {
   strcat(text, space());
   strcat(text, (isWater ? " " : tr(kTRSoil)));
   //snprintf(text, 256, tr(kTRPlantHasWater), toStringWetness( getWetness(t->m_wetness) ), (isWater ? " " : "Soil") ); 
-  pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*13, TUT_Y_SPACING*y - TUT_Y_SHFT +tY());
+  pd->graphics->drawText(text, 256, kUTF8Encoding, 25*TILE_PIX/2, TUT_Y_SPACING*y - TUT_Y_SHFT +tY());
 
   if (_building->m_progress > INT16_MAX/2) {
     trTxt = tr(kTRPlantCannotGrow);
     snprintf(text, 256, "%s", trTxt); 
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
+    pd->graphics->drawText(text, 256, kUTF8Encoding, 3*TILE_PIX/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
     snprintf(text, 256, " "); 
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
+    pd->graphics->drawText(text, 256, kUTF8Encoding, 3*TILE_PIX/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
   } else {
     trTxt = tr(kTRPlantGrowTime);
     snprintf(text, 256, trTxt, growTime / TICKS_PER_SEC); 
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
+    pd->graphics->drawText(text, 256, kUTF8Encoding, 3*TILE_PIX/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
     if (_building->m_location->m_cargo != NULL) {
       trTxt = tr(kTRPlantHarvest);
       snprintf(text, 256, "%s", trTxt); 
@@ -383,7 +382,7 @@ void drawUIInspectPlant(struct Building_t* _building) {
       trTxt = tr(kTRPlantTimeLeft);
       snprintf(text, 256, trTxt, _building->m_progress / TICKS_PER_SEC); 
     }
-    pd->graphics->drawText(text, 256, kUTF8Encoding, TILE_PIX*2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
+    pd->graphics->drawText(text, 256, kUTF8Encoding, 3*TILE_PIX/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
   }
 
   pd->graphics->setDrawMode(kDrawModeCopy);
