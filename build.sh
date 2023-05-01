@@ -31,17 +31,17 @@ rm FactoryFarming.pdx/player_2.json
 rm FactoryFarming.pdx/world_2_1.json
 
 
-rm FactoryFarmingTechDemo_v1.3.pdx.zip
-rm FactoryFarming_v1.3.pdx.zip
-rm FactoryFarming_NoMusic_v1.3.pdx.zip
+rm FactoryFarmingTechDemo_v1.4.pdx.zip
+rm FactoryFarming_v1.4.pdx.zip
+rm FactoryFarming_NoMusic_v1.4.pdx.zip
 
-zip -r -q FactoryFarmingTechDemo_v1.3.pdx.zip FactoryFarmingTechDemo.pdx
+zip -r -q FactoryFarmingTechDemo_v1.4.pdx.zip FactoryFarmingTechDemo.pdx
 
-zip -r -q FactoryFarming_v1.3.pdx.zip FactoryFarming.pdx
+zip -r -q FactoryFarming_v1.4.pdx.zip FactoryFarming.pdx
 
 mv FactoryFarming.pdx/music .
 
-zip -r -q FactoryFarming_NoMusic_v1.3.pdx.zip FactoryFarming.pdx
+zip -r -q FactoryFarming_NoMusic_v1.4.pdx.zip FactoryFarming.pdx
 
 mv music FactoryFarming.pdx
 
