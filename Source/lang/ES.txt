@@ -328,12 +328,12 @@ GENERANDO
 CARGANDO
 %i: Nuevo Juego
 Carga la Demo
-%i Continua
--- Demostración de 'Factory Farming' --
-Eres libre de mirar alrededor de esta fábrica de 
-ejemplo. Encontrará instalaciones hasta Tech Tier 3. El 
-juego completo sube a Tech Tier 7. La construcción y
-el ahorro están deshabilitadas en la demostración.
+%i: Continua
+-- Demostración de Agricultura Intensiva --
+Mire alrededor de esta fábrica de ejemplo.
+Encontrarás instalaciones hasta el nivel tecnológico 3.
+El juego completo sube al nivel 7. Construir y guardar
+están deshabilitados en la demostración.
 -- La Compra Inicial de Semillas --
 ¡Bienvenido a La Agricultura Intensiva! Hay dinero para
 ser hecho, y no se hará solo! Comienza visitando la 
@@ -743,6 +743,7 @@ Martin Vacha: Roobert
 Mediengestaltung: Messing Lettern
 Mediengestaltung: Coventry Garden
 Noto Sans
+kaasiand.cool/tophat
 -- Efectos de Sonido --
 sfxr.me
 -- Estadísticas --
@@ -755,16 +756,16 @@ Edificios totales en esta trama:
 Cargo total en esta trama:
      
 © Tim Martin 2022
-La agricultura intensiva es un proyecto de
-código abierto con licencia del MIT
+Factory Farming es de
+código abierto y licencia MIT
 github.com/timboe/factoryfarming
      
 ¡Gracias por jugar! Y por su apoyo
-a los proyectos de desarrollo de juegos
-independientes de nicho :)
+de buenos juegos
+independientes :)
      
 Siga maximizando las ganancias,
-Maximización de la eficiencia.
+maximización de la eficiencia.
 Obtén
 Precio
 Parcelas de tierra

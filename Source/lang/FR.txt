@@ -329,11 +329,11 @@ CHARGEMENT
 %i: Nouveau jeu
 Charger la Démo
 %i: Continue
--- Démo Technologique de 'Usine Agriculture' --
-Vous êtes libre de regarder autour de cet exemple d'usine.
-Vous trouverez des installations jusqu'au niveau technologique 3.
-Le jeu complet va jusqu'au niveau technologique 7.
-La construction et la sauvegarde sont désactivées dans la démo.
+-- Démo Technologique de L'agriculture Industriel --
+Regardez autour de cet exemple d'usine. Vous
+trouverez des installations jusqu'au niveau
+technologique 3. Le jeu complet va jusqu'au niveau 7.
+La construction et la sauvegarde sont désactivées.
 -- L'achat Initial de Graines --
 Bienvenue à l'agriculture industrielle! Il y a de l'argent à 
 gagner fait, et ça ne se fera pas tout seul! Alors commençons
@@ -359,8 +359,8 @@ aime. Trouvez un bon endroit à proximité, ouvrez votre inven-
 taire avec Ⓐ, sélectionnez les graines et plantez 10 carottes.
 Trouvez une zone proche de sol vase, de préférence humide.
 Appuyez sur Ⓐ pour accéder à votre inventaire, sélect. les
-gra. de carottes et appuyez à nouveau sur Ⓐ. Plantez 10 gra.
-de carottes sur des parcelles vides de sol vase.
+gra. de carottes et appuyez à nouveau sur Ⓐ. Plantez 10
+graines de carottes sur des parcelles vides de sol vase.
 -- La Première Récolte --
 Génial, les cultures mettent un certain temps à cultiver, mais
 accélérons ces plants de carottes. Appuyez sur Ⓐ, choisissez
@@ -743,6 +743,7 @@ Martin Vacha: Roobert
 Mediengestaltung: Messing Lettern
 Mediengestaltung: Coventry Garden
 Noto Sans
+kaasiand.cool/tophat
 -- Effets Sonores --
 sfxr.me
 -- Statistiques --
@@ -755,16 +756,16 @@ Total des bât. de cette terrain:
 Cargaison total dans ce terrain:
      
 © Tim Martin 2022
-L'agriculture Industriel est un MIT
+Factory Farming est un MIT
 projet open source agréé
 github.com/timboe/factoryfarming
      
 Merci d'avoir joué! Et pour votre
-soutien aux projets de développement
-de jeux indépendants de niche :)
+soutien aux jeux indépendants de
+indépendants de niche :)
      
 Continuez à maximiser le profit,
-Maximiser l'efficacité.
+maximiser l'efficacité.
 Achat
 Prix
 Emplact. du Terr.

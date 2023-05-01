@@ -183,7 +183,6 @@ void buildingSetupExtractor(struct Building_t* _building) {
   _building->m_progress = COLLECT_TIME;
 }
 
-#define S_LEN 4
 void drawUIInspectExtractor(struct Building_t* _building) {
   const enum kExtractorSubType est = _building->m_subType.extractor;
 
@@ -220,7 +219,7 @@ void drawUIInspectExtractor(struct Building_t* _building) {
       pd->graphics->drawText(text, 256, kUTF8Encoding, 3*TILE_PIX/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
       pd->graphics->setDrawMode(kDrawModeCopy);
       pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ _building->m_stored[(MAX_STORE/2) + hopper] ].UIIcon, 1),
-        3*TILE_PIX/2 + trLen(kTRExtractorHopper) - S_LEN,
+        3*TILE_PIX/2 + trLen(kTRExtractorHopper),
         TUT_Y_SPACING*y - TUT_Y_SHFT,
         kBitmapUnflipped);
       pd->graphics->setDrawMode(kDrawModeFillBlack);

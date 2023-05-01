@@ -23,21 +23,6 @@ void doInventoryClick() {
   const enum kUICat selectedCat = getUIContentCategory();
   const uint16_t selectedID =  getUIContentID();
 
-  #ifdef DEMO
-  switch (selectedCat) {
-    case kUICatTool: switch(selectedID) {
-      case kToolPickup:; return setGameMode(kPickMode);
-      case kToolInspect:; return setGameMode(kInspectMode);
-      case kToolDestroy:; return setGameMode(kDestroyMode);
-      case kNToolTypes:; break;
-    } break;
-    case kUICatCargo: return setGameMode(kPlaceMode); 
-    default: break;
-  }
-  sfx(kSfxNo);
-  return;
-  #endif
-
   switch (selectedCat) {
     case kUICatTool: switch(selectedID) {
       case kToolPickup:; return setGameMode(kPickMode);
@@ -106,6 +91,12 @@ bool isInRangeOfCarrotPlant(struct Location_t* _placeLocation) {
 void doPlace() {
   const enum kUICat selectedCat = getUIContentCategory();
   const uint16_t selectedID =  getUIContentID();
+#ifdef DEMO
+  if (selectedCat != kUICatCargo) {
+    sfx(kSfxNo);
+    return;
+  }
+#endif
   if (getOwned(selectedCat, selectedID) == 0) {
     return;
   }
@@ -516,7 +507,7 @@ void populateInfoInventory() {
   pd->graphics->drawText(textC, 128, kUTF8Encoding, 8*TILE_PIX - cOff, TILE_PIX - 2 +tY());
   pd->graphics->setDrawMode(kDrawModeCopy); // Draw coin
   if (selectedCat == kUICatCargo) { 
-    pd->graphics->drawBitmap(getSprite16(2, 16, 1), 9*TILE_PIX + trLen(kTRUIInventoryValue), TILE_PIX - 2, kBitmapUnflipped);
+    pd->graphics->drawBitmap(getSprite16(2, 16, 1), 8*TILE_PIX + trLen(kTRUIInventoryValue), TILE_PIX - 2, kBitmapUnflipped);
   }
   pd->graphics->popContext();
 }

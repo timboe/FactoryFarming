@@ -401,10 +401,6 @@ void drawUIInspectUtility(struct Building_t* _building) {
       strcat(text, lb());
       strcat(text, num);
       strcat(text, rb());
-      //snprintf(text, 256, tr(kTRUtilityStorage), 
-      //  (int)compartment+1, 
-      //  toStringCargoByType( _building->m_stored[(MAX_STORE/2) + compartment], /*plural=*/(_building->m_stored[compartment] != 1) ), 
-      //  _building->m_stored[compartment]);
 
       pd->graphics->drawText(text, 256, kUTF8Encoding, 3*TILE_PIX/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
       pd->graphics->setDrawMode(kDrawModeCopy);

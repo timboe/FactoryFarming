@@ -109,7 +109,7 @@ void populateInfoImport() {
   pd->graphics->setDrawMode(kDrawModeFillBlack);
   pd->graphics->drawText(textA, 128, kUTF8Encoding, TILE_PIX/2, +2 +tY());
   pd->graphics->drawText(textB, 128, kUTF8Encoding, TILE_PIX/2, TILE_PIX - 2 +tY());
-  pd->graphics->drawText(textC, 128, kUTF8Encoding, 9*TILE_PIX, TILE_PIX - 2 +tY());
+  pd->graphics->drawText(textC, 128, kUTF8Encoding, (getLanguage() == kRU ? 8*TILE_PIX : 9*TILE_PIX), TILE_PIX - 2 +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
   pd->graphics->popContext();
 }

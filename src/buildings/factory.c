@@ -905,8 +905,6 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
 }
 
 #define STR_PRINT_LEN 8
-#define IN_SHIFT 4
-#define OUT_SHIFT 3
 void drawUIInspectFactory(struct Building_t* _building) {
   pd->graphics->drawLine(SCREEN_PIX_X/2, TUT_Y_SPACING*3 - 4, SCREEN_PIX_X/2, TUT_Y_SPACING*7 - 4, 1, kColorBlack);
   enum kFactorySubType fst = _building->m_subType.factory;
@@ -946,7 +944,7 @@ void drawUIInspectFactory(struct Building_t* _building) {
   //snprintf(text, 256, tr(kTRFacOut), STR_PRINT_LEN, toStringCargoByType( FDesc[fst].out, /*plural=*/(_building->m_stored[0] != 1) ), _building->m_stored[0]);
   pd->graphics->drawText(text, 256, kUTF8Encoding, 3*TILE_PIX/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
-  pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].out ].UIIcon, 1), 3*TILE_PIX/2 + trLen(kTROut) + OUT_SHIFT, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+  pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].out ].UIIcon, 1), 3*TILE_PIX/2 + trLen(kTROut), TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
 
   ++S;
@@ -959,7 +957,7 @@ void drawUIInspectFactory(struct Building_t* _building) {
   //snprintf(text, 256, tr(kTRFacIn1), STR_PRINT_LEN, toStringCargoByType( FDesc[fst].in1, /*plural=*/(_building->m_stored[1] != 1) ), _building->m_stored[1]);
   pd->graphics->drawText(text, 256, kUTF8Encoding, 25*TILE_PIX/2, TUT_Y_SPACING*y - TUT_Y_SHFT +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
-  pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in1 ].UIIcon, 1), 25*TILE_PIX/2 + trLen(kTRFacIn) - IN_SHIFT, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+  pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in1 ].UIIcon, 1), 25*TILE_PIX/2 + trLen(kTRFacIn), TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
 
   if (FDesc[fst].in2 == kNoCargo) return;
@@ -974,7 +972,7 @@ void drawUIInspectFactory(struct Building_t* _building) {
   //snprintf(text, 256, tr(kTRFacIn2), STR_PRINT_LEN, toStringCargoByType( FDesc[fst].in2, /*plural=*/(_building->m_stored[2] != 1) ), _building->m_stored[2]);
   pd->graphics->drawText(text, 256, kUTF8Encoding, 3*TILE_PIX/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
-  pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in2 ].UIIcon, 1), 3*TILE_PIX/2 + trLen(kTRFacIn) - IN_SHIFT, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+  pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in2 ].UIIcon, 1), 3*TILE_PIX/2 + trLen(kTRFacIn), TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
 
   if (FDesc[fst].in3 == kNoCargo) return;
@@ -989,7 +987,7 @@ void drawUIInspectFactory(struct Building_t* _building) {
   //snprintf(text, 256, tr(kTRFacIn3), STR_PRINT_LEN, toStringCargoByType( FDesc[fst].in3, /*plural=*/(_building->m_stored[3] != 1) ), _building->m_stored[3]);
   pd->graphics->drawText(text, 256, kUTF8Encoding, 25*TILE_PIX/2, TUT_Y_SPACING*y - TUT_Y_SHFT +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
-  pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in3 ].UIIcon, 1), 25*TILE_PIX/2 + trLen(kTRFacIn) - IN_SHIFT, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+  pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in3 ].UIIcon, 1), 25*TILE_PIX/2 + trLen(kTRFacIn), TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
 
   if (FDesc[fst].in4 == kNoCargo) return;
@@ -1004,7 +1002,7 @@ void drawUIInspectFactory(struct Building_t* _building) {
   //snprintf(text, 256, tr(kTRFacIn4), STR_PRINT_LEN, toStringCargoByType( FDesc[fst].in4, /*plural=*/(_building->m_stored[4] != 1) ), _building->m_stored[4]);
   pd->graphics->drawText(text, 256, kUTF8Encoding, 3*TILE_PIX/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
-  pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in4 ].UIIcon, 1), 3*TILE_PIX/2 + trLen(kTRFacIn) - IN_SHIFT, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+  pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in4 ].UIIcon, 1), 3*TILE_PIX/2 + trLen(kTRFacIn), TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
 
   if (FDesc[fst].in5 == kNoCargo) return;
@@ -1019,7 +1017,7 @@ void drawUIInspectFactory(struct Building_t* _building) {
   //snprintf(text, 256, tr(kTRFacIn5), STR_PRINT_LEN, toStringCargoByType( FDesc[fst].in5, /*plural=*/(_building->m_stored[5] != 1) ), _building->m_stored[5]);
   pd->graphics->drawText(text, 256, kUTF8Encoding, 25*TILE_PIX/2, TUT_Y_SPACING*y - TUT_Y_SHFT +tY());
   pd->graphics->setDrawMode(kDrawModeCopy);
-  pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in5 ].UIIcon, 1), 25*TILE_PIX/2 + trLen(kTRFacIn) - IN_SHIFT, TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+  pd->graphics->drawBitmap(getSprite16_byidx(CargoDesc[ FDesc[fst].in5 ].UIIcon, 1), 25*TILE_PIX/2 + trLen(kTRFacIn), TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
   pd->graphics->setDrawMode(kDrawModeFillBlack);
 
 }

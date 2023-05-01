@@ -796,6 +796,8 @@ void showTutorialMsg(enum kUITutorialStage _stage) {
   }
   pd->graphics->popContext();
   pd->graphics->setDrawMode(kDrawModeCopy);
+
+  sfx(kSfxMenuOpen);
 }
 
 bool checkReturnDismissTutorialMsg() {
@@ -1871,6 +1873,7 @@ void updateLangUI() {
     pd->graphics->popContext();
   }
 
+  populateMenuTitle();
 }
 
 void initiUI() {

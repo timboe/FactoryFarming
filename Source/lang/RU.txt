@@ -743,6 +743,7 @@ Martin Vacha: Roobert
 Mediengestaltung: Messing Lettern
 Mediengestaltung: Coventry Garden
 Noto Sans
+kaasiand.cool/tophat
 -- Звуковые эффекты --
 sfxr.me
 -- Статистика --
@@ -756,7 +757,7 @@ sfxr.me
      
 © Тим Мартин 2023
 Factory Farming лицензирована MIT
-Лицензированный проект с открытым исходным кодом
+проект с открытым исходным кодом
 github.com/timboe/FactoryFarming
      
 Спасибо за игру!

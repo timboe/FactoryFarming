@@ -182,8 +182,6 @@ void checkConveyorSpritesAroundLoc(struct Location_t* _loc) {
   }
 }
 
-
-
 void conveyorLocationUpdate(struct Building_t* _building, uint8_t _zoom) {
   const int8_t x = (int8_t) _building->m_stored[CONV_X];
   const int8_t y = (int8_t) _building->m_stored[CONV_Y];
@@ -590,7 +588,7 @@ void drawUIInspectConveyor(struct Building_t* _building) {
       strcat(text, toStringCargoByType(_building->m_mode.mode16, /*plural=*/true));
       pd->graphics->drawText(text, 256, kUTF8Encoding, 3*TILE_PIX/2, TUT_Y_SPACING*(++y) - TUT_Y_SHFT +tY());
       pd->graphics->setDrawMode(kDrawModeCopy);
-      pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[ _building->m_mode.mode16 ].UIIcon, 1), TILE_PIX*2 + trLen(kTRConvFilter), TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
+      pd->graphics->drawBitmap(getSprite16_byidx( CargoDesc[ _building->m_mode.mode16 ].UIIcon, 1), 3*TILE_PIX/2 + trLen(kTRConvFilter), TUT_Y_SPACING*y - TUT_Y_SHFT, kBitmapUnflipped);
     }
   } else {
     strcpy(text, tr(kTRConvNextTransit));

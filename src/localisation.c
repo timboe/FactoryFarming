@@ -35,7 +35,27 @@ int16_t tY(void) {
 #define TEX_LEN_ADD_NOTO 0
 #define TEX_LEN_ADD_ROOB 5
 size_t trLen(const enum kTR _tr) {
-  return (m_language == kEN ? TEX_LEN_ADD_ROOB : TEX_LEN_ADD_NOTO) + pd->graphics->getTextWidth(getRoobert10(), tr(_tr), strlen(tr(_tr)), kUTF8Encoding, 0);
+  const char* t = tr(_tr);
+  size_t s = (m_language == kEN ? TEX_LEN_ADD_ROOB : TEX_LEN_ADD_NOTO) + pd->graphics->getTextWidth(getRoobert10(), t, strlen(t), kUTF8Encoding, 0);
+  // Annoying pixel shifting
+  switch (_tr) {
+    case kTRConvFilter: s += 4; break;
+    case kTRFacIn: s -= 2; break;
+    case kTRUtilityStorage: case kTRExtractorHopper:
+      switch (m_language) {
+        case kEN: s -= 2; break;
+        default: s -= 4; break;
+      }
+      break;
+    case kTRUIInventoryValue: case kTRShopPrice: case kTROut:
+      switch (m_language) {
+        case kEN: break;
+        default: s += 4; break;
+      }
+      break;
+    default: break;
+  }
+  return s;
 }
 
 void modLanguage(const bool _forward) {
@@ -64,6 +84,10 @@ const char* tr(const enum kTR _tr) {
   const size_t start = m_offsets[_tr];
   const size_t stop = m_offsets[_tr + 1];
   const size_t bytes = stop - start - 1; // -1 to avoid the new line character
+  if (bytes > 128) {
+    memcpy(m_tempBuffer, "STRING TOO LONG", strlen("STRING TOO LONG"));
+    return m_tempBuffer;
+  }
   //if (_tr == kTRFactoryFarming) pd->system->logToConsole("-> REQ FF: s-1:%i s:%i s+1:%i b:%i", m_offsets[_tr-1], m_offsets[_tr], m_offsets[_tr+1], bytes);
   memcpy(m_tempBuffer, &m_strings[start], bytes);
   return m_tempBuffer;
@@ -116,9 +140,14 @@ void resetLocalisation(const enum kLanguage _l) {
   // Hunt for new line characters
   size_t word = 1; // word 0 starts at index 0
   for (size_t c = 0; c < bytes; ++c) {
-  	if (m_strings[c] == '\n') {
-  	  m_offsets[word++] = c+1;
-  	} 
+    if (m_strings[c] == '\n') {
+      m_offsets[word++] = c+1;
+
+      const size_t length = m_offsets[word - 1] - m_offsets[word - 2];
+      if (length > 128) {
+        pd->system->error("String %i is too long at %i bytes", word-1, length);
+      }
+    } 
   }
 
   #ifdef DEV

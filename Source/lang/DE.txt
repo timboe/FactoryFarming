@@ -328,7 +328,7 @@ ERSTELLEN
 GELADEN
 %i: Neues Spiel
 Laden Sie Demo
-%i Weiterspielen
+%i: Weiterspielen
 -- Tech-Demo der Industrie Landwirtschaft --
 Sie können sich in dieser beispielfabrik umsehen.
 Sie finden einrichtungen bis zu Tech Tier 3. Das volle
@@ -354,7 +354,7 @@ speichern und laden, und öffnen sie das hauptmenü
 mit spieleinstellungen usw.
 -- Das Erste Wachstum --
 Guten, karotten wachsen gut im dreck boden in der
-nähe des geschäft. Achten Sse auf den boden und
+nähe des geschäft. Achten sie auf den boden und
 wasser, das jede pflanze mag. Wählen sie mit Ⓐ die
 samen und pflanzen sie 10 karotten.
 Finden sie eine nahe gelegene fläche mit dreck 
@@ -370,7 +370,7 @@ Drücken sie  Ⓐ, um ihr inventar einzugeben, und
 wählen sie abholmodus. Drücken sie oder halten sie
 Ⓐ beim umzug, abholen 10 karotten. Verwenden sie 
 das 🎣, um den abholbereich zu ändern.
--Der Erste Verkauf-
+-- Der Erste Verkauf --
 Sie wissen, was wir mit fracht wie diesen machen 
 können frische karotten? Verkaufen sie sie mit 
 gewinn! Besuchen sie den verkaufsdepot (neben das
@@ -394,9 +394,9 @@ bekommen zum verkaufsdepot. Wir brauchen
 förderbänder! Umkaufen 50 aus das geschäft und 
 setze sie den weg, um die karotten zu verkaufen.
 Gehen sie in das geschäft, kaufen sie rund 50 
-Förderbande. Machen Sie eine kette von bande vom 
+förderbande. Machen sie eine kette von bande vom 
 mähdrescher bis verkaufsdepot. Drehen sie die 
-bande mit 🎣 oder halten Sie ⓑ und drücken sie ✛.
+bande mit 🎣 oder halten sie Ⓑ und drücken sie ✛.
 -- Bergbau der Erde --
 OK. Aber nicht alle aus nutzbaren ressourcen werden
 angebaut. Lass uns bauen uns eine kreide steinbruch
@@ -743,6 +743,7 @@ Martin Vacha: Roobert
 Mediengestaltung: Messing Lettern
 Mediengestaltung: Coventry Garden
 Noto Sans
+kaasiand.cool/tophat
 -- Soundeffekte --
 sfxr.me
 -- Statistiken --
@@ -751,11 +752,11 @@ Gesamtgeld verdient:
 Das meiste Geld gehalten:
 Gesamtfracht verkauft:
 Gesamtfracht importiert:
-Gesamtgebäude in diesem grundstück:
-Gesamtfracht in diesem grundstück:
+Gebäude insgesamt (hier):
+Gesamtfracht (hier):
      
 © Tim Martin 2022
-Industrielandwirtschaft ist ein MIT
+Factory Farming ist ein MIT
 lizenziertes Open-Source-Projekt
 github.com/timboe/factoryFarming
      
@@ -763,8 +764,8 @@ Danke für das Spiel! Und für deine
 Unterstützung von Nischen-
 Indie-Spielentwicklungsprojekten :)
      
-Machen Sie weiter, maximieren Sie den
-Gewinn, maximieren Sie die Effizienz.
+Mach weiter, maximiere das
+profitieren, effizienz maximieren.
 Kauf
 Preis
 Landlage

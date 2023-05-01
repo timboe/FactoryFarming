@@ -781,6 +781,7 @@ enum kTR{
   kTRSettings76,
   kTRSettings77,
   kTRSettings78,
+  kTRSettings79,
   kTRShopBuy,
   kTRShopPrice,
   kTRWarpLocations,

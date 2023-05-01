@@ -131,13 +131,13 @@ void nextTutorialStage() {
   } else if (m_player.m_enableTutorial == kTutGetCarrots) {
     growAtAll(TICKS_PER_SEC * 2); // Force all plants to grow
   } else if (m_player.m_enableTutorial == kTutBuildHarvester) {
-    toGive = EDesc[kCropHarvesterSmall].price;
+    toGive = EDesc[kCropHarvesterSmall].price * 2;
   } else if (m_player.m_enableTutorial == kTutBuildConveyor) {
-    toGive = CDesc[kBelt].price * 50;
+    toGive = CDesc[kBelt].price * 100;
   } else if (m_player.m_enableTutorial == kTutBuildQuarry) {
-    toGive = EDesc[kChalkQuarry].price;
+    toGive = EDesc[kChalkQuarry].price * 2;
   } else if (m_player.m_enableTutorial == kTutBuildVitamin) {
-    toGive = FDesc[kVitiminFac].price;
+    toGive = FDesc[kVitiminFac].price * 2;
   }
 
   if (toGive) {

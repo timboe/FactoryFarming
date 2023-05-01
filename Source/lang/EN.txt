@@ -364,7 +364,7 @@ empty patches of silty soil, then press Ⓑ.
 -- The First Harvest --
 Great, crops normally take some time to yield produce,
 but let's speed up these carrot plants. Press Ⓐ, choose
-Pickup Cargo Mode' and harvest 10 grown carrots.
+Pickup Cargo Mode and harvest 10 grown carrots.
 You can pickup any cargo in the world, or in buildings.
 Go to where you planted your carrot seeds.
 Press Ⓐ to enter your inventory, select 'Pickup
@@ -718,7 +718,7 @@ Rotate: 🎣 or Hold Ⓑ + ⬆️/➡️/⬇️/⬅️
 Resize: 🎣 or Hold Ⓑ + ⬆️/⬇️
 Quick Pickup Mode: Hold Ⓐ + ⬅️
 Quick Inspect Mode: Hold Ⓐ + ⬆️
-Quick Deconstruct Mode: Hold Ⓐ + ➡️
+Quick Demolish Mode: Hold Ⓐ + ➡️
 --- Credits ---
 Factory Farming by Tim Martin
 Translations by Eugene Zakharov
@@ -743,6 +743,7 @@ Martin Vacha: Roobert
 Mediengestaltung: Messing Lettern
 Mediengestaltung: Coventry Garden
 Noto Sans
+kaasiand.cool/tophat
 -- Sound Effects --
 sfxr.me
 -- Statistics --
@@ -771,6 +772,6 @@ Plot Location
 Soils
 Factory
 Farming
-"Factory Farming"
+Factory Farming
 EN
 --
