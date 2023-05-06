@@ -10,6 +10,8 @@ Build up an expansive industrial complex by *growing, harvesting, refining* and 
 
 ![Promotional Image](https://raw.githubusercontent.com/timboe/FactoryFarming/main/promo/factory_farming_splash_x2_stamp.gif)
 
+Factory Farming est maintenant disponible en Français! / Factory Farming jetzt auch auf Deutsch! / Factory Farming теперь доступна на русском языке! / ¡Factory Farming ya está disponible en Español!
+
 ## Factory Farming features:
 - **15 different crops** to cultivate, with differing soil & water needs.
 - **6 different growing biomes**.
@@ -36,14 +38,14 @@ Factory Farming was written specifically for Playdate hardware in pure C code in
 
 Factory Farming's simulation performance has been check on the Playdate hardware using a test factory with a total of 6,300 buildings, crops and conveyor belts, and with 3,000 pieces of cargo moving around the facility on conveyor belts at any one time. Factories cannot grow very much larger than this due to the limited plot size.
 
-Moving around regions of a factory with lots of cargo in motion on conveyor belts can cause the framerate to dip. This can be fixed by zooming in, which reduces the number of sprites which need to be rendered. Enable "Auto Zoom-In When Moving" from the settings menu to automate this.
-
 This game can be Side Loaded onto the Playdate - [see how to do this here](https://help.play.date/games/sideloading/).
 
 ## Asset Credits
 
 With thanks to the following creators for releasing great assets under permissive licences!
 
+- Translation Support
+  - Eugene Zakharov
 - Music
   - Dr Tikov: [1985 (8 Bit Chiptune Mix)](https://drtikov.bandcamp.com/track/1985-8-bit-chiptune-mix) [CC BY 3.0] 
   - BoxCat Games: [B-3](https://freemusicarchive.org/music/BoxCat_Games/Nameless_the_Hackers_RPG_Soundtrack/BoxCat_Games_-_Nameless-_the_Hackers_RPG_Soundtrack_-_04_B-3/) [CC BY 3.0] 
@@ -66,6 +68,8 @@ With thanks to the following creators for releasing great assets under permissiv
   - Martin Vacha: [Roobert](https://displaay.net/typeface/roobert-collection/roobert/) [Playdate Fonts licenced under CC BY 4.0] 
   - Mediengestaltung: [Messing Lettern](https://www.1001fonts.com/messing-lettern-font.html) [1001Fonts FFC]
   - Mediengestaltung: [Coventry Garden](https://www.1001fonts.com/coventry-garden-font.html) [1001Fonts FFC] 
+  - [Noto Sans](https://fonts.google.com/noto/specimen/Noto+Sans) [OFL]
+  - https://kaasiand.cool/tophat/
 - Sound Effects
   - [sfxr.me](sfxr.me)
     - [Explosion](https://sfxr.me/#7BMHBGDfB7bXUHcciAq4wMGNUpYw48pjEAN8Qwjz71VED1x1KQo6efC67z9fs6NXtECpHTGSAcLDwrrBcrw7XhyfQuzvHVxWDMmkaHnBEHrdJzm9zv75Y9tAT)
