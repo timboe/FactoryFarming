@@ -774,4 +774,6 @@ Usine
 Agriculture
 L'agriculture Industriel
 FR
+Map
+Map Help
 --

@@ -774,4 +774,6 @@ Fabrik
 Landwirtschaft
 Industrielandwirtschaft
 DE
+Map
+Map Help
 --

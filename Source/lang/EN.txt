@@ -774,4 +774,6 @@ Factory
 Farming
 Factory Farming
 EN
+Map
+Map Help
 --
