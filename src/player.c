@@ -79,19 +79,37 @@ float getThisWorldCargoExport(enum kCargoType _cargo) {
   return m_player.m_exportPerWorld[getSlot()][_cargo];
 }
 
+// This part computes the total value of sold cargo
 float getOtherWorldCargoSales() {
   float ret = 0.0f;
-  int8_t s = getSlot();
+  const int8_t s = getSlot();
   for (int32_t i = 0; i < WORLD_SAVE_SLOTS; ++i) {
     if (i == s) continue;
-    ret += m_player.m_sellPerWorld[i];
+    ret += m_player.m_sellPricePerWorld[i];
   }
   return ret;
 }
 
+// This part computes the statistics part of cargo sold off-world
+// We do this such that we can still work towards goals with the world not loaded
+void processOtherWorldCargoSales(int32_t _seconds) {
+  static float fractional[kNCargoType] = {0.0f}; // Keep track of partial cargo sales too
+  for (int32_t i = 0; i < WORLD_SAVE_SLOTS; ++i) {
+    if (i == getSlot()) continue;
+    for (int32_t c = 1; c < kNCargoType; ++c) { // Start at 1 as 0=kNoCargo
+      fractional[c] += (float)(m_player.m_soldPerWorld[i][c] * _seconds);
+    }
+  }
+  // Accumulate integer statistics
+  for (int32_t c = 1; c < kNCargoType; ++c) { // Start at 1 as 0=kNoCargo
+    const int32_t soldInt = (int32_t) fractional[c];
+    fractional[c] -= (float)soldInt;
+    m_player.m_soldCargo[ c ] += soldInt;
+  }  
+}
 
 float getThisWorldCargoSales() {
-  return m_player.m_sellPerWorld[getSlot()];
+  return m_player.m_sellPricePerWorld[getSlot()];
 }
 
 uint16_t getCargoImportConsumers(enum kCargoType _cargo) {
@@ -637,9 +655,10 @@ void resetPlayer() {
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_importedCargo[i] = 0;
   for (int32_t i = 0; i < kNCargoType; ++i) m_player.m_importConsumers[i] = 0;
   for (int32_t i = 0; i < WORLD_SAVE_SLOTS; ++i) {
-    m_player.m_sellPerWorld[i] = 0;
+    m_player.m_sellPricePerWorld[i] = 0;
     for (int32_t c = 0; c < kNCargoType; ++c) {
       m_player.m_exportPerWorld[i][c] = 0;
+      m_player.m_soldPerWorld[i][c] = 0;
     }
   }
   setPlayerPosition((TOT_WORLD_PIX_X/2) + SCREEN_PIX_X/4, (TOT_WORLD_PIX_Y/2) + (3*SCREEN_PIX_Y)/4, /*update current location = */ true);
@@ -819,11 +838,23 @@ void serialisePlayer(struct json_encoder* je) {
     je->endArray(je);
   }
 
+  for (int32_t w = 0; w < WORLD_SAVE_SLOTS; ++w) {
+    char txt[12] = "";
+    snprintf(txt, 12, "scpw%02i", (int)w);
+    je->addTableMember(je, txt, 6);
+    je->startArray(je);
+    for (int32_t i = 0; i < kNCargoType; ++i) {
+      je->addArrayMember(je);
+      je->writeDouble(je, m_player.m_soldPerWorld[w][i]);
+    }
+    je->endArray(je);
+  }
+
   je->addTableMember(je, "spw", 3);
   je->startArray(je);
   for (int32_t w = 0; w < WORLD_SAVE_SLOTS; ++w) {
     je->addArrayMember(je);
-    je->writeDouble(je, m_player.m_sellPerWorld[w]);
+    je->writeDouble(je, m_player.m_sellPricePerWorld[w]);
   }
   je->endArray(je);
 
@@ -908,6 +939,7 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_deserialiseArrayID = 7;
   } else if (strcmp(_key, "icargo") == 0) {
     m_deserialiseArrayID = 8;
+
   } else if (strcmp(_key, "expw00") == 0) {
     m_deserialiseArrayID = 9;
   } else if (strcmp(_key, "expw01") == 0) {
@@ -924,8 +956,26 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_deserialiseArrayID = 15;
   } else if (strcmp(_key, "expw07") == 0) {
     m_deserialiseArrayID = 16;
-  } else if (strcmp(_key, "spw") == 0) {
+
+  } else if (strcmp(_key, "scpw00") == 0) {
     m_deserialiseArrayID = 17;
+  } else if (strcmp(_key, "scpw01") == 0) {
+    m_deserialiseArrayID = 18;
+  } else if (strcmp(_key, "scpw02") == 0) {
+    m_deserialiseArrayID = 19;
+  } else if (strcmp(_key, "scpw03") == 0) {
+    m_deserialiseArrayID = 20;
+  } else if (strcmp(_key, "scpw04") == 0) {
+    m_deserialiseArrayID = 21;
+  } else if (strcmp(_key, "scpw05") == 0) {
+    m_deserialiseArrayID = 22;
+  } else if (strcmp(_key, "scpw06") == 0) {
+    m_deserialiseArrayID = 23;
+  } else if (strcmp(_key, "scpw07") == 0) {
+    m_deserialiseArrayID = 24;
+
+  } else if (strcmp(_key, "spw") == 0) {
+    m_deserialiseArrayID = 25;
   } else if (strcmp(_key, "impc") == 0) {
     // noop
   } else if (strcmp(_key, "player") == 0) {
@@ -959,9 +1009,18 @@ void deserialiseArrayValuePlayer(json_decoder* jd, int _pos, json_value _value) 
     case 14: m_player.m_exportPerWorld[6][i] = f; break;
     case 15: m_player.m_exportPerWorld[7][i] = f; break;
 
-    case 16: m_player.m_sellPerWorld[i] = f; break;
+    case 16: m_player.m_soldPerWorld[0][i] = f; break;
+    case 17: m_player.m_soldPerWorld[1][i] = f; break;
+    case 18: m_player.m_soldPerWorld[2][i] = f; break;
+    case 19: m_player.m_soldPerWorld[3][i] = f; break;
+    case 20: m_player.m_soldPerWorld[4][i] = f; break;
+    case 21: m_player.m_soldPerWorld[5][i] = f; break;
+    case 22: m_player.m_soldPerWorld[6][i] = f; break;
+    case 23: m_player.m_soldPerWorld[7][i] = f; break;
 
-    case 17: m_player.m_importConsumers[i] = v; break;
+    case 24: m_player.m_sellPricePerWorld[i] = f; break;
+
+    case 25: m_player.m_importConsumers[i] = v; break;
   }
 }
 

@@ -27,8 +27,11 @@ bool m_exportParity = false;
 uint16_t m_exportItemCountA[kNCargoType];
 uint16_t m_exportItemCountB[kNCargoType];
 
-uint16_t m_exportItemValueA = 0;
-uint16_t m_exportItemValueB = 0;
+uint16_t m_soldItemValueA = 0;
+uint16_t m_soldItemValueB = 0;
+//
+uint16_t m_soldItemCountA[kNCargoType];
+uint16_t m_soldItemCountB[kNCargoType];
 
 bool m_hasExported = false; // tutorial only
 bool m_hasImported = false; // tutorial only
@@ -160,24 +163,26 @@ void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t 
     for (int32_t y = _building->m_location->m_y - 1; y < _building->m_location->m_y + 2; ++y) {
       struct Location_t* loc = getLocation_noCheck(x, y); // Will never straddle the world boundary
       if (loc->m_cargo) {
-        p->m_soldCargo[ loc->m_cargo->m_type ]++; // Statistics
-        const uint16_t price = CargoDesc[loc->m_cargo->m_type].price;
+        const enum kCargoType ct = loc->m_cargo->m_type; 
+        p->m_soldCargo[ ct ]++; // Statistics
+        const uint16_t price = CargoDesc[ ct ].price;
         modMoney( price );
 
         if (m_exportTimer < ONE_MIN) {
-          m_exportItemValueA += price;
+          m_soldItemValueA += price;
+          m_soldItemCountA[ ct ]++;
         } else {
-          if (m_exportParity) m_exportItemValueA += price;
-          else                m_exportItemValueB += price;
+          if (m_exportParity) { m_soldItemValueA += price; m_soldItemCountA[ ct ]++; }
+          else                { m_soldItemValueB += price; m_soldItemCountB[ ct ]++; }
         }
 
         // Tutorial
         const enum kUITutorialStage tut = getTutorialStage(); 
-        if (tut == kTutBuildConveyor && loc->m_cargo->m_type == kCarrot && nearbyConveyor(_building)) {
+        if (tut == kTutBuildConveyor && ct == kCarrot && nearbyConveyor(_building)) {
           makeTutorialProgress();
         }
         // Tutorial 
-        if (tut == kTutBuildVitamin && loc->m_cargo->m_type == kVitamin && nearbyConveyor(_building)) {
+        if (tut == kTutBuildVitamin && ct == kVitamin && nearbyConveyor(_building)) {
           makeTutorialProgress();
         }
         clearLocation(loc, /*cargo*/ true, /*building*/ false);
@@ -196,6 +201,7 @@ void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t 
     _building->m_progress -= EXTERNAL_SALES_SEC_IN_TICKS;
     const float totInputSales = getOtherWorldCargoSales() * EXTERNAL_SALES_SECONDS;
     modMoney( totInputSales ); // Rounds down
+    processOtherWorldCargoSales(EXTERNAL_SALES_SECONDS); // Also do the sold statistics
   } 
 
   // Process exporting of sales data (and exports data, though m_exportItemCountA/B are only incremented by the Exports update fn)
@@ -207,11 +213,13 @@ void sellBoxUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t 
   m_exportTimer -= ONE_MIN;
   m_exportParity = !m_exportParity;
   if (m_exportParity)  {
-    m_exportItemValueA = 0;
+    m_soldItemValueA = 0;
     memset(m_exportItemCountA, 0, sizeof(uint16_t)*kNCargoType);
+    memset(m_soldItemCountA, 0, sizeof(uint16_t)*kNCargoType);
   } else {
-    m_exportItemValueB = 0;
+    m_soldItemValueB = 0;
     memset(m_exportItemCountB, 0, sizeof(uint16_t)*kNCargoType);
+    memset(m_soldItemCountB, 0, sizeof(uint16_t)*kNCargoType);
   }
 }
 
@@ -521,7 +529,7 @@ void importUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _
   struct Player_t* p = getPlayer();
   for (int32_t d = 0; d < 4; ++d) {
 
-    enum kCargoType c = (d == 3 ? _building->m_mode.mode8[1] : _building->m_stored[(MAX_STORE/2) + d]);
+    const enum kCargoType c = (d == 3 ? _building->m_mode.mode8[1] : _building->m_stored[(MAX_STORE/2) + d]);
 
     if (c == kNoCargo) {
       continue;
@@ -573,9 +581,18 @@ void updateSales() {
   struct Player_t* p = getPlayer();
   const uint8_t slot = getSlot();
  
-  float collected = m_exportItemValueA + m_exportItemValueB;
-  float av = collected / (m_exportTimer / TICKS_PER_SEC);
-  p->m_sellPerWorld[slot] = av;
+  {
+    const float collected = m_soldItemValueA + m_soldItemValueB;
+    const float av = collected / (m_exportTimer / TICKS_PER_SEC);
+    p->m_sellPricePerWorld[slot] = av;
+  }
+
+  for (int32_t c = 1; c < kNCargoType; ++c) {
+    const float collected = m_soldItemCountA[c] + m_soldItemCountB[c];
+    const float av = collected / (m_exportTimer / TICKS_PER_SEC);
+    p->m_soldPerWorld[slot][c] = av;
+  }
+
   #ifdef DEV
   if (collected) pd->system->logToConsole("Integrated over %i s, the av sold value is %f /s", (m_exportTimer / TICKS_PER_SEC), (double)av);
   #endif
@@ -602,9 +619,11 @@ void resetExportAndSales() {
   for (int32_t i = 0; i < kNCargoType; ++i) {
     m_exportItemCountA[i] = 0;
     m_exportItemCountB[i] = 0; 
+    m_soldItemCountA[i] = 0;
+    m_soldItemCountB[i] = 0;
   }
-  m_exportItemValueA = 0;
-  m_exportItemValueB = 0;
+  m_soldItemValueA = 0;
+  m_soldItemValueB = 0;
   m_hasExported = false;
   m_hasImported = false;
 }

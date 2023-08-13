@@ -62,8 +62,9 @@ struct Player_t{
   uint32_t m_importedCargo[kNCargoType];
 
   float m_exportPerWorld[WORLD_SAVE_SLOTS][kNCargoType];
+  float m_soldPerWorld[WORLD_SAVE_SLOTS][kNCargoType];
 
-  float m_sellPerWorld[WORLD_SAVE_SLOTS];
+  float m_sellPricePerWorld[WORLD_SAVE_SLOTS];
 
   uint16_t m_importConsumers[kNCargoType];
 
@@ -113,6 +114,8 @@ uint16_t getCargoImportConsumers(enum kCargoType _cargo);
 float getThisWorldCargoSales(void);
 
 float getOtherWorldCargoSales(void);
+
+void processOtherWorldCargoSales(int32_t _seconds);
 
 bool modMoney(int32_t _amount);
 
