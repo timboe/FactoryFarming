@@ -142,6 +142,7 @@ void nextTutorialStage() {
     toGive = FDesc[kVitiminFac].price * 2;
   }
 
+  // If changing toGive items, change tutMoney also in settings
   if (toGive) {
     #ifdef DEV
     pd->system->logToConsole("Tut give player %i", toGive);
@@ -704,6 +705,8 @@ void serialisePlayer(struct json_encoder* je) {
   je->writeInt(je, m_player.m_playTime);
   je->addTableMember(je, "tutstage", 8);
   je->writeInt(je, m_player.m_tutorialProgress);
+  je->addTableMember(je, "tutpaid", 7);
+  je->writeInt(je, m_player.m_paidTutorialMoney);
 
   je->addTableMember(je, "slot", 4);
   je->writeInt(je, getSlot());
@@ -856,6 +859,8 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_player.m_playTime = json_intValue(_value);
   } else if (strcmp(_key, "tutstage") == 0) {
     m_player.m_tutorialProgress = json_intValue(_value);
+  } else if (strcmp(_key, "tutpaid") == 0) {
+    m_player.m_paidTutorialMoney = json_intValue(_value);
   } else if (strcmp(_key, "slot") == 0) {
     setSlot( json_intValue(_value) ); 
   } else if (strcmp(_key, "sets") == 0) {
@@ -1000,6 +1005,13 @@ void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_valu
     m_player.m_enableCrankConveyor = 1; 
     m_player.m_enableCentreCamera = 0;
     pd->system->logToConsole("-- Performed player schema evolution from v%i to v%i, UnlockedTo:%i -> %i", V1p0_SAVE_FORMAT, V1p1_SAVE_FORMAT, prevUnlockedTo, m_player.m_buildingsUnlockedTo);
+  }
+
+  // SCHEMA EVOLUTION - V5 to V6 (v1.1 to v1.5)
+  if (m_player.m_saveFormat == V1p1_SAVE_FORMAT) {
+    m_player.m_saveFormat = V1p5_SAVE_FORMAT;
+    // Just adding data - nothing to migrate
+    pd->system->logToConsole("-- Performed player schema evolution from v%i to v%i", V1p1_SAVE_FORMAT, V1p5_SAVE_FORMAT);
   }
 
   m_deserialiseArrayID = -1;

@@ -50,6 +50,7 @@ struct Player_t{
   uint32_t m_saveTime;
   uint32_t m_playTime;
   uint8_t m_tutorialProgress; // On each individual stage
+  uint8_t m_paidTutorialMoney;
   uint16_t m_carryCargo[kNCargoType];
   uint16_t m_carryConveyor[kNConvSubTypes];
   uint16_t m_carryUtility[kNUtilitySubTypes];

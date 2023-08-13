@@ -322,13 +322,16 @@ void scanSlots() {
         m_foundSaveData[m_save] = false;
         m_worldExists[m_save][ss] = false;
       } else if (m_worldVersions[m_save][ss] < EARLIEST_SUPPORTED_SAVE_FORMAT) {
-        #ifdef DEV
         pd->system->logToConsole("Scan world: PRE-BETA WORLD DETECTED! Version %i < %i."
           " ACTION: Delete everything and start again", m_worldVersions[m_save][ss], EARLIEST_SUPPORTED_SAVE_FORMAT);
-        #endif
         m_foundSaveData[m_save] = false;
         m_worldExists[m_save][ss] = false;
         doSaveDelete();
+      } else if (m_worldVersions[m_save][ss] > CURRENT_SAVE_FORMAT) {
+        pd->system->error("Scan world: FUTURE SAVE VERSION DETECTED! Version %i > %i."
+          " Update Factory Farming to the latest version!", m_worldVersions[m_save][ss], CURRENT_SAVE_FORMAT);
+        m_foundSaveData[m_save] = false;
+        m_worldExists[m_save][ss] = false;
       }
     }
   }
@@ -612,6 +615,12 @@ bool doLoad() {
         V1p0_SAVE_FORMAT, V1p1_SAVE_FORMAT, m_save, m_slot, nFacsUpdated);
     }
 
+    // SCHEMA EVOLUTION - V5 to V6 (v1.1 to v1.5)
+    if (m_worldVersions[m_save][m_slot] == V1p1_SAVE_FORMAT) {
+      m_worldVersions[m_save][m_slot] = V1p5_SAVE_FORMAT;
+      // Just adding data - nothing to migrate
+      pd->system->logToConsole("-- Performed world schema evolution from v%i to v%i", V1p1_SAVE_FORMAT, V1p5_SAVE_FORMAT);
+   }
 
     // Things which need to run post-load
     setGameMode(kWanderMode);

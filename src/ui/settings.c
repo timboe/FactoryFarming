@@ -273,6 +273,19 @@ void cheatUnlock() {
   }
 }
 
+void tutMoney(void) {
+  if (getPlayer()->m_paidTutorialMoney) return; // Don't pay more than once
+  getPlayer()->m_paidTutorialMoney = 1;
+  int32_t toGive = EDesc[kCropHarvesterSmall].price * 2;
+  toGive += CDesc[kBelt].price * 100;
+  toGive += EDesc[kChalkQuarry].price * 2;
+  toGive += FDesc[kVitiminFac].price * 2;
+  #ifdef DEV
+  pd->system->logToConsole("Disable tut give player %i", toGive);
+  #endif
+  modMoney( toGive );
+}
+
 void doSettings(bool _forward) {
 
   struct Player_t* p = getPlayer();
@@ -299,7 +312,7 @@ void doSettings(bool _forward) {
     case 3: p->m_soundSettings = p->m_soundSettings ^ 2; updateSfx(); break;
     case 4: p->m_enableSteps = !p->m_enableSteps; break;
     case 6: p->m_enableScreenShake = !p->m_enableScreenShake; break;
-    case 7: if (p->m_enableTutorial == 255) p->m_enableTutorial = 0; else p->m_enableTutorial = 255; break;
+    case 7: if (p->m_enableTutorial == 255) { p->m_enableTutorial = 0; } else { p->m_enableTutorial = 255; tutMoney(); } break;
     case 8: p->m_enableConveyorAnimation = !p->m_enableConveyorAnimation; break;
     case 9: p->m_enableExtractorOutlines = !p->m_enableExtractorOutlines; break;
     case 10: p->m_enableCrankConveyor = !p->m_enableCrankConveyor; break;
