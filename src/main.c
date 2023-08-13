@@ -14,6 +14,7 @@
 #include "ui.h"
 #include "building.h"
 #include "io.h"
+#include "sshot.h"
 #include "ui/settings.h"
 
 #ifdef _WINDLL
@@ -24,6 +25,7 @@ static void init(void) {
   initLocalisation();
   initSprite();
   initWorld();
+  initMap();
   initCargo();
   initChunk();
   initLocation();

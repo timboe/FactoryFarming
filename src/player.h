@@ -27,7 +27,7 @@ enum kUITutorialStage{
   kNTutorialStages
 };
 
-enum kToolType{kToolPickup, kToolInspect, kToolDestroy, kNToolTypes};
+enum kToolType{kToolPickup, kToolInspect, kToolDestroy, kToolMap, kNToolTypes};
 extern const uint16_t kToolUIIcon[];
 
 #define PLAYER_ANIM_FRAMES 6

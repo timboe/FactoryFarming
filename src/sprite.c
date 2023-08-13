@@ -3,6 +3,10 @@
 
 LCDBitmap* m_conveyorMasters[2][kDirN] = {NULL}; // For two different speed settings
 
+LCDBitmapTable* m_sheet2;
+
+LCDBitmapTable* m_sheet6;
+
 LCDBitmapTable* m_sheet16;
 
 LCDBitmapTable* m_sheet18;
@@ -24,6 +28,8 @@ LCDBitmap* m_titleSelected;
 LCDBitmap* m_settingsMenuSelected;
 
 LCDBitmap* m_new;
+
+LCDBitmap* m_parchment[2];
 
 LCDBitmap* m_splash;
 
@@ -91,6 +97,14 @@ LCDBitmap* getSpriteNew() { return m_new; }
 LCDBitmap* getSpriteSplash() { return m_splash; }
 
 LCDBitmap* getSpriteTruck(uint8_t _zoom) { return m_truck[_zoom]; }
+
+LCDBitmap* getSprite2(uint32_t _id) {
+  return pd->graphics->getTableBitmap(m_sheet2, _id);
+}
+
+LCDBitmap* getSprite6(uint32_t _id) {
+  return pd->graphics->getTableBitmap(m_sheet6, _id);
+}
 
 LCDBitmap* getSprite16(uint32_t _x, uint32_t _y, uint8_t _zoom) {
   return getSprite16_byidx(SPRITE16_ID(_x, _y), _zoom);
@@ -162,6 +176,10 @@ LCDBitmap* getConveyorMaster(enum kDir _dir, uint8_t _speed) {
     default: pd->system->error("Error unknown conveyor speed %i", _speed);
   }
   return NULL;
+}
+
+LCDBitmap* getSpriteParchment(bool _left) {
+  return m_parchment[ _left ? 0 : 1 ];
 }
 
 LCDBitmap* getRetirementNoBitmap(uint8_t _zoom) {
@@ -257,6 +275,8 @@ void populateResizedSprites() {
 
 void initSprite() {
   pd->graphics->setDrawMode(kDrawModeCopy);
+  m_sheet2 = loadImageTableAtPath("images/sheet2");
+  m_sheet6 = loadImageTableAtPath("images/sheet6");
   m_sheet16 = loadImageTableAtPath("images/sheet16");
   m_sheet18 = loadImageTableAtPath("images/sheet18");
   m_sheet48 = loadImageTableAtPath("images/sheet48");
@@ -264,6 +284,8 @@ void initSprite() {
   m_titleSelected = loadImageAtPath("images/titleSelected");
   m_settingsMenuSelected = loadImageAtPath("images/mainmenuSelected");
   m_new = loadImageAtPath("images/new");
+  m_parchment[0] = loadImageAtPath("images/map_l");
+  m_parchment[1] = loadImageAtPath("images/map_r");
   m_splash = loadImageAtPath("images/splash");
   m_menuBacking = loadImageAtPath("images/backing");
   m_retirementNo[1] = loadImageAtPath("images/cross9x9");

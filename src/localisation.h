@@ -790,6 +790,8 @@ enum kTR{
   kTRFarming,
   kTRFactoryFarming,
   kTRLang,
+  kTRMap,
+  kTRMapHelp,
   kNTR
 };
 

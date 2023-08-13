@@ -5,6 +5,7 @@
 #include "../sprite.h"
 #include "../input.h"
 #include "../sound.h"
+#include "../sshot.h"
 #include "../generate.h"
 #include "../buildings/conveyor.h"
 #include "../buildings/utility.h"
@@ -28,6 +29,7 @@ void doInventoryClick() {
       case kToolPickup:; return setGameMode(kPickMode);
       case kToolInspect:; return setGameMode(kInspectMode);
       case kToolDestroy:; return setGameMode(kDestroyMode);
+      case kToolMap:; getMap(true); return setGameMode(kMenuMap);
       case kNToolTypes:; break;
     } break;
     case kUICatPlant: return setGameMode(kPlantMode);

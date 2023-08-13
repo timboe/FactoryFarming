@@ -22,3 +22,7 @@ void unZoom(void);
 void resetMomentum(void);
 
 int8_t getAndReduceFollowConveyor(void);
+
+void resetMapCursor(void);
+
+struct Location_t* getMapCursorLocation(void);

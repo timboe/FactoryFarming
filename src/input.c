@@ -27,6 +27,9 @@ uint8_t m_pickRadius = 3;
 
 int8_t  m_followConveyor = 0;
 
+int16_t m_mapCursor_x = 0;
+int16_t m_mapCursor_y = 0;
+
 bool characterMoveInput(uint32_t _buttonPressed);
 
 void clickHandleWander(uint32_t _buttonPressed);
@@ -36,6 +39,8 @@ void clickHandleMenuMain(uint32_t _buttonPressed);
 void clickHandleMenuBuy(uint32_t _buttonPressed);
 
 void clickHandleMenuNew(uint32_t _buttonPressed);
+
+void clickHandleMenuMap(uint32_t _buttonPressed);
 
 void clickHandleMenuSell(uint32_t _buttonPressed);
 
@@ -93,9 +98,28 @@ bool aPressed(void);
 
 void postChangeZoom(bool _sfx);
 
-uint16_t m_b, m_a, m_blockA;
+void updateMapCursor(void);
+
+uint16_t m_b, m_a, m_blockA, m_up, m_down, m_left, m_right;
 
 /// ///
+
+void resetMapCursor() {
+  struct Location_t* _l = getPlayerLocation();
+  m_mapCursor_x = _l->m_x;
+  m_mapCursor_y = _l->m_y;
+  updateMapCursor();
+}
+
+void updateMapCursor() {
+  const int16_t offX = (SCREEN_PIX_X/2) - ((TOT_TILES_X*MAP_PIX_PER_TILE)/2);
+  const int16_t offY = (SCREEN_PIX_Y/2) - ((TOT_TILES_Y*MAP_PIX_PER_TILE)/2);
+  pd->sprite->moveTo(getMapCursor(), offX + ((m_mapCursor_x+1)*MAP_PIX_PER_TILE), offY + ((m_mapCursor_y+1)*MAP_PIX_PER_TILE));
+}
+
+struct Location_t* getMapCursorLocation() {
+  return getLocation(m_mapCursor_x, m_mapCursor_y);
+}
 
 void modRadius(bool _inc) {
   sfx(kSfxRotate);
@@ -215,6 +239,7 @@ void gameClickConfigHandler(uint32_t _buttonPressed) {
     case kMenuSettings: return clickHandleMenuMain(_buttonPressed);
     case kMenuBuy: return clickHandleMenuBuy(_buttonPressed);
     case kMenuNew: return clickHandleMenuNew(_buttonPressed);
+    case kMenuMap: return clickHandleMenuMap(_buttonPressed);
     case kMenuSell: return clickHandleMenuSell(_buttonPressed);
     case kMenuPlayer: return clickHandleMenuPlayer(_buttonPressed);
     case kMenuWarp: return clickHandleMenuWarp(_buttonPressed);
@@ -341,6 +366,29 @@ void clickHandleMenuNew(uint32_t _buttonPressed) {
     if (!checkShowNew()) {
       setGameMode(kMenuBuy);
     }
+  }
+}
+
+void clickHandleMenuMap(uint32_t _buttonPressed) {
+  if (_buttonPressed == kButtonUp) {
+    if (--m_mapCursor_y < 0) m_mapCursor_y += TOT_TILES_Y;
+  } else if (_buttonPressed == kButtonDown) {
+    if (++m_mapCursor_y >= TOT_TILES_Y) m_mapCursor_y -= TOT_TILES_Y;
+  }
+  //
+  if (_buttonPressed == kButtonLeft) {
+    if (--m_mapCursor_x < 0) m_mapCursor_x += TOT_TILES_X;
+  } else if (_buttonPressed == kButtonRight) {
+    if (++m_mapCursor_x >= TOT_TILES_X) m_mapCursor_x -= TOT_TILES_X;
+  }
+  updateMapCursor();
+  //
+  if (kButtonA == _buttonPressed) {
+    sfx(kSfxA);
+    setGameMode(kMenuPlayer);
+  } else if (kButtonB == _buttonPressed) {
+    sfx(kSfxB);
+    setGameMode(kWanderMode);
   }
 }
 
@@ -602,11 +650,27 @@ void clickHandlerReplacement() {
   if (pushed & kButtonRight) gameClickConfigHandler(kButtonRight);
   if (pushed & kButtonDown) gameClickConfigHandler(kButtonDown);
   if (pushed & kButtonLeft) gameClickConfigHandler(kButtonLeft);
+  
   if (current & kButtonB) ++m_b;
-  if (released & kButtonB) {
+  else if (released & kButtonB) {
     if (m_b < BUTTON_PRESSED_FRAMES) gameClickConfigHandler(kButtonB);
     m_b = 0;
   }
+
+  if (gm == kMenuMap) {
+    if (current & kButtonUp && ++m_up > BUTTON_PRESSED_FRAMES) gameClickConfigHandler(kButtonUp);
+    else if (released & kButtonUp) m_up = 0;
+
+    if (current & kButtonDown && ++m_down > BUTTON_PRESSED_FRAMES) gameClickConfigHandler(kButtonDown);
+    else if (released & kButtonDown) m_down = 0;
+
+    if (current & kButtonLeft && ++m_left > BUTTON_PRESSED_FRAMES) gameClickConfigHandler(kButtonLeft);
+    else if (released & kButtonLeft) m_left = 0;
+
+    if (current & kButtonRight && ++m_right > BUTTON_PRESSED_FRAMES) gameClickConfigHandler(kButtonRight);
+    else if (released & kButtonRight) m_right = 0;
+  }
+
   if (released & kButtonA) {
     if (m_a < BUTTON_PRESSED_FRAMES) gameClickConfigHandler(kButtonA);
     multiClickCount = 8;
@@ -647,7 +711,7 @@ void clickHandlerReplacement() {
     case kMenuBuy: case kMenuSell: rotateHandleMultiplier(pd->system->getCrankChange()); break; 
     case kMenuPlayer: case kMenuSettings: case kMenuExport: case kMenuImport: case kMenuWarp: rotateHandleSettings(pd->system->getCrankChange()); break;
     case kTitles: rotateHandleTitles(pd->system->getCrankChange()); break; 
-    case kMenuNew:  case kInspectMode: case kTruckModeNew: case kTruckModeLoad: case kNGameModes: break;
+    case kMenuNew: case kMenuMap: case kInspectMode: case kTruckModeNew: case kTruckModeLoad: case kNGameModes: break;
   }
 
 }

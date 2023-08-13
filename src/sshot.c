@@ -5,6 +5,7 @@
 #include "input.h"
 #include "io.h"
 #include "ui.h"
+#include "sprite.h"
 
 SDFile* m_imageFile;
 LCDBitmap* m_imageBitmap;
@@ -24,6 +25,17 @@ int16_t m_chunkY;
 uint16_t m_cachePlayerX;
 uint16_t m_cachePlayerY;
 uint8_t m_cacheZoom;
+
+LCDBitmap* m_map = NULL;
+LCDBitmap* m_mapP = NULL;
+LCDBitmap* m_mapC = NULL;
+LCDSprite* m_mapSprite = NULL;
+LCDSprite* m_mapPSprite = NULL;
+LCDSprite* m_mapCSprite = NULL;
+LCDSprite* m_mapEdge[2] = {NULL};
+
+LCDBitmap* m_7x7 = NULL;
+LCDBitmap* m_9x9 = NULL;
 
 
 // Simple BMP class by u/Daeke
@@ -47,10 +59,160 @@ void saveLCDBitmapHeader(SDFile* _file, LCDBitmap* _bitmap);
 
 bool saveLCDBitmapToFile(SDFile* _file);
 
+void updateMap(void);
+
 /// ///
 
-bool doScreenShot(uint32_t* _actionProgress) {
+void initMap() {
+  m_map = pd->graphics->newBitmap(TOT_TILES_X * MAP_PIX_PER_TILE, TOT_TILES_Y * MAP_PIX_PER_TILE, kColorClear);
+  m_mapSprite = pd->sprite->newSprite();
 
+  PDRect mapBound = {.x = 0, .y = 0, .width = TOT_TILES_X * MAP_PIX_PER_TILE, .height = TOT_TILES_Y * MAP_PIX_PER_TILE};
+  pd->sprite->setBounds(m_mapSprite, mapBound);
+  pd->sprite->setImage(m_mapSprite, m_map, kBitmapUnflipped);
+  pd->sprite->moveTo(m_mapSprite, SCREEN_PIX_X/2, SCREEN_PIX_Y/2);
+  pd->sprite->setZIndex(m_mapSprite, Z_INDEX_UI_B);
+  pd->sprite->setIgnoresDrawOffset(m_mapSprite, 1);
+
+  PDRect smallBound = {.x = 0, .y = 0, .width = 3 * MAP_PIX_PER_TILE, .height = 3 * MAP_PIX_PER_TILE};
+
+  m_mapP = pd->graphics->newBitmap(3 * MAP_PIX_PER_TILE, 3 * MAP_PIX_PER_TILE, kColorClear);
+  m_mapPSprite = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_mapPSprite, smallBound);
+  pd->sprite->setImage(m_mapPSprite, m_mapP, kBitmapUnflipped);
+  pd->sprite->setZIndex(m_mapPSprite, Z_INDEX_UI_M);
+  pd->sprite->setIgnoresDrawOffset(m_mapPSprite, 1);
+  pd->graphics->pushContext(m_mapP);
+  pd->graphics->drawBitmap(getSprite6(5), 0, 0, kBitmapUnflipped);
+  pd->graphics->popContext();
+
+  m_mapC = pd->graphics->newBitmap(3 * MAP_PIX_PER_TILE, 3 * MAP_PIX_PER_TILE, kColorClear);
+  m_mapCSprite = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_mapCSprite, smallBound);
+  pd->sprite->setImage(m_mapCSprite, m_mapC, kBitmapUnflipped);
+  pd->sprite->setZIndex(m_mapCSprite, Z_INDEX_UI_T);
+  pd->sprite->setIgnoresDrawOffset(m_mapCSprite, 1);
+  pd->graphics->pushContext(m_mapC);
+  pd->graphics->drawBitmap(getSprite6(6), 0, 0, kBitmapUnflipped);
+  pd->graphics->popContext();
+
+  PDRect edgeBound = {.x = 0, .y = 0, .width = TILE_PIX, .height = TOT_TILES_Y * MAP_PIX_PER_TILE};
+  m_mapEdge[0] = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_mapEdge[0], edgeBound);
+  pd->sprite->setImage(m_mapEdge[0], getSpriteParchment(true), kBitmapUnflipped);
+  pd->sprite->setZIndex(m_mapEdge[0], Z_INDEX_UI_B);
+  pd->sprite->setIgnoresDrawOffset(m_mapEdge[0], 1);
+  pd->sprite->moveTo(m_mapEdge[0], 48 - 8, SCREEN_PIX_Y/2);
+  //
+  m_mapEdge[1] = pd->sprite->newSprite();
+  pd->sprite->setBounds(m_mapEdge[1], edgeBound);
+  pd->sprite->setImage(m_mapEdge[1], getSpriteParchment(false), kBitmapUnflipped);
+  pd->sprite->setZIndex(m_mapEdge[1], Z_INDEX_UI_B);
+  pd->sprite->setIgnoresDrawOffset(m_mapEdge[1], 1);
+  pd->sprite->moveTo(m_mapEdge[1], 352 - 8, SCREEN_PIX_Y/2);
+
+  m_7x7 = pd->graphics->newBitmap(7 * MAP_PIX_PER_TILE, 7 * MAP_PIX_PER_TILE, kColorClear);
+  m_9x9 = pd->graphics->newBitmap(9 * MAP_PIX_PER_TILE, 9 * MAP_PIX_PER_TILE, kColorClear);
+  pd->graphics->pushContext(m_7x7);
+  pd->graphics->drawRect(0, 0, 7 * MAP_PIX_PER_TILE, 7 * MAP_PIX_PER_TILE, kColorBlack);
+  pd->graphics->popContext();
+  pd->graphics->pushContext(m_9x9);
+  pd->graphics->drawRect(0, 0, 9 * MAP_PIX_PER_TILE, 9 * MAP_PIX_PER_TILE, kColorBlack);
+  pd->graphics->popContext();
+}
+
+#define M_BLANK 0
+#define M_DIAG_R 1
+#define M_HORIZ 2
+#define M_CORNER 3
+#define M_VERT 4
+#define M_3CORNER 5
+#define M_DIAG_L 6
+#define M_FULL 7
+
+void updateMap() {
+  const int16_t offX = (SCREEN_PIX_X/2) - ((TOT_TILES_X*MAP_PIX_PER_TILE)/2);
+  const int16_t offY = (SCREEN_PIX_Y/2) - ((TOT_TILES_Y*MAP_PIX_PER_TILE)/2);
+  const struct Location_t* _loc = getPlayerLocation();
+  pd->sprite->moveTo(m_mapPSprite, offX + ((_loc->m_x+1)*MAP_PIX_PER_TILE), offY + ((_loc->m_y+1)*MAP_PIX_PER_TILE));
+
+  pd->graphics->clearBitmap(m_map, kColorWhite);
+  pd->graphics->pushContext(m_map);
+  pd->graphics->setDrawMode(kDrawModeCopy);
+  // Ground
+  for (uint16_t _x = 0; _x < TOT_TILES_X; ++_x) {
+    for (uint16_t _y = 0; _y < TOT_TILES_Y; ++_y) {
+      const struct Tile_t* _t = getTile(_x, _y);
+      uint8_t _i = 0;
+      // Regular or patch?
+      const bool _mainGroundType = (getWorldGround(getSlot(), 0) == _t->m_groundType);
+      switch (_t->m_groundType) {
+        case kNGroundTypes: case kSiltyGround: case kSandyGround: 
+        case kChalkyGround: case kPeatyGround: case kClayGround: 
+        case kLoamyGround: _i = (_mainGroundType ? M_BLANK : M_CORNER); break;
+        case kPavedGround: _i = M_DIAG_L; break;
+        case kObstructedGround: _i = M_VERT; break;
+        case kLake: case kRiver: case kOcean: _i = M_3CORNER; 
+      }
+      pd->graphics->drawBitmap(getSprite2(_i), _x * MAP_PIX_PER_TILE, _y * MAP_PIX_PER_TILE, kBitmapUnflipped);
+    }
+  }
+  // Buildings
+  for (uint16_t _x = 0; _x < TOT_TILES_X; ++_x) {
+    for (uint16_t _y = 0; _y < TOT_TILES_Y; ++_y) {
+      const struct Location_t* _l = getLocation(_x, _y);
+      struct Building_t* _b = NULL;
+      if (_l->m_building && _l->m_notOwned == false) _b = _l->m_building;
+      if (!_b) continue;
+      const enum kBuildingType _bt = _b->m_type; 
+      if (_bt == kConveyor) {
+        pd->graphics->drawBitmap(getSprite2(M_FULL), _x * MAP_PIX_PER_TILE, _y * MAP_PIX_PER_TILE, kBitmapUnflipped);
+      } else if (_bt == kSpecial || (_bt == kUtility && _b->m_subType.utility == kRetirement)) {
+        pd->graphics->drawBitmap(getSprite6(4), (_x-1) * MAP_PIX_PER_TILE, (_y-1) * MAP_PIX_PER_TILE, kBitmapUnflipped);
+      } else if (_bt == kPlant) {
+        pd->graphics->drawBitmap(getSprite2(M_HORIZ), _x * MAP_PIX_PER_TILE, _y * MAP_PIX_PER_TILE, kBitmapUnflipped);
+      } else if (_bt == kUtility) {
+        pd->graphics->drawBitmap(getSprite2(M_DIAG_R), _x * MAP_PIX_PER_TILE, _y * MAP_PIX_PER_TILE, kBitmapUnflipped);
+      } else if (_bt == kFactory || _bt == kExtractor) {
+        pd->graphics->drawBitmap(getSprite6((uint32_t)_b->m_dir), (_x-1) * MAP_PIX_PER_TILE, (_y-1) * MAP_PIX_PER_TILE, kBitmapUnflipped);
+      }
+    }
+  }
+  // Extractor boundaries
+  for (uint16_t _x = 0; _x < TOT_TILES_X; ++_x) {
+    for (uint16_t _y = 0; _y < TOT_TILES_Y; ++_y) {
+      const struct Location_t* _l = getLocation(_x, _y);
+      struct Building_t* _b = NULL;
+      if (_l->m_building && _l->m_notOwned == false && _l->m_building->m_type == kExtractor) _b = _l->m_building;
+      if (!_b) continue;
+      if (_b->m_subType.extractor == kCropHarvesterSmall) {
+        pd->graphics->drawBitmap(m_7x7, (_x-3) * MAP_PIX_PER_TILE, (_y-3) * MAP_PIX_PER_TILE, kBitmapUnflipped);
+      } else if (_b->m_subType.extractor == kCropHarvesterLarge) {
+        pd->graphics->drawBitmap(m_9x9, (_x-4) * MAP_PIX_PER_TILE, (_y-4) * MAP_PIX_PER_TILE, kBitmapUnflipped);
+      }
+    }
+  }
+  pd->graphics->popContext();
+}
+
+LCDSprite* getMap(bool _update) {
+  if (_update) updateMap();
+  return m_mapSprite;
+}
+
+LCDSprite* getMapPlayer() { 
+  return m_mapPSprite;
+}
+
+LCDSprite* getMapCursor() {
+  return m_mapCSprite;
+}
+
+LCDSprite* getMapEdge(bool _left) {
+  return m_mapEdge[ _left ? 0 : 1 ];
+}
+
+bool doScreenShot(uint32_t* _actionProgress) {
 
   if (*_actionProgress == 0) {
 

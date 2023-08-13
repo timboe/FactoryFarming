@@ -19,13 +19,14 @@
 #include "render.h"
 #include "sound.h"
 #include "io.h"
+#include "sshot.h"
 #include "buildings/special.h"
 #include "buildings/factory.h"
 #include "buildings/conveyor.h"
 #include "buildings/extractor.h"
 #include "buildings/plant.h"
 #include "buildings/utility.h"
-
+ 
 enum kGameMode m_mode = 0;
 
 LCDSprite* m_UISpriteBottom = NULL;
@@ -187,6 +188,8 @@ void drawUIInspect(void);
 void renderTutorialInspectRect(bool _bothSides);
 
 void renderNewUI(void);
+
+void renderMapUI(void);
 
 /// ///
 
@@ -360,10 +363,11 @@ void updateUICredits(int _fc) {
 }
 
 void updateUITitles(int _fc) {
+  
   pd->sprite->setDrawMode(m_UISpriteSplash, kDrawModeCopy);
   #ifdef TITLE_LOGO_ONLY
   pd->sprite->setVisible(m_UISpriteSplash, 1);
-  const int32_t o = round( TILE_PIX/2 * fabs( sin( 0.1f * _fc ) ) );
+  const int32_t o = round( TILE_PIX/2 * fabs( sin( 0.1f * _fc ) ) ) - 16; // Final value to centre
   pd->sprite->moveTo(m_UISpriteSplash, DEVICE_PIX_X/2, DEVICE_PIX_Y/2 - o - TILE_PIX );
   pd->sprite->moveTo(m_UISpriteTitleFac, DEVICE_PIX_X/4, TILE_PIX*4 - o);
   pd->sprite->moveTo(m_UISpriteTitleFarm, (3*DEVICE_PIX_X)/4 - TILE_PIX*2, TILE_PIX*10  - o);
@@ -375,6 +379,7 @@ void updateUITitles(int _fc) {
   }
   return;
   #endif
+
 
   pd->sprite->setVisible(m_UISpriteTitleLang, !m_UITitleOffset);
   pd->sprite->setVisible(m_UISpriteTitleLangArrow, _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
@@ -697,6 +702,12 @@ void addUIToSpriteList() {
       pd->sprite->addSprite(m_UISpriteNewSplash);
       pd->sprite->addSprite(m_UISpriteNewItem);
       pd->sprite->addSprite(m_UISpriteNewText);
+    } else if (m_mode == kMenuMap) {
+      pd->sprite->addSprite(getMap(false));
+      pd->sprite->addSprite(getMapPlayer());
+      pd->sprite->addSprite(getMapCursor());
+      pd->sprite->addSprite(getMapEdge(true));
+      pd->sprite->addSprite(getMapEdge(false));
     } else if (m_mode == kMenuSettings) {
       for (int32_t i = 0; i < MAX_ROWS; ++i) {
         pd->sprite->addSprite(m_UISpriteSettingsMenuItem[i]);
@@ -969,7 +980,11 @@ void drawUIBottom() {
   pd->graphics->setDrawMode(kDrawModeFillWhite);
 
   struct Location_t* loc = getPlayerLocation();
-  struct Tile_t* t = getTile_fromLocation(loc);
+  if (m_mode == kMenuMap) { // override with map location
+    loc = getMapCursorLocation();
+  }
+
+  const struct Tile_t* t = getTile_fromLocation(loc);
   if (isWaterTile(loc->m_x, loc->m_y)) {
 
     if (loc->m_building && loc->m_cargo) {
@@ -1367,19 +1382,19 @@ void drawUIMain() {
 
   const enum kGameMode gm = getGameMode();
 
-  const LCDBitmapDrawMode dm = (gm == kMenuPlayer ? kDrawModeInverted : kDrawModeCopy);
+  const LCDBitmapDrawMode dm = (gm == kMenuPlayer || gm == kMenuMap ? kDrawModeInverted : kDrawModeCopy);
 
   // POPULATE
   bool empty = false;
   switch (gm) {
-    case kMenuBuy:; populateContentBuy(); break;
+    case kMenuBuy: populateContentBuy(); break;
     case kMenuSettings:; populateContentSettingsMenu(); break;
-    case kMenuNew:; empty = true; break;
-    case kMenuPlayer:; populateContentInventory(); break;
-    case kMenuSell:; empty = populateContentSell(); break;
-    case kMenuWarp:; populateContentWarp(); break;
-    case kMenuExport:; empty = populateContentExport(); break;
-    case kMenuImport:; empty = populateContentImport(); break;
+    case kMenuNew: case kMenuMap: empty = true; break;
+    case kMenuPlayer: populateContentInventory(); break;
+    case kMenuSell: empty = populateContentSell(); break;
+    case kMenuWarp: populateContentWarp(); break;
+    case kMenuExport: empty = populateContentExport(); break;
+    case kMenuImport: empty = populateContentImport(); break;
     default: break;
   }
 
@@ -1426,6 +1441,8 @@ void drawUIMain() {
 
   if (gm == kMenuNew) {
     return renderNewUI();
+  } else if (gm == kMenuMap) {
+    return renderMapUI();
   }
 
   if (empty) {
@@ -1572,6 +1589,12 @@ void renderNewUI() {
   pd->graphics->popContext();
 }
 
+void renderMapUI() {
+  const bool visible = (getFrameCount() % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4);
+  pd->sprite->setVisible(getMapPlayer(), visible);
+  pd->sprite->setVisible(getMapCursor(), visible);
+}
+
 void setGameMode(enum kGameMode _mode) {
   m_mode = _mode;
   if (m_mode == kTitles) return;
@@ -1579,6 +1602,10 @@ void setGameMode(enum kGameMode _mode) {
   if (m_mode == kMenuCredits) {
     m_creditsCounter = -CREDITS_DELAY;
     return;
+  }
+
+  if (m_mode == kMenuMap) {
+    resetMapCursor();
   }
 
   if (_mode == kPlaceMode) {
@@ -1595,6 +1622,8 @@ void setGameMode(enum kGameMode _mode) {
     drawUITop(tr(kTRInspectMode), kDrawModeCopy);
   } else if (_mode == kDestroyMode) {
     drawUITop(tr(kTRDestroyMode), kDrawModeCopy);
+  } else if (_mode == kMenuMap) {
+    drawUITop(tr(kTRMap), kDrawModeCopy);
   } else if (_mode >= kMenuBuy) {
     setBuySellMultiplier(1);
   } else drawUITop(NULL, kDrawModeCopy);

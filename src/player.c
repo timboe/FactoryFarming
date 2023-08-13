@@ -9,8 +9,8 @@
 #include "ui.h"
 #include "generate.h"
 
-//                             {kToolPickup, kToolInspect, kToolDestroy, kNToolTypes};
-const uint16_t kToolUIIcon[] = {SID(8,10),   SID(9,10),    SID(1,16)};
+//                             {kToolPickup, kToolInspect, kToolDestroy, kToolMap, kNToolTypes};
+const uint16_t kToolUIIcon[] = {SID(8,10),   SID(9,10),    SID(1,16),    SID(14,17)};
 
 struct Player_t m_player;
 
@@ -29,8 +29,8 @@ enum kChunkQuad m_quadrant = 0;
 
 struct Location_t* m_currentLocation = NULL;
 
-bool m_top = true;
-bool m_left = true;
+bool m_topT = true;
+bool m_leftT = true;
 bool m_forceTorus = true;
 
 void movePlayerPosition(float _goalX, float _goalY);
@@ -52,6 +52,7 @@ const char* toStringTool(enum kToolType _type) {
     case kToolPickup: return tr(kTRPick);
     case kToolInspect: return tr(kTRInspect);
     case kToolDestroy: return tr(kTRDestroy);
+    case kToolMap: return tr(kTRMap);
     default: return "Tool???";
   }
 }
@@ -61,6 +62,7 @@ const char* toStringToolInfo(enum kToolType _type) {
     case kToolPickup: return tr(kTRPickHelp);
     case kToolInspect: return tr(kTRInspectHelp);
     case kToolDestroy: return tr(kTRDestroyHelp);
+    case kToolMap: return tr(kTRMapHelp);
     default: return "Tool???";
   }
 }
@@ -249,24 +251,24 @@ enum kChunkQuad computeCurrentQuadrant() {
 void checkTorus() {
   // Torus splitting
   bool torusChanged = false;
-  if (m_top && m_player.m_pix_y > TOT_WORLD_PIX_Y/2) {
-    m_top = false;
+  if (m_topT && m_player.m_pix_y > TOT_WORLD_PIX_Y/2) {
+    m_topT = false;
     torusChanged = true;
-  } else if (!m_top && m_player.m_pix_y <= TOT_WORLD_PIX_Y/2) {
-    m_top = true;
+  } else if (!m_topT && m_player.m_pix_y <= TOT_WORLD_PIX_Y/2) {
+    m_topT = true;
     torusChanged = true;
   }
 
-  if (m_left && m_player.m_pix_x > TOT_WORLD_PIX_X/2) {
-    m_left = false;
+  if (m_leftT && m_player.m_pix_x > TOT_WORLD_PIX_X/2) {
+    m_leftT = false;
     torusChanged = true;
-  } else if (!m_left && m_player.m_pix_x <= TOT_WORLD_PIX_X/2) {
-    m_left = true;
+  } else if (!m_leftT && m_player.m_pix_x <= TOT_WORLD_PIX_X/2) {
+    m_leftT = true;
     torusChanged = true;
   }
 
   if (torusChanged || m_forceTorus) {
-    chunkShiftTorus(m_top, m_left);
+    chunkShiftTorus(m_topT, m_leftT);
     m_forceTorus = false;
   }
 }
