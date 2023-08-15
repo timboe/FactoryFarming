@@ -84,7 +84,7 @@ void plantUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t _t
 
 }
 
-bool canBePlacedPlant(struct Location_t* _loc, union kSubType _subType) {
+bool canBePlacedPlant(const struct Location_t* _loc, union kSubType _subType) {
   if (_loc->m_building != NULL) return false;
   if (_subType.plant == kSeaweedPlant || _subType.plant == kSeaCucumberPlant) {
     return isWaterTile(_loc->m_x, _loc->m_y);

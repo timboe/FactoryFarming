@@ -117,7 +117,7 @@ void extractorUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_
   }
 }
 
-bool canBePlacedExtractor(struct Location_t* _loc, union kSubType _subType) {
+bool canBePlacedExtractor(const struct Location_t* _loc, union kSubType _subType) {
   //TODO fix this bug
   if (_loc->m_x == 0 || _loc->m_y == 0) return false;
 

@@ -81,7 +81,7 @@ void factoryUpdateFn(struct Building_t* _building, uint8_t _tickLength, uint8_t 
   }
 }
 
-bool canBePlacedFactory(struct Location_t* _loc) {
+bool canBePlacedFactory(const struct Location_t* _loc) {
   //TODO fix this bug
   if (_loc->m_x == 0 || _loc->m_y == 0) return false;
   

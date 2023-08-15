@@ -8,7 +8,7 @@ void assignNeighborsExtractor(struct Building_t* _building);
 
 void buildingSetupExtractor(struct Building_t* _building);
 
-bool canBePlacedExtractor(struct Location_t* _loc, union kSubType _subType);
+bool canBePlacedExtractor(const struct Location_t* _loc, union kSubType _subType);
 
 // For buildings which can hold any three types of cargo
 void tryPickupAnyCargo(struct Location_t* _from, struct Building_t* _building);

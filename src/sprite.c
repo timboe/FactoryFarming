@@ -13,11 +13,19 @@ LCDBitmapTable* m_sheet18;
 
 LCDBitmapTable* m_sheet48;
 
+LCDBitmapTable* m_sheetNavGuideTop;
+
+LCDBitmapTable* m_sheetNavGuideBot;
+
 LCDBitmap* m_bitmap16_zoom[ZOOM_LEVELS][SHEET16_SIZE];
 
 LCDBitmap* m_bitmap18_zoom[ZOOM_LEVELS][SHEET16_SIZE];
 
 LCDBitmap* m_bitmap48_zoom[ZOOM_LEVELS][SHEET48_SIZE];
+
+LCDBitmap* m_bitmapNavGuideTop_zoom[ZOOM_LEVELS][SHEETNAVGUIDE_SIZE];
+
+LCDBitmap* m_bitmapNavGuideBot_zoom[ZOOM_LEVELS][SHEETNAVGUIDE_SIZE];
 
 LCDBitmap* m_retirementNo[ZOOM_LEVELS];
 
@@ -149,6 +157,26 @@ LCDBitmap* getSprite48_byidx(uint32_t _idx, uint8_t _zoom) {
   return NULL;
 }
 
+LCDBitmap* getSpriteNavGuideTop(uint32_t _idx, uint8_t _zoom) {
+  if (_zoom == 1) {
+    return pd->graphics->getTableBitmap(m_sheetNavGuideTop, _idx);
+  } else if (_zoom < ZOOM_LEVELS) {
+    return m_bitmapNavGuideTop_zoom[_zoom][_idx];
+  }
+  pd->system->error("getSpriteNavGuideTop Error");
+  return NULL;
+}
+
+LCDBitmap* getSpriteNavGuideBot(uint32_t _idx, uint8_t _zoom) {
+  if (_zoom == 1) {
+    return pd->graphics->getTableBitmap(m_sheetNavGuideBot, _idx);
+  } else if (_zoom < ZOOM_LEVELS) {
+    return m_bitmapNavGuideBot_zoom[_zoom][_idx];
+  }
+  pd->system->error("getSpriteNavGuideBot Error");
+  return NULL;
+}
+
 // Note: Only works at zoom level 2
 void animateConveyor() {
   static int8_t tickSlow = 0, tickFast = 0;
@@ -270,6 +298,19 @@ void populateResizedSprites() {
       pd->graphics->drawScaledBitmap(original, 0, 0, zoom, zoom);
       pd->graphics->popContext();
     }
+    for (uint32_t i = 0; i < SHEETNAVGUIDE_SIZE; ++i) {
+      LCDBitmap* original = pd->graphics->getTableBitmap(m_sheetNavGuideTop, i);
+      m_bitmapNavGuideTop_zoom[zoom][i] = pd->graphics->newBitmap(TILE_PIX*3 * zoom, TILE_PIX*3 * zoom, kColorClear);
+      pd->graphics->pushContext(m_bitmapNavGuideTop_zoom[zoom][i]);
+      pd->graphics->drawScaledBitmap(original, 0, 0, zoom, zoom);
+      pd->graphics->popContext();
+      //
+      original = pd->graphics->getTableBitmap(m_sheetNavGuideBot, i);
+      m_bitmapNavGuideBot_zoom[zoom][i] = pd->graphics->newBitmap(TILE_PIX*3 * zoom, TILE_PIX*3 * zoom, kColorClear);
+      pd->graphics->pushContext(m_bitmapNavGuideBot_zoom[zoom][i]);
+      pd->graphics->drawScaledBitmap(original, 0, 0, zoom, zoom);
+      pd->graphics->popContext();
+    }
   }
 }
 
@@ -280,6 +321,8 @@ void initSprite() {
   m_sheet16 = loadImageTableAtPath("images/sheet16");
   m_sheet18 = loadImageTableAtPath("images/sheet18");
   m_sheet48 = loadImageTableAtPath("images/sheet48");
+  m_sheetNavGuideTop = loadImageTableAtPath("images/navGuideTop");
+  m_sheetNavGuideBot = loadImageTableAtPath("images/navGuideBottom");
   m_stickySelected = loadImageAtPath("images/selected");
   m_titleSelected = loadImageAtPath("images/titleSelected");
   m_settingsMenuSelected = loadImageAtPath("images/mainmenuSelected");

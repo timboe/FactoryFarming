@@ -366,7 +366,7 @@ void updateConveyorDirection(struct Building_t* _building, uint8_t _tickLength, 
 }
 
 
-bool canBePlacedConveyor(struct Location_t* _loc, enum kDir _dir, union kSubType _subType) {
+bool canBePlacedConveyor(const struct Location_t* _loc, enum kDir _dir, union kSubType _subType) {
   bool floor = false;
   struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
   if (t->m_tile < TOT_FLOOR_TILES_INC_PAVED) floor = true;
@@ -383,7 +383,7 @@ bool canBePlacedConveyor(struct Location_t* _loc, enum kDir _dir, union kSubType
   if (_loc->m_building == NULL || _loc->m_building->m_type == kConveyor) existingGood = true;
 
   if (_subType.conveyor == kTunnelIn) {
-    struct Location_t* tunnelOut = getTunnelOutLocation(_loc, _dir);
+    const struct Location_t* tunnelOut = getTunnelOutLocation(_loc, _dir);
     existingGood &= (tunnelOut->m_building == NULL || tunnelOut->m_building->m_type == kConveyor);
   }
 
@@ -393,7 +393,7 @@ bool canBePlacedConveyor(struct Location_t* _loc, enum kDir _dir, union kSubType
 }
 
 #define TUNNEL_HOPS 2
-struct Location_t* getTunnelOutLocation(struct Location_t* _in, enum kDir _dir) {
+struct Location_t* getTunnelOutLocation(const struct Location_t* _in, enum kDir _dir) {
   switch (_dir) {
     case SN: return getLocation(_in->m_x, _in->m_y - TUNNEL_HOPS); break;
     case WE: return getLocation(_in->m_x + TUNNEL_HOPS, _in->m_y); break;
@@ -404,7 +404,7 @@ struct Location_t* getTunnelOutLocation(struct Location_t* _in, enum kDir _dir) 
   return NULL;
 }
 
-struct Tile_t* getTunnelOutTile(struct Location_t* _in, enum kDir _dir) {
+struct Tile_t* getTunnelOutTile(const struct Location_t* _in, enum kDir _dir) {
   switch (_dir) {
     case SN: return getTile(_in->m_x, _in->m_y - TUNNEL_HOPS); break;
     case WE: return getTile(_in->m_x + TUNNEL_HOPS, _in->m_y); break;

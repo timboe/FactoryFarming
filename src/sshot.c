@@ -131,8 +131,8 @@ void initMap() {
 #define M_FULL 7
 
 void updateMap() {
-  const int16_t offX = (SCREEN_PIX_X/2) - ((TOT_TILES_X*MAP_PIX_PER_TILE)/2);
-  const int16_t offY = (SCREEN_PIX_Y/2) - ((TOT_TILES_Y*MAP_PIX_PER_TILE)/2);
+  const int16_t offX = (SCREEN_PIX_X/2) - ((TOT_TILES_X*MAP_PIX_PER_TILE)/2) - 1;
+  const int16_t offY = (SCREEN_PIX_Y/2) - ((TOT_TILES_Y*MAP_PIX_PER_TILE)/2) - 1;
   const struct Location_t* _loc = getPlayerLocation();
   pd->sprite->moveTo(m_mapPSprite, offX + ((_loc->m_x+1)*MAP_PIX_PER_TILE), offY + ((_loc->m_y+1)*MAP_PIX_PER_TILE));
 

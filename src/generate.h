@@ -60,7 +60,7 @@ int32_t getTile_idx(int32_t _x, int32_t _y);
 
 struct Tile_t* getTile(int32_t _x, int32_t _y);
 
-struct Tile_t* getTile_fromLocation(struct Location_t* _loc);
+struct Tile_t* getTile_fromLocation(const struct Location_t* _loc);
 
 void setTile(uint16_t _i, uint8_t _tileValue);
 
@@ -92,6 +92,8 @@ void doWetness(bool _forTitles);
 
 void doWetnessAroundLoc(struct Location_t* _loc);
 
+void updateNearestWater(void);
+
 bool tryRemoveObstruction(struct Location_t* _loc);
 
 enum kGroundWetness getWetness(uint8_t _value);
@@ -105,6 +107,10 @@ const char* toStringSoil(enum kGroundType _type);
 const char* getWorldName(enum kWorldType _type, bool _mask);
 
 void setWorldName(const char* _name);
+
+void findPlotCentres(void);
+
+bool setPatchArrow(const uint8_t _patchID, uint8_t* _topID);
 
 void initWorld(void);
 

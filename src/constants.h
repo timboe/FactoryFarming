@@ -91,7 +91,7 @@
 #define SHEET48_SIZE_Y 8
 #define SHEET48_SIZE (SHEET48_SIZE_X*SHEET48_SIZE_Y)
 
-
+#define SHEETNAVGUIDE_SIZE 9
 
 // Number of available floor sprites
 #define FLOOR_TYPES 6

@@ -93,10 +93,16 @@ struct Player_t{
   LCDBitmap* m_blueprintRadiusBitmap5x5[ZOOM_LEVELS]; // Index 0 not used - OWNED
   LCDBitmap* m_blueprintRadiusBitmap7x7[ZOOM_LEVELS]; // Index 0 not used - OWNED
   LCDBitmap* m_blueprintRadiusBitmap9x9[ZOOM_LEVELS]; // Index 0 not used - OWNED
+
+  LCDSprite* m_navGuideTop[ZOOM_LEVELS]; // Zoom Index 0 not used - OWNED
+  LCDSprite* m_navGuideBot[ZOOM_LEVELS]; // Zoom Index 0 not used - OWNED
+
   float m_vX;
   float m_vY;
   uint8_t m_infiniteMoney;
   uint16_t m_animID;
+  bool m_navHint; // If we are currently displaying a navigation hint
+  uint8_t m_navHintTopID; // Needed to know the appropraite offset
 };
 
 struct Player_t* getPlayer(void);

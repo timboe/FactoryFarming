@@ -194,7 +194,7 @@ bool doPlaceLandfill(struct Location_t* _loc) {
   return true;
 }
 
-bool canBePlacedUtility(struct Location_t* _loc, union kSubType _subType) {
+bool canBePlacedUtility(const struct Location_t* _loc, union kSubType _subType) {
 
   if (_subType.utility == kRetirement) {
     //TODO fix this bug

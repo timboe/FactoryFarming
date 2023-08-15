@@ -227,6 +227,8 @@ bool doNewWorld() {
 
     setChunkBackgrounds(/*for title = */ false);
 
+    findPlotCentres();
+
     setGameMode(kWanderMode);
 
     populateMenuGame(); // Save, Load, Menu
@@ -630,6 +632,7 @@ bool doLoad() {
       conveyorUpdateSprite(buildingManagerGetByIndex(i));
     } 
 
+    findPlotCentres();
     addObstacles();
     doWetness(/*for titles = */ false);
     setChunkBackgrounds(/*for title = */ false);

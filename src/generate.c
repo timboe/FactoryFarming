@@ -29,7 +29,6 @@ struct Tile_t* m_tiles = NULL;
 
 const int32_t SIZE_GENERATE = TOT_TILES * sizeof(struct Tile_t);
 
-
 #define SPAWN_START_X ((TOT_TILES_X/2) + 6)
 #define SPAWN_Y ((TOT_TILES_Y/2) + TILES_PER_CHUNK_Y)
 #define SPAWN_END_X ((TOT_TILES_X/2) + 42)
@@ -40,6 +39,8 @@ const int32_t SIZE_GENERATE = TOT_TILES * sizeof(struct Tile_t);
 
 #define SEASTART (SPAWN_Y + SPAWN_RADIUS + 2)
 #define SEAEND (SEASTART + (TILES_PER_CHUNK_Y*3))
+
+int16_t m_plot1_x = 0, m_plot1_y = 0, m_plot2_x = 0, m_plot2_y = 0, m_water_x = 0, m_water_y = 0;
  
 void generateSpriteSetup(struct Chunk_t* _chunk);
 
@@ -75,7 +76,13 @@ void  doRiverCrossings(void);
 
 enum kGroundType getGroundType(uint8_t _tile); // Make this private as faster to use the cached version
 
+uint8_t distanceFromWater_short(const int32_t _x, const int32_t _y);
+
+uint16_t distanceFromWaterBody_wide(const int32_t _x, const int32_t _y, const int32_t _searchMax, int16_t* _retX, int16_t* _retY);
+
 bool isRiverTile(const uint8_t tValue);
+
+void findPlotCentre(const enum kGroundType _gt, int16_t* _x, int16_t* _y);
 
 /// ///
 
@@ -101,7 +108,7 @@ struct Tile_t* getTile(int32_t _x, int32_t _y) {
   return &m_tiles[ getTile_idx(_x, _y) ];
 }
 
-struct Tile_t* getTile_fromLocation(struct Location_t* _loc) {
+struct Tile_t* getTile_fromLocation(const struct Location_t* _loc) {
   return getTile(_loc->m_x, _loc->m_y);
 }
 
@@ -135,6 +142,190 @@ float pointDist(int32_t _x, int32_t _y, int32_t _x1, int32_t _y1, int32_t _x2, i
   int32_t dx = _x - xx;
   int32_t dy = _y - yy;
   return sqrtf(dx * dx + dy * dy);
+}
+
+void findPlotCentre(const enum kGroundType _gt, int16_t* _x, int16_t* _y) {
+  uint16_t l = 0, r = 0, t = 0, b = 0;
+  // Find left
+  for (int32_t x = 0; x < TOT_TILES_X; ++x) {
+    for (int32_t y = 0; y < TOT_TILES_Y; ++y) {
+      if (getTile(x,y)->m_groundType == _gt) l = x;
+      if (l) break;
+    }
+    if (l) break; 
+  }
+  // Find right
+  for (int32_t x = TOT_TILES_X-1; x >= 0; --x) {
+    for (int32_t y = 0; y < TOT_TILES_Y; ++y) {
+      if (getTile(x,y)->m_groundType == _gt) r = x;
+      if (r) break;
+    }
+    if (r) break; 
+  }
+  // Find top
+  for (int32_t y = 0; y < TOT_TILES_Y; ++y) {
+    for (int32_t x = 0; x < TOT_TILES_X; ++x) {
+      if (getTile(x,y)->m_groundType == _gt) t = y;
+      if (t) break;
+    }
+    if (t) break; 
+  }
+  // Find bottom
+  for (int32_t y = TOT_TILES_Y-1; y >= 0; --y) {
+    for (int32_t x = 0; x < TOT_TILES_X; ++x) {
+      if (getTile(x,y)->m_groundType == _gt) b = y;
+      if (b) break;
+    }
+    if (b) break; 
+  }
+  *_x = (l + r) / 2;
+  *_y = (t + b) / 2;
+}
+
+void findPlotCentres() {
+  findPlotCentre(getWorldGround(getSlot(), 1), &m_plot1_x, &m_plot1_y);
+  findPlotCentre(getWorldGround(getSlot(), 2), &m_plot2_x, &m_plot2_y);
+  #ifdef DEV
+  pd->system->logToConsole("Plot 1 centre %i %i", m_plot1_x, m_plot1_y);
+  pd->system->logToConsole("Plot 2 centre %i %i", m_plot2_x, m_plot2_y);
+  #endif
+}
+
+#define MIN_POINTING_DISTANCE (TILES_PER_CHUNK_Y * TILE_PIX)
+bool setPatchArrow(const uint8_t _patchID, uint8_t* _topID) {
+  int16_t x = 0, y = 0;
+  switch (_patchID) {
+    case 1: x = m_plot1_x * TILE_PIX; y = m_plot1_y * TILE_PIX; break;
+    case 2: x = m_plot2_x * TILE_PIX; y = m_plot2_y * TILE_PIX; break;
+    case 255: x = m_water_x * TILE_PIX; y = m_water_y * TILE_PIX; break; 
+    default: pd->system->error("setPatchArrow expects 1 (patch 1), 2 (patch 2) or 255 (water) got %i",_patchID);
+  }
+
+  // Special case: if ID is 255 (looking for water) and x and y are 1 - we cannot find any water!
+  if (_patchID == 255 && !x && !y) {
+    *_topID = 8; // Cannot place in this plot
+    return true;
+  }
+
+  const int32_t px = getPlayer()->m_pix_x, py = getPlayer()->m_pix_y;
+  int32_t dx = x - px, dy = y - py; 
+  float dist = sqrtf( dx*dx + dy*dy );
+
+  // The world wraps, so check if any of the 8 mirror patches are closer
+  int32_t bestdX = dx, bestdY = dy;
+
+  dx = (x + TOT_WORLD_PIX_X) - px;
+  dy = (y + 0) - py;
+  if (sqrtf( dx*dx + dy*dy ) < dist) {
+    #ifdef DEV
+    pd->system->logToConsole("setPatchArrow: best updated - E");
+    #endif
+    dist = sqrtf( dx*dx + dy*dy );
+    bestdX = (x + TOT_WORLD_PIX_X) - px;
+    bestdY = (y + 0) - py;
+  }
+
+  dx = (x - TOT_WORLD_PIX_X) - px;
+  dy = (y + 0) - py;
+  if (sqrtf( dx*dx + dy*dy ) < dist) {
+    #ifdef DEV
+    pd->system->logToConsole("setPatchArrow: best updated - W");
+    #endif
+    dist = sqrtf( dx*dx + dy*dy );
+    bestdX = (x - TOT_WORLD_PIX_X) - px;
+    bestdY = (y + 0) - py;
+  }
+
+  dx = (x + 0) - px;
+  dy = (y + TOT_WORLD_PIX_Y) - py;
+  if (sqrtf( dx*dx + dy*dy ) < dist) {
+    #ifdef DEV
+    pd->system->logToConsole("setPatchArrow: best updated - S");
+    #endif
+    dist = sqrtf( dx*dx + dy*dy );
+    bestdX = (x + 0) - px;
+    bestdY = y + TOT_WORLD_PIX_Y;
+  }
+
+  dx = (x + 0) - px;
+  dy = (y - TOT_WORLD_PIX_Y) - py;
+  if (sqrtf( dx*dx + dy*dy ) < dist) {
+    #ifdef DEV
+    pd->system->logToConsole("setPatchArrow: best updated - N");
+    #endif
+    dist = sqrtf( dx*dx + dy*dy );
+    bestdX = (x + 0) - px;
+    bestdY = (y - TOT_WORLD_PIX_Y) - py;
+  }
+
+  //
+
+  dx = (x + TOT_WORLD_PIX_X) - px;
+  dy = (y + TOT_WORLD_PIX_Y) - py;
+  if (sqrtf( dx*dx + dy*dy ) < dist) {
+    #ifdef DEV
+    pd->system->logToConsole("setPatchArrow: best updated - SE");
+    #endif
+    dist = sqrtf( dx*dx + dy*dy );
+    bestdX = (x + TOT_WORLD_PIX_X) - px;
+    bestdY = (y + TOT_WORLD_PIX_Y) - py;
+  }
+
+  dx = (x + TOT_WORLD_PIX_X) - px;
+  dy = (y - TOT_WORLD_PIX_Y) - py;
+  if (sqrtf( dx*dx + dy*dy ) < dist) {
+    #ifdef DEV
+    pd->system->logToConsole("setPatchArrow: best updated - NE");
+    #endif
+    dist = sqrtf( dx*dx + dy*dy );
+    bestdX = (x + TOT_WORLD_PIX_X) - px;
+    bestdY = (y - TOT_WORLD_PIX_Y) - py;
+  }
+
+  dx = (x - TOT_WORLD_PIX_X) - px;
+  dy = (y - TOT_WORLD_PIX_Y) - py;
+  if (sqrtf( dx*dx + dy*dy ) < dist) {
+    #ifdef DEV
+    pd->system->logToConsole("setPatchArrow: best updated - NW");
+    #endif
+    dist = sqrtf( dx*dx + dy*dy );
+    bestdX = (x - TOT_WORLD_PIX_X) - px;
+    bestdY = (y - TOT_WORLD_PIX_Y) - py;
+  }
+
+  dx = (x - TOT_WORLD_PIX_X) - px;
+  dy = (y + TOT_WORLD_PIX_Y) - py;
+  if (sqrtf( dx*dx + dy*dy ) < dist) {
+    #ifdef DEV
+    pd->system->logToConsole("setPatchArrow: best updated - SW");
+    #endif
+    dist = sqrtf( dx*dx + dy*dy );
+    bestdX = (x - TOT_WORLD_PIX_X) - px;
+    bestdY = (y + TOT_WORLD_PIX_Y) - py;
+  }
+
+  const float a = ((180.0f / (float)M_PI) * (float)atan2(bestdX, -bestdY)) + 180.0f;
+  const int32_t id = (((int32_t)(a / 45.0f)) + 4) % 8; // Divide into 8-way pointing
+  *_topID = id; 
+
+  #ifdef DEV
+  pd->system->logToConsole("setPatchArrow: patch is %f away, heading %f (%i)", dist, a, id);
+  #endif
+  return (dist > MIN_POINTING_DISTANCE);
+}
+
+void updateNearestWater() {
+  const struct Location_t* pl = getPlayerLocation();
+  m_water_x = 0;
+  m_water_y = 0;
+  const uint16_t dist = distanceFromWaterBody_wide(pl->m_x, pl->m_y, TOT_TILES_X/2, &m_water_x, &m_water_y);
+  if (m_water_x < 0) m_water_x += TOT_TILES_X;
+  else if (m_water_x >= TOT_TILES_X) m_water_x -= TOT_TILES_X;
+  if (m_water_y < 0) m_water_y += TOT_TILES_Y;
+  else if (m_water_y >= TOT_TILES_Y) m_water_y -= TOT_TILES_Y;
+  #ifdef DEV
+  pd->system->logToConsole("updateNearestWater: Water is at %i %i", m_water_x, m_water_y);
+  #endif
 }
 
 void renderChunkBackgroundImageAround(struct Chunk_t* _chunk) {
@@ -510,6 +701,12 @@ bool isWaterTile(int32_t _x, int32_t _y) {
   return isWaterTile_ptr(getTile(_x, _y));
 }
 
+// Note: Explicitly excludes rivers
+bool isLakeSeaTile(int32_t _x, int32_t _y) {
+  const struct Tile_t* t = getTile(_x, _y);
+  return (t->m_groundType == kLake || t->m_groundType == kOcean);
+}
+
 bool isRiverTile(const uint8_t tValue) {
   if (tValue >= SPRITE16_ID(4, 11) && tValue < SPRITE16_ID(8, 11)) return true;
   if (tValue >= SPRITE16_ID(4, 12) && tValue < SPRITE16_ID(8, 12)) return true;
@@ -519,10 +716,27 @@ bool isRiverTile(const uint8_t tValue) {
   return false;
 }
 
-uint8_t distanceFromWater(int32_t _x, int32_t _y) {
+uint16_t distanceFromWaterBody_wide(const int32_t _x, const int32_t _y, const int32_t _searchMax, int16_t* _retX, int16_t* _retY) {
+  uint8_t r = 0;
+  if (isLakeSeaTile(_x, _y)) { *_retX = _x; *_retY = _y - r; return 0; }
+  while (++r < _searchMax) {
+    for (int32_t x = _x - r; x < _x + r + 1; ++x) {
+      if (isLakeSeaTile(x, _y - r)) { *_retX = x; *_retY = _y - r; return r; }
+      if (isLakeSeaTile(x, _y + r)) { *_retX = x; *_retY = _y + r; return r; }
+    }
+    for (int32_t y = _y - r; y < _y + r + 1; ++y) {
+      if (isLakeSeaTile(_x + r, y)) { *_retX = _x + r; *_retY = y; return r; }
+      if (isLakeSeaTile(_x - r, y)) { *_retX = _x - r; *_retY = y; return r; }
+    }
+  }
+  return 65535;
+}
+
+#define SEARCH_MAX 16
+uint8_t distanceFromWater_short(const int32_t _x, const int32_t _y) {
   uint8_t r = 0;
   if (isWaterTile(_x, _y)) return 0;
-  while (++r < 16) {
+  while (++r < SEARCH_MAX) {
     for (int32_t x = _x - r; x < _x + r + 1; ++x) {
       if (isWaterTile(x, _y - r)) return r;
       if (isWaterTile(x, _y + r)) return r;
@@ -540,15 +754,16 @@ void doWetness(bool _forTitles) {
   const uint16_t maxX = (_forTitles ? TILES_PER_CHUNK_X * 3 : TOT_TILES_X);
   for (int32_t x = 0; x < maxX; ++x) {
     for (int32_t y = 0; y < maxY; ++y) {
-      getTile(x, y)->m_wetness = distanceFromWater(x,y);
+      getTile(x, y)->m_wetness = distanceFromWater_short(x,y);
     }
   }
 }
 
 void doWetnessAroundLoc(struct Location_t* _loc) {
+  uint16_t dummy;
   for (int32_t x = _loc->m_x - TILES_PER_CHUNK_X; x < _loc->m_x + TILES_PER_CHUNK_X; ++x) {
     for (int32_t y = _loc->m_y - TILES_PER_CHUNK_Y; y < _loc->m_y + TILES_PER_CHUNK_Y; ++y) {
-      getTile(x, y)->m_wetness = distanceFromWater(x,y);
+      getTile(x, y)->m_wetness = distanceFromWater_short(x,y);
     }
   }
 }

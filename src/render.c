@@ -150,6 +150,10 @@ void updateRenderList() {
   pd->sprite->addSprite(player->m_sprite[zoom]);
   pd->sprite->addSprite(player->m_blueprint[zoom]);
   pd->sprite->addSprite(player->m_blueprintRadius[zoom]);
+  if (player->m_navHint) {
+    pd->sprite->addSprite(player->m_navGuideTop[zoom]);
+    pd->sprite->addSprite(player->m_navGuideBot[zoom]);
+  }
 
   const enum kSaveLoadRequest io = currentIOAction();
 

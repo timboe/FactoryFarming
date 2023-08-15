@@ -438,7 +438,9 @@ void updateUI(int _fc) {
     // Flashing blueprint 
     const bool flashOn = _fc % (TICK_FREQUENCY/2) < TICK_FREQUENCY/4; 
     updateBlueprint(!flashOn);
-    pd->sprite->setVisible(getPlayer()->m_blueprint[getZoom()], flashOn);
+    const struct Player_t* p = getPlayer();
+    pd->sprite->setVisible(p->m_blueprint[getZoom()], flashOn);
+    if (p->m_navHint) pd->sprite->setVisible(p->m_navGuideTop[getZoom()], flashOn);
   }
   if ((_fc + TICK_OFFSET_SPRITELIST) % FAR_TICK_FREQUENCY == 0) {
     // Update bottom ticker
@@ -549,13 +551,16 @@ void updateBlueprint(bool _beep) {
   pd->sprite->setDrawMode(bp, kDrawModeCopy);
 
   if (gm == kPickMode || gm == kDestroyMode) {
+
     pd->sprite->setImage(bp, getSprite16_byidx(0, zoom), kBitmapUnflipped); 
     switch (getRadius()) {
       case 1: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap1x1[zoom], kBitmapUnflipped); break;
       case 3: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap3x3[zoom], kBitmapUnflipped); break;
       case 5: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap5x5[zoom], kBitmapUnflipped); break;
     }
+
   } else if (gm == kPlaceMode) { // Of conveyors, cargo or utility
+
     if (selectedCat == kUICatUtility && (selectedID == kConveyorGrease || selectedID == kObstructionRemover)) {
       switch (getRadius()) {
         case 1: pd->sprite->setImage(bpRadius, player->m_blueprintRadiusBitmap1x1[zoom], kBitmapUnflipped); break;
@@ -598,8 +603,8 @@ void updateBlueprint(bool _beep) {
       pd->sprite->setImage(bp, getSprite16_byidx( getPlantSmilieSprite(gb+wb), zoom), kBitmapUnflipped);
     } else {
       if (_beep) {
-        // Don't beep if it's another plant - this is annoying
-        if ( ! (pl->m_building && pl->m_building->m_type == kPlant) ) {
+        // Don't beep if it's another plant of the same type - this is annoying
+        if ( ! (pl->m_building && pl->m_building->m_type == kPlant && pl->m_building->m_subType.plant == selectedID) ) {
           sfx(kSfxNo);
         }
       }
@@ -639,6 +644,23 @@ void updateBlueprint(bool _beep) {
     pd->sprite->setImage(bpRadius, getSprite16_byidx(0, zoom), kBitmapUnflipped); 
 
   }
+
+  ////
+
+  // Check if we need to give a navigation hint
+  uint8_t _bottomID = 0, _topID = 0;
+  player->m_navHint = needsNavHint(&_bottomID, &_topID);
+  if (player->m_navHint) {
+    player->m_navHintTopID = _topID; // Needed to place the 
+    pd->sprite->setImage(player->m_navGuideTop[zoom], getSpriteNavGuideTop(_topID, zoom), kBitmapUnflipped);
+    pd->sprite->setImage(player->m_navGuideBot[zoom], getSpriteNavGuideBot(_bottomID, zoom), kBitmapUnflipped);
+    pd->sprite->setVisible(player->m_navGuideTop[zoom], 1);
+    pd->sprite->setVisible(player->m_navGuideBot[zoom], 1);
+  } else {
+    pd->sprite->setVisible(player->m_navGuideTop[zoom], 0);
+    pd->sprite->setVisible(player->m_navGuideBot[zoom], 0);
+  }
+
 }
 
 void addUIToSpriteList() {

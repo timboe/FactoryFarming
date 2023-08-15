@@ -112,8 +112,8 @@ void resetMapCursor() {
 }
 
 void updateMapCursor() {
-  const int16_t offX = (SCREEN_PIX_X/2) - ((TOT_TILES_X*MAP_PIX_PER_TILE)/2);
-  const int16_t offY = (SCREEN_PIX_Y/2) - ((TOT_TILES_Y*MAP_PIX_PER_TILE)/2);
+  const int16_t offX = (SCREEN_PIX_X/2) - ((TOT_TILES_X*MAP_PIX_PER_TILE)/2) - 1;
+  const int16_t offY = (SCREEN_PIX_Y/2) - ((TOT_TILES_Y*MAP_PIX_PER_TILE)/2) - 1;
   pd->sprite->moveTo(getMapCursor(), offX + ((m_mapCursor_x+1)*MAP_PIX_PER_TILE), offY + ((m_mapCursor_y+1)*MAP_PIX_PER_TILE));
 }
 

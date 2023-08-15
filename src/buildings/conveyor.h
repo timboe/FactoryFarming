@@ -8,11 +8,11 @@ void assignNeighborsConveyor(struct Building_t* _building);
 
 void buildingSetupConveyor(struct Building_t* _building);
 
-bool canBePlacedConveyor(struct Location_t* _loc, enum kDir _dir, union kSubType _subType);
+bool canBePlacedConveyor(const struct Location_t* _loc, enum kDir _dir, union kSubType _subType);
 
-struct Location_t* getTunnelOutLocation(struct Location_t* _in, enum kDir _dir);
+struct Location_t* getTunnelOutLocation(const struct Location_t* _in, enum kDir _dir);
 
-struct Tile_t* getTunnelOutTile(struct Location_t* _in, enum kDir _dir);
+struct Tile_t* getTunnelOutTile(const struct Location_t* _in, enum kDir _dir);
 
 void upgradeConveyor(struct Building_t* _building, bool _forFree);
 

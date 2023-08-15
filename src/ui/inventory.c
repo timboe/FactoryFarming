@@ -6,9 +6,12 @@
 #include "../input.h"
 #include "../sound.h"
 #include "../sshot.h"
+#include "../io.h"
 #include "../generate.h"
 #include "../buildings/conveyor.h"
 #include "../buildings/utility.h"
+#include "../buildings/plant.h"
+#include "../buildings/extractor.h"
 
 bool doConveyorUpgrade(struct Location_t* _loc);
 
@@ -32,9 +35,13 @@ void doInventoryClick() {
       case kToolMap:; getMap(true); return setGameMode(kMenuMap);
       case kNToolTypes:; break;
     } break;
-    case kUICatPlant: return setGameMode(kPlantMode);
+    case kUICatPlant: 
+      if (selectedID == kSeaweedPlant || selectedID == kSeaCucumberPlant) updateNearestWater();
+      return setGameMode(kPlantMode);
     case kUICatConv: return setGameMode(kPlaceMode); 
-    case kUICatExtractor: return setGameMode(kBuildMode);
+    case kUICatExtractor:
+      if (selectedID == kPump) updateNearestWater();
+      return setGameMode(kBuildMode);
     case kUICatFactory: return setGameMode(kBuildMode);
     case kUICatUtility: return setGameMode(kPlaceMode);
     case kUICatCargo: return setGameMode(kPlaceMode); 
@@ -89,6 +96,134 @@ bool isInRangeOfCarrotPlant(struct Location_t* _placeLocation) {
   }
   return false;
 }
+
+bool needsNavHint(uint8_t* _bottomID, uint8_t* _topID) {
+  const enum kGameMode gm = getGameMode();
+  if (!(gm == kPlantMode || gm == kBuildMode || gm == kPlaceMode)) return false;
+  //
+  const enum kUICat selectedCat = getUIContentCategory();
+  const uint16_t selectedID =  getUIContentID();
+  if (selectedCat == kUICatExtractor) {
+
+    // If the extractor likes it here - then no need to hint
+    const struct Location_t* pl = getPlayerLocation();
+    const struct Tile_t* pt = getTile_fromLocation(pl);
+    // Try instead to base it only on the underlying tile
+    //const bool canPlace = canBePlacedExtractor(pl, (union kSubType) {.extractor = selectedID});
+    //if (canPlace) return false;
+
+    if (selectedID == kChalkQuarry) {
+      *_bottomID = kChalkyGround;
+      if (pt->m_groundType == kChalkyGround) {
+        return false; // Standing on correct ground already
+      } else if (getWorldGround(getSlot(), 0) == kChalkyGround) {
+        return false; // Main ground type is chalky
+      } else if (getWorldGround(getSlot(), 1) == kChalkyGround) {
+        return setPatchArrow(1, _topID); // Patch 1 is chalky - display hint
+      } else if (getWorldGround(getSlot(), 2) == kChalkyGround) {
+        return setPatchArrow(2, _topID); // Patch 2 is chalky - display hint
+      } else {
+        *_topID = 8; // Can never build on this plot
+        return true;
+      }
+    //////////////////////////////////////////////
+    } else if (selectedID == kSaltMine) {
+      *_bottomID = kPeatyGround;
+      if (pt->m_groundType == kPeatyGround) {
+        return false; // Standing on correct ground already
+      } else if (getWorldGround(getSlot(), 0) == kPeatyGround) {
+        return false; // Main ground type is peaty
+      } else if (getWorldGround(getSlot(), 1) == kPeatyGround) {
+        return setPatchArrow(1, _topID); // Patch 1 is peaty - display hint
+      } else if (getWorldGround(getSlot(), 2) == kPeatyGround) {
+        return setPatchArrow(2, _topID); // Patch 2 is peaty - display hint
+      } else {
+        *_topID = 8; // Can never build on this plot
+        return true;
+      }
+    //////////////////////////////////////////////
+    } else if (selectedID == kPump) {
+      *_bottomID = 6;  // Special - this is the water hint sprite
+      if (pt->m_groundType == kLake || pt->m_groundType == kRiver || pt->m_groundType == kOcean) {
+        return false; // Standing on correct water already
+      } else if (getSlot() == kSandWorld) {
+        *_topID = 8; // Can never build on this plot
+        return true;
+      } else {
+        return setPatchArrow(255, _topID); // Patch=255 is used to display the hint towards water
+      }
+    }
+  }
+
+  // ############################################
+
+  if (selectedCat == kUICatPlant) {
+    const enum kGroundType gt = PDesc[selectedID].soil;
+    *_bottomID = gt;
+
+    const struct Location_t* pl = getPlayerLocation();
+    const struct Tile_t* pt = getTile_fromLocation(pl);
+
+    // If the unerlying tile is correct - then no hint
+    if (pt->m_groundType == PDesc[selectedID].soil) return false;
+
+    // If the plant likes it here - then no need to hint
+    const bool canPlace = true; // Trying to base it purely on the tile //canBePlacedPlant(pl, (union kSubType) {.plant = selectedID});
+    const int8_t gb = getGroundBonus( PDesc[selectedID].soil, (enum kGroundType) pt->m_groundType );
+    const int8_t wb = getWaterBonus( PDesc[selectedID].wetness, getWetness( pt->m_wetness ) );
+    if (gb+wb >= 0 && canPlace) return false; // -2 no, -1 hate, 0 neutral, 1 OK, 2 love
+
+    //////////////////////////////////////////////
+    // Special case - lake
+    if (gt == kLake) {
+      *_bottomID = 6; // Special - this is the water hint sprite
+      if (getSlot() == kSandWorld) {
+        *_topID = 8; // Can never build on this plot
+        return true;
+      } else {
+        return setPatchArrow(255, _topID); // Patch=255 is used to display the hint towards water
+      }
+    }
+    //////////////////////////////////////////////
+    // Special case - ocean
+    if (gt == kOcean) {
+      *_bottomID = 6; // Special - this is the water hint sprite
+      if (getSlot() != kWaterWorld) {
+        *_topID = 8; // Can never build on this plot
+        return true;
+      } else {
+        return setPatchArrow(255, _topID); // Patch=255 is used to display the hint towards water
+      }
+    }
+    //////////////////////////////////////////////
+    // Other plants
+    if (getWorldGround(getSlot(), 0) >= gt) { // NOTE: We use >= here, as later soils support earlier
+      return false; // Main ground type will grow 
+    } else if (getWorldGround(getSlot(), 1) >= gt) {
+      return setPatchArrow(1, _topID);
+      //*_topID = 0; // Display hint to patch 1
+      //return true;
+    } else if (getWorldGround(getSlot(), 2) >= gt) {
+      return setPatchArrow(2, _topID);
+      //*_topID = 0; // Display hint to patch 2
+      //return true;
+    } else {
+      *_topID = 8; // Can never build on this plot
+      return true;
+    }
+  }
+
+  // ############################################
+
+  if (selectedCat == kUICatUtility && selectedID == kRetirement && getSlot() != kTranquilWorld) {
+    *_bottomID = kLoamyGround;
+    *_topID = 8; // Can never build on this plot
+    return true;
+  }
+
+  return false;
+}
+
 
 void doPlace() {
   const enum kUICat selectedCat = getUIContentCategory();

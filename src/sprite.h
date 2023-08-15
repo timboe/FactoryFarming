@@ -29,6 +29,10 @@ LCDBitmap* getSprite18(uint32_t _x, uint32_t _y, uint8_t _zoom);
 
 LCDBitmap* getSprite18_byidx(uint32_t _idx, uint8_t _zoom);
 
+LCDBitmap* getSpriteNavGuideTop(uint32_t _idx, uint8_t _zoom);
+
+LCDBitmap* getSpriteNavGuideBot(uint32_t _idx, uint8_t _zoom);
+
 LCDBitmap* getSprite2(uint32_t _id);
 
 LCDBitmap* getSprite6(uint32_t _id);

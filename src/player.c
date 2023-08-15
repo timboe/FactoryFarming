@@ -514,6 +514,23 @@ void movePlayer(bool _forceUpdate) {
     pd->sprite->moveTo(m_player.m_blueprintRadius[zoom], bpX, bpY);
   }
 
+  if (m_player.m_navHint) {
+    int32_t bpX = m_player.m_pix_x, bpY = m_player.m_pix_y;
+    #define HINT_D ((TILE_PIX*3)/2) 
+    switch (m_player.m_navHintTopID) {
+      case 0: case 8: bpY -= TILE_PIX*3*zoom; break;
+      case 1: bpX += HINT_D*zoom; bpY -= HINT_D*zoom; break;
+      case 2: bpX += HINT_D*zoom; break;
+      case 3: bpX += HINT_D*zoom; bpY += HINT_D*zoom; break;
+      case 4: bpY += HINT_D*zoom; break;
+      case 5: bpX -= HINT_D*zoom; bpY += HINT_D*zoom; break;
+      case 6: bpX -= HINT_D*zoom; break;
+      case 7: bpX -= HINT_D*zoom; bpY -= HINT_D*zoom; break;
+    }
+    pd->sprite->moveTo(m_player.m_navGuideTop[zoom], bpX, bpY);
+    pd->sprite->moveTo(m_player.m_navGuideBot[zoom], bpX, bpY);
+  }
+
 }
 
 bool modMoney(int32_t _amount) {
@@ -557,8 +574,8 @@ SpriteCollisionResponseType playerLCDSpriteCollisionFilterProc(LCDSprite* _playe
 void playerSpriteSetup() {
   for (uint32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
     m_player.m_sprite[zoom] = pd->sprite->newSprite();
-    PDRect pBound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = 18*zoom};
-    PDRect cBound = {.x = (COLLISION_OFFSET_SMALL/2)*zoom, .y = (COLLISION_OFFSET_SMALL/2)*zoom, .width = (TILE_PIX - COLLISION_OFFSET_SMALL)*zoom, .height = (TILE_PIX - COLLISION_OFFSET_SMALL)*zoom};
+    const PDRect pBound = {.x = 0, .y = 0, .width = TILE_PIX*zoom, .height = 18*zoom};
+    const PDRect cBound = {.x = (COLLISION_OFFSET_SMALL/2)*zoom, .y = (COLLISION_OFFSET_SMALL/2)*zoom, .width = (TILE_PIX - COLLISION_OFFSET_SMALL)*zoom, .height = (TILE_PIX - COLLISION_OFFSET_SMALL)*zoom};
     pd->sprite->setBounds(m_player.m_sprite[zoom], pBound);
     pd->sprite->setImage(m_player.m_sprite[zoom], getSprite18(0, 3, zoom), kBitmapUnflipped);
     pd->sprite->setCollideRect(m_player.m_sprite[zoom], cBound);
@@ -628,6 +645,17 @@ void playerSpriteSetup() {
     pd->sprite->setBounds(m_player.m_blueprintRadius[zoom], pBound);
     pd->sprite->setImage(m_player.m_blueprintRadius[zoom], m_player.m_blueprintRadiusBitmap3x3[zoom], kBitmapUnflipped);
     pd->sprite->setZIndex(m_player.m_blueprintRadius[zoom], Z_INDEX_BLUEPRINT);
+
+    const PDRect nBound = {.x = 0, .y = 0, .width = TILE_PIX*3*zoom, .height = TILE_PIX*3*zoom};
+    m_player.m_navGuideTop[zoom] = pd->sprite->newSprite();
+    pd->sprite->setBounds(m_player.m_navGuideTop[zoom], nBound);
+    pd->sprite->setImage(m_player.m_navGuideTop[zoom], getSpriteNavGuideTop(0, zoom), kBitmapUnflipped);
+    pd->sprite->setZIndex(m_player.m_navGuideTop[zoom], Z_INDEX_UI_TT);
+
+    m_player.m_navGuideBot[zoom] = pd->sprite->newSprite();
+    pd->sprite->setBounds(m_player.m_navGuideBot[zoom], nBound);
+    pd->sprite->setImage(m_player.m_navGuideBot[zoom], getSpriteNavGuideBot(0, zoom), kBitmapUnflipped);
+    pd->sprite->setZIndex(m_player.m_navGuideBot[zoom], Z_INDEX_UI_T);
   }
 }
 

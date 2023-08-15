@@ -7,6 +7,8 @@
 #include "constants.h"
 #include "localisation.h"
 
+#define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
+
 // Directions
 enum kDir{SN, WE, NS, EW, kDirN};
 

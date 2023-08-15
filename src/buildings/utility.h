@@ -8,7 +8,7 @@ void assignNeighborsUtility(struct Building_t* _building);
 
 void buildingSetupUtility(struct Building_t* _building);
 
-bool canBePlacedUtility(struct Location_t* _loc, union kSubType _subType);
+bool canBePlacedUtility(const struct Location_t* _loc, union kSubType _subType);
 
 void drawUIInspectUtility(struct Building_t* _building);
 
