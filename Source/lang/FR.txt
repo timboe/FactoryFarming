@@ -89,7 +89,7 @@ Usine de Poudre de Protéines
 Chocolaterie
 Usine de Tourte à la Viande
 Usine de Glutamate de Monosodium
-Usine de Dinner de Télévision
+Usine de Dîner de Télévision
 Usine de Gâteaux au Chocolat
 Usine de Poudre de Caféine
 Usine de Boissons Énergisantes
@@ -181,7 +181,7 @@ Tourtes à la Viande
 Tourte à la Viande
 G.M.S.
 G.M.S.
-Dîners Télévisé
+Dîners Télévisés
 Dîner Télévisé
 Gâteaux
 Gâteau
@@ -193,8 +193,8 @@ Caféine
 Caféine
 Boissons Énergisantes
 Boisson Énergisante
-Juses Rave'
-'Jus Rave'
+Jus de Fête
+Jus de Fête
 Pilules Guilleret
 Pilules Guilleret
 Bambous
@@ -203,7 +203,7 @@ Emballage
 Emballage
 Desserts
 Dessert
-Forfaits Traiteur
+Forfaits Traiteurs
 Forfait Traiteur
 Foo Young
 Foo Young
@@ -295,7 +295,7 @@ Inventaire
 Inspecter
 Déconstruction
 Nouvelle Récolte!
-Nouvaue Bande Transp.!
+Nouvelle Bande Transp.!
 Nouveau Extracteur!
 Nouvelle Usine!
 Nouvel Utilitaire!
@@ -305,7 +305,7 @@ Végétaux
 Végétau
 Transporteuses
 Transporteuse
-Extracteures
+Extracteurs
 Extracteur
 Usines
 Usine
@@ -329,7 +329,7 @@ CHARGEMENT
 %i: Nouveau jeu
 Charger la Démo
 %i: Continue
--- Démo Technologique de L'agriculture Industriel --
+-- Démo Technologique de L'agriculture Industrielle --
 Regardez autour de cet exemple d'usine. Vous
 trouverez des installations jusqu'au niveau
 technologique 3. Le jeu complet va jusqu'au niveau 7.
@@ -507,7 +507,7 @@ Vermifuge
 Insecticides
 Acide Glutamique
 Sodium
-Glutimate
+Glutamate
 Monosodique
 Exigences:
 Solvant
@@ -530,7 +530,7 @@ Temps de Croissance: %is
 Récolte pour pousser
 Temps Restant: %is
 Dépenser de l'argent pour acheter de nouvelles
-cultures, transporteuses, extracteures, usines et 
+cultures, transporteuses, extracteurs, usines et 
 articles de services publics.
      
 Vendez des marchandises à partir de votre inventaire
@@ -555,10 +555,10 @@ Peut-être que cela deviendra important plus tard?
      
 La vitesse de déplacement est améliorée sur l'allée.
 Une clôture charmante.
-Votre petit maison de retraite confortable.
+Votre petite maison de retraite confortable.
 Placez une cargaison ici pour l'afficher sur le signer.
 Signer pour
-Effacer définitivement le cargaison indésirable.
+Effacer définitivement la cargaison indésirable.
 Déposez la cargaison indésirable ou utilisez des bande
 Convertit les 8 carreaux environnants en sol
 Le retrait du rotavator reviendra des 
@@ -614,7 +614,7 @@ La vitesse est améliorée sur le chemin
 Affiche une cargaison de votre choix
 La cargaison placée ici sera détruite
 Endroit pour humidifier le sol environnant
-Stocke jusqu'à 3 types de cargaison différents
+Stock jusqu'à 3 types de cargaison différents
 Une boîte de rangement qui se vide
 Placer à côté des usines, accélère la production
 Améliore la vitesse du transporteuses de x1 à x2
@@ -774,4 +774,6 @@ Usine
 Agriculture
 L'agriculture Industriel
 FR
+Mode Carte
+Voir une carte en direct de la terrain
 --

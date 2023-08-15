@@ -774,4 +774,6 @@ Fábrica
 Agricultura
 La Agricultura Intensiva
 ES
+Modo de Mapa
+Ver un mapa en vivo de la parcela
 --

@@ -774,4 +774,6 @@ Fabrik
 Landwirtschaft
 Industrielandwirtschaft
 DE
+Kartenmodus
+Sehen sie sich eine karte des grundstücks an
 --

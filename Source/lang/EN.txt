@@ -774,4 +774,6 @@ Factory
 Farming
 Factory Farming
 EN
+Map Mode
+View a live map of the plot
 --
