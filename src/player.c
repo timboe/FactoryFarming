@@ -515,10 +515,10 @@ void movePlayer(bool _forceUpdate) {
   }
 
   if (m_player.m_navHint) {
-    int32_t bpX = m_player.m_pix_x, bpY = m_player.m_pix_y;
+    int32_t bpX = m_player.m_pix_x * zoom, bpY = m_player.m_pix_y * zoom;
     #define HINT_D ((TILE_PIX*3)/2) 
     switch (m_player.m_navHintTopID) {
-      case 0: case 8: bpY -= TILE_PIX*3*zoom; break;
+      case 0: case 8: bpY -= HINT_D*zoom; break;
       case 1: bpX += HINT_D*zoom; bpY -= HINT_D*zoom; break;
       case 2: bpX += HINT_D*zoom; break;
       case 3: bpX += HINT_D*zoom; bpY += HINT_D*zoom; break;
@@ -650,12 +650,12 @@ void playerSpriteSetup() {
     m_player.m_navGuideTop[zoom] = pd->sprite->newSprite();
     pd->sprite->setBounds(m_player.m_navGuideTop[zoom], nBound);
     pd->sprite->setImage(m_player.m_navGuideTop[zoom], getSpriteNavGuideTop(0, zoom), kBitmapUnflipped);
-    pd->sprite->setZIndex(m_player.m_navGuideTop[zoom], Z_INDEX_UI_TT);
+    pd->sprite->setZIndex(m_player.m_navGuideTop[zoom], Z_INDEX_UI_TTT);
 
     m_player.m_navGuideBot[zoom] = pd->sprite->newSprite();
     pd->sprite->setBounds(m_player.m_navGuideBot[zoom], nBound);
     pd->sprite->setImage(m_player.m_navGuideBot[zoom], getSpriteNavGuideBot(0, zoom), kBitmapUnflipped);
-    pd->sprite->setZIndex(m_player.m_navGuideBot[zoom], Z_INDEX_UI_T);
+    pd->sprite->setZIndex(m_player.m_navGuideBot[zoom], Z_INDEX_UI_TT);
   }
 }
 

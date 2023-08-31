@@ -6,6 +6,7 @@
 #include "io.h"
 #include "ui.h"
 #include "sprite.h"
+#include "sound.h"
 
 SDFile* m_imageFile;
 LCDBitmap* m_imageBitmap;
@@ -131,6 +132,7 @@ void initMap() {
 #define M_FULL 7
 
 void updateMap() {
+  pauseMusic(); // Should be quick - but safest to pause
   const int16_t offX = (SCREEN_PIX_X/2) - ((TOT_TILES_X*MAP_PIX_PER_TILE)/2) - 1;
   const int16_t offY = (SCREEN_PIX_Y/2) - ((TOT_TILES_Y*MAP_PIX_PER_TILE)/2) - 1;
   const struct Location_t* _loc = getPlayerLocation();
@@ -193,6 +195,7 @@ void updateMap() {
     }
   }
   pd->graphics->popContext();
+  resumeMusic();
 }
 
 LCDSprite* getMap(bool _update) {
