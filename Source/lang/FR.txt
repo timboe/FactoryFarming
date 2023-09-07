@@ -1,21 +1,21 @@
-Bande
-Bande Transporteuse 
+Convoyeur
+Convoyeur
 'I' Séparateur 
-B. Transporteuse 'I' Séparateur 
+Convoyeur 'I' Séparateur 
 'L' Séparateur 
-B. Transporteuse 'L' Séparateur 
+Convoyeur 'L' Séparateur 
 'T' Séparateur 
-B. Transporteuse 'T' 'séparateur
+Convoyeur 'T' 'séparateur
 Filtre 'I'
-Filtre de Bande Transporteuse 'I'
+Filtre de Convoyeur 'I'
 Filtre 'L'
-Filtre de Bande Transporteuse 'L'
+Filtre de Convoyeur 'L'
 Tunnel
-Tunnel à Bande Transporteuse
+Tunnel à Convoyeur
 Débordement 'I'
-Débordement de la B. Transp. 'I'
+Débordement de la Convoyeur 'I'
 Débordement 'L'
-Débordement de la B. Transp. 'L'
+Débordement de la Convoyeur 'L'
 Plante de Carotte
 Gra. de Carotte
 Plante de Tournesol
@@ -88,16 +88,16 @@ Fabrique de Crème Glacée
 Usine de Poudre de Protéines
 Chocolaterie
 Usine de Tourte à la Viande
-Usine de Glutamate de Monosodium
-Usine de Dîner de Télévision
+Usine de Glutamate Monosodique
+Usine de TV Dinner
 Usine de Gâteaux au Chocolat
 Usine de Poudre de Caféine
 Usine de Boissons Énergisantes
-Usine de 'Jus de Rave'
+Usine de 'Rave Juice'
 Usine de Pilules Guilleret
 Fabricant d'Emballages
 Usine de Dessert
-Usine de Forfait Traiteur
+Usine de Menu Traiteur
 Usine de Foo Young
 Usine de Trousse de Fête
 Usine de Parfum
@@ -181,8 +181,8 @@ Tourtes à la Viande
 Tourte à la Viande
 G.M.S.
 G.M.S.
-Dîners Télévisés
-Dîner Télévisé
+TV Dinners
+TV Dinner
 Gâteaux
 Gâteau
 Grains de Café
@@ -193,8 +193,8 @@ Caféine
 Caféine
 Boissons Énergisantes
 Boisson Énergisante
-Jus de Fête
-Jus de Fête
+'Rave Juice'
+'Rave Juice'
 Pilules Guilleret
 Pilules Guilleret
 Bambous
@@ -203,8 +203,8 @@ Emballage
 Emballage
 Desserts
 Dessert
-Forfaits Traiteurs
-Forfait Traiteur
+Menu Traiteur
+Menu Traiteur
 Foo Young
 Foo Young
 Trousses de Fête
@@ -295,16 +295,16 @@ Inventaire
 Inspecter
 Déconstruction
 Nouvelle Récolte!
-Nouvelle Bande Transp.!
+Nouvelle Convoyeur!
 Nouveau Extracteur!
 Nouvelle Usine!
 Nouvel Utilitaire!
 Outils
 Outil
 Végétaux
-Végétau
-Transporteuses
-Transporteuse
+Végétal
+Tapis Roulants
+Tapis Roulant
 Extracteurs
 Extracteur
 Usines
@@ -390,12 +390,12 @@ la moissonneuse de manière à ce qu'elle se trouve sur un sol
 vide et que les plants de carot. se tro. dans sa plage de récolte.
 -- La Première Ligne de Chargement --
 Bien, nous récoltons des carottes. Mais nous devons les
-amener au dépôt de vente. Nous avons besoin de bandes!
+amener au dépôt de vente. Nous avons besoin de convoy.!
 Achetez-en environ 50 dans la boutique et tracez le chemin
 pour dépl. et vendre les carottes. Tourner a. 🎣 ou Ⓑ + ✛.
-Allez au boutique , achetez environ 50 bandes transporteuses.
+Allez au boutique , achetez environ 50 convoyeurs.
 Appuyez sur Ⓐ et choisissez-les dans votre inventaire.
-Faites une chaîne de bandes de la moisson. auto. aux ventes.
+Faites une chaîne de convoy. de la moisson. auto. aux ventes.
 Tourner avec 🎣, ou maintenez Ⓑ et appuyez sur ✛.
 -- Miner la Terre --
 OK. Mais toutes les ressources exploit. ne sont pas cultivées.
@@ -412,9 +412,9 @@ production complète! Achetez une usine de vitamines dans la
 boutique, fournissez-lui de la craie et des carottes, et transp.
 les vitamines au dépôt de vente pour un grand bénéfice!
 Allez au boutique, achetez une usine de vitamines.
-Placez-le dans un bon endroit. Utilisez des bandes pour
+Placez-le dans un bon endroit. Utilisez des convoyeurs pour
 l'approvisionner en carottes et en craie. Utilisez plusieurs
-bandes pour transporter les vitamines jusqu'au d. de vente.
+convoy. pour transporter les vitamines jusqu'au d. de vente.
 -- Allez de l'Avant et Consommez --
 Bonne! Vous connaissez maint. toutes les bases de l'exploit.
 du monde à des fins lucratives. Au fur et à mesure que votre
@@ -432,9 +432,9 @@ un nouveau terrain pour agrandir l'usine.
 -- Un Nouvel Horizon --
 Bienvenue sur votre nouveau terrain! Au lieu de vendre du
 fret, vous pouvez également le déplacer entre les terrains. 
-Utilisez des bandes pour acheminer la cargaisons vers le 
+Utilisez des convoy. pour acheminer la cargaisons vers le 
 dépôt d'exportation dans l'une de vos terrains.
-Exportez une cargaison en la déplaçant via des bandes dans
+Exportez une cargaison en la déplaçant via des convoy. dans
 le dépôt d'exportation sur n'importe quelle terrains. Le taux
 d'exportation de chaque type de cargaison est moyenné
 sur les deux minutes précédentes.
@@ -559,7 +559,7 @@ Votre petite maison de retraite confortable.
 Placez une cargaison ici pour l'afficher sur le signer.
 Signer pour
 Effacer définitivement la cargaison indésirable.
-Déposez la cargaison indésirable ou utilisez des bande
+Déposez la cargaison indésirable ou utilisez des convoyeur
 Convertit les 8 carreaux environnants en sol
 Le retrait du rotavator reviendra des 
 carreaux à leur type de sol précédent.
@@ -614,7 +614,7 @@ La vitesse est améliorée sur le chemin
 Affiche une cargaison de votre choix
 La cargaison placée ici sera détruite
 Endroit pour humidifier le sol environnant
-Stock jusqu'à 3 types de cargaison différents
+Stocke jusqu'à 3 types de cargaison différentes
 Une boîte de rangement qui se vide
 Placer à côté des usines, accélère la production
 Améliore la vitesse du transporteuses de x1 à x2
@@ -701,7 +701,7 @@ Caméra centrale sur le joueur
 Zoom automatique sur la marche
 Temps de sauvegarde automatique
 Ramassage auto. sur déconstruct
-Auto appliquer la graisse de bande
+Auto appliquer la graisse de convoyeur
 Informations de débogage
 --- Quitter le Jeu ---
 Sauver et sortir au titre
@@ -772,7 +772,7 @@ Emplact. du Terr.
 Sols
 Usine
 Agriculture
-L'agriculture Industriel
+L'agriculture Industrielle
 FR
 Mode Carte
 Voir une carte en direct de la terrain
