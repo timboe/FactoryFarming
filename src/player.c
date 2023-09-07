@@ -105,6 +105,7 @@ void processOtherWorldCargoSales(int32_t _seconds) {
     const int32_t soldInt = (int32_t) fractional[c];
     fractional[c] -= (float)soldInt;
     m_player.m_soldCargo[ c ] += soldInt;
+    //if (soldInt) pd->system->logToConsole("-- Add bonus sold %s = %i", toStringCargoByType(c, true), soldInt);
   }  
 }
 
@@ -866,18 +867,6 @@ void serialisePlayer(struct json_encoder* je) {
     je->endArray(je);
   }
 
-  for (int32_t w = 0; w < WORLD_SAVE_SLOTS; ++w) {
-    char txt[12] = "";
-    snprintf(txt, 12, "scpw%02i", (int)w);
-    je->addTableMember(je, txt, 6);
-    je->startArray(je);
-    for (int32_t i = 0; i < kNCargoType; ++i) {
-      je->addArrayMember(je);
-      je->writeDouble(je, m_player.m_soldPerWorld[w][i]);
-    }
-    je->endArray(je);
-  }
-
   je->addTableMember(je, "spw", 3);
   je->startArray(je);
   for (int32_t w = 0; w < WORLD_SAVE_SLOTS; ++w) {
@@ -893,6 +882,20 @@ void serialisePlayer(struct json_encoder* je) {
     je->writeInt(je, m_player.m_importConsumers[i]);
   }
   je->endArray(je);
+
+  for (int32_t w = 0; w < WORLD_SAVE_SLOTS; ++w) {
+    char txt[12] = "";
+    snprintf(txt, 12, "scpw%02i", (int)w);
+    je->addTableMember(je, txt, 6);
+    je->startArray(je);
+    for (int32_t i = 0; i < kNCargoType; ++i) {
+      je->addArrayMember(je);
+      je->writeDouble(je, m_player.m_soldPerWorld[w][i]);
+      // xxx
+      if (m_player.m_soldPerWorld[w][i]) pd->system->logToConsole("SAVE: SELL RATE %s, w=%i : %f", toStringCargoByType(i, /*plural=*/true), w, (double)m_player.m_soldPerWorld[w][i]);
+    }
+    je->endArray(je);
+  }
 
   je->endTable(je);
 }
@@ -984,28 +987,29 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_deserialiseArrayID = 15;
   } else if (strcmp(_key, "expw07") == 0) {
     m_deserialiseArrayID = 16;
-
-  } else if (strcmp(_key, "scpw00") == 0) {
-    m_deserialiseArrayID = 17;
-  } else if (strcmp(_key, "scpw01") == 0) {
-    m_deserialiseArrayID = 18;
-  } else if (strcmp(_key, "scpw02") == 0) {
-    m_deserialiseArrayID = 19;
-  } else if (strcmp(_key, "scpw03") == 0) {
-    m_deserialiseArrayID = 20;
-  } else if (strcmp(_key, "scpw04") == 0) {
-    m_deserialiseArrayID = 21;
-  } else if (strcmp(_key, "scpw05") == 0) {
-    m_deserialiseArrayID = 22;
-  } else if (strcmp(_key, "scpw06") == 0) {
-    m_deserialiseArrayID = 23;
-  } else if (strcmp(_key, "scpw07") == 0) {
-    m_deserialiseArrayID = 24;
-
   } else if (strcmp(_key, "spw") == 0) {
-    m_deserialiseArrayID = 25;
+    m_deserialiseArrayID = 17;
   } else if (strcmp(_key, "impc") == 0) {
+    m_deserialiseArrayID = 18;
+
+  // New in v1.5
+  } else if (strcmp(_key, "scpw00") == 0) {
+    m_deserialiseArrayID = 19;
+  } else if (strcmp(_key, "scpw01") == 0) {
+    m_deserialiseArrayID = 20;
+  } else if (strcmp(_key, "scpw02") == 0) {
+    m_deserialiseArrayID = 21;
+  } else if (strcmp(_key, "scpw03") == 0) {
+    m_deserialiseArrayID = 22;
+  } else if (strcmp(_key, "scpw04") == 0) {
+    m_deserialiseArrayID = 23;
+  } else if (strcmp(_key, "scpw05") == 0) {
+    m_deserialiseArrayID = 24;
+  } else if (strcmp(_key, "scpw06") == 0) {
+    m_deserialiseArrayID = 25;
+  } else if (strcmp(_key, "scpw07") == 0) {
     // noop
+
   } else if (strcmp(_key, "player") == 0) {
     jd->didDecodeSublist = deserialiseStructDonePlayer;
   } else {
@@ -1037,19 +1041,24 @@ void deserialiseArrayValuePlayer(json_decoder* jd, int _pos, json_value _value) 
     case 14: m_player.m_exportPerWorld[6][i] = f; break;
     case 15: m_player.m_exportPerWorld[7][i] = f; break;
 
-    case 16: m_player.m_soldPerWorld[0][i] = f; break;
-    case 17: m_player.m_soldPerWorld[1][i] = f; break;
-    case 18: m_player.m_soldPerWorld[2][i] = f; break;
-    case 19: m_player.m_soldPerWorld[3][i] = f; break;
-    case 20: m_player.m_soldPerWorld[4][i] = f; break;
-    case 21: m_player.m_soldPerWorld[5][i] = f; break;
-    case 22: m_player.m_soldPerWorld[6][i] = f; break;
-    case 23: m_player.m_soldPerWorld[7][i] = f; break;
+    case 16: m_player.m_sellPricePerWorld[i] = f; break;
+    case 17: m_player.m_importConsumers[i] = v; break;
 
-    case 24: m_player.m_sellPricePerWorld[i] = f; break;
+    case 18: m_player.m_soldPerWorld[0][i] = f; break;
+    case 19: m_player.m_soldPerWorld[1][i] = f; break;
+    case 20: m_player.m_soldPerWorld[2][i] = f; break;
+    case 21: m_player.m_soldPerWorld[3][i] = f; break;
+    case 22: m_player.m_soldPerWorld[4][i] = f; break;
+    case 23: m_player.m_soldPerWorld[5][i] = f; break;
+    case 24: m_player.m_soldPerWorld[6][i] = f; break;
+    case 25: m_player.m_soldPerWorld[7][i] = f; break;
 
-    case 25: m_player.m_importConsumers[i] = v; break;
   }
+
+  //xxx
+  if (m_deserialiseArrayID >= 18 && m_deserialiseArrayID <=25 && f)
+    pd->system->logToConsole("LOAD: SELL RATE %s, w=%i : %f", toStringCargoByType(i, /*plural=*/true), m_deserialiseArrayID-18, (double)f);
+
 }
 
 void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_value_type _type) {
