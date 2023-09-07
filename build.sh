@@ -11,6 +11,7 @@ rm *bak
 rm Source/*bak
 rm src/*bak
 
+make clean
 make
 
 sed 's|FactoryFarmingTechDemo.pdx|FactoryFarming.pdx|g' Makefile --in-place=.bak
@@ -23,6 +24,7 @@ rm *bak
 rm Source/*bak
 rm src/*bak
 
+make clean
 make
 
 rm -r FactoryFarming.pdx/demo/

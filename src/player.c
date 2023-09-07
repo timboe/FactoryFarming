@@ -863,6 +863,8 @@ void serialisePlayer(struct json_encoder* je) {
     for (int32_t i = 0; i < kNCargoType; ++i) {
       je->addArrayMember(je);
       je->writeDouble(je, m_player.m_exportPerWorld[w][i]);
+      // zzz v1.5 update checks
+      // if (m_player.m_exportPerWorld[w][i]) pd->system->logToConsole("SAVE: EXP PER WORLD %s, w=%i : %f", toStringCargoByType(i, /*plural=*/true), w, (double)m_player.m_exportPerWorld[w][i]);
     }
     je->endArray(je);
   }
@@ -872,6 +874,8 @@ void serialisePlayer(struct json_encoder* je) {
   for (int32_t w = 0; w < WORLD_SAVE_SLOTS; ++w) {
     je->addArrayMember(je);
     je->writeDouble(je, m_player.m_sellPricePerWorld[w]);
+    // zzz v1.5 update checks
+    // if (m_player.m_sellPricePerWorld[w]) pd->system->logToConsole("SAVE: SELL P.P. WORLD, w=%i : %f", w, (double)m_player.m_sellPricePerWorld[w]);
   }
   je->endArray(je);
 
@@ -880,6 +884,8 @@ void serialisePlayer(struct json_encoder* je) {
   for (int32_t i = 0; i < kNCargoType; ++i) {
     je->addArrayMember(je);
     je->writeInt(je, m_player.m_importConsumers[i]);
+     // zzz v1.5 update checks
+     //if (m_player.m_importConsumers[i]) pd->system->logToConsole("SAVE: IMPORT CONSUMERS, c=%i : %i", i, m_player.m_importConsumers[i]);
   }
   je->endArray(je);
 
@@ -891,8 +897,8 @@ void serialisePlayer(struct json_encoder* je) {
     for (int32_t i = 0; i < kNCargoType; ++i) {
       je->addArrayMember(je);
       je->writeDouble(je, m_player.m_soldPerWorld[w][i]);
-      // xxx
-      if (m_player.m_soldPerWorld[w][i]) pd->system->logToConsole("SAVE: SELL RATE %s, w=%i : %f", toStringCargoByType(i, /*plural=*/true), w, (double)m_player.m_soldPerWorld[w][i]);
+      // zzz v1.5 update checks
+      //if (m_player.m_soldPerWorld[w][i]) pd->system->logToConsole("SAVE: SELL RATE %s, w=%i : %f", toStringCargoByType(i, /*plural=*/true), w, (double)m_player.m_soldPerWorld[w][i]);
     }
     je->endArray(je);
   }
@@ -1055,9 +1061,21 @@ void deserialiseArrayValuePlayer(json_decoder* jd, int _pos, json_value _value) 
 
   }
 
-  //xxx
-  if (m_deserialiseArrayID >= 18 && m_deserialiseArrayID <=25 && f)
-    pd->system->logToConsole("LOAD: SELL RATE %s, w=%i : %f", toStringCargoByType(i, /*plural=*/true), m_deserialiseArrayID-18, (double)f);
+  // //zzz v1.5 update checks
+  // if (m_deserialiseArrayID >= 18 && m_deserialiseArrayID <=25 && f)
+  //   pd->system->logToConsole("LOAD: SELL RATE %s, w=%i : %f", toStringCargoByType(i, /*plural=*/true), m_deserialiseArrayID-18, (double)f);
+
+  // //zzz v1.5 update checks
+  // if (m_deserialiseArrayID >= 8 && m_deserialiseArrayID <=15 && f)
+  //   pd->system->logToConsole("LOAD: EXP RATE %s, w=%i : %f", toStringCargoByType(i, /*plural=*/true), m_deserialiseArrayID-8, (double)f);
+
+  // //zzz v1.5 update checks
+  // if (m_deserialiseArrayID == 16 && f)
+  //   pd->system->logToConsole("LOAD: SELL P.P. WORLD, w=%i : %f", i, (double)f);
+
+  // //zzz v1.5 update checks
+  // if (m_deserialiseArrayID == 17 && v)
+  //   pd->system->logToConsole("LOAD: IMPORT CONSUMERS, c=%i : %i", i, v); 
 
 }
 

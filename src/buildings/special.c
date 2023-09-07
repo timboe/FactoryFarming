@@ -594,8 +594,8 @@ void updateSales() {
     const float collected = m_soldItemCountA[c] + m_soldItemCountB[c];
     const float av = collected / (m_exportTimer / TICKS_PER_SEC);
     p->m_soldPerWorld[slot][c] = av;
-    // xxx
-    if (collected) pd->system->logToConsole("-- Sel rate of %s is %f", toStringCargoByType(c, true), (double)av);
+    // zzz v1.5 update checks
+    //if (collected) pd->system->logToConsole("-- Sel rate of %s is %f", toStringCargoByType(c, true), (double)av);
   }
 
 }
@@ -609,7 +609,7 @@ void updateExport() {
     if (m_exportTimer) av = collected / (m_exportTimer / TICKS_PER_SEC);
     p->m_exportPerWorld[slot][c] = av;
     #ifdef DEV
-    if (collected) pd->system->logToConsole("Integrated over %i s, the av exported %s is %f /s", , toStringCargoByType(c, /*plural=*/true), (double)av);
+    if (collected) pd->system->logToConsole("Integrated over %i s, the av exported %s is %f /s", (m_exportTimer / TICKS_PER_SEC), toStringCargoByType(c, /*plural=*/true), (double)av);
     #endif
   }
 }

@@ -587,7 +587,6 @@ void populateInfoInventory() {
       //snprintf(textA, 128, tr(kTRUIInventoryPlace), toStringBuilding(selectedCatType, (union kSubType) {.conveyor = selectedID}, false)); 
       break;
     case kUICatExtractor:; 
-      /// xxx
       strcpy(textA, tr(kTRUIInventoryBuild));
       strcat(textA, space());
       strcat(textA, toStringBuilding(selectedCatType, (union kSubType) {.extractor = selectedID}, false));

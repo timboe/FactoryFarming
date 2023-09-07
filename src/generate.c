@@ -201,7 +201,7 @@ bool setPatchArrow(const uint8_t _patchID, uint8_t* _topID) {
     default: pd->system->error("setPatchArrow expects 1 (patch 1), 2 (patch 2) or 255 (water) got %i",_patchID);
   }
 
-  // Special case: if ID is 255 (looking for water) and x and y are 1 - we cannot find any water!
+  // Special case: if ID is 255 (looking for water) and x and y are 0 - we cannot find any water!
   if (_patchID == 255 && !x && !y) {
     *_topID = 8; // Cannot place in this plot
     return true;
