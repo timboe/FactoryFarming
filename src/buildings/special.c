@@ -594,8 +594,9 @@ void updateSales() {
     const float collected = m_soldItemCountA[c] + m_soldItemCountB[c];
     const float av = collected / (m_exportTimer / TICKS_PER_SEC);
     p->m_soldPerWorld[slot][c] = av;
-    // zzz v1.5 update checks
-    //if (collected) pd->system->logToConsole("-- Sel rate of %s is %f", toStringCargoByType(c, true), (double)av);
+    #ifdef DEV// zzz v1.5 update checks
+    if (collected) pd->system->logToConsole("-- Sel rate of %s is %f", toStringCargoByType(c, true), (double)av);
+    #endif
   }
 
 }

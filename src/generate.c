@@ -309,7 +309,7 @@ bool setPatchArrow(const uint8_t _patchID, uint8_t* _topID) {
   *_topID = id; 
 
   #ifdef DEV
-  pd->system->logToConsole("setPatchArrow: patch is %f away, heading %f (%i)", dist, a, id);
+  pd->system->logToConsole("setPatchArrow: patch is %f away, heading %f (%i)", (double)dist, (double)a, id);
   #endif
   return (dist > MIN_POINTING_DISTANCE);
 }

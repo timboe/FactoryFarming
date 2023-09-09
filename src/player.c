@@ -863,8 +863,9 @@ void serialisePlayer(struct json_encoder* je) {
     for (int32_t i = 0; i < kNCargoType; ++i) {
       je->addArrayMember(je);
       je->writeDouble(je, m_player.m_exportPerWorld[w][i]);
-      // zzz v1.5 update checks
-      // if (m_player.m_exportPerWorld[w][i]) pd->system->logToConsole("SAVE: EXP PER WORLD %s, w=%i : %f", toStringCargoByType(i, /*plural=*/true), w, (double)m_player.m_exportPerWorld[w][i]);
+      #ifdef DEV // zzz v1.5 update checks
+      if (m_player.m_exportPerWorld[w][i]) pd->system->logToConsole("SAVE: EXP PER WORLD %s, w=%i : %f", toStringCargoByType(i, /*plural=*/true), w, (double)m_player.m_exportPerWorld[w][i]);
+      #endif
     }
     je->endArray(je);
   }
@@ -874,8 +875,9 @@ void serialisePlayer(struct json_encoder* je) {
   for (int32_t w = 0; w < WORLD_SAVE_SLOTS; ++w) {
     je->addArrayMember(je);
     je->writeDouble(je, m_player.m_sellPricePerWorld[w]);
-    // zzz v1.5 update checks
-    // if (m_player.m_sellPricePerWorld[w]) pd->system->logToConsole("SAVE: SELL P.P. WORLD, w=%i : %f", w, (double)m_player.m_sellPricePerWorld[w]);
+    #ifdef DEV // zzz v1.5 update checks
+    if (m_player.m_sellPricePerWorld[w]) pd->system->logToConsole("SAVE: SELL P.P. WORLD, w=%i : %f", w, (double)m_player.m_sellPricePerWorld[w]);
+    #endif
   }
   je->endArray(je);
 
@@ -884,8 +886,9 @@ void serialisePlayer(struct json_encoder* je) {
   for (int32_t i = 0; i < kNCargoType; ++i) {
     je->addArrayMember(je);
     je->writeInt(je, m_player.m_importConsumers[i]);
-     // zzz v1.5 update checks
-     //if (m_player.m_importConsumers[i]) pd->system->logToConsole("SAVE: IMPORT CONSUMERS, c=%i : %i", i, m_player.m_importConsumers[i]);
+     #ifdef DEV// zzz v1.5 update checks
+     if (m_player.m_importConsumers[i]) pd->system->logToConsole("SAVE: IMPORT CONSUMERS, c=%i : %i", i, m_player.m_importConsumers[i]);
+     #endif
   }
   je->endArray(je);
 
@@ -897,8 +900,9 @@ void serialisePlayer(struct json_encoder* je) {
     for (int32_t i = 0; i < kNCargoType; ++i) {
       je->addArrayMember(je);
       je->writeDouble(je, m_player.m_soldPerWorld[w][i]);
-      // zzz v1.5 update checks
-      //if (m_player.m_soldPerWorld[w][i]) pd->system->logToConsole("SAVE: SELL RATE %s, w=%i : %f", toStringCargoByType(i, /*plural=*/true), w, (double)m_player.m_soldPerWorld[w][i]);
+      #ifdef DEV// zzz v1.5 update checks
+      if (m_player.m_soldPerWorld[w][i]) pd->system->logToConsole("SAVE: SELL RATE %s, w=%i : %f", toStringCargoByType(i, /*plural=*/true), w, (double)m_player.m_soldPerWorld[w][i]);
+      #endif
     }
     je->endArray(je);
   }
@@ -911,8 +915,14 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_player.m_saveFormat = json_intValue(_value);
   } else if (strcmp(_key, "x") == 0) {
     m_player.m_pix_x = (float) json_intValue(_value);
+    #ifdef DEV
+    pd->system->logToConsole("LOAD: Player x=%i", (int)m_player.m_pix_x);
+    #endif
   } else if (strcmp(_key, "y") == 0) {
     m_player.m_pix_y = json_intValue(_value);
+    #ifdef DEV
+    pd->system->logToConsole("LOAD: Player y=%i", (int)m_player.m_pix_y);
+    #endif
   } else if (strcmp(_key, "m") == 0) {
     m_player.m_money = json_intValue(_value);
   } else if (strcmp(_key, "mhwm") == 0) {
@@ -927,7 +937,7 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_player.m_playTime = json_intValue(_value);
   } else if (strcmp(_key, "tutstage") == 0) {
     m_player.m_tutorialProgress = json_intValue(_value);
-  } else if (strcmp(_key, "tutpaid") == 0) {
+  } else if (strcmp(_key, "tutpaid") == 0) { // New in v1.5
     m_player.m_paidTutorialMoney = json_intValue(_value);
   } else if (strcmp(_key, "slot") == 0) {
     setSlot( json_intValue(_value) ); 
@@ -1061,21 +1071,20 @@ void deserialiseArrayValuePlayer(json_decoder* jd, int _pos, json_value _value) 
 
   }
 
-  // //zzz v1.5 update checks
-  // if (m_deserialiseArrayID >= 18 && m_deserialiseArrayID <=25 && f)
-  //   pd->system->logToConsole("LOAD: SELL RATE %s, w=%i : %f", toStringCargoByType(i, /*plural=*/true), m_deserialiseArrayID-18, (double)f);
+  #ifdef DEV
+  //zzz v1.5 update checks
+  if (m_deserialiseArrayID >= 18 && m_deserialiseArrayID <=25 && f)
+    pd->system->logToConsole("LOAD: SELL RATE %s, w=%i : %f", toStringCargoByType(i, /*plural=*/true), m_deserialiseArrayID-18, (double)f);
 
-  // //zzz v1.5 update checks
-  // if (m_deserialiseArrayID >= 8 && m_deserialiseArrayID <=15 && f)
-  //   pd->system->logToConsole("LOAD: EXP RATE %s, w=%i : %f", toStringCargoByType(i, /*plural=*/true), m_deserialiseArrayID-8, (double)f);
+  if (m_deserialiseArrayID >= 8 && m_deserialiseArrayID <=15 && f)
+    pd->system->logToConsole("LOAD: EXP RATE %s, w=%i : %f", toStringCargoByType(i, /*plural=*/true), m_deserialiseArrayID-8, (double)f);
 
-  // //zzz v1.5 update checks
-  // if (m_deserialiseArrayID == 16 && f)
-  //   pd->system->logToConsole("LOAD: SELL P.P. WORLD, w=%i : %f", i, (double)f);
+  if (m_deserialiseArrayID == 16 && f)
+    pd->system->logToConsole("LOAD: SELL P.P. WORLD, w=%i : %f", i, (double)f);
 
-  // //zzz v1.5 update checks
-  // if (m_deserialiseArrayID == 17 && v)
-  //   pd->system->logToConsole("LOAD: IMPORT CONSUMERS, c=%i : %i", i, v); 
+  if (m_deserialiseArrayID == 17 && v)
+    pd->system->logToConsole("LOAD: IMPORT CONSUMERS, c=%i : %i", i, v); 
+  #endif
 
 }
 
@@ -1085,8 +1094,8 @@ void* deserialiseStructDonePlayer(json_decoder* jd, const char* _name, json_valu
   m_player.m_camera_pix_y = m_player.m_pix_y;
 
   #ifdef DEV
-  pd->system->logToConsole("-- Player decoded to (%i, %i), current location (%i, %i), money:%i, unlock:%i", 
-    (int32_t)m_player.m_pix_x, (int32_t)m_player.m_pix_y, m_currentLocation->m_x, m_currentLocation->m_y, m_player.m_money, m_player.m_buildingsUnlockedTo);
+  pd->system->logToConsole("-- Player decoded to (%i, %i), current location (%i, %i), money:%i, unlock:%i, version:%i", 
+    (int32_t)m_player.m_pix_x, (int32_t)m_player.m_pix_y, m_currentLocation->m_x, m_currentLocation->m_y, m_player.m_money, m_player.m_buildingsUnlockedTo, m_player.m_saveFormat);
   #endif
 
   #ifdef DEMO
