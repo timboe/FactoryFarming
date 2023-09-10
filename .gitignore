@@ -1,7 +1,9 @@
 Source/pdex.bin
 Source/pdex.so
+Source/pdex.dll
 FactoryFarming.pdx/
 build/
+win_build/
 *.zip
 FactoryFarmingTechDemo.pdx/
 *.bak
