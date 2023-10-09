@@ -21,7 +21,7 @@
 __declspec(dllexport)
 #endif
 
-static void init(void) {
+void init(void) {
   initLocalisation();
   initSprite();
   initWorld();
