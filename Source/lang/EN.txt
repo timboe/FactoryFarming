@@ -384,7 +384,7 @@ Sweet, but that was a lot of manual labor... Let's
 use an automatic harvester instead! Buy one from
 the shop and build it where some carrot plants are
 within its harvest catchment area.
-Go to the the shop, buy an automatic harvester.
+Go to the shop, buy an automatic harvester.
 Press Ⓐ and choose this from your inventory.
 Place the harvester such that it located on empty
 soil, and carrot plants are within its harvest range.
@@ -393,7 +393,7 @@ Good, we're harvesting carrots. But we need to get them
 to the sales depot. We need conveyor belts! Buy around
 50 from the shop and lay the path to move & sell
 the carrots. Rotate belt pieces with 🎣 or Ⓑ + ✛.
-Go to the the shop, buy around 50 conveyor belts.
+Go to the shop, buy around 50 conveyor belts.
 Press Ⓐ and choose these from your inventory.
 Make a chain of belts from the automatic harvester to
 sales. Rotate belts with 🎣, or hold Ⓑ and press ✛.
@@ -402,7 +402,7 @@ OK. But not all exploitable resources are grown.
 Some are dug up, or pumped out. Let's build a chalk
 quarry next. Buy one from the shop and build it on
 chalky soil. There should be some to the north.
-Go to the the shop, buy a chalk quarry.
+Go to the shop, buy a chalk quarry.
 Press Ⓐ and choose this from your inventory.
 Go north from the shop and look for chalky soil.
 Place the quarry on at least one chalky soil tile.
@@ -411,7 +411,7 @@ Nice. We can finally set up a full production line!
 Buy a vitamin factory from the shop, supply it with
 both chalk and carrots, and transport the vitamins
 to the sales depot for a much bigger profit!
-Go to the the shop, buy a vitamin factory.
+Go to the shop, buy a vitamin factory.
 Place it in a good spot. Use conveyor belts to
 supply it with carrots and chalk. Use more belts
 to transport the vitamins to the sales depot.

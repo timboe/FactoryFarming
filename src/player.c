@@ -937,10 +937,19 @@ void didDecodeTableValuePlayer(json_decoder* jd, const char* _key, json_value _v
     m_player.m_playTime = json_intValue(_value);
   } else if (strcmp(_key, "tutstage") == 0) {
     m_player.m_tutorialProgress = json_intValue(_value);
+    #ifdef DEV
+    pd->system->logToConsole("LOAD: tutstage=%i", m_player.m_tutorialProgress);
+    #endif
   } else if (strcmp(_key, "tutpaid") == 0) { // New in v1.5
     m_player.m_paidTutorialMoney = json_intValue(_value);
+    #ifdef DEV
+    pd->system->logToConsole("LOAD: tutpaid=%i", m_player.m_paidTutorialMoney);
+    #endif
   } else if (strcmp(_key, "slot") == 0) {
     setSlot( json_intValue(_value) ); 
+    #ifdef DEV
+    pd->system->logToConsole("LOAD: slot=%i", json_intValue(_value));
+    #endif
   } else if (strcmp(_key, "sets") == 0) {
     m_player.m_soundSettings = json_intValue(_value); 
   } else if (strcmp(_key, "setm") == 0) {

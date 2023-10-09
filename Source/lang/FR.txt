@@ -53,7 +53,7 @@ Puits
 Boîte de Rangement
 Boîte Tampon
 Puce de Mise à Niveau d'Usine
-Graisse de Bande Transporteuse
+Graisse de Convoyeur
 Déboucheur
 Décharge
 Motoculteur
@@ -104,10 +104,10 @@ Usine de Parfum
 Usine de Poudre de Miracle
 Usine Turque de Délice
 La Boutique
-Dépôt de Vente
-Dépôt d'Exportation
-Dépôt d'Importations
-Dépôt de Terrains
+Le Dépôt
+Bâtiment d'Exportation
+Bâtiment d'Importation
+Le Cadastre
 Un Rocher Suspect
 Carottes
 Carotte
@@ -230,12 +230,12 @@ Eau
 Détrempé
 Humide
 Sec
-Vase
+Limoneux
 Calcaire
 Tourbeux
 Sableux
 Argileux
-Limoneux
+Terreau
 Sol
 Pavé
 Sol Obstrué
@@ -265,8 +265,8 @@ Attrape la cargaison à proximité
 Voir les détails sur la tuile actuelle
 Déconstruit tout dans la région
 La Boutique
-Dépôt de Vente
-Dépôt de Terrains
+Le Dépôt
+Le Cadastre
 Exportations
 Importations
 Crédits
@@ -323,9 +323,9 @@ Importation (Sud)
 Importation (Sud)
 Importation (Ouest)
 Importation (Ouest)
-SAUVER
+SAUVEGARDER
 GÉNÉRATEUR
-CHARGEMENT
+CHARGER
 %i: Nouveau jeu
 Charger la Démo
 %i: Continue
@@ -334,124 +334,124 @@ Regardez autour de cet exemple d'usine. Vous
 trouverez des installations jusqu'au niveau
 technologique 3. Le jeu complet va jusqu'au niveau 7.
 La construction et la sauvegarde sont désactivées.
--- L'achat Initial de Graines --
-Bienvenue à l'agriculture industrielle! Il y a de l'argent à 
-gagner fait, et ça ne se fera pas tout seul! Alors commençons
-par visiter la boutique avec Ⓐ et acheter des graines de
-carottes. La boussole pointera toujours vers la boutique.
-La boussole (à droite) pointera toujours vers la boutique
-Déplacez-vous avec le D-Pad, ✛. Zoomez et dézoomez avec 🎣.
-Maintenez Ⓑ pour courir. Allez au boutique et appuyez sur Ⓐ.
-Achetez 10 graines de carottes au boutique avec Ⓐ
--- L'Objectif Suivant --
+-- Premier Achat de Graines --
+Bienvenue dans Factory Farming ! Votre fortune vous 
+attend, mais elle ne se fera pas toute seule ! Commencez
+par visiter la boutique avec Ⓐ pour acheter des graines de
+carottes. La boussole (à droite) pointera toujours vers la boutique.
+Déplacez-vous avec le pavé directionnel, ✛. Zoomez et 
+dézoomez avec 🎣. Maintenez Ⓑ pour courir. Allez à la
+boutique, puis appuyez sur Ⓐ. Achetez 10 graines de
+carottes. Quittez la boutique avec Ⓑ.
+-- Prochain Objectif --
 Votre objectif actuel est de vendre au moins 10 carottes.
-Vous pouvez vérifier quel est votre objectif actuel à tout
-moment en appuyant sur le bouton Menu.
-Faites-le maintenant.
+Vous pouvez vérifier votre objectif actuel à tout moment
+en appuyant sur le bouton Menu.
+Essayez maintenant.
 Appuyez sur le bouton Menu pour voir votre objectif actuel.
-De là, vous pouvez également enregistrer et charger le jeu,
-et ouvrir le menu principal avec les paramètres du jeu, etc.
+De là, vous pouvez également sauvegarder et charger une
+partie, accéder aux paramètres du jeu, etc.
      
 -- La Première Récolte --
-Bonne, les carottes pousseront bien dans le sol vase près du
-boutique. Faites attention au sol et à l'eau que chaque plante
-aime. Trouvez un bon endroit à proximité, ouvrez votre inven-
-taire avec Ⓐ, sélectionnez les graines et plantez 10 carottes.
-Trouvez une zone proche de sol vase, de préférence humide.
-Appuyez sur Ⓐ pour accéder à votre inventaire, sélect. les
-gra. de carottes et appuyez à nouveau sur Ⓐ. Plantez 10
-graines de carottes sur des parcelles vides de sol vase.
--- La Première Récolte --
-Génial, les cultures mettent un certain temps à cultiver, mais
-accélérons ces plants de carottes. Appuyez sur Ⓐ, choisissez
-le mode de chargement de ramassage et récoltez 10 carottes.
-Ramassez des cargaison dans le monde ou dans des bâtiments.
-Allez là où vous avez planté vos gra. de carot. App. sur Ⓐ pour
-accéder à votre inv., sélectionnez le m. de cha. de ramassage.
-Appuyez ou maintenez Ⓐ lorsque vous vous déplacez, ram.
-10 carottes cultivées. Utilisez le 🎣 pour ch. la zone de ram.
+Les carottes apprécient les sols limoneux près de la boutique.
+Vérifiez toujours le type de sol et d’irrigation dont chaque plante
+a besoin. Trouvez une zone limoneuse à proximité, ouvrez votre
+inventaire avec Ⓐ, sélectionnez les graines et plantez 10 carottes.
+Trouvez une zone limoneuse à proximité, de préférence humide.
+Appuyez sur Ⓐ pour accéder à votre inventaire, sélectionnez
+les gra. de carottes, et appuyez à nouveau sur Ⓐ. Plantez 10
+graines de carottes sur des parcelles libres de sol limoneux.
+-- Première Récolte --
+Les cultures mettent un certain temps à pousser, mais pour
+cette fois nous allons accélérer les choses. Appuyez sur Ⓐ,
+choisissez le mode ramassage et récoltez 10 carottes.
+Vous pouvez ramasser dans vos champs et dans les bâtiments.
+Allez là où vous avez planté vos gra. de carottes. Utilisez Ⓐ pour
+accéder à votre inventaire, puis sélectionnez le mode ramassage.
+Appuyez ou maintenez Ⓐ en mouvement pour récolter
+10 carottes. Utilisez 🎣 pour changer la taille de la zone.
 -- La Première Vente --
-Bien, tu sais ce qu'on peut faire avec des cargaisons comme
-ces carottes fraîches? Vendez-les pour un profit! Rendez-vous
-au dépôt de vente et appuyez sur Ⓐ pour accéder au menu
-des ventes. Vendez 10 carottes pour continuer.
-Rendez-vous au dépôt de vente (à côté de la boutique).
-Appuyez ou maintenez Ⓐ pour vendre au moins 10 carottes. 
-Modifiez la quantité vendue à chaque pression sur Ⓐ 
-en tournant le 🎣, ou maintenez Ⓑ et appuyez sur ⬆️ ou ⬇️.
--- La Première Récolte Automatisée --
-C'est gentil, mais c'était beaucoup de travail manuel... 
-Utilisons plutôt une moissonneuse automatique! Achetez-en
-un dans la boutique et construisez-le là où se trouvent des
-plants de carottes dans sa zone de captage de récolte.
-Allez au boutique, achetez une moissonneuse automatique.
-Appuyez sur Ⓐ et choisissez-le dans votre inventaire. Placez
-la moissonneuse de manière à ce qu'elle se trouve sur un sol
-vide et que les plants de carot. se tro. dans sa plage de récolte.
--- La Première Ligne de Chargement --
-Bien, nous récoltons des carottes. Mais nous devons les
-amener au dépôt de vente. Nous avons besoin de convoy.!
-Achetez-en environ 50 dans la boutique et tracez le chemin
-pour dépl. et vendre les carottes. Tourner a. 🎣 ou Ⓑ + ✛.
-Allez au boutique , achetez environ 50 convoyeurs.
-Appuyez sur Ⓐ et choisissez-les dans votre inventaire.
-Faites une chaîne de convoy. de la moisson. auto. aux ventes.
-Tourner avec 🎣, ou maintenez Ⓑ et appuyez sur ✛.
--- Miner la Terre --
-OK. Mais toutes les ressources exploit. ne sont pas cultivées.
-Certains sont déterrés ou pompés. Construisons ensuite une
-carrière de craie. Achetez-en un au boutique et construisez-le
-sur un sol calcaire. Il devrait y en avoir au nord.
-Allez au boutique, achetez une carrière de craie. Appuyez
-sur Ⓐ et choisissez-le dans votre inventaire. Allez au 
+Bien, savez-vous maintenant quoi faire de ces carottes ?
+Pourquoi ne pas les vendre ? Rendez-vous au dépôt
+et appuyez sur Ⓐ pour accéder au menu des ventes.
+Vendez 10 carottes pour continuer.
+Rendez-vous au dépôt (à côté de la boutique).
+Appuyez ou maintenez Ⓐ pour vendre au moins 10 carottes.
+Pour modifier la quantité vendue, appuyez sur Ⓐ,
+tournez 🎣, ou maintenez Ⓑ et appuyez sur ⬆️ ou ⬇️.
+-- Récolte Automatisée --
+C’est un bon début, mais c'était beaucoup de travail...
+Utilisons plutôt une moissonneuse ! Achetez-en une dans
+la boutique et installez-la près de vos plants de carotte,
+de sorte à ce qu’ils soient dans sa zone d’action.
+Allez à la boutique, achetez une moissonneuse automatique.
+Appuyez sur Ⓐ et sélectionnez-la dans votre inventaire. Placez
+la moissonneuse sur un emplacement libre, en prenant garde à
+ce que les carottes se trouvent dans sa zone de récolte.
+-- Le Premier Convoyeur --
+Les carottes sont maintenant récoltées automatiquement,
+mais nous devons les amener jusqu’au dépôt. Achetez environ
+50 convoyeurs dans la boutique et tracez un chemin jusqu’au
+dépôt pour vendre les carottes. Pour pivoter les tapis, tournez 🎣ou utilisez Ⓑ + ✛.
+Allez à la boutique , achetez environ 50 convoyeurs.
+Appuyez sur Ⓐ et sélectionnez-les dans votre inventaire.
+Formez une chaîne de convoyeurs de la moissonneuse au
+dépôt. Pivotez avec 🎣, ou maintenez Ⓑ et appuyez sur ✛.
+-- Exploiter la Terre --
+Toutes les ressources ne poussent pas dans le sol :
+certaines sont déterrées ou pompées. Construisons une
+carrière de craie. Achetez-en une à la boutique et
+construisez-la sur un sol calcaire. Il devrait y en avoir au nord.
+Allez à la boutique, achetez une carrière de craie. Appuyez
+sur Ⓐ et sélectionnez-la dans votre inventaire. Allez au
 nord de la boutique et cherchez un sol calcaire.
-Placez la carrière sur au moins une dalle de sol crayeux.
--- Valeur de Fabrication --
-Bon. Nous pouvons enfin mettre en place une ligne de
-production complète! Achetez une usine de vitamines dans la
-boutique, fournissez-lui de la craie et des carottes, et transp.
-les vitamines au dépôt de vente pour un grand bénéfice!
-Allez au boutique, achetez une usine de vitamines.
-Placez-le dans un bon endroit. Utilisez des convoyeurs pour
-l'approvisionner en carottes et en craie. Utilisez plusieurs
-convoy. pour transporter les vitamines jusqu'au d. de vente.
--- Allez de l'Avant et Consommez --
-Bonne! Vous connaissez maint. toutes les bases de l'exploit.
-du monde à des fins lucratives. Au fur et à mesure que votre
-compte bancaire gonfle, plus de cultures et d'usines va
-débloquer. Maximiser les profits, maximiser l'efficacité!
--- Mais Je n'ai Pas le Sol Pour Ça! --
-Problème. Le cactus que vous venez de débloquer
-veut un sol sablonneux, mais il n'y en a pas ici. Temps
-d'expansion! Visitez le dépôt de terrain (à côté des
-ventes) et achetez un nouveau terrain à aménager.
-Le dépôt des terrain, le dépôt des exportations et le
-dépôt des importations sont désormais tous déverrouillés.
-Visitez le dépôt des terrain à droite des ventes. Acheter
-un nouveau terrain pour agrandir l'usine.
+Placez la carrière sur au moins une case de sol crayeux.
+-- Valeur Ajoutée --
+Bien. Nous pouvons maintenant mettre en place une ligne de
+production complète ! Achetez une usine de vitamines dans la
+boutique, fournissez-lui de la craie et des carottes, puis
+amenez les vitamines au dépôt pour augmenter vos revenus !
+Allez à la boutique, achetez une usine de vitamines. Placez-la
+à l’endroit approprié. Utilisez des convoyeurs pour
+l'approvisionner en carottes et en craie. Assemblez plusieurs
+convoyeurs pour transporter les vitamines jusqu'au dépôt.
+-- Une Exploitation Prospère --
+Excellent ! Vous maîtrisez maintenant les bases de 
+l'exploitation et du commerce. Plus vos revenus vont augmenter,
+plus vous débloquerez de cultures et d'installations. 
+Pour maximiser vos profits, optimisez votre chaîne de production !
+-- Je Ne Trouve Pas Le Sol Approprié ! --
+Le cactus que vous venez de débloquer a besoin d’un
+sol sablonneux, mais il n'y en a pas dans les environs.
+Il est temps d’élargir vos horizons ! Visitez le cadastre 
+(à côté du dépôt), et achetez un nouveau terrain.
+Le cadastre, ainsi que les bâtiments d’importation et 
+d’exportation, sont désormais déverrouillés.
+Visitez le cadastre, à droite du dépôt. Achetez
+un nouveau terrain pour agrandir l’exploitation.
 -- Un Nouvel Horizon --
-Bienvenue sur votre nouveau terrain! Au lieu de vendre du
-fret, vous pouvez également le déplacer entre les terrains. 
-Utilisez des convoy. pour acheminer la cargaisons vers le 
-dépôt d'exportation dans l'une de vos terrains.
-Exportez une cargaison en la déplaçant via des convoy. dans
-le dépôt d'exportation sur n'importe quelle terrains. Le taux
-d'exportation de chaque type de cargaison est moyenné
-sur les deux minutes précédentes.
+Bienvenue sur votre nouveau terrain ! Au lieu de vendre du
+fret, vous pouvez également le déplacer entre les parcelles.
+Utilisez des convoyeurs pour acheminer la cargaison vers
+le bâtiment d'exportation de l'un de vos terrains.
+Exportez une cargaison en la déplaçant via des convoyeurs
+dans le bâtiment d'exportation de n'importe quel terrain. Le
+prix de de chaque type de cargaison à l’export est recalculé
+toutes les deux minutes.
 -- Accéder Aux Marchandises --
-Maintenant que vous exportez du fret, regardons les import.
-Allez dans une autre terrain et visitez le dépôt d'importation,
-vous pouvez importer jusqu'à quatre cargaisons par terrain.
-Configurez une importation maintenant.
-Importez des marchandises dans une terrain différente
-via le dépôt. Les importations N, S, E, O peuvent être 
-individuellement. Vous ne pouvez pas exporter un type de 
-cargaison qui est importé dans le même tracé.
--- Importations & Exportations & Terrains --
+Maintenant que vous exportez du fret, étudions l’import.
+Changez de parcelle et visitez le bâtiment d'importation :
+vous pouvez importer jusqu'à quatre cargaisons par zone.
+Paramétrez une importation maintenant.
+Importez des marchandises d’un autre terrain.
+Les importations N, S, E, O peuvent être
+gérées individuellement. Vous ne pouvez pas exporter
+un type de cargaison qui est importé dans la même zone.
+-- Importations, Exportations & Terrains --
 Merveilleux! Continuer à acheter plus de terrains afin
-d'accéder à de nouveaux types de sols et d'agrandir l'usine.
-Utilisez les dépôts d'exportation et d'importation pour 
-déplacer la cargaison entre les terrains!
+d'accéder à de nouveaux types de sols et d'agrandir
+l’exploitation. Utilisez les bâtiments d'exportation et
+d'importation pour déplacer la cargaison entre les terrains!
 Nord
 Est
 Sud
@@ -534,7 +534,7 @@ cultures, transporteuses, extracteurs, usines et
 articles de services publics.
      
 Vendez des marchandises à partir de votre inventaire
-ou utilisez des transporteuses pour automatiser les
+ou utilisez des convoyeur pour automatiser les
 ventes. Recevez de l'argent pour chaque article vendu.
      
 Voir les terrains disponibles.
@@ -560,7 +560,7 @@ Placez une cargaison ici pour l'afficher sur le signer.
 Signer pour
 Effacer définitivement la cargaison indésirable.
 Déposez la cargaison indésirable ou utilisez des convoyeur
-Convertit les 8 carreaux environnants en sol
+Convertit les 8 carreaux environnants en sol terreau
 Le retrait du rotavator reviendra des 
 carreaux à leur type de sol précédent.
 Réduit le temps de production dans n'importe quelle
@@ -620,7 +620,7 @@ Placer à côté des usines, accélère la production
 Améliore la vitesse du transporteuses de x1 à x2
 Effacer les obstacles (peut ensuite être construit)
 Récupérer la terre. Pour construire, pas planter.
-Transforme les terres à proximité en sol limoneux
+Transforme les terres à proximité en sol terreau
 Un gîte de détente pour profiter de vos richesses
 Une charmante clôture en bois
 Collecte la cargaison, détient trois types
@@ -692,36 +692,37 @@ Volume de la Musique
 Effets Sonores
 Bruits de Pas
 --- Paramètres de Jeu ---
-Bougé d'écran
-Tutoriel activé
-Animation de transporteuse
-Contours de la moissonneuse
-Manivelle sur transporteuse
-Caméra centrale sur le joueur
-Zoom automatique sur la marche
-Temps de sauvegarde automatique
-Ramassage auto. sur déconstruct
+Vibrations de l’Écran
+Tutoriel Activé
+Animation des Convoyeurs
+Afficher les Zones des Moiss.
+Manivelle sur Convoyeur
+Centrer Verrouillée sur le Joueur
+Zoom automatique en Déplacement
+Délai de Sauvegarde Automatique
+Ramassage auto. Désassemblage
 Auto appliquer la graisse de convoyeur
-Informations de débogage
+Afficher Informations Système
 --- Quitter le Jeu ---
-Sauver et sortir au titre
-Sortir au titre sans sauver 
+Sauvegarder et Revenir au Menu
+Quitter SANS Sauvegarder
 --- Capture d'Écran ---
-Prendre une capture d'écran
+Photographier une Parcelle
 --- Contrôles ---
-Inventaire/Choisir/Interagir: Ⓐ
-Retour/Annuler : Ⓑ
-Marche : ✛
-Courir: maintenez  Ⓑ + ✛
+Inventaire/Choisir/Interagir : Ⓐ
+Retour/Annuler : Ⓑ
+Marcher : ✛
+Courir : Maintenir Ⓑ + ✛
 Zoom: 🎣 ou maint. Ⓐ + ⬇️
-Tourner: 🎣 ou maint. Ⓑ + ⬆️/➡️/⬇️/⬅️
-Redimensionner: 🎣 ou maint. Ⓑ + ⬆️/⬇️
-Mode de ramassage: maint. Ⓐ + ⬅️
-Mode d'inspection: maint. Ⓐ + ⬆️
-Mode de déconstruction: maint. Ⓐ + ➡️
+Pivoter : 🎣 ou maint. Ⓑ + ⬆️/➡️/⬇️/⬅️
+Redimensionner : 🎣 ou maint. Ⓑ + ⬆️/⬇️
+Ramassage Rapide : maint. Ⓐ + ⬅️
+Inspecter Rapide : maint. Ⓐ + ⬆️
+Désassemblage Rapide : maint. Ⓐ + ➡️
 --- Crédits ---
 Factory Farming par Tim Martin
 Traductions par Eugene Zakharov
+et Adrien Martel.
 -- Musique --
 ♬ Dr Tikov: 1985
 ♬ BoxCat Games: B-3

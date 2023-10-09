@@ -722,6 +722,7 @@ Modo de deconstrucción: Sost. Ⓐ + ➡️
 --- Créditos ---
 Factory Farming de Tim Martin
 Traducciones de Eugene Zakharov
+y Adrien Martel.
 -- Música --
 ♬ Dr Tikov: 1985
 ♬ BoxCat Games: B-3

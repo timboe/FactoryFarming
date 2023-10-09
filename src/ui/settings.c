@@ -349,14 +349,14 @@ void doSettings(bool _forward) {
     case 28: cheatMoney(); break;
     case 29: cheatUnlock(); break;
     //
-    case 37: chooseMusic(0); break;
-    case 38: chooseMusic(1); break;
-    case 39: chooseMusic(4); break;
-    case 40: chooseMusic(3); break;
-    case 41: chooseMusic(2); break;
-    case 42: chooseMusic(5); break;
+    case 38: chooseMusic(0); break;
+    case 39: chooseMusic(1); break;
+    case 40: chooseMusic(4); break;
+    case 41: chooseMusic(3); break;
+    case 42: chooseMusic(2); break;
+    case 43: chooseMusic(5); break;
     //
-    case 59: sfx(rand() % kNSFX); return; // Do not also play kSfxA
+    case 60: sfx(rand() % kNSFX); return; // Do not also play kSfxA
   }
   redrawSettingsMenuLine(getSettingsMenuUIBitmap(selectedID), selectedID);
   sfx(kSfxA);
@@ -365,8 +365,8 @@ void doSettings(bool _forward) {
 // NOTE: There are defs in constants.h which might need updating too
 #define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_START 0
 #define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_STOP 17
-#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_START 61
-#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_STOP 68
+#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_START 62
+#define MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_B_STOP 69
 
 void redrawAllSettingsMenuLines() {
   for (int32_t i = MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_START; i < MAX_SETTINGS_ROWS_WHICH_MIGHT_CHANGE_A_STOP; ++i) {
@@ -424,13 +424,13 @@ void redrawSettingsMenuLine(LCDBitmap* _bitmap, int32_t _line) {
     case 15: p->m_autoUseConveyorBooster ? checked() : unchecked(); break;
     case 16: p->m_enableDebug ? checked() : unchecked(); break;
     // 
-    case 61: addText(playTime(buf, p->m_playTime / TICK_FREQUENCY)); break;
-    case 62: addNumber(p->m_moneyCumulative); break;
-    case 63: addNumber(p->m_moneyHighWaterMark); break;
-    case 64: addNumber(getTotalSoldCargo()); break;
-    case 65: addNumber(getTotalImportedCargo()); break;
-    case 66: addNumber(getNBuildings()); break;
-    case 67: addNumber(getNCargo()); break;
+    case 62: addText(playTime(buf, p->m_playTime / TICK_FREQUENCY)); break;
+    case 63: addNumber(p->m_moneyCumulative); break;
+    case 64: addNumber(p->m_moneyHighWaterMark); break;
+    case 65: addNumber(getTotalSoldCargo()); break;
+    case 66: addNumber(getTotalImportedCargo()); break;
+    case 67: addNumber(getNBuildings()); break;
+    case 68: addNumber(getNCargo()); break;
   }
 
   pd->graphics->popContext();
@@ -447,8 +447,8 @@ void populateInfoSettingsMenu() {
 
 bool isTitle(int32_t _line) {
   switch (_line) {
-    case 0: case 5: case 17: case 20: case 22: case 33: case 36: 
-    case 43: case 51: case 58: case 60: case 68: case 73: case 77: return true;
+    case 0: case 5: case 17: case 20: case 22: case 33: case 37: 
+    case 44: case 52: case 59: case 61: case 69: case 74: case 78: return true;
   }
   return false;
 }
