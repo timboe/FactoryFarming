@@ -5,7 +5,7 @@ Convoyeur 'I' Séparateur
 'L' Séparateur 
 Convoyeur 'L' Séparateur 
 'T' Séparateur 
-Convoyeur 'T' 'séparateur
+Convoyeur 'T' Séparateur
 Filtre 'I'
 Filtre de Convoyeur 'I'
 Filtre 'L'
@@ -115,7 +115,7 @@ Craie
 Craie
 Vitamines
 Vitamines
-Patates
+Pommes de terre
 Pomme de terre
 Tournesols
 Tournesol
@@ -326,20 +326,20 @@ Importation (Ouest)
 SAUVEGARDER
 GÉNÉRATEUR
 CHARGER
-%i: Nouveau jeu
+%i : Nouveau jeu
 Charger la Démo
-%i: Continue
+%i : Continue
 -- Démo Technologique de L'agriculture Industrielle --
 Regardez autour de cet exemple d'usine. Vous
 trouverez des installations jusqu'au niveau
 technologique 3. Le jeu complet va jusqu'au niveau 7.
 La construction et la sauvegarde sont désactivées.
 -- Premier Achat de Graines --
-Bienvenue dans Factory Farming ! Votre fortune vous 
-attend, mais elle ne se fera pas toute seule ! Commencez
-par visiter la boutique avec Ⓐ pour acheter des graines de
-carottes. La boussole (à droite) pointera toujours vers la boutique.
-Déplacez-vous avec le pavé directionnel, ✛. Zoomez et 
+Bienvenue dans Factory Farming ! Votre fortune vous attend,
+mais elle ne se fera pas toute seule ! Commencez par visiter
+la boutique avec Ⓐ pour acheter des graines de carottes
+La boussole (à droite) pointera toujours vers la boutique.
+Déplacez-vous avec le pavé directionnel, ✛. Zoomez et
 dézoomez avec 🎣. Maintenez Ⓑ pour courir. Allez à la
 boutique, puis appuyez sur Ⓐ. Achetez 10 graines de
 carottes. Quittez la boutique avec Ⓑ.
@@ -354,21 +354,21 @@ partie, accéder aux paramètres du jeu, etc.
      
 -- La Première Récolte --
 Les carottes apprécient les sols limoneux près de la boutique.
-Vérifiez toujours le type de sol et d’irrigation dont chaque plante
-a besoin. Trouvez une zone limoneuse à proximité, ouvrez votre
-inventaire avec Ⓐ, sélectionnez les graines et plantez 10 carottes.
-Trouvez une zone limoneuse à proximité, de préférence humide.
+Vérifiez toujours le type de sol et d’irrig. dont chaque plante
+a besoin. Trouvez une zone limon. à proximité, ouvrez votre
+inventaire avec Ⓐ, sélect. les gra. et plantez 10 carottes.
+Trouvez une zone limon. à proximité, de préférence humide.
 Appuyez sur Ⓐ pour accéder à votre inventaire, sélectionnez
 les gra. de carottes, et appuyez à nouveau sur Ⓐ. Plantez 10
 graines de carottes sur des parcelles libres de sol limoneux.
 -- Première Récolte --
 Les cultures mettent un certain temps à pousser, mais pour
 cette fois nous allons accélérer les choses. Appuyez sur Ⓐ,
-choisissez le mode ramassage et récoltez 10 carottes.
-Vous pouvez ramasser dans vos champs et dans les bâtiments.
-Allez là où vous avez planté vos gra. de carottes. Utilisez Ⓐ pour
-accéder à votre inventaire, puis sélectionnez le mode ramassage.
-Appuyez ou maintenez Ⓐ en mouvement pour récolter
+choisissez le mode ramassage et récoltez 10 carottes. Vous
+pouvez ramasser dans vos champs et dans les bât.
+Allez là où vous avez planté vos gra. de carottes. Utilis. Ⓐ
+pour accéder à votre inventaire, puis sélect. le mode ramass-
+age. Appuyez ou maintenez Ⓐ en mouvement pour récolter
 10 carottes. Utilisez 🎣 pour changer la taille de la zone.
 -- La Première Vente --
 Bien, savez-vous maintenant quoi faire de ces carottes ?
@@ -385,14 +385,14 @@ Utilisons plutôt une moissonneuse ! Achetez-en une dans
 la boutique et installez-la près de vos plants de carotte,
 de sorte à ce qu’ils soient dans sa zone d’action.
 Allez à la boutique, achetez une moissonneuse automatique.
-Appuyez sur Ⓐ et sélectionnez-la dans votre inventaire. Placez
-la moissonneuse sur un emplacement libre, en prenant garde à
+Appuyez sur Ⓐ et sélectionnez-la dans votre inventaire.
+la moisson. sur un emplacement libre, en prenant garde à
 ce que les carottes se trouvent dans sa zone de récolte.
 -- Le Premier Convoyeur --
 Les carottes sont maintenant récoltées automatiquement,
-mais nous devons les amener jusqu’au dépôt. Achetez environ
-50 convoyeurs dans la boutique et tracez un chemin jusqu’au
-dépôt pour vendre les carottes. Pour pivoter les tapis, tournez 🎣ou utilisez Ⓑ + ✛.
+mais nous devons les amener jusqu’au dépôt. Achetez 50
+convoyeurs et tracez un chemin jusqu’au dépôt pour vendre
+les carottes. Pour pivoter les tapis, utilise la 🎣 ou Ⓑ + ✛.
 Allez à la boutique , achetez environ 50 convoyeurs.
 Appuyez sur Ⓐ et sélectionnez-les dans votre inventaire.
 Formez une chaîne de convoyeurs de la moissonneuse au
@@ -400,8 +400,8 @@ dépôt. Pivotez avec 🎣, ou maintenez Ⓑ et appuyez sur ✛.
 -- Exploiter la Terre --
 Toutes les ressources ne poussent pas dans le sol :
 certaines sont déterrées ou pompées. Construisons une
-carrière de craie. Achetez-en une à la boutique et
-construisez-la sur un sol calcaire. Il devrait y en avoir au nord.
+carrière de craie. Achetez-en une à la boutique et construisez-
+la sur un sol calcaire. Il devrait y en avoir au nord.
 Allez à la boutique, achetez une carrière de craie. Appuyez
 sur Ⓐ et sélectionnez-la dans votre inventaire. Allez au
 nord de la boutique et cherchez un sol calcaire.
@@ -409,23 +409,23 @@ Placez la carrière sur au moins une case de sol crayeux.
 -- Valeur Ajoutée --
 Bien. Nous pouvons maintenant mettre en place une ligne de
 production complète ! Achetez une usine de vitamines dans la
-boutique, fournissez-lui de la craie et des carottes, puis
-amenez les vitamines au dépôt pour augmenter vos revenus !
+boutique, fournissez-lui de la craie et des carottes, puis amenez
+ les vitamines au dépôt pour augmenter vos revenus !
 Allez à la boutique, achetez une usine de vitamines. Placez-la
 à l’endroit approprié. Utilisez des convoyeurs pour
 l'approvisionner en carottes et en craie. Assemblez plusieurs
 convoyeurs pour transporter les vitamines jusqu'au dépôt.
 -- Une Exploitation Prospère --
-Excellent ! Vous maîtrisez maintenant les bases de 
-l'exploitation et du commerce. Plus vos revenus vont augmenter,
-plus vous débloquerez de cultures et d'installations. 
-Pour maximiser vos profits, optimisez votre chaîne de production !
+Excellent ! Vous maîtrisez maintenant les bases de l'exploitat-
+ion et du commerce. Plus vos revenus vont augmenter,
+plus vous débloquerez de cultures et d'installations.
+Pour maximiser vos profits, optimisez votre production !
 -- Je Ne Trouve Pas Le Sol Approprié ! --
 Le cactus que vous venez de débloquer a besoin d’un
 sol sablonneux, mais il n'y en a pas dans les environs.
-Il est temps d’élargir vos horizons ! Visitez le cadastre 
+Il est temps d’élargir vos horizons ! Visitez le cadastre
 (à côté du dépôt), et achetez un nouveau terrain.
-Le cadastre, ainsi que les bâtiments d’importation et 
+Le cadastre, ainsi que les bâtiments d’importation et
 d’exportation, sont désormais déverrouillés.
 Visitez le cadastre, à droite du dépôt. Achetez
 un nouveau terrain pour agrandir l’exploitation.
@@ -449,9 +449,9 @@ gérées individuellement. Vous ne pouvez pas exporter
 un type de cargaison qui est importé dans la même zone.
 -- Importations, Exportations & Terrains --
 Merveilleux! Continuer à acheter plus de terrains afin
-d'accéder à de nouveaux types de sols et d'agrandir
-l’exploitation. Utilisez les bâtiments d'exportation et
-d'importation pour déplacer la cargaison entre les terrains!
+d'accéder à de nouveaux types de sols et d'agrandir l’exploi-
+tation. Utilisez les bâtiments d'exportation et d'impor-
+tation pour déplacer la cargaison entre les terrains !
 Nord
 Est
 Sud
@@ -516,19 +516,19 @@ de Titane
 Eau de Javel
 Sirop
 de Fruits
-Contenu de l'emballage:
+Contenu de l'emballage :
 Boîte
 Formaldéhyde
 Amidon
-Temps de Prod.: %ss
-Temps Restant: %ss
+Temps de Prod. : %ss
+Temps Restant : %ss
 En %i
 Aime
 A
 Ne peut pas grandir ici!
-Temps de Croissance: %is
+Temps de Croissance : %is
 Récolte pour pousser
-Temps Restant: %is
+Temps Restant : %is
 Dépenser de l'argent pour acheter de nouvelles
 cultures, transporteuses, extracteurs, usines et 
 articles de services publics.
@@ -550,7 +550,7 @@ pouvez sélectionner une importation pour chacune
 des 4 dir. cardinales. Les importations ont lieu toutes,
 les 10s. la quantité imp. dépend du n. total d'import.
 Un grand rocher bloque le sol ici.
-Peut-être que cela deviendra important plus tard?
+Peut-être que cela deviendra important plus tard ?
      
      
 La vitesse de déplacement est améliorée sur l'allée.
@@ -565,22 +565,22 @@ Le retrait du rotavator reviendra des
 carreaux à leur type de sol précédent.
 Réduit le temps de production dans n'importe quelle
 usine immédiatement N, S, E ou O du module.
-1 module: -0,5s
-2 modules: -0,75s
+1 module : -0,5s
+2 modules : -0,75s
 3+ modules: -1s
     
 Crée une zone de sol détrempé et de sol humide.
 Compartiment %i/3
 Exportation
-Ce: %s/s
-Tous: %s/s
+Ce : %s/s
+Tous : %s/s
 Importation de
-Importateurs: %i
+Importateurs : %i
 Importé: %s/s
 Planter
 Placer
 Bâtir
-Inventaire: %i
+Inventaire : %i
 Valeur
 Bâtir sur
 Bâtir sur l'eau
@@ -591,7 +591,7 @@ Bâtir sur les plain. tranq.
 Déplace la cargaison au nord, sud, est ou à l'ouest
 Séparer la cargaison 2 voies (180 degrés)
 Séparer la cargaison 2 voies (90 degrés)
-Séparer la cargaison de 3 manières
+Séparer la cargaison de 3 voies
 Ne déborde que lorsqu'il est bloqué
 Filtre sur la première cargaison pour passer
 Déplace la cargaison sous terre pour 1 tuile
@@ -645,11 +645,11 @@ Utilisé pour définir une variété de liquides
 Un favori bancal
 Un mélange intéressant de saveurs
 Empêche les choses de se séparer
-C'est sans produits laitiers! Est-ce une bonne chose?
+C'est sans produits laitiers ! Est-ce une bonne chose ?
 Le maïs entre, les oeufs sortent
 Masse maximale, tracas minimum
 Ç'est surtout du sucre ...
-Qu'y a-t-il pour le dîner? Tourte à la viande!
+Qu'y a-t-il pour le dîner ? Tourte à la viande !
 Rend tout meilleur goût
 Un repas pour un, servi dans un plateau
 Extrait la caféine des grains de café
@@ -657,30 +657,30 @@ Caféine élevée et ruée vers le sucre tout en un
 Ce truc devrait probablement être illégal ...
 Vous gardera éveillé beaucoup trop longtemps
 Chocolaté, avec une durée de conservation infinie
-Gourmand?
+Gourmand ?
 Professionnel avec emballage personnalisé
-Forfait traiteur, grande balisage
+Menu traiteur, grande balisage
 Gélatineux et déshydratant
 Tout ce dont une bonne fête a besoin
 Trucs de fantaisie
-Que peut-il guérir?! (Rien!)
+Que peut-il guérir ?! (Rien !)
 Une délicatesse délicieuse
 Vendre
 Tout est
 Déverrouillé!
 Merci d'avoir joué
 USINE AGRICULTURE!
-Visite:
+Visite :
 La boutique
-Pour débloquer le suivant:
-Vendre un total de:
-Vendu jusqu'à présent: %i
+Pour débloquer le suivant :
+Vendre un total de :
+Vendu jusqu'à présent : %i
 Continuer
 Le tutoriel
 Bâtiment
 ENREGIST. AVANT DE SORTI!
-Temps de jeu total:
-%ih:%im:%is
+Temps de jeu total :
+%ih : %im : %is
 PAS
 5m
 10m
@@ -713,7 +713,7 @@ Inventaire/Choisir/Interagir : Ⓐ
 Retour/Annuler : Ⓑ
 Marcher : ✛
 Courir : Maintenir Ⓑ + ✛
-Zoom: 🎣 ou maint. Ⓐ + ⬇️
+Zoom : 🎣 ou maint. Ⓐ + ⬇️
 Pivoter : 🎣 ou maint. Ⓑ + ⬆️/➡️/⬇️/⬅️
 Redimensionner : 🎣 ou maint. Ⓑ + ⬆️/⬇️
 Ramassage Rapide : maint. Ⓐ + ⬅️
@@ -722,7 +722,7 @@ Désassemblage Rapide : maint. Ⓐ + ➡️
 --- Crédits ---
 Factory Farming par Tim Martin
 Traductions par Eugene Zakharov
-et Adrien Martel.
+et Adrien Martel
 -- Musique --
 ♬ Dr Tikov: 1985
 ♬ BoxCat Games: B-3
@@ -748,13 +748,13 @@ kaasiand.cool/tophat
 -- Effets Sonores --
 sfxr.me
 -- Statistiques --
-Temps joué:
-Total d'argent gagné:
-Le plus d'argent détenu:
-Cargaison totale vendue:
-Cargaison total importé:
-Total des bât. de cette terrain:
-Cargaison total dans ce terrain:
+Temps joué :
+Total d'argent gagné :
+Le plus d'argent détenu :
+Cargaison totale vendue :
+Cargaison total importé :
+Total des bât. de cette terrain :
+Cargaison total dans ce terrain :
      
 © Tim Martin 2022
 Factory Farming est un MIT

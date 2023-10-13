@@ -50,6 +50,7 @@ size_t trLen(const enum kTR _tr) {
     case kTRUIInventoryValue: case kTRShopPrice: case kTROut:
       switch (m_language) {
         case kEN: break;
+        case kFR: s += 6; break;
         default: s += 4; break;
       }
       break;

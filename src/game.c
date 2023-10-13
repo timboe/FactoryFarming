@@ -515,9 +515,15 @@ const char* space(void) { return " "; }
 
 const char* Cspace(void) { return ", "; }
 
-const char* cspace(void) { return ": "; }
+const char* cspace(void) { 
+  if (getLanguage() == kFR) return " : ";
+  return ": ";
+}
 
-const char* c5space(void) { return ":      "; }
+const char* c5space(void) { 
+  if (getLanguage() == kFR) return " :     ";
+  return ":      ";
+}
 
 const char* lb(void) { return "("; }
 
