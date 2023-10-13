@@ -463,7 +463,7 @@ Filtre
 Transit Suivant
 Trémie %i/3
 Sortie
-Ingrédients:
+Ingrédients :
 Glycérine
 Bêta
 Carotène
@@ -482,10 +482,10 @@ Jus
 de Pomme
 Colorant
 Artificiel
-L'alimentation animale:
+L'alimentation animale :
 Hormones
 Stéroïdes
-Processus:
+Processus :
 Électrolyse
 de
 l'eau
@@ -509,7 +509,7 @@ Acide Glutamique
 Sodium
 Glutamate
 Monosodique
-Exigences:
+Exigences :
 Solvant
 Dioxyde
 de Titane
@@ -631,7 +631,7 @@ Collecte la cargaison, détient trois types
 Liquéfie le dioxyde de carbone directement de l'air
 Fabrique des pilules de vitamines de bas niveau
 Écraser l'huile végétale des tournesols
-Fabrique des croustilles. Un favori frit!
+Fabrique des croustilles. Un favori frit !
 Brasser et distiller de l'alcool pur
 Mélangez un "cidre" bon marché
 La nourriture entre, la "viande" sort
@@ -645,7 +645,7 @@ Utilisé pour définir une variété de liquides
 Un favori bancal
 Un mélange intéressant de saveurs
 Empêche les choses de se séparer
-C'est sans produits laitiers ! Est-ce une bonne chose ?
+C'est sans produits laitiers. Est-ce une bonne chose ?
 Le maïs entre, les oeufs sortent
 Masse maximale, tracas minimum
 Ç'est surtout du sucre ...
