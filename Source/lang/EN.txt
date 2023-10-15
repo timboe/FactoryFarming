@@ -722,6 +722,7 @@ Quick Demolish Mode: Hold Ⓐ + ➡️
 --- Credits ---
 Factory Farming by Tim Martin
 Translations by Eugene Zakharov
+and Adrien Martel
 -- Music --
 ♬ Dr Tikov: 1985
 ♬ BoxCat Games: B-3
