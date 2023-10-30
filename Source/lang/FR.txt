@@ -53,7 +53,7 @@ Puits
 Boîte de Rangement
 Boîte Tampon
 Puce de Mise à Niveau d'Usine
-Graisse de Convoyeur
+Lubrifiant Conveyor
 Déboucheur
 Décharge
 Motoculteur
@@ -289,22 +289,22 @@ Le sol obstrué ne peut pas être construit.
 Peut-être pourrez-vous l'effacer plus tard?
 Mode Placement
 Mode Plantation
-Construction
-Ramassage
+Mode Construction
+Mode Collecte
 Inventaire
 Inspecter
-Déconstruction
-Nouvelle Récolte!
-Nouvelle Convoyeur!
-Nouveau Extracteur!
-Nouvelle Usine!
-Nouvel Utilitaire!
+Recyclage
+Nouvelle Culture !
+Nouveau Convoyeur !
+Nouvel Extracteur !
+Nouvelle Usine !
+Nouvel Utilitaire !
 Outils
 Outil
-Végétaux
-Végétal
-Tapis Roulants
-Tapis Roulant
+Cultures
+Culture
+Convoyeurs
+Convoyeur
 Extracteurs
 Extracteur
 Usines
@@ -313,8 +313,8 @@ Utilitaires
 Utilitaire
 Cargaisons
 Cargaison
-Parcelles de Terrain
-Parcelles de Terrain
+Parcelles de Terre
+Parcelle de Terre
 Importation (Nord)
 Importation (Nord)
 Importation (Est)
@@ -323,12 +323,12 @@ Importation (Sud)
 Importation (Sud)
 Importation (Ouest)
 Importation (Ouest)
-SAUVEGARDER
-GÉNÉRATEUR
+SAUVEGARDE
+GÉNÉRATION
 CHARGER
 %i : Nouveau jeu
 Charger la Démo
-%i : Continue
+%i : Continuer
 -- Démo Technologique de L'agriculture Industrielle --
 Regardez autour de cet exemple d'usine. Vous
 trouverez des installations jusqu'au niveau
@@ -364,11 +364,11 @@ graines de carottes sur des parcelles libres de sol limoneux.
 -- Première Récolte --
 Les cultures mettent un certain temps à pousser, mais pour
 cette fois nous allons accélérer les choses. Appuyez sur Ⓐ,
-choisissez le mode ramassage et récoltez 10 carottes. Vous
-pouvez ramasser dans vos champs et dans les bât.
+choisissez le mode collecte et récoltez 10 carottes. Vous
+pouvez collecter dans vos champs et dans les bât.
 Allez là où vous avez planté vos gra. de carottes. Utilis. Ⓐ
-pour accéder à votre inventaire, puis sélect. le mode ramass-
-age. Appuyez ou maintenez Ⓐ en mouvement pour récolter
+pour accéder à votre inventaire, puis sélect. le mode collecte.
+Appuyez ou maintenez Ⓐ en mouvement pour récolter
 10 carottes. Utilisez 🎣 pour changer la taille de la zone.
 -- La Première Vente --
 Bien, savez-vous maintenant quoi faire de ces carottes ?
@@ -381,12 +381,12 @@ Pour modifier la quantité vendue, appuyez sur Ⓐ,
 tournez 🎣, ou maintenez Ⓑ et appuyez sur ⬆️ ou ⬇️.
 -- Récolte Automatisée --
 C’est un bon début, mais c'était beaucoup de travail...
-Utilisons plutôt une moissonneuse ! Achetez-en une dans
-la boutique et installez-la près de vos plants de carotte,
+Utilisons  plutôt un extracteur ! Achetez-en un dans
+la boutique et installez-le près de vos plants de carotte,
 de sorte à ce qu’ils soient dans sa zone d’action.
-Allez à la boutique, achetez une moissonneuse automatique.
-Appuyez sur Ⓐ et sélectionnez-la dans votre inventaire.
-la moisson. sur un emplacement libre, en prenant garde à
+Allez à la boutique, achetez un extracteur automatique.
+Appuyez sur Ⓐ et sélectionnez-le dans votre inventaire.
+Placez l’extracteur sur un empl. libre, en prenant garde à
 ce que les carottes se trouvent dans sa zone de récolte.
 -- Le Premier Convoyeur --
 Les carottes sont maintenant récoltées automatiquement,
@@ -395,11 +395,11 @@ convoyeurs et tracez un chemin jusqu’au dépôt pour vendre
 les carottes. Pour pivoter les tapis, utilise la 🎣 ou Ⓑ + ✛.
 Allez à la boutique , achetez environ 50 convoyeurs.
 Appuyez sur Ⓐ et sélectionnez-les dans votre inventaire.
-Formez une chaîne de convoyeurs de la moissonneuse au
+Formez une chaîne de convoy. depuis l’extracteur jusqu’au
 dépôt. Pivotez avec 🎣, ou maintenez Ⓑ et appuyez sur ✛.
 -- Exploiter la Terre --
 Toutes les ressources ne poussent pas dans le sol :
-certaines sont déterrées ou pompées. Construisons une
+certaines sont déterrées ou forées. Construisons une
 carrière de craie. Achetez-en une à la boutique et construisez-
 la sur un sol calcaire. Il devrait y en avoir au nord.
 Allez à la boutique, achetez une carrière de craie. Appuyez
@@ -412,7 +412,7 @@ production complète ! Achetez une usine de vitamines dans la
 boutique, fournissez-lui de la craie et des carottes, puis amenez
  les vitamines au dépôt pour augmenter vos revenus !
 Allez à la boutique, achetez une usine de vitamines. Placez-la
-à l’endroit approprié. Utilisez des convoyeurs pour
+dans la zone de votre choix. Utilisez des convoyeurs pou
 l'approvisionner en carottes et en craie. Assemblez plusieurs
 convoyeurs pour transporter les vitamines jusqu'au dépôt.
 -- Une Exploitation Prospère --
@@ -431,7 +431,7 @@ Visitez le cadastre, à droite du dépôt. Achetez
 un nouveau terrain pour agrandir l’exploitation.
 -- Un Nouvel Horizon --
 Bienvenue sur votre nouveau terrain ! Au lieu de vendre du
-fret, vous pouvez également le déplacer entre les parcelles.
+fret, vous pouvez également le déplacer entre vos propriétés.
 Utilisez des convoyeurs pour acheminer la cargaison vers
 le bâtiment d'exportation de l'un de vos terrains.
 Exportez une cargaison en la déplaçant via des convoyeurs
@@ -440,16 +440,16 @@ prix de de chaque type de cargaison à l’export est recalculé
 toutes les deux minutes.
 -- Accéder Aux Marchandises --
 Maintenant que vous exportez du fret, étudions l’import.
-Changez de parcelle et visitez le bâtiment d'importation :
-vous pouvez importer jusqu'à quatre cargaisons par zone.
-Paramétrez une importation maintenant.
+Changez de terrain et visitez le bâtiment d'importation :
+vous pouvez importer jusqu'à quatre cargaisons par terrain.
+Essayez de paramétrer une importation.
 Importez des marchandises d’un autre terrain.
 Les importations N, S, E, O peuvent être
 gérées individuellement. Vous ne pouvez pas exporter
-un type de cargaison qui est importé dans la même zone.
+un type de cargaison qui est importé sur le même terrain.
 -- Importations, Exportations & Terrains --
-Merveilleux! Continuer à acheter plus de terrains afin
-d'accéder à de nouveaux types de sols et d'agrandir l’exploi-
+Merveilleux! Continuez à acheter plus de terrains afin
+d'accéder à de nouveaux types de sols et agrandir l’exploi-
 tation. Utilisez les bâtiments d'exportation et d'impor-
 tation pour déplacer la cargaison entre les terrains !
 Nord
@@ -695,19 +695,19 @@ Bruits de Pas
 Vibrations de l’Écran
 Tutoriel Activé
 Animation des Convoyeurs
-Afficher les Zones des Moiss.
+Afficher la zone d’effet des Extracteurs
 Manivelle sur Convoyeur
-Centrer Verrouillée sur le Joueur
+Caméra Verrouillée sur le Joueur
 Zoom automatique en Déplacement
 Délai de Sauvegarde Automatique
-Ramassage auto. Désassemblage
-Auto appliquer la graisse de convoyeur
+Collecte auto pendant Recyclage
+Appliquer Lubrifiant Automatiquement
 Afficher Informations Système
 --- Quitter le Jeu ---
 Sauvegarder et Revenir au Menu
 Quitter SANS Sauvegarder
 --- Capture d'Écran ---
-Photographier une Parcelle
+Photographier un Terrain
 --- Contrôles ---
 Inventaire/Choisir/Interagir : Ⓐ
 Retour/Annuler : Ⓑ
@@ -716,9 +716,9 @@ Courir : Maintenir Ⓑ + ✛
 Zoom : 🎣 ou maint. Ⓐ + ⬇️
 Pivoter : 🎣 ou maint. Ⓑ + ⬆️/➡️/⬇️/⬅️
 Redimensionner : 🎣 ou maint. Ⓑ + ⬆️/⬇️
-Ramassage Rapide : maint. Ⓐ + ⬅️
-Inspecter Rapide : maint. Ⓐ + ⬆️
-Désassemblage Rapide : maint. Ⓐ + ➡️
+Ramassage Rapide : Maint. Ⓐ + ⬅️
+Inspecter Rapide : Maint. Ⓐ + ⬆️
+Recyclage Rapide : Maint. Ⓐ + ➡️
 --- Crédits ---
 Factory Farming par Tim Martin
 Traductions par Eugene Zakharov
