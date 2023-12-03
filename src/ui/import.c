@@ -14,9 +14,10 @@ bool isEmptyImport() {
     for (int32_t i = 1; i < getNSubTypes(cat); ++i) { // Start at 1 to miss kNoCargo
       const float tot = getTotalCargoExport(i);
       const uint16_t totConsumers = getCargoImportConsumers(i);
-      if (tot && totConsumers) {
-        return false; // Am exporting this type of cargo
+      if (!tot && !totConsumers) {
+        continue; // Am not exporting this type of cargo
       }
+      return false;
     }
   }
   return true;

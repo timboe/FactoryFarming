@@ -669,7 +669,7 @@ Vendre
 Tout est
 Déverrouillé!
 Merci d'avoir joué
-L'AGRI. INDUSTRIELLE !
+L'AGRI. INDUSTRI. !
 Visite :
 La boutique
 Pour débloquer :
@@ -687,7 +687,7 @@ PAS
 15m
 30m
 --- Paramètres Sonores ---
-
+Music
 Volume de la Musique
 Effets Sonores
 Bruits de Pas
