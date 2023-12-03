@@ -622,7 +622,14 @@ bool doLoad() {
       m_worldVersions[m_save][m_slot] = V1p5_SAVE_FORMAT;
       // Just adding data - nothing to migrate
       pd->system->logToConsole("-- Performed world schema evolution from v%i to v%i", V1p1_SAVE_FORMAT, V1p5_SAVE_FORMAT);
-   }
+    }
+
+    // BUG FIX - v < 1.6
+    struct Player_t* p = getPlayer();
+    if (p->m_importConsumers[kNoCargo]) {
+      pd->system->logToConsole("-- BUG: Have %i importers of the NoCargo placeholder in this save. Fixing.", p->m_importConsumers[kNoCargo]);
+      p->m_importConsumers[kNoCargo] = 0;
+    }
 
     // Things which need to run post-load
     setGameMode(kWanderMode);
@@ -630,7 +637,7 @@ bool doLoad() {
     // need to refresh conveyor sprite connections
     for (uint16_t i = 0; i < BUILDING_LIMIT; ++i) {
       conveyorUpdateSprite(buildingManagerGetByIndex(i));
-    } 
+    }
 
     findPlotCentres();
     addObstacles();

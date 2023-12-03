@@ -4,13 +4,33 @@
 #include "../sprite.h"
 #include "../buildings/special.h"
 
+bool isEmptyImport(void);
+
 /// ///
+
+bool isEmptyImport() {
+  for (int32_t dir = 0; dir < 4; ++dir) {
+    enum kUICat cat = kUICatImportN + dir;
+    for (int32_t i = 1; i < getNSubTypes(cat); ++i) { // Start at 1 to miss kNoCargo
+      const float tot = getTotalCargoExport(i);
+      const uint16_t totConsumers = getCargoImportConsumers(i);
+      if (tot && totConsumers) {
+        return false; // Am exporting this type of cargo
+      }
+    }
+  }
+  return true;
+}
 
 void doImport() {
   struct Building_t* import = getImportBox();  
   struct Player_t* p = getPlayer();
   const uint16_t newExport =  getUIContentID();
   const enum kUICat selectedCat = getUIContentCategory();
+
+  if (isEmptyImport() || newExport == kNoCargo) { // Later should never happen, just double-checking
+    return;
+  }
 
   // Get current export
   enum kCargoType currentExport = kNoCargo;
@@ -117,7 +137,10 @@ void populateInfoImport() {
 bool populateContentImport() {
   struct Building_t* import = getImportBox();
   int16_t column = 0, row = 0;
-  bool empty = true;
+  if (isEmptyImport()) {
+    setUIContentHeader(row, kUICatImportN);
+    return true;
+  }
 
   for (int32_t dir = 0; dir < 4; ++dir) {
     column = 0;
@@ -126,7 +149,7 @@ bool populateContentImport() {
     setUIContentHeader(row, cat);
     ++row;
 
-    for (int32_t i = 0; i < getNSubTypes(cat); ++i) {
+    for (int32_t i = 1; i < getNSubTypes(cat); ++i) { // Start at 1 to miss kNoCargo
       const float tot = getTotalCargoExport(i);
       const uint16_t totConsumers = getCargoImportConsumers(i);
       if (!tot && !totConsumers) {
@@ -156,8 +179,7 @@ bool populateContentImport() {
       }
 
       ++column;
-      empty = false;
     }
   }
-  return empty;
+  return false;
 }

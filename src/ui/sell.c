@@ -4,14 +4,24 @@
 #include "../sound.h"
 #include "../buildings/special.h"
 
+bool isEmptySell(void);
+
 /// ///
+
+bool isEmptySell() {
+  for (int32_t i = 1; i < getNSubTypes(kUICatCargo); ++i) { /// Start at 1 to miss kNoCargo
+    if (getOwned(kUICatCargo, i)) {
+      return false;
+    }
+  }
+  return true;
+}
 
 void doSale() {
   const uint16_t selectedID =  getUIContentID();
   const int32_t selectedPrice = getPrice(kUICatCargo, selectedID);
   const int32_t owned = getOwned(kUICatCargo, selectedID);
-  if (selectedID == kNoCargo) return;
-  if (owned == 0) return;
+  if (selectedID == kNoCargo || owned == 0 || isEmptySell()) return;
 
   int32_t toSell = getBuySellMultiplier();
   if (toSell > owned) {
@@ -78,9 +88,9 @@ bool populateContentSell(void) {
   struct Player_t* p = getPlayer();
   int16_t column = 0, row = 0;
   setUIContentHeader(row, kUICatCargo);
-  bool empty = true;
+  if (isEmptySell()) return true;
   ++row;
-  for (int32_t i = 0; i < getNSubTypes(kUICatCargo); ++i) {
+  for (int32_t i = 1; i < getNSubTypes(kUICatCargo); ++i) { // Start at 1 to miss kNoCargo
     if (!getOwned(kUICatCargo, i)) {
       continue;
     }
@@ -89,7 +99,6 @@ bool populateContentSell(void) {
       column = 0;
     }
     setUIContentItem(row, column++, kUICatCargo, i, 0);
-    empty = false;
   }
-  return empty;
+  return false;
 }

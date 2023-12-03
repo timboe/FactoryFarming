@@ -258,12 +258,12 @@ uint16_t getUIContentID() {
 }
 
 void snprintf_c(char* _buf, uint8_t _bufSize, int _n) {
-    if (_n < 1000) {
-        snprintf(_buf+strlen(_buf), _bufSize, "%d", _n);
-        return;
-    }
-    snprintf_c(_buf, _bufSize, _n / 1000);
-    snprintf(_buf+strlen(_buf), _bufSize, ",%03d", _n %1000);
+  if (_n < 1000) {
+      snprintf(_buf+strlen(_buf), _bufSize, "%d", _n);
+      return;
+  }
+  snprintf_c(_buf, _bufSize, _n / 1000);
+  snprintf(_buf+strlen(_buf), _bufSize, ",%03d", _n %1000);
 }
 
 //LCDSprite* getUIHeader(enum kUICat _c) {

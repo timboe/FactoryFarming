@@ -53,7 +53,7 @@ Puits
 Boîte de Rangement
 Boîte Tampon
 Puce de Mise à Niveau d'Usine
-Lubrifiant Conveyor
+Lubrifiant pour Convoyeur
 Déboucheur
 Décharge
 Motoculteur
@@ -103,11 +103,11 @@ Usine de Trousse de Fête
 Usine de Parfum
 Usine de Poudre de Miracle
 Usine Turque de Délice
-La Boutique
-Le Dépôt
+Boutique
+Dépôt
 Bâtiment d'Exportation
 Bâtiment d'Importation
-Le Cadastre
+Cadastre
 Un Rocher Suspect
 Carottes
 Carotte
@@ -258,15 +258,15 @@ Les Collines Fertiles
 Les Vasières De Marée
 ??? ??????? ???????????
 Les Plaines Tranquilles
-Mode de Cargaison de Ramassage
+Mode de Collecte de Cargaison
 Mode d'Inspection
-Mode de Déconstruction
-Attrape la cargaison à proximité
-Voir les détails sur la tuile actuelle
-Déconstruit tout dans la région
-La Boutique
-Le Dépôt
-Le Cadastre
+Mode de Recyclage
+Ramasse les cargaisons à proximité
+Voir les détails de la tuile actuelle
+Recycle les éléments dans la zone
+Boutique
+Dépôt
+Cadastre
 Exportations
 Importations
 Crédits
@@ -325,7 +325,7 @@ Importation (Ouest)
 Importation (Ouest)
 SAUVEGARDE
 GÉNÉRATION
-CHARGER
+CHARGEMENT
 %i : Nouveau jeu
 Charger la Démo
 %i : Continuer
@@ -384,7 +384,7 @@ C’est un bon début, mais c'était beaucoup de travail...
 Utilisons  plutôt un extracteur ! Achetez-en un dans
 la boutique et installez-le près de vos plants de carotte,
 de sorte à ce qu’ils soient dans sa zone d’action.
-Allez à la boutique, achetez un extracteur automatique.
+Allez à la boutique, achetez un moissonneuse automatique.
 Appuyez sur Ⓐ et sélectionnez-le dans votre inventaire.
 Placez l’extracteur sur un empl. libre, en prenant garde à
 ce que les carottes se trouvent dans sa zone de récolte.
@@ -412,7 +412,7 @@ production complète ! Achetez une usine de vitamines dans la
 boutique, fournissez-lui de la craie et des carottes, puis amenez
  les vitamines au dépôt pour augmenter vos revenus !
 Allez à la boutique, achetez une usine de vitamines. Placez-la
-dans la zone de votre choix. Utilisez des convoyeurs pou
+dans la zone de votre choix. Utilisez des convoyeurs pour
 l'approvisionner en carottes et en craie. Assemblez plusieurs
 convoyeurs pour transporter les vitamines jusqu'au dépôt.
 -- Une Exploitation Prospère --
@@ -623,11 +623,11 @@ Récupérer la terre. Pour construire, pas planter.
 Transforme les terres à proximité en sol terreau
 Un gîte de détente pour profiter de vos richesses
 Une charmante clôture en bois
-Collecte la cargaison, détient trois types
+Récolte jusqu'à 3 cultures différentes
 Doit être construit sur l'eau. Pompes à eau
 Construire sur un sol calcaire. Produit de la craie
 Construit sur un sol tourbeux. Produit du sel
-Collecte la cargaison, détient trois types
+Récolte jusqu'à 3 cultures différentes
 Liquéfie le dioxyde de carbone directement de l'air
 Fabrique des pilules de vitamines de bas niveau
 Écraser l'huile végétale des tournesols
@@ -669,16 +669,16 @@ Vendre
 Tout est
 Déverrouillé!
 Merci d'avoir joué
-USINE AGRICULTURE!
+L'AGRI. INDUSTRIELLE !
 Visite :
 La boutique
-Pour débloquer le suivant :
+Pour débloquer :
 Vendre un total de :
 Vendu jusqu'à présent : %i
 Continuer
 Le tutoriel
 Bâtiment
-ENREGIST. AVANT DE SORTI!
+ENREG. AVANT DE SORTIR !
 Temps de jeu total :
 %ih : %im : %is
 PAS
@@ -687,7 +687,7 @@ PAS
 15m
 30m
 --- Paramètres Sonores ---
-Musique
+
 Volume de la Musique
 Effets Sonores
 Bruits de Pas
@@ -695,13 +695,13 @@ Bruits de Pas
 Vibrations de l’Écran
 Tutoriel Activé
 Animation des Convoyeurs
-Afficher la zone d’effet des Extracteurs
+Aff. la zone des Moissonneuses
 Manivelle sur Convoyeur
 Caméra Verrouillée sur le Joueur
 Zoom automatique en Déplacement
 Délai de Sauvegarde Automatique
 Collecte auto pendant Recyclage
-Appliquer Lubrifiant Automatiquement
+Lubrifier automatiquement
 Afficher Informations Système
 --- Quitter le Jeu ---
 Sauvegarder et Revenir au Menu
@@ -713,15 +713,15 @@ Inventaire/Choisir/Interagir : Ⓐ
 Retour/Annuler : Ⓑ
 Marcher : ✛
 Courir : Maintenir Ⓑ + ✛
-Zoom : 🎣 ou maint. Ⓐ + ⬇️
-Pivoter : 🎣 ou maint. Ⓑ + ⬆️/➡️/⬇️/⬅️
-Redimensionner : 🎣 ou maint. Ⓑ + ⬆️/⬇️
+Zoom : 🎣 / maint. Ⓐ + ⬇️
+Pivoter : 🎣 / maint. Ⓑ + ✛
+Redimensionner : 🎣 / maint. Ⓑ + ⬆️/⬇️
 Ramassage Rapide : Maint. Ⓐ + ⬅️
 Inspecter Rapide : Maint. Ⓐ + ⬆️
 Recyclage Rapide : Maint. Ⓐ + ➡️
 --- Crédits ---
 Factory Farming par Tim Martin
-Traductions par Eugene Zakharov
+Traduction par Eugene Zakharov
 et Adrien Martel
 -- Musique --
 ♬ Dr Tikov: 1985
@@ -752,9 +752,9 @@ Temps joué :
 Total d'argent gagné :
 Le plus d'argent détenu :
 Cargaison totale vendue :
-Cargaison total importé :
+Cargaison totale importé :
 Total des bât. de cette terrain :
-Cargaison total dans ce terrain :
+Cargaison totale dans ce terrain :
      
 © Tim Martin 2022
 Factory Farming est un MIT
@@ -775,6 +775,6 @@ Usine
 Agriculture
 L'agriculture Industrielle
 FR
-Mode Carte
-Voir une carte en direct de la terrain
+Carte
+Affiche une carte détaillée du terrain
 --
