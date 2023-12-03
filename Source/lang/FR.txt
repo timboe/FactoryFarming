@@ -687,7 +687,7 @@ PAS
 15m
 30m
 --- Paramètres Sonores ---
-Music
+Musique
 Volume de la Musique
 Effets Sonores
 Bruits de Pas

@@ -53,7 +53,7 @@ kTRWell,Well,Колодец,Puits,Brunnen,Pozo
 kTRStorageBox,Storage Box,Сундук,Boîte de Rangement,Aufbewahrungskiste,Caja de Almacenaje
 kTRBufferBox,Buffer Box,Хранилище,Boîte Tampon,Pufferbox,Caja de Búfer
 kTRFactoryUpgrade,Factory Upgrade Module,Модуль обновления завода,Puce de Mise à Niveau d'Usine,Werkseitiges Upgrade-Modul,Módulo de Actualización de Fábrica
-kTRConveyorGrease,Conveyor Grease,Смазка для конвейера,Graisse de Convoyeur,Förderbandfett,Grasa Transportadora
+kTRConveyorGrease,Conveyor Grease,Смазка для конвейера,Lubrifiant pour Convoyeur,Förderbandfett,Grasa Transportadora
 kTRObstructionRemover,Obstruction Remover,Взрывчатка,Déboucheur,Obstruktionsentferner,Removedor de Obstrucciones
 kTRLandfill,Landfill,Искусственная земля,Décharge,Deponie,Vertedero
 kTRRotavator,Rotavator,Ротоватор,Motoculteur,Rotavator,Motocultor
@@ -103,11 +103,11 @@ kTRFacPartyPack,Party Pack Factory,Фабрика набор. для вечер�
 kTRFacParfume,Parfume Factory,Фабрика парфюма,Usine de Parfum,Parfümfabrik,Fábrica de Perfumes
 kTRFacMiraclePowder,Miracle Powder Factory,Фабрика чудо-порошка,Usine de Poudre de Miracle,Wunderpulverfabrik,Fábrica de Polvo de Milagro
 kTRFacTurkishDelight,Turkish Delight Factory,Фабрика рахат-лукума,Usine Turque de Délice,Türkische Freudenfabrik,Fábrica de Deleite Turco
-kTRShop,The Shop,Магазин,La Boutique,Das Geschäft,La Tienda
-kTRSales,Sales Depot,Депо продаж,Le Dépôt,Verkaufsdepot,Depósito de Ventas
+kTRShop,The Shop,Магазин,Boutique,Das Geschäft,La Tienda
+kTRSales,Sales Depot,Депо продаж,Dépôt,Verkaufsdepot,Depósito de Ventas
 kTRExports,Cargo Exports Depot,Депо экспорта,Bâtiment d'Exportation,Depot für Frachtexportiert,Depósito de Exportación de Carga
 kTRImports,Cargo Imports Depot,Депо импорта,Bâtiment d'Importation,Depot für Frachtimporte,Depósito de Importaciones de Carga
-kTRWarp,Plot Depot,Депо участков,Le Cadastre,Depot für Grundstück,Depósito Trama
+kTRWarp,Plot Depot,Депо участков,Cadastre,Depot für Grundstück,Depósito Trama
 kTRSus,A Suspicious Rock,Неопознанная скала,Un Rocher Suspect,Ein verdächtiger Stein,Una Roca Sospechosa
 kTRCarrotPlural,Carrots,Морковь,Carottes,Möhren,Zanahorias
 kTRCarrot,Carrot,Морковь,Carotte,Karotte,Zanahoria
@@ -258,15 +258,15 @@ kTRWaterWorldMask,??? ????? ??? ?????,????????? ????????? ??????,??? ???????? ??
 kTRWaterWorld,The Tidal Mud Flats,Приливная грязевая полоса,Les Vasières De Marée,Das Wattenmeer,Las Marismas
 kTRTranquilWorldMask,??? ???????? ??????,????????? ????????,??? ??????? ???????????,??? ??????? ??????,??? ???????? ??????????
 kTRTranquilWorld,The Tranquil Plains,Спокойные равнины,Les Plaines Tranquilles,Die Ruhigen Ebenen,Las Llanuras Tranquilas
-kTRPick,Pickup Cargo Mode,Режим сбора,Mode de Cargaison de Ramassage,Fracht Abholen,Modo de Recogida de Carga
+kTRPick,Pickup Cargo Mode,Режим сбора,Mode de Collecte de Cargaison,Fracht Abholen,Modo de Recogida de Carga
 kTRInspect,Inspection Mode,Режим инфо,Mode d'Inspection,Inspektionsmodus,Modo de Inspección
-kTRDestroy,Deconstruction Mode,Режим разрушения,Mode de Déconstruction,Dekonstruktionsmodus,Modo de Deconstrucción
-kTRPickHelp,"Grabs nearby cargo, empties buildings","Забирает товар, опустошает фабрики",Attrape la cargaison à proximité,"Greift fracht in der nähe, leert gebäude","Agarra la carga cercana, vacía los edificios"
-kTRInspectHelp,See details about the current tile,Показывает инфо обо всём,Voir les détails sur la tuile actuelle,Siehe details zur aktuellen plättchen,Ver detalles sobre el mosaico actual
-kTRDestroyHelp,Deconstructs everything in the area,Разрушает постройки,Déconstruit tout dans la région,Dekonstruiert alles in der gegend,Deconstruye todo en el área
-kTRTopShop,The Shop,Магазин,La Boutique,Das Geschäft,La Tienda
-kTRTopSales,Sales Depot,Депо продаж,Le Dépôt,Verkaufsdepot,Ventas
-kTRTopWarp,Plots Depot,Депо участков,Le Cadastre,Grundstücke,Tierra
+kTRDestroy,Deconstruction Mode,Режим разрушения,Mode de Recyclage,Dekonstruktionsmodus,Modo de Deconstrucción
+kTRPickHelp,"Grabs nearby cargo, empties buildings","Забирает товар, опустошает фабрики",Ramasse les cargaisons à proximité,"Greift fracht in der nähe, leert gebäude","Agarra la carga cercana, vacía los edificios"
+kTRInspectHelp,See details about the current tile,Показывает инфо обо всём,Voir les détails de la tuile actuelle,Siehe details zur aktuellen plättchen,Ver detalles sobre el mosaico actual
+kTRDestroyHelp,Deconstructs everything in the area,Разрушает постройки,Recycle les éléments dans la zone,Dekonstruiert alles in der gegend,Deconstruye todo en el área
+kTRTopShop,The Shop,Магазин,Boutique,Das Geschäft,La Tienda
+kTRTopSales,Sales Depot,Депо продаж,Dépôt,Verkaufsdepot,Ventas
+kTRTopWarp,Plots Depot,Депо участков,Cadastre,Grundstücke,Tierra
 kTRTopExports,Exports Depot,Депо экспорта,Exportations,Exporte,Exportaciones
 kTRTopImports,Imports Depot,Депо импорта,Importations,Importe,Importaciones
 kTRTopCredits,Credits,Авторы,Crédits,Kredite,Créditos
@@ -289,22 +289,22 @@ kTRObstructedGroundHelp1,Obstructed ground cannot be built on.,Здесь нел
 kTRObstructedGroundHelp2,Maybe you will be able to clear it later on?,"Возможно, в будущем тут что-то появится.",Peut-être pourrez-vous l'effacer plus tard?,Vielleicht kannst du es später löschen?,¿Tal vez puedas borrarlo más tarde?
 kTRPlaceMode,Place Mode,Режим установки,Mode Placement,Platzmodus,Colocación
 kTRPlantMode,Plant Mode,Режим посадки,Mode Plantation,Pflanzenmodus,Plantando
-kTRBuildMode,Build Mode,Режим постройки,Construction,Baumodus,Construcción
-kTRPickupMode,Pickup Mode,Режим подбора,Ramassage,Abholmodus,Recoger
+kTRBuildMode,Build Mode,Режим постройки,Mode Construction,Baumodus,Construcción
+kTRPickupMode,Pickup Mode,Режим подбора,Mode Collecte,Abholmodus,Recoger
 kTRInventoryMode,Inventory,Инвентарь,Inventaire,Inventar,Inventario
 kTRInspectMode,Inspect,Детали,Inspecter,Inspektionsmodus,Inspeccionar
-kTRDestroyMode,Deconstruction,Разрушение,Déconstruction,Dekonstruktion,Deconstrucción
-kTRNewCrop,New Crop!,Новый урожай!,Nouvelle Récolte!,Neue Ernte!,¡Nueva Planta!
-kTRNewConveyor,New Conveyor!,Новый конвейер!,Nouvelle Convoyeur!,Neues Förderband!,¡Nuevo Transportador!
-kTRNewExtractor,New Harvester!,Новый харвестер!,Nouveau Extracteur!,Neue Auszieher!,¡Nuevo Extractor!
-kTRNewFactory,New Factory!,Новая фабрика!,Nouvelle Usine!,Neue Fabrik!,¡Nueva Fábrica!
-kTRNewUtility,New Utility!,Новая утилита!,Nouvel Utilitaire!,Neues Dienstprogramm!,Nueva Utilidad!
+kTRDestroyMode,Deconstruction,Разрушение,Recyclage,Dekonstruktion,Deconstrucción
+kTRNewCrop,New Crop!,Новый урожай!,Nouvelle Culture !,Neue Ernte!,¡Nueva Planta!
+kTRNewConveyor,New Conveyor!,Новый конвейер!,Nouveau Convoyeur !,Neues Förderband!,¡Nuevo Transportador!
+kTRNewExtractor,New Harvester!,Новый харвестер!,Nouvel Extracteur !,Neue Auszieher!,¡Nuevo Extractor!
+kTRNewFactory,New Factory!,Новая фабрика!,Nouvelle Usine !,Neue Fabrik!,¡Nueva Fábrica!
+kTRNewUtility,New Utility!,Новая утилита!,Nouvel Utilitaire !,Neues Dienstprogramm!,Nueva Utilidad!
 kTRUICatToolPlural,Tools,Инструменты,Outils,Werkzeug,Herramientas
 kTRUICatTool,Tool,Инструмент,Outil,Werkzeug,Herramienta
-kTRUICatPlantPlural,Crops,Рассада,Végétaux,Pflanzen,Cultivos
-kTRUICatPlant,Crop,Рассада,Végétal,Pflanzen,Cultivo
-kTRUICatConvPlural,Conveyors,Конвейеры,Tapis Roulants,Förderbänder,Transportadores
-kTRUICatConv,Conveyor,Конвейер,Tapis Roulant,Förderband,Transportador
+kTRUICatPlantPlural,Crops,Рассада,Cultures,Pflanzen,Cultivos
+kTRUICatPlant,Crop,Рассада,Culture,Pflanzen,Cultivo
+kTRUICatConvPlural,Conveyors,Конвейеры,Convoyeurs,Förderbänder,Transportadores
+kTRUICatConv,Conveyor,Конвейер,Convoyeur,Förderband,Transportador
 kTRUICatExtractorPlural,Harvesters,Харвестеры,Extracteurs,Auszieher,Extractores
 kTRUICatExtractor,Harvester,Харвестер,Extracteur,Auszieher,Extractor
 kTRUICatFactoryPlural,Factories,Фабрики,Usines,Fabriken,Fábricas
@@ -313,8 +313,8 @@ kTRUICatUtilityPlural,Utilities,Утилиты,Utilitaires,Dienstprogramme,Utili
 kTRUICatUtility,Utility,Утилита,Utilitaire,Dienstprogramm,Utilidad
 kTRUICatCargoPlural,Cargo,Товар,Cargaisons,Fracht,Carga
 kTRUICatCargo,Cargo,Товар,Cargaison,Fracht,Carga
-kTRUICatWarpPlural,Plot Locations,Участки,Parcelles de Terrain,Handlungsorte,Parcelas
-kTRUICatWarp,Plot Locations,Участок,Parcelles de Terrain,Handlungsorte,Parcelas
+kTRUICatWarpPlural,Plot Locations,Участки,Parcelles de Terre,Handlungsorte,Parcelas
+kTRUICatWarp,Plot Locations,Участок,Parcelle de Terre,Handlungsorte,Parcelas
 kTRUICatImportNPlural,Import (North),Импорт (север),Importation (Nord),Import (Norden),Importación (Norte)
 kTRUICatImportN,Import (North),Импорт (север),Importation (Nord),Import (Norden),Importación (Norte)
 kTRUICatImportEPlural,Import (East),Импорт (восток),Importation (Est),Import (Ost),Importación (Este)
@@ -323,12 +323,12 @@ kTRUICatImportSPlural,Import (South),Импорт (юг),Importation (Sud),Impor
 kTRUICatImportS,Import (South),Импорт (юг),Importation (Sud),Import (Süd),Importación (Sur)
 kTRUICatImportWPlural,Import (West),Импорт (запад),Importation (Ouest),Import (West),Importación (Oeste)
 kTRUICatImportW,Import (West),Импорт (запад),Importation (Ouest),Import (West),Importación (Oeste)
-kTRSaving,SAVING,СОХРАНЯЕМ,SAUVEGARDER,SPAREN,SALVANDO
-kTRGenerating,GENERATING,СОЗДАЁМ,GÉNÉRATEUR,ERSTELLEN,GENERANDO
-kTRLoading,LOADING,ЗАГРУЖАЕМ,CHARGER,GELADEN,CARGANDO
+kTRSaving,SAVING,СОХРАНЯЕМ,SAUVEGARDE,SPAREN,SALVANDO
+kTRGenerating,GENERATING,СОЗДАЁМ,GÉNÉRATION,ERSTELLEN,GENERANDO
+kTRLoading,LOADING,ЗАГРУЖАЕМ,CHARGEMENT,GELADEN,CARGANDO
 kTRNewGame,%i: New Game,%i: новая игра,%i : Nouveau jeu,%i: Neues Spiel,%i: Nuevo Juego
 kTRLoadDemo,Load Demo,Загрузить демо,Charger la Démo,Laden Sie Demo,Carga la Demo
-kTRContinue,%i: Continue,%i: продолжить,%i : Continue,%i: Weiterspielen,%i: Continua
+kTRContinue,%i: Continue,%i: продолжить,%i : Continuer,%i: Weiterspielen,%i: Continua
 kTRTutDemo0,-- Factory Farming Tech Demo --,-- Factory Farming техническое демо --,-- Démo Technologique de L'agriculture Industrielle --,-- Tech-Demo der Industrie Landwirtschaft --,-- Demostración de Agricultura Intensiva --
 kTRTutDemo1,You're free to look around this example factory.,Можно осмотреть этот пример фабрики.,Regardez autour de cet exemple d'usine. Vous,Sie können sich in dieser beispielfabrik umsehen.,Mire alrededor de esta fábrica de ejemplo.
 kTRTutDemo2,You will find facilities up to Tech Tier 3.,Тут есть строения не выше уровня 3.,trouverez des installations jusqu'au niveau,Sie finden einrichtungen bis zu Tech Tier 3. Das volle,Encontrarás instalaciones hasta el nivel tecnológico 3.
@@ -364,11 +364,11 @@ kTRTut2_8,"empty patches of silty soil, then press Ⓑ.","на пустые кв
 kTRTut3_0,-- The First Harvest --,-- Первый урожай --,-- Première Récolte --,-- Die Erste Ernte --,-- La Primera Cosecha --
 kTRTut3_1,"Great, crops normally take some time to yield produce,","Прекрасно, урожай растёт не моментально, но давай","Les cultures mettent un certain temps à pousser, mais pour",Großartige. Lassen sie uns diese karottenpflanzen ,"Genial, aceleremos estas plantas de zanahoria. "
 kTRTut3_2,"but let's speed up these carrot plants. Press Ⓐ, choose","соберём морковь уже сейчас. Нажми Ⓐ, выбери","cette fois nous allons accélérer les choses. Appuyez sur Ⓐ,","beschleunigen. Drücken sie Ⓐ, wählen sie abholmodus","Presiona Ⓐ, elige el modo de recogida de carga y "
-kTRTut3_3,Pickup Cargo Mode and harvest 10 grown carrots.,режим сбора и собери 10 спелых морковок. Можно,choisissez le mode ramassage et récoltez 10 carottes. Vous,und ernte 10 angebaute karotten. Sie können,cosecha 10 zanahorias. Puede recoger cualquier 
-kTRTut3_4,"You can pickup any cargo in the world, or in buildings.",подбирать любой товар на земле/воде и в зданиях.,pouvez ramasser dans vos champs et dans les bât.,jede fracht der welt oder in gebäuden abholen.,carga en el mundo o en edificios.
+kTRTut3_3,Pickup Cargo Mode and harvest 10 grown carrots.,режим сбора и собери 10 спелых морковок. Можно,choisissez le mode collecte et récoltez 10 carottes. Vous,und ernte 10 angebaute karotten. Sie können,cosecha 10 zanahorias. Puede recoger cualquier 
+kTRTut3_4,"You can pickup any cargo in the world, or in buildings.",подбирать любой товар на земле/воде и в зданиях.,pouvez collecter dans vos champs et dans les bât.,jede fracht der welt oder in gebäuden abholen.,carga en el mundo o en edificios.
 kTRTut3_5,Go to where you planted your carrot seeds.,"Пойдем туда, где растёт морковь. Нажми Ⓐ чтобы",Allez là où vous avez planté vos gra. de carottes. Utilis. Ⓐ,"Drücken sie  Ⓐ, um ihr inventar einzugeben, und ","Presione Ⓐ para ingresar a su inventario, seleccione "
-kTRTut3_6,"Press Ⓐ to enter your inventory, select 'Pickup","открыть инвентарь, выбери режим сбора. Нажми","pour accéder à votre inventaire, puis sélect. le mode ramass-",wählen sie abholmodus. Drücken sie oder halten sie,el modo de recogida de carga. Mantén presionado Ⓐ
-kTRTut3_7,"Cargo Mode'. Press or hold Ⓐ when moving, pickup 10",и держи Ⓐ во время ходьбы и собери 10 спелых,age. Appuyez ou maintenez Ⓐ en mouvement pour récolter,"Ⓐ beim umzug, abholen 10 karotten. Verwenden sie ","cuando te muevas, recoge 10 zanahorias cultivadas. "
+kTRTut3_6,"Press Ⓐ to enter your inventory, select 'Pickup","открыть инвентарь, выбери режим сбора. Нажми","pour accéder à votre inventaire, puis sélect. le mode collecte.",wählen sie abholmodus. Drücken sie oder halten sie,el modo de recogida de carga. Mantén presionado Ⓐ
+kTRTut3_7,"Cargo Mode'. Press or hold Ⓐ when moving, pickup 10",и держи Ⓐ во время ходьбы и собери 10 спелых,Appuyez ou maintenez Ⓐ en mouvement pour récolter,"Ⓐ beim umzug, abholen 10 karotten. Verwenden sie ","cuando te muevas, recoge 10 zanahorias cultivadas. "
 kTRTut3_8,grown carrots. Use the 🎣 to change the pickup area.,морковок. Используй 🎣 чтобы менять радиус сбора.,10 carottes. Utilisez 🎣 pour changer la taille de la zone.,"das 🎣, um den abholbereich zu ändern.",Usa el 🎣 para cambiar el área de recogida.
 kTRTut4_0,-- The First Sale --,-- Первая продажа --,-- La Première Vente --,-- Der Erste Verkauf --,-- La Primera Venta --
 kTRTut4_1,"Nice, you know what we can do with cargo like those",Супер! Знаешь что мы сделаем с этими спелыми,"Bien, savez-vous maintenant quoi faire de ces carottes ?","Sie wissen, was wir mit fracht wie diesen machen ",¿Sabes lo que podemos hacer con cargamentos
@@ -381,12 +381,12 @@ kTRTut4_7,Change the amount sold with each press of Ⓐ by,Можно прода
 kTRTut4_8,"turning the 🎣, or hold Ⓑ and press ⬆️ or ⬇️.","поворота 🎣, или держи Ⓑ и нажми ⬆️ или ⬇️.","tournez 🎣, ou maintenez Ⓑ et appuyez sur ⬆️ ou ⬇️.",durch drehen sie das 🎣 oder halten sie Ⓑ + ⬆️ od. ⬇️.,"girando 🎣, o mantén pulsado Ⓑ y pulsa ⬆️ o ⬇️."
 kTRTut5_0,-- The First Automated Harvest --,-- Первый автоурожай --,-- Récolte Automatisée --,-- Die Erste Automatisierte Ernte --,-- La Primera Cosecha Automatizada --
 kTRTut5_1,"Sweet, but that was a lot of manual labor... Let's","Прелестно, но получается много ручной работы...","C’est un bon début, mais c'était beaucoup de travail...","Süß, aber das war eine menge manueller arbeit... ",Pero eso fue mucho trabajo manual... 
-kTRTut5_2,use an automatic harvester instead! Buy one from,Давай-ка лучше использовать автохарвестер! Купи,Utilisons plutôt une moissonneuse ! Achetez-en une dans,Lassen sie uns automatisieren! Kaufen sie einen von ,¡Automaticemos! Compra una cosechadora en la 
-kTRTut5_3,the shop and build it where some carrot plants are,его в магазине и построй его посреди грядки,"la boutique et installez-la près de vos plants de carotte,","das geschäft und bauen sie es dort, wo es einige",tienda y constrúyela cerca de algunas plantas de 
+kTRTut5_2,use an automatic harvester instead! Buy one from,Давай-ка лучше использовать автохарвестер! Купи,Utilisons  plutôt un extracteur ! Achetez-en un dans,Lassen sie uns automatisieren! Kaufen sie einen von ,¡Automaticemos! Compra una cosechadora en la 
+kTRTut5_3,the shop and build it where some carrot plants are,его в магазине и построй его посреди грядки,"la boutique et installez-le près de vos plants de carotte,","das geschäft und bauen sie es dort, wo es einige",tienda y constrúyela cerca de algunas plantas de 
 kTRTut5_4,within its harvest catchment area.,морковок или посади морковь вокруг харвестера.,de sorte à ce qu’ils soient dans sa zone d’action.,karottenpflanzen in der nähe gibt,zanahoria.
-kTRTut5_5,"Go to the shop, buy an automatic harvester.",Пойдём в магазин за автохарвестером.,"Allez à la boutique, achetez une moissonneuse automatique.","Gehen sie in das geschäft, kaufen sie einen","Ve a la tienda, compra una cosechadora automática. "
-kTRTut5_6,Press Ⓐ and choose this from your inventory.,Нажми Ⓐ и выбери автохарвестер в инвентаре.,Appuyez sur Ⓐ et sélectionnez-la dans votre inventaire.,automatischer mähdrescher. Setze sie den,Presiona Ⓐ y elige esto de tu inventario. Coloque la 
-kTRTut5_7,Place the harvester such that it located on empty,Размести автохарвестер на пустом участке,"la moisson. sur un emplacement libre, en prenant garde à","mähdrescher so, dass er sich auf leer befindet boden,",cosechadora donde las plantas de zanahoria estén 
+kTRTut5_5,"Go to the shop, buy an automatic harvester.",Пойдём в магазин за автохарвестером.,"Allez à la boutique, achetez un moissonneuse automatique.","Gehen sie in das geschäft, kaufen sie einen","Ve a la tienda, compra una cosechadora automática. "
+kTRTut5_6,Press Ⓐ and choose this from your inventory.,Нажми Ⓐ и выбери автохарвестер в инвентаре.,Appuyez sur Ⓐ et sélectionnez-le dans votre inventaire.,automatischer mähdrescher. Setze sie den,Presiona Ⓐ y elige esto de tu inventario. Coloque la 
+kTRTut5_7,Place the harvester such that it located on empty,Размести автохарвестер на пустом участке,"Placez l’extracteur sur un empl. libre, en prenant garde à","mähdrescher so, dass er sich auf leer befindet boden,",cosechadora donde las plantas de zanahoria estén 
 kTRTut5_8,"soil, and carrot plants are within its harvest range.","почвы, и посади морковь вокруг.",ce que les carottes se trouvent dans sa zone de récolte.,und karottenpflanzen sind in der nähe.,dentro de su rango de cosecha.
 kTRTut6_0,-- The First Cargo Line --,-- Первый конвейер --,-- Le Premier Convoyeur --,--- Die Erste Frachtlinie --,-- La Primera Línea de Carga --
 kTRTut6_1,"Good, we're harvesting carrots. But we need to get them","Отлично, мы собираем морковь, но нам надо доставить","Les carottes sont maintenant récoltées automatiquement,","Gut, wir ernten karotten. Aber wir müssen sie ","Bien, estamos cosechando zanahorias. Pero tenemos"
@@ -395,11 +395,11 @@ kTRTut6_3,50 from the shop and lay the path to move & sell,Купи 50 куск�
 kTRTut6_4,the carrots. Rotate belt pieces with 🎣 or Ⓑ + ✛.,от грядки до депо. Ленту можно вращать 🎣 или Ⓑ+✛,"les carottes. Pour pivoter les tapis, utilise la 🎣 ou Ⓑ + ✛.","setze sie den weg, um die karotten zu verkaufen.",portar las zanahorias. Gire los cinturones con 🎣 o Ⓑ+✛.
 kTRTut6_5,"Go to the shop, buy around 50 conveyor belts.",Давай купим 50 кусков конвейерной ленты в,"Allez à la boutique , achetez environ 50 convoyeurs.","Gehen sie in das geschäft, kaufen sie rund 50 ","Ve a la tienda, compra 50 cintas transportadoras. "
 kTRTut6_6,Press Ⓐ and choose these from your inventory.,магазине. Нажми Ⓐ и выбери ленту в инвентаре.,Appuyez sur Ⓐ et sélectionnez-les dans votre inventaire.,förderbande. Machen sie eine kette von bande vom ,Haga una cadena de cintas desde la cosechadora 
-kTRTut6_7,Make a chain of belts from the automatic harvester to,Построй ленту от автохарвестера до депо,Formez une chaîne de convoyeurs de la moissonneuse au,mähdrescher bis verkaufsdepot. Drehen sie die ,"automática hasta las ventas. Gire los cintas con 🎣,"
+kTRTut6_7,Make a chain of belts from the automatic harvester to,Построй ленту от автохарвестера до депо,Formez une chaîne de convoy. depuis l’extracteur jusqu’au,mähdrescher bis verkaufsdepot. Drehen sie die ,"automática hasta las ventas. Gire los cintas con 🎣,"
 kTRTut6_8,"sales. Rotate belts with 🎣, or hold Ⓑ and press ✛.",продаж. Вращать куски ленты можно 🎣 или Ⓑ + ✛.,"dépôt. Pivotez avec 🎣, ou maintenez Ⓑ et appuyez sur ✛.",bande mit 🎣 oder halten sie Ⓑ und drücken sie ✛.,o mantenga presionada Ⓑ y presione ✛.
 kTRTut7_0,-- Mining The Earth --,-- Подземная добыча --,-- Exploiter la Terre --,-- Bergbau der Erde --,-- Minar la Tierra --
 kTRTut7_1,OK. But not all exploitable resources are grown.,"Это всё прекрасно, но не все ресурсы растут на земле.",Toutes les ressources ne poussent pas dans le sol :,OK. Aber nicht alle aus nutzbaren ressourcen werden,Pero no todos los recursos explotables se cultivan.
-kTRTut7_2,"Some are dug up, or pumped out. Let's build a chalk",Некоторые нужно выкапывать или выкачивать. Давай,certaines sont déterrées ou pompées. Construisons une,angebaut. Lass uns bauen uns eine kreide steinbruch,"A continuación, construyamos una cantera de tiza. "
+kTRTut7_2,"Some are dug up, or pumped out. Let's build a chalk",Некоторые нужно выкапывать или выкачивать. Давай,certaines sont déterrées ou forées. Construisons une,angebaut. Lass uns bauen uns eine kreide steinbruch,"A continuación, construyamos una cantera de tiza. "
 kTRTut7_3,quarry next. Buy one from the shop and build it on,построим меловый карьер. Купи его в магазине и,carrière de craie. Achetez-en une à la boutique et construisez-,als nächstes. Bauen sie es auf kalkartig boden.,Compra uno en la tienda y constrúyelo en suelo 
 kTRTut7_4,chalky soil. There should be some to the north.,построй на меловой почве. Она есть на севере.,la sur un sol calcaire. Il devrait y en avoir au nord.,Es sollte einige im norden geben.,calcáreo. Debería haber algunos al norte.
 kTRTut7_5,"Go to the shop, buy a chalk quarry.",Сходи в магазин и купи меловый карьер.,"Allez à la boutique, achetez une carrière de craie. Appuyez","Gehen sie in das geschäft, kaufen sie einen kreide","Ve a la tienda, compra una cantera de tiza. Presiona "
@@ -412,7 +412,7 @@ kTRTut8_2,"Buy a vitamin factory from the shop, supply it with",водство! 
 kTRTut8_3,"both chalk and carrots, and transport the vitamins","моркови и мела при помощи конвейера, а витамины","boutique, fournissez-lui de la craie et des carottes, puis amenez",geschäft. Versorge es mit kreide und karotten und,suministre tiza y zanahorias y transporte las vitaminas
 kTRTut8_4,to the sales depot for a much bigger profit!,направь в депо продаж чтобы заработать денег!, les vitamines au dépôt pour augmenter vos revenus !,transportieren die vitamine zum verkaufsdepot.,al depósito de ventas para obtener ganancias!
 kTRTut8_5,"Go to the shop, buy a vitamin factory.","Зайди в магазин, купи фабрику витаминов.","Allez à la boutique, achetez une usine de vitamines. Placez-la","Gehen Sie in das geschäft, kaufen Sie eine","Ve a la tienda, compra una fábrica de vitaminas."
-kTRTut8_6,Place it in a good spot. Use conveyor belts to,"Расположи её где-нибудь, направь в неё морковь",à l’endroit approprié. Utilisez des convoyeurs pour,"vitaminfabrik. Verwenden sie förderbänder, um es ",Utilice cintas transportadoras para suministrarle 
+kTRTut8_6,Place it in a good spot. Use conveyor belts to,"Расположи её где-нибудь, направь в неё морковь",dans la zone de votre choix. Utilisez des convoyeurs pour,"vitaminfabrik. Verwenden sie förderbänder, um es ",Utilice cintas transportadoras para suministrarle 
 kTRTut8_7,supply it with carrots and chalk. Use more belts,и мел. Для транспортировки витаминов в депо,l'approvisionner en carottes et en craie. Assemblez plusieurs,mit karotten und kreide zu versorgen. Verkaufen sie ,zanahorias y tiza. Use más cinturones para 
 kTRTut8_8,to transport the vitamins to the sales depot.,продаж построй конвейерную ленту.,convoyeurs pour transporter les vitamines jusqu'au dépôt.,die vitamine mit mehr förderbändern.,transportar las vitaminas al depósito de ventas.
 kTRTut9_0,-- Go Forth And Consume --,-- Вперёд к новым производствам --,-- Une Exploitation Prospère --,-- Geh Haus und Verbrauch --,-- Sal y Consume --
@@ -431,7 +431,7 @@ kTRTut10_7,Visit the plots depot to the right of sales.,Сходи в депо �
 kTRTut10_8,Buy a new plot of land to expand the factory.,Купи новый участок для расширения.,un nouveau terrain pour agrandir l’exploitation.,"ein neues grundstück, um die fabrik zu erweitern.",Compra un nuevo terreno para ampliar la fábrica.
 kTRTut11_0,-- A New Horizon --,-- Новые горизонты --,-- Un Nouvel Horizon --,-- Ein Neuer Horizont --,-- Un Nuevo Horizonte --
 kTRTut11_1,Welcome to you new plot of land! More room for your,Добро пожаровать в новый участок! Теперь у нас есть,Bienvenue sur votre nouveau terrain ! Au lieu de vendre du,Willkommen bei ihnen neues grundstück! Mehr platz ,¡Bienvenido a tu nuevo terreno! En lugar de vender 
-kTRTut11_2,"manufacturing empire to grow. Instead of selling cargo,",ещё больше места для производства. Вместо продаж,"fret, vous pouvez également le déplacer entre les parcelles.",für Ihre fertigung imperium zum wachstum.,"carga, también puede moverla entre tierras. Utilice "
+kTRTut11_2,"manufacturing empire to grow. Instead of selling cargo,",ещё больше места для производства. Вместо продаж,"fret, vous pouvez également le déplacer entre vos propriétés.",für Ihre fertigung imperium zum wachstum.,"carga, también puede moverla entre tierras. Utilice "
 kTRTut11_3,you can also move it between plots. Use belts to feed,можно перемещать товары между участками. Для,Utilisez des convoyeurs pour acheminer la cargaison vers,Sie können fracht zwischen grundstück bewegen.,cintas para alimentar la carga al depósito de
 kTRTut11_4,cargo in to the exports depot in any of your plots.,этого направь товар в депо экспорта.,le bâtiment d'exportation de l'un de vos terrains.,Lade fracht in ein exportdepot ein.,exportaciones en cualquiera de sus parcelas.
 kTRTut11_5,Export some cargo by moving it via belts into the,Для экспорта товара направь конвейер в депо,Exportez une cargaison en la déplaçant via des convoyeurs,"Exportieren sie fracht, indem sie sie in das ",Exporte la carga moviéndola al depósito de 
@@ -440,16 +440,16 @@ kTRTut11_7,any plot. The export rate of each cargo type is,участке. Ча�
 kTRTut11_8,averaged over the previous two minutes.,за прошедшие две минуты.,toutes les deux minutes.,   , dos minutos anteriores.
 kTRTut12_0,-- Accessing The Goods --,-- Добыча товаров --,-- Accéder Aux Marchandises --,-- Zugriff auf die Ware --,-- Acceder a Los Bienes --
 kTRTut12_1,"Now that you're exporting cargo, let's look at imports too.",Теперь когда экспорт настроен давай заниматься,"Maintenant que vous exportez du fret, étudions l’import.",Nun zum import. Gehen Sie zu einem anderen ,Importemos también. Vaya a una parcela diferente y
-kTRTut12_2,"Go to a different plot and visit the imports depot,",импортом. Пойдём на другой участок и посетим там,Changez de parcelle et visitez le bâtiment d'importation :,grundstück und besuchen sie das importdepot. Sie ,"visite el depósito de importaciones, puede importar"
-kTRTut12_3,you can import up to four cargo per plot.,депо импорта. На участке можно импортировать 4 ,vous pouvez importer jusqu'à quatre cargaisons par zone.,können bis zu vier fracht pro grundstück importieren.,hasta cuatro cargas por parcela. Intente configurar 
-kTRTut12_4,Try setting up an import now.,вида товара максимум. Давай настроем импорт.,Paramétrez une importation maintenant.,"Versuchen sie jetzt, einen import einzurichten.",una importación ahora.
+kTRTut12_2,"Go to a different plot and visit the imports depot,",импортом. Пойдём на другой участок и посетим там,Changez de terrain et visitez le bâtiment d'importation :,grundstück und besuchen sie das importdepot. Sie ,"visite el depósito de importaciones, puede importar"
+kTRTut12_3,you can import up to four cargo per plot.,депо импорта. На участке можно импортировать 4 ,vous pouvez importer jusqu'à quatre cargaisons par terrain.,können bis zu vier fracht pro grundstück importieren.,hasta cuatro cargas por parcela. Intente configurar 
+kTRTut12_4,Try setting up an import now.,вида товара максимум. Давай настроем импорт.,Essayez de paramétrer une importation.,"Versuchen sie jetzt, einen import einzurichten.",una importación ahora.
 kTRTut12_5,Import some cargo in a different plot via the imports,Импортируй товар на другом участке через депо,Importez des marchandises d’un autre terrain.,Importieren sie fracht in einem anderen grundstück,Importe algo de carga en un terreno diferente. Las
 kTRTut12_6,"depot (right of the exports depot). N, S, E, W",импорта (справа от депо экспорта). Можно выбрать,"Les importations N, S, E, O peuvent être","über das importdepot. N, S, O, W importe können ","importaciones N, S, E, O se pueden elegir"
 kTRTut12_7,imports can be individually chosen. You cannot export a,"С, Ю, З, В. Нельзя экспортировать то, что",gérées individuellement. Vous ne pouvez pas exporter,individuell ausgewählt werden. Sie können keine fracht,individualmente. No puede exportar un tipo de carga
-kTRTut12_8,cargo type which is being imported to the same plot.,импортируется тут же.,un type de cargaison qui est importé dans la même zone.,"exportieren, die in denselben grunds. importiert wird.",que se está importando a la misma terreno.
+kTRTut12_8,cargo type which is being imported to the same plot.,импортируется тут же.,un type de cargaison qui est importé sur le même terrain.,"exportieren, die in denselben grunds. importiert wird.",que se está importando a la misma terreno.
 kTRTut13_0,-- Imports & Exports & Plots --,"-- Импорт, экспорт и участки --","-- Importations, Exportations & Terrains --",-- Importe und Exporte und Grundstück --,-- Importaciones y Exportaciones y Terreno --
-kTRTut13_1,Wonderful! Continue to buy more plots in order to,Прекрасно! Покупай больше участков чтобы,Merveilleux! Continuer à acheter plus de terrains afin,"Wunderbar! Kaufen sie weiterhin mehr grundstück, ",¡Maravilloso! Continúe comprando más terreno para
-kTRTut13_2,access new soil types and to expand the factory.,производство имело доступ к другим почвам. Для,d'accéder à de nouveaux types de sols et d'agrandir l’exploi-,um zu neuen bodentypen und um die fabrik zu ,acceder a nuevos tipos de suelo y ampliar la fábrica. 
+kTRTut13_1,Wonderful! Continue to buy more plots in order to,Прекрасно! Покупай больше участков чтобы,Merveilleux! Continuez à acheter plus de terrains afin,"Wunderbar! Kaufen sie weiterhin mehr grundstück, ",¡Maravilloso! Continúe comprando más terreno para
+kTRTut13_2,access new soil types and to expand the factory.,производство имело доступ к другим почвам. Для,d'accéder à de nouveaux types de sols et agrandir l’exploi-,um zu neuen bodentypen und um die fabrik zu ,acceder a nuevos tipos de suelo y ampliar la fábrica. 
 kTRTut13_3,Use the export and import depots to move cargo,передвижения товара между участками используй,tation. Utilisez les bâtiments d'exportation et d'impor-,erweitern. Verwenden sie die export- und ,Utilice la exportación y las importaciones para mover 
 kTRTut13_4,"between plots, and continue to maximize efficiency!",депо импорта и экспорта. И делай деньги!,tation pour déplacer la cargaison entre les terrains !,importdepots und maximieren sie effizienz!,"la carga, ¡continúe maximizando la eficiencia!"
 kTRConvTransitN,North,Север,Nord,Norden,Norte
@@ -623,11 +623,11 @@ kTRNewLandfill,"Fills in water. Can be built on, but not planted on","Запол
 kTRNewRotavator,Turns nearby land into loamy soil,Превращает почву в суглинистую,Transforme les terres à proximité en sol terreau,Verwandelt benachbarte plättchen in lehmige erde,Convierte la tierra cercana en suelo arcilloso
 kTRNewRetirement,A relaxing space to enjoy your amassed wealth,Место для отдыха и наслаждения,Un gîte de détente pour profiter de vos richesses,Genießen sie ihren angesammelten reichtum,Un espacio relajante para disfrutar de su riqueza
 kTRNewFence,A charming wooden fence,Обалденный деревянный забор,Une charmante clôture en bois,Ein charmanter holzzaun,Una encantadora cerca de madera
-kTRNewCropHarvesterSmall,"Collects cargo, can hold three different types","Собирает урожай, вмещает три разных типа","Collecte la cargaison, détient trois types","Sammelt fracht, kann drei arten aufnehmen","Recoge carga, tiene tres tipos"
+kTRNewCropHarvesterSmall,"Collects cargo, can hold three different types","Собирает урожай, вмещает три разных типа",Récolte jusqu'à 3 cultures différentes,"Sammelt fracht, kann drei arten aufnehmen","Recoge carga, tiene tres tipos"
 kTRNewPump,Must be built on water. Produces water buckets,Должна быть построена на воде. Выдаёт воду,Doit être construit sur l'eau. Pompes à eau,Muss auf wasser gebaut werden. Pumpt wasser,Debe construirse sobre el agua. Bombea agua
 kTRNewChalkQuarry,Must be built on chalky soil. Produces chalk,Строится на меловой почве. Производит мел,Construire sur un sol calcaire. Produit de la craie,Auf kalkhaltigem boden bauen. Produziert kreide,Debe construirse en suelo calcáreo. Produce tiza
 kTRNewSaltMine,Must be built on peaty soil. Produces salt,Строится на торфяной почве. Производит соль,Construit sur un sol tourbeux. Produit du sel,Muss auf torfboden gebaut werden. Erzeugt salz,Debe construirse sobre suelo turbero. Produce sal
-kTRNewCropHarvesterLarge,"Collects cargo, can hold three different types","Собирает урожай, вмещает три разных типа","Collecte la cargaison, détient trois types","Sammelt fracht, kann drei arten aufnehmen","Recoge carga, tiene tres tipos"
+kTRNewCropHarvesterLarge,"Collects cargo, can hold three different types","Собирает урожай, вмещает три разных типа",Récolte jusqu'à 3 cultures différentes,"Sammelt fracht, kann drei arten aufnehmen","Recoge carga, tiene tres tipos"
 kTRNewCO2Extractor,Liquefies carbon dioxide right out of the air,Сжижает углекислый газ прямо из воздуха,Liquéfie le dioxyde de carbone directement de l'air,Verflüssiges kohlendioxid direkt aus der luft,Licua el dióxido de carbono del aire
 kTRNewVitiminFac,Manufactures low-grade vitamin pills,Производит самопальные витаминны,Fabrique des pilules de vitamines de bas niveau,Erstellt minderwertige vitaminpillen,Fabrica píldoras de vitaminas de bajo grado
 kTRNewVegOilFac,Crush vegetable oil from sunflowers,Растительное масло из подсолнечника,Écraser l'huile végétale des tournesols,Gemüseöl aus sonnenblumen zerquetschen,Aplastar el aceite vegetal de los girasoles
@@ -669,16 +669,16 @@ kTRSell,Sell,Продать,Vendre,Verkaufen,Vender
 kTRPauseFin0,Everything is,Все,Tout est,Alles ist,Todo es
 kTRPauseFin1,UNLOCKED!,РАЗБЛОКИРОВАНО!,Déverrouillé!,Freigeschaltet!,¡Desbloqueado!
 kTRPauseFin2,Thanks for playing,Спасибо за игру,Merci d'avoir joué,Danke fürs Spielen,Gracias por jugar
-kTRPauseFin3,FACTORY FARMING!,FACTORY FARMING!,USINE AGRICULTURE!,INDUSTRIE L.D.W.!,¡LA AGRI. INTENSIVA!
+kTRPauseFin3,FACTORY FARMING!,FACTORY FARMING!,L'AGRI. INDUSTRI. !,INDUSTRIE L.D.W.!,¡LA AGRI. INTENSIVA!
 kTRPauseUnlock0,Visit:,Посети:,Visite :,Besuchen:,Visita:
 kTRPauseUnlock1,The Shop,Магазин,La boutique,Das geschäft,La tienda
-kTRPauseUnlockTheNext,To unlock the next:,Чтобы разблокировать:,Pour débloquer le suivant :,Das nächste freischalten:,Para desbloquear:
+kTRPauseUnlockTheNext,To unlock the next:,Чтобы разблокировать:,Pour débloquer :,Das nächste freischalten:,Para desbloquear:
 kTRPauseSell0,Sell a total of:,Продай всего:,Vendre un total de :,Verkaufen insgesamt:,Vender un total de:
 kTRPauseSell2,Sold so far: %i,Продано до сих пор: %i,Vendu jusqu'à présent : %i,Bisher verkauft: %i,Vendido hasta ahora: %i
 kTRPauseTut0,Continue,Продолжить,Continuer,Weitermachen,Continuar
 kTRPauseTut1,The Tutorial,Обучение,Le tutoriel,Das Tutorial,El tutorial
 kTRPauseTut3,Building,Здание,Bâtiment,Gebäude,Edificio
-kTRPauseSave,SAVE BEFORE EXITING!,СОХРАНИСЬ ДО ВЫХОДА!,ENREGIST. AVANT DE SORTI!,VOR BEENDEN SPEICHERN!,¡GUARDE ANTES DE SALIR!
+kTRPauseSave,SAVE BEFORE EXITING!,СОХРАНИСЬ ДО ВЫХОДА!,ENREG. AVANT DE SORTIR !,VOR BEENDEN SPEICHERN!,¡GUARDE ANTES DE SALIR!
 kTRPauseTotTime,Total Play Time:,Общее время игры:,Temps de jeu total :,Gesamtspielzeit:,Tiempo de juego total:
 kTRPauseTotTimeDisplay,%ih:%im:%is,%iч:%iм:%iсек,%ih : %im : %is,%is:%im:%is,%ih:%im:%is
 kTRSettingsAutosaveOff,OFF,ВЫКЛ,PAS,AUS,SIN
@@ -687,7 +687,7 @@ kTRSettingsAutosave10m,10m,10м,10m,10m,10m
 kTRSettingsAutosave15m,15m,15м,15m,15m,15m
 kTRSettingsAutosave30m,30m,30м,30m,20m,30m
 kTRSettings0,--- Sound Settings ---,--- Настройки звука ---,--- Paramètres Sonores ---,--- Soundeinstellungen ----,--- Ajustes de Sonido ---
-kTRSettings1,Music,Музыка,Musique,Musik,Música
+Musique,Music,Музыка,Musique,Musik,Música
 kTRSettings2,Music Volume,Громкость музыки,Volume de la Musique,Musiklautstärke,Volumen de la Música
 kTRSettings3,Sound Effects,Звуковые эффекты,Effets Sonores,Soundeffekte,Efectos de Sonido
 kTRSettings4,Footsteps,Шаги,Bruits de Pas,Schrittgeräusche,Sonidos de Pasos
@@ -695,33 +695,33 @@ kTRSettings5,--- Game Settings ---,--- Игровые настройки ---,---
 kTRSettings6,Screen Shake,Тряска экрана,Vibrations de l’Écran,Bildschirmschütteln,Batido de pantalla
 kTRSettings7,Tutorial Enabled,Обучение включено,Tutoriel Activé,Tutorial aktiviert,Tutorial habilitado
 kTRSettings8,Conveyor Animation,Анимация конвейеров,Animation des Convoyeurs,Förderband-Animation,Animación transportadora
-kTRSettings9,Show Harvester Outlines,Видно контуры харвестеров,Afficher les Zones des Moiss.,Harvester-Umrisse,Contornos de la cosechadora
+kTRSettings9,Show Harvester Outlines,Видно контуры харвестеров,Aff. la zone des Moissonneuses,Harvester-Umrisse,Contornos de la cosechadora
 kTRSettings10,Enable Crank-on-Conveyor,Автодвижение на конвейере,Manivelle sur Convoyeur,Förderbandkurbel,Manivela en transportador
-kTRSettings11,Centre Camera on Player,Центрировать камеру на игроке,Centrer Verrouillée sur le Joueur,Mittelkamera auf Player,Centrar la cámara en el jugador
+kTRSettings11,Centre Camera on Player,Центрировать камеру на игроке,Caméra Verrouillée sur le Joueur,Mittelkamera auf Player,Centrar la cámara en el jugador
 kTRSettings12,Auto Zoom-In When Moving,Автоувеличение при движении,Zoom automatique en Déplacement,Automatisches zoom beim bewegen,Zoom automático al moverse
 kTRSettings13,Auto Save Time,Автосохранение каждые,Délai de Sauvegarde Automatique,Automatische spielspeicherung,Juego de guardado automático
-kTRSettings14,Auto Pickup on Deconstruct,Автоподбор при разрушении,Ramassage auto. Désassemblage,Automatische abholung beim abbau,Recogida automática en la decon.
-kTRSettings15,Auto Apply Conveyor Grease,Автоускорение конвейеров,Auto appliquer la graisse de convoyeur,Fett automatisch verwenden,Auto aplicar grasa transportadora
+kTRSettings14,Auto Pickup on Deconstruct,Автоподбор при разрушении,Collecte auto pendant Recyclage,Automatische abholung beim abbau,Recogida automática en la decon.
+kTRSettings15,Auto Apply Conveyor Grease,Автоускорение конвейеров,Lubrifier automatiquement,Fett automatisch verwenden,Auto aplicar grasa transportadora
 kTRSettings16,Show Debug Information,Показывать инфу для дебага,Afficher Informations Système,Debug-Informationen anzeigen,Información de depuración
 kTRSettings17,--- Exit Game ---,--- Выход ---,--- Quitter le Jeu ---,--- Spiel Verlassen ---,--- Salir del Juego ---
 kTRSettings18,Save & Exit to Title,Сохранить и выйти в меню,Sauvegarder et Revenir au Menu,Spiel speichern und beenden,Guardar y salir al título
 kTRSettings19,Exit to Title WITHOUT Saving,Выйти БЕЗ сохранения,Quitter SANS Sauvegarder,Spiel verlassen ohne zu speichern,Salir al título sin guardar
 kTRSettings20,--- Screenshot ---,--- Скриншот ---,--- Capture d'Écran ---,--- Bildschirmfoto ---,--- Captura de Pantalla ---
-kTRSettings21,Take Screenshot of Plot,Сделать скрин участка,Photographier une Parcelle,Vollständigen bildschirmfoto machen,Tomar captura de pantalla completa
+kTRSettings21,Take Screenshot of Plot,Сделать скрин участка,Photographier un Terrain,Vollständigen bildschirmfoto machen,Tomar captura de pantalla completa
 kTRSettings22,--- Controls ---,--- Управление ---,--- Contrôles ---,--- Kontrollen ---,--- Controles ---
 kTRSettings23,Inventory/Select/Interact: Ⓐ,Инвентарь/выбор/действие: Ⓐ,Inventaire/Choisir/Interagir : Ⓐ,Inventar/Select/Interact: Ⓐ,Inventario/Seleccionar/Interact: Ⓐ
 kTRSettings24,Back/Cancel: Ⓑ,Назад/Отмена: Ⓑ,Retour/Annuler : Ⓑ,Zurück/Abbrechen: Ⓑ,Volver/Cancelar: Ⓑ
 kTRSettings25,Walk: ✛,Идти: ✛,Marcher : ✛,Walk: ✛,Caminar: ✛
 kTRSettings26,Run: Hold Ⓑ + ✛,Бег: держи Ⓑ + ✛,Courir : Maintenir Ⓑ + ✛,Lauf: Halten Sie Ⓑ + ✛,Correr: sostener Ⓑ + ✛
-kTRSettings27,Zoom in/out: 🎣 or Hold Ⓐ + ⬇️,Масштаб: 🎣 или Ⓐ + ⬇️,Zoom : 🎣 ou maint. Ⓐ + ⬇️,Zoom ein-/aus: 🎣 od. hal. Ⓐ + ⬇️,Acercar/afuera: 🎣 o Sost. Ⓐ + ⬇️
-kTRSettings28,Rotate: 🎣 or Hold Ⓑ + ⬆️/➡️/⬇️/⬅️,Вращение: 🎣 или Ⓑ + ⬆️/➡️/⬇️/⬅️,Pivoter : 🎣 ou maint. Ⓑ + ⬆️/➡️/⬇️/⬅️,Drehen sie: 🎣 od. hal. Ⓑ + ⬆️/➡️/⬇️/⬅️,Rotar: 🎣 o Sost. Ⓑ + ⬆️/➡️/⬇️/⬅️
-kTRSettings29,Resize: 🎣 or Hold Ⓑ + ⬆️/⬇️,Размер: 🎣 или Ⓑ + ⬆️/⬇️,Redimensionner : 🎣 ou maint. Ⓑ + ⬆️/⬇️,Größen sie: 🎣 od. hal. Ⓑ + ⬆️/⬇️,Cambiar el tamaño: 🎣 o Sost. Ⓑ + ⬆️/⬇️
-kTRSettings30,Quick Pickup Mode: Hold Ⓐ + ⬅️,Режим сбора: Ⓐ + ⬅️,Ramassage Rapide : maint. Ⓐ + ⬅️,Abholmodus: hal. sie Ⓐ + ⬅️,Modo de recogida: Sost. Ⓐ + ⬅️
-kTRSettings31,Quick Inspect Mode: Hold Ⓐ + ⬆️,Режим деталей: Ⓐ + ⬆️,Inspecter Rapide : maint. Ⓐ + ⬆️,Inspectmodus: hal. sie Ⓐ + ⬆️,Modo de inspección: Sost. Ⓐ + ⬆️
-kTRSettings32,Quick Demolish Mode: Hold Ⓐ + ➡️,Режим разрушения: держи Ⓐ + ➡️,Désassemblage Rapide : maint. Ⓐ + ➡️,Dekonstruktmodus: hal. sie Ⓐ + ➡️,Modo de deconstrucción: Sost. Ⓐ + ➡️
+kTRSettings27,Zoom in/out: 🎣 or Hold Ⓐ + ⬇️,Масштаб: 🎣 или Ⓐ + ⬇️,Zoom : 🎣 / maint. Ⓐ + ⬇️,Zoom ein-/aus: 🎣 od. hal. Ⓐ + ⬇️,Acercar/afuera: 🎣 o Sost. Ⓐ + ⬇️
+kTRSettings28,Rotate: 🎣 or Hold Ⓑ + ⬆️/➡️/⬇️/⬅️,Вращение: 🎣 или Ⓑ + ⬆️/➡️/⬇️/⬅️,Pivoter : 🎣 / maint. Ⓑ + ✛,Drehen sie: 🎣 od. hal. Ⓑ + ⬆️/➡️/⬇️/⬅️,Rotar: 🎣 o Sost. Ⓑ + ⬆️/➡️/⬇️/⬅️
+kTRSettings29,Resize: 🎣 or Hold Ⓑ + ⬆️/⬇️,Размер: 🎣 или Ⓑ + ⬆️/⬇️,Redimensionner : 🎣 / maint. Ⓑ + ⬆️/⬇️,Größen sie: 🎣 od. hal. Ⓑ + ⬆️/⬇️,Cambiar el tamaño: 🎣 o Sost. Ⓑ + ⬆️/⬇️
+kTRSettings30,Quick Pickup Mode: Hold Ⓐ + ⬅️,Режим сбора: Ⓐ + ⬅️,Ramassage Rapide : Maint. Ⓐ + ⬅️,Abholmodus: hal. sie Ⓐ + ⬅️,Modo de recogida: Sost. Ⓐ + ⬅️
+kTRSettings31,Quick Inspect Mode: Hold Ⓐ + ⬆️,Режим деталей: Ⓐ + ⬆️,Inspecter Rapide : Maint. Ⓐ + ⬆️,Inspectmodus: hal. sie Ⓐ + ⬆️,Modo de inspección: Sost. Ⓐ + ⬆️
+kTRSettings32,Quick Demolish Mode: Hold Ⓐ + ➡️,Режим разрушения: держи Ⓐ + ➡️,Recyclage Rapide : Maint. Ⓐ + ➡️,Dekonstruktmodus: hal. sie Ⓐ + ➡️,Modo de deconstrucción: Sost. Ⓐ + ➡️
 kTRSettings33,--- Credits ---,--- Авторы ---,--- Crédits ---,--- Credits ---,--- Créditos ---
 kTRSettings34,Factory Farming by Tim Martin,Factory Farming от Тима Мартина,Factory Farming par Tim Martin,Factory Farming von Tim Martin,Factory Farming de Tim Martin
-kTRSettings35,Translations by Eugene Zakharov,Перевод: Евгений Захаров,Traductions par Eugene Zakharov,Übersetzungen von Eugene Zakharov,Traducciones de Eugene Zakharov
+kTRSettings35,Translations by Eugene Zakharov,Перевод: Евгений Захаров,Traduction par Eugene Zakharov,Übersetzungen von Eugene Zakharov,Traducciones de Eugene Zakharov
 kTRSettings36,and Adrien Martel,и Адриан Мартель,et Adrien Martel,und Adrien Martel,y Adrien Martel
 kTRSettings37,-- Music --,-- Музыка --,-- Musique --,-- Musik --,-- Música --
 kTRSettings38,♬ Dr Tikov: 1985,♬ Dr Tikov: 1986,♬ Dr Tikov: 1985,♬ Dr Tikov: 1985,♬ Dr Tikov: 1985
@@ -752,9 +752,9 @@ kTRSettings62,Play Time:,Время сыграно:,Temps joué :,Spielzeit:,Tie
 kTRSettings63,Total Money Earned:,Заработано денег:,Total d'argent gagné :,Gesamtgeld verdient:,Total de dinero ganado:
 kTRSettings64,Most Money Held:,Максимум денег на руках:,Le plus d'argent détenu :,Das meiste Geld gehalten:,La mayoría de los dinero retenido:
 kTRSettings65,Total Cargo Sold:,Продано товаров:,Cargaison totale vendue :,Gesamtfracht verkauft:,Cargo total vendida:
-kTRSettings66,Total Cargo Imported:,Импортировано:,Cargaison total importé :,Gesamtfracht importiert:,Cargo total importada:
+kTRSettings66,Total Cargo Imported:,Импортировано:,Cargaison totale importé :,Gesamtfracht importiert:,Cargo total importada:
 kTRSettings67,Total Buildings in this Plot:,Кол-во зданий на этом участке:,Total des bât. de cette terrain :,Gebäude insgesamt (hier):,Edificios totales en esta trama:
-kTRSettings68,Total Cargo in this Plot:,Кол-во товара на этом участке:,Cargaison total dans ce terrain :,Gesamtfracht (hier):,Cargo total en esta trama:
+kTRSettings68,Total Cargo in this Plot:,Кол-во товара на этом участке:,Cargaison totale dans ce terrain :,Gesamtfracht (hier):,Cargo total en esta trama:
 kTRSettings69,     ,     ,     ,     ,     
 kTRSettings70,© Tim Martin 2022,© Тим Мартин 2023,© Tim Martin 2022,© Tim Martin 2022,© Tim Martin 2022
 kTRSettings71,Factory Farming is an MIT,Factory Farming лицензирована MIT,Factory Farming est un MIT,Factory Farming ist ein MIT,Factory Farming es de
@@ -775,6 +775,6 @@ kTRFactory,Factory,Фабрика,Usine,Fabrik,Fábrica
 kTRFarming,Farming,Сельское хозяйство,Agriculture,Landwirtschaft,Agricultura
 kTRFactoryFarming,Factory Farming,Интенсивное сельское хозяйство,L'agriculture Industrielle,Industrielandwirtschaft,La Agricultura Intensiva
 kTRLang,EN,RU,FR,DE,ES
-kTRMap,Map Mode,Режим карты,Mode Carte,Kartenmodus,Modo de Mapa
-kTRMapHelp,View a live map of the plot,Посмотреть живую карту участка,Voir une carte en direct de la terrain,Sehen sie sich eine karte des grundstücks an,Ver un mapa en vivo de la parcela
+kTRMap,Map Mode,Режим карты,Carte,Kartenmodus,Modo de Mapa
+kTRMapHelp,View a live map of the plot,Посмотреть живую карту участка,Affiche une carte détaillée du terrain,Sehen sie sich eine karte des grundstücks an,Ver un mapa en vivo de la parcela
 kNTR,--,--,--,--,--
