@@ -29,7 +29,7 @@ void doImport() {
   const uint16_t newExport =  getUIContentID();
   const enum kUICat selectedCat = getUIContentCategory();
 
-  if (isEmptyImport() || newExport == kNoCargo) { // Later should never happen, just double-checking
+  if (isEmptyImport() || selectedCat < kUICatImportN || selectedCat > kUICatImportW || newExport == kNoCargo) { // Later should never happen, just double-checking
     return;
   }
 
@@ -44,6 +44,13 @@ void doImport() {
     default: break;
   }
   
+  #ifdef DEV
+  pd->system->logToConsole("doImport: newExport %i %s - consumers %i, selected cat %i, currentExport %i %s - consumers %i ",
+    newExport, toStringCargoByType(newExport, true), p->m_importConsumers[newExport], 
+    selectedCat,
+    currentExport, toStringCargoByType(currentExport, true), p->m_importConsumers[currentExport]);
+  #endif
+
   if (currentExport == kNoCargo) {
     // If currentExport == none, just add the export
 
