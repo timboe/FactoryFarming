@@ -52,7 +52,6 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
     bool wideRedraw = false;
     if (bt == kUtility && bst.utility == kWell) {
       // Special - well
-      pauseMusic();
       setTile( getTile_idx(_loc->m_x, _loc->m_y), _loc->m_building->m_mode.mode16 ); // Undo before destroying
       doWetnessAroundLoc(_loc);
       wideRedraw = true;
@@ -63,7 +62,6 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
       && bt == kExtractor && (bst.extractor == kCropHarvesterSmall || bst.extractor == kCropHarvesterLarge))
     {
       // Special, harvester with outline
-      pauseMusic();
       wideRedraw = true;
     }
 
@@ -110,7 +108,6 @@ bool clearLocation(struct Location_t* _loc, bool _clearCargo, bool _clearBuildin
 
     if (wideRedraw) {
       renderChunkBackgroundImageAround(_loc->m_chunk);
-      resumeMusic();
     } else if (needs3x3) {
       renderChunkBackgroundImageAround3x3(_loc->m_chunk, _loc, bt, bst);
     } else {

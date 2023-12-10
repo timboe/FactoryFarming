@@ -317,13 +317,9 @@ void clickHandleTitles(uint32_t _buttonPressed) {
   }
   #endif
   if (kButtonUp == _buttonPressed) {
-    pauseMusic();
     modLanguage(false);
-    resumeMusic();
   } else if (kButtonDown == _buttonPressed) {
-    pauseMusic();
     modLanguage(true);
-    resumeMusic();
   }
 }
 

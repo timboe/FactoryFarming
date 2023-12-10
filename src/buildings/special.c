@@ -255,13 +255,11 @@ void unlockOtherWorlds() {
     pd->sprite->setVisible(m_warp->m_sprite[zoom], true);
   }
 
-  pauseMusic();
   sfx(kSfxDestroy);
   addTrauma(1.1f);
   renderChunkBackgroundImageAround(m_warp->m_location->m_chunk);
   renderChunkBackgroundImageAround(m_exportBox->m_location->m_chunk);
   renderChunkBackgroundImageAround(m_importBox->m_location->m_chunk);
-  resumeMusic();
 
   startPlotsTutorial();
 }
