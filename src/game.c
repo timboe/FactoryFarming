@@ -358,6 +358,8 @@ void initGame() {
   const enum kCurrentHoliday currentHoliday = getCurrentHoliday();
   if (currentHoliday == kEaster) {
     CargoDesc[kChocolate].UIIcon = SID(9,25); // Switch chocolate bar for egg
+  } else if (currentHoliday == kChristmas) {
+    CargoDesc[kPartyPack].UIIcon = SID(10,25); // Switch party pack for present
   }
 
   // Populate unlock ordering
