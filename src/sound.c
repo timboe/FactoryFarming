@@ -12,7 +12,7 @@ FilePlayer* m_music[N_MUSIC_TRACKS + 1];
 SamplePlayer* m_samplePlayer[kNSFX];
 AudioSample* m_audioSample[kNSFX];
 
-void musicStopped(SoundSource* _c);
+void musicStopped(SoundSource* _c, void*);
 
 /// ///
 
@@ -91,7 +91,7 @@ void chooseMusic(int8_t _id) {
   updateMusicVol();
 }
 
-void musicStopped(SoundSource* _c) {
+void musicStopped(SoundSource* _c, void*) {
   if (!m_hasMusic) return;
   if (m_trackPlaying == -1) {
     return;
@@ -162,7 +162,7 @@ void initSound() {
       case 4: m_hasMusic &= pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/weAreTheResistors"); break;
       case 5: m_hasMusic &= pd->sound->fileplayer->loadIntoPlayer(m_music[i], "music/SoftAndFuriousHorizonEnding"); break;
     }
-    pd->sound->fileplayer->setFinishCallback(m_music[i], musicStopped);
+    pd->sound->fileplayer->setFinishCallback(m_music[i], musicStopped, NULL);
     pd->sound->fileplayer->setBufferLength(m_music[i], 5.0f); 
   }
 }

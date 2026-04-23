@@ -246,14 +246,14 @@ LCDBitmap* getSettingsMenuUIBitmap(uint32_t _i) {
 }
 
 enum kUICat getUIContentCategory() {
-  enum kUICat c = m_mode;
-  if (m_mode == kPlaceMode || m_mode == kPlantMode || m_mode == kBuildMode) c = kMenuPlayer;
+  enum kUICat c = (enum kUICat)m_mode; // Is this enum the correct type...?
+  if (m_mode == kPlaceMode || m_mode == kPlantMode || m_mode == kBuildMode) c = (enum kUICat)kMenuPlayer;
   return m_contentCat[ m_selRow[c] ][ m_selCol[c] ];
 }
 
 uint16_t getUIContentID() {
-  enum kUICat c = m_mode;
-  if (m_mode == kPlaceMode || m_mode == kPlantMode || m_mode == kBuildMode) c = kMenuPlayer;
+  enum kUICat c = (enum kUICat)m_mode;
+  if (m_mode == kPlaceMode || m_mode == kPlantMode || m_mode == kBuildMode) c = (enum kUICat)kMenuPlayer;
   return m_contentID[ m_selRow[c] ][ m_selCol[c] ];
 }
 
@@ -864,6 +864,7 @@ const char* getRotationAsString(enum kUICat _cat, int16_t _selectedID, uint16_t 
         case 2: return tr(kTRS);
         case 3: return tr(kTRW);
       }
+      break;
     case kSplitI: case kFilterI: case kOverflowI:
       switch (_rotation) {
         case 0: return tr(kTRWE);
@@ -871,6 +872,7 @@ const char* getRotationAsString(enum kUICat _cat, int16_t _selectedID, uint16_t 
         case 2: return tr(kTRWE);
         case 3: return tr(kTRNS);
       }
+      break;
     case kSplitL: case kFilterL: case kOverflowL:
       switch (_rotation) {
         case 0: return tr(kTRNE);
@@ -878,6 +880,7 @@ const char* getRotationAsString(enum kUICat _cat, int16_t _selectedID, uint16_t 
         case 2: return tr(kTRSW);
         case 3: return tr(kTRSW);
       }
+      break;
     case kSplitT:
       switch (_rotation) {
         case 0: return tr(kTRWNE);
@@ -885,6 +888,7 @@ const char* getRotationAsString(enum kUICat _cat, int16_t _selectedID, uint16_t 
         case 2: return tr(kTRESW);
         case 3: return tr(kTRSWN);
       }
+      break;
     default: return "!";
   }
   return "!";
@@ -2075,7 +2079,6 @@ void initiUI() {
   pd->graphics->drawText(VERSION, 5, kUTF8Encoding, TILE_PIX - width/2, tY());
   pd->graphics->popContext();
   m_UISpriteTitleVersion = pd->sprite->newSprite();
-  PDRect vBound = {.x = 0, .y = 0, .width = TILE_PIX*2, .height = TILE_PIX*1};
   pd->sprite->setBounds(m_UISpriteTitleVersion, buttonBound);
   pd->sprite->setImage(m_UISpriteTitleVersion, m_UIBitmapTitleVersion, kBitmapUnflipped);
   pd->sprite->setZIndex(m_UISpriteTitleVersion, Z_INDEX_UI_T);
@@ -2427,6 +2430,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 8: return tr(kTRTut0_8);
         #endif
       }
+      break;
     case kTutSeeObjective:;
       switch (_n) {
         case 0: return tr(kTRTut1_0);
@@ -2440,6 +2444,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 7: return tr(kTRTut1_7);
         case 8: return tr(kTRTut1_8);
       }
+      break;
     case kTutPlantCarrots:;
       switch (_n) {
         case 0: return tr(kTRTut2_0);
@@ -2453,6 +2458,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 7: return tr(kTRTut2_7);
         case 8: return tr(kTRTut2_8);
       }
+      break;
     case kTutGetCarrots:;
       switch (_n) {
         case 0: return tr(kTRTut3_0);
@@ -2466,6 +2472,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 7: return tr(kTRTut3_7);
         case 8: return tr(kTRTut3_8);
       }
+      break;
     case kTutSellCarrots:;
       switch (_n) {
         case 0: return tr(kTRTut4_0);
@@ -2479,6 +2486,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 7: return tr(kTRTut4_7);
         case 8: return tr(kTRTut4_8);
       }
+      break;
     case kTutBuildHarvester:;
       switch (_n) {
         case 0: return tr(kTRTut5_0);
@@ -2492,6 +2500,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 7: return tr(kTRTut5_7);
         case 8: return tr(kTRTut5_8);
       }
+      break;
     case kTutBuildConveyor:;
       switch (_n) {
         case 0: return tr(kTRTut6_0);
@@ -2505,6 +2514,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 7: return tr(kTRTut6_7);
         case 8: return tr(kTRTut6_8);
       }
+      break;
     case kTutBuildQuarry:
       switch (_n) {
         case 0: return tr(kTRTut7_0);
@@ -2518,6 +2528,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 7: return tr(kTRTut7_7);
         case 8: return tr(kTRTut7_8);
       }
+      break;
     case kTutBuildVitamin:
       switch (_n) {
         case 0: return tr(kTRTut8_0);
@@ -2531,6 +2542,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 7: return tr(kTRTut8_7);
         case 8: return tr(kTRTut8_8);
       }
+      break;
     case kTutFinishedOne:
       switch (_n) {
         case 0: return tr(kTRTut9_0);
@@ -2544,6 +2556,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 7: return " ";
         case 8: return " ";
       }
+      break;
       ///
     case kTutNewPlots:
       switch (_n) {
@@ -2558,6 +2571,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 7: return tr(kTRTut10_7);  
         case 8: return tr(kTRTut10_8);
       }
+      break;
     case kTutExports:
       switch (_n) {
         case 0: return tr(kTRTut11_0);
@@ -2571,6 +2585,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 7: return tr(kTRTut11_7);
         case 8: return tr(kTRTut11_8);
       }
+      break;
     case kTutImports:
       switch (_n) {
         case 0: return tr(kTRTut12_0);
@@ -2584,6 +2599,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 7: return tr(kTRTut12_7);
         case 8: return tr(kTRTut12_8);
       }
+      break;
     case kTutFinishedTwo:
       switch (_n) {
         case 0: return tr(kTRTut13_0);
@@ -2597,6 +2613,7 @@ const char* toStringTutorial(enum kUITutorialStage _stage, uint16_t _n) {
         case 7: return " ";
         case 8: return " ";
       }
+      break;
     default: return " ";
   }
   return " ";

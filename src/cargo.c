@@ -238,7 +238,6 @@ void cargoSpriteSetup(struct Cargo_t* _cargo, int16_t _x, int16_t _y, uint16_t _
 }
 
 bool newCargo(struct Location_t* _loc, enum kCargoType _type, bool _addToDisplay) {
-  bool addedByPlayer = true;
   if (_loc->m_cargo != NULL) return false;
 
   struct Cargo_t* cargo = cargoManagerNewCargo(_type);

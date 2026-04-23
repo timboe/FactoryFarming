@@ -452,7 +452,7 @@ void movePlayer(bool _forceUpdate) {
 
     bool didScroll = false;
 
-    const static int16_t MOVE_THRESHOLD_X = (SCREEN_PIX_X * SCROLL_EDGE) - (SCREEN_PIX_X/2); 
+    static const int16_t MOVE_THRESHOLD_X = (SCREEN_PIX_X * SCROLL_EDGE) - (SCREEN_PIX_X/2); 
     const int16_t sideThreshold = (int16_t) roundf(MOVE_THRESHOLD_X * shrinkFractionX);
     if (m_player.m_pix_x - m_player.m_camera_pix_x > sideThreshold / zoom && diffX > 0) {
       m_player.m_camera_pix_x = m_player.m_pix_x - (sideThreshold / zoom);
@@ -466,9 +466,9 @@ void movePlayer(bool _forceUpdate) {
     }
 
     didScroll = false;
-    const static int16_t MOVE_THRESHOLD_Y = (SCREEN_PIX_Y * SCROLL_EDGE_TOP_BOT) - (SCREEN_PIX_Y/2);
+    static const int16_t MOVE_THRESHOLD_Y = (SCREEN_PIX_Y * SCROLL_EDGE_TOP_BOT) - (SCREEN_PIX_Y/2);
     const int16_t topThreshold = (int16_t) roundf(MOVE_THRESHOLD_Y * shrinkFractionY);
-    const static int16_t MOVE_THRESHOLD_Y_REDUCED = (SCREEN_PIX_Y * SCROLL_EDGE_BOT_TUT) - (SCREEN_PIX_Y/2);    
+    static const int16_t MOVE_THRESHOLD_Y_REDUCED = (SCREEN_PIX_Y * SCROLL_EDGE_BOT_TUT) - (SCREEN_PIX_Y/2);    
     #ifdef DEMO
     const int16_t bottomThreshold = (int16_t) roundf((getGameMode() == kInspectMode ? MOVE_THRESHOLD_Y_REDUCED : MOVE_THRESHOLD_Y) * shrinkFractionY);
     #else
@@ -538,7 +538,7 @@ bool modMoney(int32_t _amount) {
   if (m_player.m_infiniteMoney) {
     return true;
   }
-  if (_amount < 0 && (_amount * -1) > m_player.m_money) {
+  if (_amount < 0 && (_amount * -1) > (int32_t) m_player.m_money) {
     return false;
   }
   m_player.m_money += _amount;

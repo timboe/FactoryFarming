@@ -54,6 +54,7 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kSpareConv6: case kSpareConv7: 
       case kNConvSubTypes: return "C_PLACEHOLDER";
     }
+    break;
     case kPlant: switch (_subType.plant) {
       case kCarrotPlant: return _inworld ? tr(kTRCarrotPWorld) : tr(kTRCarrotP);
       case kSunflowerPlant: return _inworld ? tr(kTRSunflowerPWorld) : tr(kTRSunflowerP);
@@ -76,6 +77,7 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kSparePlant12: case kSparePlant13: case kSparePlant14: case kSparePlant15: 
       case kNPlantSubTypes: return "P_PLACEHOLDER";
     }
+    break;
     case kUtility: switch (_subType.utility) {
       case kPath: return tr(kTRPath);
       case kSign: return tr(kTRSign);
@@ -94,6 +96,7 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kSpareUtil5: case kSpareUtil6: case kSpareUtil7: 
       case kNUtilitySubTypes: return "U_PLACEHOLDER";
     }
+    break;
     case kExtractor: switch (_subType.extractor) {
       case kCropHarvesterSmall: return _inworld ? tr(kTRHarvesterSmallShort) : tr(kTRHarvesterSmallLong);
       case kPump: return tr(kTRPump);
@@ -105,6 +108,7 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kSpareExtractor4: case kSpareExtractor5: case kSpareExtractor6: case kSpareExtractor7: 
       case kNExtractorSubTypes: return "E_PLACEHOLDER";
     }
+    break;
     case kFactory: switch (_subType.factory) {
       case kVitiminFac: return tr(kTRFacVitamin);
       case kVegOilFac: return tr(kTRFacVegOil);
@@ -148,6 +152,7 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kSpareFac12: case kSpareFac13: case kSpareFac14: case kSpareFac15: 
       case kNFactorySubTypes: return "F_PLACEHOLDER";
     }
+    break;
     case kSpecial: switch (_subType.special) {
       case kShop: return tr(kTRShop);
       case kSellBox: return tr(kTRSales);
@@ -156,6 +161,7 @@ const char* toStringBuilding(enum kBuildingType _type, union kSubType _subType, 
       case kWarp: return isCamouflaged() ? tr(kTRSus) : tr(kTRWarp);
       case kNSpecialSubTypes: return "S_PLACEHOLDER";
     }
+    break;
     case kNBuildingTypes:;
   }
   return "B_CAT_PLACEHOLDER";
@@ -377,7 +383,6 @@ bool newBuilding(struct Location_t* _loc, enum kDir _dir, enum kBuildingType _ty
 
   // Special - well
   bool wideRedraw = false;
-  enum kGameMode gm = getGameMode();
   if (_type == kUtility && _subType.utility == kWell) {
     struct Tile_t* t = getTile(_loc->m_x, _loc->m_y);
     building->m_mode.mode16 = t->m_tile;

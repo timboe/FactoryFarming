@@ -264,7 +264,7 @@ bool doSaveDelete() {
     snprintf(m_filePath, 32, "world_%i_%i.json", m_save+1, ss+1);
     snprintf(filePathDelete, 32, "deleted_world_%i_%i.json", m_save+1, ss+1);
     // First unlink before moving
-    int status = pd->file->unlink(filePathDelete, 0);
+    int status [[maybe_unused]] = pd->file->unlink(filePathDelete, 0);
     #ifdef DEV
     pd->system->logToConsole("DELETE: unlink previous world save %s, status %i", filePathDelete, status);
     #endif
@@ -272,7 +272,7 @@ bool doSaveDelete() {
   }
   snprintf(m_filePath, 32, "player_%i.json", m_save+1);
   snprintf(filePathDelete, 32, "deleted_player_%i.json", m_save+1);
-  int status = pd->file->unlink(filePathDelete, 0);
+  int status [[maybe_unused]] = pd->file->unlink(filePathDelete, 0);
   #ifdef DEV
   pd->system->logToConsole("DELETE unlink previous player save %s, status %i", filePathDelete, status);
   #endif
@@ -417,7 +417,7 @@ bool doSave(bool _synchronous) {
     snprintf(m_filePath, 32, "TMP_player_%i.json", m_save+1);
 
     // This file should not already exist, double check
-    int status = pd->file->unlink(m_filePath, 0);
+    int status [[maybe_unused]] = pd->file->unlink(m_filePath, 0);
     #ifdef DEV
     pd->system->logToConsole("SAVE: unlink previous TMP_player %s, status %i (expect this to fail, err: %s)", m_filePath, status, pd->file->geterr());
     #endif
@@ -443,7 +443,7 @@ bool doSave(bool _synchronous) {
     snprintf(m_filePath, 32, "TMP_world_%i_%i.json", m_save+1, m_slot+1);
 
     // This file should not already exist, double check
-    int status = pd->file->unlink(m_filePath, 0);
+    int status [[maybe_unused]] = pd->file->unlink(m_filePath, 0);
     #ifdef DEV
     pd->system->logToConsole("SAVE: unlink previous TMP_world %s, status %i (expect this to fail, err: %s)", m_filePath, status, pd->file->geterr());
     #endif

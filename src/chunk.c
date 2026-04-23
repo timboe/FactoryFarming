@@ -40,14 +40,13 @@ struct Chunk_t* getChunk_noCheck(const int32_t _x, const int32_t _y) {
 void setChunkSpriteOffsets(struct Chunk_t* _c, int16_t _x, int16_t _y) {
   // Move the background
   for (int32_t zoom = 1; zoom < ZOOM_LEVELS; ++zoom) {
-    PDRect bound = {.x = 0, .y = 0, .width = CHUNK_PIX_X*zoom, .height = CHUNK_PIX_Y*zoom};
     if (_c->m_bkgSprite[zoom]) {
       pd->sprite->moveTo(_c->m_bkgSprite[zoom], (CHUNK_PIX_X*_c->m_x + CHUNK_PIX_X/2.0 + _x)*zoom, (CHUNK_PIX_Y*_c->m_y + CHUNK_PIX_Y/2.0 + _y)*zoom);
     }
   }
   // Set the offset to all locations such that any other moveTo calls can also apply the correct offset
-  for (uint32_t x = TILES_PER_CHUNK_X * _c->m_x; x < TILES_PER_CHUNK_X * (_c->m_x + 1); ++x) {
-    for (uint32_t y = TILES_PER_CHUNK_Y * _c->m_y; y < TILES_PER_CHUNK_Y * (_c->m_y + 1); ++y) {
+  for (int32_t x = TILES_PER_CHUNK_X * _c->m_x; x < TILES_PER_CHUNK_X * (_c->m_x + 1); ++x) {
+    for (int32_t y = TILES_PER_CHUNK_Y * _c->m_y; y < TILES_PER_CHUNK_Y * (_c->m_y + 1); ++y) {
       struct Location_t* loc = getLocation_noCheck(x, y);
       loc->m_pix_off_x = _x;
       loc->m_pix_off_y = _y; 
@@ -325,7 +324,6 @@ void chunkRemoveObstacle(struct Chunk_t* _chunk, LCDSprite* _obstacleZ1) {
   for(uint32_t i = idx; i < TILES_PER_CHUNK - 1; i++) {
     _chunk->m_obstacles[i][1] = _chunk->m_obstacles[i + 1][1];
     _chunk->m_obstacles[i][2] = _chunk->m_obstacles[i + 1][2];
-    if (_chunk->m_obstacles[i] == NULL) break;
   }
   --(_chunk->m_nObstacles);
 }

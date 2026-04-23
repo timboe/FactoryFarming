@@ -427,26 +427,26 @@ void initGame() {
   setPrices();
 
   // Perform runtime sanity check.
-  for (int32_t i = 0; i < kNFactorySubTypes; ++i) {
-    if (i != FDesc[i].subType) pd->system->error("FACTORY DESCRIPTOR ORDERING IS WRONG!");
+  for (int32_t i = 0; i < (int32_t)kNFactorySubTypes; ++i) {
+    if (i != (int32_t)FDesc[i].subType) pd->system->error("FACTORY DESCRIPTOR ORDERING IS WRONG!");
   }
-  for (int32_t i = 0; i < kNUtilitySubTypes; ++i) {
-    if (i != UDesc[i].subType) pd->system->error("UTILITY DESCRIPTOR ORDERING IS WRONG!");
+  for (int32_t i = 0; i < (int32_t)kNUtilitySubTypes; ++i) {
+    if (i != (int32_t)UDesc[i].subType) pd->system->error("UTILITY DESCRIPTOR ORDERING IS WRONG!");
   }
-  for (int32_t i = 0; i < kNConvSubTypes; ++i) {
-    if (i != CDesc[i].subType) pd->system->error("CONVEYOR DESCRIPTOR ORDERING IS WRONG!");
+  for (int32_t i = 0; i < (int32_t)kNConvSubTypes; ++i) {
+    if (i != (int32_t)CDesc[i].subType) pd->system->error("CONVEYOR DESCRIPTOR ORDERING IS WRONG!");
   }
-  for (int32_t i = 0; i < kNPlantSubTypes; ++i) {
-    if (i != PDesc[i].subType) pd->system->error("PLANT DESCRIPTOR ORDERING IS WRONG!");
+  for (int32_t i = 0; i < (int32_t)kNPlantSubTypes; ++i) {
+    if (i != (int32_t)PDesc[i].subType) pd->system->error("PLANT DESCRIPTOR ORDERING IS WRONG!");
   }
-  for (int32_t i = 0; i < kNExtractorSubTypes; ++i) {
-    if (i != EDesc[i].subType) pd->system->error("EXTRACTOR DESCRIPTOR ORDERING IS WRONG!");
+  for (int32_t i = 0; i < (int32_t)kNExtractorSubTypes; ++i) {
+    if (i != (int32_t)EDesc[i].subType) pd->system->error("EXTRACTOR DESCRIPTOR ORDERING IS WRONG!");
   }
-  for (int32_t i = 0; i < kNCargoType; ++i) {
-    if (i != CargoDesc[i].subType) pd->system->error("CARGO DESCRIPTOR ORDERING IS WRONG!");
+  for (int32_t i = 0; i < (int32_t)kNCargoType; ++i) {
+    if (i != (int32_t)CargoDesc[i].subType) pd->system->error("CARGO DESCRIPTOR ORDERING IS WRONG!");
   }
-  for (int32_t i = 0; i < kNWorldTypes; ++i) {
-    if (i != WDesc[i].subType) pd->system->error("WORLD DESCRIPTOR ORDERING IS WRONG!");
+  for (int32_t i = 0; i < (int32_t)kNWorldTypes; ++i) {
+    if (i != (int32_t)WDesc[i].subType) pd->system->error("WORLD DESCRIPTOR ORDERING IS WRONG!");
   }
 
   if (CREDITS_TO_ROW > MAX_ROWS) {

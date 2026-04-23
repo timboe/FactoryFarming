@@ -318,7 +318,7 @@ void updateNearestWater() {
   const struct Location_t* pl = getPlayerLocation();
   m_water_x = 0;
   m_water_y = 0;
-  const uint16_t dist = distanceFromWaterBody_wide(pl->m_x, pl->m_y, TOT_TILES_X/2, &m_water_x, &m_water_y);
+  distanceFromWaterBody_wide(pl->m_x, pl->m_y, TOT_TILES_X/2, &m_water_x, &m_water_y);
   if (m_water_x < 0) m_water_x += TOT_TILES_X;
   else if (m_water_x >= TOT_TILES_X) m_water_x -= TOT_TILES_X;
   if (m_water_y < 0) m_water_y += TOT_TILES_Y;
@@ -529,7 +529,7 @@ void renderChunkBackgroundImage(struct Chunk_t* _chunk) {
   for (uint16_t v = 0; v < TILES_PER_CHUNK_Y; ++v) {
     for (uint16_t u = 0; u < TILES_PER_CHUNK_X; ++u) {
       struct Tile_t* t = getTileInChunk(_chunk, u, v);
-      if (t->m_wetness >= 0 && t->m_wetness < 8) { // If wet, but not actually water
+      if (t->m_wetness < 8) { // If wet, but not actually water
         for (int32_t w = 0; w < (8 - t->m_wetness); w += 2) {
           pd->graphics->drawBitmap(getSprite16(12 + (w/2 + v*u)%4, 16, 1), u * TILE_PIX, v * TILE_PIX, kBitmapUnflipped);
         }
@@ -760,7 +760,6 @@ void doWetness(bool _forTitles) {
 }
 
 void doWetnessAroundLoc(struct Location_t* _loc) {
-  uint16_t dummy;
   for (int32_t x = _loc->m_x - TILES_PER_CHUNK_X; x < _loc->m_x + TILES_PER_CHUNK_X; ++x) {
     for (int32_t y = _loc->m_y - TILES_PER_CHUNK_Y; y < _loc->m_y + TILES_PER_CHUNK_Y; ++y) {
       getTile(x, y)->m_wetness = distanceFromWater_short(x,y);
@@ -1219,7 +1218,6 @@ bool addLake(int32_t _startX, int32_t _startY, int32_t _riverProb) {
 
 
 void doSea() {
-  struct Tile_t* t = NULL;
   for (int32_t x = 0; x < TOT_TILES_X; ++x) {
     setTile( getTile_idx(x, SEASTART-1), SPRITE16_ID(4, 5) );
     if (rand() % TILES_PER_CHUNK_X/2 == 0) {
@@ -1437,10 +1435,6 @@ void generate(uint32_t _actionProgress) {
 }
 
 void generateTitle() {
-
-  const uint8_t slot = getSlot();
-  uint8_t floorMain = getWorldGround(slot, 0);
-
   srand(0);
 
   for (uint16_t x = 0; x < TILES_PER_CHUNK_X*3; ++x) {
