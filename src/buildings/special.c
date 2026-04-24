@@ -581,7 +581,8 @@ void updateSales() {
  
   {
     const float collected = m_soldItemValueA + m_soldItemValueB;
-    const float av = collected / (m_exportTimer / TICKS_PER_SEC);
+    float av = 0.0f;
+    if (m_exportTimer) av = collected / (m_exportTimer / TICKS_PER_SEC);
     p->m_sellPricePerWorld[slot] = av;
     #ifdef DEV
     if (collected) pd->system->logToConsole("Integrated over %i s, the av sold value is %f /s", (m_exportTimer / TICKS_PER_SEC), (double)av);
@@ -590,7 +591,8 @@ void updateSales() {
 
   for (int32_t c = 1; c < kNCargoType; ++c) { // Start at 1 as 0=kNoCargo
     const float collected = m_soldItemCountA[c] + m_soldItemCountB[c];
-    const float av = collected / (m_exportTimer / TICKS_PER_SEC);
+    float av = 0.0f;
+    if (m_exportTimer) av = collected / (m_exportTimer / TICKS_PER_SEC);
     p->m_soldPerWorld[slot][c] = av;
     #ifdef DEV// zzz v1.5 update checks
     if (collected) pd->system->logToConsole("-- Sel rate of %s is %f", toStringCargoByType(c, true), (double)av);
