@@ -2,7 +2,7 @@
 #include "new.h"
 #include "../sprite.h"
 #include "../ui.h"
-#include "../io.h"
+#include "../game_io.h"
 #include "../sound.h"
 
 LCDBitmap* m_pause = NULL;

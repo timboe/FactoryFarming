@@ -9,7 +9,7 @@
 #include "player.h"
 #include "input.h"
 #include "ui.h"
-#include "io.h"
+#include "game_io.h"
 #include "building.h"
 #include "buildings/special.h"
 #include "buildings/conveyor.h"

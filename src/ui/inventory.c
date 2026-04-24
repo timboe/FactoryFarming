@@ -6,7 +6,7 @@
 #include "../input.h"
 #include "../sound.h"
 #include "../sshot.h"
-#include "../io.h"
+#include "../game_io.h"
 #include "../generate.h"
 #include "../buildings/conveyor.h"
 #include "../buildings/utility.h"

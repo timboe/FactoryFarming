@@ -5,7 +5,7 @@
 #include "../generate.h"
 #include "../cargo.h"
 #include "../player.h"
-#include "../io.h"
+#include "../game_io.h"
 #include "../ui.h"
 #include "../chunk.h"
 #include "../sound.h"

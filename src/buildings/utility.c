@@ -6,7 +6,7 @@
 #include "../generate.h"
 #include "../cargo.h"
 #include "../ui.h"
-#include "../io.h"
+#include "../game_io.h"
 #include "../chunk.h"
 #include "../sound.h"
 

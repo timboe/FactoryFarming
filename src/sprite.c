@@ -329,7 +329,7 @@ void initSprite() {
   m_new = loadImageAtPath("images/new");
   m_parchment[0] = loadImageAtPath("images/map_l");
   m_parchment[1] = loadImageAtPath("images/map_r");
-  m_splash = loadImageAtPath("images/splash");
+  m_splash = loadImageAtPath("images/splash_ff");
   m_menuBacking = loadImageAtPath("images/backing");
   m_retirementNo[1] = loadImageAtPath("images/cross9x9");
   m_langArrow = loadImageAtPath("images/langArrow");

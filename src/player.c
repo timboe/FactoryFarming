@@ -5,7 +5,7 @@
 #include "render.h"
 #include "input.h"
 #include "sound.h"
-#include "io.h"
+#include "game_io.h"
 #include "ui.h"
 #include "generate.h"
 

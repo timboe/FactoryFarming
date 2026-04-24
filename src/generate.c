@@ -2,7 +2,7 @@
 #include "sprite.h"
 #include "location.h"
 #include "ui.h"
-#include "io.h"
+#include "game_io.h"
 #include "sprite.h"
 #include "render.h"
 #include "building.h"

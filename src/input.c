@@ -6,7 +6,7 @@
 #include "building.h"
 #include "sound.h"
 #include "ui.h"
-#include "io.h"
+#include "game_io.h"
 #include "sshot.h"
 #include "buildings/special.h"
 #include "buildings/utility.h"

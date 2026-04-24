@@ -1,7 +1,7 @@
 #include "warp.h"
 #include "../player.h"
 #include "../sprite.h"
-#include "../io.h"
+#include "../game_io.h"
 #include "../generate.h"
 #include "../render.h"
 #include "../sound.h"

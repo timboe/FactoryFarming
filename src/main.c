@@ -13,7 +13,7 @@
 #include "player.h"
 #include "ui.h"
 #include "building.h"
-#include "io.h"
+#include "game_io.h"
 #include "sshot.h"
 #include "ui/settings.h"
 

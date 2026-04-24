@@ -3,7 +3,7 @@
 #include "render.h"
 #include "chunk.h"
 #include "input.h"
-#include "io.h"
+#include "game_io.h"
 #include "ui.h"
 #include "sprite.h"
 #include "sound.h"

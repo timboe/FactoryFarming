@@ -18,7 +18,7 @@
 #include "cargo.h"
 #include "render.h"
 #include "sound.h"
-#include "io.h"
+#include "game_io.h"
 #include "sshot.h"
 #include "buildings/special.h"
 #include "buildings/factory.h"
