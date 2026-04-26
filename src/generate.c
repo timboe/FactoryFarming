@@ -93,6 +93,10 @@ enum kGroundType getWorldGround(uint8_t _slotNumber, uint8_t _groundCounter) {
 }
 
 struct Tile_t* getTileInChunk(struct Chunk_t* _chunk, int32_t _u, int32_t _v) {
+  if (_u < 0 || _u >= TILES_PER_CHUNK_X || _v < 0 || _v >= TILES_PER_CHUNK_Y) {
+    pd->system->error("getTileInChunk only currently works for tile IDs which reside within the chunk, was asked for %i %i", _u, _v);
+    return NULL;
+  }
   return &m_tiles[ (WORLD_CHUNKS_X * TILES_PER_CHUNK_X)*((TILES_PER_CHUNK_Y * _chunk->m_y) + _v) + ((TILES_PER_CHUNK_X * _chunk->m_x) + _u) ];
 }
 
@@ -371,13 +375,14 @@ void renderChunkBackgroundImageAround3x3(struct Chunk_t* _chunk, struct Location
 }
 
 uint8_t getNearbyBackground_Chunk(struct Chunk_t* _chunk, uint16_t _u, uint16_t _v) {
-  uint8_t tValue = getTileInChunk(_chunk, _u - 1, _v)->m_tile;
+  uint8_t tValue = TOT_FLOOR_TILES;
+  if (_u > 0) tValue = getTileInChunk(_chunk, _u - 1, _v)->m_tile;
   if (tValue < TOT_FLOOR_TILES) return tValue;
-  tValue = getTileInChunk(_chunk, _u + 1, _v)->m_tile;
+  if (_u < TILES_PER_CHUNK_X - 1) tValue = getTileInChunk(_chunk, _u + 1, _v)->m_tile;
   if (tValue < TOT_FLOOR_TILES) return tValue;
-  tValue = getTileInChunk(_chunk, _u, _v - 1)->m_tile;
+  if (_v > 0)tValue = getTileInChunk(_chunk, _u, _v - 1)->m_tile;
   if (tValue < TOT_FLOOR_TILES) return tValue;
-  tValue = getTileInChunk(_chunk, _u, _v + 1)->m_tile;
+  if (_v < TILES_PER_CHUNK_Y - 1) tValue = getTileInChunk(_chunk, _u, _v + 1)->m_tile;
   if (tValue < TOT_FLOOR_TILES) return tValue;
   return 0;
 }
