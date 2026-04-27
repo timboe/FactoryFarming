@@ -1,3 +1,6 @@
+// Being built under PlaydateGameSelect project when bundled
+#ifndef SDL2API
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -56,7 +59,7 @@ int eventHandler(PlaydateAPI* playdate, PDSystemEvent event, uint32_t arg) {
       init();
       playdate->display->setRefreshRate(TICK_FREQUENCY);
       playdate->system->setAutoLockDisabled(true);
-      playdate->system->setUpdateCallback(gameLoop, NULL);
+      playdate->system->setUpdateCallback(gameLoop_ff, NULL);
       break;
     case kEventTerminate:; case kEventLock:; case kEventLowPower:;
       #ifdef DEV
@@ -108,3 +111,5 @@ int eventHandler(PlaydateAPI* playdate, PDSystemEvent event, uint32_t arg) {
   
   return 0;
 }
+
+#endif

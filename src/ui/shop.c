@@ -31,7 +31,7 @@ void populateContentBuy() {
   int16_t column = 0, row = 0;
   // Miss the first (Tools). Miss the last (Cargo)
   for (int32_t c = kUICatPlant; c < kUICatCargo; ++c) {
-    int32_t firstItemUnlockLevel = getUnlockLevel(c, 0);
+    uint32_t firstItemUnlockLevel = getUnlockLevel(c, 0);
     if (myUnlockLevel < firstItemUnlockLevel) { // Can the first thing be bought? Should always be the 1st thing to be unlocked per cat
       continue;
     }
@@ -39,7 +39,7 @@ void populateContentBuy() {
     ++row;
     column = 0;
     for (int32_t i = 0; i < getNSubTypes(c); ++i) {
-      int32_t itemUnlockLevel = getUnlockLevel(c, i);
+      uint32_t itemUnlockLevel = getUnlockLevel(c, i);
       if (myUnlockLevel < itemUnlockLevel) {
         continue;
       }
@@ -58,7 +58,7 @@ void populateInfoBuy(bool _visible) {
   const enum kUICat selectedCat = getUIContentCategory();
   const enum kBuildingType selectedCatType = getCatBuildingSubType(selectedCat);
   const uint16_t selectedID =  getUIContentID();
-  const int32_t selectedPrice = getPrice(selectedCat, selectedID);
+  const uint32_t selectedPrice = getPrice(selectedCat, selectedID);
   const uint16_t selectedOwned = getOwned(selectedCat, selectedID);
   const uint8_t multiplier = getBuySellMultiplier();
 

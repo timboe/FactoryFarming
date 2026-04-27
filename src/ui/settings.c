@@ -263,8 +263,8 @@ void cheatUnlock() {
 #endif
   static uint8_t counter = 0;
   if (++counter == 20) {
-    if (getPlayer()->m_buildingsUnlockedTo != getNUnlocks()) {
-      getPlayer()->m_buildingsUnlockedTo = getNUnlocks();
+    if (getPlayer()->m_buildingsUnlockedTo != (uint32_t)getNUnlocks()) {
+      getPlayer()->m_buildingsUnlockedTo = (uint32_t)getNUnlocks();
     } else {
       getPlayer()->m_buildingsUnlockedTo = 0;
     }

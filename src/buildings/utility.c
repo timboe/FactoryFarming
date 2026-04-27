@@ -287,8 +287,8 @@ void buildingSetupRetirement(struct Building_t* _building) {
 int16_t distanceFromRetirement() {
   if (!m_retirement) return 1000;
   struct Player_t* p = getPlayer();
-  uint16_t dx = abs(p->m_pix_x - m_retirement->m_pix_x);
-  uint16_t dy = abs(p->m_pix_y - m_retirement->m_pix_y);
+  uint16_t dx = abs((uint16_t)p->m_pix_x - m_retirement->m_pix_x);
+  uint16_t dy = abs((uint16_t)p->m_pix_y - m_retirement->m_pix_y);
   return (dx < dy ? dy : dx);
 }
 

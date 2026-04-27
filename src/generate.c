@@ -1470,8 +1470,8 @@ void generateTitle() {
   for (int32_t y = 9; y < 10; ++y) newBuilding(getLocation(20,y), SN, kConveyor, (union kSubType) {.conveyor = kBelt} );
 
   // poto ext
-  newBuilding(getLocation(20,1), NS, kExtractor, (union kSubType) {.factory = kCropHarvesterSmall} ); // top
-  newBuilding(getLocation(20,11), SN, kExtractor, (union kSubType) {.factory = kCropHarvesterSmall} ); // bot
+  newBuilding(getLocation(20,1), NS, kExtractor, (union kSubType) {.factory = (enum kFactorySubType)kCropHarvesterSmall} ); // top
+  newBuilding(getLocation(20,11), SN, kExtractor, (union kSubType) {.factory = (enum kFactorySubType)kCropHarvesterSmall} ); // bot
   getLocation(20,1)->m_building->m_progress = rand() % (TICKS_PER_SEC * 2);
   getLocation(20,11)->m_building->m_progress = rand() % (TICKS_PER_SEC * 2);
 
@@ -1499,8 +1499,8 @@ void generateTitle() {
   newBuilding(getLocation(14,4), EW, kUtility, (union kSubType) {.utility = kPath} );
 
   // sunny ext
-  newBuilding(getLocation(12,11), EW, kExtractor, (union kSubType) {.factory = kCropHarvesterSmall} ); // right
-  newBuilding(getLocation(1,10), SN, kExtractor, (union kSubType) {.factory = kCropHarvesterSmall} ); // left
+  newBuilding(getLocation(12,11), EW, kExtractor, (union kSubType) {.factory = (enum kFactorySubType)kCropHarvesterSmall} ); // right
+  newBuilding(getLocation(1,10), SN, kExtractor, (union kSubType) {.factory = (enum kFactorySubType)kCropHarvesterSmall} ); // left
   getLocation(12,11)->m_building->m_progress = rand() % (TICKS_PER_SEC * 2);
   getLocation(1,10)->m_building->m_progress = rand() % (TICKS_PER_SEC * 2);
 
@@ -1543,7 +1543,7 @@ void generateTitle() {
   getLocation(16,13)->m_building->m_mode.mode16 = kSunflower;
 
   // Salt
-  newBuilding(getLocation(2,1), WE, kExtractor, (union kSubType) {.factory = kSaltMine} );
+  newBuilding(getLocation(2,1), WE, kExtractor, (union kSubType) {.factory = (enum kFactorySubType)kSaltMine} );
 
   for (int32_t x = 4; x < 10; ++x) newBuilding(getLocation(x,1), WE, kConveyor, (union kSubType) {.conveyor = kBelt} );
   for (int32_t y = 1; y < 4; ++y) newBuilding(getLocation(10,y), NS, kConveyor, (union kSubType) {.conveyor = kBelt} );

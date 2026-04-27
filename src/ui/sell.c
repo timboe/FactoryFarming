@@ -85,7 +85,6 @@ void populateInfoSell() {
 }
 
 bool populateContentSell(void) {
-  struct Player_t* p = getPlayer();
   int16_t column = 0, row = 0;
   setUIContentHeader(row, kUICatCargo);
   if (isEmptySell()) return true;

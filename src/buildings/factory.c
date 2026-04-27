@@ -289,6 +289,7 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 19: return " ";
         case 20: return tr(kTRFacFlavPreservatives);      
       }
+      break;
     case kAbattoir:
       switch (_n) {
         case 0: *_isFlavour = false; return tr(kTRFacFlavAnimalFeed);
@@ -362,6 +363,7 @@ const char* toStringIngredients(enum kFactorySubType _type, uint16_t _n, bool* _
         case 16: return " ";
         case 17: return tr(kTRFacFlavPreservatives);
       }
+      break;
     case kBeerFac:
       switch (_n) {
         case 0: *_isFlavour = false; return tr(kTRFacFlavIngredients);

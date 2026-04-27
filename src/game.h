@@ -18,7 +18,7 @@ extern PlaydateAPI* pd;
 
 void setPDPtr(PlaydateAPI* _p);
 
-int gameLoop(void* _data);
+int gameLoop_ff(void* _data);
 
 int getFrameCount(void);
 

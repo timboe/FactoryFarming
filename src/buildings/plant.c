@@ -129,6 +129,7 @@ int8_t getWaterBonus(enum kGroundWetness _likes, enum kGroundWetness _has) {
         case kDry: return -3;
         case kNGroundWetnesses: return 0;
       }
+      break;
     case kWet:
       switch (_has) {
         case kWater: return -1;
@@ -137,6 +138,7 @@ int8_t getWaterBonus(enum kGroundWetness _likes, enum kGroundWetness _has) {
         case kDry: return -1;
         case kNGroundWetnesses: return 0;
       }
+      break;
     case kMoist:
       switch (_has) {
         case kWater: return -2;
@@ -145,6 +147,7 @@ int8_t getWaterBonus(enum kGroundWetness _likes, enum kGroundWetness _has) {
         case kDry: return 0;
         case kNGroundWetnesses: return 0;
       }
+      break;
     case kDry:
       switch (_has) {
         case kWater: return -3;
@@ -153,6 +156,7 @@ int8_t getWaterBonus(enum kGroundWetness _likes, enum kGroundWetness _has) {
         case kDry: return +1;
         case kNGroundWetnesses: return 0;
       }
+      break;
     case kNGroundWetnesses: return 0;
   }
   return 0;
@@ -175,6 +179,7 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
         case kOcean: return -3;
         case kNGroundTypes: return 0;
       }
+      break;
     case kChalkyGround:
       switch (_has) {
         case kSiltyGround: return 0;
@@ -190,6 +195,7 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
         case kOcean: return -3;
         case kNGroundTypes: return 0;
       }
+      break;
     case kPeatyGround:
       switch (_has) {
         case kSiltyGround: return 0;
@@ -205,6 +211,7 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
         case kOcean: return -3;
         case kNGroundTypes: return 0;
       }
+      break;
     case kSandyGround:
       switch (_has) {
         case kSiltyGround: return -3;
@@ -220,6 +227,7 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
         case kOcean: return -3;
         case kNGroundTypes: return 0;
       }
+      break;
     case kClayGround:
       switch (_has) {
         case kSiltyGround: return -3;
@@ -235,6 +243,7 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
         case kOcean: return -3;
         case kNGroundTypes: return 0;
       }
+      break;
     case kLoamyGround:
       switch (_has) {
         case kSiltyGround: return -3;
@@ -250,6 +259,7 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
         case kOcean: return -3;
         case kNGroundTypes: return 0;
       }
+      break;
     case kPavedGround:
       switch (_has) {
         case kSiltyGround: return -3;
@@ -265,7 +275,8 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
         case kOcean: return -3;
         case kNGroundTypes: return 0;
       }
-    case kObstructedGround: return -3;
+      break;
+    case kObstructedGround: return -3; break;
     case kLake:
       switch (_has) {
         case kSiltyGround: return -3;
@@ -281,6 +292,7 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
         case kOcean: return -1;
         case kNGroundTypes: return 0;
       }
+      break;
     case kRiver:
       switch (_has) {
         case kSiltyGround: return -3;
@@ -296,6 +308,7 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
         case kOcean: return -1;
         case kNGroundTypes: return 0;
       }
+      break;
     case kOcean:
       switch (_has) {
         case kSiltyGround: return -3;
@@ -311,6 +324,7 @@ int8_t getGroundBonus(enum kGroundType _likes, enum kGroundType _has) {
         case kOcean: return +1;
         case kNGroundTypes: return 0;
       }
+      break;
     case kNGroundTypes: return 0;
   }
   return 0;

@@ -460,7 +460,6 @@ void doDestroy() {
   sfx(kSfxNo);
   return;
   #endif
-  bool update = false;
   int32_t min = 0, max = 0;
   switch (getRadius()) {
     case 1: min = 0; max = 1; break;
@@ -496,7 +495,6 @@ void doDestroy() {
 }
 
 void populateContentInventory(void) {
-  struct Player_t* p = getPlayer();
   int16_t column = 0, row = 0;
   for (enum kUICat c = 0; c <= kUICatCargo; ++c) {
     bool owned = false;

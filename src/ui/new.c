@@ -78,6 +78,7 @@ const char* getNewText() {
       case kSpareConv6: case kSpareConv7:
       case kNConvSubTypes:;
     }
+    break;
     case kPlant: switch (m_nextSubType.plant) {
       case kCarrotPlant: return tr(kTRNewCarrotPlant);
       case kSunflowerPlant: return tr(kTRNewSunflowerPlant);
@@ -100,6 +101,7 @@ const char* getNewText() {
       case kSparePlant12: case kSparePlant13: case kSparePlant14: case kSparePlant15: 
       case kNPlantSubTypes:;
     }
+    break;
     case kUtility: switch (m_nextSubType.utility) {
       case kPath: return tr(kTRNewPath);
       case kSign: return tr(kTRNewSign);
@@ -118,6 +120,7 @@ const char* getNewText() {
       case kSpareUtil5: case kSpareUtil6: case kSpareUtil7: 
       case kNUtilitySubTypes:;
     }
+    break;
     case kExtractor: switch (m_nextSubType.extractor) {
       case kCropHarvesterSmall: return tr(kTRNewCropHarvesterSmall);
       case kPump: return tr(kTRNewPump);
@@ -129,6 +132,7 @@ const char* getNewText() {
       case kSpareExtractor4: case kSpareExtractor5: case kSpareExtractor6: case kSpareExtractor7:
       case kNExtractorSubTypes:;
     }
+    break;
     case kFactory: switch (m_nextSubType.factory) {
       case kVitiminFac: return tr(kTRNewVitiminFac);
       case kVegOilFac: return tr(kTRNewVegOilFac);
@@ -172,6 +176,7 @@ const char* getNewText() {
       case kSpareFac12: case kSpareFac13: case kSpareFac14: case kSpareFac15: 
       case kNFactorySubTypes:;
     }
+    break;
     default: break;
   }
   return "??";

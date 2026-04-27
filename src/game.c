@@ -15,7 +15,11 @@
 #include "buildings/conveyor.h"
 #include "ui/settings.h"
 
-PlaydateAPI* pd = NULL;
+#ifdef SDL2API
+  #include "../srcgame/game.h"
+#else  
+  PlaydateAPI* pd = NULL;
+#endif
 
 int32_t m_frameCount = 0;
 
@@ -37,9 +41,12 @@ void tickFar(void);
 
 ////////////
 
-void setPDPtr(PlaydateAPI* _p) {
-  pd = _p;
-}
+#ifndef SDL2API
+  void setPDPtr(PlaydateAPI* p) {
+    pd = p;
+    pdxlogf = p->system->logToConsole;
+  }
+#endif
 
 uint16_t getNearTickCount() {
   return m_nearTickCount;
@@ -224,7 +231,7 @@ void tickFar() {
   #endif
 } 
 
-int gameLoop(void* _data) {
+int gameLoop_ff(void* _data) {
   ++m_frameCount;
   pd->graphics->setBackgroundColor(kColorBlack);
 

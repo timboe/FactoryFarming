@@ -52,9 +52,9 @@ void populateInfoWarp(bool _visible) {
   const uint16_t selectedID =  getUIContentID();
 
 #ifdef FAST_PROGRESS
-  const int32_t selectedPriceOrAmount = FAST_PROGRESS_SALES;
+  const uint32_t selectedPriceOrAmount = FAST_PROGRESS_SALES;
 #else
-  const int32_t selectedPriceOrAmount = getPrice(kUICatWarp, selectedID);
+  const uint32_t selectedPriceOrAmount = getPrice(kUICatWarp, selectedID);
 #endif
   
   const uint16_t selectedOwned = getOwned(kUICatWarp, selectedID);
@@ -125,7 +125,6 @@ void populateInfoWarp(bool _visible) {
 }
 
 void populateContentWarp() {
-  struct Player_t* p = getPlayer();
   int16_t column = 0, row = 0;
   setUIContentHeader(row, kUICatWarp);
   ++row;
