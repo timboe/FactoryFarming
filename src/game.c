@@ -44,7 +44,6 @@ void tickFar(void);
 #ifndef SDL2API
   void setPDPtr(PlaydateAPI* p) {
     pd = p;
-    pdxlogf = p->system->logToConsole;
   }
 #endif
 
